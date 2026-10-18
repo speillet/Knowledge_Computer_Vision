@@ -47,8 +47,12 @@ modifient pas le pilote.
   artefacts, sans assimiler les 129 approfondissements ouverts à des méthodes maîtrisées.
 - [x] T021 — Générer index, inventaire et vues des pôles depuis le contenu ;
   vérifier étiquettes, cas métiers, liens, conservation des IDs et calculs.
-- [ ] T022 — Publier en commits/PR cohérents, relire, fusionner dans l'ordre
-  des dépendances et vérifier le contenu final de main.
+- [x] T022 — Publier en commits/PR cohérents, relire, fusionner dans l'ordre
+  des dépendances et vérifier le contenu final de main. Réalisé dans les PR
+  [#4](https://github.com/speillet/Knowledge_Computer_Vision/pull/4),
+  [#5](https://github.com/speillet/Knowledge_Computer_Vision/pull/5) et
+  [#6](https://github.com/speillet/Knowledge_Computer_Vision/pull/6) ;
+  [preuves après fusion](../../docs/publication-2026-10-18.md).
 
 T011/T012 signifient contenu préparé : les résultats image/vidéo proposés ne
 sont pas des expériences exécutées, et les cas de transfert n'ont pas été
