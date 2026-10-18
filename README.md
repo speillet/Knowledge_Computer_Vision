@@ -22,8 +22,13 @@ Les skills complémentaires et la configuration Context7 sont propres à la
 machine auditée ; ils ne sont pas installés automatiquement lors d'un clone.
 Leur configuration est décrite dans l'audit.
 
-## Suite du cadrage
+## Programme et contrat pédagogique
 
-Formaliser le programme, le contrat des fiches et cartes, puis les critères
-de validation avant de produire le contenu. Le choix du plugin Obsidian–Anki
-doit être éprouvé sur un petit échantillon avant de généraliser l'export.
+- [Cartographie de couverture](specs/001-cv-knowledge-base/curriculum.md) :
+  quatorze domaines, profondeurs cibles et pilote proposé.
+- [Contrat des fiches et cartes](specs/001-cv-knowledge-base/learning-design.md) :
+  réponses développées, noyau attendu, équations, code et transfert.
+
+Ces documents sont des propositions de cadrage. Les fiches et cartes du pilote
+ne sont pas encore produites. Le choix du plugin Obsidian–Anki doit être éprouvé
+sur un petit échantillon avant de généraliser l'export.
