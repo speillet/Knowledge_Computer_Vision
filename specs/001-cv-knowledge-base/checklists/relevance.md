@@ -46,6 +46,9 @@ que les fiches sont produites ni que l'apprenant a acquis la compétence.
 - [ ] CHK020 Les exigences bornent-elles la couverture sans promettre tous les algorithmes ou un statut professionnel par mémorisation ? [Clarté, Spec FR-029, Hypothèses]
 - [ ] CHK023 Les familles de cartes n'ont-elles qu'une définition, dans le contrat ? [Cohérence, Spec FR-014, learning-design]
 - [ ] CHK024 Une solution de repli d'export et le rendu sur le client de révision sont-ils prévus ? [Dépendance, Spec SC-005, research]
+- [ ] CHK025 Chaque entrée propre à un pôle a-t-elle un seul domaine d'accueil et une seule fiche canonique ? [Cohérence, Spec FR-040, SC-012, curriculum]
+- [ ] CHK026 Chaque pôle a-t-il un cas de conception et un cas de diagnostic propres à ses métiers ? [Couverture, Spec FR-042, SC-011]
+- [ ] CHK027 L'avancement d'un pôle reste-t-il distinct de la maîtrise et d'une aptitude à un poste ? [Clarté, Spec FR-041, FR-043]
 
 ## Notes
 

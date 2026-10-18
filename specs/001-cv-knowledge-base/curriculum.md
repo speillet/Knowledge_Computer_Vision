@@ -1,6 +1,7 @@
 # Cartographie initiale de la couverture
 
-**Statut** : proposition éditoriale enrichie après revues, 2026-10-18.
+**Statut** : proposition éditoriale enrichie après revues et ajout des pôles
+métiers, 2026-10-18.
 
 Cette cartographie organise un catalogue évolutif. Les méthodes citées sont
 des entrées à documenter, et non des fiches déjà produites ou une liste exhaustive
@@ -59,6 +60,9 @@ que si un artefact correspondant existe ; une non-applicabilité est justifiée.
 | 12. Vision générative et multimodale | VAE, GAN, diffusion, restauration/super-résolution, vision-langage, grounding, vocabulaire ouvert, modèles de fondation, représentations implicites/explicites et rendu neuronal | V2 ; objectifs, supervision, capacités et limites |
 | 13. Données, évaluation et fiabilité | Annotation, ambiguïté du ground truth, splits par scène/séquence, fuites, IoU/AP, erreurs géométriques, MOTA/IDF1/HOTA, calibration des scores, incertitude, OOD, dérive et sous-groupes | Transverse ; protocoles, seuils et erreurs rares |
 | 14. Ingénierie des systèmes de vision | Baselines, reproductibilité, tests, pré/posttraitements, augmentations cohérentes, profiling, latence/débit, mémoire/transferts, quantification, déploiement et surveillance ; conception de bout en bout, des exigences au choix classique/appris et à la validation | Transverse ; contrats de données et mesures complètes |
+
+Les entrées propres aux pôles métiers, décrites plus bas, complètent ce tableau ;
+chacune est rattachée à un seul domaine d'accueil.
 
 ## Axes à vérifier dans chaque famille pertinente
 
@@ -125,6 +129,142 @@ changement d'échelle et conséquences des seuils sur le pipeline aval.
 - Méthodes et métriques transverses : une fiche canonique reliée depuis
   plusieurs domaines, plutôt que des explications divergentes.
 
+## Pôles métiers
+
+Les six pôles ci-dessous décrivent des axes de spécialisation et les familles
+de métiers correspondantes, à la demande de l'apprenant (2026-10-18). Ils forment
+une surcouche des domaines : chaque entrée propre à un pôle est inventoriée dans
+un seul domaine d'accueil, indiqué entre parenthèses, et un sujet partagé entre
+pôles garde une seule fiche canonique.
+
+Les intitulés de métiers sont indicatifs ; leur contenu varie selon les
+entreprises. Couvrir un pôle signifie disposer des fiches, cartes et cas
+correspondants, pas être prêt pour un poste.
+
+**Socle d'abord** : la vague V0 reste consacrée aux lacunes exprimées. Dans
+chaque pôle, les entrées clés visent V1 et l'usage opérationnel ; les
+approfondissements sont en V2, au repérage par défaut. Relever la priorité
+d'un pôle est une décision de l'apprenant, consignée dans la spec.
+Une notion déjà en V0 conserve sa priorité : son rattachement à un pôle
+ne la reporte pas artificiellement en V1.
+
+| Pôle | Périmètre | Métiers indicatifs | Domaines mobilisés |
+| --- | --- | --- | --- |
+| A. Deep Learning & Image Understanding | Classification, détection, segmentation, reconnaissance, vision transformers et modèles de fondation visuels | 2D CV Engineer, Visual Recognition Engineer, Vision Foundation Model Engineer | 7, 8, 9, 12, 13 |
+| B. Geometric Vision & Spatial AI | Reconstruction 3D, calibration, estimation de pose, SLAM, VIO et géométrie multivue | 3D Vision Engineer, VIO Engineer, SLAM Engineer, Spatial AI Engineer | 1, 2, 4, 5, 6, 12, 13 |
+| C. Robotics & Autonomous Perception | Fusion de capteurs, perception temps réel, estimation d'environnement et navigation | Robotics Perception Engineer, Autonomous Perception Engineer, Sensor Fusion Engineer | 1, 2, 5, 6, 8, 11, 13, 14 |
+| D. Multimodal AI & Video Intelligence | VLM, alignement image-texte, compréhension vidéo, grounding et modèles vision-langage-action | Multimodal AI Engineer, Video AI Engineer, VLM Research Engineer | 7, 10, 12, 13 |
+| E. Applied Computer Vision | Télédétection, imagerie médicale, inspection industrielle, biométrie et analyse documentaire | Remote Sensing AI Engineer, Medical Imaging AI Engineer, Industrial Vision Engineer | 2, 7, 9, 13, 14 |
+| F. Vision Systems & Deployment | Optimisation GPU, déploiement embarqué, quantification et pipelines vidéo à faible latence | Edge AI Engineer, Computer Vision Systems Engineer, Inference Optimization Engineer | 2, 3, 13, 14 |
+
+### A — Deep Learning & Image Understanding
+
+- **Entrées clés (V1/U)** : ViT, Swin et ConvNeXt (d07) ; DINOv2 et features
+  autosupervisées (d07) ; alignement image-texte CLIP/SigLIP, partagé avec D (d07) ;
+  SAM et SAM 2 (d09) ; détection open-vocabulary Grounding DINO et OWL-ViT (d08) ;
+  adaptation par linear probing, fine-tuning et LoRA/adapters (d07) ; long-tail,
+  stratégie d'annotation et active learning (d13) ; mIoU, PQ et AP par taille
+  d'objet (d13).
+- **Approfondissements (V2/R)** : pré-entraînement masqué MAE et effets
+  d'échelle (d07) ; modèles de fondation multitâches comme Florence-2 (d12).
+  La distillation est rattachée au pôle F (d14).
+- **Cas propres** : conception — choisir entre un détecteur fermé réentraîné et
+  une détection open-vocabulary pour un catalogue de produits qui change chaque
+  mois ; diagnostic — AP des petits objets qui chute après une réduction de la
+  résolution d'entrée.
+
+### B — Geometric Vision & Spatial AI
+
+- **Entrées clés (V1/U)** : groupes SO(3)/SE(3) et paramétrisations des
+  rotations (d01) ; graphes de facteurs, GTSAM et iSAM2 (d01) ; bundle adjustment
+  creux et complément de Schur (d05) ; VIO : préintégration IMU, MSCKF,
+  VINS-Mono et OKVIS (d06) ; fermeture de boucle et reconnaissance de lieux,
+  DBoW2 et NetVLAD (d06) ; reconstruction dense MVS et fusion TSDF (d06) ;
+  ATE et RPE (d13).
+- **Approfondissements (V2/R)** : DUSt3R et MASt3R (d06) ; profondeur
+  monoculaire, Depth Anything (d06) ; NeRF et 3D Gaussian Splatting (d12) ;
+  caméras événementielles (d02).
+- **Cas propres** : conception — localisation d'un casque de réalité augmentée
+  en intérieur, avec caméras et IMU, sous contrainte de latence ; diagnostic —
+  dérive d'échelle et de lacet d'un VIO dans un couloir peu texturé, en séparant
+  erreurs d'estimation, excitation insuffisante et jauge globale de yaw.
+
+### C — Robotics & Autonomous Perception
+
+- **Entrées clés (V1/U)** : filtres EKF, UKF et ESKF pour la fusion (d01) ;
+  LiDAR, radar et ToF, formation des mesures et bruit (d02) ; horodatage et
+  synchronisation matériels (d02) ; calibration extrinsèque
+  caméra–LiDAR–radar–IMU et décalage temporel (d05) ; représentations de nuages
+  de points, PointNet++ et voxels (d06) ; odométrie et localisation LiDAR, LOAM
+  et NDT (d06) ; vue de dessus (BEV) et grilles d'occupation, Lift-Splat-Shoot,
+  BEVFormer et BEVFusion (d06) ; détection 3D PointPillars et CenterPoint (d08) ;
+  suivi 3D multiobjet, AB3DMOT (d11) ; NDS et mAP 3D (d13) ; ROS 2 et budgets
+  de latence temps réel (d14).
+- **Approfondissements (V2/R)** : espace libre et traversabilité (d06) ;
+  représentations de surfaces implicites occupancy/SDF (d06), à distinguer
+  des grilles probabilistes libre/occupé/inconnu utilisées par un robot.
+- **Périmètre** : la planification de trajectoire et le contrôle sont hors
+  périmètre ; seule la perception qui les alimente est couverte.
+- **Cas propres** : conception — perception d'un robot mobile d'entrepôt avec
+  caméras et LiDAR, sous exigences de sécurité ; diagnostic — obstacles dédoublés
+  après fusion caméra–LiDAR lorsque le robot tourne.
+
+### D — Multimodal AI & Video Intelligence
+
+- **Entrées clés (V1/U)** : CLIP/SigLIP (fiche d07 partagée avec A) ;
+  architectures VLM BLIP-2, LLaVA et Flamingo, tokenisation visuelle (d12) ;
+  grounding et segmentation référentielle (d12) ; transformers vidéo TimeSformer,
+  ViViT et VideoMAE (d10) ; localisation temporelle d'actions (d10) ; évaluation
+  des VLM : hallucination, contamination des benchmarks et sensibilité au
+  prompt (d13).
+- **Approfondissements (V2/R)** : video-LLM et vidéo longue, échantillonnage
+  de frames et mémoire (d10) ; modèles vision-langage-action RT-2, OpenVLA
+  et π0 (d12).
+  Les VLA sont étudiés comme frontière perception/action : leurs sorties
+  et limites sont expliquées, sans implémenter une politique de commande
+  robotique ou étendre le périmètre au contrôle.
+- **Cas propres** : conception — indexer des heures de vidéo de surveillance
+  avec un VLM généraliste ou un pipeline détection, tracking et règles ;
+  diagnostic — VLM qui décrit des objets absents sur des images industrielles
+  hors distribution.
+
+### E — Applied Computer Vision
+
+- **Entrées clés (V1/U), inspection industrielle** : éclairage, optiques
+  télécentriques et caméras line-scan (d02) ; golden template et détection
+  d'anomalies PatchCore, PaDiM (d07) ; métrologie et Gauge R&R (d13).
+  L'inspection est retenue comme cas industriel central.
+- **Approfondissements (V2/R), par application** :
+  - Télédétection : imagerie multispectrale et SAR, géoréférencement (d02) ;
+    détection de changements (d09) ; tuilage de grandes images (d14).
+  - Imagerie médicale : formats DICOM/NIfTI et volumes (d02) ; nnU-Net (d09) ;
+    Dice, HD95, validation externe et distinction entre performance algorithmique
+    et utilité clinique (d13).
+  - Biométrie : reconnaissance faciale ArcFace et détection d'attaques par
+    présentation, cadre ISO/IEC 30107 à versionner lors de son étude (d07) ;
+    FMR/FNMR, FAR/FRR selon le protocole, EER, métriques PAD et sous-groupes (d13).
+  - Documents : OCR CRNN/CTC et TrOCR, mise en page LayoutLM, Donut sans OCR
+    (d07) ; CER et WER (d13).
+- **Cas propres** : conception — inspection de défauts rares sur une ligne
+  cadencée avec très peu d'exemples défectueux ; diagnostic — modèle de
+  télédétection qui se dégrade d'une saison à l'autre.
+
+### F — Vision Systems & Deployment
+
+- **Entrées clés (V1/U)** : modèle d'exécution GPU, hiérarchie mémoire,
+  transferts et profilage Nsight (d14) ; runtimes TensorRT, ONNX Runtime,
+  OpenVINO et LiteRT (d14) ; PTQ/QAT, granularité et calibration représentative,
+  avec INT8/FP8 selon opérateurs, runtime et matériel (d14) ; pruning
+  et distillation, utiles aussi au pôle A (d14) ; pipelines vidéo : décodage
+  matériel NVDEC, GStreamer/DeepStream, zéro-copie, batching et contre-pression
+  (d14) ; budget de latence de bout en bout, p50/p99 et gigue (d14).
+- **Approfondissements (V2/R)** : cibles embarquées Jetson et NPU, consommation
+  et thermique (d14) ; serving avec Triton (d14) ; mises à jour OTA et
+  surveillance en périphérie (d14).
+- **Cas propres** : conception — huit flux 1080p à 30 images/s sur un module
+  embarqué, avec un p99 contraint ; diagnostic — quantification INT8 sans gain
+  de latence parce que le goulot est le prétraitement CPU ou les transferts.
+
 ## Pilote pédagogique proposé
 
 | Sujet | Ce qu'il permet de vérifier dans la conception |
@@ -153,7 +293,7 @@ canoniques. Les deux étages restent des propositions à valider.
 ## Suivi de couverture pendant la production
 
 Chaque méthode retenue aura une entrée identifiable, au-delà d'une mention
-dans la ligne d'un domaine. Champs attendus : identifiant, domaine,
+dans la ligne d'un domaine. Champs attendus : identifiant, domaine, pôles servis,
 problème/famille, méthode/variante, prérequis obligatoires, notions connexes,
 priorité, profondeur cible, compétences visées, sources, fiche canonique,
 cartes ou cas associés et états éditoriaux.
@@ -163,9 +303,9 @@ apparentes de prérequis sont résolues par un socle partagé explicite.
 Une entrée est couverte seulement pour les compétences et la profondeur
 étayées par ses artefacts ; les lacunes restantes sont conservées.
 
-Les spécialisations seront rattachées au socle : inspection industrielle,
-robotique/autonomie, documents/OCR, télédétection, imagerie médicale et autres
-applications pertinentes. Leur inventaire détaillé reste à enrichir.
+Les spécialisations sont décrites par les pôles C (robotique et autonomie)
+et E (télédétection, imagerie médicale, inspection, biométrie et documents).
+Leur inventaire détaillé reste à enrichir à chaque lot.
 
 ## Sources de cadrage
 

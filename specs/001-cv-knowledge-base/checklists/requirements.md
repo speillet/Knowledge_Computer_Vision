@@ -2,7 +2,7 @@
 
 **Objet** : qualité du brouillon de spécification, pas son implémentation.
 **Date** : 2026-10-18
-**Révision** : 3 ; complétée par [la revue de pertinence](../review.md)
+**Révision** : 5 ; complétée par [la revue de pertinence](../review.md)
 **Spécification** : [spec.md](../spec.md)
 
 ## Qualité du contenu
@@ -22,6 +22,7 @@
 - [x] Les parcours disposent de scénarios d'acceptation.
 - [x] Les cas limites scientifiques, pédagogiques et d'export sont identifiés.
 - [x] L'inventaire évolutif est distinct du contenu effectivement produit.
+- [x] Les pôles métiers complètent les domaines sans créer de fiche canonique concurrente.
 - [x] Dépendances et hypothèses, dont la constitution non ratifiée, sont explicites.
 
 ## Préparation de la suite
@@ -37,7 +38,8 @@ Le premier contrôle portait essentiellement sur la forme des exigences.
 La révision 2 ajoute les niveaux de profondeur, contrats de données, critères
 de correction, preuves de revue et évaluation du transfert. La révision 3
 ajoute provenance de rédaction, mesure de la charge de révision, solution de
-repli d'export et famille de conception de système. La
+repli d'export et famille de conception de système. La révision 5 ajoute
+les six pôles métiers en surcouche des domaines. La
 [checklist de pertinence](relevance.md) conserve les questions de relecture.
 
 Les cases décrivent la qualité du brouillon. Elles ne signifient pas que

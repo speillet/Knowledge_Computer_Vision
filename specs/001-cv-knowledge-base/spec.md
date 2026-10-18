@@ -1,9 +1,9 @@
 # Spécification : base de connaissances de computer vision senior
 
-**Branche de travail** : `docs/cv-knowledge-spec`
+**Branche de travail** : `feat/obsidian-pilot`
 **Création** : 2026-10-18
-**Révision éditoriale** : 3, après les revues de pertinence du 2026-10-18
-**Statut** : brouillon de cadrage, à relire ensemble
+**Révision éditoriale** : 6, revue des pôles et couverture thématique le 2026-10-18
+**Statut** : cadrage en implémentation ; validation éditoriale et applicative suivie séparément
 **Périmètre Spec Kit** : `specs/001-cv-knowledge-base`
 
 **Demande** : constituer un vault Obsidian et des flashcards exportables vers
@@ -19,6 +19,24 @@ et détection.
 prose en français, termes techniques anglais et noms originaux conservés ;
 équations expliquées, pseudocode, code et illustrations utiles à la compréhension.
 Les priorités détaillées et le pilote restent des propositions éditoriales.
+
+**Décisions de démarrage, 2026-10-18** : l'utilisateur demande de commencer
+l'implémentation. Le premier lot suit les sept sujets initiaux proposés ;
+le client de révision confirmé est **AnkiDroid sur Android**. Le format d'export
+reste expérimental pendant ce lot, sans validation technique ou pédagogique
+anticipée. Les cartes initiales sont rédigées par un agent, provenance affichée.
+
+**Organisation confirmée** : un répertoire par thématique, inspiré du dépôt
+Knowledge_AI_Engineering indiqué par l'utilisateur. Les cartes et leurs fiches
+de référence sont regroupées dans ce thème ; la navigation et les sous-decks
+Anki suivent cette organisation.
+
+**Pôles métiers, 2026-10-18** : l'utilisateur demande de couvrir six pôles
+liés à des familles de métiers, de A (Image Understanding) à F (Vision Systems
+& Deployment), décrits dans la [cartographie](curriculum.md). Décisions : les
+pôles forment une surcouche des domaines existants, qui restent l'organisation
+du vault ; la vague V0 reste consacrée aux lacunes exprimées (socle d'abord) ;
+les specs sont enrichies d'abord et le report dans le vault suit par tâches.
 
 La [revue de pertinence](review.md) décrit les lacunes de la première version,
 les corrections et les décisions encore ouvertes. La largeur du catalogue,
@@ -122,6 +140,29 @@ en conservant la cohérence des fiches et des cartes existantes.
 2. Les affirmations dépendant d'une expérience ou d'une version conservent leur contexte.
 3. Un changement de format ou d'export est vérifié sur le pilote avant généralisation.
 
+### Parcours 6 — Se préparer à un pôle métier (priorité P2)
+
+Je veux voir, pour une famille de métiers visée, les domaines et sujets à
+travailler, leur profondeur cible et leur état, puis m'entraîner sur des cas
+propres à ce métier.
+
+**Justification** : relier la couverture générale aux attentes des postes
+visés, sans dupliquer les fiches.
+
+**Validation indépendante** : examiner le cadrage d'un pôle dans la cartographie
+avant la rédaction de ses fiches.
+
+**Scénarios d'acceptation** :
+
+1. Pour un pôle, je retrouve périmètre, métiers indicatifs, domaines mobilisés,
+   entrées clés et approfondissements, chacun avec son domaine d'accueil.
+2. Un sujet servant plusieurs pôles, comme CLIP pour A et D, n'a qu'une fiche
+   canonique, reliée depuis chacun d'eux.
+3. L'avancement d'un pôle distingue entrées inventoriées, rédigées et relues,
+   sans en déduire ma maîtrise ni mon aptitude à un poste.
+4. Chaque pôle propose un cas de conception et un cas de diagnostic propres à
+   ses métiers, corrigibles avec des critères explicites.
+
 ### Cas limites
 
 - Repère, unité, transformation ou convention de coordonnées ambiguë.
@@ -144,6 +185,10 @@ en conservant la cohérence des fiches et des cartes existantes.
 - Source citée qui ne soutient pas réellement l'affirmation, notamment après
   une rédaction assistée par un agent.
 - Rendu correct sur Anki Desktop mais dégradé sur le client utilisé pour réviser.
+- Sujet servant plusieurs pôles, rédigé deux fois de façon divergente.
+- Intitulé de métier dont le contenu varie selon l'entreprise ou le secteur.
+- Modèles et outils à évolution rapide (VLM, VLA, runtimes d'inférence) cités
+  sans date ni version.
 
 ## Exigences
 
@@ -249,6 +294,30 @@ en conservant la cohérence des fiches et des cartes existantes.
   rédaction : apprenant, agent ou mixte. Une affirmation centrale rédigée par
   un agent n'est validée qu'après confrontation au passage de la source citée ;
   la présence d'une référence ne suffit pas.
+- **FR-039** : le vault DOIT être organisé par répertoire thématique numéroté,
+  avec index de section et sommaire central. Les cartes d'un thème et leurs
+  références canoniques DOIVENT être regroupées dans son répertoire ; le deck
+  cible suit la thématique. Le déplacement DOIT préserver les identifiants et
+  mettre à jour liens, médias et contrôles. Une section sans contenu rédigé
+  DOIT afficher son état, sans être comptée comme couverture acquise.
+- **FR-040** : la [cartographie](curriculum.md) DOIT définir six pôles métiers,
+  de A à F, chacun avec périmètre, métiers indicatifs, domaines mobilisés,
+  entrées clés et approfondissements. Les pôles ne remplacent pas les domaines :
+  chaque entrée propre à un pôle a un seul domaine d'accueil, et un sujet
+  partagé entre pôles garde une seule fiche canonique.
+- **FR-041** : chaque entrée d'inventaire DOIT indiquer les pôles qu'elle sert ;
+  fiches et cartes exportées portent ces pôles en étiquettes, afin de suivre
+  l'avancement par pôle séparément de la maîtrise personnelle.
+- **FR-042** : chaque pôle DOIT proposer au moins un cas de conception de
+  système et un cas de diagnostic propres à ses métiers, avec réponse de
+  référence et critères de correction selon le contrat pédagogique.
+- **FR-043** : les priorités DOIVENT suivre le principe « socle d'abord » :
+  la vague V0 reste consacrée aux lacunes exprimées ; les entrées clés d'un pôle
+  nouvellement introduites visent V1 et l'usage opérationnel, les autres V2.
+  Une entrée déjà priorisée V0 conserve cette priorité même si plusieurs pôles
+  la réutilisent. La couverture d'un pôle se
+  mesure par ses artefacts et NE DOIT PAS être présentée comme une aptitude
+  à un poste.
 
 ### Entités principales
 
@@ -259,14 +328,18 @@ en conservant la cohérence des fiches et des cartes existantes.
 - **Fiche** : explication canonique d'un sujet, cartes liées, état éditorial
   et provenance de rédaction.
 - **Carte pédagogique** : identifiant, question, objectif, réponse,
-  critères de correction, références, fiche parente, domaine, famille
-  et provenance de rédaction.
+  critères de correction, références, fiche parente, domaine, famille,
+  pôles et provenance de rédaction.
 - **Note / carte Anki** : objets de destination ; une note peut générer
   plusieurs cartes selon le modèle. Leurs identités et nombres sont distincts.
 - **Source** : référence primaire, localisation et contexte de version si nécessaire.
 - **Cas industriel** : scénario, contraintes, hypothèses, alternatives,
   observations et critères d'une réponse satisfaisante.
-- **Entrée de couverture** : sujet, priorité, prérequis, états éditoriaux et lacunes.
+- **Entrée de couverture** : sujet, domaine d'accueil, pôles servis, priorité,
+  prérequis, états éditoriaux et lacunes.
+- **Pôle métier** : périmètre, métiers indicatifs, domaines mobilisés, entrées
+  clés et approfondissements avec leur domaine d'accueil, cas propres et
+  avancement éditorial.
 - **Compétence / profondeur cible** : résultat observable attendu pour un sujet,
   relié à ses artefacts et distinct de sa priorité ou de sa maîtrise personnelle.
 - **Preuve de revue ou d'essai** : version de contenu, date, responsable,
@@ -314,11 +387,35 @@ Ce statut ne signifie ni export validé, ni maîtrise personnelle acquise.
 - **SC-010** : 100 % des fiches et cartes publiées indiquent leur provenance
   de rédaction ; pour un contenu rédigé par un agent, la revue consigne les
   affirmations centrales confrontées à leur source.
+- **SC-011** : chacun des six pôles a, dans la cartographie, son périmètre,
+  ses métiers indicatifs, ses domaines mobilisés, ses entrées clés et
+  approfondissements avec un domaine d'accueil unique, ainsi qu'un cas de
+  conception et un cas de diagnostic avec réponses de référence, hypothèses,
+  vérifications discriminantes et critères de correction ; les seuls énoncés
+  ne suffisent pas à satisfaire ce critère.
+- **SC-012** : aucun sujet partagé entre pôles n'a deux fiches canoniques ;
+  l'avancement éditorial de chaque pôle est consultable dans le vault,
+  distinct de la maîtrise personnelle.
+- **SC-013** : chacun des quatorze domaines comporte des fiches et cartes
+  effectives pour les entrées retenues dans le lot de couverture. La matrice
+  distingue cette couverture thématique, le traitement détaillé de chaque
+  algorithme, les variantes seulement introduites et les sujets restant à rédiger.
+  Aucun de ces états ne vaut validation d'export ou compétence professionnelle.
 
 ## Hypothèses et décisions ouvertes
 
 - Les domaines de la cartographie traduisent l'ambition de couverture large ; les
   spécialisations et variantes seront enrichies par inventaire.
+- Les six pôles et leurs intitulés de métiers proviennent de la demande de
+  l'utilisateur du 2026-10-18. Les intitulés sont indicatifs : leur contenu
+  varie selon les entreprises.
+- Pour le pôle C, la planification de trajectoire et le contrôle sont hors
+  périmètre ; seule la perception qui les alimente est couverte.
+- Le pilote technique reste un échantillon de validation. La demande actuelle
+  autorise la préparation éditoriale des quatorze domaines et des six pôles
+  avant son achèvement ; les contenus gardent leur statut rédigé et leur format
+  d'export provisoire. L'adoption et la diffusion automatisée à grande échelle
+  restent conditionnées aux essais, notamment à l'historique et au rendu mobile.
 - Priorités, niveaux de profondeur, pilote en deux étages et protocole de
   transfert sont proposés à partir des lacunes exprimées ; ils ne réduisent
   pas la couverture finale et restent ajustables après relecture.
@@ -342,8 +439,9 @@ Ce statut ne signifie ni export validé, ni maîtrise personnelle acquise.
   séparation des états éditoriaux et de la maîtrise (FR-026).
 - La destination de `to-spec` n'est pas choisie. Ce brouillon local utilise
   Spec Kit et ne publie aucune issue.
-- Cette phase exclut production massive de cartes, installation dans les
-  applications personnelles, synchroniseur sur mesure et nouveau cursus général ML/DL.
+- Cette phase inclut la rédaction des contenus manquants par thème, à la demande
+  de l'utilisateur. Elle exclut l'installation dans les applications personnelles,
+  un synchroniseur sur mesure et un nouveau cursus général ML/DL.
   Un paquet `.apkg` généré reste un plan B documenté dans la [recherche](research.md).
 - Les cartes soutiennent les compétences visées ; un nombre de cartes ou leur
   mémorisation ne peut pas certifier à lui seul le statut de senior.

@@ -87,6 +87,19 @@ en issues et ne doit être invoqué que lorsque cette publication est souhaitée
 L'invocation avec `$speckit-…` est celle documentée pour
 [l'intégration Codex](https://github.github.com/spec-kit/reference/integrations.html).
 
+## Skill local de revue des cartes
+
+`.agents/skills/revue-cartes/` est un skill propre au projet, versionné avec
+le dépôt. Il audite une fiche et ses cartes sur l'exactitude, la pertinence,
+la corrigibilité et la cohérence, puis il applique les corrections et consigne
+chaque changement dans le journal du suivi. Il propose les enrichissements,
+qui ne sont appliqués qu'après accord. Codex l'invoque avec `$revue-cartes`.
+Claude Code y accède par le lien symbolique `.claude/skills/revue-cartes` et
+l'invoque avec `/revue-cartes`. Son script
+`scripts/inventaire_cartes.py` liste les cartes en lecture seule et compare deux
+inventaires pour vérifier que IDs et identités Anki sont préservés.
+Le skill ne remplace ni `scripts/check_vault.py` ni une relecture par l'apprenant.
+
 ## Context7 : configuration et utilisation réelle
 
 Le serveur est enregistré dans `~/.codex/config.toml` :
