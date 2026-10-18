@@ -182,3 +182,12 @@ Essayer le pilote dans les applications, puis mesurer le rappel initial et
 différé sur l’échantillon fixé avant résultats.
 Le pilote doit permettre de modifier le contrat s'il génère du remplissage,
 des réponses impossibles à corriger ou des comparaisons insuffisamment justifiées.
+
+## Revue avant publication
+
+La revue à deux axes est consignée dans le
+[rapport de livraison](../../docs/pre-merge-review.md). Le gabarit du skill
+local inclut maintenant les tags de pôles attendus. Les entrées APP ont un
+lien thématique, mais leurs compétences et dépendances restent à préparer
+(T023) : SC-001 est partiellement satisfait pour ce backlog, sans remettre
+en cause la couverture thématique du lot livré (SC-013).

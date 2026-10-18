@@ -86,13 +86,13 @@ def outputs(root):
             prereqs = json.loads(e.get('prerequis', '[]'))
             pre = ', '.join(f"[{p}](../{by_id[p]['ref']})" if p in by_id else p for p in prereqs) or '[Conventions](Pre-requis.md)'
             inv += f"| {e['id']} — {e['title']} / {e['type']} | {e['priorite']} / {e['profondeur']} | {', '.join(e['poles'])} | {pre} | [Fiche](../{e['ref']}) · [{len(e['card_ids'])} cartes](../{e['cards_path']}) | {e['statut']}, export non vérifié ; maîtrise non mesurée |\n"
-    inv += '\n## Approfondissements encore ouverts\n\nCette liste conserve des méthodes/variantes nommées dans la cartographie mais non traitées individuellement à la profondeur cible. Une introduction dans une comparaison ou un pipeline ne ferme pas cette lacune. Les sources seront vérifiées à leur rédaction.\n\n'
+    inv += '\n## Approfondissements encore ouverts\n\nCette liste conserve des méthodes/variantes nommées dans la cartographie mais non traitées individuellement à la profondeur cible. Une introduction dans une comparaison ou un pipeline ne ferme pas cette lacune. Les objectifs d’apprentissage, dépendances obligatoires et sources seront précisés avant leur rédaction. Les liens ci-dessous sont des connexions thématiques, pas des prérequis déjà validés.\n\n'
     targets = json.loads((root / 'scripts/coverage_targets.json').read_text(encoding='utf-8'))
-    inv += '| Entrée | Domaine | Pôles | Cible | Prérequis / lien connexe | État |\n| --- | --- | --- | --- | --- | --- |\n'
+    inv += '| Entrée | Domaine | Pôles | Cible | Connexion thématique | État |\n| --- | --- | --- | --- | --- | --- |\n'
     for t in targets:
         parent = by_id.get(t.get('connexe'))
         link = f"[Introduction connexe](../{parent['ref']})" if parent else 'À préciser avant rédaction'
-        inv += f"| {t['id']} — {t['titre']} | {t['domaine']} | {', '.join(t['poles'])} | {t['priorite']} / {t['profondeur']} | {link} | À approfondir ; source à vérifier |\n"
+        inv += f"| {t['id']} — {t['titre']} | {t['domaine']} | {', '.join(t['poles'])} | {t['priorite']} / {t['profondeur']} | {link} | À approfondir ; compétences, prérequis et source à préciser |\n"
     result[vault / '01-Parcours/Inventaire.md'] = inv
     pole_doc = '# Parcours par pôle métier\n\nLes pôles sont une surcouche des thèmes ; une fiche partagée conserve un seul domaine et un seul ID. Ces comptes suivent la rédaction, pas l’aptitude à un poste ni la maîtrise. La vague V0 reste prioritaire.\n\n'
     for letter, title in POLES.items():
