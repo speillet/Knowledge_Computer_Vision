@@ -1,0 +1,1513 @@
+[
+  {
+    "id": "APP-001",
+    "titre": "GTSAM",
+    "domaine": "d01",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FACTEURS"
+  },
+  {
+    "id": "APP-002",
+    "titre": "iSAM2",
+    "domaine": "d01",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FACTEURS"
+  },
+  {
+    "id": "APP-003",
+    "titre": "UKF",
+    "domaine": "d01",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FUSION"
+  },
+  {
+    "id": "APP-004",
+    "titre": "ESKF : injection et reset détaillés",
+    "domaine": "d01",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FUSION"
+  },
+  {
+    "id": "APP-005",
+    "titre": "Caméras événementielles",
+    "domaine": "d02",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-CAPTEURS"
+  },
+  {
+    "id": "APP-006",
+    "titre": "LiDAR : modèles de bruit",
+    "domaine": "d02",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-CAPTEURS"
+  },
+  {
+    "id": "APP-007",
+    "titre": "Radar : modèles de mesure",
+    "domaine": "d02",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-CAPTEURS"
+  },
+  {
+    "id": "APP-008",
+    "titre": "ToF : ambiguïtés et bruit",
+    "domaine": "d02",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-CAPTEURS"
+  },
+  {
+    "id": "APP-009",
+    "titre": "Optiques télécentriques",
+    "domaine": "d02",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-IMAGERIES"
+  },
+  {
+    "id": "APP-010",
+    "titre": "Line-scan : calibration complète",
+    "domaine": "d02",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-IMAGERIES"
+  },
+  {
+    "id": "APP-011",
+    "titre": "Imagerie multispectrale",
+    "domaine": "d02",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-IMAGERIES"
+  },
+  {
+    "id": "APP-012",
+    "titre": "SAR",
+    "domaine": "d02",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-IMAGERIES"
+  },
+  {
+    "id": "APP-013",
+    "titre": "Géoréférencement",
+    "domaine": "d02",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-IMAGERIES"
+  },
+  {
+    "id": "APP-014",
+    "titre": "DICOM et NIfTI : lecture des transformations",
+    "domaine": "d02",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-IMAGERIES"
+  },
+  {
+    "id": "APP-015",
+    "titre": "Fourier et filtrage fréquentiel",
+    "domaine": "d03",
+    "poles": [
+      "B",
+      "E",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FILTRES"
+  },
+  {
+    "id": "APP-016",
+    "titre": "Restauration et déconvolution",
+    "domaine": "d03",
+    "poles": [
+      "B",
+      "E",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FILTRES"
+  },
+  {
+    "id": "APP-017",
+    "titre": "Harris : localisation",
+    "domaine": "d04",
+    "poles": [
+      "B",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCHING"
+  },
+  {
+    "id": "APP-018",
+    "titre": "Shi–Tomasi : critères",
+    "domaine": "d04",
+    "poles": [
+      "B",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCHING"
+  },
+  {
+    "id": "APP-019",
+    "titre": "FAST : variantes",
+    "domaine": "d04",
+    "poles": [
+      "B",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCHING"
+  },
+  {
+    "id": "APP-020",
+    "titre": "BRIEF : construction",
+    "domaine": "d04",
+    "poles": [
+      "B",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCHING"
+  },
+  {
+    "id": "APP-021",
+    "titre": "AKAZE",
+    "domaine": "d04",
+    "poles": [
+      "B",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCHING"
+  },
+  {
+    "id": "APP-022",
+    "titre": "FLANN : index et métriques",
+    "domaine": "d04",
+    "poles": [
+      "B",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCHING"
+  },
+  {
+    "id": "APP-023",
+    "titre": "SuperGlue",
+    "domaine": "d04",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCH-APPRIS"
+  },
+  {
+    "id": "APP-024",
+    "titre": "LightGlue : adaptation du calcul",
+    "domaine": "d04",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCH-APPRIS"
+  },
+  {
+    "id": "APP-025",
+    "titre": "LoFTR : correspondances coarse-to-fine",
+    "domaine": "d04",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MATCH-APPRIS"
+  },
+  {
+    "id": "APP-026",
+    "titre": "Calibration fisheye",
+    "domaine": "d05",
+    "poles": [
+      "B",
+      "C",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MULTICALIB"
+  },
+  {
+    "id": "APP-027",
+    "titre": "Hand-eye : solveurs et dégénérescences",
+    "domaine": "d05",
+    "poles": [
+      "B",
+      "C",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MULTICALIB"
+  },
+  {
+    "id": "APP-028",
+    "titre": "Calibration temporelle multicapteurs",
+    "domaine": "d05",
+    "poles": [
+      "B",
+      "C",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-MULTICALIB"
+  },
+  {
+    "id": "APP-029",
+    "titre": "PnP : variantes et ambiguïtés",
+    "domaine": "d05",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-EPIPOLAIRE"
+  },
+  {
+    "id": "APP-030",
+    "titre": "Triangulation : incertitude",
+    "domaine": "d05",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-EPIPOLAIRE"
+  },
+  {
+    "id": "APP-031",
+    "titre": "Rectification stéréo",
+    "domaine": "d05",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-EPIPOLAIRE"
+  },
+  {
+    "id": "APP-032",
+    "titre": "MSCKF",
+    "domaine": "d06",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIO"
+  },
+  {
+    "id": "APP-033",
+    "titre": "VINS-Mono",
+    "domaine": "d06",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIO"
+  },
+  {
+    "id": "APP-034",
+    "titre": "OKVIS",
+    "domaine": "d06",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIO"
+  },
+  {
+    "id": "APP-035",
+    "titre": "DBoW2",
+    "domaine": "d06",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIO"
+  },
+  {
+    "id": "APP-036",
+    "titre": "NetVLAD",
+    "domaine": "d06",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIO"
+  },
+  {
+    "id": "APP-037",
+    "titre": "LOAM",
+    "domaine": "d06",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIO"
+  },
+  {
+    "id": "APP-038",
+    "titre": "NDT",
+    "domaine": "d06",
+    "poles": [
+      "B",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIO"
+  },
+  {
+    "id": "APP-039",
+    "titre": "MVS",
+    "domaine": "d06",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-RENDU3D"
+  },
+  {
+    "id": "APP-040",
+    "titre": "Fusion TSDF",
+    "domaine": "d06",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-RENDU3D"
+  },
+  {
+    "id": "APP-041",
+    "titre": "DUSt3R",
+    "domaine": "d06",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-RENDU3D"
+  },
+  {
+    "id": "APP-042",
+    "titre": "MASt3R",
+    "domaine": "d06",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-RENDU3D"
+  },
+  {
+    "id": "APP-043",
+    "titre": "Depth Anything",
+    "domaine": "d06",
+    "poles": [
+      "B"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-RENDU3D"
+  },
+  {
+    "id": "APP-044",
+    "titre": "PointNet++",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-045",
+    "titre": "Lift-Splat-Shoot",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-046",
+    "titre": "BEVFormer : attention",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-047",
+    "titre": "BEVFusion",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-048",
+    "titre": "Semantic occupancy",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-049",
+    "titre": "Occupancy Networks",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-050",
+    "titre": "SDF",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-051",
+    "titre": "Espace libre et traversabilité",
+    "domaine": "d06",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-BEV"
+  },
+  {
+    "id": "APP-052",
+    "titre": "HOG",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-053",
+    "titre": "ResNet",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-054",
+    "titre": "ViT : architecture et transfert",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-055",
+    "titre": "Swin : fenêtres décalées",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-056",
+    "titre": "ConvNeXt : recette",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-057",
+    "titre": "DINOv2 : objectifs",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-058",
+    "titre": "MAE",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-059",
+    "titre": "LoRA et adapters visuels",
+    "domaine": "d07",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-REPRESENTATIONS"
+  },
+  {
+    "id": "APP-060",
+    "titre": "SigLIP : loss détaillée",
+    "domaine": "d07",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-CLIP"
+  },
+  {
+    "id": "APP-061",
+    "titre": "PaDiM : covariance",
+    "domaine": "d07",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-ANOMALIES"
+  },
+  {
+    "id": "APP-062",
+    "titre": "PatchCore : repondération",
+    "domaine": "d07",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-ANOMALIES"
+  },
+  {
+    "id": "APP-063",
+    "titre": "ArcFace : marge angulaire",
+    "domaine": "d07",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-BIOMETRIE"
+  },
+  {
+    "id": "APP-064",
+    "titre": "PAD et cadre ISO/IEC 30107",
+    "domaine": "d07",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-BIOMETRIE"
+  },
+  {
+    "id": "APP-065",
+    "titre": "CRNN et CTC",
+    "domaine": "d07",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-OCR"
+  },
+  {
+    "id": "APP-066",
+    "titre": "TrOCR",
+    "domaine": "d07",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-OCR"
+  },
+  {
+    "id": "APP-067",
+    "titre": "LayoutLM",
+    "domaine": "d07",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-OCR"
+  },
+  {
+    "id": "APP-068",
+    "titre": "Donut",
+    "domaine": "d07",
+    "poles": [
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-OCR"
+  },
+  {
+    "id": "APP-069",
+    "titre": "PointPillars",
+    "domaine": "d08",
+    "poles": [
+      "A",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-POSE3D"
+  },
+  {
+    "id": "APP-070",
+    "titre": "CenterPoint",
+    "domaine": "d08",
+    "poles": [
+      "A",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-POSE3D"
+  },
+  {
+    "id": "APP-071",
+    "titre": "Pose articulée 2D et 3D",
+    "domaine": "d08",
+    "poles": [
+      "A",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-POSE3D"
+  },
+  {
+    "id": "APP-072",
+    "titre": "Pose 6D d'objet",
+    "domaine": "d08",
+    "poles": [
+      "A",
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-POSE3D"
+  },
+  {
+    "id": "APP-073",
+    "titre": "Grounding DINO",
+    "domaine": "d08",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-OPENVOC"
+  },
+  {
+    "id": "APP-074",
+    "titre": "OWL-ViT",
+    "domaine": "d08",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-OPENVOC"
+  },
+  {
+    "id": "APP-075",
+    "titre": "U-Net",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SEGMENTATION"
+  },
+  {
+    "id": "APP-076",
+    "titre": "DeepLab",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SEGMENTATION"
+  },
+  {
+    "id": "APP-077",
+    "titre": "Mask R-CNN",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SEGMENTATION"
+  },
+  {
+    "id": "APP-078",
+    "titre": "nnU-Net",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-SEGMENTATION"
+  },
+  {
+    "id": "APP-079",
+    "titre": "Contours actifs",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SEGMENTATION"
+  },
+  {
+    "id": "APP-080",
+    "titre": "Superpixels",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SEGMENTATION"
+  },
+  {
+    "id": "APP-081",
+    "titre": "Region growing",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SEGMENTATION"
+  },
+  {
+    "id": "APP-082",
+    "titre": "SAM 2 : mémoire vidéo",
+    "domaine": "d09",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SAM"
+  },
+  {
+    "id": "APP-083",
+    "titre": "TimeSformer",
+    "domaine": "d10",
+    "poles": [
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIDEO"
+  },
+  {
+    "id": "APP-084",
+    "titre": "ViViT",
+    "domaine": "d10",
+    "poles": [
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIDEO"
+  },
+  {
+    "id": "APP-085",
+    "titre": "VideoMAE",
+    "domaine": "d10",
+    "poles": [
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIDEO"
+  },
+  {
+    "id": "APP-086",
+    "titre": "Localisation temporelle d'actions",
+    "domaine": "d10",
+    "poles": [
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIDEO"
+  },
+  {
+    "id": "APP-087",
+    "titre": "Video-LLM et mémoire longue",
+    "domaine": "d10",
+    "poles": [
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VIDEO"
+  },
+  {
+    "id": "APP-088",
+    "titre": "CoTracker3",
+    "domaine": "d10",
+    "poles": [
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-VIDEO"
+  },
+  {
+    "id": "APP-089",
+    "titre": "Farnebäck",
+    "domaine": "d10",
+    "poles": [
+      "B",
+      "C",
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FLOT"
+  },
+  {
+    "id": "APP-090",
+    "titre": "RAFT : corrélations et update",
+    "domaine": "d10",
+    "poles": [
+      "B",
+      "C",
+      "D"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FLOT"
+  },
+  {
+    "id": "APP-091",
+    "titre": "AB3DMOT",
+    "domaine": "d11",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-ASSOCIATION"
+  },
+  {
+    "id": "APP-092",
+    "titre": "MeanShift et CamShift",
+    "domaine": "d11",
+    "poles": [
+      "C",
+      "D",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SOT"
+  },
+  {
+    "id": "APP-093",
+    "titre": "Filtres de corrélation",
+    "domaine": "d11",
+    "poles": [
+      "C",
+      "D",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SOT"
+  },
+  {
+    "id": "APP-094",
+    "titre": "SiamFC et suivi siamois",
+    "domaine": "d11",
+    "poles": [
+      "C",
+      "D",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-SOT"
+  },
+  {
+    "id": "APP-095",
+    "titre": "Florence-2",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VLM"
+  },
+  {
+    "id": "APP-096",
+    "titre": "BLIP-2 : Q-Former",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VLM"
+  },
+  {
+    "id": "APP-097",
+    "titre": "LLaVA : variantes",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VLM"
+  },
+  {
+    "id": "APP-098",
+    "titre": "Flamingo",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VLM"
+  },
+  {
+    "id": "APP-099",
+    "titre": "RT-2",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VLM"
+  },
+  {
+    "id": "APP-100",
+    "titre": "OpenVLA",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VLM"
+  },
+  {
+    "id": "APP-101",
+    "titre": "π0",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-VLM"
+  },
+  {
+    "id": "APP-102",
+    "titre": "VAE",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-DIFFUSION"
+  },
+  {
+    "id": "APP-103",
+    "titre": "GAN",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-DIFFUSION"
+  },
+  {
+    "id": "APP-104",
+    "titre": "Diffusion latente : sampler et guidance",
+    "domaine": "d12",
+    "poles": [
+      "A",
+      "D",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-DIFFUSION"
+  },
+  {
+    "id": "APP-105",
+    "titre": "Active learning",
+    "domaine": "d13",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FIABILITE"
+  },
+  {
+    "id": "APP-106",
+    "titre": "Long-tail et stratégie d'annotation",
+    "domaine": "d13",
+    "poles": [
+      "A"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-FIABILITE"
+  },
+  {
+    "id": "APP-107",
+    "titre": "NDS et mAP nuScenes",
+    "domaine": "d13",
+    "poles": [
+      "C"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-METRIQUES-TEMPS"
+  },
+  {
+    "id": "APP-108",
+    "titre": "PQ",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-109",
+    "titre": "HD95 : conventions",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-110",
+    "titre": "AU-PRO",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-111",
+    "titre": "Gauge R&R",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-112",
+    "titre": "FMR et FNMR",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-113",
+    "titre": "FAR et FRR système",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-114",
+    "titre": "EER",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-115",
+    "titre": "Métriques PAD",
+    "domaine": "d13",
+    "poles": [
+      "A",
+      "E"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-METRIQUES-APPLIQUEES"
+  },
+  {
+    "id": "APP-116",
+    "titre": "ONNX Runtime",
+    "domaine": "d14",
+    "poles": [
+      "A",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-QUANT"
+  },
+  {
+    "id": "APP-117",
+    "titre": "OpenVINO",
+    "domaine": "d14",
+    "poles": [
+      "A",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-QUANT"
+  },
+  {
+    "id": "APP-118",
+    "titre": "LiteRT",
+    "domaine": "d14",
+    "poles": [
+      "A",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-QUANT"
+  },
+  {
+    "id": "APP-119",
+    "titre": "TensorRT : précision et kernels",
+    "domaine": "d14",
+    "poles": [
+      "A",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-QUANT"
+  },
+  {
+    "id": "APP-120",
+    "titre": "Pruning",
+    "domaine": "d14",
+    "poles": [
+      "A",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-QUANT"
+  },
+  {
+    "id": "APP-121",
+    "titre": "Distillation visuelle",
+    "domaine": "d14",
+    "poles": [
+      "A",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-QUANT"
+  },
+  {
+    "id": "APP-122",
+    "titre": "ROS 2 et QoS",
+    "domaine": "d14",
+    "poles": [
+      "C",
+      "E",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-PIPELINE"
+  },
+  {
+    "id": "APP-123",
+    "titre": "NVDEC",
+    "domaine": "d14",
+    "poles": [
+      "C",
+      "E",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-PIPELINE"
+  },
+  {
+    "id": "APP-124",
+    "titre": "DeepStream",
+    "domaine": "d14",
+    "poles": [
+      "C",
+      "E",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-PIPELINE"
+  },
+  {
+    "id": "APP-125",
+    "titre": "GStreamer et zéro-copie",
+    "domaine": "d14",
+    "poles": [
+      "C",
+      "E",
+      "F"
+    ],
+    "priorite": "V1",
+    "profondeur": "usage-operationnel",
+    "connexe": "CV-PIPELINE"
+  },
+  {
+    "id": "APP-126",
+    "titre": "Jetson et NPU",
+    "domaine": "d14",
+    "poles": [
+      "F"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-DEPLOIEMENT"
+  },
+  {
+    "id": "APP-127",
+    "titre": "Thermique et consommation",
+    "domaine": "d14",
+    "poles": [
+      "F"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-DEPLOIEMENT"
+  },
+  {
+    "id": "APP-128",
+    "titre": "Triton serving",
+    "domaine": "d14",
+    "poles": [
+      "F"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-DEPLOIEMENT"
+  },
+  {
+    "id": "APP-129",
+    "titre": "OTA et rollback",
+    "domaine": "d14",
+    "poles": [
+      "F"
+    ],
+    "priorite": "V2",
+    "profondeur": "reperage",
+    "connexe": "CV-DEPLOIEMENT"
+  }
+]

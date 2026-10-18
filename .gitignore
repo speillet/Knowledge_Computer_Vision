@@ -1,7 +1,9 @@
 # État local d'Obsidian ; la configuration partageable reste versionnable.
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-.obsidian/cache/
+**/.obsidian/workspace.json
+**/.obsidian/workspace-mobile.json
+**/.obsidian/cache/
+vault/.obsidian/*
+!vault/.obsidian/app.json
 .trash/
 
 # Fichiers locaux et identifiants.

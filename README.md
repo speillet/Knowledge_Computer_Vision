@@ -3,9 +3,35 @@
 Construire un vault Obsidian de connaissances et de flashcards pour progresser
 vers un niveau de Computer Vision Engineer senior.
 
-Les cartes doivent expliquer les problèmes en profondeur : intuition, formulation,
-hypothèses, méthodes, compromis, limites et cas d'usage. Le format d'export Anki
-sera fixé avec le choix du plugin Obsidian et vérifié sur un petit échantillon.
+Le premier lot comprend **sept fiches de référence et 47 cartes détaillées** :
+SIFT, ORB, RANSAC/homographie, calibration de Zhang, SORT, NMS et IoU/AP COCO.
+Prose en français, termes techniques originaux, équations expliquées et diagnostics.
+
+Ouvrir le dossier [`vault/`](vault/00-Accueil.md) comme vault dans Obsidian,
+puis commencer par son accueil. Le [guide d'export](vault/01-Parcours/Guide-Anki.md)
+prépare Obsidian_to_Anki et la révision sur **AnkiDroid** via Desktop/AnkiWeb.
+Le format reste expérimental : le parseur officiel a été testé localement,
+mais aucun export réel ni historique de révision n'est encore validé.
+
+Le vault suit l'organisation par thématique de
+[Knowledge_AI_Engineering](https://github.com/speillet/Knowledge_AI_Engineering) :
+14 dossiers numérotés avec index, cartes à la racine de chaque thème et fiches
+complètes dans `references/`. Les cinq thèmes du premier lot ont chacun un
+sous-deck Anki. Les neuf autres affichent explicitement leur contenu à rédiger.
+Voir les [conventions de classement](docs/vault-layout.md).
+
+## Vérification locale
+
+Python 3.9+, sans dépendance supplémentaire :
+
+```sh
+python3 scripts/check_vault.py
+python3 -m unittest discover -s tests -v
+python3 examples/pilot_math.py
+```
+
+Les [preuves et essais restants](vault/01-Parcours/Suivi-pilote.md) distinguent
+contrôles locaux, auto-revue, tests applicatifs et maîtrise personnelle.
 
 ## Outils de travail
 
@@ -25,8 +51,10 @@ Il est accompagné de :
 - La [recherche sur l'export Obsidian–Anki](specs/001-cv-knowledge-base/research.md).
 - La [revue de pertinence et ses corrections](specs/001-cv-knowledge-base/review.md).
 
-Le plugin pressenti reste à confirmer par un pilote ; aucun export réel ni
-contenu pédagogique du pilote n'a encore été produit.
+Le [plan d'implémentation](specs/001-cv-knowledge-base/plan.md) et ses
+[tâches](specs/001-cv-knowledge-base/tasks.md) suivent le premier lot et la
+suite du pilote. Le catalogue complet, les extensions et la validation
+pédagogique restent à développer ; le contenu n'est pas déclaré exhaustif.
 
 GitHub Spec Kit 1.2.1 est initialisé pour Codex. Ses skills sont versionnables
 dans `.agents/skills/` ; ses modèles et scripts se trouvent dans `.specify/`.
@@ -53,3 +81,26 @@ Sur la machine auditée, Context7 est configuré comme serveur MCP distant dans 
 Cette configuration utilisateur n'est pas embarquée dans un clone. Context7 sert à vérifier
 la documentation des outils et bibliothèques utilisés. Les notions scientifiques
 doivent s'appuyer sur des articles et autres sources primaires.
+
+## Couverture actuelle
+
+<!-- cv-catalog:start -->
+**7 fiches et 47 cartes**, réparties dans 5 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+
+| Thématique | Fiches | Cartes |
+| --- | ---: | ---: |
+| [Mathématiques et estimation](vault/10-mathematiques-estimation/00-index.md) | 0 | 0 |
+| [Formation et acquisition des images](vault/20-acquisition-images/00-index.md) | 0 | 0 |
+| [Traitement d'image classique](vault/30-traitement-image/00-index.md) | 0 | 0 |
+| [Features, matching et recalage](vault/40-features-matching/00-index.md) | 2 | 13 |
+| [Calibration et géométrie multivue](vault/50-calibration-geometrie/00-index.md) | 2 | 14 |
+| [Vision 3D](vault/60-vision-3d/00-index.md) | 0 | 0 |
+| [Reconnaissance et représentations](vault/70-reconnaissance-representations/00-index.md) | 0 | 0 |
+| [Détection et pose](vault/80-detection-pose/00-index.md) | 1 | 5 |
+| [Segmentation](vault/90-segmentation/00-index.md) | 0 | 0 |
+| [Mouvement et vidéo](vault/100-mouvement-video/00-index.md) | 0 | 0 |
+| [Tracking et association](vault/110-tracking-association/00-index.md) | 1 | 8 |
+| [Vision générative et multimodale](vault/120-generatif-multimodal/00-index.md) | 0 | 0 |
+| [Données, évaluation et fiabilité](vault/130-evaluation-fiabilite/00-index.md) | 1 | 7 |
+| [Ingénierie des systèmes de vision](vault/140-ingenierie-systemes/00-index.md) | 0 | 0 |
+<!-- cv-catalog:end -->
