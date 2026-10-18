@@ -4,8 +4,10 @@
 **Périmètre** : spécification, cartographie, contrat pédagogique et recherche d'export.
 **Type de revue** : auto-revue assistée par l'agent auteur, confrontée à des sources
 primaires ; elle ne constitue pas une expertise scientifique indépendante.
-**Résultat** : révisions éditoriales 2 et 3 du brouillon, toujours à relire avec
-l'utilisateur. La révision 3 provient de la revue complémentaire ci-dessous.
+**Résultat** : révisions éditoriales 2 à 5 du brouillon, toujours à relire avec
+l'utilisateur. La révision 3 provient de la revue complémentaire ci-dessous,
+la révision 4 de l'organisation thématique du vault (FR-039) et la révision 5
+de l'ajout des pôles métiers.
 
 ## Appréciation
 
@@ -58,6 +60,30 @@ par cette revue et par la checklist de pertinence ; ils sont conservés.
 Les principes candidats à la constitution sont listés dans les hypothèses de
 la spec, sans être ajoutés à la constitution.
 
+## Enrichissement par pôles métiers (révision 5)
+
+**Demande** (2026-10-18) : couvrir six pôles liés à des familles de métiers,
+de A (Image Understanding) à F (Vision Systems & Deployment).
+**Type** : enrichissement par un agent (Claude Code) selon les décisions de
+l'utilisateur ; aucune fiche ni carte produite.
+
+Décisions de l'utilisateur :
+
+- les pôles forment une surcouche des domaines existants, qui restent
+  l'organisation du vault ;
+- « socle d'abord » : V0 inchangé, entrées clés des pôles en V1, le reste en V2 ;
+- les specs sont enrichies d'abord ; le report dans le vault suit par les
+  tâches T015 à T018.
+
+Changements : section « Pôles métiers » de la [cartographie](curriculum.md) ;
+parcours 6, FR-040 à FR-043, SC-011/012 et entité « Pôle métier » dans la spec ;
+étiquettes de pôle dans le contrat des cartes ; CHK025 à CHK027.
+
+Limites : les entrées des pôles sont des noms de méthodes et d'outils à
+documenter ; leurs sources primaires seront vérifiées à la rédaction de chaque
+fiche, comme pour le reste de l'inventaire. Les entrées des pôles D et F
+évoluent vite : elles seront datées et réexaminées à chaque lot.
+
 ## Traçabilité des résultats attendus
 
 | Groupe | Exigences | Critères liés |
@@ -65,7 +91,8 @@ la spec, sans être ajoutés à la constitution.
 | Profil, couverture et navigation | FR-001 à FR-005, FR-025 à FR-027, FR-029/030 | SC-001 à SC-003 |
 | Exactitude, contrats et preuves | FR-006 à FR-013, FR-031/032, FR-036 à FR-038 | SC-002, SC-004, SC-009/010 |
 | Révision, jugement et transfert | FR-014 à FR-019, FR-033 à FR-035 | SC-002/003, SC-006, SC-008/009 |
-| Export et maintenance des relations | FR-020 à FR-024, FR-028 | SC-004/005, SC-007 |
+| Export et maintenance des relations | FR-020 à FR-024, FR-028, FR-039 | SC-004/005, SC-007 |
+| Pôles métiers | FR-040 à FR-043 | SC-011/012 |
 
 Cette correspondance relie exigences et résultats ; elle ne représente pas
 une couverture par tâches d'implémentation. Le plan et les tâches ne sont pas
@@ -117,6 +144,8 @@ ensuite été lues pour corroborer les synthèses.
 - Le plugin d'export et les modèles de notes restent à valider dans les applications.
 - La répartition de la rédaction entre l'apprenant et un agent reste à décider (FR-038).
 - Le découpage de la production en lots après le pilote reste à décider.
+- Aucun pôle n'est encore choisi comme cible de carrière ; relever la priorité
+  d'un pôle est une décision de l'apprenant.
 - La constitution n'est pas ratifiée. Aucun principe ne lui a été ajouté implicitement.
 - La checklist formelle Spec Kit nécessite actuellement un `plan.md`, absent
   à cette phase. La commande a signalé ce prérequis ; la présente revue et

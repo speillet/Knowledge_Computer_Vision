@@ -31,7 +31,7 @@ courantes d'Obsidian, d'Anki et d'AnkiConnect, et justifient une solution de rep
 | Réponses développées | Champs multilignes, paragraphes et listes documentés | Vérifier une réponse longue et sa lisibilité |
 | Équations | Maths inline et en bloc documentées | Vérifier symboles, matrices et conventions utilisées |
 | Images locales | Liens Markdown et embeds Obsidian documentés | Vérifier résolution et transfert des médias vers Anki |
-| Code | Inline et blocs documentés ; coloration non fournie par défaut | Exiger un code lisible sans promettre une coloration automatique |
+| Code | Inline et blocs documentés ; le test de la release 3.6.0 confirme une coloration avec CSS distante | Prévoir un style local et vérifier la lecture hors connexion sur AnkiDroid |
 | Mise à jour | Identifiant ajouté à la source pour retrouver la note Anki | Préserver l'identifiant et tester l'absence de doublons |
 | Communication | Anki Desktop ouvert et AnkiConnect requis | Vérifier l'environnement d'essai |
 
@@ -88,8 +88,8 @@ n'est envisagée qu'en cas d'échec du pilote avec un plugin.
 
 ## Client de révision
 
-Le client utilisé pour réviser (Anki Desktop, AnkiDroid ou AnkiMobile) n'est
-pas encore précisé. Formules, images et blocs de code doivent être vérifiés sur
+Le client confirmé pendant l'implémentation est **AnkiDroid sur Android**.
+Formules, images et blocs de code doivent être vérifiés sur
 ce client : un rendu correct sur ordinateur ne garantit pas celui d'un mobile.
 
 ## Utilisation de Context7
@@ -125,5 +125,48 @@ Le test de conservation de l'historique nécessite une carte réellement révis�
 dans le deck d'essai avant modification. La seule conservation d'un identifiant
 ne constitue pas une preuve de conservation de l'historique.
 
-La syntaxe finale et les instructions d'installation seront rédigées après
-ce pilote. Aucun marqueur propre à un plugin n'est imposé par cette spec.
+La syntaxe de production reste conditionnée à ce pilote. Un contrat expérimental
+et un guide sont maintenant fournis pour les sept sujets initiaux ; aucune
+validation réelle d'export n'est déduite de leur présence.
+
+## Décisions de conception du premier lot — 2026-10-18
+
+**Décision** : tester Obsidian_to_Anki 3.6.0 sur les sept fichiers de cartes
+du pilote, modèle `CV-Pilote` à quatre champs et une carte par note.
+Ces fichiers sont désormais répartis dans cinq répertoires thématiques,
+à la demande de l'utilisateur ; les autres thèmes restent à rédiger.
+**Raison** : conserver plusieurs cartes par sujet, champs explicites et ID
+pédagogique stable, sans dépendre du nom localisé du modèle Basic.
+**Alternatives** : Yanki reste possible mais change l'organisation ; `.apkg`
+reste une solution de repli, aucun exporteur sur mesure n'est ajouté.
+
+**Décision** : poursuivre la préparation éditoriale sans installer Anki dans
+les applications personnelles. **Raison** : Anki Desktop est absent ; le parseur
+officiel peut être testé isolément mais ne simule pas une collection réelle.
+**Alternative** : attendre les applications ; elle n'est pas nécessaire pour
+rédiger le pilote autorisé. Les essais applicatifs restent ouverts.
+
+Context7 : résolution d'OpenCV puis interrogation `/websites/opencv_4_13_0`
+sur normes et matching ; résolution et interrogation du plugin effectuées dans
+la recherche de format. Résultats confrontés aux API et au code officiels.
+
+Le [contrat](contracts/obsidian-anki.md), le
+[guide du vault](../../vault/01-Parcours/Guide-Anki.md) et le
+[journal des preuves](../../vault/01-Parcours/Suivi-pilote.md) précisent
+versions, contrôles effectués et limites. La coloration et le comportement des
+wikilinks ont été corrigés à partir de l'exécution locale du convertisseur.
+
+## Organisation par thème — demande du 2026-10-18
+
+**Décision** : reprendre les répertoires numérotés par dizaine et le sommaire
+central du [dépôt indiqué](https://github.com/speillet/Knowledge_AI_Engineering/tree/5fdbfe259e53d01361cf6337f6c494b4663db592).
+Chaque thème contient ses cartes et un sous-dossier de références ; les IDs
+pédagogiques restent inchangés, le deck cible suit le thème.
+**Raison** : retrouver l'organisation déjà utilisée par l'apprenant et réviser
+une thématique dans Anki. Les noms et domaines sont dans `vault_sections.json`.
+
+Le réglage de scan à racine vide et le scan récursif ont été revérifiés via
+Context7, puis dans `main.ts` et `src/settings.ts` de la release 3.6.0 : le
+réglage vide sélectionne les fichiers Markdown du vault. Les gabarits et les
+exemples de syntaxe restent hors vault, et le contrôleur refuse les marqueurs
+de note dans les guides, index et références.
