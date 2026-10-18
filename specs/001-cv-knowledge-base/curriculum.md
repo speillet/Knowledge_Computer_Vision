@@ -178,6 +178,7 @@ applications pertinentes. Leur inventaire détaillé reste à enrichir.
 - [OpenCV 4.13 — mouvement et tracking](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html).
 - [ByteTrack — dépôt des auteurs](https://github.com/FoundationVision/ByteTrack).
 
+Les ajouts et leurs sources sont détaillés dans [la revue de pertinence](review.md).
 Le catalogue ne doit pas être limité aux méthodes d'une bibliothèque particulière.
 
 Ces sources étayent le découpage et l'inventaire. Chaque fiche produite devra
