@@ -31,6 +31,21 @@ La configuration du tracker des skills de Matt Pocock n'est pas encore choisie.
 Utiliser `$setup-matt-pocock-skills` avant le premier `$to-spec` pour fixer cette
 destination. Cette préparation n'autorise aucune publication d'issue ou de PR.
 
+## Organisation du vault
+
+Classer les cartes par thématique, selon `scripts/vault_sections.json` :
+un répertoire numéroté par domaine, un index `00-index.md`, les fichiers de
+cartes directement dans le thème et leurs fiches canoniques dans `references/`.
+Les conventions détaillées sont dans `docs/vault-layout.md`.
+Préserver IDs pédagogiques et identités Anki lors des déplacements ; adapter
+liens, médias, deck cible et preuves de validation. Un répertoire vide de contenu
+reste à rédiger : sa présence ne valide pas la couverture du domaine.
+
+Pour auditer, corriger ou enrichir des fiches et cartes existantes, utiliser le
+skill du dépôt `revue-cartes` (`$revue-cartes` dans Codex, `/revue-cartes`
+dans Claude Code). Il confronte les affirmations à leurs sources, préserve IDs
+et identités Anki, consigne les corrections et soumet les ajouts à l'apprenant.
+
 ## Sources et documentation
 
 Utiliser Context7 pour vérifier les API, versions, configurations et exemples de

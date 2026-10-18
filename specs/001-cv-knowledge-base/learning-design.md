@@ -57,8 +57,8 @@ Une carte comporte :
 - Les conditions de validité, limites ou contre-exemples pertinents.
 - Les critères permettant de décider si la réponse donnée est satisfaisante.
 - Les références et un lien vers l'approfondissement dans la fiche.
-- Son domaine et sa famille, exportés comme étiquettes pour suivre la maîtrise
-  par domaine dans Anki.
+- Son domaine, sa famille et les pôles servis par sa fiche, exportés comme
+  étiquettes pour suivre la maîtrise par domaine et par pôle dans Anki.
 - Sa provenance de rédaction : apprenant, agent ou mixte.
 
 La réponse peut contenir paragraphes, équations, listes, schémas et code.

@@ -30,9 +30,9 @@ Avant de committer, inspecter `git status`, le diff et les fichiers indexés.
 Ajouter les fichiers par chemin et vérifier `git diff --cached --check`.
 Le skill `$git-commit` aide à préparer le message et le regroupement des fichiers.
 
-L'identité d'auteur Git persistante est volontairement laissée à configurer
-plus tard. Une commande de commit peut recevoir ponctuellement une identité
-déjà vérifiée, sans modifier les réglages du dépôt ou de l'utilisateur.
+Vérifier l'identité d'auteur existante avant de committer avec
+`git var GIT_AUTHOR_IDENT`. Respecter la configuration de l'utilisateur. Une
+identité ponctuelle déjà vérifiée peut être fournie sans modifier ses réglages.
 Pour configurer ensuite l'identité habituelle de ce dépôt :
 
 ```sh
