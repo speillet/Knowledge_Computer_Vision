@@ -1,6 +1,6 @@
 # Suivi du pilote : preuves et limites
 
-**Lot** : sept sujets initiaux, 47 cartes, révision 2. **Rédaction** : agent.
+**Lot courant** : 52 fiches, 224 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
 **Client de révision** : AnkiDroid, confirmé par l'apprenant le 2026-10-18.
 Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
@@ -8,7 +8,7 @@ Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
 | Dimension | État |
 | --- | --- |
-| Rédaction | Sept fiches complètes et sept ensembles de cartes présents |
+| Rédaction | 52 fiches et 52 ensembles de cartes présents ; 129 approfondissements ouverts |
 | Revue documentaire | Auto-revue assistée par agents, consignée ci-dessous |
 | Validation scientifique indépendante | Non effectuée |
 | Contrôles de fichiers et calculs | Exécutés localement, voir preuves |
@@ -118,7 +118,7 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 | Essai | Attendu | Observation / date / responsable |
 | --- | --- | --- |
 | Installation et mapping | Modèle CV-Pilote, quatre champs, un gabarit | Non exécuté |
-| Création | 47 notes et 47 cartes, identités distinctes | Non exécuté |
+| Création | 224 notes et 224 cartes, identités distinctes | Non exécuté |
 | Scan inchangé | Nombres et identités inchangés | Non exécuté |
 | Mise à jour après révision | Même note et historique conservé | Non exécuté |
 | Texte, listes, formules/matrice | Lisibles dans Obsidian, Anki, AnkiDroid | Non exécuté |
@@ -134,9 +134,9 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 ## Échantillon pédagogique fixé avant résultats
 
 Choix initial : couvrir les huit familles produites et les rendus du premier
-lot. Il couvre matching, calibration, tracking et détection ; il devra être
-complété pour segmentation classique et recalage 3D avant de valider le pilote
-complet. Les dates des deux sessions sont libres.
+lot. Il couvre matching, calibration, tracking et détection. L’extension ci-dessous
+ajoute segmentation classique et recalage 3D avant tout résultat.
+Les dates des deux sessions sont libres.
 
 | Carte | Famille / intérêt | Session initiale : résultat, durée, date | Session différée : résultat, durée, date |
 | --- | --- | --- | --- |
@@ -154,6 +154,9 @@ complet. Les dates des deux sessions sont libres.
 | CV-NMS-001 | Algorithme / calcul | Non essayé | Non essayé |
 | CV-NMS-003 | Comparaison | Non essayé | Non essayé |
 | CV-IOU-AP-004 | Raisonnement / protocole | Non essayé | Non essayé |
+| CV-WATERSHED-001 | Algorithme / segmentation classique | Non essayé | Non essayé |
+| CV-ICP-002 | Diagnostic / recalage 3D | Non essayé | Non essayé |
+| CV-MATCH-APPRIS-001 | Comparaison / matching appris | Non essayé | Non essayé |
 
 Pour chaque essai, noter noyau satisfait/manquant, erreur bloquante, ambiguïté,
 indice révélant la réponse, surcharge et reformulation nécessaire. Garder les
@@ -162,20 +165,59 @@ révisions prévu, sans plafond imposé. Le rappel ne prouve pas le transfert.
 
 ## Suite et corrections
 
-- Ajouter segmentation classique, matching appris et recalage global + ICP.
-- Préparer douze scénarios de transfert inédits couvrant les six familles,
-  distincts des exemples corrigés, avec réponse et critères.
-- Compléter baseline/variation pour les familles encore absentes.
-- Faire essais applicatifs et deux sessions, puis ajuster avant extension.
+- Segmentation classique, matching appris et recalage global + ICP sont rédigés.
+- Les [douze cas de transfert](Cas-transfert.md) disposent de corrigés et critères ;
+  aucun n’a été essayé par l’apprenant.
+- Les six familles disposent d’une baseline et d’une variation proposée ;
+  seuls les petits calculs explicitement signalés ont été exécutés.
+- Faire les essais applicatifs et les deux sessions, puis ajuster la rédaction.
 
 Journal de correction : date, ID de fiche, cartes affectées, erreur/source,
 correction, responsable, contrôles et statut d'export. Aucune correction
 scientifique ne doit laisser une ancienne carte contradictoire active.
-
-## Corrections avant publication
 
 | Date | Fiche | Cartes affectées | Erreur et source | Correction | Responsable | Contrôles | Export |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-10-18 | CV-NMS, révision 2 | CV-NMS-004 | Seuil de score final attribué au §4 de Soft-NMS, alors que l'article le décrit au §5 ; IoU sans ses arguments dans la formule | Source §§4–5 et code b8e69bd ; formule $\operatorname{IoU}(M,b_i)$ avec $M$ défini | Agent Claude Code, auto-revue (`revue-cartes`) | Contrôleur, tests, inventaire comparé | Non synchronisé |
 | 2026-10-18 | CV-NMS, révision 2 | Aucune | Divergence non consignée : article $\ge N_t$, Torchvision et code original $>$ (FR-036) | Divergence et cas d'égalité ajoutés à la fiche | Agent Claude Code, auto-revue (`revue-cartes`) | Contrôleur, tests | Non concerné |
 | 2026-10-18 | CV-NMS, révision 2 | Aucune | Détection sans NMS affirmée sans source | Ajout de DETR (Carion et al. 2020, résumé) | Agent Claude Code, auto-revue (`revue-cartes`) | Contrôleur, tests | Non concerné |
+
+## Extension éditoriale et contrôles — 2026-10-18
+
+À la demande de l’apprenant, 45 fiches et 177 cartes ont été ajoutées aux sept
+sujets initiaux. Le total courant est de **52 fiches, 224 cartes et 14 thèmes**.
+Les six pôles possèdent chacun un cas de conception et un cas de diagnostic,
+avec réponse de référence et critères. Les 129 approfondissements ouverts
+restent visibles dans l’inventaire ; cette couverture n’est pas une exhaustivité
+des algorithmes ni une validation des compétences.
+
+Contrôles exécutés : 34 tests unitaires réussis ; contrôleur sans erreur sur
+125 documents Markdown, 52 fiches et 224 cartes ; catalogue reproductible avec
+`python3 scripts/sync_catalog.py --check`. Les 47 IDs initiaux sont conservés.
+Les modifications scientifiques de NMS figurent dans le journal de correction.
+Les autres ajouts aux sujets initiaux portent sur les métadonnées de pôles et
+les étiquettes ; aucun identifiant numérique Anki n’a été inventé.
+
+Le parseur officiel 3.6.0, de même SHA256 que plus haut, a scanné les 125 fichiers :
+224 notes et 224 IDs pédagogiques distincts, quatre champs, 14 sous-decks ;
+224 mises à jour et zéro ajout à la seconde passe avec IDs numériques simulés.
+La conversion a exercé 99 formules inline, deux formules display, un bloc de
+code et une image SVG. Aucune requête à Anki n’a été envoyée. Le harness reste
+un contrôle ponctuel externe au dépôt, pas une commande disponible au clonage.
+
+`python3 examples/curriculum_math.py` donne : Otsu seuil 1 puis 21 après +20
+sur les intensités, avec même partition ; projection (370,360) puis (165,150)
+après resize/crop ; associations 1D [0,0,0] puis [0,1,2] selon l’initialisation ;
+profondeur stéréo 10 puis 20 m ; huit flux à 30 Hz = 240 images/s ; gain d’Amdahl
+1,05263. Ce sont des calculs contrôlés, pas une expérience sur images, un ICP
+complet ni un benchmark de runtime.
+
+La rédaction demeure `redige`, provenance `agent`. La recherche documentaire
+et les limites sont détaillées dans la recherche de la spec. Export réel,
+historique, rendu applicatif, rappel et revue scientifique indépendante
+restent non validés.
+
+| Date | Fiche / périmètre | Cartes affectées | Motif | Changement | Responsable | Contrôles | Export |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-18 | Sept fiches initiales, révision 2 | 47 cartes initiales | Navigation par pôles demandée | Métadonnées `poles`, tags `pole::`, prérequis explicites ; IDs conservés | Agent Codex | IDs comparés, contrôleur, tests, parseur | Non synchronisé |
+| 2026-10-18 | 45 nouvelles fiches, révision 1 | 177 nouvelles cartes | Couvrir les 14 thèmes et six pôles, demande explicite | Références, réponses corrigibles, sources primaires et cas métiers | Agent Codex | Sources centrales consultées, contrôleur, tests, parseur | Non synchronisé |

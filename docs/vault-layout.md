@@ -29,7 +29,7 @@ vault/
   99-Ressources/
 ```
 
-Les quatorze thèmes ont chacun un index ; cinq contiennent les fiches du lot initial.
+Les quatorze thèmes ont chacun un index et des fiches.
 Le [sommaire](../vault/00-Accueil.md) expose cet état et l'inventaire décrit
 les lacunes. `scripts/vault_sections.json` associe chaque dossier à son domaine,
 son titre et son introduction, et sert au contrôleur.
@@ -61,6 +61,6 @@ identité. Le déplacement et le changement de deck doivent encore être observ�
 sur une vraie note déjà révisée avant de déclarer l'historique conservé.
 
 Les 47 cartes du lot initial ont conservé leurs identifiants et textes lors du
-reclassement. Le catalogue courant compte sept fiches et 47 cartes dans cinq
-des 14 thèmes. `python3 scripts/sync_catalog.py` met à jour index, accueil, inventaire
+reclassement. Le catalogue courant compte 52 fiches et 224 cartes dans les
+14 thèmes. `python3 scripts/sync_catalog.py` met à jour index, accueil, inventaire
 et parcours métiers ; `--check` détecte une navigation périmée sans écrire.

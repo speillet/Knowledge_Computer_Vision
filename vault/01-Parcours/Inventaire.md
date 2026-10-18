@@ -1,6 +1,6 @@
 # Inventaire de couverture
 
-**7 fiches et 47 cartes**, réparties dans 5 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**52 fiches et 224 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
 
 Les lignes ci-dessous désignent des fiches canoniques de méthode, pipeline, comparaison ou protocole. La profondeur porte sur ce sujet ; un nom cité en comparaison ne devient pas une méthode entièrement approfondie. Les compétences et sources sont détaillées dans chaque référence.
 
@@ -10,65 +10,110 @@ V0 = lacunes prioritaires ; V1 = socle des pôles ; V2 = approfondissements. Ré
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-SVD — Moindres carrés, SVD et conditionnement / methode | V0 / approfondissement | B, C | [Conventions](Pre-requis.md) | [Fiche](../10-mathematiques-estimation/references/11-moindres-carres-svd.md) · [4 cartes](../10-mathematiques-estimation/11-moindres-carres-svd.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-SE3 — SO(3), SE(3) et conventions de transformation / methode | V0 / approfondissement | B, C | [Conventions](Pre-requis.md) | [Fiche](../10-mathematiques-estimation/references/12-rotations-se3.md) · [4 cartes](../10-mathematiques-estimation/12-rotations-se3.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-FUSION — Kalman, EKF, UKF et ESKF pour la fusion / methode | V1 / usage-operationnel | B, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) | [Fiche](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) · [4 cartes](../10-mathematiques-estimation/13-kalman-ekf-eskf.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-FACTEURS — Graphes de facteurs et optimisation incrémentale / methode | V1 / usage-operationnel | B, C | [CV-SVD](../10-mathematiques-estimation/references/11-moindres-carres-svd.md), [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) | [Fiche](../10-mathematiques-estimation/references/14-graphes-facteurs.md) · [3 cartes](../10-mathematiques-estimation/14-graphes-facteurs.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 2 — Formation et acquisition des images
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-ACQUISITION — Exposition, bruit, couleur et échantillonnage / methode | V0 / approfondissement | A, B, C, E, F | [Conventions](Pre-requis.md) | [Fiche](../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) · [4 cartes](../20-acquisition-images/21-exposition-bruit-echantillonnage.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-CAPTEURS — Capteurs, rolling shutter et synchronisation / methode | V1 / usage-operationnel | B, C, E, F | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) | [Fiche](../20-acquisition-images/references/22-capteurs-horodatage.md) · [4 cartes](../20-acquisition-images/22-capteurs-horodatage.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-IMAGERIES — Line-scan, télédétection et volumes médicaux / comparaison | V2 / reperage | E | [Conventions](Pre-requis.md) | [Fiche](../20-acquisition-images/references/23-imageries-specialisees.md) · [3 cartes](../20-acquisition-images/23-imageries-specialisees.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 3 — Traitement d'image classique
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-FILTRES — Filtres, gradients et pyramides / methode | V0 / approfondissement | A, B, E, F | [Conventions](Pre-requis.md) | [Fiche](../30-traitement-image/references/31-filtrage-gradients.md) · [4 cartes](../30-traitement-image/31-filtrage-gradients.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-CANNY-HOUGH — Canny et Hough : contours, droites et segments / methode | V0 / approfondissement | B, E, F | [Conventions](Pre-requis.md) | [Fiche](../30-traitement-image/references/32-canny-hough.md) · [4 cartes](../30-traitement-image/32-canny-hough.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-MORPHO — Morphologie et composantes connexes / methode | V0 / approfondissement | A, E | [Conventions](Pre-requis.md) | [Fiche](../30-traitement-image/references/33-morphologie-composantes.md) · [3 cartes](../30-traitement-image/33-morphologie-composantes.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 4 — Features, matching et recalage
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
 | CV-SIFT — SIFT — points locaux et description à plusieurs échelles / methode | V0 / approfondissement | B, E | [Conventions](Pre-requis.md) | [Fiche](../40-features-matching/references/41-sift.md) · [7 cartes](../40-features-matching/41-sift.md) | redige, export non vérifié ; maîtrise non mesurée |
 | CV-ORB — ORB — détection et descripteur binaire orienté / methode | V0 / approfondissement | B, E, F | [Conventions](Pre-requis.md) | [Fiche](../40-features-matching/references/42-orb.md) · [6 cartes](../40-features-matching/42-orb.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-MATCHING — Détecteurs locaux, descripteurs et matchers / methode | V0 / approfondissement | B, E | [CV-SVD](../10-mathematiques-estimation/references/11-moindres-carres-svd.md) | [Fiche](../40-features-matching/references/43-detecteurs-matchers.md) · [4 cartes](../40-features-matching/43-detecteurs-matchers.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-MATCH-APPRIS — SuperPoint, LightGlue et LoFTR / pipeline | V1 / usage-operationnel | B | [CV-SIFT](../40-features-matching/references/41-sift.md), [CV-ORB](../40-features-matching/references/42-orb.md), [CV-HOMOGRAPHIE](../50-calibration-geometrie/references/51-ransac-homographie.md) | [Fiche](../40-features-matching/references/44-superpoint-lightglue-loftr.md) · [5 cartes](../40-features-matching/44-superpoint-lightglue-loftr.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-ECC — Recalage par intensités et ECC / methode | V1 / usage-operationnel | B, E | [CV-HOMOGRAPHIE](../50-calibration-geometrie/references/51-ransac-homographie.md) | [Fiche](../40-features-matching/references/45-recalage-ecc.md) · [3 cartes](../40-features-matching/45-recalage-ecc.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 5 — Calibration et géométrie multivue
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
 | CV-HOMOGRAPHIE — RANSAC appliqué à une homographie / methode | V0 / approfondissement | B, E | [Conventions](Pre-requis.md) | [Fiche](../50-calibration-geometrie/references/51-ransac-homographie.md) · [7 cartes](../50-calibration-geometrie/51-ransac-homographie.md) | redige, export non vérifié ; maîtrise non mesurée |
 | CV-ZHANG — Calibration caméra sur mire — méthode de Zhang / methode | V0 / approfondissement | B, C, E | [CV-HOMOGRAPHIE](../50-calibration-geometrie/references/51-ransac-homographie.md) | [Fiche](../50-calibration-geometrie/references/52-calibration-zhang.md) · [7 cartes](../50-calibration-geometrie/52-calibration-zhang.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-EPIPOLAIRE — Épipolaire, PnP et triangulation / methode | V0 / approfondissement | B, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-ZHANG](../50-calibration-geometrie/references/52-calibration-zhang.md) | [Fiche](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) · [5 cartes](../50-calibration-geometrie/53-epipolaire-pnp-triangulation.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-BA — Bundle adjustment et complément de Schur / methode | V1 / usage-operationnel | B, C | [CV-SVD](../10-mathematiques-estimation/references/11-moindres-carres-svd.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md), [CV-FACTEURS](../10-mathematiques-estimation/references/14-graphes-facteurs.md) | [Fiche](../50-calibration-geometrie/references/54-bundle-adjustment.md) · [4 cartes](../50-calibration-geometrie/54-bundle-adjustment.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-MULTICALIB — Calibration multicapteurs, hand-eye et temps / methode | V1 / usage-operationnel | B, C, E | [CV-ZHANG](../50-calibration-geometrie/references/52-calibration-zhang.md), [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-CAPTEURS](../20-acquisition-images/references/22-capteurs-horodatage.md) | [Fiche](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) · [3 cartes](../50-calibration-geometrie/55-calibration-multicapteurs.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 6 — Vision 3D
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-STEREO — Stéréo rectifiée, SGM et profondeur / methode | V1 / usage-operationnel | B, C | [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | [Fiche](../60-vision-3d/references/61-stereo-profondeur.md) · [4 cartes](../60-vision-3d/61-stereo-profondeur.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-ICP — Recalage global et ICP local / pipeline | V1 / usage-operationnel | B, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-SVD](../10-mathematiques-estimation/references/11-moindres-carres-svd.md) | [Fiche](../60-vision-3d/references/62-recalage-global-icp.md) · [5 cartes](../60-vision-3d/62-recalage-global-icp.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-VIO — SLAM, VIO, préintégration IMU et bouclage / methode | V1 / usage-operationnel | B, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-FUSION](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md), [CV-FACTEURS](../10-mathematiques-estimation/references/14-graphes-facteurs.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | [Fiche](../60-vision-3d/references/63-slam-vio.md) · [5 cartes](../60-vision-3d/63-slam-vio.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-BEV — Nuages, BEV et représentations d’occupation / comparaison | V1 / usage-operationnel | C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-CAPTEURS](../20-acquisition-images/references/22-capteurs-horodatage.md), [CV-MULTICALIB](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) | [Fiche](../60-vision-3d/references/64-nuages-bev-occupation.md) · [5 cartes](../60-vision-3d/64-nuages-bev-occupation.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 7 — Reconnaissance et représentations
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-REPRESENTATIONS — Représentations visuelles, ViT, Swin, ConvNeXt et DINOv2 / comparaison | V1 / usage-operationnel | A, D, E | [Conventions](Pre-requis.md) | [Fiche](../70-reconnaissance-representations/references/71-representations-transfert.md) · [5 cartes](../70-reconnaissance-representations/71-representations-transfert.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-CLIP — CLIP, SigLIP et reconnaissance par texte / methode | V1 / usage-operationnel | A, D | [CV-REPRESENTATIONS](../70-reconnaissance-representations/references/71-representations-transfert.md) | [Fiche](../70-reconnaissance-representations/references/72-clip-siglip.md) · [4 cartes](../70-reconnaissance-representations/72-clip-siglip.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-ANOMALIES — Inspection : golden template, PatchCore et PaDiM / methode | V1 / usage-operationnel | A, E | [CV-REPRESENTATIONS](../70-reconnaissance-representations/references/71-representations-transfert.md), [CV-ACQUISITION](../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) | [Fiche](../70-reconnaissance-representations/references/73-patchcore-padim.md) · [4 cartes](../70-reconnaissance-representations/73-patchcore-padim.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-OCR — OCR et compréhension documentaire / comparaison | V2 / reperage | E | [Conventions](Pre-requis.md) | [Fiche](../70-reconnaissance-representations/references/74-ocr-documents.md) · [3 cartes](../70-reconnaissance-representations/74-ocr-documents.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-BIOMETRIE — Reconnaissance biométrique, ArcFace et PAD / comparaison | V2 / reperage | E | [Conventions](Pre-requis.md) | [Fiche](../70-reconnaissance-representations/references/75-embeddings-biometrie.md) · [2 cartes](../70-reconnaissance-representations/75-embeddings-biometrie.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 8 — Détection et pose
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
 | CV-NMS — NMS — supprimer des détections redondantes / methode | V0 / approfondissement | A, C, E | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) | [Fiche](../80-detection-pose/references/81-nms.md) · [5 cartes](../80-detection-pose/81-nms.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-DETECTEURS — Détection : Faster R-CNN, familles YOLO et DETR / methode | V0 / approfondissement | A, C, E | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-NMS](../80-detection-pose/references/81-nms.md) | [Fiche](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) · [5 cartes](../80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-OPENVOC — Détection open-vocabulary et grounding / methode | V1 / usage-operationnel | A, D | [CV-CLIP](../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-DETECTEURS](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) | [Fiche](../80-detection-pose/references/83-detection-open-vocabulary.md) · [3 cartes](../80-detection-pose/83-detection-open-vocabulary.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-POSE3D — Détection 3D, pose d’objet et pose articulée / comparaison | V1 / usage-operationnel | A, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-BEV](../60-vision-3d/references/64-nuages-bev-occupation.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | [Fiche](../80-detection-pose/references/84-detection-pose-3d.md) · [4 cartes](../80-detection-pose/84-detection-pose-3d.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 9 — Segmentation
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-WATERSHED — Otsu, distance transform et watershed / pipeline | V0 / approfondissement | A, E | [CV-MORPHO](../30-traitement-image/references/33-morphologie-composantes.md) | [Fiche](../90-segmentation/references/91-otsu-distance-watershed.md) · [5 cartes](../90-segmentation/91-otsu-distance-watershed.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-GRABCUT — GrabCut, régions et modèles d’apparence / methode | V1 / usage-operationnel | A, E | [Conventions](Pre-requis.md) | [Fiche](../90-segmentation/references/92-grabcut-regions.md) · [3 cartes](../90-segmentation/92-grabcut-regions.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-SEGMENTATION — Segmentation sémantique, instances et panoptique / comparaison | V1 / usage-operationnel | A, E | [Conventions](Pre-requis.md) | [Fiche](../90-segmentation/references/93-semantique-instances-panoptique.md) · [4 cartes](../90-segmentation/93-semantique-instances-panoptique.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-SAM — SAM, SAM 2 et segmentation guidée en vidéo / methode | V1 / usage-operationnel | A, D | [CV-SEGMENTATION](../90-segmentation/references/93-semantique-instances-panoptique.md) | [Fiche](../90-segmentation/references/94-sam-sam2.md) · [3 cartes](../90-segmentation/94-sam-sam2.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 10 — Mouvement et vidéo
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-FLOT — Flot optique : Lucas–Kanade, Farnebäck et RAFT / methode | V0 / approfondissement | B, C, D | [CV-MATCHING](../40-features-matching/references/43-detecteurs-matchers.md) | [Fiche](../100-mouvement-video/references/101-flot-optique.md) · [4 cartes](../100-mouvement-video/101-flot-optique.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-VIDEO — Suivi de points, actions et compréhension vidéo / comparaison | V1 / usage-operationnel | D | [CV-FLOT](../100-mouvement-video/references/101-flot-optique.md) | [Fiche](../100-mouvement-video/references/102-points-actions-video.md) · [4 cartes](../100-mouvement-video/102-points-actions-video.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 11 — Tracking et association
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
 | CV-SORT — SORT — tracking multiobjet par mouvement et association / methode | V0 / approfondissement | C, D, E | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) | [Fiche](../110-tracking-association/references/111-sort.md) · [8 cartes](../110-tracking-association/111-sort.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-ASSOCIATION — DeepSORT, ByteTrack et association multiobjet / comparaison | V0 / approfondissement | C, D, E | [CV-SORT](../110-tracking-association/references/111-sort.md) | [Fiche](../110-tracking-association/references/112-deepsort-bytetrack.md) · [4 cartes](../110-tracking-association/112-deepsort-bytetrack.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-SOT — Tracking monoobjet : corrélation, siamois et MeanShift / comparaison | V1 / usage-operationnel | C, D, E | [Conventions](Pre-requis.md) | [Fiche](../110-tracking-association/references/113-tracking-monoobjet.md) · [2 cartes](../110-tracking-association/113-tracking-monoobjet.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 12 — Vision générative et multimodale
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-VLM — VLM, grounding et frontière vision–action / comparaison | V1 / usage-operationnel | A, D | [CV-CLIP](../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-VIDEO](../100-mouvement-video/references/102-points-actions-video.md) | [Fiche](../120-generatif-multimodal/references/121-vlm-grounding.md) · [4 cartes](../120-generatif-multimodal/121-vlm-grounding.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-DIFFUSION — VAE, GAN et diffusion pour génération/restauration / comparaison | V2 / reperage | A, D, E | [Conventions](Pre-requis.md) | [Fiche](../120-generatif-multimodal/references/122-generation-restauration.md) · [3 cartes](../120-generatif-multimodal/122-generation-restauration.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-RENDU3D — NeRF, 3D Gaussian Splatting et reconstruction / comparaison | V2 / reperage | B, D | [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | [Fiche](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) · [3 cartes](../120-generatif-multimodal/123-nerf-gaussian-splatting.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 13 — Données, évaluation et fiabilité
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
 | CV-IOU-AP — IoU et AP — protocole COCO de détection / metrique-protocole | V0 / approfondissement | A, C, E | [Conventions](Pre-requis.md) | [Fiche](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) · [7 cartes](../130-evaluation-fiabilite/131-iou-ap-coco.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-METRIQUES-TEMPS — Évaluer identités, trajectoires et localisation 3D / metrique-protocole | V1 / usage-operationnel | B, C, D | [CV-VIO](../60-vision-3d/references/63-slam-vio.md), [CV-SORT](../110-tracking-association/references/111-sort.md) | [Fiche](../130-evaluation-fiabilite/references/132-tracking-trajectoires.md) · [5 cartes](../130-evaluation-fiabilite/132-tracking-trajectoires.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-FIABILITE — Splits, annotations, calibration des scores et dérive / probleme | V1 / usage-operationnel | A, C, D, E, F | [Conventions](Pre-requis.md) | [Fiche](../130-evaluation-fiabilite/references/133-donnees-generalisation.md) · [5 cartes](../130-evaluation-fiabilite/133-donnees-generalisation.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-METRIQUES-APPLIQUEES — Métriques de segmentation, inspection et applications / metrique-protocole | V1 / usage-operationnel | A, E | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-SEGMENTATION](../90-segmentation/references/93-semantique-instances-panoptique.md) | [Fiche](../130-evaluation-fiabilite/references/134-metriques-applications.md) · [4 cartes](../130-evaluation-fiabilite/134-metriques-applications.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 14 — Ingénierie des systèmes de vision
 
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
+| CV-PIPELINE — Contrats de données, profiling et pipelines vidéo / pipeline | V0 / approfondissement | C, E, F | [Conventions](Pre-requis.md) | [Fiche](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) · [5 cartes](../140-ingenierie-systemes/141-contrats-profiling-video.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-QUANT — PTQ, QAT, INT8/FP8 et runtimes / methode | V1 / usage-operationnel | A, F | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) | [Fiche](../140-ingenierie-systemes/references/142-quantification-runtimes.md) · [5 cartes](../140-ingenierie-systemes/142-quantification-runtimes.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-DEPLOIEMENT — Déploiement edge, compression et surveillance / pipeline | V1 / usage-operationnel | A, C, E, F | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md), [CV-QUANT](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | [Fiche](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) · [4 cartes](../140-ingenierie-systemes/143-edge-reproductibilite.md) | redige, export non vérifié ; maîtrise non mesurée |
 
 ## Approfondissements encore ouverts
 
@@ -76,132 +121,132 @@ Cette liste conserve des méthodes/variantes nommées dans la cartographie mais 
 
 | Entrée | Domaine | Pôles | Cible | Prérequis / lien connexe | État |
 | --- | --- | --- | --- | --- | --- |
-| APP-001 — GTSAM | d01 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-002 — iSAM2 | d01 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-003 — UKF | d01 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-004 — ESKF : injection et reset détaillés | d01 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-005 — Caméras événementielles | d02 | B | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-006 — LiDAR : modèles de bruit | d02 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-007 — Radar : modèles de mesure | d02 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-008 — ToF : ambiguïtés et bruit | d02 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-009 — Optiques télécentriques | d02 | E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-010 — Line-scan : calibration complète | d02 | E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-011 — Imagerie multispectrale | d02 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-012 — SAR | d02 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-013 — Géoréférencement | d02 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-014 — DICOM et NIfTI : lecture des transformations | d02 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-015 — Fourier et filtrage fréquentiel | d03 | B, E, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-016 — Restauration et déconvolution | d03 | B, E, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-017 — Harris : localisation | d04 | B, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-018 — Shi–Tomasi : critères | d04 | B, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-019 — FAST : variantes | d04 | B, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-020 — BRIEF : construction | d04 | B, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-021 — AKAZE | d04 | B, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-022 — FLANN : index et métriques | d04 | B, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-023 — SuperGlue | d04 | B | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-024 — LightGlue : adaptation du calcul | d04 | B | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-025 — LoFTR : correspondances coarse-to-fine | d04 | B | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-026 — Calibration fisheye | d05 | B, C, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-027 — Hand-eye : solveurs et dégénérescences | d05 | B, C, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-028 — Calibration temporelle multicapteurs | d05 | B, C, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-029 — PnP : variantes et ambiguïtés | d05 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-030 — Triangulation : incertitude | d05 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-031 — Rectification stéréo | d05 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-032 — MSCKF | d06 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-033 — VINS-Mono | d06 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-034 — OKVIS | d06 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-035 — DBoW2 | d06 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-036 — NetVLAD | d06 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-037 — LOAM | d06 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-038 — NDT | d06 | B, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-039 — MVS | d06 | B | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-040 — Fusion TSDF | d06 | B | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-041 — DUSt3R | d06 | B | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-042 — MASt3R | d06 | B | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-043 — Depth Anything | d06 | B | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-044 — PointNet++ | d06 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-045 — Lift-Splat-Shoot | d06 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-046 — BEVFormer : attention | d06 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-047 — BEVFusion | d06 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-048 — Semantic occupancy | d06 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-049 — Occupancy Networks | d06 | C | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-050 — SDF | d06 | C | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-051 — Espace libre et traversabilité | d06 | C | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-052 — HOG | d07 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-053 — ResNet | d07 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-054 — ViT : architecture et transfert | d07 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-055 — Swin : fenêtres décalées | d07 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-056 — ConvNeXt : recette | d07 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-057 — DINOv2 : objectifs | d07 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-058 — MAE | d07 | A | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-059 — LoRA et adapters visuels | d07 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-060 — SigLIP : loss détaillée | d07 | A, D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-061 — PaDiM : covariance | d07 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-062 — PatchCore : repondération | d07 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-063 — ArcFace : marge angulaire | d07 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-064 — PAD et cadre ISO/IEC 30107 | d07 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-065 — CRNN et CTC | d07 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-066 — TrOCR | d07 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-067 — LayoutLM | d07 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-068 — Donut | d07 | E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-069 — PointPillars | d08 | A, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-070 — CenterPoint | d08 | A, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-071 — Pose articulée 2D et 3D | d08 | A, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-072 — Pose 6D d'objet | d08 | A, C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-073 — Grounding DINO | d08 | A, D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-074 — OWL-ViT | d08 | A, D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-075 — U-Net | d09 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-076 — DeepLab | d09 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-077 — Mask R-CNN | d09 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-078 — nnU-Net | d09 | A, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-079 — Contours actifs | d09 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-080 — Superpixels | d09 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-081 — Region growing | d09 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-082 — SAM 2 : mémoire vidéo | d09 | A, D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-083 — TimeSformer | d10 | D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-084 — ViViT | d10 | D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-085 — VideoMAE | d10 | D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-086 — Localisation temporelle d'actions | d10 | D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-087 — Video-LLM et mémoire longue | d10 | D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-088 — CoTracker3 | d10 | D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-089 — Farnebäck | d10 | B, C, D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-090 — RAFT : corrélations et update | d10 | B, C, D | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-091 — AB3DMOT | d11 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-092 — MeanShift et CamShift | d11 | C, D, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-093 — Filtres de corrélation | d11 | C, D, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-094 — SiamFC et suivi siamois | d11 | C, D, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-095 — Florence-2 | d12 | A, D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-096 — BLIP-2 : Q-Former | d12 | A, D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-097 — LLaVA : variantes | d12 | A, D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-098 — Flamingo | d12 | A, D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-099 — RT-2 | d12 | A, D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-100 — OpenVLA | d12 | A, D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-101 — π0 | d12 | A, D | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-102 — VAE | d12 | A, D, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-103 — GAN | d12 | A, D, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-104 — Diffusion latente : sampler et guidance | d12 | A, D, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-105 — Active learning | d13 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-106 — Long-tail et stratégie d'annotation | d13 | A | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-107 — NDS et mAP nuScenes | d13 | C | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-108 — PQ | d13 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-109 — HD95 : conventions | d13 | A, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-110 — AU-PRO | d13 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-111 — Gauge R&R | d13 | A, E | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-112 — FMR et FNMR | d13 | A, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-113 — FAR et FRR système | d13 | A, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-114 — EER | d13 | A, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-115 — Métriques PAD | d13 | A, E | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-116 — ONNX Runtime | d14 | A, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-117 — OpenVINO | d14 | A, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-118 — LiteRT | d14 | A, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-119 — TensorRT : précision et kernels | d14 | A, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-120 — Pruning | d14 | A, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-121 — Distillation visuelle | d14 | A, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-122 — ROS 2 et QoS | d14 | C, E, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-123 — NVDEC | d14 | C, E, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-124 — DeepStream | d14 | C, E, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-125 — GStreamer et zéro-copie | d14 | C, E, F | V1 / usage-operationnel | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-126 — Jetson et NPU | d14 | F | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-127 — Thermique et consommation | d14 | F | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-128 — Triton serving | d14 | F | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
-| APP-129 — OTA et rollback | d14 | F | V2 / reperage | À préciser avant rédaction | À approfondir ; source à vérifier |
+| APP-001 — GTSAM | d01 | B, C | V1 / usage-operationnel | [Introduction connexe](../10-mathematiques-estimation/references/14-graphes-facteurs.md) | À approfondir ; source à vérifier |
+| APP-002 — iSAM2 | d01 | B, C | V1 / usage-operationnel | [Introduction connexe](../10-mathematiques-estimation/references/14-graphes-facteurs.md) | À approfondir ; source à vérifier |
+| APP-003 — UKF | d01 | B, C | V1 / usage-operationnel | [Introduction connexe](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) | À approfondir ; source à vérifier |
+| APP-004 — ESKF : injection et reset détaillés | d01 | B, C | V1 / usage-operationnel | [Introduction connexe](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) | À approfondir ; source à vérifier |
+| APP-005 — Caméras événementielles | d02 | B | V2 / reperage | [Introduction connexe](../20-acquisition-images/references/22-capteurs-horodatage.md) | À approfondir ; source à vérifier |
+| APP-006 — LiDAR : modèles de bruit | d02 | C | V1 / usage-operationnel | [Introduction connexe](../20-acquisition-images/references/22-capteurs-horodatage.md) | À approfondir ; source à vérifier |
+| APP-007 — Radar : modèles de mesure | d02 | C | V1 / usage-operationnel | [Introduction connexe](../20-acquisition-images/references/22-capteurs-horodatage.md) | À approfondir ; source à vérifier |
+| APP-008 — ToF : ambiguïtés et bruit | d02 | C | V1 / usage-operationnel | [Introduction connexe](../20-acquisition-images/references/22-capteurs-horodatage.md) | À approfondir ; source à vérifier |
+| APP-009 — Optiques télécentriques | d02 | E | V1 / usage-operationnel | [Introduction connexe](../20-acquisition-images/references/23-imageries-specialisees.md) | À approfondir ; source à vérifier |
+| APP-010 — Line-scan : calibration complète | d02 | E | V1 / usage-operationnel | [Introduction connexe](../20-acquisition-images/references/23-imageries-specialisees.md) | À approfondir ; source à vérifier |
+| APP-011 — Imagerie multispectrale | d02 | E | V2 / reperage | [Introduction connexe](../20-acquisition-images/references/23-imageries-specialisees.md) | À approfondir ; source à vérifier |
+| APP-012 — SAR | d02 | E | V2 / reperage | [Introduction connexe](../20-acquisition-images/references/23-imageries-specialisees.md) | À approfondir ; source à vérifier |
+| APP-013 — Géoréférencement | d02 | E | V2 / reperage | [Introduction connexe](../20-acquisition-images/references/23-imageries-specialisees.md) | À approfondir ; source à vérifier |
+| APP-014 — DICOM et NIfTI : lecture des transformations | d02 | E | V2 / reperage | [Introduction connexe](../20-acquisition-images/references/23-imageries-specialisees.md) | À approfondir ; source à vérifier |
+| APP-015 — Fourier et filtrage fréquentiel | d03 | B, E, F | V1 / usage-operationnel | [Introduction connexe](../30-traitement-image/references/31-filtrage-gradients.md) | À approfondir ; source à vérifier |
+| APP-016 — Restauration et déconvolution | d03 | B, E, F | V1 / usage-operationnel | [Introduction connexe](../30-traitement-image/references/31-filtrage-gradients.md) | À approfondir ; source à vérifier |
+| APP-017 — Harris : localisation | d04 | B, E | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/43-detecteurs-matchers.md) | À approfondir ; source à vérifier |
+| APP-018 — Shi–Tomasi : critères | d04 | B, E | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/43-detecteurs-matchers.md) | À approfondir ; source à vérifier |
+| APP-019 — FAST : variantes | d04 | B, E | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/43-detecteurs-matchers.md) | À approfondir ; source à vérifier |
+| APP-020 — BRIEF : construction | d04 | B, E | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/43-detecteurs-matchers.md) | À approfondir ; source à vérifier |
+| APP-021 — AKAZE | d04 | B, E | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/43-detecteurs-matchers.md) | À approfondir ; source à vérifier |
+| APP-022 — FLANN : index et métriques | d04 | B, E | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/43-detecteurs-matchers.md) | À approfondir ; source à vérifier |
+| APP-023 — SuperGlue | d04 | B | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/44-superpoint-lightglue-loftr.md) | À approfondir ; source à vérifier |
+| APP-024 — LightGlue : adaptation du calcul | d04 | B | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/44-superpoint-lightglue-loftr.md) | À approfondir ; source à vérifier |
+| APP-025 — LoFTR : correspondances coarse-to-fine | d04 | B | V1 / usage-operationnel | [Introduction connexe](../40-features-matching/references/44-superpoint-lightglue-loftr.md) | À approfondir ; source à vérifier |
+| APP-026 — Calibration fisheye | d05 | B, C, E | V1 / usage-operationnel | [Introduction connexe](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) | À approfondir ; source à vérifier |
+| APP-027 — Hand-eye : solveurs et dégénérescences | d05 | B, C, E | V1 / usage-operationnel | [Introduction connexe](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) | À approfondir ; source à vérifier |
+| APP-028 — Calibration temporelle multicapteurs | d05 | B, C, E | V1 / usage-operationnel | [Introduction connexe](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) | À approfondir ; source à vérifier |
+| APP-029 — PnP : variantes et ambiguïtés | d05 | B, C | V1 / usage-operationnel | [Introduction connexe](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | À approfondir ; source à vérifier |
+| APP-030 — Triangulation : incertitude | d05 | B, C | V1 / usage-operationnel | [Introduction connexe](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | À approfondir ; source à vérifier |
+| APP-031 — Rectification stéréo | d05 | B, C | V1 / usage-operationnel | [Introduction connexe](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | À approfondir ; source à vérifier |
+| APP-032 — MSCKF | d06 | B, C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/63-slam-vio.md) | À approfondir ; source à vérifier |
+| APP-033 — VINS-Mono | d06 | B, C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/63-slam-vio.md) | À approfondir ; source à vérifier |
+| APP-034 — OKVIS | d06 | B, C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/63-slam-vio.md) | À approfondir ; source à vérifier |
+| APP-035 — DBoW2 | d06 | B, C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/63-slam-vio.md) | À approfondir ; source à vérifier |
+| APP-036 — NetVLAD | d06 | B, C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/63-slam-vio.md) | À approfondir ; source à vérifier |
+| APP-037 — LOAM | d06 | B, C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/63-slam-vio.md) | À approfondir ; source à vérifier |
+| APP-038 — NDT | d06 | B, C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/63-slam-vio.md) | À approfondir ; source à vérifier |
+| APP-039 — MVS | d06 | B | V1 / usage-operationnel | [Introduction connexe](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | À approfondir ; source à vérifier |
+| APP-040 — Fusion TSDF | d06 | B | V1 / usage-operationnel | [Introduction connexe](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | À approfondir ; source à vérifier |
+| APP-041 — DUSt3R | d06 | B | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | À approfondir ; source à vérifier |
+| APP-042 — MASt3R | d06 | B | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | À approfondir ; source à vérifier |
+| APP-043 — Depth Anything | d06 | B | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | À approfondir ; source à vérifier |
+| APP-044 — PointNet++ | d06 | C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-045 — Lift-Splat-Shoot | d06 | C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-046 — BEVFormer : attention | d06 | C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-047 — BEVFusion | d06 | C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-048 — Semantic occupancy | d06 | C | V1 / usage-operationnel | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-049 — Occupancy Networks | d06 | C | V2 / reperage | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-050 — SDF | d06 | C | V2 / reperage | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-051 — Espace libre et traversabilité | d06 | C | V2 / reperage | [Introduction connexe](../60-vision-3d/references/64-nuages-bev-occupation.md) | À approfondir ; source à vérifier |
+| APP-052 — HOG | d07 | A | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-053 — ResNet | d07 | A | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-054 — ViT : architecture et transfert | d07 | A | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-055 — Swin : fenêtres décalées | d07 | A | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-056 — ConvNeXt : recette | d07 | A | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-057 — DINOv2 : objectifs | d07 | A | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-058 — MAE | d07 | A | V2 / reperage | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-059 — LoRA et adapters visuels | d07 | A | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/71-representations-transfert.md) | À approfondir ; source à vérifier |
+| APP-060 — SigLIP : loss détaillée | d07 | A, D | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/72-clip-siglip.md) | À approfondir ; source à vérifier |
+| APP-061 — PaDiM : covariance | d07 | A, E | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/73-patchcore-padim.md) | À approfondir ; source à vérifier |
+| APP-062 — PatchCore : repondération | d07 | A, E | V1 / usage-operationnel | [Introduction connexe](../70-reconnaissance-representations/references/73-patchcore-padim.md) | À approfondir ; source à vérifier |
+| APP-063 — ArcFace : marge angulaire | d07 | E | V2 / reperage | [Introduction connexe](../70-reconnaissance-representations/references/75-embeddings-biometrie.md) | À approfondir ; source à vérifier |
+| APP-064 — PAD et cadre ISO/IEC 30107 | d07 | E | V2 / reperage | [Introduction connexe](../70-reconnaissance-representations/references/75-embeddings-biometrie.md) | À approfondir ; source à vérifier |
+| APP-065 — CRNN et CTC | d07 | E | V2 / reperage | [Introduction connexe](../70-reconnaissance-representations/references/74-ocr-documents.md) | À approfondir ; source à vérifier |
+| APP-066 — TrOCR | d07 | E | V2 / reperage | [Introduction connexe](../70-reconnaissance-representations/references/74-ocr-documents.md) | À approfondir ; source à vérifier |
+| APP-067 — LayoutLM | d07 | E | V2 / reperage | [Introduction connexe](../70-reconnaissance-representations/references/74-ocr-documents.md) | À approfondir ; source à vérifier |
+| APP-068 — Donut | d07 | E | V2 / reperage | [Introduction connexe](../70-reconnaissance-representations/references/74-ocr-documents.md) | À approfondir ; source à vérifier |
+| APP-069 — PointPillars | d08 | A, C | V1 / usage-operationnel | [Introduction connexe](../80-detection-pose/references/84-detection-pose-3d.md) | À approfondir ; source à vérifier |
+| APP-070 — CenterPoint | d08 | A, C | V1 / usage-operationnel | [Introduction connexe](../80-detection-pose/references/84-detection-pose-3d.md) | À approfondir ; source à vérifier |
+| APP-071 — Pose articulée 2D et 3D | d08 | A, C | V1 / usage-operationnel | [Introduction connexe](../80-detection-pose/references/84-detection-pose-3d.md) | À approfondir ; source à vérifier |
+| APP-072 — Pose 6D d'objet | d08 | A, C | V1 / usage-operationnel | [Introduction connexe](../80-detection-pose/references/84-detection-pose-3d.md) | À approfondir ; source à vérifier |
+| APP-073 — Grounding DINO | d08 | A, D | V1 / usage-operationnel | [Introduction connexe](../80-detection-pose/references/83-detection-open-vocabulary.md) | À approfondir ; source à vérifier |
+| APP-074 — OWL-ViT | d08 | A, D | V1 / usage-operationnel | [Introduction connexe](../80-detection-pose/references/83-detection-open-vocabulary.md) | À approfondir ; source à vérifier |
+| APP-075 — U-Net | d09 | A, E | V1 / usage-operationnel | [Introduction connexe](../90-segmentation/references/93-semantique-instances-panoptique.md) | À approfondir ; source à vérifier |
+| APP-076 — DeepLab | d09 | A, E | V1 / usage-operationnel | [Introduction connexe](../90-segmentation/references/93-semantique-instances-panoptique.md) | À approfondir ; source à vérifier |
+| APP-077 — Mask R-CNN | d09 | A, E | V1 / usage-operationnel | [Introduction connexe](../90-segmentation/references/93-semantique-instances-panoptique.md) | À approfondir ; source à vérifier |
+| APP-078 — nnU-Net | d09 | A, E | V2 / reperage | [Introduction connexe](../90-segmentation/references/93-semantique-instances-panoptique.md) | À approfondir ; source à vérifier |
+| APP-079 — Contours actifs | d09 | A, E | V1 / usage-operationnel | [Introduction connexe](../90-segmentation/references/93-semantique-instances-panoptique.md) | À approfondir ; source à vérifier |
+| APP-080 — Superpixels | d09 | A, E | V1 / usage-operationnel | [Introduction connexe](../90-segmentation/references/93-semantique-instances-panoptique.md) | À approfondir ; source à vérifier |
+| APP-081 — Region growing | d09 | A, E | V1 / usage-operationnel | [Introduction connexe](../90-segmentation/references/93-semantique-instances-panoptique.md) | À approfondir ; source à vérifier |
+| APP-082 — SAM 2 : mémoire vidéo | d09 | A, D | V1 / usage-operationnel | [Introduction connexe](../90-segmentation/references/94-sam-sam2.md) | À approfondir ; source à vérifier |
+| APP-083 — TimeSformer | d10 | D | V1 / usage-operationnel | [Introduction connexe](../100-mouvement-video/references/102-points-actions-video.md) | À approfondir ; source à vérifier |
+| APP-084 — ViViT | d10 | D | V1 / usage-operationnel | [Introduction connexe](../100-mouvement-video/references/102-points-actions-video.md) | À approfondir ; source à vérifier |
+| APP-085 — VideoMAE | d10 | D | V1 / usage-operationnel | [Introduction connexe](../100-mouvement-video/references/102-points-actions-video.md) | À approfondir ; source à vérifier |
+| APP-086 — Localisation temporelle d'actions | d10 | D | V1 / usage-operationnel | [Introduction connexe](../100-mouvement-video/references/102-points-actions-video.md) | À approfondir ; source à vérifier |
+| APP-087 — Video-LLM et mémoire longue | d10 | D | V2 / reperage | [Introduction connexe](../100-mouvement-video/references/102-points-actions-video.md) | À approfondir ; source à vérifier |
+| APP-088 — CoTracker3 | d10 | D | V1 / usage-operationnel | [Introduction connexe](../100-mouvement-video/references/102-points-actions-video.md) | À approfondir ; source à vérifier |
+| APP-089 — Farnebäck | d10 | B, C, D | V1 / usage-operationnel | [Introduction connexe](../100-mouvement-video/references/101-flot-optique.md) | À approfondir ; source à vérifier |
+| APP-090 — RAFT : corrélations et update | d10 | B, C, D | V1 / usage-operationnel | [Introduction connexe](../100-mouvement-video/references/101-flot-optique.md) | À approfondir ; source à vérifier |
+| APP-091 — AB3DMOT | d11 | C | V1 / usage-operationnel | [Introduction connexe](../110-tracking-association/references/112-deepsort-bytetrack.md) | À approfondir ; source à vérifier |
+| APP-092 — MeanShift et CamShift | d11 | C, D, E | V1 / usage-operationnel | [Introduction connexe](../110-tracking-association/references/113-tracking-monoobjet.md) | À approfondir ; source à vérifier |
+| APP-093 — Filtres de corrélation | d11 | C, D, E | V1 / usage-operationnel | [Introduction connexe](../110-tracking-association/references/113-tracking-monoobjet.md) | À approfondir ; source à vérifier |
+| APP-094 — SiamFC et suivi siamois | d11 | C, D, E | V1 / usage-operationnel | [Introduction connexe](../110-tracking-association/references/113-tracking-monoobjet.md) | À approfondir ; source à vérifier |
+| APP-095 — Florence-2 | d12 | A, D | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/121-vlm-grounding.md) | À approfondir ; source à vérifier |
+| APP-096 — BLIP-2 : Q-Former | d12 | A, D | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/121-vlm-grounding.md) | À approfondir ; source à vérifier |
+| APP-097 — LLaVA : variantes | d12 | A, D | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/121-vlm-grounding.md) | À approfondir ; source à vérifier |
+| APP-098 — Flamingo | d12 | A, D | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/121-vlm-grounding.md) | À approfondir ; source à vérifier |
+| APP-099 — RT-2 | d12 | A, D | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/121-vlm-grounding.md) | À approfondir ; source à vérifier |
+| APP-100 — OpenVLA | d12 | A, D | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/121-vlm-grounding.md) | À approfondir ; source à vérifier |
+| APP-101 — π0 | d12 | A, D | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/121-vlm-grounding.md) | À approfondir ; source à vérifier |
+| APP-102 — VAE | d12 | A, D, E | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/122-generation-restauration.md) | À approfondir ; source à vérifier |
+| APP-103 — GAN | d12 | A, D, E | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/122-generation-restauration.md) | À approfondir ; source à vérifier |
+| APP-104 — Diffusion latente : sampler et guidance | d12 | A, D, E | V2 / reperage | [Introduction connexe](../120-generatif-multimodal/references/122-generation-restauration.md) | À approfondir ; source à vérifier |
+| APP-105 — Active learning | d13 | A | V1 / usage-operationnel | [Introduction connexe](../130-evaluation-fiabilite/references/133-donnees-generalisation.md) | À approfondir ; source à vérifier |
+| APP-106 — Long-tail et stratégie d'annotation | d13 | A | V1 / usage-operationnel | [Introduction connexe](../130-evaluation-fiabilite/references/133-donnees-generalisation.md) | À approfondir ; source à vérifier |
+| APP-107 — NDS et mAP nuScenes | d13 | C | V1 / usage-operationnel | [Introduction connexe](../130-evaluation-fiabilite/references/132-tracking-trajectoires.md) | À approfondir ; source à vérifier |
+| APP-108 — PQ | d13 | A, E | V1 / usage-operationnel | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-109 — HD95 : conventions | d13 | A, E | V2 / reperage | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-110 — AU-PRO | d13 | A, E | V1 / usage-operationnel | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-111 — Gauge R&R | d13 | A, E | V1 / usage-operationnel | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-112 — FMR et FNMR | d13 | A, E | V2 / reperage | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-113 — FAR et FRR système | d13 | A, E | V2 / reperage | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-114 — EER | d13 | A, E | V2 / reperage | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-115 — Métriques PAD | d13 | A, E | V2 / reperage | [Introduction connexe](../130-evaluation-fiabilite/references/134-metriques-applications.md) | À approfondir ; source à vérifier |
+| APP-116 — ONNX Runtime | d14 | A, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | À approfondir ; source à vérifier |
+| APP-117 — OpenVINO | d14 | A, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | À approfondir ; source à vérifier |
+| APP-118 — LiteRT | d14 | A, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | À approfondir ; source à vérifier |
+| APP-119 — TensorRT : précision et kernels | d14 | A, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | À approfondir ; source à vérifier |
+| APP-120 — Pruning | d14 | A, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | À approfondir ; source à vérifier |
+| APP-121 — Distillation visuelle | d14 | A, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | À approfondir ; source à vérifier |
+| APP-122 — ROS 2 et QoS | d14 | C, E, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) | À approfondir ; source à vérifier |
+| APP-123 — NVDEC | d14 | C, E, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) | À approfondir ; source à vérifier |
+| APP-124 — DeepStream | d14 | C, E, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) | À approfondir ; source à vérifier |
+| APP-125 — GStreamer et zéro-copie | d14 | C, E, F | V1 / usage-operationnel | [Introduction connexe](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) | À approfondir ; source à vérifier |
+| APP-126 — Jetson et NPU | d14 | F | V2 / reperage | [Introduction connexe](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) | À approfondir ; source à vérifier |
+| APP-127 — Thermique et consommation | d14 | F | V2 / reperage | [Introduction connexe](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) | À approfondir ; source à vérifier |
+| APP-128 — Triton serving | d14 | F | V2 / reperage | [Introduction connexe](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) | À approfondir ; source à vérifier |
+| APP-129 — OTA et rollback | d14 | F | V2 / reperage | [Introduction connexe](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) | À approfondir ; source à vérifier |

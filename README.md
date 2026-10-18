@@ -3,9 +3,9 @@
 Construire un vault Obsidian de connaissances et de flashcards pour progresser
 vers un niveau de Computer Vision Engineer senior.
 
-Le premier lot comprend **sept fiches de référence et 47 cartes détaillées** :
-SIFT, ORB, RANSAC/homographie, calibration de Zhang, SORT, NMS et IoU/AP COCO.
-Prose en français, termes techniques originaux, équations expliquées et diagnostics.
+Les fiches de référence et cartes détaillées couvrent le socle classique et
+moderne, en français, avec termes techniques originaux, équations expliquées,
+comparaisons et diagnostics. Les totaux actuels figurent dans le catalogue ci-dessous.
 
 Ouvrir le dossier [`vault/`](vault/00-Accueil.md) comme vault dans Obsidian,
 puis commencer par son accueil. Le [guide d'export](vault/01-Parcours/Guide-Anki.md)
@@ -16,9 +16,32 @@ mais aucun export réel ni historique de révision n'est encore validé.
 Le vault suit l'organisation par thématique de
 [Knowledge_AI_Engineering](https://github.com/speillet/Knowledge_AI_Engineering) :
 14 dossiers numérotés avec index, cartes à la racine de chaque thème et fiches
-complètes dans `references/`. Les cinq thèmes du premier lot ont chacun un
-sous-deck Anki. Les neuf autres affichent explicitement leur contenu à rédiger.
+complètes dans `references/`. Chaque thème a son sous-deck Anki et ses états
+éditoriaux ; les variantes à approfondir restent visibles dans l’inventaire.
 Voir les [conventions de classement](docs/vault-layout.md).
+
+## Couverture actuelle
+
+<!-- cv-catalog:start -->
+**52 fiches et 224 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+
+| Thématique | Fiches | Cartes |
+| --- | ---: | ---: |
+| [Mathématiques et estimation](vault/10-mathematiques-estimation/00-index.md) | 4 | 15 |
+| [Formation et acquisition des images](vault/20-acquisition-images/00-index.md) | 3 | 11 |
+| [Traitement d'image classique](vault/30-traitement-image/00-index.md) | 3 | 11 |
+| [Features, matching et recalage](vault/40-features-matching/00-index.md) | 5 | 25 |
+| [Calibration et géométrie multivue](vault/50-calibration-geometrie/00-index.md) | 5 | 26 |
+| [Vision 3D](vault/60-vision-3d/00-index.md) | 4 | 19 |
+| [Reconnaissance et représentations](vault/70-reconnaissance-representations/00-index.md) | 5 | 18 |
+| [Détection et pose](vault/80-detection-pose/00-index.md) | 4 | 17 |
+| [Segmentation](vault/90-segmentation/00-index.md) | 4 | 15 |
+| [Mouvement et vidéo](vault/100-mouvement-video/00-index.md) | 2 | 8 |
+| [Tracking et association](vault/110-tracking-association/00-index.md) | 3 | 14 |
+| [Vision générative et multimodale](vault/120-generatif-multimodal/00-index.md) | 3 | 10 |
+| [Données, évaluation et fiabilité](vault/130-evaluation-fiabilite/00-index.md) | 4 | 21 |
+| [Ingénierie des systèmes de vision](vault/140-ingenierie-systemes/00-index.md) | 3 | 14 |
+<!-- cv-catalog:end -->
 
 ## Vérification locale
 
@@ -26,6 +49,7 @@ Python 3.9+, sans dépendance supplémentaire :
 
 ```sh
 python3 scripts/check_vault.py
+python3 scripts/sync_catalog.py --check
 python3 -m unittest discover -s tests -v
 python3 examples/pilot_math.py
 ```
@@ -39,6 +63,9 @@ contrôles locaux, auto-revue, tests applicatifs et maîtrise personnelle.
 - [Instructions pour les agents](AGENTS.md) : objectifs et règles du dépôt.
 - [Audit des outils](docs/tooling-audit.md) : skills installés, versions,
   vérifications et configuration restante.
+- [Skill de revue des cartes](.agents/skills/revue-cartes/SKILL.md) :
+  `$revue-cartes` (Codex) ou `/revue-cartes` (Claude Code) audite, corrige
+  et propose d'enrichir une fiche et ses cartes.
 
 ## Spécification en cours
 
@@ -81,26 +108,3 @@ Sur la machine auditée, Context7 est configuré comme serveur MCP distant dans 
 Cette configuration utilisateur n'est pas embarquée dans un clone. Context7 sert à vérifier
 la documentation des outils et bibliothèques utilisés. Les notions scientifiques
 doivent s'appuyer sur des articles et autres sources primaires.
-
-## Couverture actuelle
-
-<!-- cv-catalog:start -->
-**7 fiches et 47 cartes**, réparties dans 5 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
-
-| Thématique | Fiches | Cartes |
-| --- | ---: | ---: |
-| [Mathématiques et estimation](vault/10-mathematiques-estimation/00-index.md) | 0 | 0 |
-| [Formation et acquisition des images](vault/20-acquisition-images/00-index.md) | 0 | 0 |
-| [Traitement d'image classique](vault/30-traitement-image/00-index.md) | 0 | 0 |
-| [Features, matching et recalage](vault/40-features-matching/00-index.md) | 2 | 13 |
-| [Calibration et géométrie multivue](vault/50-calibration-geometrie/00-index.md) | 2 | 14 |
-| [Vision 3D](vault/60-vision-3d/00-index.md) | 0 | 0 |
-| [Reconnaissance et représentations](vault/70-reconnaissance-representations/00-index.md) | 0 | 0 |
-| [Détection et pose](vault/80-detection-pose/00-index.md) | 1 | 5 |
-| [Segmentation](vault/90-segmentation/00-index.md) | 0 | 0 |
-| [Mouvement et vidéo](vault/100-mouvement-video/00-index.md) | 0 | 0 |
-| [Tracking et association](vault/110-tracking-association/00-index.md) | 1 | 8 |
-| [Vision générative et multimodale](vault/120-generatif-multimodal/00-index.md) | 0 | 0 |
-| [Données, évaluation et fiabilité](vault/130-evaluation-fiabilite/00-index.md) | 1 | 7 |
-| [Ingénierie des systèmes de vision](vault/140-ingenierie-systemes/00-index.md) | 0 | 0 |
-<!-- cv-catalog:end -->
