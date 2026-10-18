@@ -170,3 +170,38 @@ Context7, puis dans `main.ts` et `src/settings.ts` de la release 3.6.0 : le
 réglage vide sélectionne les fichiers Markdown du vault. Les gabarits et les
 exemples de syntaxe restent hors vault, et le contrôleur refuse les marqueurs
 de note dans les guides, index et références.
+
+## Extension aux quatorze thèmes — 2026-10-18
+
+La demande de couverture élargie autorise la rédaction de 45 sujets
+supplémentaires. Les sept sujets et 47 cartes ci-dessus désignent le lot initial ;
+le catalogue courant contient 52 fiches et 224 cartes. Il garde 129 sujets
+à approfondir individuellement. Les trois recherches complémentaires ont
+confronté les affirmations centrales à des sources primaires ; elles ne valent
+ni relecture scientifique indépendante ni validation de toutes les phrases.
+
+Context7 a été interrogé sur les API OpenCV 4.13 (calibration, géométrie,
+seuils, watershed, flot), Open3D (recalage global/ICP) et TensorRT (quantification,
+mesure et limites du support). Les résultats ont été confrontés aux pages
+et articles officiels, cités dans les fiches. Les tutoriels OpenCV cités en
+4.12 et les paramètres dépendant d’une version gardent leur version explicite.
+La documentation TensorRT courante est évolutive ; aucun support matériel
+ou gain INT8/FP8 universel n’en est déduit.
+
+Passages centraux consultés, par famille :
+
+| Famille | Source primaire et point contrôlé |
+| --- | --- |
+| Estimation | [Eigen, least squares](https://eigen.tuxfamily.org/dox/group__LeastSquares.html), conditionnement des équations normales ; [Solà](https://arxiv.org/abs/1711.02508), conventions d’erreur de rotation et reset ESKF |
+| Géométrie | [OpenCV solvePnP](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html), minimum API et repères ; [Open3D ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), initialisation locale ; [Zhang/Scaramuzza](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf), jauges d’alignement VO/VIO |
+| Matching et segmentation | [LightGlue](https://github.com/cvg/LightGlue), matches clairsemés ; [LoFTR](https://arxiv.org/abs/2104.00680), detector-free ; [SAM](https://arxiv.org/abs/2304.02643) et [SAM 2](https://arxiv.org/abs/2408.00714), prompts, mémoire et causalité |
+| Détection et tracking | [DETR](https://arxiv.org/abs/2005.12872), affectation d’entraînement et prédiction en ensemble ; [ByteTrack](https://arxiv.org/abs/2110.06864), association des détections faibles ; [HOTA](https://arxiv.org/abs/2009.07736), agrégation par seuil |
+| Représentations | [CLIP](https://arxiv.org/abs/2103.00020) et [SigLIP](https://arxiv.org/abs/2303.15343), objectifs et limites des scores ; [PatchCore](https://arxiv.org/abs/2106.08265), mémoire de patches et pondération du score |
+| Imagerie et métriques | [DICOM C.7.6.2](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), repères/espacement ; [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z), choix des métriques selon la tâche |
+| Systèmes | [TensorRT, quantification](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-quantized-types.html), support conditionnel ; [GStreamer queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), sens des politiques leaky |
+
+Les équations analytiques et scénarios construits sont distingués des résultats
+des auteurs. Seuls `examples/pilot_math.py` et `examples/curriculum_math.py`
+ont été exécutés : aucun entraînement, séquence de tracking, recalage 3D,
+export réel ou benchmark GPU n’a été réalisé. Le journal consigne séparément
+l’exécution du parseur officiel sur 224 notes et ses limites de simulation.

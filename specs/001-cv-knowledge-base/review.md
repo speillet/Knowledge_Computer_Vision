@@ -4,7 +4,7 @@
 **Périmètre** : spécification, cartographie, contrat pédagogique et recherche d'export.
 **Type de revue** : auto-revue assistée par l'agent auteur, confrontée à des sources
 primaires ; elle ne constitue pas une expertise scientifique indépendante.
-**Résultat** : révisions éditoriales 2 à 5 du brouillon, toujours à relire avec
+**Résultat** : révisions éditoriales 2 à 6 du brouillon, toujours à relire avec
 l'utilisateur. La révision 3 provient de la revue complémentaire ci-dessous,
 la révision 4 de l'organisation thématique du vault (FR-039) et la révision 5
 de l'ajout des pôles métiers.
@@ -94,9 +94,8 @@ fiche, comme pour le reste de l'inventaire. Les entrées des pôles D et F
 | Export et maintenance des relations | FR-020 à FR-024, FR-028, FR-039 | SC-004/005, SC-007 |
 | Pôles métiers | FR-040 à FR-043 | SC-011/012 |
 
-Cette correspondance relie exigences et résultats ; elle ne représente pas
-une couverture par tâches d'implémentation. Le plan et les tâches ne sont pas
-encore rédigés.
+Cette correspondance relie exigences et résultats. Le plan et les tâches
+existent désormais ; la révision 6 ci-dessous précise leur état réel.
 
 ## Sources primaires de la revue
 
@@ -147,15 +146,39 @@ ensuite été lues pour corroborer les synthèses.
 - Aucun pôle n'est encore choisi comme cible de carrière ; relever la priorité
   d'un pôle est une décision de l'apprenant.
 - La constitution n'est pas ratifiée. Aucun principe ne lui a été ajouté implicitement.
-- La checklist formelle Spec Kit nécessite actuellement un `plan.md`, absent
-  à cette phase. La commande a signalé ce prérequis ; la présente revue et
+- La checklist formelle Spec Kit nécessitait un `plan.md`, absent
+  lors du premier cadrage. La commande a signalé ce prérequis ; la présente revue et
   [sa checklist](checklists/relevance.md) sont éditoriales et manuelles.
 - L'analyse formelle croisée spec/plan/tasks aura lieu lorsque les trois
-  documents existeront ; elle n'a pas été annoncée comme exécutée ici.
+  documents seront analysés selon son workflow ; cette revue de cohérence
+  ne se présente pas comme une exécution de `$speckit-analyze`.
+
+## Revue de la mise à jour et implémentation — révision 6
+
+Les six pôles sont pertinents comme parcours complémentaires au socle. Ils
+restent une surcouche, avec une fiche canonique par sujet et aucune promesse
+d'aptitude à un poste. Corrections appliquées :
+
+| ID | Constat | Correction |
+| --- | --- | --- |
+| RV-17 | V0 et priorité V1 des entrées de pôles pouvaient se contredire | Conserver V0 pour un sujet déjà prioritaire |
+| RV-18 | SC-011 ne demandait que des énoncés malgré FR-042 | Exiger réponses de référence et critères de correction |
+| RV-19 | L'ancien périmètre interdisait une rédaction élargie maintenant demandée | Autoriser préparation éditoriale, garder les gates d'export et d'essai |
+| RV-20 | Échelle/yaw VIO, occupation et VLA pouvaient mêler tâches et jauges | Conventions, observabilité et frontière perception/action précisées |
+| RV-21 | INT8/FP8 pouvait suggérer un support ou gain universel | Conditionner au runtime, opérateurs et matériel ; mesurer bout en bout |
+| RV-22 | Formats médicaux, biométrie et métriques pouvaient masquer leur protocole | Unités, validation externe, FMR/FNMR/PAD et limites précisés |
+| RV-23 | Un dossier ou nom cité pouvait être compté comme couverture détaillée | SC-013 et inventaire séparent 52 fiches rédigées, 224 cartes et approfondissements ouverts |
+
+Les 45 nouvelles fiches et 177 nouvelles cartes complètent les quatorze thèmes.
+Les sujets avancés ont une profondeur affichée ; 129 entrées d'approfondissement
+restent identifiées individuellement. Les cas métiers sont reliés par ID et
+les douze cas de transfert ont des corrigés réservés. Les contrôles exécutables
+et preuves se trouvent dans le journal du vault. Aucune session de rappel,
+validation indépendante ou synchronisation réelle n'est déclarée réussie.
 
 ## Étape suivante pertinente
 
-Relire le niveau de profondeur et les deux étages du pilote, puis produire
-un petit échantillon afin de confronter les rubriques à de vrais contenus.
+Essayer le pilote dans les applications, puis mesurer le rappel initial et
+différé sur l’échantillon fixé avant résultats.
 Le pilote doit permettre de modifier le contrat s'il génère du remplissage,
 des réponses impossibles à corriger ou des comparaisons insuffisamment justifiées.
