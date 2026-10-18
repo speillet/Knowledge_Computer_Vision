@@ -23,7 +23,7 @@ Reponse: **Noyau attendu** : <points nécessaires pour satisfaire l'objectif>
 
 **Erreurs bloquantes** : <contresens qui invalident la réponse>
 Source: [[<dossier>/references/<fiche>|Fiche <Nom>]] ; [<Auteur année, §x>](https://…).
-Tags: cv::pilote cv::dXX famille::<famille> cv_id::CV-<SUJET>-NNN provenance::agent
+Tags: cv::pilote cv::dXX famille::<famille> cv_id::CV-<SUJET>-NNN provenance::agent pole::B pole::E
 END
 ```
 
@@ -49,7 +49,11 @@ END
   vault et sans `.md`, plus au moins une source HTTPS avec sa section, sa
   ligne ou son commit.
 - **Tags** : une seule ligne, juste avant `END`, avec `cv::pilote`, le domaine
-  `cv::dXX` de la fiche, `famille::…`, `cv_id::<ID>` et `provenance::agent`.
+  `cv::dXX` de la fiche, `famille::…`, `cv_id::<ID>`, `provenance::agent`
+  et un tag `pole::<lettre>` pour chaque pôle de sa fiche. L’ensemble des tags
+  de pôles correspond exactement à son champ `poles`, sans doublon. Les tags
+  `pole::B pole::E` du bloc sont un exemple pour une fiche `poles: [B, E]` ;
+  les adapter à la fiche parente.
   Le contrôleur du pilote exige `provenance::agent` : une carte rédigée par
   l'apprenant demandera de faire évoluer le contrôleur.
 - **Identité Anki** : après une synchronisation, le plugin ajoute
