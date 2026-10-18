@@ -1,0 +1,7 @@
+{
+  "name": "CV-Pilote",
+  "fields": ["ID", "Question", "Reponse", "Source"],
+  "templates": [{"name": "Rappel", "front": "front.html", "back": "back.html"}],
+  "css": "style.css",
+  "deckRoot": "CV::Pilote"
+}

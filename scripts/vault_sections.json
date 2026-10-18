@@ -1,0 +1,16 @@
+[
+  {"domaine": "d01", "dossier": "10-mathematiques-estimation", "titre": "Mathématiques et estimation", "description": "Conditionnement, moindres carrés, estimation robuste et incertitude."},
+  {"domaine": "d02", "dossier": "20-acquisition-images", "titre": "Formation et acquisition des images", "description": "Optique, projection, bruit, couleur, échantillonnage et synchronisation."},
+  {"domaine": "d03", "dossier": "30-traitement-image", "titre": "Traitement d'image classique", "description": "Filtres, gradients, morphologie, contours et transformations."},
+  {"domaine": "d04", "dossier": "40-features-matching", "titre": "Features, matching et recalage", "description": "Détection locale, descripteurs, correspondances et validation géométrique."},
+  {"domaine": "d05", "dossier": "50-calibration-geometrie", "titre": "Calibration et géométrie multivue", "description": "Intrinsèques, repères, distorsion, homographies, pose et reconstruction."},
+  {"domaine": "d06", "dossier": "60-vision-3d", "titre": "Vision 3D", "description": "Stéréo, profondeur, SfM, SLAM et recalage de nuages."},
+  {"domaine": "d07", "dossier": "70-reconnaissance-representations", "titre": "Reconnaissance et représentations", "description": "Descripteurs globaux, classification, retrieval et anomalies."},
+  {"domaine": "d08", "dossier": "80-detection-pose", "titre": "Détection et pose", "description": "Boîtes, affectation, posttraitement et points clés."},
+  {"domaine": "d09", "dossier": "90-segmentation", "titre": "Segmentation", "description": "Méthodes classiques, sémantique, instances et panoptique."},
+  {"domaine": "d10", "dossier": "100-mouvement-video", "titre": "Mouvement et vidéo", "description": "Flot optique, suivi de points, visibilité et compréhension temporelle."},
+  {"domaine": "d11", "dossier": "110-tracking-association", "titre": "Tracking et association", "description": "Mouvement, apparence, affectation et cycle de vie des pistes."},
+  {"domaine": "d12", "dossier": "120-generatif-multimodal", "titre": "Vision générative et multimodale", "description": "Diffusion, restauration, vision-langage et rendu neuronal."},
+  {"domaine": "d13", "dossier": "130-evaluation-fiabilite", "titre": "Données, évaluation et fiabilité", "description": "Protocoles, métriques, splits, incertitude et dérive."},
+  {"domaine": "d14", "dossier": "140-ingenierie-systemes", "titre": "Ingénierie des systèmes de vision", "description": "Contrats de données, profiling, déploiement et surveillance."}
+]
