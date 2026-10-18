@@ -15,9 +15,9 @@
   consigner versions, champs et réglages réels.
 - [ ] T010 — Exécuter tout le pilote d'export, y compris historique, médias,
   déplacements/suppressions/conflits et rendu sur AnkiDroid.
-- [ ] T011 — Ajouter les extensions : segmentation classique, matching appris,
+- [x] T011 — Ajouter les extensions : segmentation classique, matching appris,
   recalage global + ICP ; vérifier le format contrasté avant généralisation.
-- [ ] T012 — Compléter les douze cas de transfert et les six familles de variations.
+- [x] T012 — Compléter les douze cas de transfert et les six familles de variations.
 - [ ] T013 — Faire les deux sessions de rappel ; mesurer ambiguïtés, durée,
   correction et charge quotidienne avant de choisir le lot suivant.
 
@@ -35,20 +35,28 @@ appartiennent à la suite du pilote, sans déclaration de validation anticipée.
 - [x] T017 — Ajouter le champ `poles` aux fiches et les étiquettes de pôle aux
   cartes ; mettre à jour `data-model.md`, `scripts/check_vault.py` et ses tests
   pour valider les lettres A à F.
-- [ ] T018 — Rédiger les douze cas de pôle, conception et diagnostic, avec
+- [x] T018 — Rédiger les douze cas de pôle, conception et diagnostic, avec
   réponse de référence et critères de correction.
 
 T015–T018 découlent de la révision 5 de la spec (pôles métiers) ; ils ne
 modifient pas le pilote.
 
-- [ ] T019 — Revoir les specs mises à jour : priorités V0, profondeur, cas
+- [x] T019 — Revoir les specs mises à jour : priorités V0, profondeur, cas
   corrigibles, jauges VIO, occupation, VLA, quantification et statut des preuves.
-- [ ] T020 — Ajouter 45 fiches et 177 cartes : chaque domaine contient des
+- [x] T020 — Ajouter 45 fiches et 177 cartes : chaque domaine contient des
   artefacts, sans assimiler les 129 approfondissements ouverts à des méthodes maîtrisées.
-- [ ] T021 — Générer index, inventaire et vues des pôles depuis le contenu ;
+- [x] T021 — Générer index, inventaire et vues des pôles depuis le contenu ;
   vérifier étiquettes, cas métiers, liens, conservation des IDs et calculs.
 - [ ] T022 — Publier en commits/PR cohérents, relire, fusionner dans l'ordre
   des dépendances et vérifier le contenu final de main.
 
-T011/T012 restent à préparer dans le lot de couverture suivant. Les exemples
-arithmétiques ne constituent pas des expériences image/vidéo. T009/T010/T013 restent ouverts après la publication.
+T011/T012 signifient contenu préparé : les résultats image/vidéo proposés ne
+sont pas des expériences exécutées, et les cas de transfert n'ont pas été
+essayés par l'apprenant. T009/T010/T013 restent ouverts après la publication.
+
+- [ ] T023 — Avant la rédaction des 129 approfondissements APP, définir pour
+  chacun les compétences observables et les dépendances obligatoires, distinctes
+  de son lien thématique connexe ; compléter l’inventaire et les sources.
+  SC-001/FR-030 restent partiellement satisfaits pour ce backlog. Les 52 fiches
+  du lot livré ont leurs compétences et prérequis ; cette tâche n’affecte pas
+  la présence effective de contenu dans les quatorze thèmes (SC-013).

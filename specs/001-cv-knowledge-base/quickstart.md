@@ -20,7 +20,7 @@ son fichier de cartes. Les formules doivent être lisibles, les liens résolus
 et le schéma SORT visible. La procédure applicative et les gabarits sont
 présentés dans [le guide Anki](../../vault/01-Parcours/Guide-Anki.md).
 
-L'essai Anki se fait dans les cinq sous-decks thématiques de `CV::Pilote`,
+L'essai Anki se fait dans les quatorze sous-decks thématiques de `CV::Pilote`,
 avec le modèle `CV-Pilote`. Les directives des fichiers déterminent le sous-deck.
 Vérifier nombre de notes **et** de cartes, répétition sans doublon, modification
 d'une réponse après une révision réelle, identité et historique conservés.

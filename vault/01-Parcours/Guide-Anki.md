@@ -66,8 +66,9 @@ Sources : [format des notes](https://github.com/ObsidianToAnki/Obsidian_to_Anki/
 ## Premier export et contrôle sur Android
 
 1. Avec Anki Desktop ouvert, lancer manuellement le scan du vault pilote.
-   Les sources initiales contiennent **47 notes** et le modèle doit produire
-   **47 cartes**, une par note, réparties dans cinq sous-decks thématiques.
+   Le nombre courant est donné par le catalogue et le contrôleur ; chaque note
+   doit produire une carte. Le lot actuel comporte **224 notes et 224 cartes**,
+   réparties dans les 14 sous-decks thématiques.
    Vérifier ces deux nombres dans le navigateur,
    pas le compteur quotidien du deck, qui dépend des limites de révision.
 2. Vérifier que les commentaires d'identité ajoutés par le plugin sont uniques,
