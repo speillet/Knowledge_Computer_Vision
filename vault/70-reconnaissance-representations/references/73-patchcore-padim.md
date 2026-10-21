@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-REPRESENTATIONS", "CV-ACQUISITION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -25,7 +25,7 @@ Détecter des écarts au nominal lorsque les défauts sont rares. Entrées : ima
 
 ## Intuition et déroulement
 
-Golden template compare à une référence après recalage. PatchCore garde une banque de features de patches nominaux, réduite par coreset, et score par proximité. PaDiM modélise des distributions gaussiennes de features par position et utilise leurs corrélations.
+Dans la baseline proposée par le projet, golden template signifie comparer à une référence après recalage. PatchCore garde une banque de features de patches nominaux, réduite par coreset, et score par proximité. PaDiM modélise des distributions gaussiennes de features par position et utilise leurs corrélations.
 
 ## Mathématiques, conventions et unités
 

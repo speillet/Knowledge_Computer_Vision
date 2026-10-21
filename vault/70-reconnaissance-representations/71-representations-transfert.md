@@ -11,13 +11,13 @@ Objectif : estimer le coût des tokens. Famille : raisonnement. Provenance : age
 START
 CV-Pilote
 ID: CV-REPRESENTATIONS-001
-Question: Dans un ViT à patch fixe et attention globale dense, doubler largeur et hauteur change comment le nombre de tokens et le terme quadratique d’attention ?
+Question: Dans un ViT à patch fixe et attention globale dense, doubler largeur et hauteur change comment le nombre de tokens image (hors token de classe) et le terme quadratique associé ?
 Reponse: **Noyau attendu** : Tokens ×4 ; terme quadratique ×16, dans ce modèle de coût.
 
 **Approfondissement** : Ce n’est pas une prédiction exacte du temps total : kernels, mémoire et autres blocs comptent.
 
 **Erreurs bloquantes** : Annoncer une latence ×16 garantie pour tout transformer.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §§3–4](https://arxiv.org/abs/2010.11929) ; [Swin, §3](https://arxiv.org/abs/2103.14030) ; [ConvNeXt, §2](https://arxiv.org/abs/2201.03545) ; [DINOv2, méthode et transfert](https://arxiv.org/abs/2304.07193).
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §3.1](https://arxiv.org/abs/2010.11929) ; comptage analytique du projet.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-REPRESENTATIONS-001 provenance::agent pole::A pole::D pole::E
 END
 
@@ -68,7 +68,7 @@ Reponse: **Noyau attendu** : Ils entraînent respectivement une tête, tout le m
 **Approfondissement** : Mesurer généralisation, données nécessaires et coût final ; peu de paramètres appris ne garantit pas une inférence plus rapide.
 
 **Erreurs bloquantes** : Assimiler faible nombre de paramètres entraînés et faible latence.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §§3–4](https://arxiv.org/abs/2010.11929) ; [Swin, §3](https://arxiv.org/abs/2103.14030) ; [ConvNeXt, §2](https://arxiv.org/abs/2201.03545) ; [DINOv2, méthode et transfert](https://arxiv.org/abs/2304.07193).
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §3.1](https://arxiv.org/abs/2010.11929) ; [Hu et al., LoRA, résumé et principe des paramètres gelés](https://arxiv.org/abs/2106.09685) ; [Houlsby et al., adapters, résumé](https://arxiv.org/abs/1902.00751) ; principe d’adaptation transposé à la vision, sans reprendre les gains NLP.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-REPRESENTATIONS-004 provenance::agent pole::A pole::D pole::E
 END
 
@@ -85,6 +85,6 @@ Reponse: **Noyau attendu** : Ordre couleur, normalisation, plage, interpolation,
 **Approfondissement** : Comparer une image identique dans les deux chaînes avant d’attribuer l’écart aux données ou à l’architecture.
 
 **Erreurs bloquantes** : Changer l’entraînement sans contrôler le contrat d’entrée.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §§3–4](https://arxiv.org/abs/2010.11929) ; [Swin, §3](https://arxiv.org/abs/2103.14030) ; [ConvNeXt, §2](https://arxiv.org/abs/2201.03545) ; [DINOv2, méthode et transfert](https://arxiv.org/abs/2304.07193).
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [DINOv2, résumé et évaluation par transfert](https://arxiv.org/abs/2304.07193) ; contrôle du prétraitement proposé par le projet.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-REPRESENTATIONS-005 provenance::agent pole::A pole::D pole::E
 END

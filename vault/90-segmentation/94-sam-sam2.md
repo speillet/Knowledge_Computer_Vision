@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Non : son contrat central est le masque guidé par 
 **Approfondissement** : Une classe peut venir d’un autre composant ou d’une annotation ; ne pas attribuer le prototype texte du papier à tout checkpoint standard.
 
 **Erreurs bloquantes** : Confondre masque d’objet et classe métier.
-Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; [SAM, §3 et prototype texte §7.5](https://arxiv.org/abs/2304.02643) ; [SAM 2, architecture et mémoire](https://arxiv.org/abs/2408.00714).
+Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; [SAM, §3 et preuve de concept text-to-mask §7.5](https://arxiv.org/abs/2304.02643).
 Tags: cv::pilote cv::d09 famille::comprehension cv_id::CV-SAM-001 provenance::agent pole::A pole::D
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Mémoire et propagation de masques guidées dans le
 **Approfondissement** : Préciser prompts, corrections, causalité et version ; cela ne fournit pas seul un MOT autonome et classifié de tous objets.
 
 **Erreurs bloquantes** : Assimiler propagation de masklets et système complet de suivi d’objets.
-Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; [SAM, §3 et prototype texte §7.5](https://arxiv.org/abs/2304.02643) ; [SAM 2, architecture et mémoire](https://arxiv.org/abs/2408.00714).
+Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; [SAM 2, §4 : mémoire, prompts et masklets](https://arxiv.org/abs/2408.00714).
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-SAM-002 provenance::agent pole::A pole::D
 END
 
@@ -51,6 +51,6 @@ Reponse: **Noyau attendu** : Elle dispose d’informations différentes ; budget
 **Approfondissement** : Rapporter délai, frames consultées et qualité finale sous même contrat avant de comparer.
 
 **Erreurs bloquantes** : Présenter une évaluation offline comme performance temps réel sans latence.
-Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; [SAM, §3 et prototype texte §7.5](https://arxiv.org/abs/2304.02643) ; [SAM 2, architecture et mémoire](https://arxiv.org/abs/2408.00714).
+Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; Conséquence du protocole temporel et d’interaction proposé par le projet ; [SAM 2, §§3–4 : tâche et modèle](https://arxiv.org/abs/2408.00714).
 Tags: cv::pilote cv::d09 famille::evaluation cv_id::CV-SAM-003 provenance::agent pole::A pole::D
 END

@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Non : la comparaison d’identité et PAD ont des c
 **Approfondissement** : Mesurer chaque composant dans le système réel ; un fort score d’identité peut aussi venir d’une reproduction.
 
 **Erreurs bloquantes** : Déduire la liveness de la similarité faciale.
-Source: [[70-reconnaissance-representations/references/75-embeddings-biometrie|Fiche complète]] ; [ArcFace, objectif et évaluation](https://arxiv.org/abs/1801.07698) ; [NIST FRTE 1:1, FMR/FNMR](https://pages.nist.gov/frvt/html/frvt11.html).
+Source: [[70-reconnaissance-representations/references/75-embeddings-biometrie|Fiche complète]] ; [Deng et al., ArcFace, objectif de marge angulaire](https://arxiv.org/abs/1801.07698) ; [Ngan et al. 2023, NISTIR 8491, résumé PAD](https://www.nist.gov/publications/face-analysis-technology-evaluation-fate-part-10-performance-passive-software-based).
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-BIOMETRIE-001 provenance::agent pole::E
 END
 
@@ -34,6 +34,6 @@ Reponse: **Noyau attendu** : Il décrit un point d’équilibre qui peut différ
 **Approfondissement** : Préciser données, acquisition et sous-groupes ; une moyenne ne donne pas toute la courbe.
 
 **Erreurs bloquantes** : Assimiler EER et performance à tout seuil.
-Source: [[70-reconnaissance-representations/references/75-embeddings-biometrie|Fiche complète]] ; [ArcFace, objectif et évaluation](https://arxiv.org/abs/1801.07698) ; [NIST FRTE 1:1, FMR/FNMR](https://pages.nist.gov/frvt/html/frvt11.html).
+Source: [[70-reconnaissance-representations/references/75-embeddings-biometrie|Fiche complète]] ; [NIST FRTE 1:1, définitions FMR/FNMR, consulté le 2026-10-20](https://pages.nist.gov/frvt/html/frvt11.html) ; comparaison de points d’exploitation déduite de la courbe d’erreurs.
 Tags: cv::pilote cv::d07 famille::evaluation cv_id::CV-BIOMETRIE-002 provenance::agent pole::E
 END

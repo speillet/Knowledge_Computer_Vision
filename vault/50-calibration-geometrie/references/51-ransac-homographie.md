@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 2
+revision: 3
 tags: [cv/d05, geometrie, ransac, matching]
 ---
 # RANSAC appliqué à une homographie
@@ -111,7 +111,7 @@ H, inliers = cv.findHomography(src_xy, dst_xy, cv.RANSAC, 3.0)
 3,0 est un seuil illustratif en pixels destination, pas une recommandation.
 L'appel seul n'atteste pas la qualité géométrique. [API][api]
 
-**Baseline analytique** : transformation connue de points d'un plan. Observer
+**Baseline analytique proposée, non exécutée ici** : transformation connue de points d'un plan. Observer
 résidu, proportion d'inliers et erreur sur des points non utilisés.
 **Variation proposée, non exécutée sur images** : ajouter progressivement des
 outliers puis une seconde profondeur sous translation. Prédiction : le premier

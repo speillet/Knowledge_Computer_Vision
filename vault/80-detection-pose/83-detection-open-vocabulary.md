@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Le classement image porte sur l’image globale ; l
 **Approfondissement** : Une image peut contenir plusieurs objets et candidats ; grounding, classification et génération ne partagent pas toutes les mêmes métriques.
 
 **Erreurs bloquantes** : Prendre un score image–texte pour une boîte correctement localisée.
-Source: [[80-detection-pose/references/83-detection-open-vocabulary|Fiche complète]] ; [OWL-ViT, méthode](https://arxiv.org/abs/2205.06230) ; [Grounding DINO, méthode](https://arxiv.org/abs/2303.05499).
+Source: [[80-detection-pose/references/83-detection-open-vocabulary|Fiche complète]] ; [OWL-ViT, §3.1 : adaptation à la localisation](https://arxiv.org/abs/2205.06230) ; [Grounding DINO, §§3.2–3.3](https://arxiv.org/abs/2303.05499).
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-OPENVOC-001 provenance::agent pole::A pole::D
 END
 
@@ -36,7 +36,7 @@ Reponse: **Noyau attendu** : Définir nouveautés, erreurs acceptables et budget
 **Erreurs bloquantes** : Choisir sur une démonstration favorable sans classes absentes ni protocole.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[80-detection-pose/references/83-detection-open-vocabulary|Fiche complète]] ; [OWL-ViT, méthode](https://arxiv.org/abs/2205.06230) ; [Grounding DINO, méthode](https://arxiv.org/abs/2303.05499).
+Source: [[80-detection-pose/references/83-detection-open-vocabulary|Fiche complète]] ; Cas et protocole conçus par le projet ; architectures de référence : [OWL-ViT, §3](https://arxiv.org/abs/2205.06230) et [Grounding DINO, §3](https://arxiv.org/abs/2303.05499).
 Tags: cv::pilote cv::d08 famille::conception cv_id::CV-OPENVOC-002 provenance::agent pole::A pole::D cas_pole::A::conception
 END
 
@@ -53,6 +53,6 @@ Reponse: **Noyau attendu** : Définition de classe, formulations/négatifs et sc
 **Approfondissement** : Évaluer un rejet plutôt que supposer le seuil transférable à toutes descriptions.
 
 **Erreurs bloquantes** : Conclure qu’un modèle open-vocabulary connaît la taxonomie métier sans supervision.
-Source: [[80-detection-pose/references/83-detection-open-vocabulary|Fiche complète]] ; [OWL-ViT, méthode](https://arxiv.org/abs/2205.06230) ; [Grounding DINO, méthode](https://arxiv.org/abs/2303.05499).
+Source: [[80-detection-pose/references/83-detection-open-vocabulary|Fiche complète]] ; Diagnostic proposé par le projet à partir du conditionnement textuel ; [Grounding DINO, §§3.2–3.3](https://arxiv.org/abs/2303.05499).
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-OPENVOC-003 provenance::agent pole::A pole::D
 END

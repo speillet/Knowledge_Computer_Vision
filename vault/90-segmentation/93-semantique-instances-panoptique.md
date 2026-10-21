@@ -12,12 +12,12 @@ START
 CV-Pilote
 ID: CV-SEGMENTATION-001
 Question: Quelle différence sépare segmentation sémantique, d’instances et panoptique ?
-Reponse: **Noyau attendu** : Sémantique : classe par pixel ; instances : séparer objets comptables ; panoptique : classe et instance pour things, classe pour stuff.
+Reponse: **Noyau attendu** : Sémantique : classe par pixel ; instances : séparer objets comptables ; panoptique : partition sans recouvrement, avec classe et instance pour things, classe pour stuff.
 
 **Approfondissement** : Le masque d’un objet sans classe ne remplit pas automatiquement le contrat panoptique.
 
 **Erreurs bloquantes** : Assimiler classe identique et identité d’instance identique.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; [U-Net](https://arxiv.org/abs/1505.04597) ; [DeepLabv3+](https://arxiv.org/abs/1802.02611) ; [Mask R-CNN](https://arxiv.org/abs/1703.06870) ; [Panoptic Segmentation, tâche/PQ](https://arxiv.org/abs/1801.00868) ; [nnU-Net, pipeline](https://doi.org/10.1038/s41592-020-01008-z).
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; [Panoptic Segmentation, §3 : format, stuff/things et absence de recouvrement](https://arxiv.org/abs/1801.00868).
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-SEGMENTATION-001 provenance::agent pole::A pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Non : la sortie peut ne pas séparer les instances.
 **Approfondissement** : Ajouter un pipeline d’instances ou des marqueurs selon acquisition, puis évaluer fusions/séparations.
 
 **Erreurs bloquantes** : Déduire le nombre d’objets d’une bonne mIoU.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; [U-Net](https://arxiv.org/abs/1505.04597) ; [DeepLabv3+](https://arxiv.org/abs/1802.02611) ; [Mask R-CNN](https://arxiv.org/abs/1703.06870) ; [Panoptic Segmentation, tâche/PQ](https://arxiv.org/abs/1801.00868) ; [nnU-Net, pipeline](https://doi.org/10.1038/s41592-020-01008-z).
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; [Reinke et al., P1 et fig. 1/3 : métrique et catégorie de problème](https://www.nature.com/articles/s41592-023-02150-0) ; application au comptage : raisonnement du projet.
 Tags: cv::pilote cv::d09 famille::diagnostic cv_id::CV-SEGMENTATION-002 provenance::agent pole::A pole::E
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : La géométrie doit rester alignée ; l’interpola
 **Approfondissement** : Contrôler aussi void, crops/padding et reconstruction de l’image complète. Une interpolation continue peut créer des labels artificiels.
 
 **Erreurs bloquantes** : Transformer l’image seule ou lisser les IDs de classe comme des intensités.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; [U-Net](https://arxiv.org/abs/1505.04597) ; [DeepLabv3+](https://arxiv.org/abs/1802.02611) ; [Mask R-CNN](https://arxiv.org/abs/1703.06870) ; [Panoptic Segmentation, tâche/PQ](https://arxiv.org/abs/1801.00868) ; [nnU-Net, pipeline](https://doi.org/10.1038/s41592-020-01008-z).
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; Conséquence du contrat de labels discrets de la fiche ; [Panoptic Segmentation, §3 : classes et IDs](https://arxiv.org/abs/1801.00868).
 Tags: cv::pilote cv::d09 famille::pratique cv_id::CV-SEGMENTATION-003 provenance::agent pole::A pole::E
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Elle mesure un recouvrement selon protocole ; valid
 **Approfondissement** : Séparer patients/sites et rapporter cas vides ou échecs ; aucun score seul ne démontre une décision clinique utile.
 
 **Erreurs bloquantes** : Déduire une utilité clinique du seul benchmark interne.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; [U-Net](https://arxiv.org/abs/1505.04597) ; [DeepLabv3+](https://arxiv.org/abs/1802.02611) ; [Mask R-CNN](https://arxiv.org/abs/1703.06870) ; [Panoptic Segmentation, tâche/PQ](https://arxiv.org/abs/1801.00868) ; [nnU-Net, pipeline](https://doi.org/10.1038/s41592-020-01008-z).
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Fiche complète]] ; [Reinke et al., P2.1–P2.3, P3.2 et discussion](https://www.nature.com/articles/s41592-023-02150-0) ; protocole externe/patients/sites proposé par le projet.
 Tags: cv::pilote cv::d09 famille::evaluation cv_id::CV-SEGMENTATION-004 provenance::agent pole::A pole::E
 END

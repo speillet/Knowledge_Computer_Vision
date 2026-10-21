@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -52,6 +52,8 @@ Bon score moyen mais échecs sur une condition : stratifier acquisition et compa
 Vérification, identification, qualité et PAD exigent sorties et références distinctes ; documenter les limites de généralisation.
 
 ## Sources et cartes
+
+- [Ngan et al. 2023, NISTIR 8491, résumé PAD](https://www.nist.gov/publications/face-analysis-technology-evaluation-fate-part-10-performance-passive-software-based)
 
 - [ArcFace, objectif et évaluation](https://arxiv.org/abs/1801.07698).
 - [NIST FRTE 1:1, FMR/FNMR](https://pages.nist.gov/frvt/html/frvt11.html).

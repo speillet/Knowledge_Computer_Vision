@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -29,7 +29,7 @@ Détecter régions/lignes puis reconnaître : CRNN/CTC est une référence séqu
 
 ## Mathématiques, conventions et unités
 
-CER=$(S+D+I)/N$ sur caractères de référence, avec substitutions, suppressions et insertions d'édition. WER applique la logique aux mots. Normalisation unicode, casse, espaces et segmentation changent le protocole ; le score peut dépasser 1 si les insertions sont nombreuses.
+La CER classique vaut $(S+D+I)/N$ pour $N>0$ caractères de référence, avec substitutions, suppressions et insertions d'édition. La WER classique applique la même logique aux mots. OCR-D décrit aussi une variante normalisée $(S+D+I)/(S+D+I+C)$, où $C$ compte les caractères corrects, et utilise cette variante bornée dans ses benchmarks ; ne pas assimiler leurs scores à la convention classique adoptée ici. Normalisation unicode, casse, espaces et segmentation changent le protocole ; le score peut dépasser 1 si les insertions sont nombreuses.
 
 ## Paramètres et propriétés
 

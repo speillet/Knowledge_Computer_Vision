@@ -36,7 +36,7 @@ Les focales et le point principal sont en pixels ; $s$ est un facteur homogène.
 **Approfondissement** : $\gamma$ est le skew, souvent fixé à zéro selon le modèle. La distorsion n'est pas incluse dans cette multiplication projective idéale. Une taille de carré en millimètres donne des translations dans cette unité, sans changer les dimensions pixel des intrinsèques.
 
 **Erreurs bloquantes** : inverser le sens de $R$ sans transformer la formule, confondre mètres et pixels ou inclure toute distorsion dans $K$ seul.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §2.2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §2.1, équation 1](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-ZHANG-002 provenance::agent pole::B pole::C pole::E
 END
 
@@ -53,7 +53,7 @@ Reponse: **Noyau attendu** : $H\sim K[r_1\ r_2\ t]$. Avec $B=K^{-T}K^{-1}$, les 
 **Approfondissement** : chaque vue apporte deux contraintes. Trois vues indépendantes sont nécessaires en général pour cinq intrinsèques libres ; deux peuvent suffire avec skew nul imposé. Les minima algébriques ne garantissent pas une calibration précise sur des images bruitées ; la capture doit aussi couvrir la zone utile.
 
 **Erreurs bloquantes** : dire que deux photos quelconques suffisent toujours ou que de simples translations rendent tous les intrinsèques observables.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §§3.1 et 4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §§2.3, 3.1 et 4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-ZHANG-003 provenance::agent pole::B pole::C pole::E
 END
 

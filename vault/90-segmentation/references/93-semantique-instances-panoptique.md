@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -16,7 +16,7 @@ tags: [cv/d09]
 
 ## Problème, données et hypothèses
 
-Définir la sortie avant de choisir architecture et loss : classe par pixel, masques d'objets comptables ou partition panoptique stuff/things. Entrées : images et annotations cohérentes ; sorties : logits/masques/classes selon le contrat.
+Définir la sortie avant de choisir architecture et loss : classe par pixel, masques d'objets comptables ou partition panoptique stuff/things sans recouvrement entre segments. Entrées : images et annotations cohérentes ; sorties : logits/masques/classes selon le contrat.
 
 ## Prérequis et compétences
 
@@ -52,6 +52,8 @@ Pixels corrects mais objets fusionnés : la tâche/annotation peut être sémant
 Méthodes classiques sur acquisition stable ; segmentation dense ou prompts selon besoin et supervision. La performance algorithmique ne prouve pas l'utilité clinique.
 
 ## Sources et cartes
+
+- [Reinke et al., 2024, pièges des métriques, P1–P3](https://www.nature.com/articles/s41592-023-02150-0) : tâche, frontières, petites structures et agrégation.
 
 - [U-Net](https://arxiv.org/abs/1505.04597).
 - [DeepLabv3+](https://arxiv.org/abs/1802.02611).

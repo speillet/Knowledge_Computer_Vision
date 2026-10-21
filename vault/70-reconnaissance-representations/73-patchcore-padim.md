@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Template compare à une référence alignée ; Patc
 **Approfondissement** : Choisir selon variabilité nominale, alignement, mémoire et évaluation métier ; aucun ne connaît tous défauts possibles.
 
 **Erreurs bloquantes** : Décrire ces scores comme des probabilités universelles de défectuosité.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [PaDiM, §III](https://arxiv.org/abs/2011.08785).
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [Roth et al., PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [Defard et al., PaDiM, §III, équations 1–2](https://arxiv.org/abs/2011.08785) ; baseline template définie par le projet.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-ANOMALIES-001 provenance::agent pole::A pole::E
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Comparer acquisition/prétraitement, recalage et di
 **Approfondissement** : Réviser la référence ou le système lumineux après validation ; changer le seuil seul peut cacher de vrais défauts.
 
 **Erreurs bloquantes** : Étiqueter automatiquement toute hausse de score comme défaut physique.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [PaDiM, §III](https://arxiv.org/abs/2011.08785).
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [Roth et al., PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; diagnostic d’acquisition déduit par le projet.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-ANOMALIES-003 provenance::agent pole::A pole::E
 END
 
@@ -70,6 +70,6 @@ Reponse: **Noyau attendu** : Stabiliser acquisition, définir défauts critiques
 **Erreurs bloquantes** : Valider sur les seules images nominales ou l’AUROC moyenne.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [PaDiM, §III](https://arxiv.org/abs/2011.08785).
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [Roth et al., PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [Defard et al., PaDiM, §III, équations 1–2](https://arxiv.org/abs/2011.08785) ; protocole industriel proposé par le projet.
 Tags: cv::pilote cv::d07 famille::conception cv_id::CV-ANOMALIES-004 provenance::agent pole::A pole::E cas_pole::E::conception
 END

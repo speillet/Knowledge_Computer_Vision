@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-HOMOGRAPHIE"]
-revision: 2
+revision: 3
 tags: [cv/d05, calibration, zhang]
 ---
 # Calibration caméra sur mire — méthode de Zhang
@@ -60,7 +60,7 @@ norme des axes de rotation. Avec cinq intrinsèques libres, trois vues
 indépendantes sont nécessaires en général à l'initialisation linéaire ;
 deux peuvent suffire en imposant un skew nul. Ce minimum algébrique ne donne
 pas une garantie de précision. Des translations seules n'apportent pas de
-nouvelles contraintes d'orientation. [Zhang, §§3.1 et 4][zhang]
+nouvelles contraintes d'orientation. [Zhang, §§2.3, 3.1 et 4][zhang]
 
 ## Déroulement, distorsion et acquisition
 

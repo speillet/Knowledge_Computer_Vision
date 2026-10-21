@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -29,11 +29,11 @@ La rectification organise les recherches selon les lignes épipolaires. Un coût
 
 ## Mathématiques, conventions et unités
 
-Cas rectifié idéal : $Z=fB/d$, f et d en pixels, baseline B en mètres et Z en mètres. Pour petite incertitude, $\sigma_Z\approx fB\sigma_d/d^2$. Utiliser la matrice Q pour la géométrie rectifiée générale. Une disparité entière fixe SGBM OpenCV peut être stockée multipliée par 16 : convertir selon le contrat avant reprojection.
+Cas rectifié horizontal idéal avec points principaux de même abscisse et $d=x_g-x_d>0$ : $Z=fB/d$, f et d en pixels, baseline B en mètres et Z en mètres. Pour petite incertitude, $\sigma_Z\approx fB\sigma_d/d^2$. Utiliser la matrice Q pour la géométrie rectifiée générale. Une disparité entière fixe SGBM OpenCV peut être stockée multipliée par 16 : convertir selon le contrat avant reprojection.
 
 ## Paramètres et propriétés
 
-Plage de disparités, bloc, pénalités, cohérence gauche/droite et masque invalides. Ne pas traiter d≤0 comme une profondeur numérique ordinaire. Texture répétée et surfaces brillantes peuvent produire un minimum de coût faux.
+Plage de disparités, bloc, pénalités, cohérence gauche/droite et masque invalides. Dans ce cas simplifié, $d\le0$ ne donne pas une profondeur avant finie valide. Dans le cas général, utiliser Q et le masque du matcher : le signe de la disparité seul ne définit pas la validité, notamment si la rectification décale les points principaux. Texture répétée et surfaces brillantes peuvent produire un minimum de coût faux.
 
 ## Coût et implémentation
 

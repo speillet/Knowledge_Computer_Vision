@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Vérifier la jauge d’échelle et la présence d�
 **Approfondissement** : Évaluer les paramètres avec un alignement autorisé par la tâche ; un coût pixel peut rester invariant à une transformation globale.
 
 **Erreurs bloquantes** : Attribuer automatiquement la multiplicité à une panne du solveur.
-Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Schur solvers et équations blocs](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
+Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Covariance Estimation, Gauge Invariance, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html).
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-BA-003 provenance::agent pole::B pole::C
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Des paramètres supplémentaires peuvent surajuster
 **Approfondissement** : Mesurer stabilité par sous-ensembles et erreur sur observations indépendantes ; choisir les contraintes du modèle physiquement.
 
 **Erreurs bloquantes** : Comparer uniquement les coûts d’ajustement.
-Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Schur solvers et équations blocs](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
+Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Covariance Estimation, Gauge Invariance, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; effet de paramètres libres et protocole de validation : déductions du projet.
 Tags: cv::pilote cv::d05 famille::evaluation cv_id::CV-BA-004 provenance::agent pole::B pole::C
 END

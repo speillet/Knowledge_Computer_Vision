@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -52,6 +52,11 @@ Bons résultats sur validation aléatoire mais mauvais nouveau site : inspecter 
 Choisir robustesse et coût utiles au produit, pas seulement popularité du backbone. Les features autosupervisées peuvent être réutilisées par segmentation ou anomalies.
 
 ## Sources et cartes
+
+- [Hu et al., LoRA, résumé et principe des paramètres gelés](https://arxiv.org/abs/2106.09685)
+- [Houlsby et al., adapters, résumé](https://arxiv.org/abs/1902.00751)
+- [He et al., MAE, résumé](https://arxiv.org/abs/2111.06377)
+- [Dalal–Triggs, HOG, résumé](https://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
 
 - [ViT, §§3–4](https://arxiv.org/abs/2010.11929).
 - [Swin, §3](https://arxiv.org/abs/2103.14030).
