@@ -18,7 +18,7 @@ Reponse: **Noyau attendu** : prédire les pistes avec Kalman, associer les boît
 
 Schéma original du projet, agent, licence MIT. Un filtre peut corriger avec confiance une mesure mal associée. SORT original n'utilise pas d'apparence pour lever cette ambiguïté et ne remplace pas le détecteur.
 
-**Erreurs bloquantes** : attribuer la réidentification à Kalman ou considérer la détection comme une sortie indépendante de SORT.
+**Erreurs bloquantes** : attribuer la réidentification à Kalman ou attribuer la production des détections au tracker SORT.
 Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [Bewley et al., §3](https://arxiv.org/abs/1602.00763).
 Tags: cv::pilote cv::d11 famille::comprehension cv_id::CV-SORT-001 provenance::agent pole::C pole::D pole::E
 END
@@ -67,7 +67,7 @@ ID: CV-SORT-004
 Question: Dans la référence SORT épinglée avec `max_age=1`, que se passe-t-il après une puis deux frames consécutives sans détection associée, et une piste mémorisée est-elle forcément émise ?
 Reponse: **Noyau attendu** : la suppression intervient si `time_since_update > max_age`. Une frame manquée peut laisser la piste mémorisée ; la deuxième la supprime. La référence émet seulement les pistes mises à jour dans la frame et respectant ses conditions de hits.
 
-**Approfondissement** : `min_hits` filtre aussi les sorties avec une exception au démarrage global. Toujours appeler `update` avec une liste vide lorsque rien n'est détecté. Augmenter l'âge change le compromis entre continuité et maintien de fausses hypothèses ; cela ne crée pas une information de réidentification.
+**Approfondissement** : `min_hits` filtre aussi les sorties avec une exception au démarrage global. Toujours appeler `update` avec un tableau vide de forme `(0, 5)`, par exemple `np.empty((0, 5))`, lorsque rien n'est détecté. Augmenter l'âge change le compromis entre continuité et maintien de fausses hypothèses ; cela ne crée pas une information de réidentification.
 
 **Erreurs bloquantes** : confondre piste conservée et boîte affichée, ou annoncer une suppression dès que l'âge est égal au maximum.
 Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [référence, cycle de vie L199](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L199).

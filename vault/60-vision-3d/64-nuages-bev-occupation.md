@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Le voxel discrétise aussi la hauteur ; le pilier r
 **Approfondissement** : Une représentation BEV peut venir d’images ou de LiDAR ; elle n’identifie pas une modalité unique.
 
 **Erreurs bloquantes** : Dire que toute BEV est un nuage LiDAR aplati identique.
-Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [PointPillars, architecture](https://openaccess.thecvf.com/content_CVPR_2019/html/Lang_PointPillars_Fast_Encoders_for_Object_Detection_From_Point_Clouds_CVPR_2019_paper.html) ; [BEVFormer, méthode](https://arxiv.org/abs/2203.17270) ; [OctoMap, probabilistic occupancy](https://octomap.github.io/octomap/doc/index.html) ; [Occupancy Networks, surface implicite](https://openaccess.thecvf.com/content_CVPR_2019/html/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.html).
+Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [Lang et al., PointPillars, §2.1](https://arxiv.org/abs/1812.05784) ; [Li et al., BEVFormer, §§3.3–3.4](https://arxiv.org/abs/2203.17270).
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-BEV-001 provenance::agent pole::C
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : La zone peut être masquée, hors portée ou jamais
 **Approfondissement** : Mesurer visibilité et raycasting ; une interface aval doit savoir quelles régions ont réellement été contraintes.
 
 **Erreurs bloquantes** : Assimiler non détecté et sans obstacle.
-Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [PointPillars, architecture](https://openaccess.thecvf.com/content_CVPR_2019/html/Lang_PointPillars_Fast_Encoders_for_Object_Detection_From_Point_Clouds_CVPR_2019_paper.html) ; [BEVFormer, méthode](https://arxiv.org/abs/2203.17270) ; [OctoMap, probabilistic occupancy](https://octomap.github.io/octomap/doc/index.html) ; [Occupancy Networks, surface implicite](https://openaccess.thecvf.com/content_CVPR_2019/html/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.html).
+Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [OctoMap, Full 3D model, consulté le 2026-10-20](https://octomap.github.io/).
 Tags: cv::pilote cv::d06 famille::comprehension cv_id::CV-BEV-002 provenance::agent pole::C
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : La première représente une croyance sur espace ob
 **Approfondissement** : Une SDF représente encore un autre objet mathématique ; vérifier signes, unités et labels.
 
 **Erreurs bloquantes** : Utiliser le score d’une forme implicite comme probabilité de collision calibrée.
-Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [PointPillars, architecture](https://openaccess.thecvf.com/content_CVPR_2019/html/Lang_PointPillars_Fast_Encoders_for_Object_Detection_From_Point_Clouds_CVPR_2019_paper.html) ; [BEVFormer, méthode](https://arxiv.org/abs/2203.17270) ; [OctoMap, probabilistic occupancy](https://octomap.github.io/octomap/doc/index.html) ; [Occupancy Networks, surface implicite](https://openaccess.thecvf.com/content_CVPR_2019/html/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.html).
+Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [OctoMap, Full 3D model, consulté le 2026-10-20](https://octomap.github.io/) ; [Mescheder et al., Occupancy Networks, §3.1](https://arxiv.org/abs/1812.03828) ; [Park et al., DeepSDF, §3](https://arxiv.org/abs/1901.05103).
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-BEV-003 provenance::agent pole::C
 END
 
@@ -68,7 +68,7 @@ Reponse: **Noyau attendu** : Timestamps, ego-motion, deskew et transformation ve
 **Approfondissement** : Stratifier erreur par vitesse, distance et angle ; un décalage temporel peut se cacher dans des essais statiques.
 
 **Erreurs bloquantes** : Conclure d’emblée à une capacité insuffisante du backbone.
-Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [PointPillars, architecture](https://openaccess.thecvf.com/content_CVPR_2019/html/Lang_PointPillars_Fast_Encoders_for_Object_Detection_From_Point_Clouds_CVPR_2019_paper.html) ; [BEVFormer, méthode](https://arxiv.org/abs/2203.17270) ; [OctoMap, probabilistic occupancy](https://octomap.github.io/octomap/doc/index.html) ; [Occupancy Networks, surface implicite](https://openaccess.thecvf.com/content_CVPR_2019/html/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.html).
+Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [Li et al., BEVFormer, §§3.3–3.4](https://arxiv.org/abs/2203.17270) ; diagnostic temporel déduit par le projet.
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-BEV-004 provenance::agent pole::C
 END
 
@@ -87,6 +87,6 @@ Reponse: **Noyau attendu** : Définir objets/occupation attendus, repères/temps
 **Erreurs bloquantes** : Garantir la sécurité globale avec une seule métrique de détection.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [PointPillars, architecture](https://openaccess.thecvf.com/content_CVPR_2019/html/Lang_PointPillars_Fast_Encoders_for_Object_Detection_From_Point_Clouds_CVPR_2019_paper.html) ; [BEVFormer, méthode](https://arxiv.org/abs/2203.17270) ; [OctoMap, probabilistic occupancy](https://octomap.github.io/octomap/doc/index.html) ; [Occupancy Networks, surface implicite](https://openaccess.thecvf.com/content_CVPR_2019/html/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.html).
+Source: [[60-vision-3d/references/64-nuages-bev-occupation|Fiche complète]] ; [OctoMap, Full 3D model, consulté le 2026-10-20](https://octomap.github.io/) ; protocole de conception proposé par le projet.
 Tags: cv::pilote cv::d06 famille::conception cv_id::CV-BEV-005 provenance::agent pole::C cas_pole::C::conception
 END

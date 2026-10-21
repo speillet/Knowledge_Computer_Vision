@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -52,6 +52,10 @@ Comptage trop faible : regarder les ponts ajoutés par dilatation/fermeture et l
 Watershed à marqueurs pour séparer des objets joints ; segmentation d'instances si l'apparence et les contacts dépassent un modèle géométrique simple.
 
 ## Sources et cartes
+
+- [OpenCV 4.13.0, connectedComponents, paramètres connectivity et labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html).
+
+Pour la morphologie ensembliste avec les conventions annoncées, l’ouverture est anti-extensive et la fermeture extensive : elles peuvent supprimer de petites structures de premier plan ou combler de petits intervalles. Sur une image finie, le traitement des bords doit rester explicite.
 
 - [OpenCV, morphological transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html).
 - [Cartes associées](../33-morphologie-composantes.md).

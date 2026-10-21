@@ -11,13 +11,13 @@ Objectif : calculer une profondeur rectifiée. Famille : raisonnement. Provenanc
 START
 CV-Pilote
 ID: CV-STEREO-001
-Question: Pour f=1000 px, baseline 0,2 m et disparité 20 px, quelle profondeur dans le cas rectifié idéal ?
-Reponse: **Noyau attendu** : 10 m par Z=fB/d ; à 10 px de disparité, 20 m.
+Question: En stéréo rectifiée horizontale avec points principaux de même abscisse, pour f=1000 px, baseline 0,2 m et disparité gauche−droite 20 px, quelle profondeur ?
+Reponse: **Noyau attendu** : 10 m par $Z=fB/d$.
 
-**Approfondissement** : La formule suppose une géométrie rectifiée compatible et une disparité valide ; f et d doivent être dans la même unité pixel.
+**Approfondissement** : À 10 px de disparité, on obtiendrait 20 m. La formule suppose une géométrie rectifiée compatible et une disparité valide ; f et d doivent être dans la même unité pixel.
 
 **Erreurs bloquantes** : Utiliser une baseline en millimètres et annoncer directement des mètres.
-Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV StereoSGBM, description et compute](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html) ; [OpenCV reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV 4.13.0, stereoRectify et reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; calcul analytique du projet.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-STEREO-001 provenance::agent pole::B pole::C
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : La sensibilité à la disparité croît comme $fB/d
 **Approfondissement** : Comparer une erreur de reprojection et une erreur métrique sur distances connues.
 
 **Erreurs bloquantes** : Supposer un bruit de profondeur constant pour toute distance.
-Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV StereoSGBM, description et compute](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html) ; [OpenCV reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV 4.13.0, stereoRectify et reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; dérivation de Z=fB/d, à f et B fixés.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-STEREO-002 provenance::agent pole::B pole::C
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Le stockage de la disparité et son facteur d’éc
 **Approfondissement** : Vérifier aussi baseline et Q avant de corriger arbitrairement les coordonnées finales.
 
 **Erreurs bloquantes** : Reprojeter des entiers fixes comme des pixels de disparité ordinaires.
-Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV StereoSGBM, description et compute](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html) ; [OpenCV reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV 4.13.0, StereoSGBM, Detailed Description et create](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html) ; [OpenCV 4.13.0, stereoRectify et reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-STEREO-003 provenance::agent pole::B pole::C
 END
 

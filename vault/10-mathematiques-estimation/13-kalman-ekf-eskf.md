@@ -12,12 +12,12 @@ START
 CV-Pilote
 ID: CV-FUSION-001
 Question: Comment distinguer EKF, UKF et ESKF sans les classer en précision absolue ?
-Reponse: **Noyau attendu** : EKF linéarise, UKF utilise des sigma-points, ESKF organise état nominal et erreur locale ; leurs hypothèses et représentations diffèrent.
+Reponse: **Noyau attendu** : EKF linéarise, UKF utilise des sigma-points ; ESKF organise état nominal et erreur locale et utilise lui-même un EKF dans la formulation de Solà. Ces noms ne décrivent donc pas trois catégories exclusives.
 
 **Approfondissement** : Le résultat dépend du modèle, du bruit, de l’initialisation et de la cohérence temporelle ; une étiquette d’algorithme n’est pas un classement universel.
 
 **Erreurs bloquantes** : Dire qu’UKF est toujours meilleur ou qu’ESKF supprime la non-linéarité.
-Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Solà, ESKF : injection et reset, §§5–6](https://arxiv.org/abs/1711.02508).
+Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Solà, §§5.2 et 6.1–6.3](https://arxiv.org/pdf/1711.02508) ; [Julier et Uhlmann 2004, Unscented Filtering and Nonlinear Estimation (texte intégral à vérifier)](https://doi.org/10.1109/JPROC.2003.823141).
 Tags: cv::pilote cv::d01 famille::comprehension cv_id::CV-FUSION-001 provenance::agent pole::B pole::C
 END
 
@@ -28,13 +28,13 @@ Objectif : interpréter une innovation normalisée. Famille : raisonnement. Prov
 START
 CV-Pilote
 ID: CV-FUSION-002
-Question: Que mesure $\nu^TS^{-1}\nu$ dans un contrôle dinnovation ?
+Question: Dans un filtre, $\nu$ désigne l’innovation mesure moins prédiction et $S$ sa covariance définie positive. Que mesure $\nu^TS^{-1}\nu$ dans un contrôle d’innovation ?
 Reponse: **Noyau attendu** : Un écart mesure/prédiction pondéré par son incertitude, sans unité lorsque les grandeurs sont cohérentes.
 
 **Approfondissement** : Son interprétation statistique dépend des hypothèses de bruit et du modèle ; il peut servir au gating sans prouver l’identité du bon objet.
 
 **Erreurs bloquantes** : Confondre grand résidu pixel et grande incohérence statistique dans tous les cas.
-Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Solà, ESKF : injection et reset, §§5–6](https://arxiv.org/abs/1711.02508).
+Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Gamse et al. 2014, §2.2.2, équations 5–7](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/).
 Tags: cv::pilote cv::d01 famille::raisonnement cv_id::CV-FUSION-002 provenance::agent pole::B pole::C
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Le reset change le point de référence de l’erre
 **Approfondissement** : Une covariance nulle déclarerait une connaissance parfaite fictive et ferait mal pondérer les mesures suivantes.
 
 **Erreurs bloquantes** : Assimiler reset de représentation et disparition de l’incertitude.
-Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Solà, ESKF : injection et reset, §§5–6](https://arxiv.org/abs/1711.02508).
+Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Solà, §6.3, équations 285–288](https://arxiv.org/pdf/1711.02508).
 Tags: cv::pilote cv::d01 famille::diagnostic cv_id::CV-FUSION-003 provenance::agent pole::B pole::C
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Propager selon les timestamps et le pas réel, int�
 **Approfondissement** : Vérifier délais, ordre de réception et bruit de processus lié à la durée avant de simplement régler le gain.
 
 **Erreurs bloquantes** : Conserver implicitement un pas constant malgré des intervalles différents.
-Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Solà, ESKF : injection et reset, §§5–6](https://arxiv.org/abs/1711.02508).
+Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Fiche complète]] ; [Solà, §§5.2 et 5.4, annexe E](https://arxiv.org/pdf/1711.02508) ; contrat temporel proposé par le projet.
 Tags: cv::pilote cv::d01 famille::pratique cv_id::CV-FUSION-004 provenance::agent pole::B pole::C
 END

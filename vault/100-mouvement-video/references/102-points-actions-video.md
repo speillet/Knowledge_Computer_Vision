@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 3
 prerequis: ["CV-FLOT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -52,6 +52,9 @@ Bon score de clip mais action mal localisée : vérifier que la sortie est un la
 Pipeline détection/tracking/règles pour des événements définis ; modèle vidéo ou VLM selon contexte et annotations. Contrôler fuite entre clips d'une même séquence.
 
 ## Sources et cartes
+
+- [ViViT, résumé](https://arxiv.org/abs/2103.15691) : tokens spatio-temporels et classification vidéo.
+- [CoTracker3, résumé et introduction](https://arxiv.org/abs/2410.11831) : variantes offline (fenêtre unique) et online (fenêtres glissantes).
 
 - [CoTracker, §3](https://arxiv.org/abs/2307.07635).
 - [TimeSformer](https://arxiv.org/abs/2102.05095).

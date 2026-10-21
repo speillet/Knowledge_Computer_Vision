@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-REPRESENTATIONS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -53,7 +53,7 @@ Classification fermée si taxonomie stable et données suffisantes ; open-vocabu
 
 ## Sources et cartes
 
-- [CLIP, §§2.3,3 et limites §7](https://arxiv.org/abs/2103.00020).
+- [CLIP, §§2.3,3 et limites §6](https://arxiv.org/abs/2103.00020).
 - [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
 - [Cartes associées](../72-clip-siglip.md).
 

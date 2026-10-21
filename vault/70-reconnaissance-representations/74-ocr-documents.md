@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : CER mesure l’édition de caractères selon un pro
 **Approfondissement** : Évaluer chacun des livrables utiles au produit avec référence et règles de normalisation.
 
 **Erreurs bloquantes** : Confondre texte global proche et facture correctement structurée.
-Source: [[70-reconnaissance-representations/references/74-ocr-documents|Fiche complète]] ; [CRNN, méthode](https://arxiv.org/abs/1507.05717) ; [TrOCR](https://arxiv.org/abs/2109.10282) ; [LayoutLM](https://arxiv.org/abs/1912.13318) ; [Donut](https://arxiv.org/abs/2111.15664) ; [OCR-D, évaluation](https://ocr-d.de/en/spec/ocrd_eval.html).
+Source: [[70-reconnaissance-representations/references/74-ocr-documents|Fiche complète]] ; [OCR-D, Text Evaluation, CER and WER, consulté le 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html) ; critères de facture proposés par le projet.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-OCR-001 provenance::agent pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Oui : les insertions peuvent faire dépasser le nom
 **Approfondissement** : Préciser normalisation, cas N=0 et agrégation ; ce n’est pas une proportion simple de caractères faux dans la prédiction.
 
 **Erreurs bloquantes** : Tronquer arbitrairement à 1 sans annoncer un autre protocole.
-Source: [[70-reconnaissance-representations/references/74-ocr-documents|Fiche complète]] ; [CRNN, méthode](https://arxiv.org/abs/1507.05717) ; [TrOCR](https://arxiv.org/abs/2109.10282) ; [LayoutLM](https://arxiv.org/abs/1912.13318) ; [Donut](https://arxiv.org/abs/2111.15664) ; [OCR-D, évaluation](https://ocr-d.de/en/spec/ocrd_eval.html).
+Source: [[70-reconnaissance-representations/references/74-ocr-documents|Fiche complète]] ; [OCR-D, Text Evaluation, CER and WER, consulté le 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html) ; convention classique à dénominateur N.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-OCR-002 provenance::agent pole::E
 END
 
@@ -51,6 +51,6 @@ Reponse: **Noyau attendu** : Détection/layout et assemblage de l’ordre de lec
 **Approfondissement** : Comparer boîtes et structure au document annoté ; une nouvelle langue de reconnaissance ne corrige pas ce contrat.
 
 **Erreurs bloquantes** : Réentraîner seulement le reconnaisseur sans vérifier les régions.
-Source: [[70-reconnaissance-representations/references/74-ocr-documents|Fiche complète]] ; [CRNN, méthode](https://arxiv.org/abs/1507.05717) ; [TrOCR](https://arxiv.org/abs/2109.10282) ; [LayoutLM](https://arxiv.org/abs/1912.13318) ; [Donut](https://arxiv.org/abs/2111.15664) ; [OCR-D, évaluation](https://ocr-d.de/en/spec/ocrd_eval.html).
+Source: [[70-reconnaissance-representations/references/74-ocr-documents|Fiche complète]] ; [OCR-D, Text Evaluation, CER and WER, consulté le 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html) ; diagnostic d’assemblage déduit par le projet.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-OCR-003 provenance::agent pole::E
 END

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SE3", "CV-FUSION", "CV-FACTEURS", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -29,7 +29,7 @@ Suivre/associer observations, estimer mouvement, gérer keyframes, optimiser ou 
 
 ## Mathématiques, conventions et unités
 
-Avec R corps→monde, $\Delta v_{ij}=R_i^T(v_j-v_i-g\Delta t)$ et $\Delta p_{ij}=R_i^T(p_j-p_i-v_i\Delta t-\tfrac12g\Delta t^2)$, en m/s et m. L'accéléromètre mesure une force spécifique dans son repère. Un VIO sans références globales conserve translation et yaw globaux non observables ; l'échelle métrique demande excitation et calibration suffisantes.
+Avec $R_i$ corps→monde, $p_i,v_i$ position et vitesse dans le monde, $g$ gravité dans ce même repère et $\Delta t=t_j-t_i$ en secondes, $\Delta v_{ij}=R_i^T(v_j-v_i-g\Delta t)$ et $\Delta p_{ij}=R_i^T(p_j-p_i-v_i\Delta t-\tfrac12g\Delta t^2)$, en m/s et m. L'accéléromètre mesure une force spécifique dans son repère. Un VIO sans références globales conserve translation et yaw globaux non observables ; l'échelle métrique demande excitation et calibration suffisantes.
 
 ## Paramètres et propriétés
 

@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -53,9 +53,14 @@ Choisir une représentation selon la tâche et les unités ; une bonne segmentat
 
 ## Sources et cartes
 
+- [Basler, GigE Line Scan Use Cases, Use Case 1 b (v136, 2026-10-01)](https://docs.baslerweb.com/line-scan-gige-use-cases).
+- [Edmund Optics, The Advantages of Telecentricity](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/advantages-of-telecentricity/).
+
+La fuite entre tuiles voisines est un risque déduit par le projet, à évaluer selon le scénario de généralisation ; la description SpaceNet contextualise les séries géographiques sans prouver à elle seule ce biais pour tout split.
+
 - [NIfTI, standard et transformations](https://nifti.nimh.nih.gov/nifti-1/).
 - [DICOM, standard courant](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html).
-- [SpaceNet7, données multi-temporelles](https://spacenet.ai/spacenet-7-multi-temporal-urban-development-challenge/).
+- [SpaceNet7, données multi-temporelles](https://www.spacenet.ai/sn7-challenge/).
 - [Cartes associées](../23-imageries-specialisees.md).
 
 Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.

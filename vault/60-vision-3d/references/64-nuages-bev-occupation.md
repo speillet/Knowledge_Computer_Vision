@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SE3", "CV-CAPTEURS", "CV-MULTICALIB"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -52,6 +52,11 @@ Objets fantômes : vérifier synchronisation et ego-motion. Carte vide : contrô
 Carte d'occupation géométrique, prédiction sémantique, surface reconstruite et liste d'objets remplissent des contrats distincts ; le choix dépend de l'interface aval.
 
 ## Sources et cartes
+
+- [Qi et al., PointNet++, résumé](https://arxiv.org/abs/1706.02413)
+- [Philion–Fidler, Lift-Splat-Shoot, résumé](https://arxiv.org/abs/2008.05711)
+- [Liu et al., BEVFusion, résumé (version v3)](https://arxiv.org/abs/2205.13542)
+- [Park et al., DeepSDF, §3](https://arxiv.org/abs/1901.05103)
 
 - [PointPillars, architecture](https://openaccess.thecvf.com/content_CVPR_2019/html/Lang_PointPillars_Fast_Encoders_for_Object_Detection_From_Point_Clouds_CVPR_2019_paper.html).
 - [BEVFormer, méthode](https://arxiv.org/abs/2203.17270).

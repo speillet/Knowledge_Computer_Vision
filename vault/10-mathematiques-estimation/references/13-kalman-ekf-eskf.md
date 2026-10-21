@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -25,11 +25,11 @@ Fusionner mesures et prédictions horodatées en représentant leurs incertitude
 
 ## Intuition et déroulement
 
-Kalman linéaire alterne prédiction et correction. EKF linéarise les modèles ; UKF propage des sigma-points ; ESKF sépare état nominal et petite erreur tangentielle. Corriger l'erreur puis l'injecter dans la pose exige aussi un reset cohérent de covariance.
+Kalman linéaire alterne prédiction et correction. EKF linéarise les modèles ; UKF propage des sigma-points ; ESKF sépare état nominal et petite erreur tangentielle ; dans la formulation de Solà, le filtre de cette erreur est un EKF. Ce n’est donc pas une alternative mutuellement exclusive à EKF. Corriger l'erreur puis l'injecter dans la pose exige aussi un reset cohérent de covariance.
 
 ## Mathématiques, conventions et unités
 
-L'innovation est $\nu=z-h(x^-)$, de covariance $S=HP^-H^T+R$ dans l'EKF. Le score $\nu^TS^{-1}\nu$ est sans unité si modèle et covariance sont cohérents. $P^-=FP^+F^T+Q$ utilise le pas de temps réel. Dans l'ESKF, après injection, $P\leftarrow GPG^T$ selon la Jacobienne de reset G ; remettre l'erreur moyenne à zéro ne remet pas l'incertitude à zéro.
+L'innovation est $\nu=z-h(x^-)$, de covariance $S=HP^-H^T+R$ dans l'EKF. Avec $S$ définie positive, le score $\nu^TS^{-1}\nu$ est sans unité si modèle et covariance sont cohérents. $P^-=FP^+F^T+Q$ utilise le pas de temps réel. Dans l'ESKF, après injection, $P\leftarrow GPG^T$ selon la Jacobienne de reset G ; remettre l'erreur moyenne à zéro ne remet pas l'incertitude à zéro.
 
 ## Paramètres et propriétés
 
@@ -52,6 +52,9 @@ Deux capteurs en désaccord : comparer horodatage, extrinsèques, unités, biais
 Filtrage pour faible latence ; lissage/graphes pour réestimer plusieurs états. Une mesure redondante corrélée ne doit pas être comptée deux fois comme information indépendante.
 
 ## Sources et cartes
+
+- [Gamse et al. 2014, §2.2.2, équations 5–7](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/).
+- [Julier et Uhlmann 2004, Unscented Filtering and Nonlinear Estimation (texte intégral à vérifier)](https://doi.org/10.1109/JPROC.2003.823141). La source Solà ne couvre pas UKF ; le mécanisme des sigma-points reste à confronter au texte intégral de Julier–Uhlmann, inaccessible pendant ce passage.
 
 - [Solà, ESKF : injection et reset, §§5–6](https://arxiv.org/abs/1711.02508).
 - [Cartes associées](../13-kalman-ekf-eskf.md).

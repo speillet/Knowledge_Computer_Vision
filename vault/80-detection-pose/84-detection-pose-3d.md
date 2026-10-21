@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Boîtes/classes et articulations sont des sorties d
 **Approfondissement** : Définir le livrable, repère, visibilité et alignement avant de choisir la mesure.
 
 **Erreurs bloquantes** : Assimiler tout problème appelé pose à la même métrique.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [PointPillars, architecture](https://arxiv.org/abs/1812.05784) ; [CenterPoint, méthode](https://arxiv.org/abs/2006.11275) ; [nuScenes, detection evaluation](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [CenterPoint, résumé et §4](https://arxiv.org/abs/2006.11275) ; [OpenPose, résumé et fig. 2](https://arxiv.org/abs/1611.08050).
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-POSE3D-001 provenance::agent pole::A pole::C
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Repère, ancrage du centre, ordre des dimensions, a
 **Approfondissement** : Tester une boîte connue et sa transformation entre capteurs ; le problème peut être un contrat de données.
 
 **Erreurs bloquantes** : Réentraîner sans contrôler la convention de boîte.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [PointPillars, architecture](https://arxiv.org/abs/1812.05784) ; [CenterPoint, méthode](https://arxiv.org/abs/2006.11275) ; [nuScenes, detection evaluation](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; Diagnostic de conventions proposé par le projet ; [nuScenes, format et métriques](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulté le 2026-10-20.
 Tags: cv::pilote cv::d08 famille::pratique cv_id::CV-POSE3D-002 provenance::agent pole::A pole::C
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : L’association nuScenes utilise des distances de c
 **Approfondissement** : NDS combine aussi erreurs d’attributs géométriques/dynamiques ; nommer version, filtres et unités.
 
 **Erreurs bloquantes** : Transposer les seuils IoU COCO à tout benchmark 3D.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [PointPillars, architecture](https://arxiv.org/abs/1812.05784) ; [CenterPoint, méthode](https://arxiv.org/abs/2006.11275) ; [nuScenes, detection evaluation](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [nuScenes, Average Precision metric et nuScenes detection score](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulté le 2026-10-20 ; [COCO bbox](https://cocodataset.org/#detection-eval).
 Tags: cv::pilote cv::d08 famille::evaluation cv_id::CV-POSE3D-003 provenance::agent pole::A pole::C
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : La symétrie visuelle et la définition de pose/év
 **Approfondissement** : Ajouter un indice distinctif si le produit exige cet angle ; un solveur plus précis ne crée pas un repère visible absent.
 
 **Erreurs bloquantes** : Déclarer toute variation d’un angle symétrique comme une erreur observable.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [PointPillars, architecture](https://arxiv.org/abs/1812.05784) ; [CenterPoint, méthode](https://arxiv.org/abs/2006.11275) ; [nuScenes, detection evaluation](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [BOP, métriques VSD/MSSD/MSPD et symétries](https://bop.felk.cvut.cz/tasks/), consulté le 2026-10-20 ; application au cylindre : raisonnement du projet.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-POSE3D-004 provenance::agent pole::A pole::C
 END

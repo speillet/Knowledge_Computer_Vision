@@ -120,6 +120,6 @@ Reponse: **Noyau attendu** : utiliser les mêmes paires représentatives et une 
 **Approfondissement** : stratifier par rotation, échelle, flou et lumière ; inclure extraction, matching et validation géométrique dans la latence et examiner les échecs rares. Les nombres de points ou les temps publiés sur un autre matériel ne suffisent pas. Le protocole est proposé ; aucun gagnant ni résultat industriel n'est annoncé ici.
 
 **Erreurs bloquantes** : choisir uniquement au nombre de matches ou comparer des temps qui n'incluent pas les mêmes étapes.
-Source: [[40-features-matching/references/41-sift|Fiche SIFT]] ; [Lowe, §8](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) ; [Rublee et al., §5](https://doi.org/10.1109/ICCV.2011.6126544).
+Source: [[40-features-matching/references/41-sift|Fiche SIFT]] ; [Lowe, §§6.2–6.4 et 8](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) ; [Rublee et al., §§4.4, 5.3 et 6.1](https://doi.org/10.1109/ICCV.2011.6126544).
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-SIFT-007 provenance::agent pole::B pole::E
 END

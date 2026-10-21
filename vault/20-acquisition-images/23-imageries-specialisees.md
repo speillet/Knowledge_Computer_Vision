@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Les axes peuvent avoir des espacements physiques di
 **Approfondissement** : Conserver orientation, rééchantillonnage et protocole des masques vides. Une différence d’un voxel n’a pas la même longueur selon l’axe.
 
 **Erreurs bloquantes** : Comparer des valeurs en voxels et en millimètres comme si elles étaient identiques.
-Source: [[20-acquisition-images/references/23-imageries-specialisees|Fiche complète]] ; [NIfTI, standard et transformations](https://nifti.nimh.nih.gov/nifti-1/) ; [DICOM, standard courant](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html) ; [SpaceNet7, données multi-temporelles](https://spacenet.ai/spacenet-7-multi-temporal-urban-development-challenge/).
+Source: [[20-acquisition-images/references/23-imageries-specialisees|Fiche complète]] ; [DICOM PS3.3, C.7.6.2.1.1, orientation/position et espacement (consulté le 2026-10-18)](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html).
 Tags: cv::pilote cv::d02 famille::pratique cv_id::CV-IMAGERIES-001 provenance::agent pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : La synchronisation entre lignes et déplacement, l�
 **Approfondissement** : Tester une dimension connue à plusieurs vitesses ; distinguer ce défaut du grandissement optique et de la détection.
 
 **Erreurs bloquantes** : Réentraîner sans vérifier le contrat spatial de l’image.
-Source: [[20-acquisition-images/references/23-imageries-specialisees|Fiche complète]] ; [NIfTI, standard et transformations](https://nifti.nimh.nih.gov/nifti-1/) ; [DICOM, standard courant](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html) ; [SpaceNet7, données multi-temporelles](https://spacenet.ai/spacenet-7-multi-temporal-urban-development-challenge/).
+Source: [[20-acquisition-images/references/23-imageries-specialisees|Fiche complète]] ; [Basler, GigE Line Scan Use Cases, Use Case 1 b (v136, 2026-10-01)](https://docs.baslerweb.com/line-scan-gige-use-cases).
 Tags: cv::pilote cv::d02 famille::diagnostic cv_id::CV-IMAGERIES-002 provenance::agent pole::E
 END
 
@@ -51,6 +51,6 @@ Reponse: **Noyau attendu** : Elles partagent scène, texture et contexte ; le te
 **Approfondissement** : Séparer régions/dates/sites selon l’usage, contrôler les recouvrements et conserver une évaluation indépendante.
 
 **Erreurs bloquantes** : Assimiler séparation de fichiers et indépendance statistique.
-Source: [[20-acquisition-images/references/23-imageries-specialisees|Fiche complète]] ; [NIfTI, standard et transformations](https://nifti.nimh.nih.gov/nifti-1/) ; [DICOM, standard courant](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html) ; [SpaceNet7, données multi-temporelles](https://spacenet.ai/spacenet-7-multi-temporal-urban-development-challenge/).
+Source: [[20-acquisition-images/references/23-imageries-specialisees|Fiche complète]] ; [SpaceNet7, The Problem et The Data (consulté le 2026-10-18)](https://www.spacenet.ai/sn7-challenge/) ; risque de fuite déduit par le projet.
 Tags: cv::pilote cv::d02 famille::evaluation cv_id::CV-IMAGERIES-003 provenance::agent pole::E
 END

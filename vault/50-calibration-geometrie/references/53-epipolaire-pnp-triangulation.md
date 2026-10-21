@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -33,7 +33,7 @@ Pour $X_2=RX_1+t$, $E=[t]_\times R$ et $x_2^TEx_1=0$ en coordonnées normalisée
 
 ## Paramètres et propriétés
 
-Minimum, ambiguïtés et raffinement dépendent de la variante. P3P peut donner plusieurs solutions ; l'API P3P d'OpenCV utilise un quatrième point pour sélectionner. Vérifier chiralité, parallaxe et résidus, pas le seul nombre de points.
+Minimum, ambiguïtés et raffinement dépendent de la variante. P3P peut donner plusieurs solutions ; dans OpenCV 4.13.0, `solvePnP(..., SOLVEPNP_P3P)` exige quatre points, tandis que `solveP3P` accepte trois correspondances et retourne les solutions candidates. Vérifier chiralité, parallaxe et résidus, pas le seul nombre de points.
 
 ## Coût et implémentation
 

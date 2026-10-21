@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Environ 1/0,95 = 1,053×, selon le modèle d’Amda
 **Approfondissement** : Le p99 et les files peuvent réagir autrement ; vérifier par mesure complète plutôt qu’extrapoler le gain d’un kernel.
 
 **Erreurs bloquantes** : Annoncer un pipeline deux fois plus rapide.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/) ; [TensorRT, support et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; Dérivation algébrique du projet pour le modèle séquentiel de la fiche : temps normalisé après changement $(1-f)+f/s$, soit $0,9+0,1/2=0,95$ ; [Amdahl (1967), p. 483](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf) pour la limite imposée par la partie non accélérée.
 Tags: cv::pilote cv::d14 famille::raisonnement cv_id::CV-DEPLOIEMENT-001 provenance::agent pole::A pole::C pole::E pole::F
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Le backend doit exploiter la structure de sparsité
 **Approfondissement** : Mesurer graphe réel et matériel cible, qualité comprise ; taille disque et temps sont des grandeurs différentes.
 
 **Erreurs bloquantes** : Déduire automatiquement vitesse et énergie du taux de poids nuls.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/) ; [TensorRT, support et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [TensorRT 8.6.1, §6.10 Sparsity](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-861/developer-guide/index.html#structured-sparsity) : les tactiques creuses ne sont pas systématiquement sélectionnées car elles peuvent être plus lentes.
 Tags: cv::pilote cv::d14 famille::comparaison cv_id::CV-DEPLOIEMENT-002 provenance::agent pole::A pole::C pole::E pole::F
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Prétraitements/repères, architecture, taxonomie, 
 **Approfondissement** : Tester compatibilité et rollback avant déploiement ; une différence de resize ou BGR/RGB peut changer la décision.
 
 **Erreurs bloquantes** : Considérer les poids comme l’unique artefact du modèle exploité.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/) ; [TensorRT, support et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [The ML Test Score, Model/Infra tests et rollback](https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf) ; liste de contrats adaptée par le projet.
 Tags: cv::pilote cv::d14 famille::pratique cv_id::CV-DEPLOIEMENT-003 provenance::agent pole::A pole::C pole::E pole::F
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Température/fréquences, charge/mémoire, transfer
 **Approfondissement** : Distinguer throttling, fuite ou accumulation de retard ; répéter le scénario représentatif après correction.
 
 **Erreurs bloquantes** : Déclarer le matériel suffisant sur un test froid isolé.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/) ; [TensorRT, support et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; Diagnostic proposé par le projet ; [Jetson Linux r36.4, Thermal Management](https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html) pour le mécanisme thermique, sans supposer cette plateforme dans tous les déploiements.
 Tags: cv::pilote cv::d14 famille::diagnostic cv_id::CV-DEPLOIEMENT-004 provenance::agent pole::A pole::C pole::E pole::F
 END

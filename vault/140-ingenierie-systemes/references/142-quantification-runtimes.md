@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-PIPELINE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -29,7 +29,7 @@ PTQ choisit des paramètres après entraînement ; QAT expose l'apprentissage à
 
 ## Mathématiques, conventions et unités
 
-Quantification affine schématique : $q=clip(round(x/s)+z)$ et $\hat x=s(q-z)$, échelle s>0 et zero-point z. Plages, saturation et granularité per-tensor/per-channel comptent. INT8 entier et FP8 flottant ont des représentations/contraintes différentes ; ils ne sont pas interchangeables par une simple étiquette.
+Quantification affine entière schématique : $q=clip(round(x/s)+z, q_{min}, q_{max})$ et $\hat x=s(q-z)$, échelle $s>0$, zero-point entier $z$ et bornes du type $q_{min},q_{max}$. La règle d’arrondi dépend du contrat ; ce schéma entier ne définit pas la représentation FP8. Plages, saturation et granularité per-tensor/per-channel comptent. INT8 entier et FP8 flottant ont des représentations/contraintes différentes ; ils ne sont pas interchangeables par une simple étiquette.
 
 ## Paramètres et propriétés
 
@@ -37,7 +37,7 @@ Distribution de calibration, couches sensibles, précision mixte, formes dynamiq
 
 ## Coût et implémentation
 
-Conversions, fallbacks, transferts et goulots non réseau peuvent annuler le gain. Aucun moteur construit ni accélération mesurée ; sources runtime vérifiées le 2026-10-18, pas de commande universelle figée.
+Conversions, fallbacks, transferts et goulots non réseau peuvent annuler le gain. Aucun moteur construit ni accélération mesurée ; documentation runtime `latest` consultée de nouveau le 2026-10-20, pas de commande universelle figée.
 
 ## Évaluation et variation contrôlée
 
@@ -52,6 +52,9 @@ Pas de gain après INT8 : inspecter opérateurs réellement quantifiés, fallbac
 Précision mixte, distillation, compression structurée et optimisation du pipeline selon le goulot ; la taille du fichier ne prédit pas le temps de traitement.
 
 ## Sources et cartes
+
+- [ONNX QuantizeLinear, version d’opérateur 21, Summary](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21) : échelle, zero-point, saturation et arrondi.
+- [ONNX Runtime, Execution Providers](https://onnxruntime.ai/docs/execution-providers/), consulté le 2026-10-20 : affectation d’opérateurs/sous-graphes selon les capacités.
 
 - [TensorRT, quantization workflows](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html).
 - [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).

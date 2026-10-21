@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SE3", "CV-BEV", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -52,6 +52,9 @@ Yaw décalé de 90° : vérifier ordre longueur/largeur et convention d'axe avan
 PnP si points 3D connus, modèle appris si observations adaptées, représentation d'occupation pour d'autres besoins ; conserver des tâches distinctes.
 
 ## Sources et cartes
+
+- [BOP, tâches et métriques VSD/MSSD/MSPD](https://bop.felk.cvut.cz/tasks/), consulté le 2026-10-20 : symétries et visibilité.
+- [OpenPose, résumé et fig. 2](https://arxiv.org/abs/1611.08050) : points et association pour la pose articulée 2D.
 
 - [PointPillars, architecture](https://arxiv.org/abs/1812.05784).
 - [CenterPoint, méthode](https://arxiv.org/abs/2006.11275).

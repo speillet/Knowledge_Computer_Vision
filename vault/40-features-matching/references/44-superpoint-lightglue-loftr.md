@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SIFT", "CV-ORB", "CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -54,7 +54,7 @@ Sparse appris pour points explicites ; LoFTR pour une autre stratégie de corres
 ## Sources et cartes
 
 - [SuperPoint, méthode et Homographic Adaptation](https://arxiv.org/abs/1712.07629).
-- [LightGlue, dépôt des auteurs](https://github.com/cvg/LightGlue).
+- [LightGlue, README, Usage et Advanced configuration (consulté le 2026-10-20)](https://github.com/cvg/LightGlue).
 - [LoFTR, §3](https://arxiv.org/abs/2104.00680).
 - [Cartes associées](../44-superpoint-lightglue-loftr.md).
 

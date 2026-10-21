@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : L’initialisation globale cherche une zone compati
 **Approfondissement** : FPFH décrit la géométrie ; la pose doit être estimée puis validée. Le succès dépend aussi du recouvrement et des symétries.
 
 **Erreurs bloquantes** : Présenter ICP comme un solveur global garanti.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::algorithme cv_id::CV-ICP-001 provenance::agent pole::B pole::C
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : La composante du désalignement selon la normale ci
 **Approfondissement** : Sur un plan, un déplacement tangent peut peu changer ce résidu ; contrôler observabilité et pose, pas seulement RMSE.
 
 **Erreurs bloquantes** : Prendre ce scalaire pour une erreur complète 3D dans toutes directions.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-ICP-002 provenance::agent pole::B pole::C
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Recouvrement, seuil, distribution des correspondanc
 **Approfondissement** : Le RMSE conditionne son résultat aux paires retenues ; réduire le consensus peut faire baisser le nombre sans améliorer la tâche.
 
 **Erreurs bloquantes** : Classer la pose au RMSE seul.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-ICP-003 provenance::agent pole::B pole::C
 END
 
@@ -68,7 +68,7 @@ Reponse: **Noyau attendu** : Le seuil est une longueur dans l’unité des coord
 **Approfondissement** : Vérifier voxel et voisinages aussi, puis le modèle de bruit.
 
 **Erreurs bloquantes** : Traiter le seuil comme un nombre sans unité.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::pratique cv_id::CV-ICP-004 provenance::agent pole::B pole::C
 END
 
@@ -85,6 +85,6 @@ Reponse: **Noyau attendu** : Il exploite des normales fiables et une géométrie
 **Approfondissement** : Comparer initialisation, estimation des normales et précision de pose dans le protocole cible.
 
 **Erreurs bloquantes** : Annoncer une domination universelle d’une variante.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-ICP-005 provenance::agent pole::B pole::C
 END

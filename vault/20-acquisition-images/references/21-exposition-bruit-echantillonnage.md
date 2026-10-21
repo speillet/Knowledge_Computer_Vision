@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -52,6 +52,11 @@ Variation analytique : doubler l'exposition à vitesse image constante double le
 Éclairage synchronisé, exposition plus courte, optique adaptée ou cadence différente : arbitrer signal, flou, chaleur, coût et contraintes de ligne.
 
 ## Sources et cartes
+
+- [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
+- [sRGB, §§A.7–A.8 et B.1, conversion linéaire et fonction de transfert](https://www.w3.org/Graphics/Color/srgb).
+
+Le calcul $b_{px}=v_{px}t_e$ est une déduction cinématique du projet pour une vitesse image constante ; EMVA documente le capteur, pas cette formule de flou. Le contrôle de cohérence entraînement/inférence est une démarche du projet.
 
 - [EMVA1288 Linear 4.0, bruit et SNR](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf).
 - [Edmund Optics, resolution](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/resolution/).

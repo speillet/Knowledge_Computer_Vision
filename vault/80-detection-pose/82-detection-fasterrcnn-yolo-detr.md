@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Non : la conception partage des features entre RPN 
 **Approfondissement** : Distinguer coût des propositions et de la tête ; mesurer le nombre de régions et la variante d’implémentation.
 
 **Erreurs bloquantes** : Décrire deux étapes comme deux backbones complets obligatoires par région.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Faster R-CNN, §3](https://arxiv.org/abs/1506.01497) ; [YOLO original, §2](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html) ; [DETR, §§3.1–3.2](https://arxiv.org/abs/2005.12872).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Faster R-CNN, §3 : partage des convolutions](https://arxiv.org/abs/1506.01497).
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-001 provenance::agent pole::A pole::C pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : La famille contient des variantes et recettes hét�
 **Approfondissement** : Comparer version/checkpoint/résolution et protocole complets.
 
 **Erreurs bloquantes** : Attribuer les choix du YOLO original à toutes les générations.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Faster R-CNN, §3](https://arxiv.org/abs/1506.01497) ; [YOLO original, §2](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html) ; [DETR, §§3.1–3.2](https://arxiv.org/abs/2005.12872).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) ; [YOLOX, §2.1 : anchor-free, tête découplée et assignation](https://arxiv.org/abs/2107.08430).
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-DETECTEURS-002 provenance::agent pole::A pole::C pole::E
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Il associe cibles et requêtes pour définir la sup
 **Approfondissement** : L’appariement de l’évaluateur est encore une étape distincte. La prédiction d’ensemble peut éviter NMS dans cette conception.
 
 **Erreurs bloquantes** : Décrire les trois mécanismes comme un seul matching interchangeable.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Faster R-CNN, §3](https://arxiv.org/abs/1506.01497) ; [YOLO original, §2](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html) ; [DETR, §§3.1–3.2](https://arxiv.org/abs/2005.12872).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [DETR, §3.1, fig. 1 et équations 1–2](https://arxiv.org/abs/2005.12872).
 Tags: cv::pilote cv::d08 famille::algorithme cv_id::CV-DETECTEURS-003 provenance::agent pole::A pole::C pole::E
 END
 
@@ -70,7 +70,7 @@ Reponse: **Noyau attendu** : Propager les coordonnées/padding, mesurer taille e
 **Erreurs bloquantes** : Accuser uniquement le classifieur ou recalibrer le score sur le test.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Faster R-CNN, §3](https://arxiv.org/abs/1506.01497) ; [YOLO original, §2](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html) ; [DETR, §§3.1–3.2](https://arxiv.org/abs/2005.12872).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; Diagnostic construit du projet ; mécanismes multiéchelles et propositions : [Faster R-CNN, §3.1](https://arxiv.org/abs/1506.01497).
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-004 provenance::agent pole::A pole::C pole::E cas_pole::A::diagnostic
 END
 
@@ -87,6 +87,6 @@ Reponse: **Noyau attendu** : Matériel, backend/précision, résolution, batch, 
 **Approfondissement** : Mesurer aussi qualité à seuils figés et tailles critiques. Un temps moteur seul n’est pas une latence caméra→décision.
 
 **Erreurs bloquantes** : Comparer des FPS dont les périmètres diffèrent.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Faster R-CNN, §3](https://arxiv.org/abs/1506.01497) ; [YOLO original, §2](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html) ; [DETR, §§3.1–3.2](https://arxiv.org/abs/2005.12872).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; Protocole de comparaison proposé par le projet ; périmètres de calcul discutés dans [Faster R-CNN, §4.1](https://arxiv.org/abs/1506.01497).
 Tags: cv::pilote cv::d08 famille::evaluation cv_id::CV-DETECTEURS-005 provenance::agent pole::A pole::C pole::E
 END

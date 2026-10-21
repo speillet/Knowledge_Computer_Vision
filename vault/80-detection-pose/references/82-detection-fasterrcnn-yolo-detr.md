@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -52,6 +52,8 @@ Boxes correctes avant posttraitement mais sorties manquantes : inspecter seuils/
 Comparer architecture + recette + supervision + coût complet ; la catégorie one/two-stage seule ne prédit pas la qualité ni la latence.
 
 ## Sources et cartes
+
+- [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) et [YOLOX, §2.1 : passage anchor-free](https://arxiv.org/abs/2107.08430), exemples concrets de variantes.
 
 - [Faster R-CNN, §3](https://arxiv.org/abs/1506.01497).
 - [YOLO original, §2](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html).

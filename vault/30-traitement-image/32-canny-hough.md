@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Les contours forts amorcent des structures ; des r�
 **Approfondissement** : La suppression des non-maxima amincit d’abord les réponses. Les seuils ne donnent aucune classe sémantique.
 
 **Erreurs bloquantes** : Décrire le seuil bas comme une seconde segmentation indépendante.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV Canny, Theory](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html) ; [OpenCV Hough, Theory](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
+Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Canny, Non-maximum Suppression et Hysteresis Thresholding](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html).
 Tags: cv::pilote cv::d03 famille::algorithme cv_id::CV-CANNY-HOUGH-001 provenance::agent pole::B pole::E pole::F
 END
 
@@ -29,12 +29,12 @@ START
 CV-Pilote
 ID: CV-CANNY-HOUGH-002
 Question: Que représentent $\rho$ et $\theta$ dans $\rho=x\cos\theta+y\sin\theta$ ?
-Reponse: **Noyau attendu** : La distance orientée de la droite à l’origine et l’orientation de sa normale selon la convention ; chaque point vote pour des droites compatibles.
+Reponse: **Noyau attendu** : Pour des coordonnées image $x,y$ en pixels, $\rho$ est la distance orientée à l’origine en pixels ; $\theta$ est l’angle de la normale en radians, selon la convention annoncée. Chaque point vote pour les droites qui le traversent.
 
 **Approfondissement** : Les bins imposent une résolution ; un maximum peut regrouper plusieurs structures voisines.
 
 **Erreurs bloquantes** : Confondre normale et direction de segment ou oublier l’unité pixel.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV Canny, Theory](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html) ; [OpenCV Hough, Theory](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
+Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Hough, How does it work? et Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
 Tags: cv::pilote cv::d03 famille::raisonnement cv_id::CV-CANNY-HOUGH-002 provenance::agent pole::B pole::E pole::F
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Elle paramètre une droite ; les limites de support
 **Approfondissement** : Vérifier longueur minimale, trous et région observée ; prolonger une droite hors support n’est pas une mesure.
 
 **Erreurs bloquantes** : Interpréter une droite infinie comme les contours complets d’une pièce.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV Canny, Theory](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html) ; [OpenCV Hough, Theory](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
+Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Hough, How does it work? et Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
 Tags: cv::pilote cv::d03 famille::comparaison cv_id::CV-CANNY-HOUGH-003 provenance::agent pole::B pole::E pole::F
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Inspecter carte Canny, distribution angulaire, rég
 **Approfondissement** : Tester une perturbation contrôlée de texture et des contraintes métier avant de valider une ligne.
 
 **Erreurs bloquantes** : Conclure que chaque maximum d’accumulateur est une arête physique.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV Canny, Theory](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html) ; [OpenCV Hough, Theory](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
+Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Hough, How does it work? et Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html) ; diagnostic de texture proposé par le projet.
 Tags: cv::pilote cv::d03 famille::diagnostic cv_id::CV-CANNY-HOUGH-004 provenance::agent pole::B pole::E pole::F
 END

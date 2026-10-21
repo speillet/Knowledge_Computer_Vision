@@ -104,7 +104,7 @@ Reponse: **Noyau attendu** : examiner couverture spatiale, conditionnement et er
 **Approfondissement** : comparer les estimations sur sous-ensembles, vérifier l'absence d'alignement et le modèle plan, puis rechercher des observations informatives ailleurs. Rapporter la région dans laquelle la précision est établie. Augmenter le seuil ou le nombre de tirages ne fournit pas les contraintes spatiales manquantes.
 
 **Erreurs bloquantes** : déclarer le recalage validé sur le seul pourcentage d'inliers ou conclure automatiquement à un bug du descripteur.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|Fiche homographie]] ; [OpenCV homographie](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html).
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|Fiche homographie]] ; [OpenCV 4.13.0, homographie, Basic theory](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html) ; scénario de couverture et protocole de diagnostic proposés par le projet.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-HOMOGRAPHIE-006 provenance::agent pole::B pole::E
 END
 

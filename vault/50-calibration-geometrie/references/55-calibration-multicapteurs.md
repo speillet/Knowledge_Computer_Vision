@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-ZHANG", "CV-SE3", "CV-CAPTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -29,11 +29,11 @@ Associer observations communes et mouvements informatifs ; résoudre une initial
 
 ## Mathématiques, conventions et unités
 
-Une convention possible est $A_iX=XB_i$ pour mouvements relatifs nommés et extrinsèque X. L'équation n'a de sens qu'après définition des repères et sens. Rotations sur un seul axe et translations peu variées peuvent rendre des composantes mal observables. Les translations suivent la même unité de longueur.
+Pour une caméra portée par l'outil et une mire fixe dans la base, noter $G_i={}^bT_{g_i}$ (outil→base), $C_i={} ^{c_i}T_t$ (mire→caméra) et $X={}^gT_c$ (caméra→outil). L'égalité $G_iXC_i=G_jXC_j$ donne $A_{ij}X=XB_{ij}$ avec $A_{ij}=G_j^{-1}G_i$ et $B_{ij}=C_jC_i^{-1}$. Cette convention correspond au cas eye-in-hand ; changer le montage impose de redéfinir la chaîne. Rotations sur un seul axe et translations peu variées peuvent rendre des composantes mal observables. Les translations suivent la même unité de longueur.
 
 ## Paramètres et propriétés
 
-Définir outil→base, caméra→mire et ordre de composition. Consigner horloges, temps de pose, levier, incertitudes et mouvement. Ne pas annoncer un minimum universel indépendant du solveur et des trajectoires.
+Définir outil→base, mire→caméra et ordre de composition pour la convention ci-dessus. Consigner horloges, temps de pose, levier, incertitudes et mouvement. Ne pas annoncer un minimum universel indépendant du solveur et des trajectoires.
 
 ## Coût et implémentation
 
@@ -52,6 +52,8 @@ Bonne calibration immobile, erreur en mouvement : mesurer timing et deskew. Tran
 Cible commune, méthodes targetless et optimisation conjointe temporelle selon équipement et observabilité. La sécurité de commande robotique reste hors de cette fiche.
 
 ## Sources et cartes
+
+- [Zhang–Singh 2014, LOAM, §§II, IV et V-B](https://www.roboticsproceedings.org/rss10/p07.pdf)
 
 - [OpenCV calib3d, calibrateHandEye et robot-world hand-eye](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
 - [Cartes associées](../55-calibration-multicapteurs.md).

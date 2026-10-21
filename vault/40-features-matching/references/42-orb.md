@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 2
+revision: 3
 tags: [cv/d04, matching, orb]
 ---
 # ORB — détection et descripteur binaire orienté
@@ -121,7 +121,7 @@ la validation de la tâche.
 
 ## Sources et cartes
 
-- [Rublee et al., ICCV 2011][orbpaper] : §§3–4 mécanisme ; §5 évaluation.
+- [Rublee et al., ICCV 2011][orbpaper] : §§3–4 mécanisme ; §§4.4, 5.3 et 6.1 évaluation.
 - [OpenCV ORB 4.13][opencv] : paramètres et sémantique de `WTA_K`.
 - [OpenCV matching][matcher] : distances et cross-check.
 - [Cartes ORB](../42-orb.md).

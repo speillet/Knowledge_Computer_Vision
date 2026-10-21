@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 2
+revision: 3
 tags: [cv/d04, matching, sift]
 ---
 # SIFT — points locaux et description à plusieurs échelles
@@ -113,7 +113,7 @@ La norme découle du sens du descripteur, pas seulement de son type mémoire.
 
 ## Évaluation, variation et diagnostic
 
-**Référence analytique, pas une expérience image exécutée** : deux prises de
+**Baseline proposée, pas une expérience image exécutée** : deux prises de
 vue d'une étiquette plane avec géométrie connue. Comparer les correspondances
 à la transformation vraie, leur couverture et l'erreur de projection ; mesurer
 la latence du pipeline complet sur la machine cible.

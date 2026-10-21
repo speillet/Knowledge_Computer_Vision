@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : NeRF utilise un champ de densité/radiance avec ren
 **Approfondissement** : Comparer optimisation, mémoire et rendu sous même scène/matériel ; aucune vitesse universelle ne suit du nom.
 
 **Erreurs bloquantes** : Assimiler les deux à un maillage métrique garanti.
-Source: [[120-generatif-multimodal/references/123-nerf-gaussian-splatting|Fiche complète]] ; [NeRF, page et papier des auteurs](https://www.matthewtancik.com/nerf) ; [3D Gaussian Splatting, auteurs](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/).
+Source: [[120-generatif-multimodal/references/123-nerf-gaussian-splatting|Fiche complète]] ; [NeRF, §§3–4](https://arxiv.org/abs/2003.08934) ; [3DGS, résumé et §§4–6](https://arxiv.org/abs/2308.04079).
 Tags: cv::pilote cv::d12 famille::comparaison cv_id::CV-RENDU3D-001 provenance::agent pole::B pole::D
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Elle évalue une ressemblance d’image sous protoc
 **Approfondissement** : Utiliser une référence géométrique, unités et angles réservés ; examiner les zones jamais observées.
 
 **Erreurs bloquantes** : Déduire une précision en millimètres d’un score perceptuel ou pixel.
-Source: [[120-generatif-multimodal/references/123-nerf-gaussian-splatting|Fiche complète]] ; [NeRF, page et papier des auteurs](https://www.matthewtancik.com/nerf) ; [3D Gaussian Splatting, auteurs](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/).
+Source: [[120-generatif-multimodal/references/123-nerf-gaussian-splatting|Fiche complète]] ; Distinction entre métriques image et géométrie déduite par le projet ; [NeRF, §6 : évaluation de synthèse de vues](https://arxiv.org/abs/2003.08934).
 Tags: cv::pilote cv::d12 famille::evaluation cv_id::CV-RENDU3D-002 provenance::agent pole::B pole::D
 END
 
@@ -51,6 +51,6 @@ Reponse: **Noyau attendu** : Couverture angulaire, poses et hypothèse de scène
 **Approfondissement** : Comparer à des vues réservées ; augmenter les itérations sans nouvelles contraintes peut seulement surajuster.
 
 **Erreurs bloquantes** : Considérer les vues d’entraînement comme une validation complète.
-Source: [[120-generatif-multimodal/references/123-nerf-gaussian-splatting|Fiche complète]] ; [NeRF, page et papier des auteurs](https://www.matthewtancik.com/nerf) ; [3D Gaussian Splatting, auteurs](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/).
+Source: [[120-generatif-multimodal/references/123-nerf-gaussian-splatting|Fiche complète]] ; Diagnostic de couverture/poses proposé par le projet ; [NeRF, §§3–4 : représentation et observations](https://arxiv.org/abs/2003.08934).
 Tags: cv::pilote cv::d12 famille::diagnostic cv_id::CV-RENDU3D-003 provenance::agent pole::B pole::D
 END

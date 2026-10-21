@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -52,6 +52,8 @@ IDs échangés malgré apparence : vérifier domaines ReID, crops, normalisation
 Associer mouvement et apparence selon ambiguïtés ; compenser ego-motion si nécessaire. Les trackers monoobjet et ReID seul remplissent des contrats distincts.
 
 ## Sources et cartes
+
+- [SORT, §3.1 et tableau 1](https://arxiv.org/abs/1602.00763) : effet du changement de détecteur, motivation pour le contrôle de l’amont.
 
 - [DeepSORT, §§2.1–2.3](https://arxiv.org/abs/1703.07402).
 - [ByteTrack, §3 Algorithm1](https://arxiv.org/abs/2110.06864).

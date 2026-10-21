@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SVD", "CV-EPIPOLAIRE", "CV-FACTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -29,7 +29,7 @@ Linéariser les projections, résoudre un incrément creux, accepter un pas puis
 
 ## Mathématiques, conventions et unités
 
-Minimiser $\sum_{ij}\rho(r_{ij}^T\Sigma_{ij}^{-1}r_{ij})$, résidus pixel avant blanchiment. Pour les blocs caméra/points B,E,C et seconds membres v,w, résoudre $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$, puis récupérer $\delta_p$. Les inverses notées décrivent l'algèbre ; l'implémentation utilise des résolutions adaptées.
+Minimiser $\sum_{ij}\rho(r_{ij}^T\Sigma_{ij}^{-1}r_{ij})$, où $r_{ij}$ est un résidu pixel, $\Sigma_{ij}$ sa covariance définie positive et $\rho$ une perte robuste appliquée à sa norme blanchie au carré. Pour les blocs caméra/points B,E,C et seconds membres v,w, résoudre $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$, puis récupérer $\delta_p=C^{-1}(w-E^T\delta_c)$. Cette écriture suppose les blocs de $C$ inversibles ; contraintes et/ou amortissement doivent traiter les directions singulières. Les inverses notées décrivent l'algèbre ; l'implémentation utilise des résolutions adaptées.
 
 ## Paramètres et propriétés
 
@@ -52,6 +52,9 @@ Coût faible mais échelle incorrecte : vérifier référence métrique et jauge
 Pose graph optimise principalement poses/contraintes relatives ; BA conserve les observations des landmarks. Le choix dépend des inconnues et de l'information à garder.
 
 ## Sources et cartes
+
+- [Ceres, Covariance Estimation, Gauge Invariance, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html)
+- [Ceres, LossFunction, motivation et équation du coût, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html)
 
 - [Ceres, Schur solvers et équations blocs](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
 - [Cartes associées](../54-bundle-adjustment.md).

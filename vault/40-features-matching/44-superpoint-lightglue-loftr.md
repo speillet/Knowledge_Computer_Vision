@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : SuperPoint fournit des keypoints et des descripteur
 **Approfondissement** : Une estimation géométrique et sa validation restent nécessaires après le matching.
 
 **Erreurs bloquantes** : Présenter LightGlue comme un détecteur d’objets ou une calibration caméra.
-Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [SuperPoint, méthode et Homographic Adaptation](https://arxiv.org/abs/1712.07629) ; [LightGlue, dépôt des auteurs](https://github.com/cvg/LightGlue) ; [LoFTR, §3](https://arxiv.org/abs/2104.00680).
+Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [DeTone et al. 2018, SuperPoint, §§3 et 5](https://arxiv.org/abs/1712.07629) ; [LightGlue, README, Usage et Advanced configuration, consulté le 2026-10-20](https://github.com/cvg/LightGlue).
 Tags: cv::pilote cv::d04 famille::comprehension cv_id::CV-MATCH-APPRIS-001 provenance::agent pole::B
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Non : il produit des correspondances coarse-to-fine
 **Approfondissement** : Définir repères, scores et validation géométrique comme pour toute proposition de matches.
 
 **Erreurs bloquantes** : Assimiler detector-free à dense sans trous et sans erreurs.
-Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [SuperPoint, méthode et Homographic Adaptation](https://arxiv.org/abs/1712.07629) ; [LightGlue, dépôt des auteurs](https://github.com/cvg/LightGlue) ; [LoFTR, §3](https://arxiv.org/abs/2104.00680).
+Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [Sun et al. 2021, LoFTR, §§3.1–3.4 et 4.1–4.2](https://arxiv.org/abs/2104.00680).
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-MATCH-APPRIS-002 provenance::agent pole::B
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Les poids et distributions attendues sont associés
 **Approfondissement** : Vérifier feature extractor, normalisation, coordonnées et version du checkpoint, puis mesurer.
 
 **Erreurs bloquantes** : Déduire la compatibilité du seul nombre de composantes.
-Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [SuperPoint, méthode et Homographic Adaptation](https://arxiv.org/abs/1712.07629) ; [LightGlue, dépôt des auteurs](https://github.com/cvg/LightGlue) ; [LoFTR, §3](https://arxiv.org/abs/2104.00680).
+Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [LightGlue, README, Usage et Advanced configuration, consulté le 2026-10-20](https://github.com/cvg/LightGlue).
 Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-MATCH-APPRIS-003 provenance::agent pole::B
 END
 
@@ -68,7 +68,7 @@ Reponse: **Noyau attendu** : Même problème, paires/splits, résolution effecti
 **Approfondissement** : Rapporter couverture, robustesse et matériel ; le score d’un benchmark ne garantit pas le succès sur une nouvelle acquisition.
 
 **Erreurs bloquantes** : Comparer des nombres bruts de matches ou des temps couvrant des étapes différentes.
-Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [SuperPoint, méthode et Homographic Adaptation](https://arxiv.org/abs/1712.07629) ; [LightGlue, dépôt des auteurs](https://github.com/cvg/LightGlue) ; [LoFTR, §3](https://arxiv.org/abs/2104.00680).
+Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [Sun et al. 2021, LoFTR, §§3.1–3.4 et 4.1–4.2](https://arxiv.org/abs/2104.00680) ; protocole comparatif proposé par le projet.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-MATCH-APPRIS-004 provenance::agent pole::B
 END
 
@@ -85,6 +85,6 @@ Reponse: **Noyau attendu** : La conversion des positions depuis le repère du r�
 **Approfondissement** : Vérifier un point connu et l’échelle des résidus avant d’accuser le matcher.
 
 **Erreurs bloquantes** : Mélanger coordonnées normalisées et pixels dans une même estimation.
-Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [SuperPoint, méthode et Homographic Adaptation](https://arxiv.org/abs/1712.07629) ; [LightGlue, dépôt des auteurs](https://github.com/cvg/LightGlue) ; [LoFTR, §3](https://arxiv.org/abs/2104.00680).
+Source: [[40-features-matching/references/44-superpoint-lightglue-loftr|Fiche complète]] ; [LightGlue, README, Usage et Advanced configuration, consulté le 2026-10-20](https://github.com/cvg/LightGlue) ; diagnostic de changement de repère déduit par le projet.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-MATCH-APPRIS-005 provenance::agent pole::B
 END

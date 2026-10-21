@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -29,7 +29,7 @@ Projeter les observations sur l'espace expliqué par le modèle ; résoudre par 
 
 ## Mathématiques, conventions et unités
 
-On minimise $\|Ax-b\|_2^2$. Si $A=U\Sigma V^T$, les petites valeurs singulières de $\Sigma$ signalent des directions sensibles. À rang colonne plein, $\kappa_2(A^TA)=\kappa_2(A)^2$ : les équations normales amplifient le conditionnement. Pour un résidu $r$ et covariance cohérente $C$, $r^TC^{-1}r$ est sans unité ; mélanger pixels et mètres sans pondération modifie arbitrairement l'objectif.
+On minimise $\|Ax-b\|_2^2$. Si $A=U\Sigma V^T$, les petites valeurs singulières de $\Sigma$ signalent des directions sensibles. À rang colonne plein, $\kappa_2(A^TA)=\kappa_2(A)^2$ : les équations normales amplifient le conditionnement. Pour un résidu $r$ et sa covariance $C$ définie positive, $r^TC^{-1}r$ est sans unité. Blanchir signifie former $L^{-1}r$ avec $C=LL^T$ ; la forme quadratique est sa norme au carré. Une covariance singulière impose de traiter les contraintes ou le sous-espace observable séparément ; mélanger pixels et mètres sans pondération modifie arbitrairement l'objectif.
 
 ## Paramètres et propriétés
 
@@ -53,7 +53,12 @@ QR pour un problème bien posé, SVD pour diagnostic de rang, solveur creux pour
 
 ## Sources et cartes
 
-- [Eigen, least squares : SVD/QR/normal equations](https://eigen.tuxfamily.org/dox/group__LeastSquares.html).
+- [Ceres, Covariance Estimation, Introduction et Rank of the Jacobian (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html).
+- [Ceres, Modeling Non-linear Least Squares, Introduction (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html).
+
+Ces documentations étayent les solveurs, le blanchiment et le traitement des outliers. Le cas de perturbation et le diagnostic de géométrie sont des raisonnements algébriques du projet ; ils ne constituent pas une expérience publiée.
+
+- [Eigen, Solving linear least squares systems, Using the SVD decomposition / Using normal equations (documentation consultée le 2026-10-18)](https://eigen.tuxfamily.org/dox/group__LeastSquares.html).
 - [Cartes associées](../11-moindres-carres-svd.md).
 
 Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.

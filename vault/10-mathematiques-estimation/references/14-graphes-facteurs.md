@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SVD", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -29,7 +29,7 @@ Chaque facteur relie les variables nécessaires à une observation ; un solveur 
 
 ## Mathématiques, conventions et unités
 
-Une forme MAP est $\min_x\sum_k\|r_k(x_k)\|^2_{\Sigma_k^{-1}}$. $x_k$ regroupe les variables du facteur ; le résidu est blanchi par sa covariance. Un prior ou une convention fixe les jauges globales ; un solveur n'invente pas une référence absolue absente des mesures.
+Pour des facteurs gaussiens conditionnellement indépendants, à covariances fixes définies positives, une forme MAP est $\min_x\sum_k\|r_k(x_k)\|^2_{\Sigma_k^{-1}}$. $x_k$ regroupe les variables du facteur ; le résidu est blanchi par sa covariance. Un prior ou une convention fixe les jauges globales ; un solveur n'invente pas une référence absolue absente des mesures.
 
 ## Paramètres et propriétés
 
@@ -53,8 +53,10 @@ Pose graph pour contraintes entre poses, BA pour poses et landmarks observés ; 
 
 ## Sources et cartes
 
-- [GTSAM, factor graphs et SLAM](https://gtsam.org/tutorials/intro.html).
-- [iSAM2, auteurs](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.html).
+- [Ceres, Covariance Estimation, Gauge Invariance (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html#gauge-invariance).
+
+- [Dellaert, Factor Graphs and GTSAM, §§2.3–2.4, 4.1 et 7 (consulté le 2026-10-18)](https://gtsam.org/tutorials/intro.html).
+- [Kaess et al. 2012, iSAM2, §2 Gaussian Case et §4](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf).
 - [Cartes associées](../14-graphes-facteurs.md).
 
 Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.

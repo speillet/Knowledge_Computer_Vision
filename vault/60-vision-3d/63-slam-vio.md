@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Non : elle résume des mesures entre keyframes en c
 **Approfondissement** : L’accéléromètre n’est pas directement une accélération monde sans gravité.
 
 **Erreurs bloquantes** : Décrire la préintégration comme une pose absolue prête à l’emploi.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster, préintégration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza, alignement §III et Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [GTSAM, SLAM et facteurs](https://gtsam.org/tutorials/intro.html).
+Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster et al., §§V–VI, équations 31–34 et VI-C](https://dellaert.github.io/files/Forster16tro.pdf).
 Tags: cv::pilote cv::d06 famille::comprehension cv_id::CV-VIO-001 provenance::agent pole::B pole::C
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Elle ajoute une contrainte sur un lieu revisité et
 **Approfondissement** : Le candidat de lieu doit être vérifié ; une fausse boucle peut rendre le résultat pire malgré un coût faible.
 
 **Erreurs bloquantes** : Garantir une position globale exacte dès qu’une boucle est détectée.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster, préintégration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza, alignement §III et Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [GTSAM, SLAM et facteurs](https://gtsam.org/tutorials/intro.html).
+Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [GTSAM, §4.1 Loop Closure Constraints, consulté le 2026-10-20](https://gtsam.org/tutorials/intro.html) ; fausse boucle : diagnostic du projet.
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-VIO-002 provenance::agent pole::B pole::C
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Sans référence externe, le yaw global peut rester
 **Approfondissement** : La translation globale reste aussi libre ; distinguer convention d’alignement et information physique réellement disponible.
 
 **Erreurs bloquantes** : Dire que tout VIO est toujours à une échelle arbitraire comme un monoculaire visuel.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster, préintégration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza, alignement §III et Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [GTSAM, SLAM et facteurs](https://gtsam.org/tutorials/intro.html).
+Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Zhang–Scaramuzza 2018, §III et table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; condition d’excitation : hypothèse du modèle inertiel.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-VIO-003 provenance::agent pole::B pole::C
 END
 
@@ -70,7 +70,7 @@ Reponse: **Noyau attendu** : Définir repères/temps, calibrer capteurs et déla
 **Erreurs bloquantes** : Promettre une pose métrique fiable sans calibration temporelle ni protocole d’évaluation.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster, préintégration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza, alignement §III et Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [GTSAM, SLAM et facteurs](https://gtsam.org/tutorials/intro.html).
+Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster et al., §§V–VI, équations 31–34 et VI-C](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza 2018, §III et table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; protocole du projet.
 Tags: cv::pilote cv::d06 famille::conception cv_id::CV-VIO-004 provenance::agent pole::B pole::C cas_pole::B::conception
 END
 
@@ -89,6 +89,6 @@ Reponse: **Noyau attendu** : Inspecter texture/parallaxe, excitation, biais et s
 **Erreurs bloquantes** : Corriger en alignant librement l’échelle puis déclarer le VIO précis.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster, préintégration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza, alignement §III et Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [GTSAM, SLAM et facteurs](https://gtsam.org/tutorials/intro.html).
+Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster et al., §§V–VI, équations 31–34 et VI-C](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza 2018, §III et table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; diagnostic du projet.
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-VIO-005 provenance::agent pole::B pole::C cas_pole::B::diagnostic
 END

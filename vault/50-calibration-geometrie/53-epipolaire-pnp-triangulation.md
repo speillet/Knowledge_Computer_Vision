@@ -68,7 +68,7 @@ Reponse: **Noyau attendu** : Avec des rayons presque parallèles, plusieurs gran
 **Approfondissement** : Mesurer angle de parallaxe, sensibilité et référence 3D ; une meilleure baseline peut ajouter l’information manquante.
 
 **Erreurs bloquantes** : Déduire la précision 3D du seul résidu pixel.
-Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Fiche complète]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions et variantes](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html).
+Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Fiche complète]] ; [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P et triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; sensibilité à faible parallaxe : déduction géométrique du projet.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-EPIPOLAIRE-004 provenance::agent pole::B pole::C
 END
 
@@ -85,6 +85,6 @@ Reponse: **Noyau attendu** : Le problème peut avoir plusieurs solutions, les co
 **Approfondissement** : Nommer la variante, vérifier son contrat puis raffiner et tester la chiralité.
 
 **Erreurs bloquantes** : Confondre minimum théorique et contrat d’API.
-Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Fiche complète]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions et variantes](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html).
+Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Fiche complète]] ; [OpenCV 4.13.0, solvePnP, Pose computation methods et P3P](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html) ; [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P et triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
 Tags: cv::pilote cv::d05 famille::pratique cv_id::CV-EPIPOLAIRE-005 provenance::agent pole::B pole::C
 END

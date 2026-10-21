@@ -14,10 +14,10 @@ ID: CV-CLIP-001
 Question: Comment CLIP peut-il classer une image avec des classes qu’on décrit par texte ?
 Reponse: **Noyau attendu** : Encoder image et descriptions, comparer dans un espace aligné puis appliquer une règle de décision sur ces candidats.
 
-**Approfondissement** : La qualité dépend des prompts, du vocabulaire et du domaine ; aucun entraînement d’une nouvelle tête ne signifie aucune hypothèse.
+**Approfondissement** : La qualité dépend des prompts, du vocabulaire et du domaine ; l’absence d’entraînement d’une nouvelle tête n’implique pas l’absence d’hypothèses.
 
 **Erreurs bloquantes** : Présenter CLIP comme un générateur de légende autonome.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §7](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §6](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
 Tags: cv::pilote cv::d07 famille::comprehension cv_id::CV-CLIP-001 provenance::agent pole::A pole::D
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Il normalise des scores entre ces candidats ; l’e
 **Approfondissement** : Tester rejets, nouveaux candidats et calibration sur données représentatives.
 
 **Erreurs bloquantes** : Interpréter tout score normalisé comme une probabilité de vérité.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §7](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §6](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-CLIP-002 provenance::agent pole::A pole::D
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : SigLIP utilise une loss sigmoid sur des paires plut
 **Approfondissement** : Ce changement d’objectif n’accorde pas automatiquement une calibration en exploitation ; les détails de température, biais et données comptent.
 
 **Erreurs bloquantes** : Déduire une probabilité fiable du seul mot sigmoid.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §7](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §6](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-CLIP-003 provenance::agent pole::A pole::D
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Créer des variantes sur validation, figer prompts 
 **Approfondissement** : Conserver négatifs et cas sans bonne classe ; mesurer la sensibilité aux formulations sans sélectionner a posteriori le meilleur score test.
 
 **Erreurs bloquantes** : Choisir les prompts d’après les résultats du test final.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §7](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [Radford et al., CLIP, §§2.3, 3.1 et limites §6](https://arxiv.org/abs/2103.00020) ; protocole de validation proposé par le projet.
 Tags: cv::pilote cv::d07 famille::evaluation cv_id::CV-CLIP-004 provenance::agent pole::A pole::D
 END

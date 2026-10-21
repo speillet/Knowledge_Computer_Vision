@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 2
+revision: 3
 tags: [cv/d11, tracking, sort]
 ---
 # SORT — tracking multiobjet par mouvement et association
@@ -23,13 +23,13 @@ réidentification par apparence et ne remplace pas le détecteur. [Article, §3]
 Entrées : à chaque frame, boîtes de détection dans le même repère pixel, avec
 scores pour le pipeline amont. Sorties : boîtes suivies et identifiants de
 piste, dont le cycle de vie dépend de l'implémentation. La référence doit être
-appelée même quand la liste de détections est vide ; elle utilise un pas d'une
+appelée même sans détection, avec un tableau `np.empty((0, 5))` ; elle utilise un pas d'une
 image. Si la cadence change ou si des frames sont sautées, le modèle doit être
 réexaminé. La référence n'effectue pas d'association séparée par classe.
 
 **Prérequis obligatoires** : [Kalman et affectation](../../01-Parcours/Pre-requis.md),
 [IoU des boîtes](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md).
-**Connexions** : [NMS](../../80-detection-pose/references/81-nms.md), détection, ReID, DeepSORT et ByteTrack à rédiger.
+**Connexions** : [NMS](../../80-detection-pose/references/81-nms.md), détection, ReID, [DeepSORT et ByteTrack](112-deepsort-bytetrack.md).
 **Compétences** : expliquer prédiction/correction, diagnostiquer ID switches,
 choisir un cycle de vie et évaluer le pipeline complet.
 
@@ -117,8 +117,8 @@ Voir `examples/pilot_math.py`.
 
 Comparer au moins détections seules et tracker sur séquences séparées entre
 réglage et test. Examiner erreurs de détection, ID switches, fragments et
-métriques d'association telles qu'IDF1/HOTA selon leur protocole ; leur fiche
-détaillée reste à produire. Une AP du détecteur ne mesure pas les identités.
+métriques d'association telles qu'IDF1/HOTA selon leur protocole ; voir la
+[fiche d’évaluation du tracking](../../130-evaluation-fiabilite/references/132-tracking-trajectoires.md). Une AP du détecteur ne mesure pas les identités.
 Ne pas mélanger frames d'une même scène entre train et test.
 
 **Variation proposée non exécutée sur vidéo** : masquer deux observations

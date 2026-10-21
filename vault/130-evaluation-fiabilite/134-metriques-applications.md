@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Dice mesure un recouvrement ; HD95 une distance de 
 **Approfondissement** : Définir masques vides, directions et agrégation ; un contour éloigné ou une petite région peut peser différemment.
 
 **Erreurs bloquantes** : Comparer directement un nombre sans unité à une longueur.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z) ; [NIST, Gauge R&R](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc4.htm) ; [MVTec AD2, PRO et protocole](https://www.mvtec.com/fileadmin/Redaktion/mvtec.com/company/research/datasets/MVTecAD2_arXiv_preprint_2503.21622v1.pdf).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [Metrics Reloaded, Semantic segmentation](https://doi.org/10.1038/s41592-023-02151-z) ; [Reinke et al., fig. 4a et 5c : recouvrement/frontières et HD95](https://www.nature.com/articles/s41592-023-02150-0).
 Tags: cv::pilote cv::d13 famille::comparaison cv_id::CV-METRIQUES-APPLIQUEES-001 provenance::agent pole::A pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Les pixels de fond ou grands défauts dominent cert
 **Approfondissement** : Préciser AU-PRO et sa plage FPR si utilisée, plus taux de rejets/manques au seuil utile.
 
 **Erreurs bloquantes** : Comparer des AU-PRO avec plages différentes sans le signaler.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z) ; [NIST, Gauge R&R](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc4.htm) ; [MVTec AD2, PRO et protocole](https://www.mvtec.com/fileadmin/Redaktion/mvtec.com/company/research/datasets/MVTecAD2_arXiv_preprint_2503.21622v1.pdf).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [MVTec AD2 v1, protocole d’évaluation et fig. 4 : PRO et pondération des régions](https://arxiv.org/abs/2503.21622v1).
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-METRIQUES-APPLIQUEES-002 provenance::agent pole::A pole::E
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Non : répéter les mesures et varier les condition
 **Approfondissement** : Distinguer biais, répétabilité, reproductibilité et stabilité ; fixer la tolérance métier.
 
 **Erreurs bloquantes** : Transformer directement une erreur pixel d’ajustement en garantie millimétrique.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z) ; [NIST, Gauge R&R](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc4.htm) ; [MVTec AD2, PRO et protocole](https://www.mvtec.com/fileadmin/Redaktion/mvtec.com/company/research/datasets/MVTecAD2_arXiv_preprint_2503.21622v1.pdf).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [NIST, 2.4.4.1 répétabilité](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc441.htm), [2.4.4.2 reproductibilité](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc442.htm), [2.4.4.3 stabilité](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc443.htm), [2.4.5 biais](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc45.htm).
 Tags: cv::pilote cv::d13 famille::diagnostic cv_id::CV-METRIQUES-APPLIQUEES-003 provenance::agent pole::A pole::E
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : La convention choisie et son effet sur le score/agr
 **Approfondissement** : Les faux positifs sur cas négatifs et absences de détection doivent rester visibles.
 
 **Erreurs bloquantes** : Retirer silencieusement tous les cas vides pour améliorer la moyenne.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z) ; [NIST, Gauge R&R](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc4.htm) ; [MVTec AD2, PRO et protocole](https://www.mvtec.com/fileadmin/Redaktion/mvtec.com/company/research/datasets/MVTecAD2_arXiv_preprint_2503.21622v1.pdf).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Fiche complète]] ; [Reinke et al., P2.3–P2.4 et P3.2 : sorties/références vides et agrégation](https://www.nature.com/articles/s41592-023-02150-0).
 Tags: cv::pilote cv::d13 famille::pratique cv_id::CV-METRIQUES-APPLIQUEES-004 provenance::agent pole::A pole::E
 END

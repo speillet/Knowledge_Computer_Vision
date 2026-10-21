@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -25,7 +25,7 @@ Synthétiser des vues d'une scène et distinguer qualité de rendu et précision
 
 ## Intuition et déroulement
 
-NeRF représente densité/radiance en fonction d'un point 3D et de la direction de vue, puis rend par intégration volumique. 3D Gaussian Splatting optimise des primitives anisotropes explicites, leur apparence et densification, puis effectue un rendu par splatting.
+Dans NeRF original, la densité dépend de la position 3D seule ; la couleur/radiance dépend aussi de la direction de vue. Le rendu utilise une intégration volumique. 3D Gaussian Splatting optimise des primitives anisotropes explicites, leur apparence et densification, puis effectue un rendu par splatting.
 
 ## Mathématiques, conventions et unités
 
@@ -52,6 +52,9 @@ Rendu bon mais surface flottante : vérifier vues réservées, poses, régions n
 MVS/TSDF pour d'autres hypothèses et sorties ; reconstruction apprise pour une autre supervision. Aucun de ces noms ne garantit une échelle absolue sans contrat adapté.
 
 ## Sources et cartes
+
+- [NeRF, §§3–4](https://arxiv.org/abs/2003.08934) : dépendances du champ et rendu volumique.
+- [3D Gaussian Splatting, §§4–6](https://arxiv.org/abs/2308.04079) : primitives anisotropes, optimisation/densification et rendu.
 
 - [NeRF, page et papier des auteurs](https://www.matthewtancik.com/nerf).
 - [3D Gaussian Splatting, auteurs](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/).
