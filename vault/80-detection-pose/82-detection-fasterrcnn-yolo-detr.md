@@ -62,15 +62,15 @@ Objectif : analyser les petits objets après resize. Famille : diagnostic. Prove
 START
 CV-Pilote
 ID: CV-DETECTEURS-004
-Question: Cas A — diagnostic : l’AP des petits objets chute après réduction de la résolution d’entrée. Que vérifier ?
-Reponse: **Noyau attendu** : Propager les coordonnées/padding, mesurer taille effective et rappel avant/après posttraitement, puis examiner assignation et features multiéchelles.
+Question: Cas A — diagnostic : à checkpoint et images fixés, l'AP des petits objets chute quand des images $1920\times1080$ passent à une entrée $640\times640$ avec conservation du ratio et padding centré. Certains objets font $12\times9$ pixels à l'origine. Quels contrôles distinguent les causes possibles ?
+Reponse: **Noyau attendu** : Vérifier d'abord l'aller-retour des boîtes avec resize et padding. Mesurer ensuite leur taille effective et le rappel de ces mêmes objets avant filtrage, après seuil de score, puis après NMS éventuelle. Une GT couverte avant mais plus après désigne une perte de sélection ; si aucune candidate correcte n'existe en amont, examiner échelle, features et assignation d'entraînement.
 
-**Approfondissement** : Comparer mêmes images et classes ; séparer bug de repère et perte réelle de détails. Une architecture plus grosse ne recrée pas les pixels disparus.
+**Approfondissement** : Le facteur est $1/3$, le padding vertical 140 pixels par côté, l'objet devient $4\times3$. La fiche calcule un cas où une boîte parfaite de score $0{,}8$ disparaît au profit d'une boîte moins bien localisée de score $0{,}9$. Conserver classes, seuil IoU et strates de taille d'origine pour comparer le rappel. La petite taille seule ne prouve pas une perte d'information responsable de l'échec.
 
-**Erreurs bloquantes** : Accuser uniquement le classifieur ou recalibrer le score sur le test.
+**Erreurs bloquantes** : Oublier d'inverser le padding, compter les doublons comme du rappel, ou régler les seuils sur le test.
 
-**Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; Diagnostic construit du projet ; mécanismes multiéchelles et propositions : [Faster R-CNN, §3.1](https://arxiv.org/abs/1506.01497).
+**Critères de correction du cas** : trois contrôles discriminants (géométrie, échelle, filtrage), hypothèses explicites et conclusion conditionnelle. Cas construit ; calcul géométrique vérifié, aucune observation terrain.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; diagnostic et calculs du projet ; [FPN, version 2, §3](https://arxiv.org/html/1612.03144v2) ; [Soft-NMS, §4](https://arxiv.org/html/1704.04503).
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-004 provenance::agent pole::A pole::C pole::E cas_pole::A::diagnostic
 END
 
@@ -174,4 +174,38 @@ Reponse: **Noyau attendu** : Elle associe les représentations sémantiques prof
 **Erreurs bloquantes** : Attribuer de nouveaux détails observés à l'interpolation seule, ou confondre FPN et pyramide d'images.
 Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [FPN, version 2, §3 et figure 3](https://arxiv.org/html/1612.03144v2).
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-010 provenance::agent pole::A pole::C pole::E
+END
+
+## CV-DETECTEURS-011
+
+Objectif : distinguer des erreurs de classe, de localisation et de doublon. Famille : diagnostic. Provenance : agent.
+
+START
+CV-Pilote
+ID: CV-DETECTEURS-011
+Question: Trois cas indépendants ont chacun une seule GT « voiture », sans ignore/crowd. Avec les seuils TIDE $t_b=0{,}1$, $t_f=0{,}5$, quelle erreur décrit chaque FP : (a) « camion », IoU $0{,}8$ ; (b) « voiture », IoU $0{,}3$ ; (c) « voiture », IoU $0{,}8$, mais la GT est déjà associée à une boîte de score supérieur ?
+Reponse: **Noyau attendu** : (a) Classification : localisation suffisante, mauvaise classe. (b) Localisation : bonne classe, recouvrement intermédiaire. (c) Doublon : classe et localisation suffisantes, mais la GT a déjà une détection associée.
+
+**Approfondissement** : TIDE distingue aussi l'erreur combinée classe/localisation, le fond et les GT manquées non déjà expliquées par classification/localisation. Orienter les vérifications vers labels/classes, géométrie ou posttraitement selon le cas, sans en déduire automatiquement une cause. Le nombre de FP seul ne mesure pas la perte d'AP : leur classement par score compte aussi.
+
+**Erreurs bloquantes** : Compter (c) comme un second TP, ou attribuer (a) à une mauvaise localisation.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [TIDE, version 2, §2.2 : types et pondération des erreurs](https://arxiv.org/html/2008.08115v2) ; cas construits du projet.
+Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-011 provenance::agent pole::A pole::C pole::E
+END
+
+## CV-DETECTEURS-012
+
+Objectif : diagnostiquer un faux positif pouvant provenir d'une annotation manquante. Famille : diagnostic. Provenance : agent.
+
+START
+CV-Pilote
+ID: CV-DETECTEURS-012
+Question: Un détecteur produit une boîte très confiante sans GT associée ; l'image semble pourtant montrer un objet de la classe visée. Que vérifier avant de conclure à une confusion avec le fond ?
+Reponse: **Noyau attendu** : Confronter l'image à la politique d'annotation : présence et classe réelles, conventions de boîte, exclusions et règles crowd/ignore. Si l'objet aurait dû être annoté mais a été omis, une détection non ignorée est comptée FP malgré sa pertinence visuelle. La confiance du modèle ne suffit pas à prouver l'omission.
+
+**Approfondissement** : Le projet propose de faire arbitrer les cas ambigus, versionner les corrections et réévaluer tous les modèles sur la même GT corrigée, en conservant l'ancien bilan. TIDE documente des objets manquants et des flags crowd erronés ; cela ne rend pas tous les FP suspects ni toutes les annotations exhaustives.
+
+**Erreurs bloquantes** : Supprimer les FP gênants d'un seul modèle, ou transformer automatiquement toute détection confiante en annotation.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [TIDE, version 2, §3.4 et annexes D–E : annotations ambiguës/manquantes et détections ignorées](https://arxiv.org/html/2008.08115v2) ; protocole de correction proposé par le projet.
+Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-012 provenance::agent pole::A pole::C pole::E
 END

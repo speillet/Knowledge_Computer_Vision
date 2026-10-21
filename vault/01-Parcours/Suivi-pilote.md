@@ -1,6 +1,6 @@
 # Suivi du pilote : preuves et limites
 
-**Lot courant** : 52 fiches, 229 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
+**Lot courant** : 52 fiches, 231 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
 **Client de révision** : AnkiDroid, confirmé par l'apprenant le 2026-10-18.
 Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
@@ -118,7 +118,7 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 | Essai | Attendu | Observation / date / responsable |
 | --- | --- | --- |
 | Installation et mapping | Modèle CV-Pilote, quatre champs, un gabarit | Non exécuté |
-| Création | 229 notes et 229 cartes, identités distinctes | Non exécuté |
+| Création | 231 notes et 231 cartes, identités distinctes | Non exécuté |
 | Scan inchangé | Nombres et identités inchangés | Non exécuté |
 | Mise à jour après révision | Même note et historique conservé | Non exécuté |
 | Texte, listes, formules/matrice | Lisibles dans Obsidian, Anki, AnkiDroid | Non exécuté |
@@ -261,6 +261,10 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-008 ; fiche | Enrichissement accepté : Déséquilibre des négatifs non expliqué ; Focal Loss §§2–3 | Distinguer difficulté et pondération de classe | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
 | 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-009 ; fiche | Enrichissement accepté : Plateau sans recouvrement absent ; GIoU §3.1 | Expliquer le terme englobant et vérifier un cas numérique | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
 | 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-010 ; fiche | Enrichissement accepté : Features multiéchelles seulement citées ; FPN §3 | Expliquer la fusion descendante et latérale | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 4 | CV-DETECTEURS-011 ; fiche | Enrichissement accepté : Décomposition des erreurs absente ; TIDE §2.2 | Ajouter trois cas classables et les six familles dans la fiche | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-du-diagnostic-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 4 | CV-DETECTEURS-012 ; fiche | Enrichissement accepté : Qualité des annotations non interrogée ; TIDE §3.4, annexes D–E | Distinguer erreur modèle, omission et politique crowd/ignore | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-du-diagnostic-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 4 | CV-DETECTEURS-004 ; fiche | Enrichissement accepté : Cas resize trop abstrait ; FPN §3 et Soft-NMS §4 | Conserver l’objectif ; chiffrer resize/padding et comparer couverture avant/après NMS | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-du-diagnostic-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 4 | Fiche seulement | Enrichissement accepté : Variation de résolution insuffisamment reproductible ; protocole du projet | Définir baseline, facteur varié, prédiction, mesures, diagnostic et limites ; expérience non exécutée | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-du-diagnostic-de-détection--2026-10-21) | Non synchronisé |
 
 ## Extension éditoriale et contrôles — 2026-10-18
 
@@ -343,3 +347,29 @@ Preuves datées antérieures conservées ; diff et caractères de contrôle vér
 Auto-revue documentaire par Agent Codex (`revue-cartes`) ; pas d'export réel,
 de rendu Obsidian/AnkiDroid, de benchmark ni de validation indépendante.
 Les deux cartes de diagnostic acceptées sont traitées dans le passage suivant.
+
+## Enrichissement du diagnostic de détection — 2026-10-21
+
+Ajout accepté de CV-DETECTEURS-011 et 012 : décomposition des erreurs et qualité
+des annotations. CV-DETECTEURS-004 conserve son objectif de diagnostic après
+resize, avec un cas chiffré et des contrôles discriminants. Fiche en révision 4,
+statut `redige` ; protocole de variation de résolution proposé, non exécuté.
+Le lot atteint 52 fiches et 231 cartes, dont 12 sur ce sujet.
+Rapport : `docs/revues/2026-10-21/82-detecteurs-diagnostic.md`.
+
+Contrôles : `python3 scripts/check_vault.py` sans erreur (125 Markdown,
+52 fiches, 231 cartes), 34 tests unitaires réussis, catalogue à jour
+(`python3 scripts/sync_catalog.py --check`, 18 documents). Comparaisons des
+inventaires : deux ajouts depuis le premier passage, sept depuis les 224 cartes
+initiales ; aucun ID disparu, objectif ni identité Anki existant modifié.
+Les autres cartes et les preuves datées des passages précédents sont conservées.
+
+Calcul Python temporaire : resize de facteur 1/3, padding vertical de 140,
+boîte (300,290,304,293), aller-retour exact. Dans le cas NMS, IoU = 5/11 entre
+les candidates ; la boîte parfaite est supprimée à 0,4 par celle de score
+supérieur, qui échoue au seuil d'évaluation 0,5 : rappel 1 puis 0. Diff, liens,
+caractères et comptes courants vérifiés. Aucun résultat de détecteur entraîné.
+
+Auto-revue documentaire par Agent Codex (`revue-cartes`). Export réel, rendu
+Obsidian/AnkiDroid, maîtrise, charge de rappel et validation scientifique
+indépendante non vérifiés. Les sept ajouts acceptés sont désormais rédigés.
