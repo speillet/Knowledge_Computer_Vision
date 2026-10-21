@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 3
+revision: 4
 tags: [cv/d08, detection, nms]
 ---
 # NMS — supprimer des détections redondantes
@@ -75,6 +75,52 @@ davantage de boîtes ; cela peut sauver un vrai voisin ou conserver un doublon.
 Les boîtes seules ne disent pas lequel : il faut les annotations de la tâche.
 Une AP mesurée sur un vrai jeu reste nécessaire pour régler le compromis.
 
+## Détections multiples, classes et tailles de boîtes
+
+Une image peut contenir plusieurs instances d'une même classe. Il faut conserver
+leurs détections distinctes ; NMS ne sélectionne pas « un seul objet par classe ».
+Inversement, plusieurs candidates peuvent désigner une seule instance. La
+suppression utilise le recouvrement comme indice de redondance, sans connaître
+l'identité réelle des objets. Une foule met précisément cette hypothèse en défaut.
+[Soft-NMS, §§1 et 3–4][paper]
+
+### Même géométrie, décisions sémantiques différentes
+
+Les scénarios suivants sont construits pour le raisonnement ; la bonne sortie
+métier dépend des annotations et ne se déduit pas de l'IoU seule.
+
+| Situation | Effet possible de NMS | Contrôle nécessaire |
+| --- | --- | --- |
+| Plusieurs candidates de même classe autour d'un seul objet | Réduction des doublons si le recouvrement dépasse le seuil | Vérifier la GT associée et la localisation de la boîte retenue |
+| Deux personnes distinctes dont les boîtes se chevauchent fortement | Suppression possible d'une vraie voisine, même avec NMS par classe | Couverture de chacune des deux GT avant/après NMS |
+| Deux objets de classes différentes, par exemple personne et vélo | Une NMS globale peut faire supprimer l'un par l'autre si l'IoU dépasse le seuil | Contrat des objets à détecter ; NMS par classe si les deux doivent être conservés |
+| Une instance reçoit deux classes exclusives, par exemple deux types de pièce | NMS par classe peut conserver les deux hypothèses | Résoudre la décision de classe selon le contrat ; le score maximal n'est pas une preuve de justesse |
+| Une petite boîte est entièrement dans une grande | L'inclusion ne suffit pas à provoquer une suppression | Calculer l'IoU, puis distinguer objet/partie, deux instances ou mauvaise localisation |
+
+Pour deux candidates seulement, d'IoU $0{,}8$, de scores $0{,}9$ et $0{,}8$
+et de classes différentes, hard NMS globale à $0{,}5$ conserve uniquement la
+première. Une NMS par classe conserve les deux. Si elles ont la même classe,
+la séparation par classe ne les protège pas l'une de l'autre. Elle ne fusionne
+pas non plus leurs étiquettes et n'impose pas leur exclusivité.
+[Batched NMS, description et paramètres][batched]
+
+### Inclusion et boîtes de tailles très différentes
+
+Pour des rectangles continus valides, si $B\subset A$, l'intersection est $B$
+et l'union est $A$ : $\operatorname{IoU}(A,B)=|B|/|A|$. Ainsi,
+$A=(0,0,100,100)$ et $B=(40,40,60,60)$ donnent $400/10000=0{,}04$.
+Avec scores $0{,}9$ et $0{,}8$, même classe et hard NMS à $0{,}5$, les deux
+restent. Une grande boîte ne supprime donc pas automatiquement toutes les
+petites boîtes qu'elle contient. Calcul analytique du projet, dérivé de la
+définition d'IoU [GIoU, §3, équation 1][giou].
+
+Le rapport « intersection / aire de la petite boîte » vaut ici 1 : ce n'est
+pas l'IoU. Le substituer à l'IoU changerait la règle de suppression et pourrait
+éliminer des détections légitimes d'objets imbriqués ou de parties. À l'inverse,
+une grande boîte mal localisée et une petite boîte sur le même objet peuvent
+rester toutes les deux ; leur survie ne prouve pas deux instances.
+Voir aussi les [cas de tailles et rapports d'aspect](82-detection-fasterrcnn-yolo-detr.md#tailles-rapports-daspect-et-précision-des-boîtes).
+
 ## Soft-NMS : alternative et limites
 
 Soft-NMS diminue les scores au lieu d'éliminer immédiatement tout recouvrement
@@ -121,15 +167,21 @@ se passer de NMS : ne pas l'appliquer comme une obligation universelle.
 
 - [Bodla et al., Soft-NMS 2017][paper] : §1 limites de la NMS, §4 hard/soft
   et fonctions de pénalité, §5 seuil de score après chaque itération.
-- [Torchvision `nms`][api] et [catégories][batched] : convention d'API consultée
+- [Torchvision `nms`][api] : convention d'API consultée
   le 2026-10-18 ; aucun benchmark logiciel revendiqué.
 - [Code original Soft-NMS, commit b8e69bd][softcode] : coordonnées, recherche
   du maximum et seuil final.
 - [Carion et al., DETR 2020][detr] : détection ensembliste sans NMS.
+- [Torchvision 0.29 `batched_nms`][batched] : séparation par catégorie et seuil,
+  consultation complémentaire le 2026-10-21 ; Context7 indisponible, documentation
+  officielle consultée directement. Aucun appel logiciel exécuté.
+- [GIoU, §3, équation 1][giou] : définition utilisée pour le calcul d’inclusion.
 - [Cartes NMS](../81-nms.md).
 
 [paper]: https://arxiv.org/abs/1704.04503
 [api]: https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html
-[batched]: https://docs.pytorch.org/vision/stable/generated/torchvision.ops.batched_nms.html
+[batched]: https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html
 [softcode]: https://github.com/bharatsingh430/soft-nms/blob/b8e69bdf8df2ad53025c9d198ded909b50471d4f/lib/nms/cpu_nms.pyx
 [detr]: https://arxiv.org/abs/2005.12872
+
+[giou]: https://arxiv.org/html/1902.09630v2

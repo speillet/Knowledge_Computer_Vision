@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -17,6 +17,35 @@ tags: [cv/d08]
 ## Problème, données et hypothèses
 
 Localiser et classer des objets selon boîtes, scores et labels. Entrées : images et annotations avec repères/tailles ; sorties : ensemble de détections. Les particularités sont affectation, localisation et posttraitements, au-delà des bases DL déjà acquises.
+
+### Plusieurs instances, plusieurs classes, plusieurs labels
+
+Le nombre d'objets et le nombre de classes sont deux dimensions distinctes.
+Détecter trois voitures et deux vélos demande cinq localisations d'instances,
+réparties sur deux catégories présentes dans l'image. Un modèle de détection
+multiclasse peut donc produire plusieurs objets de chaque classe ; il ne se
+réduit ni à un label pour l'image entière ni à une boîte par classe.
+
+La classification **multi-étiquette** concerne plusieurs labels valides pour
+une même instance, si la taxonomie le prévoit. Par exemple, un contrat peut
+retenir à la fois « véhicule » et « voiture » ; d'autres jeux n'annotent que
+la catégorie la plus spécifique. Deux labels exclusifs proposés sur le même
+objet représentent une ambiguïté à résoudre, pas automatiquement deux objets.
+Les cas et leur politique d'annotation sont des exemples du projet.
+
+YOLOv3 §2.2 illustre la distinction : ses classifieurs logistiques indépendants
+permettent une formulation multi-étiquette, contrairement à un softmax modélisant
+des classes exclusives. Cela ne suffit pas à déterminer les
+labels finaux : supervision, seuils, éventuel choix de la meilleure classe et
+posttraitement doivent suivre le contrat. Ne pas attribuer ce choix à toutes
+les versions YOLO. [YOLOv3 v1, §2.2](https://arxiv.org/html/1804.02767v1)
+
+Pour l'inférence et l'évaluation, conserver le triplet boîte, score et classe
+pour chaque hypothèse, ainsi que son image d'origine. Distinguer ensuite :
+plusieurs hypothèses d'une instance, plusieurs instances de même classe et
+objets de classes différentes qui se recouvrent. Les
+[cas NMS multiclasses et multi-instances](81-nms.md#détections-multiples-classes-et-tailles-de-boîtes)
+montrent pourquoi le recouvrement seul ne tranche pas cette identité.
 
 ## Prérequis et compétences
 
@@ -119,6 +148,41 @@ Une détection non associée à une GT et non ignorée est comptée FP par le pr
 
 Protocole proposé par le projet : examiner un échantillon documenté sans privilégier un modèle, appliquer des règles d'annotation stables, faire arbitrer les cas ambigus, puis versionner les corrections. Réévaluer tous les modèles comparés sur cette même version, en conservant les résultats antérieurs. Ne pas retirer sélectivement les FP d'un modèle pour améliorer son score. Une omission d'objet est différente d'une exclusion intentionnelle par la politique du jeu.
 
+### Tailles, rapports d'aspect et précision des boîtes
+
+Une même image peut contenir simultanément de petites et grandes boîtes,
+carrées ou allongées. Une taille d'entrée fixe n'impose pas des dimensions de
+boîtes fixes : les coordonnées sont régressées ; niveaux de features et,
+selon la méthode, formes d'anchors organisent les prédictions. YOLOv3 décrit
+par exemple sa régression au §2.1 et ses prédictions à plusieurs échelles
+au §2.3 ; FCOS utilise les distances et plages déjà présentées ici.
+
+La taille relative des boîtes compte aussi **après** la prédiction. Une inclusion
+peut avoir une faible IoU : voir le [calcul NMS](81-nms.md#inclusion-et-boîtes-de-tailles-très-différentes).
+À l'évaluation, une même erreur absolue peut pénaliser très différemment les
+objets. Cas analytiques du projet, rectangles alignés sur les axes, coordonnées
+continues dans un même repère en pixels,
+boîte prédite de même largeur/hauteur que sa GT mais translatée :
+
+| Taille GT et prédiction | Translation $(\Delta x,\Delta y)$ | Intersection / union | IoU |
+| --- | --- | --- | --- |
+| $4\times4$ | $(2,0)$ pixels | $8/24$ | $1/3$ |
+| $40\times40$ | $(2,0)$ pixels | $1520/1680$ | $19/21\approx0{,}905$ |
+| $40\times4$ | $(2,0)$ pixels | $152/168$ | $19/21\approx0{,}905$ |
+| $40\times4$ | $(0,2)$ pixels | $80/240$ | $1/3$ |
+
+Deux pixels d'erreur représentent une fraction différente de la dimension
+concernée. Une boîte allongée est ici bien plus sensible au déplacement sur
+son axe court. Ce n'est pas une contradiction avec l'invariance d'IoU lorsque
+l'on redimensionne **ensemble** les deux boîtes : ici l'erreur reste fixée à
+deux pixels. Dérivation de la définition d'IoU, [GIoU v2, §3, équation 1](https://arxiv.org/html/1902.09630v2), calculs vérifiés sans détecteur exécuté.
+
+Dans le protocole proposé, croiser classe, taille, rapport d'aspect et densité
+sur les mêmes annotations, puis inspecter les distributions de scores et les
+pertes avant/après posttraitement. Ne pas conclure qu'un réglage est bon pour
+les petites boîtes à partir de la seule AP moyenne ; ne pas changer de repère
+ou de convention d'aire entre tailles.
+
 ### Cas analytique : resize, padding et NMS
 
 Pour une image de largeur 1920 et hauteur 1080 redimensionnée sans déformation dans $640\times640$, le facteur est $1/3$. L'image utile devient $640\times360$ ; le padding centré ajoute 140 pixels en haut et en bas. Avec coordonnées continues, origine en haut à gauche : $x'=x/3$, $y'=y/3+140$ ; l'inverse est $x=3x'$, $y=3(y'-140)$.
@@ -151,6 +215,7 @@ Comparer architecture + recette + supervision + coût complet ; la catégorie on
 - [FPN, version 2, §3 et figure 3 : chemins descendant et latéraux](https://arxiv.org/html/1612.03144v2).
 - [TIDE, version 2, §§2.2–2.3, 3.4 et annexes A.1, D–E : erreurs, oracles et annotations](https://arxiv.org/html/2008.08115v2).
 - [Soft-NMS, §4 : interaction scores, suppression et qualité de localisation](https://arxiv.org/html/1704.04503), consulté le 2026-10-21.
+- [YOLOv3, version 1, §§2.1–2.3 : régression, classes et échelles](https://arxiv.org/html/1804.02767v1), complément consulté le 2026-10-21.
 - [Cartes associées](../82-detection-fasterrcnn-yolo-detr.md).
 
 Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
@@ -158,3 +223,5 @@ Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations cent
 Enrichissement du 2026-10-21 : cartes CV-DETECTEURS-006 à 010, mécanismes d’apprentissage et FPN. Sources scientifiques consultées ; calculs synthétiques vérifiés, sans entraînement ni benchmark.
 
 Enrichissement du diagnostic du 2026-10-21 : cartes CV-DETECTEURS-011 et 012, cas 004 précisé et protocole de variation de résolution proposé. Cas géométrique/NMS calculé ; expérience sur images non exécutée.
+
+Complément du 2026-10-21 : distinction instances/classes/étiquettes, carte CV-DETECTEURS-013, tailles et rapports d’aspect ; renvois vers les cas NMS multiclasses et imbriqués. Calculs synthétiques, sans mesure sur images.
