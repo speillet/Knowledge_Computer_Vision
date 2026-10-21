@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Non : elle réduit le flou par ligne, mais les lign
 **Approfondissement** : Mesurer durée de lecture, mouvement et type de shutter ; tester global shutter ou correction adaptée.
 
 **Erreurs bloquantes** : Confondre netteté de chaque ligne et simultanéité de toute l’image.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Basler, electronic shutter types](https://docs.baslerweb.com/electronic-shutter-types) ; [Forster, IMU preintegration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf).
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Basler, Electronic Shutter Types, Rolling Shutter (v136, 2026-10-01)](https://docs.baslerweb.com/electronic-shutter-types#rolling-shutter).
 Tags: cv::pilote cv::d02 famille::comparaison cv_id::CV-CAPTEURS-001 provenance::agent pole::B pole::C pole::E pole::F
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : 0,10 m, avant effets de rotation et d’estimation.
 **Approfondissement** : Le calcul sert à départager timing et bruit spatial ; annoncer l’horloge et le mouvement supposés.
 
 **Erreurs bloquantes** : Utiliser ce modèle pour toute scène en rotation sans autre hypothèse.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Basler, electronic shutter types](https://docs.baslerweb.com/electronic-shutter-types) ; [Forster, IMU preintegration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf).
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Basler, Electronic Shutter Types, Rolling Shutter (v136, 2026-10-01)](https://docs.baslerweb.com/electronic-shutter-types#rolling-shutter) ; calcul cinématique $v\Delta t$ du projet.
 Tags: cv::pilote cv::d02 famille::raisonnement cv_id::CV-CAPTEURS-002 provenance::agent pole::B pole::C pole::E pole::F
 END
 
@@ -53,7 +53,7 @@ Reponse: **Noyau attendu** : Vérifier offsets/dérive des horloges, temps par p
 **Erreurs bloquantes** : Corriger définitivement par une translation fixe sans examiner les timestamps.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Basler, electronic shutter types](https://docs.baslerweb.com/electronic-shutter-types) ; [Forster, IMU preintegration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf).
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Zhang et Singh 2014, LOAM, §§II et V, correction de distorsion de mouvement](https://www.roboticsproceedings.org/rss10/p07.pdf) ; enquête caméra–LiDAR construite par le projet.
 Tags: cv::pilote cv::d02 famille::diagnostic cv_id::CV-CAPTEURS-003 provenance::agent pole::B pole::C pole::E pole::F cas_pole::C::diagnostic
 END
 
@@ -70,6 +70,6 @@ Reponse: **Noyau attendu** : Elle contraint la composante radiale relativement a
 **Approfondissement** : Transformer repères et mouvement ego, puis fusionner d’autres observations pour les composantes non mesurées. Les covariances doivent suivre la transformation.
 
 **Erreurs bloquantes** : Prendre une vitesse radiale pour les trois composantes du mouvement.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Basler, electronic shutter types](https://docs.baslerweb.com/electronic-shutter-types) ; [Forster, IMU preintegration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf).
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Fiche complète]] ; [Texas Instruments, TIDUF01 (2021), §2.4.9](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf).
 Tags: cv::pilote cv::d02 famille::comprehension cv_id::CV-CAPTEURS-004 provenance::agent pole::B pole::C pole::E pole::F
 END

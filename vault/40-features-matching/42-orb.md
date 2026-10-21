@@ -109,6 +109,6 @@ Reponse: **Noyau attendu** : fixer les variations et la tolérance de localisati
 **Approfondissement** : les descripteurs binaires sont compacts mais le nombre de points, le matching et les cas difficiles comptent aussi. Prévoir un comportement lorsque le recalage est incertain et ne pas transformer un fort consensus en certitude. C'est une proposition de système, sans résultat terrain annoncé.
 
 **Erreurs bloquantes** : promettre une latence à partir du seul article ou ignorer le taux d'échec pour choisir la méthode la plus rapide.
-Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [Rublee et al., §§4–5](https://doi.org/10.1109/ICCV.2011.6126544).
+Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [Rublee et al., §§4–6](https://doi.org/10.1109/ICCV.2011.6126544).
 Tags: cv::pilote cv::d04 famille::conception cv_id::CV-ORB-006 provenance::agent pole::B pole::E pole::F
 END

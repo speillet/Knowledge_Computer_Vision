@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Inspecter rang et conditionnement : une direction p
 **Approfondissement** : Les petites valeurs singulières identifient les combinaisons sensibles ; tester la stabilité sur perturbations et observations réservées.
 
 **Erreurs bloquantes** : Assimiler petit résidu et paramètres fiables.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Eigen, least squares : SVD/QR/normal equations](https://eigen.tuxfamily.org/dox/group__LeastSquares.html).
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Introduction et Rank of the Jacobian (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html).
 Tags: cv::pilote cv::d01 famille::raisonnement cv_id::CV-SVD-001 provenance::agent pole::B pole::C
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Former $A^TA$ élève au carré le conditionnement 
 **Approfondissement** : Le choix doit aussi considérer taille et sparsité. Une inverse explicite n’est pas nécessaire pour résoudre le système.
 
 **Erreurs bloquantes** : Dire que toute solution mathématiquement équivalente est numériquement identique.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Eigen, least squares : SVD/QR/normal equations](https://eigen.tuxfamily.org/dox/group__LeastSquares.html).
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Eigen, Using normal equations (consulté le 2026-10-18)](https://eigen.tuxfamily.org/dox/group__LeastSquares.html).
 Tags: cv::pilote cv::d01 famille::comparaison cv_id::CV-SVD-002 provenance::agent pole::B pole::C
 END
 
@@ -46,12 +46,12 @@ START
 CV-Pilote
 ID: CV-SVD-003
 Question: Un objectif de calibration additionne une erreur pixel et une erreur en mètres. Comment éviter un poids dicté par les unités ?
-Reponse: **Noyau attendu** : Définir des covariances et blanchir les résidus : $r^TC^{-1}r$ rend la contribution cohérente avec son incertitude.
+Reponse: **Noyau attendu** : Définir la covariance $C$ des résidus, supposée définie positive, puis les blanchir : avec $C=LL^T$, utiliser $L^{-1}r$. Sa norme au carré est $r^TC^{-1}r$, cohérente avec l’incertitude et les unités.
 
 **Approfondissement** : Changer mètres en millimètres ne doit pas changer arbitrairement la solution. Vérifier modèle de bruit et corrélations.
 
 **Erreurs bloquantes** : Additionner les valeurs brutes puis interpréter leur somme comme une vraisemblance.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Eigen, least squares : SVD/QR/normal equations](https://eigen.tuxfamily.org/dox/group__LeastSquares.html).
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Introduction et Rank of the Jacobian (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html).
 Tags: cv::pilote cv::d01 famille::pratique cv_id::CV-SVD-003 provenance::agent pole::B pole::C
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Le rejet d’outliers et l’identifiabilité sont 
 **Approfondissement** : Inspecter couverture, valeurs singulières et extrapolation sur la zone utile.
 
 **Erreurs bloquantes** : Supposer qu’un estimateur robuste corrige une géométrie dégénérée.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Eigen, least squares : SVD/QR/normal equations](https://eigen.tuxfamily.org/dox/group__LeastSquares.html).
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Introduction et Rank of the Jacobian (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; [Ceres, Modeling Non-linear Least Squares, Introduction (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html) ; diagnostic géométrique déduit par le projet.
 Tags: cv::pilote cv::d01 famille::diagnostic cv_id::CV-SVD-004 provenance::agent pole::B pole::C
 END

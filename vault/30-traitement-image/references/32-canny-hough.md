@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -52,6 +52,8 @@ Trop de lignes sur texture : contrôler d'abord les contours, la région utile e
 LSD, ajustement robuste et modèles appris selon continuité, bruit et besoin de segment. Une contrainte géométrique métier peut limiter les faux positifs.
 
 ## Sources et cartes
+
+Le tutoriel décrit une chaîne avec lissage ; ses explications ne constituent pas une preuve d’un lissage interne à chaque surcharge API. La carte de contours et les contraintes métier du cas de texture sont un diagnostic construit.
 
 - [OpenCV Canny, Theory](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html).
 - [OpenCV Hough, Theory](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).

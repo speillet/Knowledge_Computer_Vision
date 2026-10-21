@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -52,6 +52,11 @@ Des obstacles se dédoublent surtout dans les virages : comparer données au mê
 Global shutter, capteurs déclenchés, correction temporelle ou modèle rolling shutter selon cadence et mouvement ; aucun capteur n'est idéal pour toutes conditions.
 
 ## Sources et cartes
+
+- [Zhang et Singh 2014, LOAM, §§II et V, correction de distorsion de mouvement](https://www.roboticsproceedings.org/rss10/p07.pdf).
+- [Texas Instruments, TIDUF01 (2021), §2.4.9](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf).
+
+Le calcul de décalage est cinématique et le cas caméra–LiDAR est construit par le projet ; Forster étaye la préintégration inertielle, pas la mesure Doppler.
 
 - [Basler, electronic shutter types](https://docs.baslerweb.com/electronic-shutter-types).
 - [Forster, IMU preintegration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf).

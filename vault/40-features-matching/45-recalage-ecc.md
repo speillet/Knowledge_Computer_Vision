@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : ECC optimise un critère d’intensité sur un warp
 **Approfondissement** : Bassin de convergence, recouvrement et invariances diffèrent ; ils peuvent être combinés pour initialisation et raffinement.
 
 **Erreurs bloquantes** : Décrire ECC comme un descripteur sparse.
-Source: [[40-features-matching/references/45-recalage-ecc|Fiche complète]] ; [OpenCV findTransformECC, motion and criteria](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html).
+Source: [[40-features-matching/references/45-recalage-ecc|Fiche complète]] ; [OpenCV 4.13.0, findTransformECC, modèle, initialisation et inverse warping](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html).
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-ECC-001 provenance::agent pole::B pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Comparer à des points/structures réservés et aux
 **Approfondissement** : Inspecter initialisation, recouvrement et sens du warp.
 
 **Erreurs bloquantes** : Prendre convergence numérique pour vérité physique.
-Source: [[40-features-matching/references/45-recalage-ecc|Fiche complète]] ; [OpenCV findTransformECC, motion and criteria](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html).
+Source: [[40-features-matching/references/45-recalage-ecc|Fiche complète]] ; [OpenCV 4.13.0, findTransformECC, modèle, initialisation et inverse warping](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html) ; cas répétitif et protocole de validation déduits par le projet.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-ECC-002 provenance::agent pole::B pole::E
 END
 
@@ -51,6 +51,6 @@ Reponse: **Noyau attendu** : Plus de paramètres peuvent surajuster ou réduire 
 **Approfondissement** : Le modèle doit expliquer la capture et être validé sur des observations indépendantes.
 
 **Erreurs bloquantes** : Assimiler flexibilité maximale et précision maximale.
-Source: [[40-features-matching/references/45-recalage-ecc|Fiche complète]] ; [OpenCV findTransformECC, motion and criteria](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html).
+Source: [[40-features-matching/references/45-recalage-ecc|Fiche complète]] ; [OpenCV 4.13.0, findTransformECC, modèle, initialisation et inverse warping](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html) ; compromis entre flexibilité et stabilité déduit par le projet.
 Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-ECC-003 provenance::agent pole::B pole::E
 END

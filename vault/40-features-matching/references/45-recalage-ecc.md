@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -25,7 +25,7 @@ Aligner des images en optimisant un critère photométrique sous un modèle de m
 
 ## Intuition et déroulement
 
-L'optimiseur déforme une image pour améliorer la corrélation avec l'autre. L'ECC vise une normalisation photométrique utile pour certains changements de gain/offset, dans ses hypothèses. Une pyramide peut améliorer l'initialisation sans garantir un optimum global.
+L'optimiseur déforme une image pour améliorer la corrélation avec l'autre. Le centrage et la normalisation rendent la corrélation inchangée sous un gain positif et un offset globaux sur un support fixé, de variance non nulle (déduction algébrique). Cela ne garantit pas une convergence du recalage ECC. Une pyramide peut améliorer l'initialisation sans garantir un optimum global.
 
 ## Mathématiques, conventions et unités
 

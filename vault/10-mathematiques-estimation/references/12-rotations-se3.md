@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -25,7 +25,7 @@ Composer des poses sans mélanger sens des transformations, axes ou unités. Ent
 
 ## Intuition et déroulement
 
-Une rotation conserve norme et orientation ; une pose rigide ajoute une translation. Composer dans l'ordre des repères, inverser algébriquement et tester un point connu. Une optimisation utilise une petite perturbation à trois paramètres pour la rotation.
+Une rotation conserve les normes et l’orientation de la base (déterminant +1), mais change généralement la direction d’un vecteur ; une pose rigide ajoute une translation. Composer dans l'ordre des repères, inverser algébriquement et tester un point connu. Une optimisation utilise une petite perturbation à trois paramètres pour la rotation.
 
 ## Mathématiques, conventions et unités
 
@@ -52,6 +52,9 @@ Objets tournant dans le mauvais sens : vérifier axes, degrés/radians et invers
 Matrices pour composition, quaternions pour stockage/interpolation, coordonnées tangentielles pour optimisation ; ne pas mélanger leurs Jacobiennes sans transformation.
 
 ## Sources et cartes
+
+- [Solà et al., A micro Lie theory, annexe D-A, équations 170–171](https://arxiv.org/html/1812.01537v9#A4.SS1).
+- [Solà et al., A micro Lie theory, §§II-E–II-H](https://arxiv.org/html/1812.01537v9#S2.SS5).
 
 - [Solà, Quaternion kinematics, §§2–4](https://arxiv.org/abs/1711.02508).
 - [Cartes associées](../12-rotations-se3.md).

@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : FAST localise des points ; BRIEF décrit un patch e
 **Approfondissement** : Un pipeline peut les combiner, avec orientation et échelle selon la méthode ; un matcher reste ensuite nécessaire.
 
 **Erreurs bloquantes** : Attribuer des correspondances géométriquement vérifiées à un détecteur seul.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV Harris, théorie](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html) ; [OpenCV Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html) ; [OpenCV matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV 4.13.0, FAST, Feature Detection](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html) ; [OpenCV 4.13.0, BRIEF, Theory](https://docs.opencv.org/4.13.0/dc/d7d/tutorial_py_brief.html).
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-MATCHING-002 provenance::agent pole::B pole::E
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Compatibilité de l’index et de la distance, rapp
 **Approfondissement** : Comparer temps de construction et requêtes, mémoire et coût total ; une recherche plus rapide peut changer le ratio entre voisins.
 
 **Erreurs bloquantes** : Évaluer seulement le temps de requête ou le nombre de matches.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV Harris, théorie](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html) ; [OpenCV Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html) ; [OpenCV matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html) ; protocole aval et effet sur le ratio : raisonnements du projet.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-MATCHING-003 provenance::agent pole::B pole::E
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Une vérification géométrique adaptée à la scè
 **Approfondissement** : Une symétrie peut rester cohérente ; chercher une observation distinctive ou une contrainte indépendante.
 
 **Erreurs bloquantes** : Déduire la validité physique de la réciprocité des plus proches voisins.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV Harris, théorie](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html) ; [OpenCV Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html) ; [OpenCV matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html) ; scénario de symétrie et vérification indépendante : raisonnements du projet.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-MATCHING-004 provenance::agent pole::B pole::E
 END

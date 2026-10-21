@@ -12,12 +12,12 @@ START
 CV-Pilote
 ID: CV-MORPHO-001
 Question: Quel effet géométrique distingue ouverture et fermeture binaires, et pourquoi choisir la taille du structurant avec la tâche ?
-Reponse: **Noyau attendu** : L’ouverture érode puis dilate ; la fermeture dilate puis érode. Elles modifient des structures à l’échelle du structurant.
+Reponse: **Noyau attendu** : L’ouverture érode puis dilate et peut retirer de petites structures de premier plan ; la fermeture dilate puis érode et peut combler des trous ou intervalles. Choisir le structurant selon les tailles et formes à conserver.
 
 **Approfondissement** : Retirer un petit objet peut nettoyer du bruit ou effacer un défaut ; valider sur tailles et formes critiques.
 
 **Erreurs bloquantes** : Décrire ces opérations comme des filtres sémantiques garantis.
-Source: [[30-traitement-image/references/33-morphologie-composantes|Fiche complète]] ; [OpenCV, morphological transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html).
+Source: [[30-traitement-image/references/33-morphologie-composantes|Fiche complète]] ; [OpenCV 4.13.0, Morphological Transformations, §§1–4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html).
 Tags: cv::pilote cv::d03 famille::comparaison cv_id::CV-MORPHO-001 provenance::agent pole::A pole::E
 END
 
@@ -28,13 +28,13 @@ Objectif : choisir une connectivité. Famille : raisonnement. Provenance : agent
 START
 CV-Pilote
 ID: CV-MORPHO-002
-Question: Deux pixels de premier plan se touchent uniquement par un coin. Combien de composantes en connectivité 4 puis 8 ?
+Question: Un masque ne contient que deux pixels de premier plan, qui se touchent uniquement par un coin. Combien de composantes en connectivité 4 puis 8 ?
 Reponse: **Noyau attendu** : Deux en connectivité 4 ; une en connectivité 8.
 
 **Approfondissement** : La convention doit être conservée dans l’évaluation et les mesures de trous/objets.
 
 **Erreurs bloquantes** : Annoncer un nombre sans connectivité.
-Source: [[30-traitement-image/references/33-morphologie-composantes|Fiche complète]] ; [OpenCV, morphological transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html).
+Source: [[30-traitement-image/references/33-morphologie-composantes|Fiche complète]] ; [OpenCV 4.13.0, connectedComponents, paramètres connectivity et labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html) ; décompte déduit de la connectivité.
 Tags: cv::pilote cv::d03 famille::raisonnement cv_id::CV-MORPHO-002 provenance::agent pole::A pole::E
 END
 
@@ -51,6 +51,6 @@ Reponse: **Noyau attendu** : Le structurant peut avoir créé un pont ; inspecte
 **Approfondissement** : Réduire ou adapter l’opération sous contrôle, puis envisager une séparation à marqueurs ; ne pas seulement changer le filtre d’aire.
 
 **Erreurs bloquantes** : Prendre une composante connexe pour un objet garanti.
-Source: [[30-traitement-image/references/33-morphologie-composantes|Fiche complète]] ; [OpenCV, morphological transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html).
+Source: [[30-traitement-image/references/33-morphologie-composantes|Fiche complète]] ; [OpenCV 4.13.0, Morphological Transformations, §§1–4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html) ; diagnostic de pont construit par le projet.
 Tags: cv::pilote cv::d03 famille::diagnostic cv_id::CV-MORPHO-003 provenance::agent pole::A pole::E
 END
