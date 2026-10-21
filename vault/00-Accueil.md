@@ -1,6 +1,6 @@
 # Computer vision — comprendre, choisir, diagnostiquer
 
-**52 fiches et 229 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**52 fiches et 231 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
 
 Ce parcours vise un ingénieur déjà à l’aise en ML/DL. Les fiches expliquent ; les cartes entraînent un rappel corrigible. Une thématique représentée ne signifie pas que toutes ses variantes sont approfondies.
 
@@ -23,7 +23,7 @@ Ce parcours vise un ingénieur déjà à l’aise en ML/DL. Les fiches expliquen
 | [Calibration et géométrie multivue](50-calibration-geometrie/00-index.md) | 5 | 26 |
 | [Vision 3D](60-vision-3d/00-index.md) | 4 | 19 |
 | [Reconnaissance et représentations](70-reconnaissance-representations/00-index.md) | 5 | 18 |
-| [Détection et pose](80-detection-pose/00-index.md) | 4 | 22 |
+| [Détection et pose](80-detection-pose/00-index.md) | 4 | 24 |
 | [Segmentation](90-segmentation/00-index.md) | 4 | 15 |
 | [Mouvement et vidéo](100-mouvement-video/00-index.md) | 2 | 8 |
 | [Tracking et association](110-tracking-association/00-index.md) | 3 | 14 |

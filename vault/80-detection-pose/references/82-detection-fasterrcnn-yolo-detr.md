@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 3
+revision: 4
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -79,11 +79,60 @@ Backbone, multiéchelles, nombre de régions/requêtes et posttraitements compte
 
 ## Évaluation et variation contrôlée
 
-Baseline et variation : même split par scène ; réduire la résolution puis mesurer AP par taille et rappel des petits objets. Distinguer perte d'information et simple conversion incorrecte de coordonnées.
+### Expérience proposée : ne faire varier que la résolution
+
+Ce protocole du projet est **à exécuter** ; aucun résultat sur images n'est disponible.
+
+1. **Baseline** : choisir un checkpoint et un backend acceptant les deux tailles, figer poids, classes et jeu de validation annoté, séparé de l'entraînement par scène. Consigner les versions et la politique d'annotation. Utiliser une entrée letterbox $1280\times1280$.
+2. **Variation** : passer à $640\times640$, sans réentraînement. Garder interpolation, normalisation, politique de padding, seuil de score, NMS éventuelle et plafonds de détections identiques. Seules les dimensions et les transformations de coordonnées qui en découlent changent. Archiver les prédictions décodées avant filtrage, après seuil de score, puis après NMS ou le posttraitement propre au modèle.
+3. **Prédiction à confronter** : les petits objets pourraient perdre des détails ou être moins bien localisés ; le coût du réseau pourrait baisser. Ce sont des hypothèses, ni une baisse d'AP nécessaire ni une promesse de latence totale.
+4. **Mesures** : remettre toutes les boîtes dans l'image d'origine. Comparer AP50, AP75, AP par taille et rappel à score/IoU fixés, avec les mêmes règles d'ignore/crowd et de plafonnement. Définir les strates de taille une seule fois depuis les annotations d'origine, selon le protocole choisi ; ne pas déplacer un objet de strate parce qu'on a réduit l'entrée. Pour chaque étape de filtrage, mesurer la couverture des mêmes GT, de bonne classe et au même seuil IoU, sans compter les doublons comme des objets supplémentaires.
+5. **Diagnostic et coût** : examiner les erreurs par classe, taille, densité et étape, ainsi que les images correspondantes. Chronométrer décodage, resize/transferts, réseau et posttraitement sur le même matériel, précision et batch, avec échauffement et répétitions documentés ; rapporter latence complète et dispersion. Un cas où la GT n'est plus couverte après NMS distingue un problème de sélection d'une absence de proposition correcte.
+6. **Conclusion limitée** : formuler une hypothèse à partir des cas et tester ensuite une seule correction sur validation. Figer les choix avant test. Un gain sur ce jeu et ce checkpoint ne classe pas universellement Faster R-CNN, YOLO et DETR.
+
+Le cadre AP est celui de la [fiche IoU/AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md) ; les seuils de score, de NMS et d'évaluation restent distincts.
 
 ## Échecs et diagnostic
 
 Boxes correctes avant posttraitement mais sorties manquantes : inspecter seuils/NMS. Loss bonne mais rappel faible : vérifier assignation, labels, stride, échelle et protocole avant de changer le backbone.
+
+### Lire les erreurs au-delà de l'AP globale
+
+TIDE §2.2 sépare six familles. Dans les cas simples sans ignore/crowd, les seuils $t_b=0{,}1$ et $t_f=0{,}5$ servent ici d'illustration, comme dans l'article ; ils ne sont pas universels. Le tableau évite les égalités aux seuils et les conflits entre plusieurs GT, qui demandent les règles complètes de l'outil.
+
+| Famille | Lecture d'un cas simple | Vérification proposée par le projet |
+| --- | --- | --- |
+| Classification | Bonne localisation, mauvaise classe | Classes proches, définition des labels et annotations |
+| Localisation | Bonne classe, recouvrement intermédiaire entre $t_b$ et $t_f$ | Repère, cibles, précision des boîtes et échelle |
+| Classification et localisation | Mauvaise classe et recouvrement intermédiaire | Examiner conjointement image, label et boîte |
+| Doublon | Bonne classe et recouvrement suffisant, GT déjà associée à une détection mieux scorée | Classe, scores et posttraitement ; ne pas compter deux TP |
+| Fond | Recouvrement inférieur à $t_b$ avec toutes les GT | Faux objet ou objet réel non annoté |
+| GT manquée | GT non détectée et non déjà expliquée par les erreurs de classification/localisation | Couverture avant/après filtrage, échelle, occultation et données |
+
+Trois situations indépendantes avec une seule GT « voiture » : IoU $0{,}8$ et classe « camion » donnent une erreur de classification ; IoU $0{,}3$ et classe « voiture », une erreur de localisation ; une seconde boîte « voiture » d'IoU $0{,}8$ après une boîte mieux scorée déjà associée, un doublon. Ces classifications utilisent les hypothèses du cas, pas une causalité déduite d'un score agrégé.
+
+Le nombre brut d'erreurs ne mesure pas leur effet sur l'AP : leur rang par score compte. TIDE estime des effets par corrections oracles appliquées séparément à la même baseline (§§2.2–2.3). Ces gains ne s'additionnent pas en général (annexe A.1) et ne prédisent pas le gain d'un réentraînement réel. Les contrôles proposés ci-dessus sont des pistes, pas des causes prouvées par la taxonomie.
+
+### Qualité des annotations
+
+Une détection non associée à une GT et non ignorée est comptée FP par le protocole, même si une inspection confirme un objet réel omis. Un score élevé ne suffit pas à trancher : vérifier l'image, la classe attendue, les objets partiels, les conventions de boîte, les exclusions et le traitement crowd/ignore. TIDE §3.4 et annexe D montrent des exemples d'annotations manquantes ou ambiguës ; l'annexe E montre aussi que la gestion des détections ignorées influence le diagnostic.
+
+Protocole proposé par le projet : examiner un échantillon documenté sans privilégier un modèle, appliquer des règles d'annotation stables, faire arbitrer les cas ambigus, puis versionner les corrections. Réévaluer tous les modèles comparés sur cette même version, en conservant les résultats antérieurs. Ne pas retirer sélectivement les FP d'un modèle pour améliorer son score. Une omission d'objet est différente d'une exclusion intentionnelle par la politique du jeu.
+
+### Cas analytique : resize, padding et NMS
+
+Pour une image de largeur 1920 et hauteur 1080 redimensionnée sans déformation dans $640\times640$, le facteur est $1/3$. L'image utile devient $640\times360$ ; le padding centré ajoute 140 pixels en haut et en bas. Avec coordonnées continues, origine en haut à gauche : $x'=x/3$, $y'=y/3+140$ ; l'inverse est $x=3x'$, $y=3(y'-140)$.
+
+La boîte GT $(900,450,912,459)$, de taille $12\times9$, devient $G=(300,290,304,293)$, de taille $4\times3$. L'aller-retour doit restituer exactement la boîte d'origine. Cette géométrie ne prouve pas à elle seule pourquoi un modèle échoue : il faut examiner ses sorties aux différentes étapes.
+
+Exemple construit, une GT, une classe, aucune zone ignorée, deux candidates seulement, seuil de score $0{,}1$, hard NMS pour IoU $>0{,}4$, évaluation à IoU $0{,}5$ :
+
+| Candidate dans l'entrée | Score | IoU avec $G$ | Avant NMS | Après NMS |
+| --- | --- | --- | --- | --- |
+| $P=(300,290,304,293)$ | $0{,}8$ | 1 | Couvre la GT | Supprimée |
+| $Q=(301{,}5,290,305{,}5,293)$ | $0{,}9$ | $5/11\approx0{,}455$ | Ne couvre pas la GT au seuil d'évaluation | Conservée |
+
+Les deux candidates passent le seuil de score. Leur IoU mutuelle vaut $5/11>0{,}4$ : Q, mieux scorée, supprime P. Le rappel de cette GT passe de 1 à 0 ; ici, la perte se situe dans le posttraitement, car une proposition correcte existait à cette résolution. Cela ne démontre pas que toute baisse d'AP après resize vient de NMS. Si aucune candidate correcte n'existe avant filtrage, examiner plutôt la taille effective, les features, les données et l'assignation d'entraînement. Le mécanisme de suppression est documenté par Soft-NMS §4 ; les nombres sont un calcul du projet, sans inférence réseau.
 
 ## Alternatives et usages
 
@@ -100,8 +149,12 @@ Comparer architecture + recette + supervision + coût complet ; la catégorie on
 - [Focal Loss, version 2, §§2 et 3.1–3.2 : déséquilibre, pondération et difficulté](https://arxiv.org/html/1708.02002v2).
 - [GIoU, version 2, §3 et algorithmes 1–2 : géométrie et loss](https://arxiv.org/html/1902.09630v2).
 - [FPN, version 2, §3 et figure 3 : chemins descendant et latéraux](https://arxiv.org/html/1612.03144v2).
+- [TIDE, version 2, §§2.2–2.3, 3.4 et annexes A.1, D–E : erreurs, oracles et annotations](https://arxiv.org/html/2008.08115v2).
+- [Soft-NMS, §4 : interaction scores, suppression et qualité de localisation](https://arxiv.org/html/1704.04503), consulté le 2026-10-21.
 - [Cartes associées](../82-detection-fasterrcnn-yolo-detr.md).
 
 Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
 
 Enrichissement du 2026-10-21 : cartes CV-DETECTEURS-006 à 010, mécanismes d’apprentissage et FPN. Sources scientifiques consultées ; calculs synthétiques vérifiés, sans entraînement ni benchmark.
+
+Enrichissement du diagnostic du 2026-10-21 : cartes CV-DETECTEURS-011 et 012, cas 004 précisé et protocole de variation de résolution proposé. Cas géométrique/NMS calculé ; expérience sur images non exécutée.
