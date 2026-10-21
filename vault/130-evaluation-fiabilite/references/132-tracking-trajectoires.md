@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-VIO", "CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -29,7 +29,7 @@ MOTA agrège certains faux positifs, manques et échanges d'identité ; IDF1 cib
 
 ## Mathématiques, conventions et unités
 
-À un seuil $\alpha$, $HOTA_\alpha=\sqrt{DetA_\alpha AssA_\alpha}$ puis le score moyenne les seuils ; ce n'est pas la racine du produit des moyennes. Pour des poses corps→monde, $E_{ij}=(T_i^{-1}T_j)^{-1}(\hat T_i^{-1}\hat T_j)$ définit une erreur relative. La translation est en mètres et la rotation exige angle/unité précisés.
+À un seuil $\alpha$, $HOTA_\alpha=\sqrt{DetA_\alpha AssA_\alpha}$ puis le score moyenne les seuils ; ce n'est pas la racine du produit des moyennes. Pour des poses corps→monde, $T_i$ désignant la vérité terrain et $\hat T_i$ l’estimation, $E_{ij}=(T_i^{-1}T_j)^{-1}(\hat T_i^{-1}\hat T_j)$ définit une erreur relative. La translation est en mètres et la rotation exige angle/unité précisés.
 
 ## Paramètres et propriétés
 
@@ -52,6 +52,8 @@ Score global bon mais trajectoire rare perdue : analyser longueurs, segments et 
 Choisir une batterie liée au produit : détection, identité, localisation et coût. NDS/mAP nuScenes constituent encore un autre protocole de sortie 3D.
 
 ## Sources et cartes
+
+- [Sturm et al., 2012, §VII-A/B, équations 1–4](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf) : RPE et ATE ; distinction avec l’erreur relative par sous-trajectoires de Zhang–Scaramuzza.
 
 - [HOTA, §§5–6](https://arxiv.org/abs/2009.07736).
 - [Zhang–Scaramuzza, §III/TableI et évaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).

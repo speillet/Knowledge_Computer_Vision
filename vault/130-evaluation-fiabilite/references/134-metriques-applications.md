@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-IOU-AP", "CV-SEGMENTATION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -53,9 +53,11 @@ Rapporter plusieurs vues complémentaires et leur limite. Les taux de comparaiso
 
 ## Sources et cartes
 
+- [Reinke et al., P2.1–P2.4 et P3.2](https://www.nature.com/articles/s41592-023-02150-0) : frontières, vides et agrégation.
+
 - [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z).
 - [NIST, Gauge R&R](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc4.htm).
-- [MVTec AD2, PRO et protocole](https://www.mvtec.com/fileadmin/Redaktion/mvtec.com/company/research/datasets/MVTecAD2_arXiv_preprint_2503.21622v1.pdf).
+- [MVTec AD2, PRO et protocole](https://arxiv.org/abs/2503.21622v1).
 - [Cartes associées](../134-metriques-applications.md).
 
 Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.

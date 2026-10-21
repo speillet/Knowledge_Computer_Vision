@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Apparence/ReID et stratégies de gating/cascade, en
 **Approfondissement** : Un embedding n’élimine ni mauvaise détection ni ambiguïté et doit être validé dans le domaine cible.
 
 **Erreurs bloquantes** : Présenter toute proximité d’apparence comme identité vraie.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [DeepSORT, §§2.1–2.3](https://arxiv.org/abs/1703.07402) ; [ByteTrack, §3 Algorithm1](https://arxiv.org/abs/2110.06864) ; [AB3DMOT, contrat 3D](https://arxiv.org/abs/2008.08063).
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [DeepSORT, §§2.1–2.3 : Mahalanobis, apparence et cascade](https://arxiv.org/abs/1703.07402).
 Tags: cv::pilote cv::d11 famille::comparaison cv_id::CV-ASSOCIATION-001 provenance::agent pole::C pole::D pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Non : il exploite d’abord les scores élevés, pu
 **Approfondissement** : Vérifier version et cycle de vie ; garder de faibles observations n’est pas accepter indistinctement tous faux positifs.
 
 **Erreurs bloquantes** : Assimiler la seconde association à une création massive de pistes faibles.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [DeepSORT, §§2.1–2.3](https://arxiv.org/abs/1703.07402) ; [ByteTrack, §3 Algorithm1](https://arxiv.org/abs/2110.06864) ; [AB3DMOT, contrat 3D](https://arxiv.org/abs/2008.08063).
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [ByteTrack, §3 Algorithm 1 : deux associations et création depuis les scores élevés restants](https://arxiv.org/abs/2110.06864).
 Tags: cv::pilote cv::d11 famille::algorithme cv_id::CV-ASSOCIATION-002 provenance::agent pole::C pole::D pole::E
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : La discrimination et le domaine des embeddings, ain
 **Approfondissement** : Comparer mouvement seul, apparence et combinaison sur séquences annotées ; aucune information d’apparence ne distingue deux objets visuellement identiques par principe.
 
 **Erreurs bloquantes** : Augmenter aveuglément le poids ReID.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [DeepSORT, §§2.1–2.3](https://arxiv.org/abs/1703.07402) ; [ByteTrack, §3 Algorithm1](https://arxiv.org/abs/2110.06864) ; [AB3DMOT, contrat 3D](https://arxiv.org/abs/2008.08063).
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; Diagnostic de transfert construit par le projet ; [DeepSORT, §2.3 : modèle d’apparence piéton](https://arxiv.org/abs/1703.07402).
 Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-ASSOCIATION-003 provenance::agent pole::C pole::D pole::E
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Fixer les mêmes détections ou rapporter explicite
 **Approfondissement** : Mesurer qualité des pistes et coût total ; AP du détecteur et score d’identité répondent à deux questions.
 
 **Erreurs bloquantes** : Attribuer tout gain final au tracker sans contrôler l’amont.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [DeepSORT, §§2.1–2.3](https://arxiv.org/abs/1703.07402) ; [ByteTrack, §3 Algorithm1](https://arxiv.org/abs/2110.06864) ; [AB3DMOT, contrat 3D](https://arxiv.org/abs/2008.08063).
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; Protocole de comparaison proposé par le projet ; [SORT, §3.1 et tableau 1 : effet du détecteur](https://arxiv.org/abs/1602.00763).
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-ASSOCIATION-004 provenance::agent pole::C pole::D pole::E
 END

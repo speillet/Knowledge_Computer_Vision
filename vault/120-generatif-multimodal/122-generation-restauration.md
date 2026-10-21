@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : L’entraînement apprend une règle de débruitage
 **Approfondissement** : Le choix du sampler, du nombre d’étapes et du conditionnement change coût et résultats sans rendre la sortie vraie par définition.
 
 **Erreurs bloquantes** : Assimiler le processus forward d’ajout de bruit à toute la génération.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; [DDPM, processus et objectif](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html) ; [Latent Diffusion Models](https://arxiv.org/abs/2112.10752).
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; [DDPM, équation 4 et algorithmes 1–2](https://arxiv.org/abs/2006.11239).
 Tags: cv::pilote cv::d12 famille::comprehension cv_id::CV-DIFFUSION-001 provenance::agent pole::A pole::D pole::E
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Réduire le coût spatial du processus au prix d’
 **Approfondissement** : Évaluer aussi ce que l’autoencodeur peut perdre, notamment les petits défauts, et pas seulement le denoiser.
 
 **Erreurs bloquantes** : Supposer la compression sans conséquence sur la fidélité.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; [DDPM, processus et objectif](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html) ; [Latent Diffusion Models](https://arxiv.org/abs/2112.10752).
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; [Latent Diffusion Models, §§3.1–3.2 et fig. 1 : compression perceptuelle et diffusion latente](https://arxiv.org/abs/2112.10752).
 Tags: cv::pilote cv::d12 famille::comparaison cv_id::CV-DIFFUSION-002 provenance::agent pole::A pole::D pole::E
 END
 
@@ -51,6 +51,6 @@ Reponse: **Noyau attendu** : La plausibilité visuelle n’est pas la fidélité
 **Approfondissement** : Comparer aux données de référence et conserver le brut ; choisir une mesure adaptée au défaut.
 
 **Erreurs bloquantes** : Valider une mesure dimensionnelle sur une image plus jolie seulement.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; [DDPM, processus et objectif](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html) ; [Latent Diffusion Models](https://arxiv.org/abs/2112.10752).
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; Cas construit du projet : fidélité à une fissure versus plausibilité ; [Latent Diffusion Models, §3.1 et fig. 1](https://arxiv.org/abs/2112.10752) documente le rôle de la compression/reconstruction.
 Tags: cv::pilote cv::d12 famille::diagnostic cv_id::CV-DIFFUSION-003 provenance::agent pole::A pole::D pole::E
 END

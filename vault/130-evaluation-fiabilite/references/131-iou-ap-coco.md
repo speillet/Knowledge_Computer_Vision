@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 2
+revision: 3
 tags: [cv/d13, evaluation, iou, ap]
 ---
 # IoU et AP — protocole COCO de détection
@@ -105,7 +105,7 @@ Il y a 51 seuils de rappel de 0 à 0,50 inclus. Le FP intermédiaire fait baisse
 la précision aux rappels supérieurs. Si l'on ne détecte qu'une des deux GT,
 $AP_{101}=51/101\approx0,504950$ : ce n'est pas une AP de 1 malgré une précision
 de 1 pour l'unique prédiction. Calculs exécutés dans `examples/pilot_math.py` ;
-ce programme n'est pas un réimplémentation complète de pycocotools.
+ce programme n'est pas une réimplémentation complète de pycocotools.
 
 **Variation contrôlée** : placer le doublon après les deux TP au lieu d'entre
 eux. Dans ce cas construit, l'enveloppe peut garder une AP de 1 ; cela montre

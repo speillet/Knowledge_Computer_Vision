@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : PTQ intervient après entraînement ; QAT adapte l�
 **Approfondissement** : La granularité, le backend, les données et les opérateurs déterminent la qualité finale ; QAT n’est pas automatiquement nécessaire ni supérieur pour toute tâche.
 
 **Erreurs bloquantes** : Assimiler le mot INT8 à une méthode d’apprentissage unique.
-Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, quantization workflows](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html) ; [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, Quantization Workflows : PTQ et QAT](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html), consulté le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::comparaison cv_id::CV-QUANT-001 provenance::agent pole::A pole::F
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Saturation ou résolution numérique inadéquate po
 **Approfondissement** : Mesurer distributions et performance par cas critique ; ne pas seulement regarder la moyenne de calibration.
 
 **Erreurs bloquantes** : Supposer que quelques images arbitraires donnent une calibration universelle.
-Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, quantization workflows](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html) ; [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, PTQ et données représentatives](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html) ; [ONNX QuantizeLinear-21](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21), consultés le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::raisonnement cv_id::CV-QUANT-002 provenance::agent pole::A pole::F
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Opérateurs, formes, kernels, précisions et matér
 **Approfondissement** : Versionner export, runtime, cible et mesures ; inspecter le graphe exécuté.
 
 **Erreurs bloquantes** : Assimiler format d’échange et exécution optimisée universelle.
-Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, quantization workflows](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html) ; [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, Support Matrix et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html) ; [ONNX Runtime, Execution Providers et GetCapability](https://onnxruntime.ai/docs/execution-providers/), consultés le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::pratique cv_id::CV-QUANT-003 provenance::agent pole::A pole::F
 END
 
@@ -70,7 +70,7 @@ Reponse: **Noyau attendu** : Profiler moteur et pipeline complet, opérateurs/pr
 **Erreurs bloquantes** : Conclure que la quantification est toujours inutile ou toujours mal implémentée.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, quantization workflows](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html) ; [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; Diagnostic construit du projet ; [TensorRT benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) et [ONNX Runtime, sous-graphes par provider](https://onnxruntime.ai/docs/execution-providers/), consultés le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::diagnostic cv_id::CV-QUANT-004 provenance::agent pole::A pole::F cas_pole::F::diagnostic
 END
 
@@ -87,6 +87,6 @@ Reponse: **Noyau attendu** : Qualité sur données réservées et cas critiques,
 **Approfondissement** : Contrôler petits objets, domaines et saturation ; une taille de modèle réduite n’établit pas une mise en service acceptable.
 
 **Erreurs bloquantes** : Rapporter seulement le nombre de bits ou le poids du fichier.
-Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, quantization workflows](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html) ; [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; Protocole conjoint qualité/coût proposé par le projet ; [TensorRT, compromis de quantification](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html), consulté le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::evaluation cv_id::CV-QUANT-005 provenance::agent pole::A pole::F
 END

@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : CoTracker suit des points avec visibilité ; la cla
 **Approfondissement** : Ni les cibles ni les métriques ne sont interchangeables. Nommer la version et l’accès au futur.
 
 **Erreurs bloquantes** : Déduire les frontières d’une action d’un seul label de clip.
-Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; [CoTracker, §3](https://arxiv.org/abs/2307.07635) ; [TimeSformer](https://arxiv.org/abs/2102.05095) ; [VideoMAE](https://arxiv.org/abs/2203.12602).
+Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; [CoTracker, §3 : trajectoires et visibilité](https://arxiv.org/abs/2307.07635) ; [TimeSformer, résumé](https://arxiv.org/abs/2102.05095) ; distinction label/intervalles : contrat du projet.
 Tags: cv::pilote cv::d10 famille::comparaison cv_id::CV-VIDEO-001 provenance::agent pole::D
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : L’événement peut survenir entièrement entre de
 **Approfondissement** : Tester phases, cadence et fenêtres avec référence ; le modèle ne peut pas observer une information jamais échantillonnée directement.
 
 **Erreurs bloquantes** : Supposer qu’un modèle plus gros garantit le rappel de tout événement court.
-Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; [CoTracker, §3](https://arxiv.org/abs/2307.07635) ; [TimeSformer](https://arxiv.org/abs/2102.05095) ; [VideoMAE](https://arxiv.org/abs/2203.12602).
+Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; Contre-exemple temporel construit dans la fiche : événement entre deux instants échantillonnés ; [CoTracker, §3](https://arxiv.org/abs/2307.07635) pour le contexte des entrées vidéo discrètes, sans attribution du contre-exemple à cet article.
 Tags: cv::pilote cv::d10 famille::raisonnement cv_id::CV-VIDEO-002 provenance::agent pole::D
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Non sans préciser les informations disponibles et 
 **Approfondissement** : Évaluer même fenêtre, timestamps, politique de visibilité et temps de décision.
 
 **Erreurs bloquantes** : Confondre mot online et absence de latence ou de futur dans toute implémentation.
-Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; [CoTracker, §3](https://arxiv.org/abs/2307.07635) ; [TimeSformer](https://arxiv.org/abs/2102.05095) ; [VideoMAE](https://arxiv.org/abs/2203.12602).
+Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; [CoTracker, §3 : fenêtres glissantes](https://arxiv.org/abs/2307.07635) ; [CoTracker3, introduction : variantes online/offline](https://arxiv.org/abs/2410.11831) ; comparaison de latence proposée par le projet.
 Tags: cv::pilote cv::d10 famille::evaluation cv_id::CV-VIDEO-003 provenance::agent pole::D
 END
 
@@ -68,6 +68,6 @@ Reponse: **Noyau attendu** : Comparer à une baseline image/contexte, contrôler
 **Approfondissement** : La scène ou un objet peut suffire au score ; utiliser des cas où l’ordre distingue deux événements.
 
 **Erreurs bloquantes** : Déduire une compréhension temporelle d’une accuracy globale seule.
-Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; [CoTracker, §3](https://arxiv.org/abs/2307.07635) ; [TimeSformer](https://arxiv.org/abs/2102.05095) ; [VideoMAE](https://arxiv.org/abs/2203.12602).
+Source: [[100-mouvement-video/references/102-points-actions-video|Fiche complète]] ; Test contrôlé proposé par le projet ; [TimeSformer, résumé et architecture](https://arxiv.org/abs/2102.05095) pour le mécanisme d’attention temporelle.
 Tags: cv::pilote cv::d10 famille::diagnostic cv_id::CV-VIDEO-004 provenance::agent pole::D
 END

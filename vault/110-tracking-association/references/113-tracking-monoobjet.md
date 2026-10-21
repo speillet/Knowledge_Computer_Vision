@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -25,7 +25,7 @@ Suivre une cible initialisée dans une séquence, sans supposer un détecteur mu
 
 ## Intuition et déroulement
 
-MeanShift cherche un mode d'une distribution d'apparence locale ; CamShift adapte sa fenêtre selon sa conception. Filtres de corrélation et réseaux siamois comparent modèle de cible et zone de recherche. Mise à jour du template et recherche locale créent un compromis adaptation/dérive.
+MeanShift cherche un mode d'une distribution d'apparence locale ; CamShift adapte sa fenêtre selon sa conception. Filtres de corrélation et réseaux siamois comparent modèle de cible et zone de recherche. Dans les variantes qui actualisent leur modèle de cible, comme KCF, mise à jour et recherche locale créent un compromis adaptation/dérive. SiamFC original conserve au contraire son template d’apparence pendant le suivi (§4) ; cette mise à jour n’est pas universelle.
 
 ## Mathématiques, conventions et unités
 
@@ -52,6 +52,8 @@ Dérive progressive : inspecter ce qui est intégré au template et la présence
 Détecteur + association si plusieurs cibles et entrées/sorties sont attendues ; suivi de point si la sortie utile est un point. Définir le contrat avant la famille de modèle.
 
 ## Sources et cartes
+
+- [KCF, pipeline de tracking et interpolation du modèle](https://arxiv.org/abs/1404.7584) : exemple de mise à jour en ligne, distinct du template fixe de SiamFC.
 
 - [OpenCV, Meanshift/Camshift](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
 - [SiamFC, méthode](https://arxiv.org/abs/1606.09549).

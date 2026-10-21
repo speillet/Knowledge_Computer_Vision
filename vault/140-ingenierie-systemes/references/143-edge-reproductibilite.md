@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 3
 prerequis: ["CV-PIPELINE", "CV-QUANT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -29,7 +29,7 @@ Versionner prétraitements, modèle, posttraitements et taxonomie ; tester sur e
 
 ## Mathématiques, conventions et unités
 
-La loi d'Amdahl simplifiée borne un gain global à $1/((1-f)+f/s)$ si une fraction f du temps est accélérée d'un facteur s, sans nouveaux surcoûts. Accélérer un étage de 10 % du temps par 2 donne seulement environ 1,053× global dans ce modèle. Ne pas confondre moyenne et p99.
+Dans le modèle séquentiel additif, la loi d'Amdahl simplifiée borne un gain global à $1/((1-f)+f/s)$ si une fraction f du temps est accélérée d'un facteur s, sans nouveaux surcoûts. Accélérer un étage de 10 % du temps par 2 donne seulement environ 1,053× global dans ce modèle. Ne pas confondre moyenne et p99.
 
 ## Paramètres et propriétés
 
@@ -52,6 +52,12 @@ Une régression après mise à jour peut venir de normalisation ou classes, pas 
 Serving central, edge ou hybride selon contraintes ; la surveillance de scores doit être liée à des retours étiquetés pour démontrer une dérive de qualité.
 
 ## Sources et cartes
+
+- [Amdahl (1967), p. 483 : limite due à la fraction non accélérée](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf). Le calcul numérique ci-dessus est une dérivation du projet.
+
+- [TensorRT 8.6.1, §6.10 Sparsity](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-861/developer-guide/index.html#structured-sparsity) : exemple versionné de motifs supportés et tactiques parfois moins rapides.
+- [Hinton et al., Distilling the Knowledge in a Neural Network, introduction](https://arxiv.org/abs/1503.02531) : supervision par sorties du modèle enseignant.
+- [Jetson Linux r36.4, Thermal Management](https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html) : exemple versionné de réduction des fréquences sous contrainte thermique.
 
 - [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/).
 - [TensorRT, support et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).

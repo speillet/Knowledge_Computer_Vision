@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -37,7 +37,7 @@ Batch, concurrence, cadence, politique de drop, buffers et point de mesure. Zero
 
 ## Coût et implémentation
 
-Mesurer temps moteur et transferts séparément, puis système complet ; Nsight peut aider selon matériel. Aucun benchmark exécuté. Les commandes et défauts de `trtexec` évoluent : consulter la version avant de supposer ce qui est inclus.
+Mesurer temps moteur et transferts séparément, puis système complet ; Nsight peut aider selon matériel. Aucun benchmark exécuté. Les commandes et valeurs par défaut de `trtexec` évoluent : consulter la version avant de supposer ce qui est inclus. Documentation `latest` consultée le 2026-10-20 ; aucune commande ni valeur par défaut universelle n’est fixée ici.
 
 ## Évaluation et variation contrôlée
 

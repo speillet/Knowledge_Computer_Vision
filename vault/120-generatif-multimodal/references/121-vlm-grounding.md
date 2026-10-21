@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-CLIP", "CV-VIDEO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -29,7 +29,7 @@ BLIP-2 relie encodeur visuel et LLM via Q-Former ; LLaVA combine connecteur et i
 
 ## Mathématiques, conventions et unités
 
-L'entrée est convertie en tokens/features visuels et textuels selon la méthode ; leur nombre, la résolution et le contexte conditionnent le coût. Une génération maximise un objectif de tokens, qui n'est pas une preuve de vérité visuelle. Un score de vraisemblance texte ne remplace pas une annotation de boîte ou de masque.
+L'entrée est convertie en tokens/features visuels et textuels selon la méthode ; leur nombre, la résolution et le contexte conditionnent le coût. L’entraînement génératif optimise un objectif sur les tokens ; le décodage produit ensuite une séquence selon une stratégie de recherche ou d’échantillonnage. Aucun de ces objectifs ne constitue une preuve de vérité visuelle. Un score de vraisemblance texte ne remplace pas une annotation de boîte ou de masque.
 
 ## Paramètres et propriétés
 
@@ -52,6 +52,9 @@ Description d'objet absent : inspecter résolution, prompt, hors-distribution et
 Un pipeline explicite peut offrir des sorties plus contrôlables pour des événements définis ; VLM peut aider sur des descriptions/contextes nouveaux sous évaluation. Grounding doit avoir son protocole.
 
 ## Sources et cartes
+
+- [Florence-2, résumé](https://arxiv.org/abs/2311.06242) : représentation par prompts pour plusieurs tâches.
+- [RT-2, résumé et fig. 1](https://arxiv.org/abs/2307.15818) et [π0, résumé](https://arxiv.org/abs/2410.24164) : interface vision–langage–action, sans validation robotique du projet.
 
 - [BLIP-2, architecture](https://arxiv.org/abs/2301.12597).
 - [LLaVA original](https://arxiv.org/abs/2304.08485).

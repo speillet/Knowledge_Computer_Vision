@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Les boîtes/classes peuvent être identiques tandis
 **Approfondissement** : Utiliser métriques et diagnostics d’association sous protocole de séquence identique.
 
 **Erreurs bloquantes** : Déduire qualité d’identité de l’AP seule.
-Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [HOTA, §§5–6](https://arxiv.org/abs/2009.07736) ; [Zhang–Scaramuzza, §III/TableI et évaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [nuScenes, métriques de détection](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [HOTA, §§4–5 : détection et association](https://arxiv.org/abs/2009.07736) ; permutation d’IDs : cas construit du projet.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-METRIQUES-TEMPS-001 provenance::agent pole::B pole::C pole::D
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : La référence calcule la racine du produit à chaq
 **Approfondissement** : Conserver aussi conventions de matching, ignore et localisation ; un résumé de formule n’est pas tout l’évaluateur.
 
 **Erreurs bloquantes** : Intervertir librement moyenne et racine.
-Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [HOTA, §§5–6](https://arxiv.org/abs/2009.07736) ; [Zhang–Scaramuzza, §III/TableI et évaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [nuScenes, métriques de détection](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [HOTA, §5 : HOTA par seuil puis moyenne sur les seuils](https://arxiv.org/abs/2009.07736).
 Tags: cv::pilote cv::d13 famille::raisonnement cv_id::CV-METRIQUES-TEMPS-002 provenance::agent pole::B pole::C pole::D
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Elle ajuste l’échelle et peut donc masquer une e
 **Approfondissement** : Le groupe d’alignement doit suivre les jauges et l’objectif ; avec gravité fixée, une rotation libre peut aussi masquer des erreurs d’inclinaison.
 
 **Erreurs bloquantes** : Optimiser l’alignement pour obtenir le meilleur score sans justification.
-Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [HOTA, §§5–6](https://arxiv.org/abs/2009.07736) ; [Zhang–Scaramuzza, §III/TableI et évaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [nuScenes, métriques de détection](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [Zhang–Scaramuzza, §III et tableau I : groupes d’alignement](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-METRIQUES-TEMPS-003 provenance::agent pole::B pole::C pole::D
 END
 
@@ -68,7 +68,7 @@ Reponse: **Noyau attendu** : ATE évalue une trajectoire après alignement ; RPE
 **Approfondissement** : Préciser temps/distance d’intervalle, agrégation, translation/rotation et échecs ; longueur du trajet et bouclage influencent l’interprétation.
 
 **Erreurs bloquantes** : Comparer des nombres sans protocole, unité ou intervalle.
-Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [HOTA, §§5–6](https://arxiv.org/abs/2009.07736) ; [Zhang–Scaramuzza, §III/TableI et évaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [nuScenes, métriques de détection](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [Sturm et al., §VII-A/B : RPE et ATE](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf) ; [Zhang–Scaramuzza, §IV et tableau II](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
 Tags: cv::pilote cv::d13 famille::comparaison cv_id::CV-METRIQUES-TEMPS-004 provenance::agent pole::B pole::C pole::D
 END
 
@@ -85,6 +85,6 @@ Reponse: **Noyau attendu** : Appariement temporel, interpolation, conventions de
 **Approfondissement** : Rejouer un petit cas connu puis le même fichier/version ; ne pas attribuer l’écart immédiatement à l’estimateur.
 
 **Erreurs bloquantes** : Comparer seulement le nom ATE affiché par les outils.
-Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; [HOTA, §§5–6](https://arxiv.org/abs/2009.07736) ; [Zhang–Scaramuzza, §III/TableI et évaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; [nuScenes, métriques de détection](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Fiche complète]] ; Diagnostic de protocole du projet ; [Sturm et al., §VII : synchronisation et poses](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf) ; [Zhang–Scaramuzza, §§III–IV](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
 Tags: cv::pilote cv::d13 famille::diagnostic cv_id::CV-METRIQUES-TEMPS-005 provenance::agent pole::B pole::C pole::D
 END

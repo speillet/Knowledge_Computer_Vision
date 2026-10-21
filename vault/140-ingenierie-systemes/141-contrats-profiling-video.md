@@ -17,7 +17,7 @@ Reponse: **Noyau attendu** : Non : le débit ne garantit ni l’âge de l’obse
 **Approfondissement** : Mesurer timestamps de capture à sortie, distribution de latence, file et drops sous charge représentative.
 
 **Erreurs bloquantes** : Valider le produit au seul FPS moyen.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; [TensorRT, performance benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) ; [GStreamer queue, limites et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html).
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; Distinction de mesures du projet ; [TensorRT, Reported Performance Metrics](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) et [GStreamer, queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consultés le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::comparaison cv_id::CV-PIPELINE-001 provenance::agent pole::C pole::E pole::F
 END
 
@@ -34,7 +34,7 @@ Reponse: **Noyau attendu** : Le retard et la taille de file croissent dans ce mo
 **Approfondissement** : Choisir capacité, admission ou abandon selon fraîcheur/complétude et mesurer le comportement réel.
 
 **Erreurs bloquantes** : Croire qu’augmenter la queue résout le déficit durable de débit.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; [TensorRT, performance benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) ; [GStreamer queue, limites et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html).
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; Bilan de flux analytique du projet, 240−200 = 40 images/s de déficit ; [GStreamer queue, blocage et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consulté le 2026-10-20, décrit les politiques d’une file bornée.
 Tags: cv::pilote cv::d14 famille::raisonnement cv_id::CV-PIPELINE-002 provenance::agent pole::C pole::E pole::F
 END
 
@@ -51,7 +51,7 @@ Reponse: **Noyau attendu** : Décodage, pré/posttraitements, transferts, files 
 **Approfondissement** : Vérifier version/options du benchmark et mesurer le périmètre produit ; synchroniser correctement les opérations asynchrones.
 
 **Erreurs bloquantes** : Comparer des durées GPU asynchrones à une latence utilisateur sans contrat.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; [TensorRT, performance benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) ; [GStreamer queue, limites et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html).
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; [TensorRT, Measure End-to-End Performance, métriques et mesures synchronisées](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), consulté le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::pratique cv_id::CV-PIPELINE-003 provenance::agent pole::C pole::E pole::F
 END
 
@@ -70,7 +70,7 @@ Reponse: **Noyau attendu** : Fixer fraîcheur, drops et qualité ; profiler chaq
 **Erreurs bloquantes** : Dimensionner sur un FPS isolé du modèle ou additionner mécaniquement des p99.
 
 **Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; [TensorRT, performance benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) ; [GStreamer queue, limites et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html).
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; Cas de dimensionnement construit du projet ; [TensorRT benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) et [GStreamer queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consultés le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::conception cv_id::CV-PIPELINE-004 provenance::agent pole::C pole::E pole::F cas_pole::F::conception
 END
 
@@ -87,6 +87,6 @@ Reponse: **Noyau attendu** : Tracer temps CPU/GPU, H2D/D2H, attentes et âge des
 **Approfondissement** : Modifier un étage à la fois et conserver le même contrat de qualité. Une occupation moyenne seule ne localise pas la cause.
 
 **Erreurs bloquantes** : Optimiser le réseau sans mesurer les autres étapes.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; [TensorRT, performance benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) ; [GStreamer queue, limites et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html).
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Fiche complète]] ; Diagnostic proposé par le projet ; [TensorRT, Reported Performance Metrics et profiling](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), consulté le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::diagnostic cv_id::CV-PIPELINE-005 provenance::agent pole::C pole::E pole::F
 END

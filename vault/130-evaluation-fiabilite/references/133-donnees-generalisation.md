@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -52,6 +52,9 @@ Test très bon mais nouveau site faible : rechercher fuite et décalage. Une aug
 Conserver données brutes, contrats et traçabilité, puis réviser collecte/modèle sous validation. Une surveillance d'exploitation ne remplace pas le test initial.
 
 ## Sources et cartes
+
+- [Ovadia et al., 2019, résumé/introduction](https://arxiv.org/abs/1906.02530) : limites de calibration sous changement de distribution.
+- [Cawley–Talbot, 2010, résumé et introduction](https://www.jmlr.org/papers/v11/cawley10a.html) : surajustement de la sélection et biais d’évaluation.
 
 - [Roberts et al., structured data cross-validation](https://doi.org/10.1111/ecog.02881).
 - [Calibration of modern neural networks](https://proceedings.mlr.press/v70/guo17a.html).
