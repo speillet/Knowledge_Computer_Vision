@@ -1,6 +1,6 @@
 # Suivi du pilote : preuves et limites
 
-**Lot courant** : 52 fiches, 224 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
+**Lot courant** : 52 fiches, 229 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
 **Client de révision** : AnkiDroid, confirmé par l'apprenant le 2026-10-18.
 Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
@@ -118,7 +118,7 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 | Essai | Attendu | Observation / date / responsable |
 | --- | --- | --- |
 | Installation et mapping | Modèle CV-Pilote, quatre champs, un gabarit | Non exécuté |
-| Création | 224 notes et 224 cartes, identités distinctes | Non exécuté |
+| Création | 229 notes et 229 cartes, identités distinctes | Non exécuté |
 | Scan inchangé | Nombres et identités inchangés | Non exécuté |
 | Mise à jour après révision | Même note et historique conservé | Non exécuté |
 | Texte, listes, formules/matrice | Lisibles dans Obsidian, Anki, AnkiDroid | Non exécuté |
@@ -256,6 +256,11 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-20 | CV-DEPLOIEMENT, révision 2 | CV-DEPLOIEMENT-003 | Lien résumé trop général. | Relier le PDF complet et attribuer l’adaptation de checklist au projet. | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-20 | CV-VIDEO, révision 3 | CV-VIDEO-002 | Traçabilité externe omise lors de la précision du contre-exemple analytique. | Rétablir le contexte primaire CoTracker §3 en conservant explicitement la provenance du raisonnement. | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-20 | CV-DEPLOIEMENT, révision 3 | CV-DEPLOIEMENT-001 ; fiche | La dérivation analytique ne renvoyait pas à la source du modèle d’Amdahl. | Ajouter l’article original (p. 483) ; maintenir l’attribution du calcul numérique au projet. | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-006 ; fiche | Enrichissement accepté : Assignation anchor-free absente ; FCOS §§3.1–3.2 | Ajouter sites admissibles, plage de distances et arbitrage par aire | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-007 ; fiche | Enrichissement accepté : Encodage non exercé ; FCOS §3.1, équation 1 | Ajouter un calcul ltrb avec repère et unités | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-008 ; fiche | Enrichissement accepté : Déséquilibre des négatifs non expliqué ; Focal Loss §§2–3 | Distinguer difficulté et pondération de classe | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-009 ; fiche | Enrichissement accepté : Plateau sans recouvrement absent ; GIoU §3.1 | Expliquer le terme englobant et vérifier un cas numérique | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 3 | CV-DETECTEURS-010 ; fiche | Enrichissement accepté : Features multiéchelles seulement citées ; FPN §3 | Expliquer la fusion descendante et latérale | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-des-mécanismes-de-détection--2026-10-21) | Non synchronisé |
 
 ## Extension éditoriale et contrôles — 2026-10-18
 
@@ -319,3 +324,22 @@ restent inchangées.
 Aucun export réel ni rendu Obsidian/AnkiDroid testé pendant cette revue.
 Il s’agit d’une auto-revue documentaire, sans validation scientifique
 indépendante ni mesure de maîtrise ou de charge de rappel.
+
+## Enrichissement des mécanismes de détection — 2026-10-21
+
+Ajout accepté de CV-DETECTEURS-006 à 010 : assignation et encodage FCOS,
+Focal Loss, GIoU et FPN. Fiche en révision 3, statut `redige`. Le lot atteint
+52 fiches et 229 cartes. Les cinq cartes antérieures du sujet sont intactes.
+Rapport : `docs/revues/2026-10-21/82-detecteurs-apprentissage.md`.
+
+Contrôles : `python3 scripts/check_vault.py` sans erreur (125 Markdown,
+52 fiches, 229 cartes), 34 tests unitaires réussis, catalogue à jour
+(`python3 scripts/sync_catalog.py --check`, 18 documents). Comparaison avec
+l'inventaire des 224 cartes : seuls les cinq IDs acceptés sont ajoutés ; aucun
+ID, objectif ni identité Anki existant modifié. Calculs temporaires en Python :
+encodage/décodage FCOS, facteurs focaux 0,01 et 0,81, losses GIoU 6/5 puis 10/9.
+Preuves datées antérieures conservées ; diff et caractères de contrôle vérifiés.
+
+Auto-revue documentaire par Agent Codex (`revue-cartes`) ; pas d'export réel,
+de rendu Obsidian/AnkiDroid, de benchmark ni de validation indépendante.
+Les deux cartes de diagnostic acceptées sont traitées dans le passage suivant.

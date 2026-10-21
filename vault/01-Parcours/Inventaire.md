@@ -1,6 +1,6 @@
 # Inventaire de couverture
 
-**52 fiches et 224 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**52 fiches et 229 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
 
 Les lignes ci-dessous désignent des fiches canoniques de méthode, pipeline, comparaison ou protocole. La profondeur porte sur ce sujet ; un nom cité en comparaison ne devient pas une méthode entièrement approfondie. Les compétences et sources sont détaillées dans chaque référence.
 
@@ -68,7 +68,7 @@ V0 = lacunes prioritaires ; V1 = socle des pôles ; V2 = approfondissements. Ré
 | Entrée / type | Priorité / profondeur | Pôles | Prérequis | Artefacts, compétences et sources | État |
 | --- | --- | --- | --- | --- | --- |
 | CV-NMS — NMS — supprimer des détections redondantes / methode | V0 / approfondissement | A, C, E | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) | [Fiche](../80-detection-pose/references/81-nms.md) · [5 cartes](../80-detection-pose/81-nms.md) | redige, export non vérifié ; maîtrise non mesurée |
-| CV-DETECTEURS — Détection : Faster R-CNN, familles YOLO et DETR / methode | V0 / approfondissement | A, C, E | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-NMS](../80-detection-pose/references/81-nms.md) | [Fiche](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) · [5 cartes](../80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-DETECTEURS — Détection : Faster R-CNN, familles YOLO et DETR / methode | V0 / approfondissement | A, C, E | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-NMS](../80-detection-pose/references/81-nms.md) | [Fiche](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) · [10 cartes](../80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) | redige, export non vérifié ; maîtrise non mesurée |
 | CV-OPENVOC — Détection open-vocabulary et grounding / methode | V1 / usage-operationnel | A, D | [CV-CLIP](../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-DETECTEURS](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) | [Fiche](../80-detection-pose/references/83-detection-open-vocabulary.md) · [3 cartes](../80-detection-pose/83-detection-open-vocabulary.md) | redige, export non vérifié ; maîtrise non mesurée |
 | CV-POSE3D — Détection 3D, pose d’objet et pose articulée / comparaison | V1 / usage-operationnel | A, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-BEV](../60-vision-3d/references/64-nuages-bev-occupation.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | [Fiche](../80-detection-pose/references/84-detection-pose-3d.md) · [4 cartes](../80-detection-pose/84-detection-pose-3d.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 9 — Segmentation
