@@ -45,13 +45,13 @@ Objectif : choisir le périmètre d'une suppression. Famille : comparaison. Prov
 START
 CV-Pilote
 ID: CV-NMS-003
-Question: Deux catégories peuvent se recouvrir dans l'image. Quel compromis distingue une NMS globale d'une NMS par classe ?
-Reponse: **Noyau attendu** : une NMS globale peut supprimer une boîte d'une autre classe ; une NMS par classe évite cette suppression mais peut conserver plusieurs classes sur le même objet. Choisir selon la sémantique des labels et l'évaluation.
+Question: Deux candidates de classes différentes, de scores $0{,}9$ et $0{,}8$, ont une IoU de $0{,}8$. Avec un seuil NMS de $0{,}5$, quel compromis distingue suppression globale et suppression par classe ?
+Reponse: **Noyau attendu** : La NMS globale conserve seulement la candidate de score $0{,}9$ ; la NMS par classe conserve les deux. Cela protège deux objets de classes différentes, mais laisse aussi deux labels concurrents sur une même instance. Choisir selon que les annotations autorisent ces deux détections ou imposent une classe exclusive.
 
-**Approfondissement** : un casque et une personne peuvent légitimement se recouvrir ; deux catégories exclusives d'une même pièce peuvent exiger un autre traitement. Vérifier aussi scores comparables et conventions de coordonnées. La séparation par classe n'est pas une garantie universelle de bonne décision.
+**Approfondissement** : Personne et vélo peuvent être deux objets légitimes qui se recouvrent. Deux catégories exclusives d'une même pièce demandent une décision de classe ; prendre le score maximal ne garantit pas le bon label. Une NMS par classe conserve aussi plusieurs instances disjointes de cette classe : elle n'impose pas une boîte par catégorie. Les scores, repères et règles de sortie doivent être comparables.
 
-**Erreurs bloquantes** : annoncer que la NMS standard connaît automatiquement les classes ou qu'une stratégie gagne dans toutes les tâches.
-Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [Torchvision batched_nms](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.batched_nms.html).
+**Erreurs bloquantes** : Croire que NMS par classe résout les confusions interclasses, ou que NMS globale connaît l'identité réelle des objets.
+Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [Torchvision 0.29, batched_nms : description et seuil](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html), consulté le 2026-10-21 ; cas construit du projet.
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-NMS-003 provenance::agent pole::A pole::C pole::E
 END
 
@@ -80,11 +80,28 @@ START
 CV-Pilote
 ID: CV-NMS-005
 Question: Un objet disparaît des sorties finales dans une zone dense. Comment déterminer si la NMS est en cause et choisir une intervention vérifiable ?
-Reponse: **Noyau attendu** : comparer boîtes, scores et classes avant/après NMS avec l'annotation ; vérifier si une proposition correcte existait et par quelle boîte elle a été supprimée. Si elle n'existait pas, changer NMS ne la recréera pas.
+Reponse: **Noyau attendu** : comparer boîtes, scores et classes avant/après NMS avec l'annotation ; vérifier quelle GT cesse d'être couverte, si une proposition correcte existait et par quelle boîte elle a été supprimée. Si elle n'existait pas, changer NMS ne la recréera pas.
 
-**Approfondissement** : si une vraie voisine est supprimée, tester seuil ou Soft-NMS sur validation et mesurer rappel, doublons, AP et effets sur le tracker. Vérifier les coordonnées et le top-k amont avant d'accuser l'algorithme. Le résultat attendu est une cause étayée et un compromis mesuré, pas une hausse automatique du seuil.
+**Approfondissement** : deux personnes distinctes restent en concurrence dans une NMS par classe : partager le label ne signifie pas partager l'identité. Si une vraie voisine est supprimée, tester seuil ou Soft-NMS sur validation et mesurer rappel, doublons, AP et effets sur le tracker. Vérifier les coordonnées et le top-k amont ; une suppression de doublon qui laisse la GT couverte ne diminue pas son rappel. Le résultat attendu est une cause étayée et un compromis mesuré.
 
 **Erreurs bloquantes** : modifier directement le seuil sur le jeu de test ou confondre erreur de proposition et suppression.
 Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [Soft-NMS, §§1 et 4](https://arxiv.org/abs/1704.04503).
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-NMS-005 provenance::agent pole::A pole::C pole::E
+END
+
+## CV-NMS-006
+
+Objectif : interpréter l'inclusion de boîtes dans une suppression par IoU. Famille : raisonnement. Provenance : agent.
+
+START
+CV-Pilote
+ID: CV-NMS-006
+Question: Deux boîtes continues de même classe, $A=(0,0,100,100)$ et $B=(40,40,60,60)$, ont les scores $0{,}9$ et $0{,}8$. L'inclusion de B dans A entraîne-t-elle sa suppression par une hard NMS à IoU $>0{,}5$ ? Justifier.
+Reponse: **Noyau attendu** : Non. L'intersection a l'aire de B, 400, et l'union celle de A, 10000 : IoU $=0{,}04$. A est sélectionnée, puis B reste puisque le seuil n'est pas dépassé.
+
+**Approfondissement** : Pour $B\subset A$, IoU $=|B|/|A|$, et non intersection divisée par aire de B. Ce dernier rapport vaudrait 1. La géométrie seule ne tranche pas entre objet imbriqué, partie d'objet et deux localisations d'une même instance. Exemple analytique du projet.
+
+**Erreurs bloquantes** : Donner une IoU de 1 dès qu'il y a inclusion, ou supprimer automatiquement toute boîte plus petite.
+Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [GIoU, version 2, §3, équation 1](https://arxiv.org/html/1902.09630v2) ; [Soft-NMS, §4 : hard NMS](https://arxiv.org/html/1704.04503) ; calcul du projet.
+Tags: cv::pilote cv::d08 famille::raisonnement cv_id::CV-NMS-006 provenance::agent pole::A pole::C pole::E
 END

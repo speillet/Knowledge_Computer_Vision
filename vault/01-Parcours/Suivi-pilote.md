@@ -1,6 +1,6 @@
 # Suivi du pilote : preuves et limites
 
-**Lot courant** : 52 fiches, 231 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
+**Lot courant** : 52 fiches, 233 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
 **Client de révision** : AnkiDroid, confirmé par l'apprenant le 2026-10-18.
 Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
@@ -118,7 +118,7 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 | Essai | Attendu | Observation / date / responsable |
 | --- | --- | --- |
 | Installation et mapping | Modèle CV-Pilote, quatre champs, un gabarit | Non exécuté |
-| Création | 231 notes et 231 cartes, identités distinctes | Non exécuté |
+| Création | 233 notes et 233 cartes, identités distinctes | Non exécuté |
 | Scan inchangé | Nombres et identités inchangés | Non exécuté |
 | Mise à jour après révision | Même note et historique conservé | Non exécuté |
 | Texte, listes, formules/matrice | Lisibles dans Obsidian, Anki, AnkiDroid | Non exécuté |
@@ -265,6 +265,11 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-21 | CV-DETECTEURS, révision 4 | CV-DETECTEURS-012 ; fiche | Enrichissement accepté : Qualité des annotations non interrogée ; TIDE §3.4, annexes D–E | Distinguer erreur modèle, omission et politique crowd/ignore | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-du-diagnostic-de-détection--2026-10-21) | Non synchronisé |
 | 2026-10-21 | CV-DETECTEURS, révision 4 | CV-DETECTEURS-004 ; fiche | Enrichissement accepté : Cas resize trop abstrait ; FPN §3 et Soft-NMS §4 | Conserver l’objectif ; chiffrer resize/padding et comparer couverture avant/après NMS | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-du-diagnostic-de-détection--2026-10-21) | Non synchronisé |
 | 2026-10-21 | CV-DETECTEURS, révision 4 | Fiche seulement | Enrichissement accepté : Variation de résolution insuffisamment reproductible ; protocole du projet | Définir baseline, facteur varié, prédiction, mesures, diagnostic et limites ; expérience non exécutée | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#enrichissement-du-diagnostic-de-détection--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-NMS, révision 4 | CV-NMS-003 | Complément demandé : Compromis multiclasse trop abstrait ; Torchvision 0.29 batched_nms | Comparer les sorties sur deux classes et distinguer coexistence légitime et labels exclusifs | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#cas-multiples-classes-et-tailles--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-NMS, révision 4 | CV-NMS-005 | Complément demandé : Instances de même classe non explicites ; Soft-NMS §§1 et 4 | Relier disparition à la couverture de chaque GT et distinguer suppression de doublon et perte de rappel | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#cas-multiples-classes-et-tailles--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-NMS, révision 4 | CV-NMS-006 ; fiche | Complément demandé : Inclusion et tailles différentes non exercées ; définition IoU, GIoU §3 | Ajouter le cas 100×100 / 20×20 : IoU 0,04, deux boîtes conservées | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#cas-multiples-classes-et-tailles--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 5 | CV-DETECTEURS-013 ; fiche | Complément demandé : Instances, classes et multi-étiquettes confondues dans les questions possibles ; YOLOv3 §2.2 | Ajouter un rappel distinct sur le contrat de sortie et la taxonomie | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#cas-multiples-classes-et-tailles--2026-10-21) | Non synchronisé |
+| 2026-10-21 | CV-DETECTEURS, révision 5 | Fiche seulement | Complément demandé : Taille et rapport d’aspect insuffisamment illustrés ; définition IoU, GIoU §3 | Calculer l’effet d’une même translation de deux pixels sur petites, grandes et longues boîtes | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles](#cas-multiples-classes-et-tailles--2026-10-21) | Non synchronisé |
 
 ## Extension éditoriale et contrôles — 2026-10-18
 
@@ -373,3 +378,33 @@ caractères et comptes courants vérifiés. Aucun résultat de détecteur entra�
 Auto-revue documentaire par Agent Codex (`revue-cartes`). Export réel, rendu
 Obsidian/AnkiDroid, maîtrise, charge de rappel et validation scientifique
 indépendante non vérifiés. Les sept ajouts acceptés sont désormais rédigés.
+
+## Cas multiples, classes et tailles — 2026-10-21
+
+Complément demandé par l'apprenant : expliciter détections multiples,
+multiclasse et boîtes de tailles différentes. Passage NMS : fiche en révision 4,
+cartes 003 et 005 enrichies sans changement d'objectif, ajout de CV-NMS-006.
+Passage détecteurs : fiche en révision 5, ajout de CV-DETECTEURS-013.
+Le lot courant atteint 52 fiches et 233 cartes ; statut `redige` conservé.
+
+Cas traités : doublons d'une instance, plusieurs instances de même classe,
+objets de classes différentes qui se recouvrent, labels exclusifs ou multiples,
+boîtes imbriquées, petites/grandes boîtes et rapports d'aspect allongés.
+Les deux rapports sont `docs/revues/2026-10-21/81-nms-cas-multiples.md` et
+`docs/revues/2026-10-21/82-detecteurs-classes-tailles.md`.
+
+Contrôles : `python3 scripts/check_vault.py` OK (125 Markdown, 52 fiches,
+233 cartes), 34 tests unitaires réussis ; catalogue à jour sur 18 documents.
+L'inventaire comparé aux 231 cartes précédentes montre les deux ajouts attendus,
+aucun ID disparu, objectif ou identité Anki existant modifié. Preuves datées,
+liens locaux, tableaux, caractères et diff vérifiés.
+
+Calculs Python temporaires avec fractions exactes : inclusion 20×20 dans
+100×100, IoU = 1/25 = 0,04 ; translation de deux pixels sur 4×4, 40×40,
+40×4 horizontalement puis verticalement : IoU = 1/3, 19/21, 19/21, 1/3.
+Ces calculs et décisions NMS sur cas construits ne sont pas une mesure terrain.
+Context7 indisponible : documentation officielle Torchvision 0.29 consultée
+pour `batched_nms`, sans exécuter cette API.
+
+Auto-revue par Agent Codex (`revue-cartes`), sans export réel, rendu
+Obsidian/AnkiDroid, benchmark, validation indépendante ou mesure de maîtrise.

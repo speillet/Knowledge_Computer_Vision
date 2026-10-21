@@ -4,7 +4,7 @@ Les pôles sont une surcouche des thèmes ; une fiche partagée conserve un seul
 
 ## A — Deep Learning & Image Understanding
 
-21 fiches rattachées, 95 cartes ; export non vérifié, maîtrise non mesurée.
+21 fiches rattachées, 97 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## C — Robotics & Autonomous Perception
 
-26 fiches rattachées, 126 cartes ; export non vérifié, maîtrise non mesurée.
+26 fiches rattachées, 128 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -137,7 +137,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## E — Applied Computer Vision
 
-31 fiches rattachées, 144 cartes ; export non vérifié, maîtrise non mesurée.
+31 fiches rattachées, 146 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |

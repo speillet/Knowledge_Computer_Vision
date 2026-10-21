@@ -209,3 +209,20 @@ Reponse: **Noyau attendu** : Confronter l'image à la politique d'annotation : p
 Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [TIDE, version 2, §3.4 et annexes D–E : annotations ambiguës/manquantes et détections ignorées](https://arxiv.org/html/2008.08115v2) ; protocole de correction proposé par le projet.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-012 provenance::agent pole::A pole::C pole::E
 END
+
+## CV-DETECTEURS-013
+
+Objectif : distinguer instances, classes et étiquettes par instance. Famille : comprehension. Provenance : agent.
+
+START
+CV-Pilote
+ID: CV-DETECTEURS-013
+Question: Une tâche demande de localiser trois voitures et deux vélos, avec un seul label par objet. Est-ce nécessairement une classification multi-étiquette par boîte ? Distinguer nombre d'instances, classes présentes et labels par instance.
+Reponse: **Noyau attendu** : Non : il y a cinq instances, deux classes présentes, mais un label par instance dans ce contrat. La détection peut produire plusieurs instances d'une même classe. Multi-étiquette signifie que plusieurs labels sont valides pour une même instance, selon la taxonomie.
+
+**Approfondissement** : Des labels hiérarchiques comme « véhicule » et « voiture » peuvent coexister si les annotations l'autorisent ; deux classes exclusives proposées sur le même objet restent une ambiguïté. YOLOv3 utilise des classifieurs logistiques indépendants, mais les labels effectivement rendus dépendent aussi des seuils et du posttraitement. Une NMS par classe ne garantit ni un label unique par instance ni une seule boîte par classe.
+
+**Erreurs bloquantes** : Confondre plusieurs objets dans une image avec plusieurs labels pour un objet, ou limiter la sortie à une boîte par catégorie.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [YOLOv3, version 1, §§2.2–2.3](https://arxiv.org/html/1804.02767v1) ; [Torchvision 0.29, batched_nms : séparation des catégories](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html) ; exemples de contrats du projet.
+Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-013 provenance::agent pole::A pole::C pole::E
+END
