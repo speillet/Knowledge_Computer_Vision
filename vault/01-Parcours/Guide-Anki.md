@@ -67,7 +67,7 @@ Sources : [format des notes](https://github.com/ObsidianToAnki/Obsidian_to_Anki/
 
 1. Avec Anki Desktop ouvert, lancer manuellement le scan du vault pilote.
    Le nombre courant est donné par le catalogue et le contrôleur ; chaque note
-   doit produire une carte. Le lot actuel comporte **233 notes et 233 cartes**,
+   doit produire une carte. Le lot actuel comporte **238 notes et 238 cartes**,
    réparties dans les 14 sous-decks thématiques.
    Vérifier ces deux nombres dans le navigateur,
    pas le compteur quotidien du deck, qui dépend des limites de révision.
