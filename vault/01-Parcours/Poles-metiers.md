@@ -37,7 +37,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## B — Geometric Vision & Spatial AI
 
-24 fiches rattachées, 117 cartes ; export non vérifié, maîtrise non mesurée.
+24 fiches rattachées, 119 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## C — Robotics & Autonomous Perception
 
-26 fiches rattachées, 137 cartes ; export non vérifié, maîtrise non mesurée.
+26 fiches rattachées, 139 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |

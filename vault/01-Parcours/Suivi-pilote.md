@@ -1,6 +1,6 @@
 # Suivi du pilote : preuves et limites
 
-**Lot courant** : 52 fiches, 242 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
+**Lot courant** : 52 fiches, 244 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
 **Client de révision** : AnkiDroid, confirmé par l'apprenant le 2026-10-18.
 Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
@@ -118,7 +118,7 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 | Essai | Attendu | Observation / date / responsable |
 | --- | --- | --- |
 | Installation et mapping | Modèle CV-Pilote, quatre champs, un gabarit | Non exécuté |
-| Création | 242 notes et 242 cartes, identités distinctes | Non exécuté |
+| Création | 244 notes et 244 cartes, identités distinctes | Non exécuté |
 | Scan inchangé | Nombres et identités inchangés | Non exécuté |
 | Mise à jour après révision | Même note et historique conservé | Non exécuté |
 | Texte, listes, formules/matrice | Lisibles dans Obsidian, Anki, AnkiDroid | Non exécuté |
@@ -292,6 +292,10 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-23 | CV-FUSION, révision 4 | CV-FUSION-005 ; fiche | Enrichissement accepté : le « pourquoi » de l'ESKF n'était pas interrogé ; Solà, §§5.1–5.2 | Quatre propriétés de l'état d'erreur et cycle injection/reset | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-FUSION, révision 4 | CV-FUSION-006 ; fiche | Enrichissement accepté : instabilité numérique de la mise à jour de $P$ absente ; Solà, §6.1, note 26 | Formes symétrique et de Joseph, symptômes et test discriminant | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-FUSION, révision 4 | CV-FUSION-004 ; fiche | Enrichissement accepté : contrat temporel générique ; Solà, §5.4.2, équations 262–265, annexe E, équation 440 | Dépendances en $\Delta t$, instant d'acquisition, retards ; objectif inchangé | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FACTEURS, révision 3 | CV-FACTEURS-001 ; fiche | Question fermée dont la réponse « Non » se devine ; équivalence MAP gaussien–moindres carrés attribuée implicitement à GTSAM, qui ne la formule pas ; Kaess et al. 2012, §2 | Question ouverte sur ce que représente le graphe et ce qu'il reste à fournir ; équivalence sourcée par Kaess, QR creuse et ordre d'élimination | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-002 ; fiche | Enrichissement accepté : dimension et traitement de la jauge absents ; Zhang, Gallego et Scaramuzza 2018 ; Ceres, Gauge Invariance | Jauge de dimension 6, 7 ou 4 selon les capteurs ; fixer, prior ou jauge libre | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-003 ; CV-FACTEURS-004 ; fiche | Enrichissement accepté : aucun test chiffré de boucle ni back-end robuste ; Agarwal et al. 2013, §§II–IV | Test $\chi^2$ par facteur ; comparaison perte robuste, contraintes commutables, DCS et RRR | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-005 ; fiche | Enrichissement accepté : « incrémental » cité sans mécanisme ; Kaess et al. 2012, §§3.3–4.2 | Partie affectée de l'arbre de Bayes, seuils $\beta$ et $\alpha$ | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 
 ## Extension éditoriale et contrôles — 2026-10-18
 
@@ -451,11 +455,15 @@ appliquées ; les enrichissements sont soumis à l'accord de l'apprenant.
   acceptés CV-FUSION-005 (pourquoi l'ESKF) et 006 (forme de Joseph),
   enrichissement de CV-FUSION-004. Rapport :
   `docs/revues/2026-10-23/13-kalman-ekf-eskf.md`.
+- CV-FACTEURS, révision 3 : carte 001 corrigée (question fermée). Révision 4 :
+  ajouts acceptés CV-FACTEURS-004 (fausses boucles) et 005 (iSAM2),
+  enrichissement de 002 et 003. Rapport :
+  `docs/revues/2026-10-23/14-graphes-facteurs.md`.
 
-Le lot courant passe de 233 à 242 cartes ; statut `redige` conservé.
+Le lot courant passe de 233 à 244 cartes ; statut `redige` conservé.
 
 Contrôles : `python3 scripts/check_vault.py` OK (125 Markdown, 52 fiches,
-242 cartes), 34 tests unitaires réussis, catalogue régénéré puis à jour sur
+244 cartes), 34 tests unitaires réussis, catalogue régénéré puis à jour sur
 18 documents ; inventaire comparé à l'état initial : seuls les IDs ajoutés
 apparaissent, sans ID disparu ni identité Anki modifiée.
 
