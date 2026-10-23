@@ -20,7 +20,7 @@ reste le Markdown ; les réponses ne sont pas modifiées en parallèle dans Anki
 Chaque fichier de cartes définit un seul deck cible
 `CV::Pilote::<répertoire-thématique>`, par exemple
 `CV::Pilote::40-features-matching`. Les quatorze sous-decks regroupent
-240 notes et 240 cartes. Le statut reste rédigé et l’export expérimental ;
+242 notes et 242 cartes. Le statut reste rédigé et l’export expérimental ;
 les totaux et pôles se vérifient dans le catalogue généré.
 Un bloc commence
 par `START` sur une ligne seule, suivi du nom du modèle et de ses quatre champs ;
