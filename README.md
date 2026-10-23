@@ -23,11 +23,11 @@ Voir les [conventions de classement](docs/vault-layout.md).
 ## Couverture actuelle
 
 <!-- cv-catalog:start -->
-**52 fiches et 233 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**52 fiches et 238 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
 
 | Thématique | Fiches | Cartes |
 | --- | ---: | ---: |
-| [Mathématiques et estimation](vault/10-mathematiques-estimation/00-index.md) | 4 | 15 |
+| [Mathématiques et estimation](vault/10-mathematiques-estimation/00-index.md) | 4 | 20 |
 | [Formation et acquisition des images](vault/20-acquisition-images/00-index.md) | 3 | 11 |
 | [Traitement d'image classique](vault/30-traitement-image/00-index.md) | 3 | 11 |
 | [Features, matching et recalage](vault/40-features-matching/00-index.md) | 5 | 25 |
