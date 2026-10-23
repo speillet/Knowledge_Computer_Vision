@@ -296,6 +296,8 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-002 ; fiche | Enrichissement accepté : dimension et traitement de la jauge absents ; Zhang, Gallego et Scaramuzza 2018 ; Ceres, Gauge Invariance | Jauge de dimension 6, 7 ou 4 selon les capteurs ; fixer, prior ou jauge libre | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-003 ; CV-FACTEURS-004 ; fiche | Enrichissement accepté : aucun test chiffré de boucle ni back-end robuste ; Agarwal et al. 2013, §§II–IV | Test $\chi^2$ par facteur ; comparaison perte robuste, contraintes commutables, DCS et RRR | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-005 ; fiche | Enrichissement accepté : « incrémental » cité sans mécanisme ; Kaess et al. 2012, §§3.3–4.2 | Partie affectée de l'arbre de Bayes, seuils $\beta$ et $\alpha$ | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-ACQUISITION, révision 3 | CV-ACQUISITION-003 ; fiche | Aliasing et convention de resize attribués au tutoriel OpenCV des pyramides, qui ne les traite pas ; Parmar et al. 2022, §§1–3.2 et 6.3 | Source dédiée ; préfiltre et différences entre bibliothèques en approfondissement | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-ACQUISITION, révision 4 | CV-ACQUISITION-002 ; fiche | Enrichissement accepté : comparaison gain/exposition qualitative et recto en « pourquoi » ; EMVA 1288, §2.6, équations 21–22, et §2.7 | Comparaison chiffrée du SNR, du flou et de la saturation ; objectif inchangé | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 
 ## Extension éditoriale et contrôles — 2026-10-18
 
@@ -459,6 +461,14 @@ appliquées ; les enrichissements sont soumis à l'accord de l'apprenant.
   ajouts acceptés CV-FACTEURS-004 (fausses boucles) et 005 (iSAM2),
   enrichissement de 002 et 003. Rapport :
   `docs/revues/2026-10-23/14-graphes-facteurs.md`.
+- CV-ACQUISITION, révision 3 : source de la carte 003 corrigée (aliasing de
+  resize). Révision 4 : CV-ACQUISITION-002 réécrite en comparaison chiffrée
+  gain/exposition. Rapport :
+  `docs/revues/2026-10-23/21-exposition-bruit-echantillonnage.md`.
+
+Passage arrêté à la demande de l'apprenant après CV-ACQUISITION : les
+sujets suivants, à partir de CV-CAPTEURS, n'ont pas été revus. Les
+enrichissements non retenus restent décrits dans les rapports.
 
 Le lot courant passe de 233 à 244 cartes ; statut `redige` conservé.
 
@@ -474,7 +484,8 @@ Calculs exécutés hors dépôt (Python 3.10.13, NumPy 2.2.6, SciPy 1.13.1) :
   configurations de 200 tirages, blanchiment en mètres et millimètres ;
 - SE(3) : centre caméra, angle géodésique et angles d'Euler près du blocage
   de cardan, double couverture, conversion OpenCV→OpenGL ;
-- Kalman : quantiles du $\chi^2$ à 95 % pour $m=1$ à 4.
+- Kalman : quantiles du $\chi^2$ à 95 % pour $m=1$ à 4 ;
+- acquisition : SNR EMVA selon le gain et le nombre d'électrons.
 
 Cas construits, pas des mesures terrain. Context7 n'est pas disponible dans
 cette session : documentations officielles consultées directement, ou fichiers

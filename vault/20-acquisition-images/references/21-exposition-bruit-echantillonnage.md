@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 2
+revision: 4
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -29,11 +29,11 @@ Les photons deviennent une mesure bruitée puis numérisée. Exposition, ouvertu
 
 ## Mathématiques, conventions et unités
 
-Modèle simplifié : flou $b_{px}\approx v_{px}t_e$, vitesse image en px/s et exposition en s. Le bruit photonique idéal a variance égale au nombre moyen de photoélectrons ; il ne résume pas tout le bruit du capteur. Nyquist demande une fréquence inférieure à la moitié de l'échantillonnage pour un signal limité en bande, sans garantir la détection de tout défaut à deux pixels.
+Modèle simplifié : flou $b_{px}\approx v_{px}t_e$, vitesse image en px/s et exposition en s. Le bruit photonique idéal a variance égale au nombre moyen de photoélectrons ; il ne résume pas tout le bruit du capteur. EMVA 1288 (§2.4, équations 13–14) ajoute un bruit de lecture $\sigma_d^2$, en électrons, et un bruit de quantification $\sigma_q^2=1/12$ DN². Le SNR s'écrit $\eta\mu_p/\sqrt{\sigma_d^2+\sigma_q^2/K^2+\eta\mu_p}$ (§2.6, équation 21). Hors quantification, le gain système $K$ s'y annule : augmenter le gain ne change pas le SNR, alors que doubler les photons le multiplie par $\sqrt2$ en régime photonique et jusqu'à 2 en régime de bruit de lecture (équation 22). Un gain plus fort atteint la valeur numérique maximale avec moins d'électrons, d'où une capacité de saturation réduite (§2.7). Exemple du projet, $\sigma_d=5$ e⁻ : SNR 8,9 à 100 e⁻, 13,3 à 200 e⁻, inchangé si l'on double $K$. Nyquist demande une fréquence inférieure à la moitié de l'échantillonnage pour un signal limité en bande, sans garantir la détection de tout défaut à deux pixels. Réduire une image sans préfiltre adapté au facteur de réduction replie les hautes fréquences dans le résultat. Parmar et al. (2022, §§2 et 3.2) le rappellent, et montrent que les resize d'OpenCV, TensorFlow et PyTorch, avec leurs options par défaut, présentent un fort aliasing, contrairement à PIL (§1, §6.3).
 
 ## Paramètres et propriétés
 
-Vérifier plage, profondeur de bits, gamma, BGR/RGB, balance des blancs et saturation. Le gain numérique ne crée pas de photons. Rolling shutter et temps d'exposition sont deux dimensions temporelles distinctes.
+Vérifier plage, profondeur de bits, gamma, BGR/RGB, balance des blancs et saturation. Le gain numérique ne crée pas de photons. Rolling shutter et temps d'exposition sont deux dimensions temporelles distinctes. Pour éclaircir une image, renforcer l'éclairage double le signal sans allonger le flou, au contraire d'une exposition plus longue.
 
 ## Coût et implémentation
 
@@ -53,13 +53,14 @@ Variation analytique : doubler l'exposition à vitesse image constante double le
 
 ## Sources et cartes
 
-- [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
+- [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html). Le tutoriel décrit le flou gaussien avant décimation, pas l'aliasing.
+- [Parmar, Zhang et Zhu 2022, On Aliased Resizing and Surprising Subtleties in GAN Evaluation, CVPR, §§1–3.2 et 6.3](https://arxiv.org/abs/2104.11222) : critère de Nyquist, préfiltre et conventions de resize selon la bibliothèque.
 - [sRGB, §§A.7–A.8 et B.1, conversion linéaire et fonction de transfert](https://www.w3.org/Graphics/Color/srgb).
 
 Le calcul $b_{px}=v_{px}t_e$ est une déduction cinématique du projet pour une vitesse image constante ; EMVA documente le capteur, pas cette formule de flou. Le contrôle de cohérence entraînement/inférence est une démarche du projet.
 
-- [EMVA1288 Linear 4.0, bruit et SNR](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf).
-- [Edmund Optics, resolution](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/resolution/).
+- [EMVA1288 Linear 4.0, 16 juin 2021, §2.4, équations 13–15, §2.6, équations 20–23, §2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf) : modèle de bruit, SNR et saturation.
+- [Edmund Optics, resolution](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/resolution/). Page inaccessible aux outils automatisés le 2026-10-23 : non revérifiée.
 - [Cartes associées](../21-exposition-bruit-echantillonnage.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet. Révisions 3 et 4 : auto-revue `revue-cartes` par Agent Claude Code le 2026-10-23, correction puis enrichissement accepté par l'apprenant, sans validation indépendante.
