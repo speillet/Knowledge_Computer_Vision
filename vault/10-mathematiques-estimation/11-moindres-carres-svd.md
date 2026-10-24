@@ -33,6 +33,8 @@ Reponse: **Noyau attendu** : former $A^TA$ élève le conditionnement au carré,
 
 **Approfondissement** : ordre de grandeur : avec $\kappa_2(A)=10^6$, environ 6 des 16 chiffres de la double précision sont menacés avec QR, 12 avec les équations normales. Ceres conseille `DENSE_QR` pour les petits problèmes denses et `SPARSE_SCHUR` pour les BA à milliers de caméras. Factoriser puis résoudre : l'inverse explicite est inutile.
 
+**Lecture pour un projet** : choisir le solveur après avoir examiné rang, échelles et structure creuse. Un temps de résolution inférieur ne compense pas des paramètres devenus inutilisables. Comparer aussi la stabilité lorsque les observations sont légèrement perturbées, avec le même objectif et les mêmes unités.
+
 **Erreurs bloquantes** : dire que deux formulations mathématiquement équivalentes sont numériquement identiques ; exclure les équations normales en toute circonstance, y compris pour un BA creux.
 Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Triggs et al. 2000, §4.3, QR et équations normales](https://inria.hal.science/inria-00548290) ; [Eigen 5.0.1-dev, Solving linear least squares systems, Using normal equations (consulté le 2026-10-23)](https://libeigen.gitlab.io/eigen/docs-nightly/group__LeastSquares.html) ; [Ceres, Solving Non-linear Least Squares, Linear Solvers et Schur complement trick (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
 Tags: cv::pilote cv::d01 famille::comparaison cv_id::CV-SVD-002 provenance::agent pole::B pole::C
@@ -49,6 +51,8 @@ Question: Un objectif de calibration additionne une erreur pixel et une erreur e
 Reponse: **Noyau attendu** : Définir la covariance $C$ des résidus, supposée définie positive, puis les blanchir : avec $C=LL^T$, utiliser $L^{-1}r$. Sa norme au carré est $r^TC^{-1}r$, sans dimension et pondérée par l’incertitude.
 
 **Approfondissement** : Changer mètres en millimètres ne doit pas changer arbitrairement la solution. Exemple calculé par le projet : $r_{px}=0{,}8$ px avec $\sigma_{px}=0{,}5$ px, $r=3$ mm avec $\sigma=2$ mm. La somme brute des carrés vaut 0,64 en mètres et 9,64 en millimètres : l'unité choisit quel terme domine. La somme blanchie vaut 4,81 dans les deux cas. Vérifier modèle de bruit et corrélations ; une perte robuste éventuelle s'applique ensuite au résidu blanchi.
+
+**Interprétation** : le blanchiment exprime chaque écart relativement au bruit que le modèle lui attribue. Un résidu de deux pixels peut être banal avec une incertitude de dix pixels et surprenant avec une incertitude de 0,1 pixel. Les termes hors diagonale de $C$ comptent si les observations sont corrélées : diviser chaque composante par son écart-type n'est alors pas un blanchiment complet. Une pondération choisie pour obtenir une belle solution ne devient pas automatiquement un modèle de bruit justifié.
 
 **Erreurs bloquantes** : Additionner les valeurs brutes puis interpréter leur somme comme une vraisemblance.
 Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Introduction et Rank of the Jacobian (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html).
@@ -67,6 +71,8 @@ Reponse: **Noyau attendu** : des outliers résiduels se voient dans les résidus
 
 **Approfondissement** : cas publié : avec un plan dominant, un échantillon de sept correspondances dont au moins cinq vérifient une homographie donne une géométrie épipolaire compatible avec tout le plan ; d'où un large consensus pour une matrice fondamentale mal déterminée (Chum, Werner et Matas 2005). Pour un système homogène $Lh=0$, c'est l'avant-dernière valeur singulière qui doit rester nettement non nulle.
 
+**Contrôle proposé** : conserver les mêmes observations, réajuster sur plusieurs sous-ensembles et visualiser la direction de variation des paramètres. Comparer ensuite une meilleure répartition spatiale plutôt qu'un simple quota plus élevé. Les deux causes peuvent coexister : corriger les outliers ne valide pas encore la géométrie restante.
+
 **Erreurs bloquantes** : supposer qu'un estimateur robuste corrige une géométrie dégénérée ; conclure à des outliers dès qu'une solution est instable.
 Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Chum, Werner et Matas 2005, résumé et théorème du plan dominant](https://dspace.cvut.cz/bitstream/10467/9495/1/2005-Two-view-geometry-estimation-unaffected-by-dominant-plane.pdf) ; [Hartley 1997, §4, rôle de $d_1/d_8$](https://doi.org/10.1109/34.601246) ; [Ceres, Covariance Estimation, Rank of the Jacobian (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; tests discriminants proposés par le projet.
 Tags: cv::pilote cv::d01 famille::diagnostic cv_id::CV-SVD-004 provenance::agent pole::B pole::C
@@ -83,6 +89,8 @@ Question: Décris l'estimation linéaire (DLT) d'une homographie $H$ à partir d
 Reponse: **Noyau attendu** : chaque correspondance fournit deux équations linéaires homogènes en les neuf coefficients $h$ de $H$ ; on les empile en $Lh=0$, avec $L\in\mathbb R^{2n\times9}$. $H$ n'étant défini qu'à un facteur près, on minimise $\|Lh\|$ sous $\|h\|=1$, ce qui exclut $h=0$. La solution est le vecteur singulier droit de $L$ associé à la plus petite valeur singulière, c'est-à-dire le vecteur propre de $L^TL$ de plus petite valeur propre.
 
 **Approfondissement** : ce coût algébrique n'a pas de sens physique : Zhang s'en sert pour initialiser, puis minimise l'erreur de reprojection par Levenberg-Marquardt. Pour $F$, chaque correspondance donne une équation et il en faut au moins huit ; on impose ensuite le rang 2 en annulant la plus petite valeur singulière de $F$. Normaliser les coordonnées avant de construire $L$.
+
+**Interprétation du minimum** : la contrainte de norme élimine la solution triviale, mais ne donne pas une unité physique au résidu algébrique. Une bonne initialisation linéaire doit donc être contrôlée dans l'espace où le produit est utilisé, par exemple avec des distances de reprojection sur des points réservés.
 
 **Erreurs bloquantes** : retenir le vecteur de la plus grande valeur singulière ; résoudre $Lh=0$ par moindres carrés sans contrainte ; croire que la DLT minimise l'erreur de reprojection.
 Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Zhang 1998, MSR-TR-98-71, §3.2 et annexe A](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf) ; [Hartley 1997, §§2.2–2.3](https://doi.org/10.1109/34.601246).
@@ -151,6 +159,8 @@ Question: Après un ajustement par moindres carrés non linéaires, on lit l'inc
 Reponse: **Noyau attendu** : il faut des résidus blanchis, de covariance identité, et un $J$ de rang colonne plein ; la matrice obtenue est alors la dispersion locale de l'estimée, qui n'approche sa covariance qu'asymptotiquement. Si $J$ est déficient en rang (jauge, paramètre non observable), $J^TJ$ n'est pas inversible : fixer la jauge, reparamétrer ou utiliser une pseudo-inverse. Elle ne mesure ni un biais de modèle, comme une distorsion mal modélisée, ni l'effet d'outliers : elle suppose modèle et bruit corrects.
 
 **Approfondissement** : Triggs et al. jugent l'approximation asymptotique bien moins sûre pour les petits problèmes de géométrie et les réseaux faibles. Par défaut, Ceres échoue sur un jacobien déficient (`Compute()` renvoie faux) ; `DENSE_SVD` calcule une pseudo-inverse pour les problèmes petits ou moyens. Un jacobien presque singulier donne des variances absurdes, d'où `min_reciprocal_condition_number`. Les termes hors diagonale révèlent des paramètres que les données ne séparent pas (CV-ZHANG-006).
+
+**Décision proposée** : confronter les intervalles annoncés à des répétitions ou des perturbations contrôlées, en conservant jauge et unités. Une faible dispersion autour d'une solution biaisée reste compatible avec une mauvaise précision. Séparer donc incertitude locale, variation entre acquisitions et adéquation du modèle physique.
 
 **Erreurs bloquantes** : lire $(J^TJ)^{-1}$ sans blanchiment ni contrôle du rang ; prendre une faible variance pour une preuve d'exactitude du modèle.
 Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Introduction, Gauge Invariance, Rank of the Jacobian et Covariance::Options (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; [Triggs et al. 2000, §3.1](https://inria.hal.science/inria-00548290).

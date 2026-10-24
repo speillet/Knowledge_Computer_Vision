@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SVD", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -59,6 +59,28 @@ Fausses fermetures de boucle. Le perceptual aliasing rend irréaliste un front-e
 ## Alternatives et usages
 
 Pose graph pour contraintes entre poses, BA pour poses et landmarks observés ; filtre pour état courant. Comparer mémoire, réestimation et latence.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent graphe, jauge et coût d’une élimination. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-FACTEURS-001
+
+**Question de travail** : Un graphe de facteurs est souvent présenté comme « le SLAM » d'un système. Que représente-t-il exactement, et que reste-t-il à fournir ou à choisir pour obtenir une trajectoire ?
+
+**Réponse de référence** : c'est un graphe biparti entre variables (poses, amers, biais) et facteurs (mesures, priors) qui factorise la densité a posteriori. Avec des modèles de mesure gaussiens, le MAP devient un moindres carrés non linéaire sur des résidus pondérés par leur covariance (distance de Mahalanobis). Il reste à fournir les associations et fermetures de boucle venues du front-end, les modèles de mesure et leurs covariances, une estimée initiale et un ancrage de la jauge. Il faut aussi choisir l'inférence : optimisation batch, iSAM2, pertes robustes.
+
+**Exemple construit** : ajouter un facteur de distance n'a pas le même sens qu'ajouter une pose absolue. Les deux relient des variables selon des informations différentes et ne suppriment pas les mêmes ambiguïtés. Vérifier le contrat de chaque facteur avant de conclure qu'un graphe contient « assez » de contraintes.
+
+### Cas lié à CV-FACTEURS-005
+
+**Question de travail** : À l'arrivée de nouvelles mesures, qu'est-ce qu'iSAM2 recalcule réellement dans son arbre de Bayes, et quels deux seuils limitent la relinéarisation et la mise à jour des estimées ?
+
+**Réponse de référence** : seules les cliques situées sur les chemins entre les variables touchées par les nouveaux facteurs ou sélectionnées pour relinéarisation et la racine sont retirées, réordonnées et re-éliminées avec ces facteurs ; les sous-arbres non affectés sont réinsérés tels quels. Relinéarisation fluide : une variable n'est relinéarisée que si son estimée s'écarte de son point de linéarisation de plus d'un seuil $\beta$. Mise à jour partielle : la rétro-substitution s'arrête dans les sous-arbres où les changements restent sous un seuil $\alpha$.
+
+**Conséquence produit** : mesurer les pics de latence à l'ajout de contraintes importantes, et pas seulement la moyenne en ligne droite. Une petite mise à jour habituelle et une grande fermeture de boucle ne touchent pas nécessairement la même portion du système. Le budget doit prévoir cette variabilité et le compromis des seuils.
+
+**Repère documentaire de cette passe** : [GTSAM, Introduction](https://gtsam.org/tutorials/intro.html), factor graph, Values et prior. Les autres développements figurent dans les [cartes associées](../14-graphes-facteurs.md).
 
 ## Sources et cartes
 

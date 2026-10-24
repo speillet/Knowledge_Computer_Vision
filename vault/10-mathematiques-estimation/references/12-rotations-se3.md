@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -58,6 +58,28 @@ Conventions d'axes caméra. OpenCV projette $x'=X_c/Z_c$, $y'=Y_c/Z_c$ (`calib3d
 ## Alternatives et usages
 
 Matrices pour composition, quaternions pour stockage/interpolation, coordonnées tangentielles pour optimisation ; ne pas mélanger leurs Jacobiennes sans transformation.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent composition des repères et perturbations gauche/droite. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-SE3-001
+
+**Question de travail** : Un SLAM fournit pour deux images les poses $T_{wc_1}$ et $T_{wc_2}$, qui envoient les coordonnées caméra vers le monde : $p_w=T_{wc_i}\,p_{c_i}$. Quelle transformation exprime dans la caméra 1 un point connu dans la caméra 2 ?
+
+**Réponse de référence** : $T_{c_1c_2}=T_{wc_1}^{-1}T_{wc_2}=T_{c_1w}T_{wc_2}$ : remonter de $c_2$ vers le monde, puis du monde vers $c_1$. Les indices adjacents doivent coïncider ($c_1w$ puis $wc_2$) ; la composition n'est pas commutative.
+
+**Exemple construit** : avec deux orientations identiques et des centres décalés sur un axe monde, le point origine de la seconde caméra doit apparaître à ce même décalage dans la première. Faire ensuite tourner seulement la première caméra oblige à exprimer ce décalage dans ses axes. Ce test simple révèle une translation additionnée dans le mauvais repère, qu'une multiplication de matrices apparemment valide peut laisser passer.
+
+### Cas lié à CV-SE3-005
+
+**Question de travail** : Pour évaluer une orientation estimée $\hat R$ contre une vérité terrain $R$, un rapport compare les angles d'Euler composante par composante, un autre les quaternions. Quelle mesure utiliser à la place, et pourquoi ces deux comparaisons peuvent-elles tromper ?
+
+**Réponse de référence** : mesurer l'angle de la rotation résiduelle $R^T\hat R$ : $\theta=\arccos\frac{\operatorname{tr}(R^T\hat R)-1}{2}$, indépendant de la paramétrisation. Les angles d'Euler dépendent de la convention et sont singuliers : près d'un tangage de 90°, de grands écarts de lacet et de roulis se compensent. $q$ et $-q$ représentent la même rotation : leurs composantes peuvent différer de 2 pour une erreur nulle ; depuis des quaternions unitaires, utiliser $\theta=2\arccos|\langle q_1,q_2\rangle|$.
+
+**Lecture du score** : l'erreur angulaire mesure la rotation relative nécessaire pour aligner les orientations, pas leur distance à une origine d'angles particulière. Garder radians et degrés explicites dans le calcul et le rapport, puis examiner la distribution des erreurs au lieu d'une seule moyenne.
+
+**Repère documentaire de cette passe** : [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537v9), §II, perturbations et incertitudes ; annexe D, SE(3). Les autres développements figurent dans les [cartes associées](../12-rotations-se3.md).
 
 ## Sources et cartes
 
