@@ -32,15 +32,15 @@ def validate_order(entries, steps):
     return errors
 
 
-def render_path(entries, steps):
+def render_path(entries, steps, open_target_count):
     errors = validate_order(entries, steps)
     if errors:
         raise ValueError('\n'.join(errors))
     by_id = {entry['id']: entry for entry in entries}
-    text = '''# Parcours senior : comprendre, vérifier, intégrer
+    text = f'''# Parcours senior : comprendre, vérifier, intégrer
 
-Ce parcours ordonne les 60 sujets présents. Les dossiers restent un classement
-thématique ; leur numéro ne fixe pas l'ordre de révision. Les 119 approfondissements
+Ce parcours ordonne les {len(entries)} sujets présents. Les dossiers restent un classement
+thématique ; leur numéro ne fixe pas l'ordre de révision. Les {open_target_count} approfondissements
 encore ouverts dans l'[inventaire](Inventaire.md) restent à construire.
 
 Tu maîtrises déjà le ML/DL et la segmentation sémantique : utiliser les critères
@@ -93,7 +93,7 @@ expériences annoncées comme exécutées ni une certification de niveau senior.
             text += (f"| {number}.{index} | [{entry['title']}](../{entry['ref']}) | "
                      f"[{len(entry['card_ids'])} cartes](../{entry['cards_path']}) | {links} |\n")
         text += f"\n**Critère de passage proposé** : {step['preuve']}\n\n"
-    text += '''## Trois intégrations pour vérifier le transfert
+    text += f'''## Trois intégrations pour vérifier le transfert
 
 - **Recalage et mesure d'une pièce** : acquisition contrôlée → features → matches
   → modèle géométrique → calibration → mesure indépendante. Départager faible
@@ -113,7 +113,7 @@ Des cartes rappelées correctement ne prouvent pas seules ce transfert.
 ## Contrôles du parcours
 
 `python3 scripts/learning_path.py` contrôle couverture des fiches, unicité,
-ordre des prérequis et seuil éditorial de 180 mots lexicaux par réponse.
+ordre des prérequis et seuil éditorial de {MIN_ANSWER_WORDS} mots lexicaux par réponse.
 Un ordre strict respectant chaque dépendance exclut un cycle ; un lien inconnu
 ou une nouvelle fiche non intégrée fait échouer le contrôle. Le seuil signale
 une réponse courte, sans certifier sa justesse ni sa qualité pédagogique.
