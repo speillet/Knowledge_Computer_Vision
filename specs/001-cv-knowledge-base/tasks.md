@@ -58,9 +58,17 @@ T011/T012 signifient contenu préparé : les résultats image/vidéo proposés n
 sont pas des expériences exécutées, et les cas de transfert n'ont pas été
 essayés par l'apprenant. T009/T010/T013 restent ouverts après la publication.
 
-- [ ] T023 — Avant la rédaction des 129 approfondissements APP, définir pour
+- [ ] T023 — Avant la rédaction des 119 approfondissements APP encore ouverts, définir pour
   chacun les compétences observables et les dépendances obligatoires, distinctes
   de son lien thématique connexe ; compléter l’inventaire et les sources.
-  SC-001/FR-030 restent partiellement satisfaits pour ce backlog. Les 52 fiches
-  du lot livré ont leurs compétences et prérequis ; cette tâche n’affecte pas
+  SC-001/FR-030 restent partiellement satisfaits pour ce backlog. Les 60 fiches
+  du lot courant ont leurs compétences et prérequis ; cette tâche n’affecte pas
   la présence effective de contenu dans les quatorze thèmes (SC-013).
+
+- [x] T024 — Vérifier et corriger les PR 13–16, puis les fusionner dans l’ordre :
+  dimensions SE(3), stabilité de covariance, contrôle postfit et contexte du resize.
+- [x] T025 — Ajouter huit fiches et 38 cartes sur les lacunes classiques prioritaires ;
+  relier dix cibles APP à leur contenu effectif sans supprimer leurs IDs.
+
+Les dix entrées APP désormais rédigées conservent leurs objectifs et prérequis.
+T023 reste ouverte pour les 119 autres ; T009/T010/T013 restent inchangées.

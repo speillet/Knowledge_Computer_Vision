@@ -37,7 +37,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## B — Geometric Vision & Spatial AI
 
-24 fiches rattachées, 119 cartes ; export non vérifié, maîtrise non mesurée.
+30 fiches rattachées, 148 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -54,15 +54,21 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 | Détecteurs locaux, descripteurs et matchers | approfondissement | [Fiche](../40-features-matching/references/43-detecteurs-matchers.md) · [Cartes](../40-features-matching/43-detecteurs-matchers.md) |
 | SuperPoint, LightGlue et LoFTR | usage-operationnel | [Fiche](../40-features-matching/references/44-superpoint-lightglue-loftr.md) · [Cartes](../40-features-matching/44-superpoint-lightglue-loftr.md) |
 | Recalage par intensités et ECC | usage-operationnel | [Fiche](../40-features-matching/references/45-recalage-ecc.md) · [Cartes](../40-features-matching/45-recalage-ecc.md) |
+| Harris et Shi–Tomasi — structure locale et points suivables | usage-operationnel | [Fiche](../40-features-matching/references/46-harris-shi-tomasi.md) · [Cartes](../40-features-matching/46-harris-shi-tomasi.md) |
+| FAST et BRIEF — détecter un coin puis décrire son voisinage | usage-operationnel | [Fiche](../40-features-matching/references/47-fast-brief.md) · [Cartes](../40-features-matching/47-fast-brief.md) |
+| FLANN — recherche approchée et contrat de distance | usage-operationnel | [Fiche](../40-features-matching/references/48-flann.md) · [Cartes](../40-features-matching/48-flann.md) |
 | RANSAC appliqué à une homographie | approfondissement | [Fiche](../50-calibration-geometrie/references/51-ransac-homographie.md) · [Cartes](../50-calibration-geometrie/51-ransac-homographie.md) |
 | Calibration caméra sur mire — méthode de Zhang | approfondissement | [Fiche](../50-calibration-geometrie/references/52-calibration-zhang.md) · [Cartes](../50-calibration-geometrie/52-calibration-zhang.md) |
 | Épipolaire, PnP et triangulation | approfondissement | [Fiche](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) · [Cartes](../50-calibration-geometrie/53-epipolaire-pnp-triangulation.md) |
 | Bundle adjustment et complément de Schur | usage-operationnel | [Fiche](../50-calibration-geometrie/references/54-bundle-adjustment.md) · [Cartes](../50-calibration-geometrie/54-bundle-adjustment.md) |
 | Calibration multicapteurs, hand-eye et temps | usage-operationnel | [Fiche](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) · [Cartes](../50-calibration-geometrie/55-calibration-multicapteurs.md) |
+| Calibration fisheye — projection angulaire et validation hors centre | usage-operationnel | [Fiche](../50-calibration-geometrie/references/56-calibration-fisheye.md) · [Cartes](../50-calibration-geometrie/56-calibration-fisheye.md) |
+| Hand-eye calibration — résoudre AX = XB sans mélanger les repères | usage-operationnel | [Fiche](../50-calibration-geometrie/references/57-calibration-hand-eye.md) · [Cartes](../50-calibration-geometrie/57-calibration-hand-eye.md) |
 | Stéréo rectifiée, SGM et profondeur | usage-operationnel | [Fiche](../60-vision-3d/references/61-stereo-profondeur.md) · [Cartes](../60-vision-3d/61-stereo-profondeur.md) |
 | Recalage global et ICP local | usage-operationnel | [Fiche](../60-vision-3d/references/62-recalage-global-icp.md) · [Cartes](../60-vision-3d/62-recalage-global-icp.md) |
 | SLAM, VIO, préintégration IMU et bouclage | usage-operationnel | [Fiche](../60-vision-3d/references/63-slam-vio.md) · [Cartes](../60-vision-3d/63-slam-vio.md) |
 | Flot optique : Lucas–Kanade, Farnebäck et RAFT | approfondissement | [Fiche](../100-mouvement-video/references/101-flot-optique.md) · [Cartes](../100-mouvement-video/101-flot-optique.md) |
+| Farnebäck — flot dense par expansion polynomiale | usage-operationnel | [Fiche](../100-mouvement-video/references/103-farneback.md) · [Cartes](../100-mouvement-video/103-farneback.md) |
 | NeRF, 3D Gaussian Splatting et reconstruction | reperage | [Fiche](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) · [Cartes](../120-generatif-multimodal/123-nerf-gaussian-splatting.md) |
 | Évaluer identités, trajectoires et localisation 3D | usage-operationnel | [Fiche](../130-evaluation-fiabilite/references/132-tracking-trajectoires.md) · [Cartes](../130-evaluation-fiabilite/132-tracking-trajectoires.md) |
 
@@ -73,7 +79,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## C — Robotics & Autonomous Perception
 
-26 fiches rattachées, 139 cartes ; export non vérifié, maîtrise non mesurée.
+33 fiches rattachées, 173 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -83,10 +89,14 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 | Graphes de facteurs et optimisation incrémentale | usage-operationnel | [Fiche](../10-mathematiques-estimation/references/14-graphes-facteurs.md) · [Cartes](../10-mathematiques-estimation/14-graphes-facteurs.md) |
 | Exposition, bruit, couleur et échantillonnage | approfondissement | [Fiche](../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) · [Cartes](../20-acquisition-images/21-exposition-bruit-echantillonnage.md) |
 | Capteurs, rolling shutter et synchronisation | usage-operationnel | [Fiche](../20-acquisition-images/references/22-capteurs-horodatage.md) · [Cartes](../20-acquisition-images/22-capteurs-horodatage.md) |
+| Harris et Shi–Tomasi — structure locale et points suivables | usage-operationnel | [Fiche](../40-features-matching/references/46-harris-shi-tomasi.md) · [Cartes](../40-features-matching/46-harris-shi-tomasi.md) |
+| FAST et BRIEF — détecter un coin puis décrire son voisinage | usage-operationnel | [Fiche](../40-features-matching/references/47-fast-brief.md) · [Cartes](../40-features-matching/47-fast-brief.md) |
 | Calibration caméra sur mire — méthode de Zhang | approfondissement | [Fiche](../50-calibration-geometrie/references/52-calibration-zhang.md) · [Cartes](../50-calibration-geometrie/52-calibration-zhang.md) |
 | Épipolaire, PnP et triangulation | approfondissement | [Fiche](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) · [Cartes](../50-calibration-geometrie/53-epipolaire-pnp-triangulation.md) |
 | Bundle adjustment et complément de Schur | usage-operationnel | [Fiche](../50-calibration-geometrie/references/54-bundle-adjustment.md) · [Cartes](../50-calibration-geometrie/54-bundle-adjustment.md) |
 | Calibration multicapteurs, hand-eye et temps | usage-operationnel | [Fiche](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) · [Cartes](../50-calibration-geometrie/55-calibration-multicapteurs.md) |
+| Calibration fisheye — projection angulaire et validation hors centre | usage-operationnel | [Fiche](../50-calibration-geometrie/references/56-calibration-fisheye.md) · [Cartes](../50-calibration-geometrie/56-calibration-fisheye.md) |
+| Hand-eye calibration — résoudre AX = XB sans mélanger les repères | usage-operationnel | [Fiche](../50-calibration-geometrie/references/57-calibration-hand-eye.md) · [Cartes](../50-calibration-geometrie/57-calibration-hand-eye.md) |
 | Stéréo rectifiée, SGM et profondeur | usage-operationnel | [Fiche](../60-vision-3d/references/61-stereo-profondeur.md) · [Cartes](../60-vision-3d/61-stereo-profondeur.md) |
 | Recalage global et ICP local | usage-operationnel | [Fiche](../60-vision-3d/references/62-recalage-global-icp.md) · [Cartes](../60-vision-3d/62-recalage-global-icp.md) |
 | SLAM, VIO, préintégration IMU et bouclage | usage-operationnel | [Fiche](../60-vision-3d/references/63-slam-vio.md) · [Cartes](../60-vision-3d/63-slam-vio.md) |
@@ -95,9 +105,12 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 | Détection : Faster R-CNN, familles YOLO et DETR | approfondissement | [Fiche](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) · [Cartes](../80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) |
 | Détection 3D, pose d’objet et pose articulée | usage-operationnel | [Fiche](../80-detection-pose/references/84-detection-pose-3d.md) · [Cartes](../80-detection-pose/84-detection-pose-3d.md) |
 | Flot optique : Lucas–Kanade, Farnebäck et RAFT | approfondissement | [Fiche](../100-mouvement-video/references/101-flot-optique.md) · [Cartes](../100-mouvement-video/101-flot-optique.md) |
+| Farnebäck — flot dense par expansion polynomiale | usage-operationnel | [Fiche](../100-mouvement-video/references/103-farneback.md) · [Cartes](../100-mouvement-video/103-farneback.md) |
 | SORT — tracking multiobjet par mouvement et association | approfondissement | [Fiche](../110-tracking-association/references/111-sort.md) · [Cartes](../110-tracking-association/111-sort.md) |
 | DeepSORT, ByteTrack et association multiobjet | approfondissement | [Fiche](../110-tracking-association/references/112-deepsort-bytetrack.md) · [Cartes](../110-tracking-association/112-deepsort-bytetrack.md) |
 | Tracking monoobjet : corrélation, siamois et MeanShift | usage-operationnel | [Fiche](../110-tracking-association/references/113-tracking-monoobjet.md) · [Cartes](../110-tracking-association/113-tracking-monoobjet.md) |
+| MOSSE et KCF — tracking par filtres de corrélation | usage-operationnel | [Fiche](../110-tracking-association/references/114-mosse-kcf.md) · [Cartes](../110-tracking-association/114-mosse-kcf.md) |
+| MeanShift et CamShift — suivre une distribution d’apparence | usage-operationnel | [Fiche](../110-tracking-association/references/115-meanshift-camshift.md) · [Cartes](../110-tracking-association/115-meanshift-camshift.md) |
 | IoU et AP — protocole COCO de détection | approfondissement | [Fiche](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) · [Cartes](../130-evaluation-fiabilite/131-iou-ap-coco.md) |
 | Évaluer identités, trajectoires et localisation 3D | usage-operationnel | [Fiche](../130-evaluation-fiabilite/references/132-tracking-trajectoires.md) · [Cartes](../130-evaluation-fiabilite/132-tracking-trajectoires.md) |
 | Splits, annotations, calibration des scores et dérive | usage-operationnel | [Fiche](../130-evaluation-fiabilite/references/133-donnees-generalisation.md) · [Cartes](../130-evaluation-fiabilite/133-donnees-generalisation.md) |
@@ -111,7 +124,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## D — Multimodal AI & Video Intelligence
 
-14 fiches rattachées, 57 cartes ; export non vérifié, maîtrise non mesurée.
+17 fiches rattachées, 71 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -121,9 +134,12 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 | SAM, SAM 2 et segmentation guidée en vidéo | usage-operationnel | [Fiche](../90-segmentation/references/94-sam-sam2.md) · [Cartes](../90-segmentation/94-sam-sam2.md) |
 | Flot optique : Lucas–Kanade, Farnebäck et RAFT | approfondissement | [Fiche](../100-mouvement-video/references/101-flot-optique.md) · [Cartes](../100-mouvement-video/101-flot-optique.md) |
 | Suivi de points, actions et compréhension vidéo | usage-operationnel | [Fiche](../100-mouvement-video/references/102-points-actions-video.md) · [Cartes](../100-mouvement-video/102-points-actions-video.md) |
+| Farnebäck — flot dense par expansion polynomiale | usage-operationnel | [Fiche](../100-mouvement-video/references/103-farneback.md) · [Cartes](../100-mouvement-video/103-farneback.md) |
 | SORT — tracking multiobjet par mouvement et association | approfondissement | [Fiche](../110-tracking-association/references/111-sort.md) · [Cartes](../110-tracking-association/111-sort.md) |
 | DeepSORT, ByteTrack et association multiobjet | approfondissement | [Fiche](../110-tracking-association/references/112-deepsort-bytetrack.md) · [Cartes](../110-tracking-association/112-deepsort-bytetrack.md) |
 | Tracking monoobjet : corrélation, siamois et MeanShift | usage-operationnel | [Fiche](../110-tracking-association/references/113-tracking-monoobjet.md) · [Cartes](../110-tracking-association/113-tracking-monoobjet.md) |
+| MOSSE et KCF — tracking par filtres de corrélation | usage-operationnel | [Fiche](../110-tracking-association/references/114-mosse-kcf.md) · [Cartes](../110-tracking-association/114-mosse-kcf.md) |
+| MeanShift et CamShift — suivre une distribution d’apparence | usage-operationnel | [Fiche](../110-tracking-association/references/115-meanshift-camshift.md) · [Cartes](../110-tracking-association/115-meanshift-camshift.md) |
 | VLM, grounding et frontière vision–action | usage-operationnel | [Fiche](../120-generatif-multimodal/references/121-vlm-grounding.md) · [Cartes](../120-generatif-multimodal/121-vlm-grounding.md) |
 | VAE, GAN et diffusion pour génération/restauration | reperage | [Fiche](../120-generatif-multimodal/references/122-generation-restauration.md) · [Cartes](../120-generatif-multimodal/122-generation-restauration.md) |
 | NeRF, 3D Gaussian Splatting et reconstruction | reperage | [Fiche](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) · [Cartes](../120-generatif-multimodal/123-nerf-gaussian-splatting.md) |
@@ -137,7 +153,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## E — Applied Computer Vision
 
-31 fiches rattachées, 146 cartes ; export non vérifié, maîtrise non mesurée.
+38 fiches rattachées, 179 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -151,9 +167,14 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 | ORB — détection et descripteur binaire orienté | approfondissement | [Fiche](../40-features-matching/references/42-orb.md) · [Cartes](../40-features-matching/42-orb.md) |
 | Détecteurs locaux, descripteurs et matchers | approfondissement | [Fiche](../40-features-matching/references/43-detecteurs-matchers.md) · [Cartes](../40-features-matching/43-detecteurs-matchers.md) |
 | Recalage par intensités et ECC | usage-operationnel | [Fiche](../40-features-matching/references/45-recalage-ecc.md) · [Cartes](../40-features-matching/45-recalage-ecc.md) |
+| Harris et Shi–Tomasi — structure locale et points suivables | usage-operationnel | [Fiche](../40-features-matching/references/46-harris-shi-tomasi.md) · [Cartes](../40-features-matching/46-harris-shi-tomasi.md) |
+| FAST et BRIEF — détecter un coin puis décrire son voisinage | usage-operationnel | [Fiche](../40-features-matching/references/47-fast-brief.md) · [Cartes](../40-features-matching/47-fast-brief.md) |
+| FLANN — recherche approchée et contrat de distance | usage-operationnel | [Fiche](../40-features-matching/references/48-flann.md) · [Cartes](../40-features-matching/48-flann.md) |
 | RANSAC appliqué à une homographie | approfondissement | [Fiche](../50-calibration-geometrie/references/51-ransac-homographie.md) · [Cartes](../50-calibration-geometrie/51-ransac-homographie.md) |
 | Calibration caméra sur mire — méthode de Zhang | approfondissement | [Fiche](../50-calibration-geometrie/references/52-calibration-zhang.md) · [Cartes](../50-calibration-geometrie/52-calibration-zhang.md) |
 | Calibration multicapteurs, hand-eye et temps | usage-operationnel | [Fiche](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) · [Cartes](../50-calibration-geometrie/55-calibration-multicapteurs.md) |
+| Calibration fisheye — projection angulaire et validation hors centre | usage-operationnel | [Fiche](../50-calibration-geometrie/references/56-calibration-fisheye.md) · [Cartes](../50-calibration-geometrie/56-calibration-fisheye.md) |
+| Hand-eye calibration — résoudre AX = XB sans mélanger les repères | usage-operationnel | [Fiche](../50-calibration-geometrie/references/57-calibration-hand-eye.md) · [Cartes](../50-calibration-geometrie/57-calibration-hand-eye.md) |
 | Représentations visuelles, ViT, Swin, ConvNeXt et DINOv2 | usage-operationnel | [Fiche](../70-reconnaissance-representations/references/71-representations-transfert.md) · [Cartes](../70-reconnaissance-representations/71-representations-transfert.md) |
 | Inspection : golden template, PatchCore et PaDiM | usage-operationnel | [Fiche](../70-reconnaissance-representations/references/73-patchcore-padim.md) · [Cartes](../70-reconnaissance-representations/73-patchcore-padim.md) |
 | OCR et compréhension documentaire | reperage | [Fiche](../70-reconnaissance-representations/references/74-ocr-documents.md) · [Cartes](../70-reconnaissance-representations/74-ocr-documents.md) |
@@ -166,6 +187,8 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 | SORT — tracking multiobjet par mouvement et association | approfondissement | [Fiche](../110-tracking-association/references/111-sort.md) · [Cartes](../110-tracking-association/111-sort.md) |
 | DeepSORT, ByteTrack et association multiobjet | approfondissement | [Fiche](../110-tracking-association/references/112-deepsort-bytetrack.md) · [Cartes](../110-tracking-association/112-deepsort-bytetrack.md) |
 | Tracking monoobjet : corrélation, siamois et MeanShift | usage-operationnel | [Fiche](../110-tracking-association/references/113-tracking-monoobjet.md) · [Cartes](../110-tracking-association/113-tracking-monoobjet.md) |
+| MOSSE et KCF — tracking par filtres de corrélation | usage-operationnel | [Fiche](../110-tracking-association/references/114-mosse-kcf.md) · [Cartes](../110-tracking-association/114-mosse-kcf.md) |
+| MeanShift et CamShift — suivre une distribution d’apparence | usage-operationnel | [Fiche](../110-tracking-association/references/115-meanshift-camshift.md) · [Cartes](../110-tracking-association/115-meanshift-camshift.md) |
 | VAE, GAN et diffusion pour génération/restauration | reperage | [Fiche](../120-generatif-multimodal/references/122-generation-restauration.md) · [Cartes](../120-generatif-multimodal/122-generation-restauration.md) |
 | IoU et AP — protocole COCO de détection | approfondissement | [Fiche](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) · [Cartes](../130-evaluation-fiabilite/131-iou-ap-coco.md) |
 | Splits, annotations, calibration des scores et dérive | usage-operationnel | [Fiche](../130-evaluation-fiabilite/references/133-donnees-generalisation.md) · [Cartes](../130-evaluation-fiabilite/133-donnees-generalisation.md) |
@@ -180,7 +203,7 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 
 ## F — Vision Systems & Deployment
 
-9 fiches rattachées, 41 cartes ; export non vérifié, maîtrise non mesurée.
+11 fiches rattachées, 50 cartes ; export non vérifié, maîtrise non mesurée.
 
 | Sujet | Profondeur cible de la fiche | Artefacts |
 | --- | --- | --- |
@@ -189,6 +212,8 @@ Cas propres au pôle, avec réponse et critères dans la carte :
 | Filtres, gradients et pyramides | approfondissement | [Fiche](../30-traitement-image/references/31-filtrage-gradients.md) · [Cartes](../30-traitement-image/31-filtrage-gradients.md) |
 | Canny et Hough : contours, droites et segments | approfondissement | [Fiche](../30-traitement-image/references/32-canny-hough.md) · [Cartes](../30-traitement-image/32-canny-hough.md) |
 | ORB — détection et descripteur binaire orienté | approfondissement | [Fiche](../40-features-matching/references/42-orb.md) · [Cartes](../40-features-matching/42-orb.md) |
+| FLANN — recherche approchée et contrat de distance | usage-operationnel | [Fiche](../40-features-matching/references/48-flann.md) · [Cartes](../40-features-matching/48-flann.md) |
+| MOSSE et KCF — tracking par filtres de corrélation | usage-operationnel | [Fiche](../110-tracking-association/references/114-mosse-kcf.md) · [Cartes](../110-tracking-association/114-mosse-kcf.md) |
 | Splits, annotations, calibration des scores et dérive | usage-operationnel | [Fiche](../130-evaluation-fiabilite/references/133-donnees-generalisation.md) · [Cartes](../130-evaluation-fiabilite/133-donnees-generalisation.md) |
 | Contrats de données, profiling et pipelines vidéo | approfondissement | [Fiche](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) · [Cartes](../140-ingenierie-systemes/141-contrats-profiling-video.md) |
 | PTQ, QAT, INT8/FP8 et runtimes | usage-operationnel | [Fiche](../140-ingenierie-systemes/references/142-quantification-runtimes.md) · [Cartes](../140-ingenierie-systemes/142-quantification-runtimes.md) |

@@ -1,7 +1,7 @@
 from pathlib import Path
 import tempfile
 import unittest
-from scripts.sync_catalog import collect
+from scripts.sync_catalog import collect, partition_targets
 
 
 class CatalogCases(unittest.TestCase):
@@ -18,6 +18,22 @@ class CatalogCases(unittest.TestCase):
             entries = collect(root)
             self.assertEqual(entries[0]['cases'], [('B', 'diagnostic', 'CV-TEST-002')])
             self.assertEqual(entries[0]['card_ids'], ['CV-TEST-001', 'CV-TEST-002'])
+
+
+    def test_promoted_targets_are_kept_separate_from_open_work(self):
+        pending = {'id': 'APP-001', 'connexe': 'CV-EXISTING'}
+        completed = {'id': 'APP-002', 'fiche': 'CV-EXISTING'}
+        opened, drafted = partition_targets([pending, completed], {'CV-EXISTING'})
+        self.assertEqual(opened, [pending])
+        self.assertEqual(drafted, [completed])
+
+    def test_unknown_reference_cannot_close_a_coverage_target(self):
+        with self.assertRaisesRegex(ValueError, 'Fiche de couverture absente'):
+            partition_targets([{'id': 'APP-001', 'fiche': 'CV-MISSING'}], set())
+
+    def test_duplicate_coverage_id_cannot_silently_disappear(self):
+        with self.assertRaisesRegex(ValueError, 'dupliquée'):
+            partition_targets([{'id': 'APP-001'}, {'id': 'APP-001'}], set())
 
 
 if __name__ == '__main__':

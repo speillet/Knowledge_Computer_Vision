@@ -191,9 +191,18 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-MATCHING"
+    "connexe": "CV-MATCHING",
+    "fiche": "CV-CORNERS",
+    "competences": [
+      "relier réponse Harris, conditionnement et localisation",
+      "diagnostiquer une sélection de points concentrée"
+    ],
+    "prerequis": [
+      "CV-FILTRES",
+      "CV-SVD"
+    ]
   },
   {
     "id": "APP-018",
@@ -203,9 +212,18 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-MATCHING"
+    "connexe": "CV-MATCHING",
+    "fiche": "CV-CORNERS",
+    "competences": [
+      "interpréter la plus petite valeur propre",
+      "régler qualité relative et espacement des coins"
+    ],
+    "prerequis": [
+      "CV-FILTRES",
+      "CV-SVD"
+    ]
   },
   {
     "id": "APP-019",
@@ -215,9 +233,17 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-MATCHING"
+    "connexe": "CV-MATCHING",
+    "fiche": "CV-FAST-BRIEF",
+    "competences": [
+      "décrire le segment test et ses variantes",
+      "séparer répétabilité et vitesse de détection"
+    ],
+    "prerequis": [
+      "CV-CORNERS"
+    ]
   },
   {
     "id": "APP-020",
@@ -227,9 +253,17 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-MATCHING"
+    "connexe": "CV-MATCHING",
+    "fiche": "CV-FAST-BRIEF",
+    "competences": [
+      "construire un test binaire et sa distance",
+      "diagnostiquer la sensibilité à la rotation"
+    ],
+    "prerequis": [
+      "CV-CORNERS"
+    ]
   },
   {
     "id": "APP-021",
@@ -251,9 +285,17 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-MATCHING"
+    "connexe": "CV-MATCHING",
+    "fiche": "CV-FLANN",
+    "competences": [
+      "choisir index et métrique compatibles",
+      "mesurer rappel, construction et coût amorti"
+    ],
+    "prerequis": [
+      "CV-MATCHING"
+    ]
   },
   {
     "id": "APP-023",
@@ -297,9 +339,18 @@
       "C",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-MULTICALIB"
+    "connexe": "CV-MULTICALIB",
+    "fiche": "CV-FISHEYE",
+    "competences": [
+      "distinguer projection angulaire et pinhole",
+      "valider les résidus périphériques et la rectification"
+    ],
+    "prerequis": [
+      "CV-ZHANG",
+      "CV-SE3"
+    ]
   },
   {
     "id": "APP-027",
@@ -310,9 +361,18 @@
       "C",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-MULTICALIB"
+    "connexe": "CV-MULTICALIB",
+    "fiche": "CV-HANDEYE",
+    "competences": [
+      "dériver AX=XB avec repères nommés",
+      "concevoir des mouvements observables et valider la fermeture"
+    ],
+    "prerequis": [
+      "CV-SE3",
+      "CV-ZHANG"
+    ]
   },
   {
     "id": "APP-028",
@@ -1023,9 +1083,18 @@
       "C",
       "D"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-FLOT"
+    "connexe": "CV-FLOT",
+    "fiche": "CV-FARNEBACK",
+    "competences": [
+      "relier coefficients quadratiques et déplacement",
+      "évaluer les limites du flot dense et de sa pyramide"
+    ],
+    "prerequis": [
+      "CV-FLOT",
+      "CV-SVD"
+    ]
   },
   {
     "id": "APP-090",
@@ -1060,9 +1129,18 @@
       "D",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-SOT"
+    "connexe": "CV-SOT",
+    "fiche": "CV-MEANSHIFT",
+    "competences": [
+      "relier backprojection, centroïde et fenêtre adaptative",
+      "diagnostiquer ambiguïté de couleur et perte de cible"
+    ],
+    "prerequis": [
+      "CV-SOT",
+      "CV-ACQUISITION"
+    ]
   },
   {
     "id": "APP-093",
@@ -1073,9 +1151,18 @@
       "D",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
-    "connexe": "CV-SOT"
+    "connexe": "CV-SOT",
+    "fiche": "CV-CORRELATION",
+    "competences": [
+      "expliquer corrélation, structure circulante et adaptation",
+      "interpréter PSR, dérive et protocole de reset"
+    ],
+    "prerequis": [
+      "CV-SOT",
+      "CV-FILTRES"
+    ]
   },
   {
     "id": "APP-094",
