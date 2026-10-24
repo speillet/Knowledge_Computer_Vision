@@ -1,7 +1,8 @@
 # Conventions et rappels utiles
 
-**Provenance** : agent. Ces rappels soutiennent le pilote ; ils ne remplacent
-pas les futures fiches canoniques d'estimation et de géométrie.
+**Provenance** : agent. Ces rappels donnent les conventions locales ; les fiches
+canoniques d'estimation et de géométrie développent leurs mécanismes. Le
+[parcours senior](Parcours-senior.md) ordonne les sujets et leurs prérequis.
 
 ## Lire une carte
 
@@ -74,6 +75,9 @@ Référence : [SORT, §3.2](https://arxiv.org/abs/1602.00763).
 
 Un prérequis est nécessaire pour comprendre le raisonnement principal.
 Un lien thématique donne une connexion utile sans imposer un ordre de lecture.
-Le parcours proposé est SIFT → ORB → homographie → calibration, et
-IoU/AP → NMS → SORT pour les notions de détection et d'association.
-Il n'implique pas qu'il faut maîtriser toute la métrique AP pour comprendre Kalman.
+Le [parcours senior](Parcours-senior.md) donne un ordre complet, contrôlé sur les
+60 fiches, avec des critères de passage et trois intégrations. Les notions d'IoU
+précèdent NMS et SORT ; les bases du filtrage précèdent l'association. Cela
+n'exige pas de maîtriser toute l'AP pour comprendre Kalman ni tout l'ESKF pour
+commencer SORT. Les numéros des dossiers classent les thèmes, sans imposer cet
+ordre d'apprentissage.

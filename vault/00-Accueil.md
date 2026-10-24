@@ -12,6 +12,8 @@ Ce parcours vise un ingénieur déjà à l’aise en ML/DL. Les fiches expliquen
 4. Préparer la révision Android avec le [guide AnkiDroid](01-Parcours/Guide-Anki.md).
 5. Consigner rappel et export dans le [journal](01-Parcours/Suivi-pilote.md).
 
+[Parcours senior ordonné](01-Parcours/Parcours-senior.md) : prérequis, étapes et critères de passage.
+
 ## Navigation par thématique
 
 | Thématique | Fiches | Cartes |

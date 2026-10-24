@@ -57,6 +57,13 @@ Pour une carte, vérifier la justesse scientifique, les hypothèses, la cohéren
 des notations, les sources et la compréhension de la question hors contexte.
 Pour un changement de format, vérifier également l'export dans un deck d'essai.
 
+Pour un changement pédagogique, lancer `python3 scripts/learning_path.py` :
+chaque fiche apparaît une fois dans le parcours, après ses prérequis, et chaque
+réponse atteint le seuil éditorial de développement. Relire aussi le mécanisme,
+l'exemple et les limites : la longueur ne garantit pas la pertinence. Ajouter
+un sujet dans `scripts/learning_path.json`, puis régénérer le catalogue avec
+`python3 scripts/sync_catalog.py` ; ne pas modifier le parcours généré à la main.
+
 Les skills `$gh-address-comments` et `$gh-fix-ci` accompagnent respectivement
 les retours de revue et le diagnostic des checks GitHub Actions.
 Les conventions ci-dessus ne sont pas encore imposées par des hooks ou une CI.

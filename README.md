@@ -21,6 +21,11 @@ complètes dans `references/`. Chaque thème a son sous-deck Anki et ses états
 éditoriaux ; les variantes à approfondir restent visibles dans l’inventaire.
 Voir les [conventions de classement](docs/vault-layout.md).
 
+Le [parcours senior](vault/01-Parcours/Parcours-senior.md) ordonne les 60 sujets
+en neuf étapes, avec prérequis, critères de passage et cas d'intégration. Toutes
+les cartes ont un verso développé ; le noyau attendu permet de corriger le
+rappel sans réciter l'approfondissement entier.
+
 ## Couverture actuelle
 
 <!-- cv-catalog:start -->
@@ -50,6 +55,7 @@ Python 3.9+, sans dépendance supplémentaire :
 
 ```sh
 python3 scripts/check_vault.py
+python3 scripts/learning_path.py
 python3 scripts/sync_catalog.py --check
 python3 -m unittest discover -s tests -v
 python3 examples/pilot_math.py

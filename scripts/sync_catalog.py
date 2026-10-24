@@ -7,8 +7,10 @@ import sys
 
 if __package__:
     from .check_vault import SECTIONS, parse_poles
+    from .learning_path import render_path
 else:
     from check_vault import SECTIONS, parse_poles
+    from learning_path import render_path
 
 ROOT = Path(__file__).resolve().parents[1]
 POLES = {
@@ -70,6 +72,8 @@ def outputs(root):
     vault = root / 'vault'
     entries = collect(vault)
     by_id = {e['id']: e for e in entries}
+    targets = json.loads((root / 'scripts/coverage_targets.json').read_text(encoding='utf-8'))
+    opened, drafted = partition_targets(targets, by_id)
     result = {}
     total = sum(len(e['card_ids']) for e in entries)
     active = sum(any(e['domaine'] == s['domaine'] for e in entries) for s in SECTIONS)
@@ -92,9 +96,12 @@ def outputs(root):
     home = '# Computer vision — comprendre, choisir, diagnostiquer\n\n'
     home += summary + 'Ce parcours vise un ingénieur déjà à l’aise en ML/DL. Les fiches expliquent ; les cartes entraînent un rappel corrigible. Une thématique représentée ne signifie pas que toutes ses variantes sont approfondies.\n\n'
     home += '## Commencer\n\n1. Lire les [conventions](01-Parcours/Pre-requis.md).\n2. Suivre l’[inventaire](01-Parcours/Inventaire.md) ou un [pôle métier](01-Parcours/Poles-metiers.md).\n3. Essayer les cartes avant de lire leur noyau attendu, puis reformuler.\n4. Préparer la révision Android avec le [guide AnkiDroid](01-Parcours/Guide-Anki.md).\n5. Consigner rappel et export dans le [journal](01-Parcours/Suivi-pilote.md).\n\n'
+    home += '[Parcours senior ordonné](01-Parcours/Parcours-senior.md) : prérequis, étapes et critères de passage.\n\n'
     home += '## Navigation par thématique\n\n' + table
     home += '\nUn répertoire par thème, cartes dans le thème et fiches dans `references/`, selon l’organisation de [Knowledge_AI_Engineering](https://github.com/speillet/Knowledge_AI_Engineering). Les exemples Python du dépôt sont hors vault et précisent leurs limites.\n'
     result[vault / '00-Accueil.md'] = home
+    steps = json.loads((root / 'scripts/learning_path.json').read_text(encoding='utf-8'))['etapes']
+    result[vault / '01-Parcours/Parcours-senior.md'] = render_path(entries, steps, len(opened))
     inv = '# Inventaire de couverture\n\n' + summary
     inv += 'Les lignes ci-dessous désignent des fiches canoniques de méthode, pipeline, comparaison ou protocole. La profondeur porte sur ce sujet ; un nom cité en comparaison ne devient pas une méthode entièrement approfondie. Les compétences et sources sont détaillées dans chaque référence.\n\nV0 = lacunes prioritaires ; V1 = socle des pôles ; V2 = approfondissements. Rédigé, relu, export vérifié et maîtrise personnelle sont distincts ; aucun contenu n’est déclaré relu par une auto-revue.\n\n'
     for s in SECTIONS:
@@ -106,8 +113,6 @@ def outputs(root):
             pre = ', '.join(f"[{p}](../{by_id[p]['ref']})" if p in by_id else p for p in prereqs) or '[Conventions](Pre-requis.md)'
             inv += f"| {e['id']} — {e['title']} / {e['type']} | {e['priorite']} / {e['profondeur']} | {', '.join(e['poles'])} | {pre} | [Fiche](../{e['ref']}) · [{len(e['card_ids'])} cartes](../{e['cards_path']}) | {e['statut']}, export non vérifié ; maîtrise non mesurée |\n"
     inv += '\n## Approfondissements encore ouverts\n\nCette liste conserve des méthodes/variantes nommées dans la cartographie mais non traitées individuellement à la profondeur cible. Une introduction dans une comparaison ou un pipeline ne ferme pas cette lacune. Les objectifs d’apprentissage, dépendances obligatoires et sources seront précisés avant leur rédaction. Les liens ci-dessous sont des connexions thématiques, pas des prérequis déjà validés.\n\n'
-    targets = json.loads((root / 'scripts/coverage_targets.json').read_text(encoding='utf-8'))
-    opened, drafted = partition_targets(targets, by_id)
     if drafted:
         inv += f'{len(opened)} entrées encore ouvertes ; {len(drafted)} entrées disposent désormais de fiches au niveau cible. Rédaction et validation restent distinctes.\n\n'
     inv += '| Entrée | Domaine | Pôles | Cible | Connexion thématique | État |\n| --- | --- | --- | --- | --- | --- |\n'
