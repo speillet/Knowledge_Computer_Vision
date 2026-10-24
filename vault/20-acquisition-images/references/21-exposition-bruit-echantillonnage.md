@@ -33,7 +33,7 @@ Modèle simplifié : flou $b_{px}\approx v_{px}t_e$, vitesse image en px/s et ex
 
 ## Paramètres et propriétés
 
-Vérifier plage, profondeur de bits, gamma, BGR/RGB, balance des blancs et saturation. Le gain numérique ne crée pas de photons. Rolling shutter et temps d'exposition sont deux dimensions temporelles distinctes. Pour éclaircir une image, renforcer l'éclairage double le signal sans allonger le flou, au contraire d'une exposition plus longue.
+Vérifier plage, profondeur de bits, gamma, BGR/RGB, balance des blancs et saturation. Le gain numérique ne crée pas de photons. Rolling shutter et temps d'exposition sont deux dimensions temporelles distinctes. Pour éclaircir une image, doubler l’éclairage double le signal dans le modèle linéaire non saturé sans allonger le flou, au contraire d'une exposition plus longue.
 
 ## Coût et implémentation
 
