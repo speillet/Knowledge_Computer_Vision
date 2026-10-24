@@ -410,6 +410,13 @@ réimportations en collection jetable ne prouvent pas son import sur le téléph
 Ces contrôles ne prouvent ni rendu Android, ni import sur le téléphone, ni
 maîtrise personnelle. Les preuves antérieures datées restent inchangées.
 
+Revue avant publication du même lot : axes Standards et Spec examinés séparément.
+Aucun écart de spec retenu ; un jugement mineur sur les comptes figés du
+générateur est corrigé dans `758f57d`. Le nombre de sujets, les cibles encore
+ouvertes et le seuil affiché suivent désormais les données et la constante du
+contrôle. Un test de régression porte la suite à **56 tests réussis** ; les
+19 documents générés restent identiques. Les deux axes ont confirmé le correctif.
+
 ## Extension éditoriale et contrôles — 2026-10-18
 
 À la demande de l’apprenant, 45 fiches et 177 cartes ont été ajoutées aux sept

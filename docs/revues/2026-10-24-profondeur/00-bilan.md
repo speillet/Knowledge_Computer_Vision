@@ -179,3 +179,57 @@ Les tests vérifient la structure, les identités et l'import dans le moteur Ank
 sans prouver le rendu Obsidian/AnkiDroid, l'import sur le téléphone ou l'efficacité
 du rappel. Les sessions d'apprentissage et essais applicatifs restent à réaliser.
 Les preuves datées antérieures du journal sont conservées.
+
+## Standards
+
+Revue `code-review` séparée du diff `8c428b4…c729455` : aucune violation
+documentée établie. Les commits suivent Conventional Commits et séparent leurs
+intentions conformément à `CONTRIBUTING.md`. Les rapports distinguent auto-revue
+documentaire, calculs construits, tests moteur Anki et rendu Android encore non
+vérifié, comme demandé par `AGENTS.md` et les contrats pédagogiques/export.
+Aucun changement injustifié d'identité ou de format relevé dans les hunks examinés.
+
+Un jugement de conception mineur a été retenu : possible **Shotgun Surgery**
+dans `scripts/learning_path.py`. Le générateur figeait « 60 sujets »,
+« 119 approfondissements » et « 180 mots », alors que ces valeurs existaient
+dans les données ou la constante. Une évolution pouvait laisser des comptes
+inexacts dans une page que `sync_catalog --check` considérait à jour.
+
+Constat résolu dans `758f57d` : comptes calculés depuis les entrées et le
+catalogue, seuil partagé avec `MIN_ANSWER_WORDS`, sans duplication de la
+partition des cibles. La confirmation ciblée a relancé les six tests du parcours,
+dont la régression sur sujets, backlog et seuil ; les 19 documents générés sont
+inchangés. Les douze heuristiques du skill ont été examinées ; aucun autre
+smell suffisamment concret retenu. Aucune violation ni jugement restant sur le
+périmètre examiné.
+
+## Spec
+
+Aucun écart actionnable identifié entre `8c428b4` et `c729455` sur le périmètre
+contrôlé :
+
+- **Profondeur et corrigibilité** : cadrage lignes 10–17, FR-015 ; 274 réponses
+  modifiées, 282 cartes conservées, minimum 180 mots lexicaux et médiane 200,5.
+  Les exemples inspectés développent mécanisme, hypothèses, diagnostic ou limites
+  liés à la question. Le seuil reste éditorial ; noyaux et erreurs bloquantes
+  restent inchangés.
+- **Cohérence** : cadrage lignes 18–21, T030 ; neuf étapes couvrant les 60 sujets
+  une seule fois, prérequis respectés, critères de passage et trois intégrations
+  proposés. Les dépendances portent sur les notions utiles, sans exiger toute
+  l'AP COCO pour SORT.
+- **Invariants** : cadrage ligne 10, FR-016/020 ; comparaison des 282 IDs,
+  questions, sources, noyaux et erreurs bloquantes sans écart. Les 60 fiches
+  prennent une seule révision et conservent statut, provenance et prérequis.
+- **Portée** : cadrage lignes 22–26, FR-037 ; bilan, rapports et journal
+  identifient l'auto-revue et ses limites. Exemples construits, tests exécutés,
+  rendu Android, rappel et 119 cibles ouvertes restent distingués.
+
+Aucun élargissement injustifié relevé. Confirmation ciblée de `758f57d` : comptes
+issus de l'inventaire, seuil partagé et variations couvertes par un test ; aucun
+nouvel écart. Cette revue éditoriale et structurelle ne remplace ni validation
+scientifique exhaustive ni essais sur le téléphone.
+
+Constats : **Standards, zéro violation et un jugement mineur résolu ; Spec,
+zéro écart**. Après correction : **56 tests réussis**, aucun ignoré avec genanki
+0.13.1 ; parcours OK et 19 documents à jour. Ces résultats complètent les
+preuves initiales de 55 tests, sans les réécrire.
