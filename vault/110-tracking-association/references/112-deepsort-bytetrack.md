@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -50,6 +50,32 @@ IDs échangés malgré apparence : vérifier domaines ReID, crops, normalisation
 ## Alternatives et usages
 
 Associer mouvement et apparence selon ambiguïtés ; compenser ego-motion si nécessaire. Les trackers monoobjet et ReID seul remplissent des contrats distincts.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent gating, apparence et association des scores faibles. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-ASSOCIATION-001
+
+**Question de travail** : Que rajoute DeepSORT au raisonnement d’association d’un SORT géométrique simple ?
+
+**Réponse de référence** : Apparence/ReID et stratégies de gating/cascade, en plus du mouvement, selon sa conception.
+
+**Raisonnement d'association** : deux boîtes proches peuvent se ressembler géométriquement tout en appartenant à des personnes différentes. Une distance d'apparence ajoute une observation qui peut les distinguer ; le mouvement et le gating restreignent les candidats plausibles. La cascade organise ces décisions selon la méthode, au lieu de transformer le filtre en reconnaissance d'identité.
+
+**Exemple de limite** : si les crops sont petits, occultés ou hors du domaine d'entraînement ReID, leurs embeddings peuvent devenir peu discriminants. Augmenter leur poids peut alors aggraver l'affectation. Contrôler distances de vraies et fausses paires dans le domaine cible, puis comparer mouvement seul, apparence seule et combinaison à détecteur fixe. La fusion de coûts doit avoir une interprétation et un protocole ; une proximité cosinus n'est pas automatiquement une probabilité calibrée d'être la même personne, ni une garantie après une disparition longue.
+
+### Cas lié à CV-ASSOCIATION-004
+
+**Question de travail** : Comment comparer deux trackers sans confondre leur association avec un détecteur différent ?
+
+**Réponse de référence** : Fixer les mêmes détections ou rapporter explicitement les deux variations ; conserver séquences, seuils et protocole temporel.
+
+**Ablation causale proposée** : utiliser un fichier de détections horodatées commun aux deux trackers, avec mêmes boîtes, scores et classes. Les différences de pistes proviennent alors de leurs étapes temporelles et de leurs paramètres, dans les limites de ce contrôle. Pour comparer les systèmes complets, mesurer ensuite aussi chaque détecteur avec son tracker.
+
+**Exemple de facteur confondant** : un détecteur qui retrouve une personne après occultation peut améliorer le score d'identité sans changement d'association. À l'inverse, une meilleure association peut être masquée par de nombreuses boîtes absentes. Reporter donc qualité de détection, erreurs d'identité, fragments, coût et règles de naissance/perte. Conserver un split par séquence et des réglages figés sur le test. Une comparaison équitable ne demande pas forcément un détecteur unique pour tous les usages, mais exige de dire précisément quelle composante a changé et ce que l'on peut lui attribuer.
+
+**Repère documentaire de cette passe** : [ByteTrack](https://arxiv.org/html/2110.06864v3), algorithme de deuxième association. Les autres développements figurent dans les [cartes associées](../112-deepsort-bytetrack.md).
 
 ## Sources et cartes
 
