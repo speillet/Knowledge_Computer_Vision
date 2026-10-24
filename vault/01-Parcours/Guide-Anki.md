@@ -1,9 +1,53 @@
 # Export du pilote vers AnkiDroid
 
-**Cible confirmée** : AnkiDroid sur Android. **Statut** : procédure préparée,
-aucune synchronisation réelle encore exécutée. Le format est limité au pilote.
+**Cible confirmée** : AnkiDroid sur Android. **Statut au 2026-10-24** : paquet
+construit, import et mises à jour simulés avec le moteur Anki 26.9.3 ; rendu
+sur le téléphone et synchronisation personnelle non vérifiés.
 
-## Chaîne utilisée
+## Import direct du paquet — chemin du pilote actuel
+
+Depuis la racine du dépôt, construire puis vérifier :
+
+```sh
+uv run --no-project --with genanki==0.13.1 python scripts/build_apkg.py
+python3 scripts/build_apkg.py --verifier dist/CV-Pilote.apkg
+```
+
+Copier `dist/CV-Pilote.apkg` sur le téléphone puis ouvrir le fichier avec
+AnkiDroid, ou le sélectionner depuis son menu **Importer**. Le paquet contient
+282 notes, une carte par note, 14 sous-decks et l'image SVG. Le manifeste
+`dist/CV-Pilote-manifest.json` permet de comparer deux constructions.
+La création d'une release publique est une opération distincte de la fusion
+d'une PR : aucun lien de téléchargement de release n'est garanti avant publication.
+
+Réimporter un paquet plus récent avec la mise à jour des notes et types de notes
+si plus récents, sans importer de progression d'apprentissage. Les identités
+proviennent des IDs pédagogiques : conserver ces IDs, `modelId` et la structure
+du modèle. Les essais en collection jetable conservent l'historique après une
+correction de réponse et un changement de CSS. Ils ne prouvent pas le comportement
+de la version d'AnkiDroid installée : essayer d'abord sur un deck de test.
+
+Le vault est la source du contenu. Une édition plus récente sur le téléphone
+peut empêcher une mise à jour conditionnelle ; résoudre le conflit manuellement
+dans la source, puis reconstruire. Retirer une carte du vault ne la supprime pas
+de la collection : retrouver `tag:cv_id::<ID>` et supprimer manuellement la note.
+Ne pas alimenter la même collection avec le plugin et le paquet : leurs identités
+Anki diffèrent et des doublons peuvent apparaître.
+
+Le convertisseur utilise du HTML et du CSS locaux, les délimiteurs MathJax
+d'Anki et les médias embarqués. Les liens « Fiche » ouvrent les références sur
+GitHub et demandent Internet ; les réponses sont complètes sans ces liens.
+Vérifier sur Android les formules, listes, code, SVG, mode sombre et lecture
+hors connexion, puis réimporter après une révision.
+
+Sources : [paquets et mises à jour Anki](https://docs.ankiweb.net/manual/importing/packaged-decks),
+[import AnkiDroid](https://docs.ankidroid.org/#_importing_anki_files),
+[identités genanki](https://github.com/kerrickstaley/genanki#note-guids).
+
+## Chaîne historique du plugin — protocole encore non exécuté
+
+Les sections suivantes conservent le protocole du candidat initial. Elles
+concernent une collection de test séparée de celle alimentée par le paquet.
 
 Obsidian sur ordinateur → Obsidian_to_Anki → AnkiConnect dans Anki Desktop
 → AnkiWeb → AnkiDroid. Le plugin 3.6.0 est desktop uniquement ; il ne tourne
@@ -29,7 +73,8 @@ Sources : [plugin officiel](https://github.com/ObsidianToAnki/Obsidian_to_Anki),
 4. Garder un seul gabarit « Rappel ». Copier le contenu de `anki/front.html`,
    `anki/back.html` et `anki/style.css` du dépôt dans recto, verso et style.
    `anki/model.json` décrit ces correspondances ; ce fichier n'est pas un paquet
-   importable dans Anki. Aucun script ne crée le modèle automatiquement.
+   importable dans Anki. Pour cette chaîne, le modèle est créé manuellement ;
+   le générateur `.apkg` le fournit automatiquement dans son propre paquet.
 
 Les comptes et la collection Anki restent ceux de l'apprenant. Pour un premier
 AnkiWeb déjà rempli, suivre le manuel de synchronisation avant de choisir un

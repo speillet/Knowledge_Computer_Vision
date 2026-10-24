@@ -19,7 +19,8 @@ Le client de révision confirmé est **AnkiDroid sur Android**.
   Aucune application personnelle ni configuration de compte modifiée.
 - Python 3.9+ et bibliothèque standard pour les contrôles et expériences
   arithmétiques : aucune dépendance nécessaire pour lire ou vérifier le vault.
-- Pas de synchroniseur, générateur `.apkg`, entraînement ou service ajouté.
+- Pas de synchroniseur, entraînement ou service ajouté. Le lot du 2026-10-24
+  ajoute le générateur `.apkg` décrit ci-dessous.
 - Aucun objectif de latence du système pédagogique ; les performances des
   méthodes sont discutées avec leurs conditions, sans promesse matérielle.
 
@@ -109,3 +110,19 @@ un inventaire d'entrées individuelles, une vue des pôles et des cas de transfe
 La navigation et les comptes seront calculés depuis le contenu pour éviter
 les totaux périmés. Les tests vérifient pôles, parents et états ; ils ne certifient
 pas les textes scientifiques. Aucun hook d'extension n'est présent.
+
+## Export direct — lot du 2026-10-24
+
+Publier l'exporteur local préparé sur `feat/apkg-export`, avec genanki 0.13.1
+isolé par uv. Le vault et le modèle à quatre champs restent canoniques ;
+`modelId` reprend celui du paquet local existant (1153189853). Le GUID dépend
+du nom du modèle et de l'ID pédagogique. Cette chaîne alimente une collection
+distincte de celle du plugin historique.
+
+Critères : [contrat d'export direct](../../docs/export-apkg.md).
+`build_apkg.py` construit et relit ZIP/SQLite, compare les manifestes et embarque
+les médias ; `simulate_anki_import.py` teste dans une collection jetable le
+contenu, le style, les identités et l'historique avec anki 26.9.3 et Python 3.12.
+Le rendu AnkiDroid et les cas applicatifs de T010 restent ouverts. Une fusion
+publie les sources ; les paquets dans `dist/` ne sont pas versionnés et une
+release demande une action distincte.

@@ -442,6 +442,8 @@ Ce statut ne signifie ni export validé, ni maîtrise personnelle acquise.
 - Cette phase inclut la rédaction des contenus manquants par thème, à la demande
   de l'utilisateur. Elle exclut l'installation dans les applications personnelles,
   un synchroniseur sur mesure et un nouveau cursus général ML/DL.
-  Un paquet `.apkg` généré reste un plan B documenté dans la [recherche](research.md).
+  Le plan B `.apkg` est implémenté dans le lot du 2026-10-24 pour l'import direct
+  sur Android, conformément au [contrat d'export](../../docs/export-apkg.md).
+  Les preuves du moteur Anki restent distinctes de la validation mobile.
 - Les cartes soutiennent les compétences visées ; un nombre de cartes ou leur
   mémorisation ne peut pas certifier à lui seul le statut de senior.

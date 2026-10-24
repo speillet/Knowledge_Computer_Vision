@@ -13,7 +13,8 @@ Une absence de résultat signifie « non exécuté », jamais « réussi ».
 | Validation scientifique indépendante | Non effectuée |
 | Contrôles de fichiers et calculs | Exécutés localement, voir preuves |
 | Parseur officiel du plugin | Testé en simulant Obsidian/Anki |
-| Export réel, historique et médias | Non testés |
+| Paquet `.apkg` et import moteur | 282 notes, 14 sous-decks, un SVG ; identités et historique conservés en collection jetable le 2026-10-24 |
+| Import personnel et médias sur téléphone | Non testés |
 | Rendu Obsidian et AnkiDroid | Non vérifié dans les applications |
 | Rappel initial / différé et maîtrise | Non mesurés |
 
@@ -535,3 +536,44 @@ Contrôles exécutés : 37 tests réussis, contrôleur OK sur 141 documents, cat
 282 mises à jour, zéro ajout. Maths, code et SVG convertis. Aucune requête à
 Anki envoyée ; le harness reste temporaire et extérieur au dépôt. Ces résultats
 ne prouvent ni export réel, ni historique, ni médias synchronisés, ni rendu AnkiDroid.
+
+
+## Export direct du 2026-10-24 — collection jetable
+
+Responsable : agent Codex. Sources du lot de départ : `84dc970` ; les scripts
+et le skill d'export locaux restaient à publier. Aucun contenu pédagogique,
+ID ou commentaire du plugin n'a été modifié pour cette livraison.
+
+- Contrôleur : **141 Markdown, 60 fiches, 282 cartes**, résultat OK.
+- Catalogue : 18 documents générés, aucun périmé.
+- `uv run --no-project --with genanki==0.13.1 python -m unittest discover -s tests` :
+  **50 tests réussis**, aucun ignoré avec genanki présent.
+- Construction et relecture ZIP/SQLite : **282 notes, 14 sous-decks, un média**
+  (`cv-sort-pipeline.svg`). La génération ne publie pas de release.
+- Comparaison au paquet local sauvegardé du 2026-10-18, qui contenait 224 notes :
+  **58 ajouts, 164 corrections de contenu/tags, aucun retrait**. Les 224 GUID et
+  le modèle 1153189853 sont conservés. Ce paquet antérieur n'était pas une release
+  GitHub ; aucune release n'était présente au moment de la vérification.
+- Simulation avec Python 3.12, genanki 0.13.1 et moteur anki 26.9.3 : import puis
+  réimport du même paquet, 282 notes/cartes et identités inchangées. Trois cartes
+  (`CV-ACQUISITION-001` à `003`) sont révisées avec « Bien ». Une réponse est
+  modifiée dans une copie du vault, réimportée, puis une autre réponse et le CSS
+  sont modifiés et réimportés. Résultat **OK** : contenu et CSS appliqués, aucun
+  doublon, IDs de notes conservés ; ID de carte, type, queue, échéance, intervalle,
+  répétitions, échecs et nombre d'entrées du journal de révision inchangés.
+- Un test de régression vérifie que la simulation refuse chacun des échecs
+  de contenu, style, identité, historique ou absence de doublons. L'ancien script
+  affichait certains échecs après changement de style sans retourner un échec.
+- Revue `code-review`, axe Standards : aucun écart documenté ou smell actionnable.
+  Axe Spec : deux défauts du vérificateur relevés et corrigés avant publication.
+  Une archive sans cartes ou avec un GUID altéré pouvait être déclarée valide.
+  Le contrôle relit désormais les cartes et modèles, les liens note/deck/gabarit
+  et le GUID attendu. Des copies corrompues du paquet servent de tests de régression
+  (carte absente/orpheline, mauvais gabarit/deck/modèle, GUID altéré) ; trois GUID
+  du paquet initial servent de valeurs de compatibilité indépendantes.
+
+Les contrôles ont utilisé uniquement des copies et une collection temporaire.
+Ils ne vérifient ni le rendu Obsidian/AnkiDroid, ni le transfert sur téléphone,
+ni les suppressions et conflits dans les applications. Ces essais et les sessions
+de rappel restent ouverts. Les tests du plugin consignés auparavant appartiennent
+à une autre chaîne d'identités ; ne pas importer les deux dans la même collection.

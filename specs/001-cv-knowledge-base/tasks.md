@@ -72,3 +72,14 @@ essayés par l'apprenant. T009/T010/T013 restent ouverts après la publication.
 
 Les dix entrées APP désormais rédigées conservent leurs objectifs et prérequis.
 T023 reste ouverte pour les 119 autres ; T009/T010/T013 restent inchangées.
+
+- [x] T026 — Publier l'exporteur `.apkg` local : modèle stable, conversion,
+  médias embarqués, contrôle ZIP/SQLite et comparaison des manifestes.
+- [x] T027 — Tester dans le moteur Anki 26.9.3 l'import, la réimportation sans
+  changement, trois révisions, les corrections de contenu et du style, avec
+  identités et historique conservés. Consigner les résultats dans le journal.
+- [x] T028 — Documenter la construction, l'import direct et son skill ; distinguer
+  cette chaîne des identités du plugin et la fusion d'une PR d'une release.
+
+T026–T028 livrent l'export direct du 2026-10-24. Ils ne clôturent pas T009/T010 :
+installation personnelle, rendu Android et cas applicatifs restent à observer.

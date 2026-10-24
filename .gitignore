@@ -13,5 +13,6 @@ vault/.obsidian/*
 !.env.example
 __pycache__/
 .venv/
+dist/
 
 # Les skills .agents/skills et les modèles .specify restent versionnables.
