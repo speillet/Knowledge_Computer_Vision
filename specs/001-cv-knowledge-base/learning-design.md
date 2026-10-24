@@ -65,7 +65,16 @@ La réponse peut contenir paragraphes, équations, listes, schémas et code.
 Sa longueur dépend de ce qu'il faut expliquer. Une comparaison peut constituer
 un seul objectif cohérent ; plusieurs questions indépendantes dans une carte
 doivent être retravaillées. Aucun nombre uniforme de cartes par méthode
-ni limite arbitraire de mots ou de durée n'est imposé.
+ni plafond de mots ou de durée n'est imposé.
+
+**Choix éditorial confirmé le 2026-10-24** : l'apprenant demande des cartes
+longues sur tous les sujets. Chaque verso développe le mécanisme, un exemple
+ou raisonnement suivi et les hypothèses ou limites utiles à son objectif.
+Le contrôle `python3 scripts/learning_path.py` signale une réponse sous
+180 mots lexicaux (`re.findall(r'\w+', Reponse)`). Ce seuil sert à repérer les
+réponses trop brèves dans ce projet ; il ne mesure ni compréhension ni qualité,
+ne fixe aucun plafond et ne justifie pas d'ajouter du remplissage. La règle de
+correction reste le noyau attendu, même quand le verso est long.
 
 La réponse directe reste repérable au début du verso. Les détails sont organisés
 par rôle : mécanisme, raisonnement, limites, exemple. Le recto ne doit pas
