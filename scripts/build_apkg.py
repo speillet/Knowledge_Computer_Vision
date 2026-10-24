@@ -191,6 +191,21 @@ def deck_id(name):
     return int(hashlib.sha256(name.encode("utf-8")).hexdigest()[:12], 16)
 
 
+def expected_guid(card_id):
+    """GUID genanki 0.13.1, relu sans dépendance : SHA-256 puis base 91.
+
+    Algorithme vérifié dans genanki/util.py ; les valeurs de compatibilité
+    du paquet initial sont figées dans les tests.
+    """
+    alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&()*+,-./:;<=>?@[]^_`{|}~"
+    value = int.from_bytes(hashlib.sha256(f"{MODEL}__{card_id}".encode()).digest()[:8], "big")
+    digits = []
+    while value:
+        value, remainder = divmod(value, len(alphabet))
+        digits.append(alphabet[remainder])
+    return "".join(reversed(digits))
+
+
 def fingerprint(fields, tags):
     payload = json.dumps([fields, sorted(tags)], ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
@@ -272,8 +287,8 @@ def build_package(vault=ROOT / "vault", out_dir=ROOT / "dist", fiche_url=DEFAULT
     return manifest
 
 
-def verify_package(apkg, expected_ids=None):
-    """Relit le paquet (zip + SQLite) ; retourne (erreurs, résumé)."""
+def verify_package(apkg, expected_decks=None):
+    """Relit ZIP/SQLite ; expected_decks associe chaque ID au deck du vault."""
     errors = []
     with zipfile.ZipFile(apkg) as archive, tempfile.TemporaryDirectory() as temp:
         names = set(archive.namelist())
@@ -286,21 +301,49 @@ def verify_package(apkg, expected_ids=None):
         archive.extract("collection.anki2", temp)
         connection = sqlite3.connect(Path(temp) / "collection.anki2")
         try:
-            notes = connection.execute("SELECT guid, flds, tags FROM notes").fetchall()
-            decks = json.loads(connection.execute("SELECT decks FROM col").fetchone()[0])
+            notes = connection.execute("SELECT id, guid, flds, tags, mid FROM notes").fetchall()
+            cards = connection.execute("SELECT nid, did, ord FROM cards").fetchall()
+            deck_json, model_json = connection.execute("SELECT decks, models FROM col").fetchone()
+            decks, models = json.loads(deck_json), json.loads(model_json)
         finally:
             connection.close()
-    guids = [guid for guid, _, _ in notes]
+    guids = [note[1] for note in notes]
     if len(guids) != len(set(guids)):
         errors.append("GUID dupliqués dans le paquet")
     ids = []
+    cards_by_note = {}
+    note_ids = {note[0] for note in notes}
+    for nid, did, ordinal in cards:
+        cards_by_note.setdefault(nid, []).append((did, ordinal))
+        if nid not in note_ids:
+            errors.append(f"carte liée à une note absente : {nid}")
+    model_id = json.loads((ROOT / "anki/model.json").read_text(encoding="utf-8"))["modelId"]
     media_names = set(media.values())
-    for _, flds, tags in notes:
+    for nid, guid, flds, tags, mid in notes:
         fields = flds.split(FIELD_SEPARATOR)
         if len(fields) != len(FIELDS):
             errors.append(f"note à {len(fields)} champs au lieu de {len(FIELDS)}")
             continue
         ids.append(fields[0])
+        card_id = html.unescape(fields[0])
+        if guid != expected_guid(card_id):
+            errors.append(f"{card_id} : GUID différent de l'identité pédagogique")
+        model = models.get(str(mid), {})
+        if (mid != model_id or model.get("name") != MODEL
+                or [field["name"] for field in model.get("flds", [])] != FIELDS
+                or len(model.get("tmpls", [])) != 1):
+            errors.append(f"{card_id} : modèle différent du contrat")
+        note_cards = cards_by_note.get(nid, [])
+        if len(note_cards) != 1:
+            errors.append(f"{card_id} : {len(note_cards)} cartes au lieu d'une")
+        else:
+            did, ordinal = note_cards[0]
+            deck_name = decks.get(str(did), {}).get("name", "")
+            if ordinal != 0:
+                errors.append(f"{card_id} : gabarit de carte différent de Rappel")
+            if (not deck_name.startswith(DECK_ROOT + "::")
+                    or expected_decks is not None and deck_name != expected_decks.get(card_id)):
+                errors.append(f"{card_id} : sous-deck différent du vault")
         if f"cv_id::{html.unescape(fields[0])}" not in tags.split():
             errors.append(f"{fields[0]} : tag cv_id absent ou différent de l'ID")
         prose = re.sub(r"<pre>.*?</pre>|<code>.*?</code>", "", "".join(fields), flags=re.S)
@@ -309,11 +352,14 @@ def verify_package(apkg, expected_ids=None):
         for source in re.findall(r'<img src="([^"]+)"', "".join(fields)):
             if html.unescape(source) not in media_names:
                 errors.append(f"{fields[0]} : média {source} absent du paquet")
-    if expected_ids is not None and set(ids) != set(expected_ids):
-        errors.append(f"IDs du paquet différents du vault : {len(ids)} contre {len(expected_ids)}")
+    if len(ids) != len(set(ids)):
+        errors.append("IDs pédagogiques dupliqués dans le paquet")
+    if expected_decks is not None and set(ids) != set(expected_decks):
+        errors.append(f"IDs du paquet différents du vault : {len(ids)} contre {len(expected_decks)}")
     deck_names = sorted(deck["name"] for deck in decks.values()
                         if deck["name"].startswith(DECK_ROOT + "::"))
-    summary = {"notes": len(notes), "decks": deck_names, "medias": sorted(media_names)}
+    summary = {"notes": len(notes), "cartes": len(cards), "decks": deck_names,
+               "medias": sorted(media_names)}
     return errors, summary
 
 
@@ -347,7 +393,7 @@ def main():
         print(json.dumps(compare_manifests(old, new), ensure_ascii=False, indent=2))
         return 0
     if args.verifier:
-        expected = [card["id"] for card in parse_cards(args.vault)]
+        expected = {card["id"]: card["deck"] for card in parse_cards(args.vault)}
         errors, summary = verify_package(args.verifier, expected)
     else:
         try:
@@ -359,7 +405,8 @@ def main():
         except (BuildError, ConversionError) as error:
             print(error, file=sys.stderr)
             return 1
-        errors, summary = verify_package(args.sortie / PACKAGE_NAME, list(manifest["cartes"]))
+        expected = {key: value["deck"] for key, value in manifest["cartes"].items()}
+        errors, summary = verify_package(args.sortie / PACKAGE_NAME, expected)
         summary["paquet"] = str(args.sortie / PACKAGE_NAME)
         summary["commit"] = manifest["commit"]
     for error in errors:

@@ -547,7 +547,7 @@ ID ou commentaire du plugin n'a été modifié pour cette livraison.
 - Contrôleur : **141 Markdown, 60 fiches, 282 cartes**, résultat OK.
 - Catalogue : 18 documents générés, aucun périmé.
 - `uv run --no-project --with genanki==0.13.1 python -m unittest discover -s tests` :
-  **48 tests réussis**, aucun ignoré avec genanki présent.
+  **50 tests réussis**, aucun ignoré avec genanki présent.
 - Construction et relecture ZIP/SQLite : **282 notes, 14 sous-decks, un média**
   (`cv-sort-pipeline.svg`). La génération ne publie pas de release.
 - Comparaison au paquet local sauvegardé du 2026-10-18, qui contenait 224 notes :
@@ -564,6 +564,13 @@ ID ou commentaire du plugin n'a été modifié pour cette livraison.
 - Un test de régression vérifie que la simulation refuse chacun des échecs
   de contenu, style, identité, historique ou absence de doublons. L'ancien script
   affichait certains échecs après changement de style sans retourner un échec.
+- Revue `code-review`, axe Standards : aucun écart documenté ou smell actionnable.
+  Axe Spec : deux défauts du vérificateur relevés et corrigés avant publication.
+  Une archive sans cartes ou avec un GUID altéré pouvait être déclarée valide.
+  Le contrôle relit désormais les cartes et modèles, les liens note/deck/gabarit
+  et le GUID attendu. Des copies corrompues du paquet servent de tests de régression
+  (carte absente/orpheline, mauvais gabarit/deck/modèle, GUID altéré) ; trois GUID
+  du paquet initial servent de valeurs de compatibilité indépendantes.
 
 Les contrôles ont utilisé uniquement des copies et une collection temporaire.
 Ils ne vérifient ni le rendu Obsidian/AnkiDroid, ni le transfert sur téléphone,

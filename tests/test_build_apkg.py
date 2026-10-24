@@ -7,7 +7,7 @@ import unittest
 import zipfile
 
 from scripts.build_apkg import (ConversionError, MANIFEST_NAME, PACKAGE_NAME, compare_manifests,
-                                deck_id, md_to_html, parse_cards, verify_package)
+                                deck_id, expected_guid, md_to_html, parse_cards, verify_package)
 from scripts.simulate_anki_import import check_reimport
 
 
@@ -53,6 +53,11 @@ URL = "https://example.org/vault/"
 
 
 class ImportSimulation(unittest.TestCase):
+    def test_initial_package_guids_remain_compatible(self):
+        self.assertEqual(expected_guid("CV-ACQUISITION-001"), "IZ]LO~1#G9")
+        self.assertEqual(expected_guid("CV-ACQUISITION-002"), "n0uAINY9H|")
+        self.assertEqual(expected_guid("CV-ACQUISITION-003"), "Rd~h)QoIr~")
+
     def test_style_import_fails_when_update_or_history_is_lost(self):
         successful = {"doublons": False, "ids_de_notes_conserves": True,
                       "mise_a_jour_appliquee": True, "historique_conserve": True,
@@ -158,7 +163,8 @@ class VaultFixture(unittest.TestCase):
         second = build_package(self.vault, out, URL, timestamp=1_700_000_100)
         self.assertEqual(first["cartes"]["CV-TEST-001"]["guid"], second["cartes"]["CV-TEST-001"]["guid"])
         self.assertEqual(compare_manifests(first, second)["modifiees"], ["CV-TEST-001"])
-        errors, summary = verify_package(out / PACKAGE_NAME, ["CV-TEST-001"])
+        expected = {"CV-TEST-001": "CV::Pilote::40-features-matching"}
+        errors, summary = verify_package(out / PACKAGE_NAME, expected)
         self.assertEqual(errors, [])
         self.assertEqual(summary["decks"], ["CV::Pilote::40-features-matching"])
         with zipfile.ZipFile(out / PACKAGE_NAME) as archive, tempfile.TemporaryDirectory() as temp:
@@ -170,6 +176,33 @@ class VaultFixture(unittest.TestCase):
         self.assertEqual(mod, 1_700_000_100)
         manifest = json.loads((out / MANIFEST_NAME).read_text(encoding="utf-8"))
         self.assertEqual(manifest["comptes"], {"notes": 1, "decks": 1, "medias": 0})
+
+    @unittest.skipUnless(find_spec("genanki"), "genanki absent : uv run --no-project --with genanki==0.13.1")
+    def test_verifier_rejects_broken_card_links_and_note_identity(self):
+        from scripts.build_apkg import build_package
+
+        out = Path(self.temp.name) / "dist"
+        build_package(self.vault, out, URL)
+        expected = {"CV-TEST-001": "CV::Pilote::40-features-matching"}
+        with zipfile.ZipFile(out / PACKAGE_NAME) as archive:
+            original = {name: archive.read(name) for name in archive.namelist()}
+        for mutation in (
+            "DELETE FROM cards", "UPDATE cards SET nid=-1", "UPDATE cards SET ord=1",
+            "UPDATE cards SET did=1", "UPDATE notes SET mid=0",
+            "UPDATE notes SET guid='brokenGuid'",
+        ):
+            with self.subTest(mutation=mutation):
+                database = out / "broken.anki2"
+                database.write_bytes(original["collection.anki2"])
+                with sqlite3.connect(database) as connection:
+                    connection.execute(mutation)
+                connection.close()
+                package = out / "broken.apkg"
+                with zipfile.ZipFile(package, "w") as archive:
+                    for name, data in original.items():
+                        archive.writestr(name, database.read_bytes() if name == "collection.anki2" else data)
+                errors, _ = verify_package(package, expected)
+                self.assertTrue(errors, mutation)
 
 
 if __name__ == "__main__":

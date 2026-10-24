@@ -21,7 +21,9 @@ du vault restent la source canonique ; les états pédagogiques restent inchang�
    les gabarits et CSS locaux. Les liens de référence pointent sur GitHub ;
    leur ouverture nécessite Internet. Les réponses restent autonomes.
 5. Générer `dist/CV-Pilote.apkg` et `dist/CV-Pilote-manifest.json`, sans les
-   committer. Relire ZIP/SQLite et contrôler IDs, GUID, champs, tags et médias.
+   committer. Relire ZIP/SQLite et contrôler IDs, GUID dérivés des IDs, modèle,
+   champs, tags, médias et exactement une carte par note dans son sous-deck,
+   sans carte orpheline et avec l'unique gabarit attendu.
    Le manifeste conserve commit, version de genanki, comptes et empreintes
    du contenu et des tags. La comparaison liste ajouts, corrections et retraits ;
    elle ne mesure pas les modifications des CSS/gabarits ou des octets d'une image.
