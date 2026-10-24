@@ -1,6 +1,6 @@
 # Computer vision — comprendre, choisir, diagnostiquer
 
-**52 fiches et 242 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**52 fiches et 244 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
 
 Ce parcours vise un ingénieur déjà à l’aise en ML/DL. Les fiches expliquent ; les cartes entraînent un rappel corrigible. Une thématique représentée ne signifie pas que toutes ses variantes sont approfondies.
 
@@ -16,7 +16,7 @@ Ce parcours vise un ingénieur déjà à l’aise en ML/DL. Les fiches expliquen
 
 | Thématique | Fiches | Cartes |
 | --- | ---: | ---: |
-| [Mathématiques et estimation](10-mathematiques-estimation/00-index.md) | 4 | 24 |
+| [Mathématiques et estimation](10-mathematiques-estimation/00-index.md) | 4 | 26 |
 | [Formation et acquisition des images](20-acquisition-images/00-index.md) | 3 | 11 |
 | [Traitement d'image classique](30-traitement-image/00-index.md) | 3 | 11 |
 | [Features, matching et recalage](40-features-matching/00-index.md) | 5 | 25 |
