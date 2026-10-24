@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -50,6 +50,32 @@ Des obstacles se dédoublent surtout dans les virages : comparer données au mê
 ## Alternatives et usages
 
 Global shutter, capteurs déclenchés, correction temporelle ou modèle rolling shutter selon cadence et mouvement ; aucun capteur n'est idéal pour toutes conditions.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent séparer temps d’exposition, lecture et synchronisation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-CAPTEURS-001
+
+**Question de travail** : Une exposition très courte suffit-elle à supprimer toute déformation rolling shutter ?
+
+**Réponse de référence** : Non : elle réduit le flou par ligne, mais les lignes peuvent encore représenter des instants différents.
+
+**Décomposition du phénomène** : l'exposition décrit la durée pendant laquelle une ligne accumule la lumière ; le temps de lecture détermine le décalage entre lignes. Une scène mobile peut donc produire des lignes individuellement nettes mais prises à des positions différentes. Dans un exemple construit, une mire verticale qui se déplace horizontalement peut apparaître inclinée, sans flou marqué sur ses bords.
+
+**Vérification proposée** : comparer immobilité, translation et rotation, puis faire varier séparément exposition et durée de lecture lorsque le matériel le permet. Si le raccourcissement de l'exposition améliore la netteté sans supprimer l'inclinaison, les deux effets ont bien été distingués. Un global shutter modifie la simultanéité de capture ; il ne garantit pas une exposition assez courte ni une bonne synchronisation avec un autre capteur. Le modèle de projection utilisé pour la calibration doit rester compatible avec l'acquisition réelle.
+
+### Cas lié à CV-CAPTEURS-004
+
+**Question de travail** : Pourquoi une mesure Doppler radar ne se substitue-t-elle pas directement à une vitesse cartésienne 3D ?
+
+**Réponse de référence** : Elle contraint la composante radiale relativement au capteur selon son modèle de mesure.
+
+**Modèle de mesure** : si $\hat r$ est le vecteur unitaire du capteur vers la cible et $v_{rel}$ sa vitesse relative dans le même repère, la mesure idéale contraint $v_r=\hat r^Tv_{rel}$, avec une convention de signe à annoncer. C'est une projection scalaire. Toute composante orthogonale à $\hat r$ peut changer sans modifier cette mesure instantanée.
+
+**Exemple construit** : une cible qui traverse latéralement le champ peut avoir une vitesse importante et une composante radiale faible à un instant donné. Conclure qu'elle est immobile serait donc injustifié. Pour retrouver davantage de composantes, exploiter d'autres directions, plusieurs instants ou d'autres capteurs avec un modèle dynamique explicite. Si le porteur bouge, son propre mouvement contribue à la vitesse relative. Une fusion doit traiter cette contribution et l'incertitude de la mesure, plutôt que recopier le scalaire Doppler dans trois axes.
+
+**Repère documentaire de cette passe** : [Basler, Electronic Shutter Types](https://docs.baslerweb.com/electronic-shutter-types), global et rolling shutter. Les autres développements figurent dans les [cartes associées](../22-capteurs-horodatage.md).
 
 ## Sources et cartes
 

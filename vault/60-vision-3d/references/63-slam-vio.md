@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-SE3", "CV-FUSION", "CV-FACTEURS", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -50,6 +50,32 @@ Couloir répétitif : vérifier parallaxe, gradients, timing, biais et fausses b
 ## Alternatives et usages
 
 Vision seule, stéréo/RGB-D, VIO, LiDAR-odométrie ou fusion selon texture, excitation et référence. Le contrôle de trajectoire reste hors périmètre.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent fusion inertielle, jauges et évaluation sans masquer les erreurs. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-VIO-001
+
+**Question de travail** : La préintégration IMU constitue-t-elle à elle seule un système VIO ?
+
+**Réponse de référence** : Non : elle résume des mesures entre keyframes en contraintes avec bruit et biais ; le système doit aussi associer la vision, initialiser et estimer les états.
+
+**Contrat de la préintégration** : entre deux keyframes, les nombreuses observations inertielles sont condensées dans des contraintes de mouvement avec leur incertitude et leur dépendance aux biais. Ces contraintes doivent être combinées aux observations visuelles, à un état initial et à la gravité dans des repères cohérents.
+
+**Exemple de limite** : intégrer une accélération mesurée dans le repère IMU comme si elle était directement une accélération monde confond orientation, force spécifique et gravité. Une très bonne vision ne répare pas automatiquement cette incohérence de modèle. Un système complet doit aussi gérer horodatages, extrinsèques, biais, keyframes et pertes d'observation. La préintégration évite de reprendre naïvement toute la séquence brute à chaque calcul ; elle ne fournit pas une pose absolue ni une référence globale absente des capteurs. Valider le système demande donc trajectoire, incertitude, disponibilité et latence sur des mouvements représentatifs.
+
+### Cas lié à CV-VIO-005
+
+**Question de travail** : Cas B — diagnostic : un VIO dérive en échelle et lacet dans un couloir peu texturé. Quels contrôles départagent les causes ?
+
+**Réponse de référence** : Inspecter texture/parallaxe, excitation, biais et synchronisation ; vérifier fausses boucles et groupe d’alignement utilisé.
+
+**Enquête par signatures** : une faible texture dégrade les contraintes visuelles ; une excitation insuffisante limite certaines estimations inertielles ; un retard ou un biais peut produire une erreur dépendant du mouvement. Comparer la chronologie des résidus et des pertes de suivi, plutôt que seulement la trajectoire finale.
+
+**Ablations proposées** : contrôler les timestamps sur des mouvements instrumentés, inspecter les features et la parallaxe, puis examiner les contraintes de boucle une par une. Réserver des séquences où un seul facteur change pour distinguer les hypothèses. Un alignement avec échelle libre peut rendre la superposition visuelle convaincante tout en cachant l'erreur métrique. Rapporter donc l'erreur avant et après l'alignement permis, avec sa justification. Aucun contrôle isolé ne prouve une cause unique lorsque plusieurs défauts de capteurs et d'estimation coexistent.
+
+**Repère documentaire de cette passe** : [Forster et al. 2016](https://dellaert.github.io/files/Forster16tro.pdf), §§IV–VI, préintégration et estimation. Les autres développements figurent dans les [cartes associées](../63-slam-vio.md).
 
 ## Sources et cartes
 

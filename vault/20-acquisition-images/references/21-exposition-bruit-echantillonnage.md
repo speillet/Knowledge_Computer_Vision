@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -50,6 +50,32 @@ Variation analytique : doubler l'exposition à vitesse image constante double le
 ## Alternatives et usages
 
 Éclairage synchronisé, exposition plus courte, optique adaptée ou cadence différente : arbitrer signal, flou, chaleur, coût et contraintes de ligne.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent exposition, bruit et échantillonnage reliés à la tâche. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-ACQUISITION-001
+
+**Question de travail** : Un détail se déplace à 800 px/s et l’exposition est de 5 ms. Quel flou prévoir dans le modèle de mouvement uniforme ?
+
+**Réponse de référence** : Environ 4 px : 800 × 0,005. Doubler l’exposition donnerait 8 px dans ce modèle.
+
+**Lecture physique et exemple construit** : le pixel reçoit de la lumière pendant toute l'exposition ; il additionne donc les positions successives du détail. Le produit $v_{px}t_e$ est une longueur dans l'image, pas une distance dans le monde. Pour un défaut large de deux pixels, une traînée de quatre pixels peut mélanger son signal avec le fond, même si l'image conserve une luminosité convenable. Une compensation du déplacement entre frames ne restitue pas automatiquement ce mélange à l'intérieur d'une frame.
+
+**Décision sous contrainte** : pour viser au plus un pixel de déplacement avec la même vitesse, le modèle donne $t_e\le1/800$ s, soit 1,25 ms. C'est un budget analytique, pas une garantie de détection. Réduire l'exposition oblige à reconsidérer l'éclairage et le bruit. Mesurer le mouvement dans la zone utile : une vitesse moyenne sur toute l'image peut masquer un détail plus rapide.
+
+### Cas lié à CV-ACQUISITION-004
+
+**Question de travail** : Quels contrôles d’image faire lorsqu’un modèle transféré échoue sans changement apparent de scène ?
+
+**Réponse de référence** : Vérifier ordre couleur, gamme/normalisation, gamma, bit depth, exposition et saturation dans la chaîne réellement reçue.
+
+**Pourquoi ces contrôles départagent les causes** : deux tableaux de même forme peuvent représenter des couleurs ou des quantités physiques différentes. Un canal rouge interprété comme bleu change les contrastes appris ; une division supplémentaire par 255 modifie l'échelle ; un passage en entier peut écrêter des valeurs. Une visualisation qui ajuste automatiquement son contraste peut rendre ces tableaux presque identiques à l'œil.
+
+**Enquête reproductible proposée** : choisir une image témoin, conserver son fichier original et relever, à chaque étape, forme, type, minimum, maximum et valeurs de quelques pixels connus. Comparer ensuite le tenseur effectivement reçu par le modèle avec celui de la chaîne d'entraînement. Tester une seule correction à la fois. Une amélioration après remise en conformité soutient une cause de prétraitement ; elle ne dispense pas d'évaluer les autres images et les cas difficiles du nouveau capteur.
+
+**Repère documentaire de cette passe** : [EMVA 1288 Linear 4.0](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf), §§2.4, 2.6 et 2.7, modèle de bruit et signal. Les autres développements figurent dans les [cartes associées](../21-exposition-bruit-echantillonnage.md).
 
 ## Sources et cartes
 

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -56,6 +56,28 @@ Deux capteurs en désaccord : comparer horodatage, extrinsèques, unités, biais
 ## Alternatives et usages
 
 Filtrage pour faible latence ; lissage/graphes pour réestimer plusieurs états. Une mesure redondante corrélée ne doit pas être comptée deux fois comme information indépendante.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent innovations, covariance et réinitialisation de l’ESKF. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-FUSION-001
+
+**Question de travail** : Comment distinguer EKF, UKF et ESKF sans les classer en précision absolue ?
+
+**Réponse de référence** : l'EKF linéarise modèles et mesures autour de l'estimée courante. L'UKF propage $2n+1$ sigma-points choisis de façon déterministe à travers les fonctions non linéaires, sans jacobienne. L'ESKF intègre un état nominal non linéaire et estime une petite erreur autour de lui, avec les équations de prédiction et de correction d'un EKF appliquées à cette erreur. Ces noms décrivent donc des choix qui se combinent, pas trois catégories exclusives.
+
+**Choix de conception** : commencer par la représentation de l'état, la non-linéarité des observations et le coût acceptable. Le filtre retenu doit être évalué sur des innovations et des erreurs de trajectoire cohérentes. Une meilleure approximation locale de propagation ne corrige pas une mauvaise extrinsèque, une association fausse ou une horloge décalée ; ces défauts appartiennent au modèle et aux données.
+
+### Cas lié à CV-FUSION-005
+
+**Question de travail** : Pour fusionner IMU et caméra avec une orientation représentée par un quaternion, pourquoi estimer une petite erreur autour d'un état nominal intégré, plutôt que l'état complet dans un EKF ?
+
+**Réponse de référence** : l'erreur d'orientation est minimale, trois paramètres pour trois degrés de liberté : on évite la redondance du quaternion et le risque de covariance singulière lié à sa contrainte de norme. L'erreur reste petite et proche de l'origine, loin des singularités de paramétrisation : la linéarisation reste valide, les produits du second ordre sont négligeables et les jacobiennes simples. Sa dynamique est lente, la dynamique rapide étant intégrée dans l'état nominal : les corrections peuvent arriver moins souvent que les prédictions IMU.
+
+**Intuition pour le suivi** : l'état nominal porte le mouvement important, tandis que l'erreur décrit un voisinage local. La petite taille de l'erreur justifie une approximation locale seulement tant que l'estimation reste proche de la réalité. Une mauvaise initialisation ou une longue absence de mesure peut sortir de ce domaine ; conserver un quaternion normalisé n'établit pas à lui seul la cohérence du filtre.
+
+**Repère documentaire de cette passe** : [Solà, Quaternion kinematics for the error-state Kalman filter](https://arxiv.org/html/1711.02508v1), §6.3, injection et reset de l’erreur. Les autres développements figurent dans les [cartes associées](../13-kalman-ekf-eskf.md).
 
 ## Sources et cartes
 

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-SE3", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -50,6 +50,32 @@ Faible RMSE mais pose fausse : inspecter symétrie, zone de recouvrement, seuil 
 ## Alternatives et usages
 
 Initialisation par features, odométrie/IMU, contraintes métier ou recalage multivue. Toujours annoncer sens de pose et qualité de la référence.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent initialisation, correspondances et directions peu contraintes. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-ICP-001
+
+**Question de travail** : Pourquoi combiner FPFH/RANSAC puis ICP plutôt que lancer ICP depuis n’importe quelle pose ?
+
+**Réponse de référence** : L’initialisation globale cherche une zone compatible à partir de correspondances ; ICP affine localement et peut converger sur de mauvaises associations.
+
+**Pourquoi l'initialisation compte** : ICP construit ou actualise des associations à partir de la pose courante. Si cette pose est éloignée, les plus proches voisins peuvent représenter d'autres surfaces ; optimiser sur ces paires peut renforcer un mauvais alignement local. La recherche globale utilise d'autres indices pour proposer une région de pose avant le raffinement.
+
+**Exemple construit** : deux pieds identiques d'une pièce peuvent offrir deux alignements locaux plausibles. Un faible résidu après ICP ne désigne pas automatiquement le bon pied. Contrôler l'orientation et la translation finales, le recouvrement et des surfaces distinctives réservées. Consigner sens source→cible et unités avant toute comparaison. Les features géométriques et RANSAC apportent des hypothèses utiles ; elles restent limitées par texture géométrique, symétries et recouvrement. Une odométrie ou une contrainte métier peut fournir une autre initialisation si elle est justifiée et évaluée.
+
+### Cas lié à CV-ICP-005
+
+**Question de travail** : Point-to-plane remplace-t-il toujours avantageusement point-to-point ?
+
+**Réponse de référence** : Il exploite des normales fiables et une géométrie qui contraint les mouvements utiles ; il peut être mal posé sur certaines surfaces ou normales bruitées.
+
+**Comparaison des informations utilisées** : point-to-point pénalise une différence de positions selon trois composantes ; point-to-plane utilise une approximation locale de surface. Lorsque les normales et l'initialisation sont adaptées, cette approximation peut être efficace. Si les normales sont instables ou la géométrie pauvre, le critère peut perdre son intérêt ou laisser certaines directions peu contraintes.
+
+**Ablation construite** : conserver nuages, correspondances initiales, seuil et référence, puis comparer les variantes en faisant varier séparément le bruit des normales et le recouvrement. Mesurer erreur de pose, convergence, échecs et coût. Une baisse du résidu propre à une variante n'est pas directement comparable au résidu d'une autre formulation. Le bon choix dépend de la surface observée et de la précision demandée. Ne pas utiliser un seul cas plan favorable pour annoncer une supériorité sur toutes les pièces et toutes les initialisations.
+
+**Repère documentaire de cette passe** : [Open3D 0.19, ICP registration](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), Point-to-plane ICP et évaluation. Les autres développements figurent dans les [cartes associées](../62-recalage-global-icp.md).
 
 ## Sources et cartes
 

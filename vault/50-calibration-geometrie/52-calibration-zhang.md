@@ -16,6 +16,10 @@ Reponse: **Noyau attendu** : la calibration estime des paramètres de formation 
 
 **Approfondissement** : une procédure de calibration de Zhang estime aussi une pose de mire par vue, mais cela ne rend pas les objectifs équivalents. PnP peut estimer une pose avec une caméra déjà calibrée ; une homographie peut recaler un plan sans retrouver tous les intrinsèques. La calibration des scores d'un réseau est encore un autre problème.
 
+**Exemple de chaîne** : dans une cellule fixe, une calibration décrit comment les rayons sont transformés en pixels. Une estimation de pose situe la caméra ou la pièce dans un repère. Un recalage peut ensuite aligner une image de référence avec l'observation courante. Ces opérations se combinent, mais leurs inconnues et leurs données de référence ne sont pas identiques.
+
+**Conséquence pour le diagnostic** : un bon alignement d'une mire plane peut masquer une mauvaise extrapolation des paramètres hors des vues utilisées. Inversement, une caméra bien calibrée peut donner un mauvais recalage si les correspondances sont fausses. Nommer la sortie attendue permet de choisir le bon protocole et évite de demander à une homographie unique de certifier toute la géométrie du système.
+
 **Erreurs bloquantes** : assimiler ces trois sorties ou croire qu'une homographie est toujours une calibration complète.
 Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §§2–3](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
 Tags: cv::pilote cv::d05 famille::comprehension cv_id::CV-ZHANG-001 provenance::agent pole::B pole::C pole::E
@@ -35,6 +39,10 @@ Les focales et le point principal sont en pixels ; $s$ est un facteur homogène.
 
 **Approfondissement** : $\gamma$ est le skew, souvent fixé à zéro selon le modèle. La distorsion n'est pas incluse dans cette multiplication projective idéale. Une taille de carré en millimètres donne des translations dans cette unité, sans changer les dimensions pixel des intrinsèques.
 
+**Décomposition du calcul** : la pose donne d'abord le point dans les axes de la caméra. La division par sa profondeur produit des coordonnées normalisées sans unité ; la matrice intrinsèque exprime ensuite ces coordonnées dans la grille image. La distorsion choisie modifie cette relation et doit être placée au bon endroit dans le modèle complet.
+
+**Contrôle construit** : un point sur l'axe optique idéal se projette au point principal ; augmenter sa profondeur sans changer sa direction ne change pas sa projection perspective. Vérifier ces cas simples aide à détecter un ordre de multiplication ou un repère erroné. Une transformation de pixels due au prétraitement agit encore après ces étapes et doit être propagée jusqu'aux observations comparées.
+
 **Erreurs bloquantes** : inverser le sens de $R$ sans transformer la formule, confondre mètres et pixels ou inclure toute distorsion dans $K$ seul.
 Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §2.1, équation 1](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-ZHANG-002 provenance::agent pole::B pole::C pole::E
@@ -51,6 +59,10 @@ Question: Comment des homographies d'une mire plane contraignent-elles les intri
 Reponse: **Noyau attendu** : $H\sim K[r_1\ r_2\ t]$. Avec $B=K^{-T}K^{-1}$, les colonnes $h_1,h_2$ donnent $h_1^TBh_2=0$ et $h_1^TBh_1=h_2^TBh_2$. Ces contraintes reposent sur les axes orthogonaux de rotation ; des orientations répétées ne fournissent pas la diversité nécessaire.
 
 **Approfondissement** : chaque vue apporte deux contraintes. Trois vues indépendantes sont nécessaires en général pour cinq intrinsèques libres ; deux peuvent suffire avec skew nul imposé. Les minima algébriques ne garantissent pas une calibration précise sur des images bruitées ; la capture doit aussi couvrir la zone utile.
+
+**Pourquoi les orientations apportent de l'information** : une rotation différente de la mire modifie les directions de ses axes dans la caméra. Les mêmes intrinsèques doivent expliquer ces nouvelles projections, ce qui ajoute des contraintes différentes. Répéter presque la même orientation fournit surtout des répétitions bruitées de contraintes semblables.
+
+**Acquisition proposée** : couvrir plusieurs inclinaisons et plusieurs positions dans le champ avec une mire nette et rigide. Ne pas chercher uniquement à multiplier des images faciles et frontales pour abaisser un RMS. Comparer ensuite la stabilité des paramètres lorsque certaines vues sont retirées et les erreurs sur des poses réservées. Le modèle explique le minimum de contraintes ; leur indépendance effective et la qualité des coins déterminent l'information disponible en pratique.
 
 **Erreurs bloquantes** : dire que deux photos quelconques suffisent toujours ou que de simples translations rendent tous les intrinsèques observables.
 Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §§2.3, 3.1 et 4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
@@ -69,6 +81,10 @@ Reponse: **Noyau attendu** : le RMS mesure l'ajustement des projections aux coin
 
 **Approfondissement** : consigner si la moyenne porte sur points ou coordonnées, analyser les résidus par vue et position. Proposition du projet : fixer intrinsèques/distorsion, estimer une pose avec une partie des coins réservés et tester les autres, puis vérifier une dimension connue. Ne pas choisir un seuil universel sans tolérance métier.
 
+**Exemple de biais** : une taille de carré erronée peut laisser des projections image bien ajustées tout en imposant une mauvaise unité de translation. Le résidu pixel ne teste pas directement cette échelle physique. De même, une zone de l'image peu couverte peut être mal modélisée sans dominer la moyenne globale.
+
+**Validation construite** : mesurer une dimension connue sur plusieurs positions et distances d'exploitation, avec paramètres fixés avant l'essai. Rapporter erreurs systématiques et dispersion, puis examiner les cas où la tolérance est dépassée. Une moyenne faible ne doit pas faire disparaître les observations périphériques difficiles. Ce protocole ajoute une information indépendante adaptée au besoin, au lieu de réutiliser seulement les coins qui ont servi à estimer les paramètres.
+
 **Erreurs bloquantes** : conclure à une précision en millimètres à partir du seul RMS pixel d'ajustement.
 Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §3.2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf) ; [OpenCV calibrateCamera](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
 Tags: cv::pilote cv::d05 famille::evaluation cv_id::CV-ZHANG-004 provenance::agent pole::B pole::C pole::E
@@ -85,6 +101,10 @@ Question: Une image calibrée est redimensionnée par un facteur uniforme $a$, p
 Reponse: **Noyau attendu** : multiplier focales et skew par $a$ et transformer le point principal en $(ac_x-b_x,ac_y-b_y)$. Plus généralement, $K'=AK$ avec $A$ la transformation pixel appliquée à l'image.
 
 **Approfondissement** : $A$ a ici diagonale $(a,a,1)$ et translation $(-b_x,-b_y)$. Cette dérivation suppose exactement le resize/crop décrit et un modèle optique inchangé ; vérifier la convention des centres de pixels de l'outil. Une distorsion exprimée en coordonnées caméra normalisées n'est pas multipliée comme une focale pixel. Focus/zoom modifiés nécessitent un autre diagnostic.
+
+**Exemple analytique** : avec $a=0,5$, $c_x=640$ px et un crop de 20 px dans l'image réduite, le nouveau centre vaut 300 px. Une observation et sa projection doivent subir la même transformation pour conserver un résidu cohérent. Le changement de grille ne déplace pas physiquement la caméra.
+
+**Piège d'interface** : deux outils peuvent utiliser des conventions différentes pour les centres de pixels pendant le resize. Tester quelques points connus à travers la chaîne complète avant d'appliquer une formule simplifiée. Si la caméra a changé de focus, la relation optique peut réellement changer : ce n'est plus une simple transformation de coordonnées et la validation initiale doit être réexaminée.
 
 **Erreurs bloquantes** : garder $K$ identique après crop ou multiplier indistinctement tous les coefficients de distorsion par $a$.
 Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [OpenCV, camera model](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
@@ -103,6 +123,10 @@ Reponse: **Noyau attendu** : suspecter une capture peu informative et un modèle
 
 **Approfondissement** : comparer stabilité par sous-ensembles, cartes de résidus et validation réservée ; vérifier planéité, netteté et modèle de distorsion. Ne pas conclure automatiquement que l'optimiseur est défectueux. Fixer un paramètre n'est justifié que par le modèle et le besoin, pas pour obtenir un plus joli score.
 
+**Mécanisme de la compensation** : certains paramètres peuvent se déplacer ensemble en conservant des projections proches sur une capture peu diverse. Le solveur peut donc trouver plusieurs solutions qui ajustent presque aussi bien les mêmes données, sans erreur d'implémentation. La stabilité par sous-ensemble révèle cette sensibilité.
+
+**Test proposé** : ajouter des vues dont les orientations et positions diffèrent réellement, puis comparer les paramètres et la validation avec le même modèle. Inspecter aussi une éventuelle déformation de mire ou une erreur systématique de localisation des coins. Libérer plus de coefficients peut absorber ces défauts plutôt que les expliquer. La qualité d'une calibration se juge sur les informations de capture et son usage futur, pas sur le nombre brut d'images.
+
 **Erreurs bloquantes** : déclarer la calibration bonne uniquement parce que vingt images ont été utilisées ou que le RMS est faible.
 Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-ZHANG-006 provenance::agent pole::B pole::C pole::E
@@ -119,6 +143,10 @@ Question: Pour contrôler des dimensions de pièces avec une caméra fixe, quell
 Reponse: **Noyau attendu** : définir tolérance métier, résolution/focus stables, modèle optique et unités ; capturer une mire plane connue sous orientations et positions informatives ; vérifier les coins ; conserver des observations et une référence métrique indépendantes pour valider.
 
 **Approfondissement** : consigner versions, flags, captures exclues et résidus ; tester la zone et les distances d'exploitation. Séparer calibration intrinsèque et pose de la caméra dans la cellule. Prévoir une nouvelle validation après modification de l'optique ou du montage. Ce scénario décrit un protocole proposé, sans essai terrain réalisé.
+
+**Critère d'exploitation proposé** : conserver une pièce ou une cible de contrôle indépendante et définir les événements qui déclenchent une nouvelle vérification : modification de focus, choc mécanique, changement de résolution ou dérive de mesure. Une calibration devient un artefact versionné avec son domaine de validité.
+
+**Boucle de validation** : relier les erreurs mesurées aux décisions du produit, puis distinguer répétabilité entre prises et biais par rapport à la dimension connue. Documenter la géométrie du plan ou du volume réellement contrôlé. Une projection correcte sur la mire ne garantit pas que toutes les surfaces 3D soient mesurables avec une seule vue. Cette limite doit rester visible dans le parcours entre calibration, estimation de pose et métrologie.
 
 **Erreurs bloquantes** : réutiliser aveuglément les paramètres après changement de focus, ou ignorer la taille réelle de la mire.
 Source: [[50-calibration-geometrie/references/52-calibration-zhang|Fiche calibration]] ; [Zhang, §§2–4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).

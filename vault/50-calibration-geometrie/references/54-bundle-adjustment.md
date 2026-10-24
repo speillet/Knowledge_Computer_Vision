@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-SVD", "CV-EPIPOLAIRE", "CV-FACTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -50,6 +50,32 @@ Coût faible mais échelle incorrecte : vérifier référence métrique et jauge
 ## Alternatives et usages
 
 Pose graph optimise principalement poses/contraintes relatives ; BA conserve les observations des landmarks. Le choix dépend des inconnues et de l'information à garder.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent jauge, résidus robustes et blocs d’optimisation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-BA-001
+
+**Question de travail** : Qu’optimise un bundle adjustment et pourquoi le distinguer d’un pose graph ?
+
+**Réponse de référence** : Le BA optimise poses et points, éventuellement intrinsics, à partir de reprojections ; un pose graph repose sur des contraintes entre poses.
+
+**Mécanisme** : chaque observation image lie une caméra et un landmark par un modèle de projection. Modifier un point influence ses observations dans plusieurs vues ; modifier une caméra influence les points qu'elle observe. Le BA recherche conjointement des valeurs qui expliquent ces observations, avec pondération et éventuellement robustification.
+
+**Exemple construit** : une dérive de trajectoire et des positions de points erronées peuvent se compenser partiellement dans une vue, mais être incompatibles dans les autres. L'optimisation conjointe exploite ces liens. Un pose graph utilise déjà des contraintes résumées entre poses et ne conserve pas nécessairement chaque reprojection. Les coûts, les biais possibles et la structure des inconnues diffèrent donc. Vérifier jauge, initialisation, associations et résidus par observation : une diminution du coût global ne prouve ni l'échelle métrique ni la validité physique de tous les landmarks optimisés.
+
+### Cas lié à CV-BA-004
+
+**Question de travail** : Pourquoi libérer davantage de coefficients de caméra peut-il réduire le coût tout en dégradant la calibration ?
+
+**Réponse de référence** : Des paramètres supplémentaires peuvent surajuster un jeu peu informatif ou être corrélés.
+
+**Pourquoi le coût baisse** : un espace de paramètres plus grand peut contenir une solution qui ajuste davantage les observations d'entraînement. Cela ne dit pas si les paramètres supplémentaires représentent la caméra ou absorbent bruit, déformation de mire et erreurs de correspondance. Plusieurs paramètres peuvent aussi produire des effets proches sur une capture peu informative.
+
+**Ablation construite** : conserver les observations et libérer un groupe de paramètres à la fois. Examiner leur dispersion par sous-ensembles, les corrélations et les résidus sur des vues réservées couvrant notamment les bords. Un meilleur coût d'ajustement accompagné d'une dégradation hors échantillon suggère un compromis défavorable. À l'inverse, un modèle trop contraint peut conserver un biais réel. Le choix doit s'appuyer sur l'optique, la diversité des données et l'usage, sans faire de la seule baisse du coût un critère de calibration.
+
+**Repère documentaire de cette passe** : [Ceres, Non-linear Least Squares Solving](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), Schur solvers et bundle adjustment. Les autres développements figurent dans les [cartes associées](../54-bundle-adjustment.md).
 
 ## Sources et cartes
 

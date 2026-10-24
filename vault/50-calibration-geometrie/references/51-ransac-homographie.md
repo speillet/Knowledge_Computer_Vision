@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 3
+revision: 4
 tags: [cv/d05, geometrie, ransac, matching]
 ---
 # RANSAC appliqué à une homographie
@@ -130,6 +130,32 @@ Pour recaler une carte plane, une homographie est une hypothèse raisonnable à
 tester. Pour localiser une caméra dans une scène 3D connue, examiner PnP ;
 pour deux vues d'une scène 3D inconnue, examiner géométrie épipolaire et pose.
 Calibration, pose et recalage répondent à des objectifs distincts.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent succès d’échantillonnage, couverture et validité du modèle. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-HOMOGRAPHIE-001
+
+**Question de travail** : Pour relier deux images, dans quelles situations une homographie globale est-elle un modèle approprié, et quelle variation la met généralement en défaut ?
+
+**Réponse de référence** : elle convient pour les points d'un même plan, ou une rotation pure de caméra dans le modèle perspective idéal. Une translation devant des profondeurs différentes crée généralement une parallaxe incompatible avec un seul modèle global.
+
+**Exemple construit** : pour une étiquette plane rigide, ses points peuvent suivre une même transformation projective entre deux prises de vue, même si le fond est à une autre profondeur. Accepter cette homographie pour l'étiquette n'autorise pas à l'étendre au fond.
+
+**Contrôle du modèle** : afficher les vecteurs de résidus par région. Si les erreurs sont structurées selon la profondeur sous translation, ajouter des tirages robustes ne crée pas le modèle 3D manquant. Si elles sont plutôt aléatoires et localisées sur quelques paires, des outliers ou une mauvaise localisation restent plausibles. La décision de modèle précède donc le réglage du seuil de consensus et se rapporte à la zone où l'alignement sera utilisé.
+
+### Cas lié à CV-HOMOGRAPHIE-007
+
+**Question de travail** : Pour assembler un panorama pris avec translation, les points proches et lointains ont des résidus systématiquement différents. Que tester avant de rendre RANSAC plus tolérant ?
+
+**Réponse de référence** : tester une parallaxe due aux différentes profondeurs, donc l'inadéquation d'une homographie globale. Examiner les résidus par zone/profondeur et la géométrie de capture avant de modifier le seuil.
+
+**Pourquoi le relief compte** : sous translation de caméra, le déplacement apparent dépend notamment de la profondeur. Des points proches et lointains peuvent exiger des déformations différentes, alors qu'une homographie globale impose une relation unique. Un consensus dominé par l'arrière-plan peut ainsi laisser un objet proche visiblement dédoublé.
+
+**Ablation proposée** : sélectionner séparément des correspondances sur chaque plan, comparer leurs modèles et contrôler les résidus croisés. Si deux modèles locaux expliquent des groupes différents, cela soutient l'hypothèse de parallaxe sans prouver que toutes les associations soient correctes. Choisir ensuite une capture ou une modélisation adaptée au produit. Élargir le seuil mélange seulement davantage de groupes dans la même catégorie d'inliers et peut cacher la structure de l'erreur.
+
+**Repère documentaire de cette passe** : [Fischler et Bolles 1981](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf), §II, consensus et échantillonnage. Les autres développements figurent dans les [cartes associées](../51-ransac-homographie.md).
 
 ## Sources et cartes
 

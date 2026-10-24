@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-ZHANG", "CV-SE3", "CV-CAPTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -50,6 +50,32 @@ Bonne calibration immobile, erreur en mouvement : mesurer timing et deskew. Tran
 ## Alternatives et usages
 
 Cible commune, méthodes targetless et optimisation conjointe temporelle selon équipement et observabilité. La sécurité de commande robotique reste hors de cette fiche.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent séparer transformations spatiales et désynchronisation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-MULTICALIB-001
+
+**Question de travail** : Pourquoi écrire $AX=XB$ ne suffit-il pas à appliquer une calibration hand-eye ?
+
+**Réponse de référence** : Il faut définir les repères, les mouvements relatifs A/B, leur sens et la transformation inconnue X.
+
+**Dérivation par chaîne** : en eye-in-hand avec une mire fixe, la composition outil→base, caméra→outil puis mire→caméra doit donner la même pose mire→base pour chaque acquisition. L'égalité de ces compositions conduit à des mouvements relatifs de part et d'autre de l'extrinsèque inconnue. Le sens des produits n'est pas libre : il découle des repères adjacents.
+
+**Test construit** : prendre une pose connue, transformer un point de mire jusqu'à la base, puis vérifier l'inverse de la chaîne. Répéter avec une rotation non triviale et des translations non nulles dans des unités communes. Un test identité peut laisser des inversions invisibles. Cette validation d'interface précède le réglage du solveur ; si elle échoue, ajouter des données ou changer la méthode d'optimisation traite un autre problème que l'erreur de convention.
+
+### Cas lié à CV-MULTICALIB-003
+
+**Question de travail** : Pourquoi une faible reprojection intrinsèque ne valide-t-elle pas une fusion caméra–LiDAR en mouvement ?
+
+**Réponse de référence** : Elle ne teste pas à elle seule l’extrinsèque entre capteurs, leur offset temporel ou la déformation du scan.
+
+**Séparer les contrats** : l'intrinsèque relie rayons et pixels d'une caméra. L'extrinsèque relie les axes des capteurs. Le temps détermine quelles positions de la scène et du porteur sont comparées. Une fusion peut respecter le premier contrat et violer les deux autres, particulièrement pendant une rotation.
+
+**Enquête construite** : commencer par des observations immobiles pour contrôler une partie de la géométrie, puis comparer translation et rotation en inspectant temps par point du LiDAR et instant de capture caméra. Corriger séparément les offsets, le deskew et les transformations pour mesurer leur effet. Une translation ajustée pour une seule vitesse peut masquer un retard sans généraliser. Réserver une séquence avec d'autres mouvements pour la validation finale. Une bonne reprojection caméra reste utile, mais elle ne teste ni la simultanéité des mesures ni toute la projection d'un nuage vers l'image.
+
+**Repère documentaire de cette passe** : [OpenCV 4.13, Camera Calibration and 3D Reconstruction](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), modèles de projection et composition des extrinsèques. Les autres développements figurent dans les [cartes associées](../55-calibration-multicapteurs.md).
 
 ## Sources et cartes
 

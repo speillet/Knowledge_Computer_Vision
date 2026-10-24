@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -82,6 +82,28 @@ Après un estimateur robuste, deux causes d'instabilité se départagent. Des ou
 ## Alternatives et usages
 
 QR pour un problème bien posé, SVD pour diagnostic de rang et systèmes homogènes, solveur creux pour grandes reconstructions, estimation robuste contre outliers. Chaîne usuelle en géométrie : RANSAC sur un modèle minimal, DLT normalisée sur les inliers, puis Levenberg-Marquardt sur l'erreur géométrique avec une perte robuste, et enfin lecture de la covariance si le rang le permet. Le choix dépend des données et du système linéaire.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent blanchiment, perte de rang et distinction ajustement–identifiabilité. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-SVD-002
+
+**Question de travail** : Pour résoudre $\min_x\|Ax-b\|_2$ avec $A$ de rang colonne plein, quand préférer une factorisation QR ou SVD de $A$, et quand les équations normales $A^TAx=A^Tb$ résolues par Cholesky restent-elles un choix défendable ?
+
+**Réponse de référence** : former $A^TA$ élève le conditionnement au carré, $\kappa_2(A^TA)=\kappa_2(A)^2$, et fait perdre environ deux fois plus de chiffres significatifs. QR, ou SVD plus précise mais plus lente et utile pour diagnostiquer le rang, s'impose dès que $A$ est mal conditionnée, même modérément. Les équations normales sont en général les plus rapides, surtout pour $A$ haute et étroite : elles restent défendables si $A$ est bien conditionnée après mise à l'échelle, et les grands problèmes creux comme le bundle adjustment les exploitent par Cholesky creux et complément de Schur.
+
+**Lecture pour un projet** : choisir le solveur après avoir examiné rang, échelles et structure creuse. Un temps de résolution inférieur ne compense pas des paramètres devenus inutilisables. Comparer aussi la stabilité lorsque les observations sont légèrement perturbées, avec le même objectif et les mêmes unités.
+
+### Cas lié à CV-SVD-009
+
+**Question de travail** : Après un ajustement par moindres carrés non linéaires, on lit l'incertitude des paramètres dans $(J^TJ)^{-1}$, avec $J$ le jacobien à la solution. Sous quelles conditions cette lecture est-elle valable, et que ne mesure-t-elle pas ?
+
+**Réponse de référence** : il faut des résidus blanchis, de covariance identité, et un $J$ de rang colonne plein ; la matrice obtenue est alors la dispersion locale de l'estimée, qui n'approche sa covariance qu'asymptotiquement. Si $J$ est déficient en rang (jauge, paramètre non observable), $J^TJ$ n'est pas inversible : fixer la jauge, reparamétrer ou utiliser une pseudo-inverse. Elle ne mesure ni un biais de modèle, comme une distorsion mal modélisée, ni l'effet d'outliers : elle suppose modèle et bruit corrects.
+
+**Décision proposée** : confronter les intervalles annoncés à des répétitions ou des perturbations contrôlées, en conservant jauge et unités. Une faible dispersion autour d'une solution biaisée reste compatible avec une mauvaise précision. Séparer donc incertitude locale, variation entre acquisitions et adéquation du modèle physique.
+
+**Repère documentaire de cette passe** : [Ceres, Covariance Estimation](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), Introduction, Rank of the Jacobian et Gauge Invariance. Les autres développements figurent dans les [cartes associées](../11-moindres-carres-svd.md).
 
 ## Sources et cartes
 

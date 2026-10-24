@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -50,6 +50,32 @@ Variation proposée : translation connue puis initialisation de plus en plus él
 ## Alternatives et usages
 
 Features + RANSAC pour grandes transformations avec points distinctifs ; recalage par intensités pour raffinement approprié. Comparer sur précision et bassin utile.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent critère photométrique, bassin de convergence et masques. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-ECC-001
+
+**Question de travail** : Quel contrat distingue ECC d’un pipeline SIFT + RANSAC ?
+
+**Réponse de référence** : ECC optimise un critère d’intensité sur un warp initialisé ; SIFT propose des paires puis une géométrie robuste.
+
+**Mécanisme interprété** : ECC cherche des paramètres de transformation en comparant directement les intensités sur une zone commune. Les correspondances ne sont pas d'abord exprimées comme une liste de patches détectés. SIFT et RANSAC peuvent proposer une transformation à partir de points distinctifs ; un raffinement photométrique peut ensuite être essayé si le modèle et le recouvrement s'y prêtent.
+
+**Exemple construit** : pour deux vues proches d'une étiquette, une initialisation convenable peut rendre utile l'optimisation des intensités. Pour un grand déplacement avec faible recouvrement, la même procédure peut atteindre un mauvais optimum ou échouer. Vérifier séparément initialisation, masque, variations photométriques et modèle de mouvement. Une corrélation normalisée peut tolérer un gain positif et un offset globaux sur un support fixé non constant ; cette propriété algébrique ne couvre pas une ombre locale, une occultation ou une convergence globale du recalage.
+
+### Cas lié à CV-ECC-003
+
+**Question de travail** : Pourquoi ne pas choisir systématiquement une homographie dans un recalage ECC ?
+
+**Réponse de référence** : Plus de paramètres peuvent surajuster ou réduire la stabilité alors qu’une translation ou un affine suffit au besoin.
+
+**Raisonnement sur les degrés de liberté** : un modèle de translation impose que tous les points partagent deux déplacements ; une homographie autorise une déformation projective plus générale. Cette souplesse peut expliquer de vraies variations de vue sur un plan, mais aussi absorber du bruit ou une perturbation photométrique lorsque les données contraignent mal ses paramètres.
+
+**Comparaison construite** : sur une installation où le mouvement prévu est une petite translation, ajuster d'abord ce modèle, puis un modèle plus riche avec les mêmes images et zone utile. Comparer erreurs sur des points réservés, stabilité des paramètres et extrapolation près des bords. Un meilleur score sur les pixels d'ajustement ne suffit pas. Inversement, conserver une translation si la perspective change réellement introduit un biais. Le choix relie donc la géométrie de capture, la richesse des observations et l'erreur admise, plutôt qu'un principe de simplicité ou de flexibilité appliqué aveuglément.
+
+**Repère documentaire de cette passe** : [OpenCV 4.13, Video Tracking](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html), findTransformECC et paramètres du warp. Les autres développements figurent dans les [cartes associées](../45-recalage-ecc.md).
 
 ## Sources et cartes
 

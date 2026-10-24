@@ -16,6 +16,8 @@ Reponse: **Noyau attendu** : c'est un graphe biparti entre variables (poses, ame
 
 **Approfondissement** : GTSAM sépare le graphe des `Values` qui portent l'estimée initiale. La structure du graphe fixe la sparsité : dans le cas gaussien, éliminer les variables équivaut à une factorisation QR creuse du jacobien, dont le coût dépend de l'ordre d'élimination. Un graphe bien construit ne rend pas correct un facteur faux.
 
+**Exemple construit** : ajouter un facteur de distance n'a pas le même sens qu'ajouter une pose absolue. Les deux relient des variables selon des informations différentes et ne suppriment pas les mêmes ambiguïtés. Vérifier le contrat de chaque facteur avant de conclure qu'un graphe contient « assez » de contraintes.
+
 **Erreurs bloquantes** : déduire une trajectoire fiable de la seule présence d'un graphe ; confondre représentation et solveur.
 Source: [[10-mathematiques-estimation/references/14-graphes-facteurs|Fiche complète]] ; [Dellaert, Factor Graphs and GTSAM, §§1, 2.3–2.4, 4.1 et 7 (consulté le 2026-10-23)](https://gtsam.org/tutorials/intro.html) ; [Kaess et al. 2012, iSAM2, §2, Gaussian Case](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf).
 Tags: cv::pilote cv::d01 famille::comprehension cv_id::CV-FACTEURS-001 provenance::agent pole::B pole::C
@@ -33,6 +35,8 @@ Reponse: **Noyau attendu** : Les observations relatives ne définissent pas néc
 
 **Approfondissement** : fixer une jauge enlève une ambiguïté de représentation, sans ajouter une mesure absolue. Le nombre de degrés libres dépend des capteurs : 6 pour un pose graph de mesures relatives en 3D, 7 pour un BA monoculaire, défini à une similitude près, 4 en visuel-inertiel, où la gravité rend roulis et tangage observables mais pas la position ni le lacet. Trois traitements existent : fixer ces paramètres, leur ajouter un prior ou laisser la jauge libre. Zhang et al. obtiennent précision et temps similaires, et des covariances d'aspect très différent mais reliées.
 
+**Exemple d'ambiguïté** : déplacer et tourner ensemble toutes les poses d'un graphe relatif peut laisser inchangées les prédictions entre poses. L'optimiseur ne dispose alors d'aucune raison issue des mesures pour préférer une origine ou une orientation globale. Fixer une première pose choisit une convention commode ; cela ne transforme pas cette pose en vérité terrain. Évaluer des trajectoires suppose donc d'annoncer aussi l'alignement autorisé et les informations absolues réellement disponibles, surtout lorsqu'une échelle métrique est attendue.
+
 **Erreurs bloquantes** : Interpréter un prior arbitraire comme une preuve de précision globale.
 Source: [[10-mathematiques-estimation/references/14-graphes-facteurs|Fiche complète]] ; [Ceres, Covariance Estimation, Gauge Invariance (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html#gauge-invariance) ; [Zhang, Gallego et Scaramuzza 2018, RA-L, résumé, §I et table I](https://rpg.ifi.uzh.ch/docs/RAL18_Zhang.pdf) ; 6 degrés du pose graph déduits par le projet.
 Tags: cv::pilote cv::d01 famille::raisonnement cv_id::CV-FACTEURS-002 provenance::agent pole::B pole::C
@@ -49,6 +53,8 @@ Question: Après loop closure, le coût diminue mais la carte se plie de façon 
 Reponse: **Noyau attendu** : Vérifier l’association de lieux, la transformation relative, les repères et le poids du facteur de boucle.
 
 **Approfondissement** : une fausse contrainte forte peut être satisfaite au détriment du reste. Test chiffré : après optimisation, comparer le résidu blanchi au carré $\chi^2_l$ du facteur de boucle à un quantile du $\chi^2$ de sa dimension, 6 pour une pose relative 3D, et regarder la hausse des résidus d'odométrie voisins. Après ajustement sur les mêmes mesures, ce seuil est une heuristique : le résidu dépend de l’estimée et des corrélations, sa covariance n’est pas simplement celle de la mesure. Une loi $\chi^2_6$ calibrée exige un modèle de résidu approprié ; ne pas lui attribuer automatiquement un taux de faux rejet. Réoptimiser sans ce facteur départage : si la carte se redresse, la boucle est suspecte. Conserver vérification géométrique et observations indépendantes ; un back-end robuste est traité en CV-FACTEURS-004.
+
+**Ablation construite** : conserver tous les autres facteurs et comparer avec puis sans la boucle suspecte. Examiner l'effet sur les observations voisines et sur une référence réservée. Une baisse du coût total peut simplement refléter l'importance excessive accordée au nouveau facteur ; elle n'établit pas sa validité physique.
 
 **Erreurs bloquantes** : Augmenter les itérations sans inspecter le facteur ajouté.
 Source: [[10-mathematiques-estimation/references/14-graphes-facteurs|Fiche complète]] ; [Dellaert, Factor Graphs and GTSAM, §§2.3–2.4, 4.1 et 7 (consulté le 2026-10-23)](https://gtsam.org/tutorials/intro.html) ; [Agarwal et al. 2013, DCS, §III, équation 1](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf) ; scénario de faux facteur et tests proposés par le projet.
@@ -83,6 +89,8 @@ Question: À l'arrivée de nouvelles mesures, qu'est-ce qu'iSAM2 recalcule réel
 Reponse: **Noyau attendu** : seules les cliques situées sur les chemins entre les variables touchées par les nouveaux facteurs ou sélectionnées pour relinéarisation et la racine sont retirées, réordonnées et re-éliminées avec ces facteurs ; les sous-arbres non affectés sont réinsérés tels quels. Relinéarisation fluide : une variable n'est relinéarisée que si son estimée s'écarte de son point de linéarisation de plus d'un seuil $\beta$. Mise à jour partielle : la rétro-substitution s'arrête dans les sous-arbres où les changements restent sous un seuil $\alpha$.
 
 **Approfondissement** : l'ordre des variables de la partie affectée est recalculé à chaque mise à jour, avec une qualité proche d'un COLAMD batch, pour limiter le remplissage. Une grande fermeture de boucle affecte une grande partie de l'arbre : incrémental ne veut pas dire coût constant. Sur Manhattan, $\beta=0{,}1$ donne une solution presque exacte pour un coût nettement réduit ; les seuils échangent précision et calcul.
+
+**Conséquence produit** : mesurer les pics de latence à l'ajout de contraintes importantes, et pas seulement la moyenne en ligne droite. Une petite mise à jour habituelle et une grande fermeture de boucle ne touchent pas nécessairement la même portion du système. Le budget doit prévoir cette variabilité et le compromis des seuils.
 
 **Erreurs bloquantes** : croire qu'iSAM2 ne relinéarise jamais ou refait tout à chaque pas ; promettre un coût constant par mesure.
 Source: [[10-mathematiques-estimation/references/14-graphes-facteurs|Fiche complète]] ; [Kaess et al. 2012, iSAM2, §3.3, algorithme 4, §3.4 et §§4.1–4.2](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf).

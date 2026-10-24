@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -50,6 +50,32 @@ Distances de contour incohérentes : vérifier espacement et orientation. Artefa
 ## Alternatives et usages
 
 Choisir une représentation selon la tâche et les unités ; une bonne segmentation ne prouve ni géoréférencement exact ni précision de métrologie.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent géométrie physique, line-scan et unité de généralisation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-IMAGERIES-001
+
+**Question de travail** : Pourquoi HD95 ne doit-il pas être calculé aveuglément en indices de voxels sur une IRM anisotrope ?
+
+**Réponse de référence** : Les axes peuvent avoir des espacements physiques différents ; convertir les distances dans le repère et l’unité annoncés.
+
+**Exemple analytique** : avec un espacement de 0,5 mm, 0,5 mm et 3 mm, un déplacement d'un indice vaut 0,5 mm sur les deux premiers axes, mais 3 mm sur le troisième. Pour des axes orthogonaux, une différence d'indices $\Delta i$ se convertit en distance par $\sqrt{\sum_k(s_k\Delta i_k)^2}$, où $s_k$ est l'espacement de l'axe. Les conventions d'orientation et de position déterminent ensuite le repère commun.
+
+**Conséquence pour l'évaluation** : un calcul de distance entre surfaces doit utiliser une géométrie physique cohérente pour les deux masques. Une permutation d'axes ou un rééchantillonnage oublié peut modifier le résultat sans changement de segmentation. Vérifier une distance connue et annoncer l'unité dans le rapport. Le percentile choisi et le traitement des masques vides appartiennent au protocole ; aucune valeur isolée ne constitue ici une conclusion clinique.
+
+### Cas lié à CV-IMAGERIES-003
+
+**Question de travail** : Pourquoi des tuiles voisines réparties aléatoirement entre entraînement et test peuvent-elles surestimer la généralisation en télédétection ?
+
+**Réponse de référence** : Elles partagent scène, texture et contexte ; le test peut ressembler à l’entraînement au-delà du scénario futur visé.
+
+**Pourquoi le split peut tromper** : des tuiles distinctes peuvent contenir les mêmes bâtiments, le même fond ou une partie d'une image commune. Même sans recouvrement exact, un site partage acquisition, saison et matériaux. Le modèle peut donc réussir en reconnaissant un environnement déjà rencontré, alors que le produit doit fonctionner dans une autre région.
+
+**Protocole proposé** : définir d'abord la généralisation recherchée : nouvelles positions du même site, nouvelle date ou nouveau territoire. Regrouper les données selon cette unité avant le tuilage, contrôler les empreintes géographiques et réserver un test qui représente cet usage. Comparer les résultats par site et saison plutôt que seulement la moyenne globale. Un split géographique plus difficile n'est pas automatiquement plus représentatif : il doit correspondre au besoin annoncé. Le risque décrit est un raisonnement méthodologique, pas une mesure de fuite établie sur tous les jeux de télédétection.
+
+**Repère documentaire de cette passe** : [DICOM, Image Plane Module](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), §C.7.6.2.1.1, position, orientation et pixel spacing. Les autres développements figurent dans les [cartes associées](../23-imageries-specialisees.md).
 
 ## Sources et cartes
 
