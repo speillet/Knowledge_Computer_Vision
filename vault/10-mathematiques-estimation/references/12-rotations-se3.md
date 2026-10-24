@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -53,7 +53,7 @@ Variation contrôlée, calculée le 2026-10-23 hors dépôt (NumPy 2.2.6, SciPy 
 
 Objets tournant dans le mauvais sens : vérifier axes, degrés/radians et inversion. Une pose visuellement plausible ne suffit pas ; contrôler points repères et composition des extrinsèques.
 
-Conventions d'axes caméra. OpenCV projette $x'=X_c/Z_c$, $y'=Y_c/Z_c$ (`calib3d.hpp` 4.13.0, l. 94–118) : les points visibles ont $Z_c>0$, et avec $v=f_yy'+c_y$ et des lignes qui croissent vers le bas, $Y_c$ pointe vers le bas, déduction du projet. ROS (REP 103) fixe le corps en $x$ avant, $y$ gauche, $z$ haut ; son repère `_optical` place $z$ avant, $x$ droite, $y$ bas, comme OpenCV. En OpenGL, `gluLookAt` envoie le point visé sur l'axe $-z$ et la direction « haut » sur $+y$. Passer d'OpenCV à OpenGL revient donc à appliquer $M=\mathrm{diag}(1,-1,-1)$, rotation de 180° autour de $x$ et de déterminant $+1$. Elle se compose à droite d'une pose caméra→monde, $T^{gl}_{wc}=T^{cv}_{wc}M$, et à gauche d'une matrice monde→caméra, $V^{gl}=M\,T^{cv}_{cw}$. Symptômes : scène derrière la caméra ou image retournée. Une seule inversion d'axe, de déterminant $-1$, est une réflexion. Test : un point connu devant la caméra doit le rester après conversion.
+Conventions d'axes caméra. OpenCV projette $x'=X_c/Z_c$, $y'=Y_c/Z_c$ (`calib3d.hpp` 4.13.0, l. 94–118) : les points visibles ont $Z_c>0$, et avec $v=f_yy'+c_y$ et des lignes qui croissent vers le bas, $Y_c$ pointe vers le bas, déduction du projet. ROS (REP 103) fixe le corps en $x$ avant, $y$ gauche, $z$ haut ; son repère `_optical` place $z$ avant, $x$ droite, $y$ bas, comme OpenCV. En OpenGL, `gluLookAt` envoie le point visé sur l'axe $-z$ et la direction « haut » sur $+y$. Passer d'OpenCV à OpenGL revient donc à appliquer $M=\mathrm{diag}(1,-1,-1)$, rotation de 180° autour de $x$ et de déterminant $+1$. Pour les poses homogènes $4\times4$, employer $M_h=\mathrm{diag}(1,-1,-1,1)$ : $T^{gl}_{wc}=T^{cv}_{wc}M_h$ et $V^{gl}=M_h\,T^{cv}_{cw}$. $M$ agit sur des vecteurs 3D ; $M_h$ agit sur des coordonnées homogènes. Symptômes : scène derrière la caméra ou image retournée. Une seule inversion d'axe, de déterminant $-1$, est une réflexion. Test : un point connu devant la caméra doit le rester après conversion.
 
 ## Alternatives et usages
 
