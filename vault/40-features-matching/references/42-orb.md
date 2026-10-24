@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 3
+revision: 4
 tags: [cv/d04, matching, orb]
 ---
 # ORB — détection et descripteur binaire orienté
@@ -118,6 +118,32 @@ Le résultat attendu n'est pas « 4 est toujours meilleur ».
 variations sont compatibles, puis mesurer SIFT ou une approche apprise si
 le taux de succès est insuffisant. La contrainte de temps ne remplace pas
 la validation de la tâche.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent séparer détection, orientation, représentation et norme. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-ORB-001
+
+**Question de travail** : Comment ORB passe-t-il d'une image à un descripteur binaire orienté, et quel est le rôle de chaque composant ?
+
+**Réponse de référence** : FAST détecte les candidats dans une pyramide ; un classement, Harris dans l'article, sélectionne les points ; le centre de masse des intensités fournit une orientation ; des tests BRIEF orientés forment le descripteur binaire.
+
+**Mécanisme interprété** : détecter une position ne suffit pas pour comparer deux voisinages tournés. L'orientation établit un repère local dans lequel le motif de tests est déplacé ; les réponses binaires décrivent ensuite des relations d'intensité dans ce repère. La pyramide fournit plusieurs tailles d'observation, sans rendre identiques tous les détails aux différentes résolutions.
+
+**Diagnostic construit** : si les keypoints sont redétectés mais les matches disparaissent sous rotation, inspecter stabilité de l'orientation et contenu des patches avant de changer le nombre de points. Si les keypoints disparaissent eux-mêmes, examiner seuils, flou et niveaux de pyramide. Cette séparation des étapes permet d'attribuer un échec à un mécanisme précis au lieu de traiter ORB comme une boîte noire.
+
+### Cas lié à CV-ORB-006
+
+**Question de travail** : Tu dois localiser un marquage sur un CPU embarqué avec peu de mémoire. Comment construire une baseline avec ORB sans préjuger de son adéquation finale ?
+
+**Réponse de référence** : fixer les variations et la tolérance de localisation, extraire ORB avec paramètres consignés, apparier avec sa norme puis valider géométriquement. Mesurer coût complet et échecs sur des données représentatives, puis comparer une alternative si le besoin n'est pas atteint.
+
+**Baseline exploitable** : prévoir explicitement trois issues : transformation acceptée, résultat incertain et absence de résultat. Définir l'acceptation à partir des résidus, de la couverture et de la plausibilité du mouvement, puis évaluer les erreurs d'acceptation sur des pièces réservées. Un refus contrôlé peut être préférable à une région d'inspection mal placée.
+
+**Comparaison proposée** : garder les mêmes entrées et tolérances pour une alternative SIFT, en incluant les étapes qui changent réellement dans le coût. Mesurer mémoire maximale et latence en conditions représentatives, pas seulement le temps d'un appel isolé. La représentation compacte d'ORB motive l'essai ; c'est le bilan de précision, robustesse, coût et comportement en échec qui décide de son adéquation.
+
+**Repère documentaire de cette passe** : [OpenCV 4.13, ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), Theory, orientation et BRIEF tourné. Les autres développements figurent dans les [cartes associées](../42-orb.md).
 
 ## Sources et cartes
 

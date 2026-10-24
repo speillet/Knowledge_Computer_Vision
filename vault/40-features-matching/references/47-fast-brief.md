@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-CORNERS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -43,6 +43,32 @@ Baseline proposée : motif et échelle fixes ; variation : rotation croissante d
 ## Échecs, diagnostic et alternatives
 
 Bruit fin : comparer le lissage et la stabilité des tests binaires. Flou : contrôler le contraste du cercle FAST avant d’abaisser le seuil. Rotation : garder les détections et comparer les patches orientés pour isoler le descripteur. À fortes variations d’échelle, tester SIFT ou un détecteur/descripteur appris. API OpenCV 4.13 vérifiées avec Context7 ; aucun benchmark ou appel de feature extractor exécuté.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent test de segment et signature binaire sous transformations. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-FAST-BRIEF-001
+
+**Question de travail** : Quel motif d’intensité fait accepter un candidat par le segment test FAST, et que produisent les étapes suivantes ?
+
+**Réponse de référence** : Un arc contigu de voisins du cercle doit être entièrement plus clair que le centre plus un seuil, ou plus sombre que le centre moins ce seuil. La variante fixe longueur de l’arc et cercle ; la suppression des maxima sélectionne les réponses voisines.
+
+**Exemple logique** : dans une variante donnée, plusieurs voisins très clairs répartis sur tout le cercle ne remplacent pas un arc contigu assez long. Le motif accepté décrit une organisation spatiale du contraste autour du centre, et non un simple histogramme des valeurs voisines.
+
+**Choix d'implémentation** : conserver seuil, variante et unité d'intensité dans le protocole. Un seuil plus faible augmente potentiellement les candidats, y compris les réponses instables sous bruit ; la suppression des maxima contrôle ensuite la redondance locale. Pour diagnostiquer une chute de matches, observer d'abord si les mêmes positions sont détectées. Une extraction rapide de candidats ne donne encore ni orientation stable, ni signature distinctive, ni transformation entre images. Ces responsabilités appartiennent aux composants suivants de la chaîne.
+
+### Cas lié à CV-FAST-BRIEF-005
+
+**Question de travail** : Pour une caméra embarquée, quels résultats comparer avant de remplacer SIFT par FAST/BRIEF ?
+
+**Réponse de référence** : Comparer répétabilité, qualité des matches validés, couverture, latence extraction+matching et mémoire, à résolution et budget de points comparables. Inclure rotations, échelles et bruit représentatifs.
+
+**Comparer des systèmes complets** : un gain sur la détection peut être perdu si davantage de points peu distinctifs multiplient les comparaisons et les échantillons d'estimation robuste. Inversement, une description plus coûteuse peut réduire le nombre de mauvaises hypothèses à traiter. Le coût aval dépend donc aussi de la qualité et de la répartition des features.
+
+**Critère proposé** : fixer une tolérance de recalage et mesurer les cas acceptés à tort, refusés et correctement localisés, avec les mêmes transformations de référence. Chronométrer construction éventuelle d'index, extraction, matching et géométrie sur le CPU cible. Conserver des cas de faible texture et de rotation forte. Ce protocole transforme une promesse de rapidité historique en une décision vérifiable pour la caméra et le produit actuels.
+
+**Repère documentaire de cette passe** : [Rosten et Drummond 2006](https://www.edwardrosten.com/work/rosten_2006_machine.pdf), §§2–3, test FAST et apprentissage de l’arbre. Les autres développements figurent dans les [cartes associées](../47-fast-brief.md).
 
 ## Sources et cartes
 

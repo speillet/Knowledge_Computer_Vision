@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -50,6 +50,32 @@ Beaucoup de points inutiles : inspecter distribution spatiale et répétition. M
 ## Alternatives et usages
 
 SIFT/ORB sont des références complètes ; méthodes apprises si elles améliorent le protocole cible. Une comparaison doit conserver les conditions d'acquisition.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent contrats des étapes et diagnostic avant changement de méthode. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-MATCHING-001
+
+**Question de travail** : Pourquoi un coin localise-t-il mieux un déplacement 2D qu’une arête seule dans un modèle par gradients ?
+
+**Réponse de référence** : Deux directions de variation contraignent le mouvement ; sur une arête, le déplacement tangent est peu observable.
+
+**Modèle local** : pour un petit déplacement $d$, la variation photométrique se rapproche d'une forme quadratique $d^TMd$. La matrice $M$ rassemble les produits des gradients dans le voisinage. Ses directions propres indiquent les directions de déplacement qui changent beaucoup ou peu l'apparence.
+
+**Exemple construit** : sur un bord vertical uniforme, déplacer le patch horizontalement change son contenu ; le déplacer le long du bord peut presque le laisser identique. Un coin visible présente au contraire des changements dans deux directions, ce qui aide à localiser un déplacement. Cela n'implique pas qu'il soit unique dans l'image : les coins d'une grille peuvent tous se ressembler. Distinguer donc information locale de localisation et ambiguïté d'association entre images. Une fenêtre mal éclairée, occultée ou trop grande peut également invalider le petit modèle photométrique malgré des valeurs propres favorables.
+
+### Cas lié à CV-MATCHING-004
+
+**Question de travail** : Deux logos répétés produisent des descripteurs proches. Quel composant permet de tester le modèle physique des correspondances ?
+
+**Réponse de référence** : Une vérification géométrique adaptée à la scène, avec résidus, seuils et couverture ; le matcher seul ne le garantit pas.
+
+**Ce que teste la géométrie** : une homographie pour un plan, ou une contrainte multivue appropriée, relie les positions des candidats dans les images. Le résidu exprime leur désaccord avec ce modèle dans une unité définie. Un matcher choisit des voisins dans une représentation d'apparence ; ces deux problèmes sont différents.
+
+**Limite construite** : deux logos identiques sur un même support peuvent produire un groupe de matches et une transformation cohérents mais correspondant au mauvais logo. Un modèle géométrique ne résout pas nécessairement une symétrie de la scène. Chercher une marque unique, une position attendue ou une observation supplémentaire qui distingue les hypothèses. Contrôler aussi le support spatial des points et des observations réservées. Cette étape fournit des raisons d'accepter une transformation pour un usage précis, sans transformer automatiquement le consensus en preuve d'identité de l'objet.
+
+**Repère documentaire de cette passe** : [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), Brute-Force Matcher, normes et FLANN. Les autres développements figurent dans les [cartes associées](../43-detecteurs-matchers.md).
 
 ## Sources et cartes
 

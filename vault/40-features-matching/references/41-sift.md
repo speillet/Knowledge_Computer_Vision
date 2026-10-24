@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 3
+revision: 4
 tags: [cv/d04, matching, sift]
 ---
 # SIFT — points locaux et description à plusieurs échelles
@@ -132,6 +132,32 @@ Le résultat réel reste à mesurer, sans annoncer une performance numérique.
 **Cas industriel** : recalage d'une étiquette sous rotation avec budget CPU.
 SIFT est une baseline à comparer à ORB et aux méthodes apprises sur succès,
 robustesse et coût total, sans le déclarer gagnant a priori.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent normalisations, ambiguïté du ratio et couverture géométrique. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-SIFT-001
+
+**Question de travail** : Pour recaler deux photos d'une étiquette plane, que fournit SIFT et quelles étapes restent nécessaires pour obtenir une transformation fiable ?
+
+**Réponse de référence** : SIFT fournit des keypoints et leurs descripteurs locaux. Le matcher propose des paires ; un filtrage limite les ambiguïtés ; une estimation géométrique teste une transformation adaptée au plan. Les matches ne sont pas une preuve de recalage.
+
+**Chaîne de décision construite** : pour une étiquette connue plane, conserver les coordonnées des keypoints dans chaque image, calculer les candidats et inspecter leur distribution avant d'estimer le warp. Quatre correspondances mal placées ou plusieurs paires ambiguës ne deviennent pas fiables parce qu'elles proviennent de SIFT. Un consensus concentré dans un coin peut également mal contraindre l'extrapolation vers l'autre bord.
+
+**Interprétation du résultat** : contrôler une géométrie sur des points non utilisés pour son ajustement et dans la zone où le produit doit agir. Une pièce en relief peut exiger un autre modèle qu'une homographie unique. La responsabilité de SIFT est la représentation locale ; celle du pipeline est d'établir qu'une transformation explique suffisamment bien les observations pour l'usage annoncé.
+
+### Cas lié à CV-SIFT-007
+
+**Question de travail** : Pour choisir SIFT ou ORB sur une ligne industrielle avec recalage de pièces, quelles mesures rendent la comparaison utile au produit ?
+
+**Réponse de référence** : utiliser les mêmes paires représentatives et une géométrie de référence ; mesurer succès de recalage, erreurs, couverture et coût complet sur le matériel cible. Régler sur validation puis figer pour le test.
+
+**Critère produit proposé** : convertir l'erreur de recalage en conséquence métier, par exemple une région d'inspection décalée par rapport au défaut. Fixer une tolérance et compter les succès, refus et erreurs dangereuses. Deux méthodes aux résidus moyens voisins peuvent différer fortement sur les vues obliques ou les pièces peu texturées.
+
+**Mesure complète** : consigner résolution, nombre de points et mêmes étapes incluses dans le chronométrage. Un extracteur plus rapide qui produit beaucoup de candidats ambigus peut déplacer le coût vers le matching et RANSAC. Examiner aussi mémoire et latence des cas difficiles. La bonne décision dépend du compromis observé sur le matériel cible et des conséquences d'un échec, pas d'une préférence générale pour une méthode classique ou binaire.
+
+**Repère documentaire de cette passe** : [Lowe 2004](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf), §§3–7.1, détection, orientation, descripteur et matching. Les autres développements figurent dans les [cartes associées](../41-sift.md).
 
 ## Sources et cartes
 

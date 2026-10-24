@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -39,6 +39,32 @@ Baseline proposée : recherche exhaustive sur un sous-ensemble représentatif. F
 ## Diagnostic et alternatives
 
 Une erreur de type avec ORB n’autorise pas à convertir aveuglément les octets en float pour L2 : conserver la métrique de Hamming ou choisir un index adapté. Une baisse d’inliers après accélération peut venir du rappel des deux voisins, pas du détecteur. Une petite base peut favoriser la recherche exhaustive. Une base évolutive impose aussi de mesurer reconstruction et invalidation de l’index. Aucun benchmark FLANN exécuté ; les coûts ci-dessus sont hypothétiques.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent rappel des voisins, ratio et amortissement de l’index. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-FLANN-001
+
+**Question de travail** : Pourquoi un index FLANN peut-il être moins intéressant qu’une recherche exhaustive sur une petite base utilisée une seule fois ?
+
+**Réponse de référence** : Le coût de construction et la mémoire peuvent dépasser le gain sur les requêtes. Comparer $T_{construction}+N_qT_{requête}$ au coût exhaustif pour le nombre réel de requêtes, avec le même objectif de rappel.
+
+**Exemple de coût amorti** : avec 2 s de construction et 1 ms par requête, cent requêtes coûtent environ 2,1 s, tandis qu'une recherche exhaustive à 3 ms chacune coûte 0,3 s. Pour dix mille requêtes sur la même base, les coûts hypothétiques deviennent 12 s et 30 s. Les valeurs illustrent un calcul, sans constituer un benchmark FLANN.
+
+**Interprétation** : le nombre réel de réutilisations de l'index et sa durée de validité décident de l'amortissement. Une base reconstruite à chaque image peut perdre cet avantage. Comparer également la qualité des voisins : diminuer le temps en acceptant un rappel insuffisant n'est pas un gain à objectif constant. Le choix dépend du volume, du matériel, des lots et du protocole.
+
+### Cas lié à CV-FLANN-004
+
+**Question de travail** : Quelles mesures permettent de régler le budget d’une recherche approchée sans masquer une dégradation du pipeline ?
+
+**Réponse de référence** : Mesurer rappel des voisins par rapport à une baseline exacte, latence, mémoire, construction et nombre/qualité des inliers finaux. Faire varier un budget à la fois sur des données réservées.
+
+**Séparer trois mesures** : le rappel de voisins compare l'index à une recherche exacte dans un espace de descripteurs ; la précision des matches compare les paires à une vérité de correspondance ; le succès géométrique juge la transformation obtenue. Ces niveaux peuvent diverger sur des textures répétitives ou des régions mal réparties.
+
+**Courbe de décision proposée** : pour plusieurs budgets, conserver base et requêtes puis reporter temps complet, mémoire, rappel des deux premiers voisins et erreurs du recalage final. Ajouter le coût d'entretien si la base évolue. Choisir une région de fonctionnement qui respecte les contraintes du produit, puis la vérifier sur un lot réservé. Ce résultat ne se résume pas à maximiser le rappel : une recherche exhaustive peut être inutilement chère, mais une approximation très rapide peut être insuffisante.
+
+**Repère documentaire de cette passe** : [Muja et Lowe 2009](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), §§2–3, index et compromis de recherche. Les autres développements figurent dans les [cartes associées](../48-flann.md).
 
 ## Sources et cartes
 
