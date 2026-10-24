@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -201,6 +201,32 @@ Les deux candidates passent le seuil de score. Leur IoU mutuelle vaut $5/11>0{,}
 ## Alternatives et usages
 
 Comparer architecture + recette + supervision + coût complet ; la catégorie one/two-stage seule ne prédit pas la qualité ni la latence.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent contrats d’architecture, appariement et décomposition des erreurs. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-DETECTEURS-001
+
+**Question de travail** : Dans Faster R-CNN, traiter des régions implique-t-il de relancer le backbone complet sur chaque crop ?
+
+**Réponse de référence** : Non : la conception partage des features entre RPN et tête par régions, avec extraction de représentations régionales.
+
+**Lecture du partage de calcul** : le backbone transforme l'image en cartes de features communes. Le réseau de propositions et la tête exploitent ensuite ces représentations selon la variante. Le traitement par régions ajoute un coût lié au nombre et à la taille des représentations régionales, sans imposer de refaire toute l'extraction sur l'image brute pour chacune.
+
+**Exemple de comparaison construite** : deux implémentations peuvent avoir le même backbone mais des nombres de propositions différents, et donc des temps de tête différents. Mesurer extraction, propositions, opérations régionales et posttraitement séparément pour identifier le goulet. Une catégorie two-stage décrit l'organisation des décisions ; elle ne donne pas une formule universelle de latence. Conserver résolution, batch et seuils dans le protocole, et comparer aussi la qualité sur les petits objets et scènes denses. Le choix produit repose sur ce bilan complet, plutôt que sur le seul nombre d'étapes annoncé.
+
+### Cas lié à CV-DETECTEURS-013
+
+**Question de travail** : Une tâche demande de localiser trois voitures et deux vélos, avec un seul label par objet. Est-ce nécessairement une classification multi-étiquette par boîte ? Distinguer nombre d'instances, classes présentes et labels par instance.
+
+**Réponse de référence** : Non : il y a cinq instances, deux classes présentes, mais un label par instance dans ce contrat. La détection peut produire plusieurs instances d'une même classe. Multi-étiquette signifie que plusieurs labels sont valides pour une même instance, selon la taxonomie.
+
+**Exemple de contrat** : cinq objets distincts de deux catégories demandent cinq décisions de localisation et de classe, sans imposer plusieurs labels sur chacune. Une taxonomie hiérarchique peut ajouter une autre règle, mais il faut alors la définir dans les annotations et les sorties attendues.
+
+**Conséquence pour le pipeline** : des boîtes proches peuvent représenter doublons, catégories concurrentes ou objets distincts. NMS ne connaît pas directement cette sémantique. Examiner labels par instance et couverture des annotations avant de transformer une sortie multiclasse en une règle de suppression. Cette distinction relie supervision, posttraitement et évaluation, au lieu de déduire le contrat du seul nombre de labels présents dans l'image.
+
+**Repère documentaire de cette passe** : [DETR](https://arxiv.org/html/2005.12872v3), §3, prédiction d’ensemble et matching. Les autres développements figurent dans les [cartes associées](../82-detection-fasterrcnn-yolo-detr.md).
 
 ## Sources et cartes
 

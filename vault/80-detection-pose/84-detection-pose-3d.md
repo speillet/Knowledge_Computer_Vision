@@ -16,6 +16,12 @@ Reponse: **Noyau attendu** : Boîtes/classes et articulations sont des sorties d
 
 **Approfondissement** : Définir le livrable, repère, visibilité et alignement avant de choisir la mesure.
 
+**Différence des inconnues** : une détection 3D fournit généralement une localisation, des dimensions et une orientation de boîte avec une classe. Une pose articulée décrit des positions de joints et leurs relations ; une pose rigide d'objet relie un modèle à une observation. Ces sorties ne codent pas la même géométrie.
+
+**Exemple construit** : une boîte entourant un piéton ne dit pas où se trouvent ses poignets. Un squelette bien ajusté ne fournit pas nécessairement une boîte 3D métrique dans le repère capteur. Définir d'abord l'information consommée par le module aval, ses unités et le traitement des points invisibles. Choisir ensuite correspondances et alignement autorisés dans l'évaluation. Une comparaison de scores hétérogènes peut être trompeuse même lorsque tous les articles emploient le mot pose. Une mesure doit être interprétée par son protocole, pas par son seul intitulé.
+
+La référence et l'unité doivent être choisies selon l'information que le consommateur utilise réellement.
+
 **Erreurs bloquantes** : Assimiler tout problème appelé pose à la même métrique.
 Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [CenterPoint, résumé et §4](https://arxiv.org/abs/2006.11275) ; [OpenPose, résumé et fig. 2](https://arxiv.org/abs/1611.08050).
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-POSE3D-001 provenance::agent pole::A pole::C
@@ -32,6 +38,12 @@ Question: Quels éléments vérifier si des boîtes 3D ont les bons centres mais
 Reponse: **Noyau attendu** : Repère, ancrage du centre, ordre des dimensions, axe/signe du yaw et radians/degrés.
 
 **Approfondissement** : Tester une boîte connue et sa transformation entre capteurs ; le problème peut être un contrat de données.
+
+**Exemple de convention** : permuter longueur et largeur peut faire sembler une boîte tournée d'un quart de tour, alors que son centre reste correct. Un centre défini au sol et un centre géométrique peuvent aussi différer en hauteur. Ces erreurs se situent à l'interface entre représentation et système, sans nécessiter un défaut de features.
+
+**Contrôle proposé** : construire une boîte asymétrique de dimensions connues, la transformer entre repères puis revenir au repère initial. Vérifier ses coins, l'axe de rotation, le sens du yaw et l'unité d'angle. Utiliser une forme asymétrique évite de masquer une permutation. Comparer ensuite aux conventions exactes du jeu de données et de la visualisation. Un rendu plausible sur une voiture presque symétrique ne suffit pas. Une fois les conventions validées, analyser les erreurs de modèle sur des annotations réservées.
+
+Comparer les coins après aller-retour permet de vérifier cette cohérence indépendamment d'un réseau.
 
 **Erreurs bloquantes** : Réentraîner sans contrôler la convention de boîte.
 Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; Diagnostic de conventions proposé par le projet ; [nuScenes, format et métriques](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulté le 2026-10-20.
@@ -50,6 +62,10 @@ Reponse: **Noyau attendu** : L’association nuScenes utilise des distances de c
 
 **Approfondissement** : NDS combine aussi erreurs d’attributs géométriques/dynamiques ; nommer version, filtres et unités.
 
+**Ce que change l'appariement** : un critère de distance entre centres au sol ne pénalise pas dimensions et orientation de la même façon qu'un recouvrement de boîtes. Des erreurs peuvent donc être traitées dans d'autres termes ou indicateurs du benchmark. Le même mot AP ne rend pas identiques la notion de vrai positif et ses conditions.
+
+**Comparaison proposée** : relever classes, filtres de distance, unités, seuils et règles d'appariement dans la version du protocole, puis tester quelques prédictions connues. Examiner séparément position, orientation, taille et autres attributs utiles au produit. Une amélioration de l'AP ne garantit pas automatiquement une meilleure géométrie de tous les attributs. Ne pas copier un seuil COCO parce qu'il porte un nom familier ; choisir une mesure adaptée au contrat de la sortie 3D et annoncer ce qu'elle ne teste pas.
+
 **Erreurs bloquantes** : Transposer les seuils IoU COCO à tout benchmark 3D.
 Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [nuScenes, Average Precision metric et nuScenes detection score](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulté le 2026-10-20 ; [COCO bbox](https://cocodataset.org/#detection-eval).
 Tags: cv::pilote cv::d08 famille::evaluation cv_id::CV-POSE3D-003 provenance::agent pole::A pole::C
@@ -66,6 +82,10 @@ Question: Un objet cylindrique est localisé correctement mais sa rotation autou
 Reponse: **Noyau attendu** : La symétrie visuelle et la définition de pose/évaluation : cette composante peut être ambiguë avec les observations disponibles.
 
 **Approfondissement** : Ajouter un indice distinctif si le produit exige cet angle ; un solveur plus précis ne crée pas un repère visible absent.
+
+**Intuition d'identifiabilité** : si plusieurs rotations de l'objet produisent la même apparence sous les observations disponibles, la vision ne peut pas toujours choisir une orientation unique. Le modèle d'évaluation doit alors préciser comment les symétries sont traitées et quelles parties de la pose restent observables.
+
+**Exemple construit** : un cylindre sans marque distinctive peut être invariant à une rotation autour de son axe. Un marquage visible brise éventuellement cette ambiguïté ; une meilleure optimisation seule ne le fait pas apparaître. Si une étape d'assemblage exige cet angle, prévoir l'information supplémentaire et la mesurer. Une boîte orientée ou un score de pose faible ne suffit pas à trancher un degré de liberté symétrique. Rapporter la convention et l'incertitude évite de pénaliser arbitrairement des solutions visuellement équivalentes ou, inversement, de masquer une erreur observable sur un objet marqué.
 
 **Erreurs bloquantes** : Déclarer toute variation d’un angle symétrique comme une erreur observable.
 Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [BOP, métriques VSD/MSSD/MSPD et symétries](https://bop.felk.cvut.cz/tasks/), consulté le 2026-10-20 ; application au cylindre : raisonnement du projet.

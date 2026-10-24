@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -50,6 +50,32 @@ Un défaut disparaît après super-résolution : vérifier que l'objectif favori
 ## Alternatives et usages
 
 Génératif pour synthèse/annotation assistée selon validation ; modèle de mesure explicite pour métrologie. Les données synthétiques doivent être évaluées face aux distributions réelles.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent distribution conditionnelle et fidélité de la restauration. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-DIFFUSION-001
+
+**Question de travail** : Dans un modèle de diffusion, pourquoi entraînement et sampling ne sont-ils pas la même opération ?
+
+**Réponse de référence** : L’entraînement apprend une règle de débruitage sous une distribution de bruit ; le sampling utilise cette règle dans une procédure pour produire une sortie.
+
+**Décomposition du processus** : durant l'apprentissage, on construit des exemples bruités à des niveaux choisis et on optimise une cible de prédiction selon la formulation. Au sampling, les poids sont utilisés dans une suite d'opérations pour transformer une condition et du bruit en sortie. Les données vues et les décisions prises à ces deux moments diffèrent.
+
+**Exemple de contrôle** : conserver poids et conditionnement, puis comparer plusieurs nombres d'étapes et seeds sur un ensemble défini. Mesurer coût, diversité et fidélité à la condition plutôt que conclure depuis une seule image favorable. Le marginal forward à un niveau de bruit n'est pas toute la procédure inverse de génération. Une sortie vraisemblable peut remplir des détails non observés ; elle ne devient pas une mesure physique parce que l'entraînement a convergé. Pour une tâche de restauration, la conservation de l'information critique doit donc être évaluée séparément.
+
+### Cas lié à CV-DIFFUSION-003
+
+**Question de travail** : Une super-résolution rend une image nette mais modifie une fissure. Pourquoi est-ce un défaut pour l’inspection ?
+
+**Réponse de référence** : La plausibilité visuelle n’est pas la fidélité à l’observation critique ; le modèle peut supprimer ou inventer une structure.
+
+**Pourquoi la netteté peut tromper** : plusieurs images détaillées peuvent être compatibles avec une observation basse résolution. Le modèle utilise ses régularités apprises pour choisir une reconstruction plausible. Cette décision peut créer une texture crédible sans correspondre à la fissure réellement présente.
+
+**Validation proposée** : conserver le brut et, si possible, une référence acquise avec une résolution adaptée, puis mesurer conservation, largeur et localisation des défauts. Comparer à une restauration simple avec hypothèses explicites et examiner les erreurs sur cas rares. Ne pas remplacer la preuve d'acquisition par une image générée plus convaincante. Une amélioration de score perceptuel ou de reconstruction globale peut masquer la modification d'une structure petite mais critique. Le choix dépend de l'objectif : produire une illustration et mesurer une fissure n'exigent pas la même fidélité. Aucun générateur n'est exécuté dans ce cas, qui sert à raisonner sur le contrat de sortie.
+
+**Repère documentaire de cette passe** : [Latent Diffusion Models](https://arxiv.org/html/2112.10752v2), §3, espace latent et conditionnement. Les autres développements figurent dans les [cartes associées](../122-generation-restauration.md).
 
 ## Sources et cartes
 
