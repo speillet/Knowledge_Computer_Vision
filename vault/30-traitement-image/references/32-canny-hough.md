@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -50,6 +50,32 @@ Trop de lignes sur texture : contrôler d'abord les contours, la région utile e
 ## Alternatives et usages
 
 LSD, ajustement robuste et modèles appris selon continuité, bruit et besoin de segment. Une contrainte géométrique métier peut limiter les faux positifs.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent relier contours, votes et validation géométrique. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-CANNY-HOUGH-001
+
+**Question de travail** : Pourquoi Canny utilise-t-il deux seuils plutôt qu’un simple seuil de gradient ?
+
+**Réponse de référence** : Les contours forts amorcent des structures ; des réponses plus faibles peuvent être retenues lorsqu’elles sont reliées aux fortes selon l’hystérésis.
+
+**Déroulement interprété** : le gradient mesure une variation locale d'intensité. La suppression des non-maxima conserve les crêtes dans la direction du gradient afin d'éviter des bandes épaisses. L'hystérésis décide ensuite quelles crêtes faibles prolongent une structure suffisamment forte. Le seuil bas permet une continuité conditionnelle ; il ne rend pas toutes les réponses faibles admissibles.
+
+**Exemple construit** : une arête éclairée de façon inégale comporte une portion contrastée et une portion faible. Un seuil unique élevé fragmente l'arête ; un seuil unique bas retient aussi beaucoup de texture. Les deux seuils permettent de conserver certaines portions faibles reliées à la portion forte. Si tout le contour est faible et sans amorce forte, il peut rester absent. Le réglage dépend de l'échelle de lissage, du contraste et de la définition du gradient ; aucune de ces étapes ne distingue à elle seule arête de pièce et texture du fond.
+
+### Cas lié à CV-CANNY-HOUGH-004
+
+**Question de travail** : Hough produit beaucoup de droites sur une surface texturée. Quel contrôle évite un réglage aveugle du seuil de vote ?
+
+**Réponse de référence** : Inspecter carte Canny, distribution angulaire, région utile et support spatial des candidats.
+
+**Enquête proposée** : superposer les droites et leurs points de support à l'image. Si les votes proviennent de stries répétées, le détecteur répond peut-être correctement à des contours qui ne sont simplement pas ceux de la pièce. Examiner ensuite la distribution des angles et le nombre de fragments : cela distingue une texture structurée d'un bruit dispersé.
+
+**Ablation construite** : fixer les bins et seuils, restreindre une région d'intérêt, puis modifier séparément le lissage et la contrainte d'orientation attendue. Mesurer lignes métier trouvées, faux candidats et erreur de position. Augmenter seulement le seuil de vote peut éliminer une arête utile peu contrastée tout en conservant une texture longue et répétitive. Une contrainte géométrique aide uniquement si elle reste valable pour les orientations réellement rencontrées. L'accumulateur compte un support photométrique ; la validation du modèle de pièce est une décision supplémentaire du pipeline.
+
+**Repère documentaire de cette passe** : [OpenCV 4.13, Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html), paramétrisation polaire et votes. Les autres développements figurent dans les [cartes associées](../32-canny-hough.md).
 
 ## Sources et cartes
 
