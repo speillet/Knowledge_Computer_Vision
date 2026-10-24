@@ -191,6 +191,7 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-18 | CV-FACTEURS, révision 2 | CV-FACTEURS-001 à 003 ; fiche | Hypothèses du MAP quadratique omises et références génériques ; Kaess §2, Ceres Gauge Invariance | Facteurs gaussiens à covariances fixes ; références ciblées et scénario distingué | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-24 | CV-FACTEURS, révision 5 | CV-FACTEURS-003, CV-FACTEURS-005 ; fiche | Test de résidu post-ajustement assimilable à une innovation indépendante ; relinéarisation omise dans les cliques affectées | Présenter le seuil comme heuristique, contrôler corrélations et retrait de boucle ; inclure variables relinéarisées | Agent Codex, auto-revue (`revue-cartes`) | Contrôleur, tests, inventaire ; rapport 2026-10-24 | Non synchronisé |
 | 2026-10-18 | CV-ACQUISITION, révision 2 | CV-ACQUISITION-001 à 004 | Sources bruit/résolution utilisées aussi pour gamma, décimation et calcul de flou | Sources par affirmation ; modèle cinématique et checklist identifiés comme raisonnements du projet | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
+| 2026-10-24 | CV-ACQUISITION, révision 5 | CV-ACQUISITION-002, CV-ACQUISITION-003 ; fiche | Comparaison de resize 2022 généralisée au présent ; symboles et unités SNR absents | Limiter l’observation à Parmar 2022 ; définir QE, photons, gain et variances, préciser modèle linéaire | Agent Codex, auto-revue (`revue-cartes`) | Contrôleur, tests, inventaire ; rapport 2026-10-24 | Non synchronisé |
 | 2026-10-18 | CV-CAPTEURS, révision 2 | CV-CAPTEURS-002 à 004 | Forster/Basler ne soutiennent pas le Doppler radar et ne décrivent pas le cas LiDAR | Références TI/LOAM et attribution du calcul au projet | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-18 | CV-IMAGERIES, révision 2 | CV-IMAGERIES-001 à 003 | Source line-scan absente ; URL SpaceNet7 obsolète ; fuite géographique attribuée implicitement au dataset | Sources Basler/DICOM ciblées, lien SpaceNet actualisé et raisonnement du split distingué | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-18 | CV-FILTRES, révision 2 | CV-FILTRES-002, 003, 004 | Noyau 002 sans conversion explicite ; formule et pyramide insuffisamment sourcées | Sigma divisé par 255 ; source Tomasi–Manduchi et pyramides ; protocole PSNR identifié comme choix | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
@@ -299,6 +300,8 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-002 ; fiche | Enrichissement accepté : dimension et traitement de la jauge absents ; Zhang, Gallego et Scaramuzza 2018 ; Ceres, Gauge Invariance | Jauge de dimension 6, 7 ou 4 selon les capteurs ; fixer, prior ou jauge libre | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-003 ; CV-FACTEURS-004 ; fiche | Enrichissement accepté : aucun test chiffré de boucle ni back-end robuste ; Agarwal et al. 2013, §§II–IV | Test $\chi^2$ par facteur ; comparaison perte robuste, contraintes commutables, DCS et RRR | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-FACTEURS, révision 4 | CV-FACTEURS-005 ; fiche | Enrichissement accepté : « incrémental » cité sans mécanisme ; Kaess et al. 2012, §§3.3–4.2 | Partie affectée de l'arbre de Bayes, seuils $\beta$ et $\alpha$ | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-ACQUISITION, révision 3 | CV-ACQUISITION-003 ; fiche | Aliasing et convention de resize attribués au tutoriel OpenCV des pyramides, qui ne les traite pas ; Parmar et al. 2022, §§1–3.2 et 6.3 | Source dédiée ; préfiltre et différences entre bibliothèques en approfondissement | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-ACQUISITION, révision 4 | CV-ACQUISITION-002 ; fiche | Enrichissement accepté : comparaison gain/exposition qualitative et recto en « pourquoi » ; EMVA 1288, §2.6, équations 21–22, et §2.7 | Comparaison chiffrée du SNR, du flou et de la saturation ; objectif inchangé | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 
 ## Extension éditoriale et contrôles — 2026-10-18
 
@@ -462,6 +465,14 @@ appliquées ; les enrichissements sont soumis à l'accord de l'apprenant.
   ajouts acceptés CV-FACTEURS-004 (fausses boucles) et 005 (iSAM2),
   enrichissement de 002 et 003. Rapport :
   `docs/revues/2026-10-23/14-graphes-facteurs.md`.
+- CV-ACQUISITION, révision 3 : source de la carte 003 corrigée (aliasing de
+  resize). Révision 4 : CV-ACQUISITION-002 réécrite en comparaison chiffrée
+  gain/exposition. Rapport :
+  `docs/revues/2026-10-23/21-exposition-bruit-echantillonnage.md`.
+
+Passage arrêté à la demande de l'apprenant après CV-ACQUISITION : les
+sujets suivants, à partir de CV-CAPTEURS, n'ont pas été revus. Les
+enrichissements non retenus restent décrits dans les rapports.
 
 Le lot courant passe de 233 à 244 cartes ; statut `redige` conservé.
 
@@ -477,7 +488,8 @@ Calculs exécutés hors dépôt (Python 3.10.13, NumPy 2.2.6, SciPy 1.13.1) :
   configurations de 200 tirages, blanchiment en mètres et millimètres ;
 - SE(3) : centre caméra, angle géodésique et angles d'Euler près du blocage
   de cardan, double couverture, conversion OpenCV→OpenGL ;
-- Kalman : quantiles du $\chi^2$ à 95 % pour $m=1$ à 4.
+- Kalman : quantiles du $\chi^2$ à 95 % pour $m=1$ à 4 ;
+- acquisition : SNR EMVA selon le gain et le nombre d'électrons.
 
 Cas construits, pas des mesures terrain. Context7 n'est pas disponible dans
 cette session : documentations officielles consultées directement, ou fichiers
