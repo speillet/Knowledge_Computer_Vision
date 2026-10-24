@@ -9,6 +9,8 @@ Intrinsèques, repères, distorsion, homographies, pose et reconstruction.
 | [Épipolaire, PnP et triangulation](53-epipolaire-pnp-triangulation.md) | [Lire](references/53-epipolaire-pnp-triangulation.md) | 5 | B, C |
 | [Bundle adjustment et complément de Schur](54-bundle-adjustment.md) | [Lire](references/54-bundle-adjustment.md) | 4 | B, C |
 | [Calibration multicapteurs, hand-eye et temps](55-calibration-multicapteurs.md) | [Lire](references/55-calibration-multicapteurs.md) | 3 | B, C, E |
+| [Calibration fisheye — projection angulaire et validation hors centre](56-calibration-fisheye.md) | [Lire](references/56-calibration-fisheye.md) | 5 | B, C, E |
+| [Hand-eye calibration — résoudre AX = XB sans mélanger les repères](57-calibration-hand-eye.md) | [Lire](references/57-calibration-hand-eye.md) | 5 | B, C, E |
 
 Sous-deck : `CV::Pilote::50-calibration-geometrie`. Statut : rédigé ; export et maîtrise non vérifiés.
 

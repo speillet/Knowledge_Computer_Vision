@@ -1,6 +1,6 @@
 # Suivi du pilote : preuves et limites
 
-**Lot courant** : 52 fiches, 244 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
+**Lot courant** : 60 fiches, 282 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
 **Client de révision** : AnkiDroid, confirmé par l'apprenant le 2026-10-18.
 Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
@@ -8,7 +8,7 @@ Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
 | Dimension | État |
 | --- | --- |
-| Rédaction | 52 fiches et 52 ensembles de cartes présents ; 129 approfondissements ouverts |
+| Rédaction | 60 fiches et 60 ensembles de cartes présents ; 119 approfondissements ouverts |
 | Revue documentaire | Auto-revue assistée par agents, consignée ci-dessous |
 | Validation scientifique indépendante | Non effectuée |
 | Contrôles de fichiers et calculs | Exécutés localement, voir preuves |
@@ -118,7 +118,7 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 | Essai | Attendu | Observation / date / responsable |
 | --- | --- | --- |
 | Installation et mapping | Modèle CV-Pilote, quatre champs, un gabarit | Non exécuté |
-| Création | 244 notes et 244 cartes, identités distinctes | Non exécuté |
+| Création | 282 notes et 282 cartes, identités distinctes | Non exécuté |
 | Scan inchangé | Nombres et identités inchangés | Non exécuté |
 | Mise à jour après révision | Même note et historique conservé | Non exécuté |
 | Texte, listes, formules/matrice | Lisibles dans Obsidian, Anki, AnkiDroid | Non exécuté |
@@ -191,6 +191,14 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-18 | CV-FACTEURS, révision 2 | CV-FACTEURS-001 à 003 ; fiche | Hypothèses du MAP quadratique omises et références génériques ; Kaess §2, Ceres Gauge Invariance | Facteurs gaussiens à covariances fixes ; références ciblées et scénario distingué | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-24 | CV-FACTEURS, révision 5 | CV-FACTEURS-003, CV-FACTEURS-005 ; fiche | Test de résidu post-ajustement assimilable à une innovation indépendante ; relinéarisation omise dans les cliques affectées | Présenter le seuil comme heuristique, contrôler corrélations et retrait de boucle ; inclure variables relinéarisées | Agent Codex, auto-revue (`revue-cartes`) | Contrôleur, tests, inventaire ; rapport 2026-10-24 | Non synchronisé |
 | 2026-10-18 | CV-ACQUISITION, révision 2 | CV-ACQUISITION-001 à 004 | Sources bruit/résolution utilisées aussi pour gamma, décimation et calcul de flou | Sources par affirmation ; modèle cinématique et checklist identifiés comme raisonnements du projet | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
+| 2026-10-24 | CV-CORNERS, révision 1 | CV-CORNERS-001 à 005 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
+| 2026-10-24 | CV-FAST-BRIEF, révision 1 | CV-FAST-BRIEF-001 à 005 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
+| 2026-10-24 | CV-FLANN, révision 1 | CV-FLANN-001 à 004 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
+| 2026-10-24 | CV-FISHEYE, révision 1 | CV-FISHEYE-001 à 005 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
+| 2026-10-24 | CV-HANDEYE, révision 1 | CV-HANDEYE-001 à 005 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
+| 2026-10-24 | CV-FARNEBACK, révision 1 | CV-FARNEBACK-001 à 005 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
+| 2026-10-24 | CV-CORRELATION, révision 1 | CV-CORRELATION-001 à 005 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
+| 2026-10-24 | CV-MEANSHIFT, révision 1 | CV-MEANSHIFT-001 à 004 | Lacune prioritaire, ajout demandé par l’apprenant | Fiche, cartes corrigibles, sources et protocole de variation | Agent Codex | Voir rapport des ajouts prioritaires | Non synchronisé |
 | 2026-10-24 | CV-ACQUISITION, révision 5 | CV-ACQUISITION-002, CV-ACQUISITION-003 ; fiche | Comparaison de resize 2022 généralisée au présent ; symboles et unités SNR absents | Limiter l’observation à Parmar 2022 ; définir QE, photons, gain et variances, préciser modèle linéaire | Agent Codex, auto-revue (`revue-cartes`) | Contrôleur, tests, inventaire ; rapport 2026-10-24 | Non synchronisé |
 | 2026-10-18 | CV-CAPTEURS, révision 2 | CV-CAPTEURS-002 à 004 | Forster/Basler ne soutiennent pas le Doppler radar et ne décrivent pas le cas LiDAR | Références TI/LOAM et attribution du calcul au projet | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-18 | CV-IMAGERIES, révision 2 | CV-IMAGERIES-001 à 003 | Source line-scan absente ; URL SpaceNet7 obsolète ; fuite géographique attribuée implicitement au dataset | Sources Basler/DICOM ciblées, lien SpaceNet actualisé et raisonnement du split distingué | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
@@ -499,3 +507,31 @@ de Crète, l'éditeur étant payant.
 
 Auto-revue par Agent Claude Code (`revue-cartes`), sans export réel, rendu
 Obsidian/AnkiDroid, validation indépendante ni mesure de maîtrise.
+
+## Ajouts prioritaires — 2026-10-24
+
+Les PR 13, 14, 15 et 16 ont été vérifiées, corrigées puis fusionnées dans cet
+ordre. Leurs six nouvelles cartes portent le lot de 238 à 244 cartes. Les
+rapports ciblés du 24 octobre conservent les limites de cette auto-revue.
+
+À la demande de l’apprenant, huit sujets prioritaires ajoutent 38 cartes :
+Harris/Shi–Tomasi, FAST/BRIEF, FLANN, fisheye, hand-eye, Farnebäck, MOSSE/KCF
+et MeanShift/CamShift. Le total courant est **60 fiches et 282 cartes** dans
+les 14 thèmes. Dix IDs APP sont reliés à des fiches au niveau opérationnel ;
+119 entrées restent ouvertes, avec compétences/prérequis à préparer.
+Ce lot ne ferme pas les variantes spécialisées ni les essais applicatifs.
+
+Les calculs analytiques du lot ont été exécutés hors dépôt avec Python et la
+bibliothèque standard : Harris −308,04 et 336 ; Hamming 2 ; coût construit
+FLANN 2,1/0,3 s pour 100 requêtes puis 12/30 s pour 10 000 ; rayons à 60°
+314,16 et 519,62 px ; déplacement Farnebäck idéal (2,−1) px ; vitesse image
+(100,−50) px/s ; PSR 6 ; centroïde pondéré 13 px. Les coûts FLANN sont des
+hypothèses numériques, sans mesure de performance réelle.
+
+Sources et critères du lot : `docs/ajouts-prioritaires-2026-10-24.md` dans le dépôt.
+Contrôles exécutés : 37 tests réussis, contrôleur OK sur 141 documents, catalogue
+à jour. Le parseur officiel 3.6.0 (SHA256 identique au premier essai) a reconnu
+282 notes et IDs uniques dans 14 sous-decks ; seconde passe avec IDs simulés :
+282 mises à jour, zéro ajout. Maths, code et SVG convertis. Aucune requête à
+Anki envoyée ; le harness reste temporaire et extérieur au dépôt. Ces résultats
+ne prouvent ni export réel, ni historique, ni médias synchronisés, ni rendu AnkiDroid.

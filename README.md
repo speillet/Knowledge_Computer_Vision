@@ -23,21 +23,21 @@ Voir les [conventions de classement](docs/vault-layout.md).
 ## Couverture actuelle
 
 <!-- cv-catalog:start -->
-**52 fiches et 244 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**60 fiches et 282 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
 
 | Thématique | Fiches | Cartes |
 | --- | ---: | ---: |
 | [Mathématiques et estimation](vault/10-mathematiques-estimation/00-index.md) | 4 | 26 |
 | [Formation et acquisition des images](vault/20-acquisition-images/00-index.md) | 3 | 11 |
 | [Traitement d'image classique](vault/30-traitement-image/00-index.md) | 3 | 11 |
-| [Features, matching et recalage](vault/40-features-matching/00-index.md) | 5 | 25 |
-| [Calibration et géométrie multivue](vault/50-calibration-geometrie/00-index.md) | 5 | 26 |
+| [Features, matching et recalage](vault/40-features-matching/00-index.md) | 8 | 39 |
+| [Calibration et géométrie multivue](vault/50-calibration-geometrie/00-index.md) | 7 | 36 |
 | [Vision 3D](vault/60-vision-3d/00-index.md) | 4 | 19 |
 | [Reconnaissance et représentations](vault/70-reconnaissance-representations/00-index.md) | 5 | 18 |
 | [Détection et pose](vault/80-detection-pose/00-index.md) | 4 | 26 |
 | [Segmentation](vault/90-segmentation/00-index.md) | 4 | 15 |
-| [Mouvement et vidéo](vault/100-mouvement-video/00-index.md) | 2 | 8 |
-| [Tracking et association](vault/110-tracking-association/00-index.md) | 3 | 14 |
+| [Mouvement et vidéo](vault/100-mouvement-video/00-index.md) | 3 | 13 |
+| [Tracking et association](vault/110-tracking-association/00-index.md) | 5 | 23 |
 | [Vision générative et multimodale](vault/120-generatif-multimodal/00-index.md) | 3 | 10 |
 | [Données, évaluation et fiabilité](vault/130-evaluation-fiabilite/00-index.md) | 4 | 21 |
 | [Ingénierie des systèmes de vision](vault/140-ingenierie-systemes/00-index.md) | 3 | 14 |
