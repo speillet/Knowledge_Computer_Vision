@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-MORPHO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -50,6 +50,32 @@ Deux grains restent fusionnés : inspecter marqueurs et topographie. Trop de fra
 ## Alternatives et usages
 
 Seuillage local pour éclairage variable, GrabCut pour interaction, modèle d'instances si variations dépassent les hypothèses simples.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent histogramme, distance et rôle des marqueurs. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-WATERSHED-001
+
+**Question de travail** : Pourquoi un seuil Otsu optimal sur l’histogramme peut-il être mauvais pour segmenter les défauts ?
+
+**Réponse de référence** : L’objectif sépare des intensités selon une variance, pas des catégories métier ; éclairage, déséquilibre et bruit peuvent dominer.
+
+**Lecture de l'objectif** : Otsu choisit une coupure selon les poids et moyennes des groupes d'intensité. Une partition qui sépare bien deux niveaux de luminosité peut surtout distinguer ombre et zone éclairée, alors que le défaut traverse les deux. L'optimum appartient au critère statistique retenu, pas à une connaissance des pièces.
+
+**Exemple construit** : un défaut très petit et peu contrasté pèse peu dans l'histogramme global d'une grande image. Une coupure adaptée au fond majoritaire peut donc le manquer. Comparer le masque aux annotations de défauts, en stratifiant tailles et éclairage. Tester une correction d'acquisition ou un seuillage local si elle correspond à l'hypothèse observée, sans supposer que tout seuil automatique est robuste à toute scène. Pour du comptage, il faudra encore séparer les objets : une partition binaire correcte ne fournit pas leurs identités d'instance.
+
+### Cas lié à CV-WATERSHED-005
+
+**Question de travail** : Pourquoi une IoU binaire élevée peut-elle masquer l’échec d’un pipeline de comptage watershed ?
+
+**Réponse de référence** : La fusion de plusieurs objets peut conserver presque toute la région de premier plan mais perdre le nombre et l’identité des instances.
+
+**Exemple analytique** : deux objets adjacents dont l'union est exactement prédite peuvent donner un masque de premier plan parfait. Si la sortie ne possède qu'un label pour cette union, le recouvrement binaire vaut pourtant un alors que le comptage de deux objets échoue. La métrique ne contredit pas l'échec : elle mesure une autre sortie.
+
+**Évaluation proposée** : définir une association entre instances prédites et réelles, puis compter objets retrouvés, fusions, fragments et faux objets. Conserver le masque global comme mesure complémentaire, en annonçant seuils et traitement des contacts. Vérifier plusieurs densités et tailles, car les erreurs de séparation peuvent augmenter dans les zones où la région binaire reste bonne. Le contrat du produit, par exemple compter des pièces, doit donc guider les annotations et les mesures avant le choix du pipeline de segmentation.
+
+**Repère documentaire de cette passe** : [OpenCV 4.13, Watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html), marqueurs, transformée de distance et frontières. Les autres développements figurent dans les [cartes associées](../91-otsu-distance-watershed.md).
 
 ## Sources et cartes
 
