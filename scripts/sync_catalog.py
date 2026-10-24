@@ -47,6 +47,25 @@ def collect(vault):
     return entries
 
 
+
+def partition_targets(targets, known_ids):
+    """Conserve chaque cible ; une promotion exige une fiche existante."""
+    opened, drafted, seen = [], [], set()
+    for target in targets:
+        identity = target['id']
+        if identity in seen:
+            raise ValueError('Cible de couverture dupliquée : ' + identity)
+        seen.add(identity)
+        reference = target.get('fiche')
+        if reference:
+            if reference not in known_ids:
+                raise ValueError('Fiche de couverture absente : ' + reference)
+            drafted.append(target)
+        else:
+            opened.append(target)
+    return opened, drafted
+
+
 def outputs(root):
     vault = root / 'vault'
     entries = collect(vault)
@@ -88,11 +107,21 @@ def outputs(root):
             inv += f"| {e['id']} — {e['title']} / {e['type']} | {e['priorite']} / {e['profondeur']} | {', '.join(e['poles'])} | {pre} | [Fiche](../{e['ref']}) · [{len(e['card_ids'])} cartes](../{e['cards_path']}) | {e['statut']}, export non vérifié ; maîtrise non mesurée |\n"
     inv += '\n## Approfondissements encore ouverts\n\nCette liste conserve des méthodes/variantes nommées dans la cartographie mais non traitées individuellement à la profondeur cible. Une introduction dans une comparaison ou un pipeline ne ferme pas cette lacune. Les objectifs d’apprentissage, dépendances obligatoires et sources seront précisés avant leur rédaction. Les liens ci-dessous sont des connexions thématiques, pas des prérequis déjà validés.\n\n'
     targets = json.loads((root / 'scripts/coverage_targets.json').read_text(encoding='utf-8'))
+    opened, drafted = partition_targets(targets, by_id)
+    if drafted:
+        inv += f'{len(opened)} entrées encore ouvertes ; {len(drafted)} entrées disposent désormais de fiches au niveau cible. Rédaction et validation restent distinctes.\n\n'
     inv += '| Entrée | Domaine | Pôles | Cible | Connexion thématique | État |\n| --- | --- | --- | --- | --- | --- |\n'
-    for t in targets:
+    for t in opened:
         parent = by_id.get(t.get('connexe'))
         link = f"[Introduction connexe](../{parent['ref']})" if parent else 'À préciser avant rédaction'
         inv += f"| {t['id']} — {t['titre']} | {t['domaine']} | {', '.join(t['poles'])} | {t['priorite']} / {t['profondeur']} | {link} | À approfondir ; compétences, prérequis et source à préciser |\n"
+    if drafted:
+        inv += '\n## Entrées du backlog désormais rédigées\n\nLes IDs APP sont conservés pour retracer la progression. Le contenu existe au niveau indiqué ; variantes supplémentaires, export et maîtrise restent à valider séparément.\n\n'
+        inv += '| Entrée | Fiche et profondeur | Compétences visées | Prérequis obligatoires | État |\n| --- | --- | --- | --- | --- |\n'
+        for target in drafted:
+            entry = by_id[target['fiche']]
+            prerequisites = ', '.join(f"[{identity}](../{by_id[identity]['ref']})" for identity in target['prerequis']) or '[Conventions](Pre-requis.md)'
+            inv += f"| {target['id']} — {target['titre']} | [{entry['title']}](../{entry['ref']}) / {entry['profondeur']} | {' ; '.join(target['competences'])} | {prerequisites} | Rédigé ; export et maîtrise non vérifiés |\n"
     result[vault / '01-Parcours/Inventaire.md'] = inv
     pole_doc = '# Parcours par pôle métier\n\nLes pôles sont une surcouche des thèmes ; une fiche partagée conserve un seul domaine et un seul ID. Ces comptes suivent la rédaction, pas l’aptitude à un poste ni la maîtrise. La vague V0 reste prioritaire.\n\n'
     for letter, title in POLES.items():
