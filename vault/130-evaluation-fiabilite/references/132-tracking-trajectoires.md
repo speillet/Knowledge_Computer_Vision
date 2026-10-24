@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-VIO", "CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -50,6 +50,32 @@ Score global bon mais trajectoire rare perdue : analyser longueurs, segments et 
 ## Alternatives et usages
 
 Choisir une batterie liée au produit : détection, identité, localisation et coût. NDS/mAP nuScenes constituent encore un autre protocole de sortie 3D.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent identité, agrégation HOTA et alignement de trajectoire. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-METRIQUES-TEMPS-001
+
+**Question de travail** : Comment deux systèmes peuvent-ils avoir la même AP frame par frame et des qualités de tracking différentes ?
+
+**Réponse de référence** : Les boîtes/classes peuvent être identiques tandis que les IDs sont échangés ou fragmentés ; AP ne mesure pas cette continuité.
+
+**Exemple construit** : conserver exactement les boîtes et les classes de deux piétons, mais échanger leurs IDs au milieu de la vidéo. Les associations spatiales à la GT peuvent rester identiques à chaque frame pour l'évaluation de détection. La continuité temporelle, elle, devient fausse.
+
+**Choix de mesures** : examiner détection, association, fragments et cas de disparition dans un protocole de séquence annoncé. Une métrique d'identité demande ses propres règles d'association et d'agrégation ; un nombre de changements d'ID ne remplace pas forcément tous les autres aspects du suivi. Comparer les mêmes séquences, périodes ignorées et détections lorsqu'on cherche l'apport de l'association. Le résultat produit peut aussi dépendre des sorties émises pendant les pertes. Cette distinction explique pourquoi le parcours introduit l'IoU avant SORT, puis revient aux métriques temporelles après avoir défini les responsabilités du tracker.
+
+### Cas lié à CV-METRIQUES-TEMPS-005
+
+**Question de travail** : Deux outils donnent des erreurs de trajectoire différentes pour les mêmes poses. Que contrôler ?
+
+**Réponse de référence** : Appariement temporel, interpolation, conventions de pose, alignement, intervalles et traitement des pertes.
+
+**Enquête reproductible** : vérifier d'abord les timestamps et combien de poses ont effectivement été appariées. Contrôler ensuite sens caméra→monde ou monde→caméra, unités des translations et convention de rotation. Rejouer une trajectoire synthétique connue avec une translation globale puis une erreur d'échelle pour observer ce que chaque outil retire.
+
+**Comparaison équitable** : conserver fichiers et versions, groupe d'alignement, interpolation et intervalle de RPE, ainsi que traitement des absences. Deux outils peuvent afficher ATE tout en différant dans ces choix. Une différence de protocole ne constitue pas immédiatement une erreur de l'estimateur. Une fois les conventions alignées, les écarts restants justifient une inspection plus précise du calcul. La trace doit permettre à un autre ingénieur de reproduire le même ensemble de poses comparées et la même grandeur, et pas seulement une image de trajectoires superposées.
+
+**Repère documentaire de cette passe** : [Luiten et al., HOTA](https://arxiv.org/pdf/2009.07736), définition HOTA, DetA, AssA et agrégation. Les autres développements figurent dans les [cartes associées](../132-tracking-trajectoires.md).
 
 ## Sources et cartes
 

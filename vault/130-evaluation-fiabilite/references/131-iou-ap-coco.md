@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 3
+revision: 4
 tags: [cv/d13, evaluation, iou, ap]
 ---
 # IoU et AP — protocole COCO de détection
@@ -123,6 +123,32 @@ Aucun entraînement ni appel pycocotools sur un jeu réel n'est exécuté ici.
 | AP50 bonne, AP75 faible | Localisation imprécise, coordonnées transformées incorrectement | Erreurs de boîtes et résultats par taille, repère après resize/padding |
 | Écart entre deux évaluateurs | maxDets, ignore/crowd, interpolation, catégories | Même fichier de résultats, version et paramètres explicites |
 | AP bonne, défauts critiques ratés | Moyenne masquant classes/tailles rares, seuil métier inadapté | Sous-groupes et courbe au point d'exploitation |
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent appariement, classement et conventions COCO. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-IOU-AP-001
+
+**Question de travail** : Que faut-il fixer avant de calculer l'IoU de deux boîtes, et pourquoi un mélange `xyxy`/`xywh` peut-il rendre le résultat trompeur ?
+
+**Réponse de référence** : fixer format, repère, unité, validité et convention continue/inclusive. En `xyxy`, les deux derniers nombres sont un coin ; en `xywh`, ce sont largeur et hauteur. Convertir explicitement avant intersection et union.
+
+**Exemple de contrat** : les nombres `(10,20,30,40)` décrivent soit deux coins, soit une origine et deux dimensions. Les régions obtenues ont alors des aires et positions différentes. Une formule d'intersection correcte ne peut pas compenser cette ambiguïté d'entrée.
+
+**Contrôle proposé** : convertir une boîte connue vers le format de l'évaluateur, revenir au format initial et comparer ses coins. Répéter après resize et padding. Si prédiction et annotation subissent la même mise à l'échelle géométrique cohérente, leur IoU reste identique dans le cas idéal ; si une seule chaîne est convertie, le score change artificiellement. L'absence d'unité du ratio ne signifie donc pas absence de convention sur ses entrées.
+
+### Cas lié à CV-IOU-AP-007
+
+**Question de travail** : Un détecteur a une bonne AP moyenne mais rate les défauts les plus coûteux sur de petites pièces. Comment compléter l'évaluation pour décider de sa mise en service ?
+
+**Réponse de référence** : examiner rappel et faux positifs au seuil d'exploitation, les classes/tailles critiques et les conditions d'acquisition réelles, avec les coûts métier. Une moyenne sur classes et seuils peut masquer une erreur rare mais grave.
+
+**Contrat de décision** : définir les défauts dont l'absence de détection est coûteuse, la charge acceptable de faux rejets et le comportement des cas incertains. Une AP moyenne pondère des catégories selon son protocole ; elle ne connaît pas automatiquement cette hiérarchie des conséquences.
+
+**Validation proposée** : conserver des lots indépendants incluant petites tailles et conditions difficiles, puis mesurer les erreurs au seuil figé et les performances des sous-groupes critiques. Examiner aussi le délai utile et les erreurs introduites par les étapes aval. Un gain d'AP peut être intéressant sans suffire à autoriser la mise en service. La conclusion doit dire quel usage a été validé, sur quelles données et avec quelles limites, plutôt que convertir un score agrégé en garantie de fiabilité.
+
+**Repère documentaire de cette passe** : [COCO API, cocoeval.py au commit 8c9bcc3](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), evaluateImg, accumulate et summarize. Les autres développements figurent dans les [cartes associées](../131-iou-ap-coco.md).
 
 ## Sources et cartes
 

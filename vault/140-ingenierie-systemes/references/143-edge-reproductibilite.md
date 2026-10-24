@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 4
 prerequis: ["CV-PIPELINE", "CV-QUANT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -50,6 +50,32 @@ Une régression après mise à jour peut venir de normalisation ou classes, pas 
 ## Alternatives et usages
 
 Serving central, edge ou hybride selon contraintes ; la surveillance de scores doit être liée à des retours étiquetés pour démontrer une dérive de qualité.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent goulot séquentiel, régime thermique et reproductibilité. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-DEPLOIEMENT-001
+
+**Question de travail** : Si l’inférence représente 10 % du temps moyen et devient deux fois plus rapide sans autre coût, quel gain global idéal prévoir ?
+
+**Réponse de référence** : Environ 1/0,95 = 1,053×, selon le modèle d’Amdahl annoncé.
+
+**Calcul interprété** : normaliser le temps initial à un. La part non accélérée vaut 0,9 ; l'inférence passe de 0,1 à 0,05. Le temps total devient 0,95, soit une réduction de 5 %, et le facteur de vitesse est son inverse. L'étage accéléré n'occupait qu'une petite part du travail total.
+
+**Conséquence produit** : profiler avant de compresser évite d'investir dans une optimisation dont le gain global est limité dans ce modèle. De nouveaux surcoûts de conversion peuvent même annuler le bénéfice. À l'inverse, réduire une ressource critique dans un système concurrent peut modifier les files d'une façon que ce calcul additif ne décrit pas. Il s'agit donc d'une borne de raisonnement sous hypothèses explicites, pas d'une prédiction de toute la distribution de latence. Confirmer le gain sur la même charge et le même contrat de qualité.
+
+### Cas lié à CV-DEPLOIEMENT-004
+
+**Question de travail** : Un benchmark bref passe mais le débit chute après une heure sur edge. Quelles traces recueillir ?
+
+**Réponse de référence** : Température/fréquences, charge/mémoire, transferts et files, avec qualité et timestamps de bout en bout.
+
+**Pourquoi la durée compte** : l'état thermique, l'occupation mémoire et les files peuvent évoluer après le démarrage. Une mesure courte sur un appareil froid ne décrit donc pas nécessairement son régime soutenable. Une baisse de fréquence, une fuite ou une accumulation d'attente produisent des signatures différentes.
+
+**Enquête proposée** : tracer simultanément température, fréquences, mémoire, débits par étape et âge des frames, sur une charge et une durée représentatives. Repérer quel changement précède la dégradation, puis modifier une hypothèse à la fois. Comparer par exemple une file bornée à la politique initiale sans changer le modèle, ou vérifier le régime thermique selon le dispositif. Confirmer ensuite qualité et délai complets. Une cause de calcul n'exclut pas une cause de données ; le système doit conserver entrées et configuration pour expliquer les échecs, sans annoncer un diagnostic unique depuis le seul FPS final.
+
+**Repère documentaire de cette passe** : [Amdahl 1967](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf), p. 483, fraction non accélérée. Les autres développements figurent dans les [cartes associées](../143-edge-reproductibilite.md).
 
 ## Sources et cartes
 

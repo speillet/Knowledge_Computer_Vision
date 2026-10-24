@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -50,6 +50,32 @@ Dérive progressive : inspecter ce qui est intégré au template et la présence
 ## Alternatives et usages
 
 Détecteur + association si plusieurs cibles et entrées/sorties sont attendues ; suivi de point si la sortie utile est un point. Définir le contrat avant la famille de modèle.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent recherche locale, adaptation et identité après occultation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-SOT-001
+
+**Question de travail** : Pourquoi un tracker monoobjet initialisé ne remplace-t-il pas directement un MOT de toutes les personnes d’une scène ?
+
+**Réponse de référence** : Il part d’une cible fournie et doit la relocaliser ; MOT gère aussi détections multiples, association, créations et disparitions.
+
+**Différence de problème** : une cible fournie dans la première frame donne au tracker une information d'initialisation qu'un système multiobjet doit souvent découvrir. Le MOT doit en plus décider quels objets entrent ou sortent, empêcher plusieurs pistes de représenter le même objet et maintenir des identités malgré les interactions.
+
+**Exemple construit** : lancer un tracker monoobjet sur une personne n'identifie pas automatiquement une deuxième personne qui entre plus tard. Lancer plusieurs instances peut aider à localiser des cibles initialisées, mais ne résout pas seul leurs collisions d'identité, leurs créations et la suppression des doublons. Définir les entrées et les événements attendus avant le choix d'architecture. Les métriques doivent également refléter ce contrat : une précision conditionnée à une initialisation manuelle favorable n'est pas directement comparable à une évaluation où toutes les cibles doivent être découvertes automatiquement.
+
+### Cas lié à CV-SOT-002
+
+**Question de travail** : Une cible occultée est remplacée par un distracteur dans le template du tracker. Quel mécanisme peut entretenir l’erreur ?
+
+**Réponse de référence** : La mise à jour du modèle sur une observation mal associée peut renforcer le distracteur et accroître la dérive.
+
+**Boucle de dérive** : le modèle apprend l'apparence de la région qu'il croit être la cible. Si la localisation devient fausse puis sert de nouvelle supervision, l'erreur est intégrée au modèle ; les frames suivantes peuvent alors favoriser encore davantage le distracteur. Une adaptation plus rapide renforce parfois cette boucle au lieu de la corriger.
+
+**Contrôle proposé** : enregistrer les crops utilisés pour la mise à jour, les réponses et les décisions de perte. Comparer une politique de gel sous incertitude à la politique initiale, avec mêmes séquences et initialisation. Vérifier aussi le retour de la cible après occultation. Le gel protège éventuellement le modèle mais ne garantit pas la redétection si la cible sort de la région de recherche. Ce mécanisme concerne les variantes qui mettent leur modèle à jour ; il ne doit pas être attribué indistinctement à tout tracker siamois ou à tout template fixe.
+
+**Repère documentaire de cette passe** : [KCF](https://arxiv.org/pdf/1404.7584), modèle de corrélation, décalages circulants et suivi. Les autres développements figurent dans les [cartes associées](../113-tracking-monoobjet.md).
 
 ## Sources et cartes
 

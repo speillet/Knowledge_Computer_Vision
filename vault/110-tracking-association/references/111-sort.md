@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 3
+revision: 4
 tags: [cv/d11, tracking, sort]
 ---
 # SORT — tracking multiobjet par mouvement et association
@@ -136,6 +136,32 @@ ne restaure pas l'information d'apparence absente.
 Flot optique : déplacement de points/pixels ; tracking : pistes d'objets ;
 ReID : comparaison d'identités par apparence. Ces tâches se combinent mais
 leurs sorties et métriques sont différentes.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent filtrage, affectation et cycle de vie des pistes. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-SORT-001
+
+**Question de travail** : Comment SORT transforme-t-il les détections successives en pistes, et pourquoi Kalman ne résout-il pas à lui seul l'identité ?
+
+**Réponse de référence** : prédire les pistes avec Kalman, associer les boîtes aux détections par IoU et affectation, corriger les associées, puis gérer créations et disparitions. L'association choisit la mesure d'une piste ; Kalman estime l'état après ce choix, sans vérifier l'identité physique.
+
+**Exemple de responsabilité** : au croisement de deux personnes, deux mesures peuvent être géométriquement plausibles pour une piste. Le filtre prédit des états et leurs incertitudes ; l'affectation choisit les couples effectivement utilisés pour la correction. Si ce choix échange les personnes, un état lisse peut suivre avec assurance la mauvaise identité.
+
+**Diagnostic proposé** : conserver pour chaque frame les boîtes avant association, les prédictions, les coûts et les événements de création ou suppression. Une superposition finale sans cette chronologie ne permet pas de localiser l'erreur. Le schéma causal sépare ces fonctions pour choisir un correctif : améliorer le détecteur, la prédiction, l'association ou le cycle de vie selon la trace observée, plutôt qu'attribuer tout problème à Kalman.
+
+### Cas lié à CV-SORT-008
+
+**Question de travail** : Le tracker seul dépasse la cadence demandée, mais le produit manque sa latence et perd des identités. Quelles mesures manquent à cette validation ?
+
+**Réponse de référence** : mesurer acquisition, détection, NMS, transferts et tracking de bout en bout sur le matériel cible ; mesurer aussi les erreurs d'identité, les fragments et les dépendances aux détections sur des séquences représentatives.
+
+**Ancienneté des observations** : le tracker peut être rapide tout en recevant des détections calculées sur des images anciennes. Une file d'attente ou une politique de batch peut augmenter le déplacement réel entre l'état estimé et la décision utilisée. Cela peut affecter simultanément latence et qualité d'association.
+
+**Mesure proposée** : horodater capture, entrée de chaque étape et sortie, puis stratifier les délais et erreurs par densité d'objets. Comparer charge habituelle, pics et pertes de frames avec la même politique de file. Les performances publiées pour l'association seule ne remplacent pas cette trace. Un système exploitable doit tenir son budget temporel et sa qualité de pistes dans les mêmes conditions, avec une politique explicite lorsque la charge dépasse la capacité.
+
+**Repère documentaire de cette passe** : [SORT, code au commit 2236dff](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py), associate_detections_to_trackers et Sort.update. Les autres développements figurent dans les [cartes associées](../111-sort.md).
 
 ## Sources et cartes
 

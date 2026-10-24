@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-FLOT", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -43,6 +43,32 @@ Baseline proposée : translation connue d’une image texturée, à masques de b
 ## Diagnostic et alternatives
 
 Des vecteurs incohérents sur un mur uniforme demandent un contrôle de texture, pas seulement plus d’itérations. Un mouvement global peut venir de la caméra ; le soustraire exige un modèle et une validation adaptés à la scène. Le test aller-retour échantillonne le flot inverse à la position déplacée : il signale certaines incohérences mais ne prouve pas une correspondance. Comparer Lucas–Kanade si seuls des points sont nécessaires et RAFT si données, calcul et conditions de domaine le justifient.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent approximation quadratique et domaine de capture du déplacement. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-FARNEBACK-001
+
+**Question de travail** : Comment Farnebäck obtient-il un déplacement à partir de deux voisinages d’image, sans descripteurs de points ?
+
+**Réponse de référence** : Il approxime les voisinages par des polynômes quadratiques, relie leurs changements de coefficients à une translation, puis agrège les contraintes et raffine à plusieurs échelles. Pour un modèle idéal $f_2(x)=f_1(x-d)$, on a $2Ad=b_1-b_2$.
+
+**Interprétation du modèle local** : les coefficients quadratiques décrivent la forme des intensités dans un voisinage, plutôt qu'une signature indépendante à apparier. Une translation idéale laisse une relation particulière entre les termes des deux polynômes. L'agrégation exploite plusieurs contraintes pour limiter la fragilité d'une inversion isolée.
+
+**Exemple de limite** : un mur uniforme n'apporte pas de courbure informative dans les deux directions ; un voisinage à cheval sur deux objets peut mélanger deux mouvements. Faire croître la fenêtre peut réduire du bruit mais lisser cette frontière. Contrôler ces régions séparément dans une évaluation. Une méthode dense offre une sortie partout selon son format ; la précision locale dépend toujours de l'information image et de l'adéquation du modèle.
+
+### Cas lié à CV-FARNEBACK-005
+
+**Question de travail** : Pourquoi augmenter le nombre de niveaux d’une pyramide de flot peut-il aider les grands mouvements tout en détériorant de petits objets ?
+
+**Réponse de référence** : Le déplacement est réduit aux niveaux grossiers, mais la réduction peut faire disparaître les petites structures et mélanger les frontières. Évaluer à la fois amplitude capturable, erreur des petits objets et limites de mouvement.
+
+**Compromis d'échelle** : aux niveaux grossiers, un grand déplacement de l'image initiale représente moins de pixels, ce qui facilite une recherche locale. Mais un objet de quelques pixels peut se mélanger au fond et ne plus fournir son propre mouvement. Le raffinement fin démarre alors d'une hypothèse déjà influencée par son voisinage.
+
+**Expérience construite** : utiliser une scène avec grand mouvement de fond et petit objet indépendant, puis faire varier seulement la pyramide. Rapporter erreur sur le fond, sur l'objet et à sa frontière, ainsi que les pixels invalides. Une amélioration moyenne dominée par le fond peut masquer la perte du petit objet. Ce raisonnement relie le paramètre au signal utile, sans supposer qu'un plus grand budget améliore uniformément toutes les régions.
+
+**Repère documentaire de cette passe** : [Farnebäck 2003](https://www.diva-portal.org/smash/get/diva2:273847/FULLTEXT01.pdf), §§2–3, polynomial expansion et displacement estimation. Les autres développements figurent dans les [cartes associées](../103-farneback.md).
 
 ## Sources et cartes
 

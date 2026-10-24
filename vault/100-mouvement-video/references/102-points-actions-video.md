@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 4
 prerequis: ["CV-FLOT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -50,6 +50,32 @@ Bon score de clip mais action mal localisée : vérifier que la sortie est un la
 ## Alternatives et usages
 
 Pipeline détection/tracking/règles pour des événements définis ; modèle vidéo ou VLM selon contexte et annotations. Contrôler fuite entre clips d'une même séquence.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent trajectoires de points, visibilité et horizon temporel. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-VIDEO-001
+
+**Question de travail** : Quelle différence entre CoTracker, classification vidéo et localisation temporelle d’action ?
+
+**Réponse de référence** : CoTracker suit des points avec visibilité ; la classification étiquette un clip ; la localisation estime aussi des intervalles temporels.
+
+**Contrats à distinguer** : une trajectoire de point répond à « où se trouve cette observation au fil du temps ? ». Un label de clip répond à « quelle action caractérise cet extrait ? ». Un intervalle temporel ajoute une estimation de début et de fin. Une sortie peut être correcte pour l'un de ces contrats et insuffisante pour un autre.
+
+**Exemple construit** : reconnaître qu'une personne s'assoit dans un clip ne fournit pas nécessairement l'instant de contact avec la chaise. Suivre un point de vêtement ne fournit pas non plus automatiquement la classe d'action. Définir la sortie utile avant de choisir architecture et métrique : erreur de point, visibilité, classification ou frontières temporelles. Préciser les frames accessibles au modèle et le délai de décision. Une performance obtenue avec le clip complet ne valide pas une alarme devant se déclencher avant la fin de l'événement.
+
+### Cas lié à CV-VIDEO-004
+
+**Question de travail** : Un classifieur vidéo reconnaît l’action même après permutation des frames. Que tester avant d’affirmer qu’il comprend la dynamique ?
+
+**Réponse de référence** : Comparer à une baseline image/contexte, contrôler les labels et les actions qui exigent réellement l’ordre.
+
+**Hypothèse alternative** : la présence d'un outil, d'un décor ou d'une posture caractéristique peut suffire à prédire le label du clip. La permutation des frames préserve une grande partie de ces indices. Une accuracy élevée ne permet donc pas, seule, d'attribuer la décision à l'ordre temporel.
+
+**Ablation proposée** : comparer le modèle à une agrégation de prédictions image, puis sélectionner des cas où les mêmes états visuels dans un ordre différent correspondent à des événements différents. Contrôler échantillonnage, labels, arrière-plan et fuite entre clips voisins. Si la performance reste identique sur des tâches réellement sensibles à l'ordre, examiner les informations utilisées. Une chute après permutation soutient une dépendance temporelle, mais ne prouve pas toute forme de compréhension causale. Le raisonnement doit rester lié aux tâches et aux contrôles effectués, pas au seul nom de l'architecture.
+
+**Repère documentaire de cette passe** : [CoTracker3](https://arxiv.org/abs/2410.11831), résumé, tâche de suivi de points. Les autres développements figurent dans les [cartes associées](../102-points-actions-video.md).
 
 ## Sources et cartes
 

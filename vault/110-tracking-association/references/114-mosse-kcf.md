@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-SOT", "CV-FILTRES"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -43,6 +43,32 @@ Baseline proposée : apparence figée après initialisation ; variation : mise �
 ## Diagnostic et alternatives
 
 Si la boîte part sur le fond après une occultation, vérifier la mise à jour durant les frames ambiguës, la taille de recherche et les pics concurrents. Geler le modèle, déclarer la perte ou relancer un détecteur peut être préférable à toujours émettre une boîte. Pour un grand changement d’apparence ou une disparition, comparer un tracker siamois ou un pipeline détecteur+association. Les propositions sont des raisonnements du projet ; aucun tracker ni benchmark vidéo exécuté pour cette fiche.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent circulant, fenêtre et risque de contamination du modèle. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-CORRELATION-001
+
+**Question de travail** : Comment un filtre de corrélation initialisé par une boîte suit-il la cible à la frame suivante ?
+
+**Réponse de référence** : Extraire une région de recherche et ses features, corréler avec le modèle, localiser le pic, contrôler la fiabilité puis adapter le modèle seulement selon la politique retenue. La réponse vise un pic de localisation, pas une classe sémantique.
+
+**Interprétation de la réponse** : chaque déplacement candidat dans la région de recherche reçoit un score de ressemblance au modèle. Le pic localise l'hypothèse préférée, mais son contraste et la présence de concurrents doivent être examinés avant une mise à jour. La zone de recherche exprime déjà une hypothèse sur le mouvement possible.
+
+**Exemple construit** : une cible qui se déplace au-delà de cette zone peut laisser au fond le meilleur pic disponible. Apprendre alors ce fond transforme une perte de localisation en dérive persistante du modèle. Définir une politique de perte et de récupération, puis la tester sur grands déplacements et occultations. La vitesse de corrélation est utile seulement si les hypothèses de recherche et de mise à jour conviennent au besoin.
+
+### Cas lié à CV-CORRELATION-005
+
+**Question de travail** : Deux trackers donnent des scores proches, mais l’un est réinitialisé après chaque perte. Que faut-il préciser pour comparer ?
+
+**Réponse de référence** : Le protocole d’initialisation et de réinitialisation, les séquences, les pertes, l’overlap et l’erreur de centre, ainsi que la latence complète. Un redémarrage après erreur change la tâche évaluée.
+
+**Pourquoi les resets changent la tâche** : une réinitialisation fournit au tracker une nouvelle localisation après un échec. Un système sans cette aide doit retrouver la cible ou rester en perte. Les deux protocoles n'exposent donc pas le modèle à la même accumulation d'erreurs ni à la même quantité d'information externe.
+
+**Comparaison proposée** : conserver séquences, initialisation, règle de présence et critère de perte. Rapporter les échecs et les périodes de récupération en plus des mesures de localisation. Une moyenne calculée uniquement sur les frames réussies peut favoriser une méthode qui abandonne les cas difficiles. Pour un produit, inclure le coût et le délai de la procédure réelle de relance, qu'elle soit automatique ou humaine. Les scores restent interprétables uniquement avec ce contrat d'évaluation.
+
+**Repère documentaire de cette passe** : [Bolme et al., MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf), §§3–4, filtre et suivi. Les autres développements figurent dans les [cartes associées](../114-mosse-kcf.md).
 
 ## Sources et cartes
 

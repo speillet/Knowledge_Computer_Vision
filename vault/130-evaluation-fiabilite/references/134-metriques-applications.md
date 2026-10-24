@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-IOU-AP", "CV-SEGMENTATION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -50,6 +50,32 @@ Métriques contradictoires : chercher l'erreur mesurée, l'unité, les vides et 
 ## Alternatives et usages
 
 Rapporter plusieurs vues complémentaires et leur limite. Les taux de comparaison FMR/FNMR, les décisions système FAR/FRR et PAD ne sont pas une métrique unique.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent topologie, surfaces physiques et références incertaines. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-METRIQUES-APPLIQUEES-001
+
+**Question de travail** : Pourquoi Dice et HD95 peuvent-ils raconter des choses différentes sur un même masque ?
+
+**Réponse de référence** : Dice mesure un recouvrement ; HD95 une distance de surface selon un percentile/protocole, avec unité physique si les coordonnées sont calibrées.
+
+**Exemple de divergence** : un grand masque peut conserver presque tout son volume alors qu'une petite partie de surface est éloignée. Le recouvrement et une distance de surface pondèrent cet écart différemment. Un percentile écarte aussi une partie des distances extrêmes selon la définition retenue ; ce n'est pas nécessairement la distance maximale.
+
+**Protocole proposé** : annoncer définition des surfaces, distances dirigées ou symétrisées, percentile, espacement et unité. Conserver le traitement des vides et le niveau d'agrégation par cas ou pixel. Examiner les exemples où les métriques divergent pour identifier l'erreur qu'elles révèlent, plutôt que choisir automatiquement le score favorable. Une distance en millimètres nécessite une géométrie physique cohérente. Ces mesures peuvent être complémentaires si l'usage dépend à la fois de couverture et de frontière ; aucune valeur isolée ne démontre toute la qualité du masque ou son utilité dans un autre processus.
+
+### Cas lié à CV-METRIQUES-APPLIQUEES-004
+
+**Question de travail** : Que faut-il annoncer lorsqu’une métrique de segmentation rencontre référence ou prédiction vide ?
+
+**Réponse de référence** : La convention choisie et son effet sur le score/agrégation ; ne pas laisser une division indéfinie devenir un résultat implicite.
+
+**Distinguer les situations** : deux masques vides, une référence vide avec faux positif et une prédiction vide sur un objet présent n'ont pas le même sens. Une distance de surface peut être indéfinie lorsqu'une surface manque, tandis qu'un recouvrement peut nécessiter une convention particulière pour un dénominateur nul.
+
+**Choix de protocole proposé** : définir ces cas avant les résultats et les conserver dans un tableau de comptage séparé si la métrique principale ne peut pas les résumer. Annoncer valeurs conventionnelles, exclusions éventuelles et poids dans l'agrégation. Retirer silencieusement les cas négatifs peut cacher des faux positifs ; retirer les prédictions vides peut cacher les objets entièrement manqués. Tester quelques exemples synthétiques connus dans l'outil d'évaluation et conserver sa version. La convention n'est pas une astuce numérique : elle détermine quelles erreurs le score final représente et lesquelles doivent être rapportées autrement.
+
+**Repère documentaire de cette passe** : [Reinke et al., Understanding metric-related pitfalls](https://arxiv.org/html/2302.01790v4), P2.2–P2.4 : tailles, formes, références/prédictions vides. Les autres développements figurent dans les [cartes associées](../134-metriques-applications.md).
 
 ## Sources et cartes
 

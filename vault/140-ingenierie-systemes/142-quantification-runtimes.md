@@ -16,6 +16,10 @@ Reponse: **Noyau attendu** : PTQ intervient après entraînement ; QAT adapte l�
 
 **Approfondissement** : La granularité, le backend, les données et les opérateurs déterminent la qualité finale ; QAT n’est pas automatiquement nécessaire ni supérieur pour toute tâche.
 
+**Lecture de la différence** : une PTQ estime des paramètres de quantification à partir du modèle déjà appris et d'une procédure adaptée. Une QAT simule certains effets numériques pendant l'apprentissage pour permettre une adaptation. Le format final ne révèle donc pas à lui seul comment les paramètres ont été obtenus.
+
+**Choix proposé** : comparer d'abord une baseline flottante et une PTQ sur les mêmes données réservées, puis envisager la QAT si la perte de qualité et le budget le justifient. Vérifier représentation, granularité et support du backend réellement utilisé. Une simulation d'entraînement doit correspondre assez bien au contrat d'inférence pour être interprétable. Le gain dépend aussi des opérateurs exécutés et du matériel. Une meilleure robustesse à la quantification ne garantit ni accélération de toute la chaîne ni conservation des petits défauts : mesurer ces sorties au point de fonctionnement fixé fait partie de la décision.
+
 **Erreurs bloquantes** : Assimiler le mot INT8 à une méthode d’apprentissage unique.
 Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, Quantization Workflows : PTQ et QAT](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html), consulté le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::comparaison cv_id::CV-QUANT-001 provenance::agent pole::A pole::F
@@ -32,6 +36,12 @@ Question: Quel risque introduit une échelle de quantification estimée sur un j
 Reponse: **Noyau attendu** : Saturation ou résolution numérique inadéquate pour les activations réelles, avec erreurs sensibles sur certaines sorties.
 
 **Approfondissement** : Mesurer distributions et performance par cas critique ; ne pas seulement regarder la moyenne de calibration.
+
+**Compromis numérique** : une plage très large peut réduire la finesse de représentation des valeurs fréquentes ; une plage trop étroite peut écrêter les valeurs rencontrées en exploitation. L'échelle choisie relie donc résolution et saturation, selon le schéma et la granularité retenus.
+
+**Exemple construit** : un jeu de calibration composé surtout de scènes claires peut mal représenter les activations provoquées par un nouveau capteur ou une condition rare. Examiner distributions et couches sensibles, puis comparer les erreurs sur ces cas, sans régler indéfiniment le test. Conserver une séparation entre données servant à déterminer les paramètres numériques et données servant à évaluer le produit. Un nombre d'images ne remplace pas leur représentativité. Si une précision mixte est essayée, mesurer sa qualité et son coût réel plutôt que supposer que le même format partout constitue le meilleur compromis.
+
+Conserver également la provenance des images utilisées pour pouvoir reproduire cette calibration numérique.
 
 **Erreurs bloquantes** : Supposer que quelques images arbitraires donnent une calibration universelle.
 Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, PTQ et données représentatives](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html) ; [ONNX QuantizeLinear-21](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21), consultés le 2026-10-20.
@@ -50,6 +60,10 @@ Reponse: **Noyau attendu** : Opérateurs, formes, kernels, précisions et matér
 
 **Approfondissement** : Versionner export, runtime, cible et mesures ; inspecter le graphe exécuté.
 
+**Format et exécution** : un graphe d'échange décrit des opérations, mais un runtime doit les prendre en charge et choisir des implémentations pour la cible. Des conversions ou des sous-graphes sur une autre ressource peuvent changer temps, mémoire et parfois comportement numérique. La présence du fichier ne prouve pas que le chemin optimisé souhaité soit utilisé.
+
+**Validation proposée** : comparer entrées, sorties intermédiaires pertinentes et sortie finale avec une référence sur des exemples connus, puis mesurer le système complet. Consigner versions, opset, formes et précisions, ainsi que pré/posttraitements. Examiner les opérateurs effectivement assignés au backend visé avant d'attribuer un manque de gain à l'architecture. Une exportation réussie est une étape de compatibilité ; une mise en service demande encore équivalence utile, ressources et qualité dans les conditions du produit. Le même modèle peut avoir des compromis différents selon CPU, GPU ou autre accélérateur.
+
 **Erreurs bloquantes** : Assimiler format d’échange et exécution optimisée universelle.
 Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; [TensorRT, Support Matrix et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html) ; [ONNX Runtime, Execution Providers et GetCapability](https://onnxruntime.ai/docs/execution-providers/), consultés le 2026-10-20.
 Tags: cv::pilote cv::d14 famille::pratique cv_id::CV-QUANT-003 provenance::agent pole::A pole::F
@@ -66,6 +80,10 @@ Question: Cas F — diagnostic : INT8 ne réduit pas la latence totale d’un pi
 Reponse: **Noyau attendu** : Profiler moteur et pipeline complet, opérateurs/précisions effectives, fallback, prétraitement CPU et transferts.
 
 **Approfondissement** : Comparer même charge et qualité ; une accélération d’un petit étage peut être invisible à l’échelle du système. Corriger le goulot observé avant une nouvelle compression.
+
+**Décomposition du gain** : si seul le moteur accélère alors que le décodage ou les copies dominent, le délai total peut peu changer. Si le moteur n'accélère pas, examiner couverture des opérateurs, conversions et kernels choisis. Les deux situations conduisent à des interventions différentes.
+
+**Ablation proposée** : conserver les mêmes images, batch, formes et règle de décision ; comparer temps moteur, transferts et temps complet avec échauffement et charge identiques. Vérifier aussi que la qualité est maintenue, car un seuil modifié peut changer le coût des étapes aval. Relier le diagnostic au modèle simple d'Amdahl sans l'utiliser comme une identité pour le p99 ou les files. Le résultat peut justifier une précision mixte ou une optimisation hors réseau, mais ne permet pas de conclure universellement pour ou contre INT8.
 
 **Erreurs bloquantes** : Conclure que la quantification est toujours inutile ou toujours mal implémentée.
 
@@ -85,6 +103,10 @@ Question: Quelles mesures associer à une réduction de mémoire après quantifi
 Reponse: **Noyau attendu** : Qualité sur données réservées et cas critiques, plus latence/débit/mémoire du système complet au point d’exploitation fixé.
 
 **Approfondissement** : Contrôler petits objets, domaines et saturation ; une taille de modèle réduite n’établit pas une mise en service acceptable.
+
+**Différentes mémoires** : la taille des poids sur disque n'est pas toute la mémoire utilisée : activations, buffers, contexte du runtime et copies peuvent compter. Une compression des poids peut donc produire un gain de stockage sans réduire proportionnellement le pic mémoire en exploitation.
+
+**Protocole proposé** : conserver données et seuils de décision, mesurer AP ou métriques utiles, cas critiques, mémoire maximale, latence et débit sur la même cible. Contrôler les défauts petits ou peu contrastés, car une variation numérique limitée peut changer une décision près du seuil. Rapporter conversions et éventuels opérateurs restant en autre précision. Le point de fonctionnement doit être comparable avant de décider que la compression améliore le produit. Un fichier plus petit est un résultat de ressource ; il ne démontre ni accélération, ni qualité suffisante, ni robustesse aux acquisitions que la calibration numérique n'a pas représentées.
 
 **Erreurs bloquantes** : Rapporter seulement le nombre de bits ou le poids du fichier.
 Source: [[140-ingenierie-systemes/references/142-quantification-runtimes|Fiche complète]] ; Protocole conjoint qualité/coût proposé par le projet ; [TensorRT, compromis de quantification](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html), consulté le 2026-10-20.

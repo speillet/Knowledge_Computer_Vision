@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-PIPELINE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -51,12 +51,38 @@ Pas de gain après INT8 : inspecter opérateurs réellement quantifiés, fallbac
 
 Précision mixte, distillation, compression structurée et optimisation du pipeline selon le goulot ; la taille du fichier ne prédit pas le temps de traitement.
 
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent échelle, saturation et exécution réelle du runtime. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-QUANT-001
+
+**Question de travail** : Qu’est-ce qui distingue PTQ de QAT, au-delà du format numérique final ?
+
+**Réponse de référence** : PTQ intervient après entraînement ; QAT adapte l’apprentissage à un modèle de quantification.
+
+**Lecture de la différence** : une PTQ estime des paramètres de quantification à partir du modèle déjà appris et d'une procédure adaptée. Une QAT simule certains effets numériques pendant l'apprentissage pour permettre une adaptation. Le format final ne révèle donc pas à lui seul comment les paramètres ont été obtenus.
+
+**Choix proposé** : comparer d'abord une baseline flottante et une PTQ sur les mêmes données réservées, puis envisager la QAT si la perte de qualité et le budget le justifient. Vérifier représentation, granularité et support du backend réellement utilisé. Une simulation d'entraînement doit correspondre assez bien au contrat d'inférence pour être interprétable. Le gain dépend aussi des opérateurs exécutés et du matériel. Une meilleure robustesse à la quantification ne garantit ni accélération de toute la chaîne ni conservation des petits défauts : mesurer ces sorties au point de fonctionnement fixé fait partie de la décision.
+
+### Cas lié à CV-QUANT-005
+
+**Question de travail** : Quelles mesures associer à une réduction de mémoire après quantification d’un détecteur ?
+
+**Réponse de référence** : Qualité sur données réservées et cas critiques, plus latence/débit/mémoire du système complet au point d’exploitation fixé.
+
+**Différentes mémoires** : la taille des poids sur disque n'est pas toute la mémoire utilisée : activations, buffers, contexte du runtime et copies peuvent compter. Une compression des poids peut donc produire un gain de stockage sans réduire proportionnellement le pic mémoire en exploitation.
+
+**Protocole proposé** : conserver données et seuils de décision, mesurer AP ou métriques utiles, cas critiques, mémoire maximale, latence et débit sur la même cible. Contrôler les défauts petits ou peu contrastés, car une variation numérique limitée peut changer une décision près du seuil. Rapporter conversions et éventuels opérateurs restant en autre précision. Le point de fonctionnement doit être comparable avant de décider que la compression améliore le produit. Un fichier plus petit est un résultat de ressource ; il ne démontre ni accélération, ni qualité suffisante, ni robustesse aux acquisitions que la calibration numérique n'a pas représentées.
+
+**Repère documentaire de cette passe** : [ONNX, QuantizeLinear-21](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21), Summary, échelle, zero-point et arrondi. Les autres développements figurent dans les [cartes associées](../142-quantification-runtimes.md).
+
 ## Sources et cartes
 
 - [ONNX QuantizeLinear, version d’opérateur 21, Summary](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21) : échelle, zero-point, saturation et arrondi.
 - [ONNX Runtime, Execution Providers](https://onnxruntime.ai/docs/execution-providers/), consulté le 2026-10-20 : affectation d’opérateurs/sous-graphes selon les capacités.
 
-- [TensorRT, quantization workflows](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html).
+- [TensorRT, Quantization Workflows, consulté le 2026-10-24](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html).
 - [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
 - [Cartes associées](../142-quantification-runtimes.md).
 
