@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-SE3", "CV-CAPTEURS", "CV-MULTICALIB"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -50,6 +50,32 @@ Objets fantômes : vérifier synchronisation et ego-motion. Carte vide : contrô
 ## Alternatives et usages
 
 Carte d'occupation géométrique, prédiction sémantique, surface reconstruite et liste d'objets remplissent des contrats distincts ; le choix dépend de l'interface aval.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent visibilité, inconnue et limites de la représentation spatiale. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-BEV-001
+
+**Question de travail** : Pourquoi un pilier vertical et un voxel 3D ne conservent-ils pas la même organisation spatiale ?
+
+**Réponse de référence** : Le voxel discrétise aussi la hauteur ; le pilier regroupe les points d’une colonne, ensuite encodée en pseudo-image.
+
+**Lecture des représentations** : une grille de voxels discrétise les trois dimensions spatiales ; un pilier regroupe une colonne verticale avant d'en produire des features. Une pseudo-image BEV organise ensuite des informations dans le plan horizontal. Le regroupement peut encoder la hauteur sans conserver une case explicite pour chaque altitude.
+
+**Exemple construit** : un obstacle bas et une structure en hauteur peuvent occuper les mêmes coordonnées horizontales. Leur distinction dépend de l'information verticale effectivement conservée et exploitée, pas du seul mot BEV. Définir origine, résolution en mètres, étendue et repère avant de comparer les tenseurs. Une BEV issue de caméras nécessite elle aussi des hypothèses de projection et de profondeur. Le choix de représentation est donc un compromis entre information, mémoire, calcul et interface de perception, et non une simple conversion universelle d'un nuage en image.
+
+### Cas lié à CV-BEV-005
+
+**Question de travail** : Cas C — conception : un robot d’entrepôt utilise caméras et LiDAR. Quelle interface de perception et quel protocole construire ?
+
+**Réponse de référence** : Définir objets/occupation attendus, repères/temps, visibilité et incertitude ; concevoir fusion et comportement en cas de perte puis tester obstacles rares, occultations et latence.
+
+**Interface proposée** : fournir pour chaque sortie le repère, l'instant de validité, la zone observée, les classes ou états d'occupation et une indication d'incertitude exploitable. Prévoir ce qui se passe si un capteur disparaît ou si les données deviennent anciennes. Une liste de boîtes et une carte d'espace libre ne répondent pas au même besoin.
+
+**Protocole de transfert** : construire des cas avec obstacle partiellement occulté, objet rare, matière peu réfléchissante et désynchronisation contrôlée. Mesurer erreurs par distance, zones inconnues traitées à tort comme libres et latence de bout en bout. Comparer modalités seules et fusion pour identifier l'apport réel de chacune. Les critères sont ceux de la perception et de son contrat ; la validation de la commande et de la sécurité globale demande un périmètre distinct et n'est pas déduite d'une AP moyenne.
+
+**Repère documentaire de cette passe** : [OctoMap, documentation officielle](https://octomap.github.io/octomap/doc/index.html), présentation du modèle d’occupation probabiliste. Les autres développements figurent dans les [cartes associées](../64-nuages-bev-occupation.md).
 
 ## Sources et cartes
 
