@@ -1,6 +1,6 @@
 # Suivi du pilote : preuves et limites
 
-**Lot courant** : 52 fiches, 240 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
+**Lot courant** : 52 fiches, 242 cartes, 14 thèmes et six pôles métiers. **Rédaction** : agent.
 **Client de révision** : AnkiDroid, confirmé par l'apprenant le 2026-10-18.
 Une absence de résultat signifie « non exécuté », jamais « réussi ».
 
@@ -118,7 +118,7 @@ et liens sont reconvertis. Les limites de simulation ci-dessus restent applicabl
 | Essai | Attendu | Observation / date / responsable |
 | --- | --- | --- |
 | Installation et mapping | Modèle CV-Pilote, quatre champs, un gabarit | Non exécuté |
-| Création | 240 notes et 240 cartes, identités distinctes | Non exécuté |
+| Création | 242 notes et 242 cartes, identités distinctes | Non exécuté |
 | Scan inchangé | Nombres et identités inchangés | Non exécuté |
 | Mise à jour après révision | Même note et historique conservé | Non exécuté |
 | Texte, listes, formules/matrice | Lisibles dans Obsidian, Anki, AnkiDroid | Non exécuté |
@@ -187,6 +187,7 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-24 | CV-SE3, révision 5 | CV-SE3-006 ; fiche | Matrice 3×3 composée avec poses homogènes 4×4 (FR-007) | Définir M pour les vecteurs 3D et M_h pour les poses homogènes ; dimensions et côtés de composition explicites | Agent Codex, auto-revue (`revue-cartes`) | Contrôleur, tests, inventaire ; rapport 2026-10-24 | Non synchronisé |
 | 2026-10-18 | CV-FUSION, révision 2 | CV-FUSION-001 | ESKF présenté à côté d’EKF sans expliciter leur recouvrement ; Solà §5.2 | Indiquer que la formulation ESKF emploie un EKF ; source UKF séparée, accès intégral non vérifié | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-18 | CV-FUSION, révision 2 | CV-FUSION-002 | Symboles non définis au recto et source NIS absente ; Gamse §2.2.2 | Définir innovation et covariance inversible ; source NIS dédiée | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
+| 2026-10-24 | CV-FUSION, révision 5 | CV-FUSION-003, CV-FUSION-006 ; fiche | Soustraction de covariances présentée comme remède numérique et reset sans convention | Privilégier Joseph sous ses hypothèses, conserver surveillance ; reset local au premier ordre explicitement annoncé | Agent Codex, auto-revue (`revue-cartes`) | Contrôleur, tests, inventaire ; rapport 2026-10-24 | Non synchronisé |
 | 2026-10-18 | CV-FACTEURS, révision 2 | CV-FACTEURS-001 à 003 ; fiche | Hypothèses du MAP quadratique omises et références génériques ; Kaess §2, Ceres Gauge Invariance | Facteurs gaussiens à covariances fixes ; références ciblées et scénario distingué | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-18 | CV-ACQUISITION, révision 2 | CV-ACQUISITION-001 à 004 | Sources bruit/résolution utilisées aussi pour gamma, décimation et calcul de flou | Sources par affirmation ; modèle cinématique et checklist identifiés comme raisonnements du projet | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
 | 2026-10-18 | CV-CAPTEURS, révision 2 | CV-CAPTEURS-002 à 004 | Forster/Basler ne soutiennent pas le Doppler radar et ne décrivent pas le cas LiDAR | Références TI/LOAM et attribution du calcul au projet | Agent Codex, auto-revue (`revue-cartes`) | Voir [contrôles finaux](#validation-2026-10-21) | Non synchronisé |
@@ -287,6 +288,12 @@ scientifique ne doit laisser une ancienne carte contradictoire active.
 | 2026-10-23 | CV-SE3, révision 3 | Fiche seulement | Notation $\operatorname{Exp}([\delta\theta]_\times)$ qui mélange Exp et exp ; Solà et al., §II-E | $\operatorname{Exp}(\delta\theta)$ et distinction Exp/exp | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-SE3, révision 4 | CV-SE3-005 ; fiche | Enrichissement accepté : aucune métrique d'erreur de rotation dans le vault ; Solà et al., annexe B ; REP 103 | Angle géodésique, pièges Euler et $q/-q$, variation contrôlée calculée | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 | 2026-10-23 | CV-SE3, révision 4 | CV-SE3-006 ; fiche | Enrichissement accepté : conventions d'axes caméra absentes ; OpenCV 4.13.0 `calib3d.hpp` ; Khronos gluLookAt ; REP 103 | Axes OpenCV, OpenGL et ROS ; $\mathrm{diag}(1,-1,-1)$ et côté de composition | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FUSION, révision 3 | CV-FUSION-001 ; fiche | Source UKF jamais lue (Julier et Uhlmann 2004) ; « ESKF utilise un EKF » plus fort que le texte de Solà ; Julier et Uhlmann 1997, §3 ; Solà, §6.1 et annexe E | Source UKF lue et citée par équation ; ESKF décrit comme appliquant prédiction et correction d'EKF à l'erreur ; nuance d'ordre de précision | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FUSION, révision 3 | CV-FUSION-002 ; fiche | Noyau sans la loi du $\chi^2$ pourtant donnée par la source citée ; « sans unité lorsque les grandeurs sont cohérentes » imprécis ; Gamse et al. 2014, équations 7–10 | Loi du $\chi^2$ à $m$ degrés de liberté, quantile d'exemple, lien avec le gating de DeepSORT | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FUSION, révision 3 | CV-FUSION-003 ; fiche | Famille diagnostic sans symptôme ; recto qui oriente la réponse ; Solà, §6.3, équations 285–288 | Symptôme de covariance effondrée, test discriminant, $G\approx I$ dans la plupart des implémentations | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FUSION, révision 4 | CV-FUSION-005 ; fiche | Enrichissement accepté : le « pourquoi » de l'ESKF n'était pas interrogé ; Solà, §§5.1–5.2 | Quatre propriétés de l'état d'erreur et cycle injection/reset | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FUSION, révision 4 | CV-FUSION-006 ; fiche | Enrichissement accepté : instabilité numérique de la mise à jour de $P$ absente ; Solà, §6.1, note 26 | Formes symétrique et de Joseph, symptômes et test discriminant | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
+| 2026-10-23 | CV-FUSION, révision 4 | CV-FUSION-004 ; fiche | Enrichissement accepté : contrat temporel générique ; Solà, §5.4.2, équations 262–265, annexe E, équation 440 | Dépendances en $\Delta t$, instant d'acquisition, retards ; objectif inchangé | Agent Claude Code, auto-revue (`revue-cartes`) | Voir [contrôles](#revue-sujet-par-sujet--2026-10-23) | Non synchronisé |
 
 ## Extension éditoriale et contrôles — 2026-10-18
 
@@ -441,11 +448,16 @@ appliquées ; les enrichissements sont soumis à l'accord de l'apprenant.
   d'ID ni d'objectif. Révision 4 : ajouts acceptés CV-SE3-005 (angle
   géodésique) et CV-SE3-006 (conventions d'axes caméra). Rapport :
   `docs/revues/2026-10-23/12-rotations-se3.md`.
+- CV-FUSION, révision 3 : cartes 001 à 003 corrigées, dont la source UKF
+  enfin lue et la loi du $\chi^2$ de l'innovation. Révision 4 : ajouts
+  acceptés CV-FUSION-005 (pourquoi l'ESKF) et 006 (forme de Joseph),
+  enrichissement de CV-FUSION-004. Rapport :
+  `docs/revues/2026-10-23/13-kalman-ekf-eskf.md`.
 
-Le lot courant passe de 233 à 240 cartes ; statut `redige` conservé.
+Le lot courant passe de 233 à 242 cartes ; statut `redige` conservé.
 
 Contrôles : `python3 scripts/check_vault.py` OK (125 Markdown, 52 fiches,
-240 cartes), 34 tests unitaires réussis, catalogue régénéré puis à jour sur
+242 cartes), 34 tests unitaires réussis, catalogue régénéré puis à jour sur
 18 documents ; inventaire comparé à l'état initial : seuls les IDs ajoutés
 apparaissent, sans ID disparu ni identité Anki modifiée.
 
@@ -455,7 +467,8 @@ Calculs exécutés hors dépôt (Python 3.10.13, NumPy 2.2.6, SciPy 1.13.1) :
   Ceres de jacobien presque singulier, DLT brute ou normalisée sur trois
   configurations de 200 tirages, blanchiment en mètres et millimètres ;
 - SE(3) : centre caméra, angle géodésique et angles d'Euler près du blocage
-  de cardan, double couverture, conversion OpenCV→OpenGL.
+  de cardan, double couverture, conversion OpenCV→OpenGL ;
+- Kalman : quantiles du $\chi^2$ à 95 % pour $m=1$ à 4.
 
 Cas construits, pas des mesures terrain. Context7 n'est pas disponible dans
 cette session : documentations officielles consultées directement, ou fichiers

@@ -1,6 +1,6 @@
 # Inventaire de couverture
 
-**52 fiches et 240 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**52 fiches et 242 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
 
 Les lignes ci-dessous désignent des fiches canoniques de méthode, pipeline, comparaison ou protocole. La profondeur porte sur ce sujet ; un nom cité en comparaison ne devient pas une méthode entièrement approfondie. Les compétences et sources sont détaillées dans chaque référence.
 
@@ -12,7 +12,7 @@ V0 = lacunes prioritaires ; V1 = socle des pôles ; V2 = approfondissements. Ré
 | --- | --- | --- | --- | --- | --- |
 | CV-SVD — Moindres carrés, SVD et conditionnement / methode | V0 / approfondissement | B, C | [Conventions](Pre-requis.md) | [Fiche](../10-mathematiques-estimation/references/11-moindres-carres-svd.md) · [9 cartes](../10-mathematiques-estimation/11-moindres-carres-svd.md) | redige, export non vérifié ; maîtrise non mesurée |
 | CV-SE3 — SO(3), SE(3) et conventions de transformation / methode | V0 / approfondissement | B, C | [Conventions](Pre-requis.md) | [Fiche](../10-mathematiques-estimation/references/12-rotations-se3.md) · [6 cartes](../10-mathematiques-estimation/12-rotations-se3.md) | redige, export non vérifié ; maîtrise non mesurée |
-| CV-FUSION — Kalman, EKF, UKF et ESKF pour la fusion / methode | V1 / usage-operationnel | B, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) | [Fiche](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) · [4 cartes](../10-mathematiques-estimation/13-kalman-ekf-eskf.md) | redige, export non vérifié ; maîtrise non mesurée |
+| CV-FUSION — Kalman, EKF, UKF et ESKF pour la fusion / methode | V1 / usage-operationnel | B, C | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) | [Fiche](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) · [6 cartes](../10-mathematiques-estimation/13-kalman-ekf-eskf.md) | redige, export non vérifié ; maîtrise non mesurée |
 | CV-FACTEURS — Graphes de facteurs et optimisation incrémentale / methode | V1 / usage-operationnel | B, C | [CV-SVD](../10-mathematiques-estimation/references/11-moindres-carres-svd.md), [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) | [Fiche](../10-mathematiques-estimation/references/14-graphes-facteurs.md) · [3 cartes](../10-mathematiques-estimation/14-graphes-facteurs.md) | redige, export non vérifié ; maîtrise non mesurée |
 ## 2 — Formation et acquisition des images
 
