@@ -83,3 +83,13 @@ T023 reste ouverte pour les 119 autres ; T009/T010/T013 restent inchangées.
 
 T026–T028 livrent l'export direct du 2026-10-24. Ils ne clôturent pas T009/T010 :
 installation personnelle, rendu Android et cas applicatifs restent à observer.
+
+- [x] T029 — Développer les réponses existantes selon la demande du 2026-10-24 :
+  mécanismes, cas expliqués, hypothèses et contrôles, sans changer les identités
+  ni les objectifs ; aligner les fiches canoniques et tracer l'auto-revue.
+- [x] T030 — Ordonner les 60 sujets en neuf étapes adaptées au profil, avec
+  prérequis contrôlés, critères de passage et intégrations ; détecter les
+  réponses courtes sans confondre longueur et qualité.
+
+T029–T030 portent sur le lot existant. Elles ne ferment ni les 119 cibles APP
+restantes (T023), ni les essais applicatifs et de rappel (T009/T010/T013).
