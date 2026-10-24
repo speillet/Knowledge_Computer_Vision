@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-SVD", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -39,7 +39,7 @@ Choisir facteurs, pertes robustes, priors, variables marginalisées et seuils de
 
 La sparsité et l'ordre d'élimination changent temps/mémoire. Dans le cas gaussien, l'élimination des variables équivaut à une factorisation QR creuse du jacobien de mesure (Kaess et al. 2012, §2, Gaussian Case). Un mauvais ordre crée du remplissage (fill-in) ; iSAM2 réordonne incrémentalement la partie affectée, avec des résultats proches d'un COLAMD batch (§3.4). Incremental ne veut pas dire coût constant. Aucun appel GTSAM n'est exécuté ; les notions sont conceptuelles et reliées au BA.
 
-Mise à jour d'iSAM2 (Kaess et al. 2012). Un nouveau facteur n'affecte que les chemins entre les cliques de ses variables et la racine (§3.3). L'algorithme 4 retire ces cliques, ajoute les nouveaux facteurs, réordonne, élimine, puis réinsère les sous-arbres orphelins. La relinéarisation fluide ne relinéarise une variable que si son écart au point de linéarisation dépasse un seuil $\beta$ (§4.1) ; sur Manhattan, $\beta=0{,}1$ donne une solution presque exacte pour un coût nettement réduit. La mise à jour partielle arrête la rétro-substitution dans les sous-arbres dont le changement reste sous un seuil $\alpha$ (§4.2). Une grande boucle affecte une grande partie de l'arbre.
+Mise à jour d'iSAM2 (Kaess et al. 2012). Un nouveau facteur n'affecte que les chemins entre les cliques de ses variables et la racine (§3.3). L'algorithme 4 retire ces cliques, ajoute les nouveaux facteurs, réordonne, élimine, puis réinsère les sous-arbres orphelins. Les variables relinéarisées entraînent aussi le recalcul de leurs cliques et ancêtres (algorithmes 5–6), même sans nouveau facteur sur elles. La relinéarisation fluide ne relinéarise une variable que si son écart au point de linéarisation dépasse un seuil $\beta$ (§4.1) ; sur Manhattan, $\beta=0{,}1$ donne une solution presque exacte pour un coût nettement réduit. La mise à jour partielle arrête la rétro-substitution dans les sous-arbres dont le changement reste sous un seuil $\alpha$ (§4.2). Une grande boucle affecte une grande partie de l'arbre.
 
 ## Évaluation et variation contrôlée
 
@@ -49,7 +49,7 @@ Cas construit : ajouter une contrainte de boucle correcte puis une fausse. Préd
 
 Un solveur converge avec une trajectoire absurde : contrôler repères, information des priors, associations et facteurs incohérents ; une tolérance plus stricte n'est pas un diagnostic.
 
-Fausses fermetures de boucle. Le perceptual aliasing rend irréaliste un front-end sans faux positifs (Agarwal et al. 2013, §II). Test du projet : comparer le $\chi^2_l$ du facteur de boucle à un quantile de sa dimension, regarder la hausse des résidus d'odométrie voisins, puis réoptimiser sans ce facteur. Back-ends robustes :
+Fausses fermetures de boucle. Le perceptual aliasing rend irréaliste un front-end sans faux positifs (Agarwal et al. 2013, §II). Test heuristique du projet : suivre le résidu pondéré $\chi^2_l$ du facteur de boucle. Après optimisation sur les mêmes mesures, sa distribution dépend de l’ajustement et des corrélations ; un quantile $\chi^2$ de dimension 6 ne fournit pas automatiquement un taux de faux rejet calibré. Pour diagnostiquer, regarder la hausse des résidus d'odométrie voisins, puis réoptimiser sans ce facteur. Back-ends robustes :
 
 - perte robuste sur les boucles (CV-SVD-008) ;
 - contraintes commutables de Sünderhauf et Protzel : une variable $s_{ij}\in[0,1]$ par boucle, avec un prior qui la rappelle vers 1 ;
