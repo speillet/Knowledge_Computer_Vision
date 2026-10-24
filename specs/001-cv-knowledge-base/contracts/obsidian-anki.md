@@ -1,6 +1,12 @@
 # Contrat expérimental Obsidian–Anki
 
-**Version** : pilote 1, 2026-10-18. Ne généraliser qu'après les essais réels.
+**Version** : pilote 2, 2026-10-24. Ne généraliser qu'après les essais réels.
+
+Le chemin actuel construit un paquet `.apkg` depuis le même Markdown ; le
+plugin décrit ci-dessous reste un candidat historique. Le contrat complémentaire
+[export direct](../../../docs/export-apkg.md) fixe les identités, la conversion,
+les critères d'acceptation et les limites de cette chaîne. Aucun import de
+paquet et de plugin ne doit alimenter la même collection.
 
 Le dossier `vault/` est la racine à ouvrir dans Obsidian. Les cartes sont classées
 dans les répertoires thématiques définis par `scripts/vault_sections.json`,
@@ -12,7 +18,8 @@ qu'aucun bloc de note n'est ajouté dans les guides ou références.
 La configuration se fait dans l'application, sans embarquer
 ses fichiers privés ou le code du plugin dans Git.
 
-Le modèle Anki s'appelle exactement `CV-Pilote`, avec les champs `ID`,
+Le modèle Anki s'appelle exactement `CV-Pilote` (`modelId: 1153189853` pour
+les paquets), avec les champs `ID`,
 `Question`, `Reponse`, `Source` dans cet ordre. Les trois gabarits se trouvent
 dans `anki/`. Le champ `ID` n'apparaît pas sur le recto. La source canonique
 reste le Markdown ; les réponses ne sont pas modifiées en parallèle dans Anki.
