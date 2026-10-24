@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 3
 prerequis: ["CV-CLIP", "CV-DETECTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -50,6 +50,32 @@ Faux positifs sur descriptions larges : analyser ambiguïté du texte et taxonom
 ## Alternatives et usages
 
 Combiner détecteur connu, embeddings et annotations ciblées selon fréquence de nouveauté et tolérance d'erreur. Une génération VLM n'est pas une détection évaluée par boîtes.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent vocabulaire variable, protocole et sortie localisée. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-OPENVOC-001
+
+**Question de travail** : Pourquoi un classement CLIP d’une image ne remplace-t-il pas directement un détecteur open-vocabulary ?
+
+**Réponse de référence** : Le classement image porte sur l’image globale ; la détection doit aussi localiser les instances avec un protocole de sortie adapté.
+
+**Décomposition de la sortie** : une similarité globale image–texte peut indiquer qu'un contenu est compatible avec une description. Un détecteur doit en plus proposer des positions et distinguer plusieurs occurrences, avec leurs classes ou relations au texte. Un score sur l'image entière ne détermine ni ces boîtes ni leur nombre.
+
+**Exemple construit** : une scène avec deux tasses et une assiette peut bien correspondre au texte « tasse » sans fournir la localisation de chaque tasse. L'évaluation de détection doit vérifier instances, coordonnées et objets manqués, y compris lorsque le prompt est absent de l'image. Un grounding référentiel peut demander encore une autre sortie, comme « la tasse à gauche de l'assiette ». Définir annotations, négatifs, seuils et métriques selon ce contrat. Le langage élargit l'interface des candidats ; il ne dispense pas de vérifier la précision spatiale et les confusions du domaine.
+
+### Cas lié à CV-OPENVOC-003
+
+**Question de travail** : Un prompt large donne des boîtes sur des objets apparentés mais hors cible. Que tester ?
+
+**Réponse de référence** : Définition de classe, formulations/négatifs et score de région sur validation ; inspecter les confusions et annotations.
+
+**Pourquoi le texte peut être en cause** : une description générale peut correspondre à plusieurs catégories visuelles que la taxonomie industrielle sépare. Un modèle peut donc retourner une région plausible pour le langage courant mais incorrecte pour le besoin. Un seuil unique ne résout pas nécessairement cette ambiguïté.
+
+**Enquête construite** : consigner les classes visées et exclues, comparer des formulations plus précises et des négatifs proches sur validation, puis inspecter les régions et annotations. Séparer défaut de localisation et confusion de vocabulaire. Évaluer aussi l'absence de cible, car choisir le meilleur candidat ne prouve pas sa présence. Une nouvelle formulation doit être figée avant le test final. Si le domaine ne fournit pas d'indice discriminant visible, un meilleur prompt peut rester insuffisant ; l'interface doit alors permettre refus ou vérification plutôt que garantir une catégorie exacte.
+
+**Repère documentaire de cette passe** : [Grounding DINO](https://arxiv.org/html/2303.05499v4), méthode et protocole open-set. Les autres développements figurent dans les [cartes associées](../83-detection-open-vocabulary.md).
 
 ## Sources et cartes
 

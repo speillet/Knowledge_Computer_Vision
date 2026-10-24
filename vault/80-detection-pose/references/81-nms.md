@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 4
+revision: 5
 tags: [cv/d08, detection, nms]
 ---
 # NMS — supprimer des détections redondantes
@@ -162,6 +162,32 @@ peuvent provoquer des pistes manquées.
 Un détecteur entraîné à produire un ensemble non redondant, comme DETR, peut
 se passer de NMS : ne pas l'appliquer comme une obligation universelle.
 [DETR, résumé][detr]
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent suppression, seuil d’égalité et rappel des objets proches. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-NMS-001
+
+**Question de travail** : Trois boîtes continues $A=(0,0,10,10)$, $B=(2,0,12,10)$ et $C=(20,0,30,10)$ ont les scores $0,9;0,8;0,7$. Quelles boîtes garde une hard NMS qui supprime pour IoU supérieure à 0,5 ?
+
+**Réponse de référence** : sélectionner $A$, supprimer $B$ car leur intersection vaut 80, l'union 120 et l'IoU $2/3>0,5$ ; conserver ensuite $C$, disjointe. La sortie est donc $A,C$.
+
+**Raisonnement sur les instances** : le recouvrement est utilisé comme indice de redondance entre prédictions, sans connaître l'identité réelle des objets. Si A et B représentent deux personnes proches, supprimer B peut retirer une vraie instance ; si elles représentent la même pièce, la suppression peut au contraire être utile.
+
+**Contrôle proposé** : conserver les sorties avant et après l'opération et vérifier quelles annotations restent couvertes. Le seuil règle donc un compromis dépendant de la scène. Une boîte éloignée reste candidate même avec un score plus faible, tant qu'elle passe les autres filtres du pipeline. Cette lecture évite de transformer la sélection gloutonne en règle « une boîte par image » ou « une boîte par classe ».
+
+### Cas lié à CV-NMS-006
+
+**Question de travail** : Deux boîtes continues de même classe, $A=(0,0,100,100)$ et $B=(40,40,60,60)$, ont les scores $0{,}9$ et $0{,}8$. L'inclusion de B dans A entraîne-t-elle sa suppression par une hard NMS à IoU $>0{,}5$ ? Justifier.
+
+**Réponse de référence** : Non. L'intersection a l'aire de B, 400, et l'union celle de A, 10000 : IoU $=0{,}04$. A est sélectionnée, puis B reste puisque le seuil n'est pas dépassé.
+
+**Lecture géométrique** : une petite boîte entièrement contenue dans une grande a une intersection égale à sa propre aire, mais une union égale à la grande aire. Le recouvrement relatif à la petite boîte et l'IoU répondent donc à deux questions différentes. Remplacer l'un par l'autre changerait la règle de suppression.
+
+**Conséquence de diagnostic** : deux boîtes survivantes ne prouvent pas deux instances : elles peuvent être deux localisations très différentes de la même pièce. À l'inverse, objet et partie d'objet peuvent être tous deux légitimes si la taxonomie le prévoit. Vérifier les annotations, les scores et le contrat de sortie avant de modifier la mesure de recouvrement. Ce cas analytique montre une limite du slogan « les grandes boîtes éliminent les petites ».
+
+**Repère documentaire de cette passe** : [Soft-NMS](https://arxiv.org/html/1704.04503v2), méthode et décroissance des scores. Les autres développements figurent dans les [cartes associées](../81-nms.md).
 
 ## Sources et cartes
 
