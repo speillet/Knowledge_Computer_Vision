@@ -11,12 +11,12 @@ Objectif : composer avec des repères nommés. Famille : raisonnement. Provenanc
 START
 CV-Pilote
 ID: CV-SE3-001
-Question: Si $p_a=T_{ab}p_b$ et $p_b=T_{bc}p_c$ en coordonnées homogènes, quelle transformation donne p_a depuis p_c ?
-Reponse: **Noyau attendu** : $T_{ac}=T_{ab}T_{bc}$ : le repère intermédiaire b s’enchaîne.
+Question: Un SLAM fournit pour deux images les poses $T_{wc_1}$ et $T_{wc_2}$, qui envoient les coordonnées caméra vers le monde : $p_w=T_{wc_i}\,p_{c_i}$. Quelle transformation exprime dans la caméra 1 un point connu dans la caméra 2 ?
+Reponse: **Noyau attendu** : $T_{c_1c_2}=T_{wc_1}^{-1}T_{wc_2}=T_{c_1w}T_{wc_2}$ : remonter de $c_2$ vers le monde, puis du monde vers $c_1$. Les indices adjacents doivent coïncider ($c_1w$ puis $wc_2$) ; la composition n'est pas commutative.
 
-**Approfondissement** : Les translations sont exprimées dans le repère de sortie de chaque transformation ; l’ordre inverse décrit généralement autre chose.
+**Approfondissement** : avec $T_{ab}=(R_{ab},t_{ab})$, $T_{ab}T_{bc}=(R_{ab}R_{bc},\;t_{ab}+R_{ab}t_{bc})$ : la translation $t_{bc}$, exprimée dans $b$, est tournée dans $a$ avant l'addition. Contrôle : $T_{c_1c_2}$ appliquée à l'origine de $c_2$ doit donner la position de la caméra 2 vue de la caméra 1. Si les poses fournies vont du monde vers la caméra, comme `rvec`/`tvec` d'OpenCV, les inverses changent de place : $T_{c_1c_2}=T_{c_1w}T_{c_2w}^{-1}$.
 
-**Erreurs bloquantes** : Supposer la composition commutative.
+**Erreurs bloquantes** : calculer $T_{wc_2}T_{wc_1}^{-1}$ ou $T_{wc_1}T_{wc_2}$ ; supposer la composition commutative.
 Source: [[10-mathematiques-estimation/references/12-rotations-se3|Fiche complète]] ; [Solà et al., A micro Lie theory, annexe D-A, équations 170–171](https://arxiv.org/html/1812.01537v9#A4.SS1).
 Tags: cv::pilote cv::d01 famille::raisonnement cv_id::CV-SE3-001 provenance::agent pole::B pole::C
 END
@@ -45,13 +45,13 @@ Objectif : distinguer perturbations locale et globale. Famille : comparaison. Pr
 START
 CV-Pilote
 ID: CV-SE3-003
-Question: Pourquoi deux Jacobiennes de rotation peuvent-elles différer sans qu’une des deux soit fausse ?
-Reponse: **Noyau attendu** : Elles peuvent utiliser une perturbation locale à droite ou globale à gauche ; la convention change le repère de la petite rotation.
+Question: Deux implémentations du même coût paramètrent l'incrément de rotation par un petit vecteur $\delta\theta$ et obtiennent des jacobiennes différentes, chacune validée par différences finies. Quelle différence de convention l'explique, comment passer de l'une à l'autre et laquelle choisir ?
+Reponse: **Noyau attendu** : l'une perturbe à droite, $R\operatorname{Exp}(\delta\theta_L)$, avec un incrément exprimé dans le repère local ; l'autre à gauche, $\operatorname{Exp}(\delta\theta_G)R$, avec un incrément dans le repère global. L'adjoint les relie : $\operatorname{Exp}(R\,\delta\theta_L)\,R=R\operatorname{Exp}(\delta\theta_L)$, soit $\delta\theta_G=R\,\delta\theta_L$ ; jacobiennes et covariances se transforment par $R$, par exemple $J_L=J_GR$. Choisir le côté où l'incertitude est naturellement exprimée, repère capteur ou repère monde, et l'annoncer.
 
-**Approfondissement** : Annoncer la convention et transformer les Jacobiennes/covariances lorsqu’on change de repère.
+**Approfondissement** : pour SO(3), $\mathrm{Ad}_R=R$ ; pour SE(3), l'adjoint mélange rotation et translation. Solà adopte par défaut la perturbation locale. Une covariance de gyroscope s'exprime naturellement dans le repère du capteur, une erreur de cap fournie par un GNSS dans le repère monde : ces exemples relèvent du raisonnement du projet.
 
-**Erreurs bloquantes** : Copier une Jacobienne sans vérifier où agit la perturbation.
-Source: [[10-mathematiques-estimation/references/12-rotations-se3|Fiche complète]] ; [Solà et al., A micro Lie theory, §§II-E–II-H](https://arxiv.org/html/1812.01537v9#S2.SS5).
+**Erreurs bloquantes** : copier une jacobienne sans vérifier où agit la perturbation ; croire qu'une des deux conventions est fausse.
+Source: [[10-mathematiques-estimation/references/12-rotations-se3|Fiche complète]] ; [Solà et al., A micro Lie theory, §II-E, équations 25–28, et §II-F, équations 29–32](https://arxiv.org/html/1812.01537v9#S2.SS5) ; [annexe B-C, équation 139](https://arxiv.org/html/1812.01537v9).
 Tags: cv::pilote cv::d01 famille::comparaison cv_id::CV-SE3-003 provenance::agent pole::B pole::C
 END
 
@@ -62,12 +62,46 @@ Objectif : contrôler un quaternion. Famille : diagnostic. Provenance : agent.
 START
 CV-Pilote
 ID: CV-SE3-004
-Question: Un quaternion normalisé suffit-il à rendre une extrinsèque compatible avec une autre bibliothèque ?
-Reponse: **Noyau attendu** : Non : vérifier ordre scalaire/vectoriel, sens de transformation, axes et convention de multiplication.
+Question: Une extrinsèque caméra–IMU passe d'une bibliothèque à une autre sous forme de quaternion unitaire et de translation ; la reprojection devient fausse alors que la norme du quaternion vaut bien 1. Quelles conventions vérifier, et quel test les départage ?
+Reponse: **Noyau attendu** : vérifier l'ordre des composantes (scalaire en premier ou en dernier), l'algèbre de multiplication (Hamilton ou JPL), le sens de la transformation (capteur vers référence ou l'inverse) et les axes des repères. La norme unité ne contraint que la représentation. Test : transformer un point ou un axe connu par les deux chaînes et comparer les résultats, plutôt que les quatre nombres.
 
-**Approfondissement** : Normaliser garantit une contrainte de représentation, pas que les deux API interprètent les composantes de la même façon.
+**Approfondissement** : Solà distingue quatre choix binaires : ordre, algèbre, fonction active ou passive, sens local→global ou l'inverse. Exemples : le constructeur `Quaternion(w,x,y,z)` d'Eigen prend le scalaire en premier mais stocke `[x,y,z,w]` ; `Rotation.from_quat` de SciPy suppose par défaut le scalaire en dernier. $q$ et $-q$ représentent la même rotation : comparer des rotations, pas des composantes.
 
-**Erreurs bloquantes** : Assimiler quatre nombres de norme un à une convention universelle.
-Source: [[10-mathematiques-estimation/references/12-rotations-se3|Fiche complète]] ; [Solà, Quaternion kinematics, §3.1, équations 140–143](https://arxiv.org/pdf/1711.02508).
+**Erreurs bloquantes** : assimiler quatre nombres de norme un à une convention universelle ; conclure à deux rotations différentes parce que $q$ et $-q$ diffèrent.
+Source: [[10-mathematiques-estimation/references/12-rotations-se3|Fiche complète]] ; [Solà, Quaternion kinematics, §3.1, équations 140–143 et table 2](https://arxiv.org/abs/1711.02508) ; [Eigen 5.0.1-dev, Quaternion, constructeur (consulté le 2026-10-23)](https://libeigen.gitlab.io/eigen/docs-nightly/classEigen_1_1Quaternion.html) ; [SciPy 1.18.0, Rotation.from_quat (consulté le 2026-10-23)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.from_quat.html).
 Tags: cv::pilote cv::d01 famille::diagnostic cv_id::CV-SE3-004 provenance::agent pole::B pole::C
+END
+
+## CV-SE3-005
+
+Objectif : mesurer un écart de rotation. Famille : evaluation. Provenance : agent.
+
+START
+CV-Pilote
+ID: CV-SE3-005
+Question: Pour évaluer une orientation estimée $\hat R$ contre une vérité terrain $R$, un rapport compare les angles d'Euler composante par composante, un autre les quaternions. Quelle mesure utiliser à la place, et pourquoi ces deux comparaisons peuvent-elles tromper ?
+Reponse: **Noyau attendu** : mesurer l'angle de la rotation résiduelle $R^T\hat R$ : $\theta=\arccos\frac{\operatorname{tr}(R^T\hat R)-1}{2}$, indépendant de la paramétrisation. Les angles d'Euler dépendent de la convention et sont singuliers : près d'un tangage de 90°, de grands écarts de lacet et de roulis se compensent. $q$ et $-q$ représentent la même rotation : leurs composantes peuvent différer de 2 pour une erreur nulle ; depuis des quaternions unitaires, utiliser $\theta=2\arccos|\langle q_1,q_2\rangle|$.
+
+**Approfondissement** : cas calculé par le projet : les rotations ZYX $(30°;89{,}9°;0°)$ et $(0°;89{,}9°;-30°)$ diffèrent de 30° sur deux angles d'Euler, mais leur angle géodésique vaut 0,05°. Borner l'argument de l'arccos dans $[-1,1]$ contre les arrondis. REP 103 déconseille les angles d'Euler, qui admettent 24 conventions « valides ». Ne pas moyenner des angles d'Euler pour agréger des erreurs.
+
+**Erreurs bloquantes** : rapporter des écarts d'angles d'Euler comme erreur de rotation ; conclure à une erreur parce que $q$ et $-q$ diffèrent.
+Source: [[10-mathematiques-estimation/references/12-rotations-se3|Fiche complète]] ; [Solà et al., A micro Lie theory, annexe B, double couverture et Log de SO(3), équation 135](https://arxiv.org/html/1812.01537v9) ; [REP 103, Rotation Representation, commit 6fbda48](https://github.com/ros-infrastructure/rep/blob/6fbda48350825b28aec74609b29c7ee18c8e619a/rep-0103.rst) ; calcul et formule par quaternion dérivés par le projet.
+Tags: cv::pilote cv::d01 famille::evaluation cv_id::CV-SE3-005 provenance::agent pole::B pole::C
+END
+
+## CV-SE3-006
+
+Objectif : convertir entre conventions d'axes caméra. Famille : diagnostic. Provenance : agent.
+
+START
+CV-Pilote
+ID: CV-SE3-006
+Question: Une pose caméra estimée avec OpenCV est transmise à un moteur de rendu OpenGL et à un nœud ROS ; dans le rendu, la scène apparaît retournée ou derrière la caméra. Quelles conventions d'axes comparer, et quelle transformation relie OpenCV et OpenGL ?
+Reponse: **Noyau attendu** : OpenCV place $x$ à droite, $y$ vers le bas et $z$ vers l'avant, les points visibles ayant $Z_c>0$ ; en OpenGL, la caméra vise $-z$ avec $y$ vers le haut ; ROS place le corps en $x$ avant, $y$ gauche, $z$ haut, et son repère `_optical` suit la convention d'OpenCV. Passer d'OpenCV à OpenGL revient à tourner de 180° autour de $x$ : $M=\mathrm{diag}(1,-1,-1)$, de déterminant $+1$. Pour composer des poses homogènes $4\times4$, utiliser $M_h=\mathrm{diag}(1,-1,-1,1)$ : à droite d’une pose caméra→monde, $T^{gl}_{wc}=T^{cv}_{wc}M_h$, ou à gauche d’une matrice monde→caméra, $T^{gl}_{cw}=M_hT^{cv}_{cw}$. Vérifier qu'un point connu devant la caméra le reste dans chaque convention.
+
+**Approfondissement** : chez OpenCV, $x'=X_c/Z_c$, puis $v=f_yy'+c_y$ avec des lignes de pixels qui croissent vers le bas : pour $f_y>0$, $Y_c$ pointe vers le bas. `gluLookAt` envoie le point visé sur l'axe $-z$ et la direction « haut » sur $+y$. Confondre repère corps et repère `_optical` dans ROS fait viser la caméra vers le haut ou sur le côté. Inverser un seul axe donne un déterminant $-1$ : c'est une réflexion, pas un changement de repère rigide.
+
+**Erreurs bloquantes** : inverser un seul axe ; appliquer la conversion du mauvais côté de la pose ; supposer que toutes les bibliothèques partagent les axes d'OpenCV.
+Source: [[10-mathematiques-estimation/references/12-rotations-se3|Fiche complète]] ; [OpenCV 4.13.0, `calib3d.hpp`, modèle sténopé, l. 94–118](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp#L94-L118) ; [Khronos, gluLookAt, Description](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml) ; [REP 103, Axis Orientation et Suffix Frames, commit 6fbda48](https://github.com/ros-infrastructure/rep/blob/6fbda48350825b28aec74609b29c7ee18c8e619a/rep-0103.rst) ; diagnostic et côté de composition déduits par le projet.
+Tags: cv::pilote cv::d01 famille::diagnostic cv_id::CV-SE3-006 provenance::agent pole::B pole::C
 END

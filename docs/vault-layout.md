@@ -61,6 +61,6 @@ identité. Le déplacement et le changement de deck doivent encore être observ�
 sur une vraie note déjà révisée avant de déclarer l'historique conservé.
 
 Les 47 cartes du lot initial ont conservé leurs identifiants et textes lors du
-reclassement. Le catalogue courant compte 52 fiches et 238 cartes dans les
+reclassement. Le catalogue courant compte 52 fiches et 240 cartes dans les
 14 thèmes. `python3 scripts/sync_catalog.py` met à jour index, accueil, inventaire
 et parcours métiers ; `--check` détecte une navigation périmée sans écrire.
