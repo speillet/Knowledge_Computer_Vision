@@ -69,3 +69,23 @@ Provenance agent et état `redige` conservés. Export réel, historique Anki,
 rendu Android, rappel et validation scientifique indépendante restent ouverts.
 Le travail `.apkg` présent dans le workspace initial est préservé sans publication
 ou reconstruction dans ce lot.
+
+## Standards
+
+Revue `code-review` du diff `046300b1…3776c973`, par un agent distinct : aucun
+écart bloquant ou important, aucun smell de conception actionnable. Les tests
+du catalogue portent sur conservation des cibles et refus de métadonnées
+incohérentes ; ils ne jugent pas l’exactitude scientifique des cartes.
+
+## Spec
+
+Deux écarts repérés puis corrigés : priorités APP/fiches désormais alignées en
+V0 pour ce lot consacré aux lacunes classiques exprimées (FR-043) ; contexte
+eye-in-hand, mire fixe et sens des transformations redéfinis dans CV-HANDEYE-004
+pour une révision autonome (FR-007/016). La promotion de priorité concerne
+uniquement les dix cibles traitées, pas les 119 restantes. Aucun autre défaut
+algorithmique bloquant ou débordement de périmètre identifié dans ce passage.
+
+Standards : aucun constat à corriger ; Spec : deux constats corrigés. Les
+essais applicatifs et la préparation des 119 cibles ouvertes restent distincts
+de cette livraison éditoriale.

@@ -62,8 +62,8 @@ Objectif : tester la fermeture de la chaîne. Famille : diagnostic. Provenance :
 START
 CV-Pilote
 ID: CV-HANDEYE-004
-Question: Une extrinsèque hand-eye est plausible, mais les points reconstruits se décalent quand le robot tourne. Quel test de chaîne et quelles causes vérifier ?
-Reponse: **Noyau attendu** : Calculer $Y_i=G_iXC_i$ sur plusieurs poses réservées : la mire fixe doit donner une transformation mire→base cohérente. Si elle varie, vérifier inversions, unités, timestamps, intrinsics et rigidité de la mire.
+Question: En eye-in-hand, la caméra est solidaire du gripper et la mire reste fixe dans la base robot. L’extrinsèque estimée paraît plausible, mais les points reconstruits se décalent quand le robot tourne. Quel test de chaîne et quelles causes vérifier ?
+Reponse: **Noyau attendu** : Noter $G_i$ la transformation gripper→base, $C_i$ mire→caméra et $X$ caméra→gripper, toutes homogènes et avec des unités de translation communes. Calculer $Y_i=G_iXC_i$ sur plusieurs poses réservées : la mire fixe doit donner une transformation mire→base cohérente. Si elle varie, vérifier inversions, unités, timestamps, intrinsics et rigidité de la mire.
 
 **Approfondissement** : Comparer rotations et translations dans leurs unités avant de les agréger. Refaire l’expérience à robot immobile puis en mouvement aide à isoler un délai. Le test est proposé par le projet ; il ne localise pas automatiquement une cause unique.
 

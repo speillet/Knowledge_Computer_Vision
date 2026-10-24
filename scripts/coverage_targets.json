@@ -191,7 +191,7 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-MATCHING",
     "fiche": "CV-CORNERS",
@@ -212,7 +212,7 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-MATCHING",
     "fiche": "CV-CORNERS",
@@ -233,7 +233,7 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-MATCHING",
     "fiche": "CV-FAST-BRIEF",
@@ -253,7 +253,7 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-MATCHING",
     "fiche": "CV-FAST-BRIEF",
@@ -285,7 +285,7 @@
       "B",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-MATCHING",
     "fiche": "CV-FLANN",
@@ -339,7 +339,7 @@
       "C",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-MULTICALIB",
     "fiche": "CV-FISHEYE",
@@ -361,7 +361,7 @@
       "C",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-MULTICALIB",
     "fiche": "CV-HANDEYE",
@@ -1083,7 +1083,7 @@
       "C",
       "D"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-FLOT",
     "fiche": "CV-FARNEBACK",
@@ -1129,7 +1129,7 @@
       "D",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-SOT",
     "fiche": "CV-MEANSHIFT",
@@ -1151,7 +1151,7 @@
       "D",
       "E"
     ],
-    "priorite": "V1",
+    "priorite": "V0",
     "profondeur": "usage-operationnel",
     "connexe": "CV-SOT",
     "fiche": "CV-CORRELATION",
