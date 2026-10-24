@@ -9,9 +9,10 @@ comparaisons et diagnostics. Les totaux actuels figurent dans le catalogue ci-de
 
 Ouvrir le dossier [`vault/`](vault/00-Accueil.md) comme vault dans Obsidian,
 puis commencer par son accueil. Le [guide d'export](vault/01-Parcours/Guide-Anki.md)
-prépare Obsidian_to_Anki et la révision sur **AnkiDroid** via Desktop/AnkiWeb.
-Le format reste expérimental : le parseur officiel a été testé localement,
-mais aucun export réel ni historique de révision n'est encore validé.
+explique la construction d'un paquet `.apkg` pour **AnkiDroid**. La création
+et les mises à jour sont testées dans une collection Anki jetable ; le rendu
+sur Android reste à vérifier. La chaîne Obsidian_to_Anki reste documentée
+comme essai historique, avec des identités distinctes.
 
 Le vault suit l'organisation par thématique de
 [Knowledge_AI_Engineering](https://github.com/speillet/Knowledge_AI_Engineering) :
@@ -57,6 +58,17 @@ python3 examples/pilot_math.py
 Les [preuves et essais restants](vault/01-Parcours/Suivi-pilote.md) distinguent
 contrôles locaux, auto-revue, tests applicatifs et maîtrise personnelle.
 
+Pour générer le paquet avec [uv](https://docs.astral.sh/uv/), sans modifier
+les dépendances de l'environnement courant :
+
+```sh
+uv run --no-project --with genanki==0.13.1 python scripts/build_apkg.py
+python3 scripts/build_apkg.py --verifier dist/CV-Pilote.apkg
+```
+
+Le fichier `dist/CV-Pilote.apkg` s'importe dans AnkiDroid ; les fichiers générés
+restent hors Git. Voir le [contrat et les vérifications](docs/export-apkg.md).
+
 ## Outils de travail
 
 - [Conventions de contribution](CONTRIBUTING.md) : branches, commits et PR.
@@ -66,6 +78,9 @@ contrôles locaux, auto-revue, tests applicatifs et maîtrise personnelle.
 - [Skill de revue des cartes](.agents/skills/revue-cartes/SKILL.md) :
   `$revue-cartes` (Codex) ou `/revue-cartes` (Claude Code) audite, corrige
   et propose d'enrichir une fiche et ses cartes.
+- [Skill du paquet Anki](.agents/skills/paquet-anki/SKILL.md) :
+  `$paquet-anki` construit, vérifie et compare les paquets ; une release
+  se publie sur demande.
 
 ## Spécification en cours
 
