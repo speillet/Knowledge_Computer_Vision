@@ -1,0 +1,136 @@
+{
+  "etapes": [
+    {
+      "id": "socle",
+      "titre": "Mesurer les données et poser les conventions",
+      "sujets": [
+        "CV-ACQUISITION",
+        "CV-FIABILITE",
+        "CV-PIPELINE",
+        "CV-SVD",
+        "CV-SE3"
+      ],
+      "objectif": "Relier qualité image, repères, bruit et critère produit avant de choisir une méthode.",
+      "preuve": "Sur un cas de flou et un cas de résidu faible mais paramètres instables, proposer deux contrôles discriminants avec leurs unités."
+    },
+    {
+      "id": "image",
+      "titre": "Comprendre le signal et les structures locales",
+      "sujets": [
+        "CV-CAPTEURS",
+        "CV-IMAGERIES",
+        "CV-FILTRES",
+        "CV-CANNY-HOUGH",
+        "CV-MORPHO"
+      ],
+      "objectif": "Maîtriser acquisition temporelle, filtres, contours et géométrie des masques.",
+      "preuve": "Expliquer pourquoi un débruitage ou une fermeture peut améliorer une image tout en dégradant le rappel ou le comptage ; prévoir une ablation."
+    },
+    {
+      "id": "matching",
+      "titre": "Construire et vérifier des correspondances",
+      "sujets": [
+        "CV-MATCHING",
+        "CV-CORNERS",
+        "CV-FAST-BRIEF",
+        "CV-SIFT",
+        "CV-ORB",
+        "CV-FLANN",
+        "CV-HOMOGRAPHIE",
+        "CV-MATCH-APPRIS",
+        "CV-ECC"
+      ],
+      "objectif": "Relier détecteur, descripteur, métrique, matcher et modèle géométrique.",
+      "preuve": "Recaler un plan avec une baseline et un protocole proposé : couverture, erreurs sur points réservés, coût complet et cas de répétition."
+    },
+    {
+      "id": "geometrie",
+      "titre": "Calibrer et reconstruire la géométrie",
+      "sujets": [
+        "CV-ZHANG",
+        "CV-EPIPOLAIRE",
+        "CV-FISHEYE",
+        "CV-HANDEYE",
+        "CV-MULTICALIB",
+        "CV-FACTEURS",
+        "CV-BA",
+        "CV-STEREO",
+        "CV-ICP"
+      ],
+      "objectif": "Distinguer intrinsèques, pose, profondeur, extrinsèques et optimisation conjointe.",
+      "preuve": "Départager erreur de repère, mauvaise échelle, manque de parallaxe et surajustement, puis choisir une observation indépendante utile."
+    },
+    {
+      "id": "perception",
+      "titre": "Relier représentations, tâches et métriques",
+      "sujets": [
+        "CV-REPRESENTATIONS",
+        "CV-CLIP",
+        "CV-ANOMALIES",
+        "CV-OCR",
+        "CV-BIOMETRIE",
+        "CV-IOU-AP",
+        "CV-NMS",
+        "CV-DETECTEURS",
+        "CV-OPENVOC",
+        "CV-SEGMENTATION",
+        "CV-WATERSHED",
+        "CV-GRABCUT",
+        "CV-SAM",
+        "CV-METRIQUES-APPLIQUEES"
+      ],
+      "objectif": "Comparer les contrats des tâches et leurs erreurs, sans reprendre tout le cursus général ML/DL.",
+      "preuve": "Diagnostiquer un petit objet manqué et une frontière incorrecte en séparant acquisition, annotation, apprentissage, posttraitement et évaluation."
+    },
+    {
+      "id": "temps",
+      "titre": "Suivre le mouvement et les identités",
+      "sujets": [
+        "CV-FUSION",
+        "CV-FLOT",
+        "CV-FARNEBACK",
+        "CV-VIDEO",
+        "CV-SOT",
+        "CV-CORRELATION",
+        "CV-MEANSHIFT",
+        "CV-SORT",
+        "CV-ASSOCIATION"
+      ],
+      "objectif": "Distinguer déplacement apparent, état filtré, visibilité, association et identité.",
+      "preuve": "Reconstruire la chronologie d'une perte de piste après occultation et proposer une ablation qui départage détecteur, expiration et association."
+    },
+    {
+      "id": "spatial",
+      "titre": "Intégrer temps et espace en 3D",
+      "sujets": [
+        "CV-VIO",
+        "CV-BEV",
+        "CV-POSE3D",
+        "CV-METRIQUES-TEMPS"
+      ],
+      "objectif": "Composer calibration, mouvement, représentations spatiales et validation temporelle.",
+      "preuve": "Définir un groupe d'alignement qui ne masque pas une erreur métrique, puis contrôler un décalage de fusion apparaissant en rotation."
+    },
+    {
+      "id": "multimodal",
+      "titre": "Interpréter les modèles génératifs et multimodaux",
+      "sujets": [
+        "CV-VLM",
+        "CV-DIFFUSION",
+        "CV-RENDU3D"
+      ],
+      "objectif": "Distinguer ressemblance, génération, localisation, reconstruction et fidélité des observations.",
+      "preuve": "Expliquer pourquoi une sortie plausible peut être fausse, puis définir une référence et une évaluation adaptées au besoin."
+    },
+    {
+      "id": "production",
+      "titre": "Déployer et surveiller la chaîne complète",
+      "sujets": [
+        "CV-QUANT",
+        "CV-DEPLOIEMENT"
+      ],
+      "objectif": "Évaluer les compromis qualité, mémoire, débit, latence et reproductibilité du système.",
+      "preuve": "Comparer deux versions sur la même cible matérielle avec données réservées, p99 de bout en bout, cas difficiles et procédure de retour arrière."
+    }
+  ]
+}
