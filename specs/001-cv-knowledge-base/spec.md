@@ -228,7 +228,11 @@ avant la rédaction de ses fiches.
   Une famille non applicable doit être justifiée lors de la revue.
 - **FR-015** : chaque carte DOIT définir un objectif de rappel et des critères
   de correction distinguant noyau attendu, approfondissement facultatif et
-  erreurs bloquantes ; sa réponse reste développée sans limite arbitraire de longueur.
+  erreurs bloquantes ; sa réponse reste développée sans plafond de longueur.
+  Depuis la demande du 2026-10-24, tous les versos doivent être longs et
+  explicatifs : mécanisme, exemple ou raisonnement suivi et limites utiles.
+  Le seuil éditorial de repérage est décrit dans le contrat pédagogique ;
+  le noyau attendu reste la règle de correction du rappel.
 - **FR-016** : chaque carte DOIT être reliée à une fiche canonique et rester
   compréhensible dans son contexte de révision autonome.
 - **FR-017** : fiche de référence et cartes DOIVENT avoir des rôles distincts ;
