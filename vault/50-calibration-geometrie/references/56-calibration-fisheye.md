@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 1
+revision: 2
 prerequis: ["CV-ZHANG", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -43,6 +43,32 @@ Baseline proposée : modèle pinhole avec distorsion et même jeu d’apprentiss
 ## Diagnostic et alternatives
 
 Un RMS moyen faible avec de grands résidus aux bords appelle une carte spatiale des erreurs, une inspection des corners et de nouvelles vues périphériques. Une image « redressée » visuellement ne prouve pas la justesse métrique. Pour un dispositif omnidirectionnel ou non central, comparer un autre modèle de caméra plutôt que multiplier arbitrairement les coefficients. Le contrat de projection et la région observée limitent les conclusions.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent couverture angulaire et compatibilité du modèle de projection. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-FISHEYE-001
+
+**Question de travail** : Dans OpenCV fisheye, mettre les quatre coefficients de distorsion à zéro redonne-t-il la projection pinhole ? Expliquer avec un rayon hors axe.
+
+**Réponse de référence** : Non : le rayon normalisé vaut alors $r_d=\theta$, tandis que le pinhole donne $r=\tan\theta$, avec $\theta$ l’angle au centre optique en radians. Les projections ne coïncident qu’approximativement près de l’axe.
+
+**Pourquoi le centre trompe** : près de zéro, $\tan\theta$ est proche de $\theta$. Les deux modèles peuvent donc sembler semblables sur une petite région centrale. L'écart grandit hors axe ; des coefficients nuls ne signifient pas « aucune différence avec le pinhole », mais aucune correction supplémentaire au modèle angulaire choisi.
+
+**Contrôle proposé** : projeter quelques rayons connus, dont un suffisamment oblique, avec les deux modèles dans les mêmes conventions et unités. Comparer ensuite aux observations réservées de la caméra réelle. Une image visuellement plausible ne départage pas les modèles sur leur précision périphérique. Les coefficients et la matrice de chaque modèle doivent rester associés à l'image et à la fonction de projection qui les interprètent.
+
+### Cas lié à CV-FISHEYE-005
+
+**Question de travail** : Une modification du paramètre balance d’OpenCV montre davantage de scène mais ajoute des bordures. La caméra est-elle mieux calibrée ?
+
+**Réponse de référence** : Non : `balance` modifie le choix de la projection de sortie et le compromis de champ, pas les paramètres physiques déjà estimés. Comparer champ utile, résolution locale et pixels valides avec la même calibration.
+
+**Interprétation du compromis** : une projection de sortie peut privilégier un cadrage qui remplit le rectangle ou un champ plus large avec des zones invalides. Ces choix changent la quantité d'information disponible et sa résolution locale, sans modifier les observations ayant servi à estimer la caméra.
+
+**Évaluation proposée** : comparer les sorties sur la même calibration en reportant masque valide, champ utile et erreur de la tâche. Pour une mesure près d'une bordure, l'interpolation et la faible densité d'observations peuvent compter davantage que le nombre total de pixels affichés. La géométrie de sortie doit être propagée aux algorithmes suivants. Un changement de présentation peut donc aider un produit sans constituer une amélioration de calibration physique.
+
+**Repère documentaire de cette passe** : [OpenCV 4.13, Fisheye camera model](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html), équations en theta, coefficients et fonctions de calibration. Les autres développements figurent dans les [cartes associées](../56-calibration-fisheye.md).
 
 ## Sources et cartes
 

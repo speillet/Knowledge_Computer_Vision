@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-HOMOGRAPHIE"]
-revision: 3
+revision: 4
 tags: [cv/d05, calibration, zhang]
 ---
 # Calibration caméra sur mire — méthode de Zhang
@@ -130,6 +130,32 @@ Après resize par facteurs $a_x,a_y$, appliquer la transformation pixel aux
 intrinsèques ; crop/padding déplacent aussi le point principal. Si le modèle
 physique reste valable, ce changement de repère n'exige pas forcément une
 nouvelle calibration. Un changement de focus ou de zoom est une autre situation.
+
+## Raisonnement guidé et contrôles proposés
+
+Ces cas construits développent contraintes des vues, resize et contrôle hors apprentissage. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+
+### Cas lié à CV-ZHANG-001
+
+**Question de travail** : Quelle différence sépare calibration caméra, estimation de pose et recalage de deux images ?
+
+**Réponse de référence** : la calibration estime des paramètres de formation de l'image, notamment intrinsèques et distorsion ; la pose décrit une transformation de repères ; le recalage aligne des observations selon un modèle choisi.
+
+**Exemple de chaîne** : dans une cellule fixe, une calibration décrit comment les rayons sont transformés en pixels. Une estimation de pose situe la caméra ou la pièce dans un repère. Un recalage peut ensuite aligner une image de référence avec l'observation courante. Ces opérations se combinent, mais leurs inconnues et leurs données de référence ne sont pas identiques.
+
+**Conséquence pour le diagnostic** : un bon alignement d'une mire plane peut masquer une mauvaise extrapolation des paramètres hors des vues utilisées. Inversement, une caméra bien calibrée peut donner un mauvais recalage si les correspondances sont fausses. Nommer la sortie attendue permet de choisir le bon protocole et évite de demander à une homographie unique de certifier toute la géométrie du système.
+
+### Cas lié à CV-ZHANG-007
+
+**Question de travail** : Pour contrôler des dimensions de pièces avec une caméra fixe, quelles décisions rendent une calibration sur mire exploitable au-delà d'une démonstration ?
+
+**Réponse de référence** : définir tolérance métier, résolution/focus stables, modèle optique et unités ; capturer une mire plane connue sous orientations et positions informatives ; vérifier les coins ; conserver des observations et une référence métrique indépendantes pour valider.
+
+**Critère d'exploitation proposé** : conserver une pièce ou une cible de contrôle indépendante et définir les événements qui déclenchent une nouvelle vérification : modification de focus, choc mécanique, changement de résolution ou dérive de mesure. Une calibration devient un artefact versionné avec son domaine de validité.
+
+**Boucle de validation** : relier les erreurs mesurées aux décisions du produit, puis distinguer répétabilité entre prises et biais par rapport à la dimension connue. Documenter la géométrie du plan ou du volume réellement contrôlé. Une projection correcte sur la mire ne garantit pas que toutes les surfaces 3D soient mesurables avec une seule vue. Cette limite doit rester visible dans le parcours entre calibration, estimation de pose et métrologie.
+
+**Repère documentaire de cette passe** : [Zhang, rapport TR98-71](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf), §§2–4, projection, estimation et raffinement. Les autres développements figurent dans les [cartes associées](../52-calibration-zhang.md).
 
 ## Alternatives, sources et cartes
 
