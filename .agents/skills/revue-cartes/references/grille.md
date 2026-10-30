@@ -7,9 +7,10 @@ exigences FR-007 à FR-016, FR-031, FR-032 et FR-036 de la spec.
 1. [Exactitude](#exactitude)
 2. [Pertinence pour un profil senior](#pertinence-pour-un-profil-senior)
 3. [Corrigibilité](#corrigibilité)
-4. [Cohérence](#cohérence)
-5. [Signaux d'alerte](#signaux-dalerte)
-6. [Gravité](#gravité)
+4. [Développement](#développement)
+5. [Cohérence](#cohérence)
+6. [Signaux d'alerte](#signaux-dalerte)
+7. [Gravité](#gravité)
 
 ## Exactitude
 
@@ -84,9 +85,28 @@ classiques, matching, calibration et recalage, tracking, détection.
   commettrait ?
 - Une comparaison forme-t-elle un seul objectif cohérent, plutôt que deux
   questions juxtaposées ?
-- La longueur est-elle raisonnable pour un rappel ? Il n'y a pas de plafond.
-  Signaler une réponse nettement plus longue que les autres du sujet, ou un
-  noyau trop composite pour être noté sans hésiter.
+- La réponse atteint-elle le plancher du contrat (180 mots lexicaux, contrôlé
+  par `scripts/learning_path.py` et l'inventaire) ? Il n'y a pas de plafond.
+  Le plancher repère les réponses trop brèves ; il ne mesure pas la qualité.
+- Le noyau reste-t-il assez court pour être noté sans hésiter, même quand le
+  verso est long ? Un noyau trop composite justifie une proposition de carte
+  complémentaire, pas un noyau plus vague.
+
+## Développement
+
+Le contrat demande des réponses développées. Un bon développement aide à
+retrouver la réponse et à vérifier qu'elle s'applique :
+
+- il explique le **mécanisme** plutôt que d'énoncer une conclusion ;
+- il suit un **exemple interprété** ou un **calcul construit**, avec ses
+  hypothèses et ses unités ;
+- il nomme les **hypothèses** et les **limites** utiles à l'objectif ;
+- il donne un **contrôle discriminant** quand la carte porte sur un choix ou un
+  diagnostic.
+
+À éviter : paraphraser le noyau, répéter un paragraphe de diagnostic d'une autre
+carte, empiler des faits sans lien avec la question, présenter un calcul ou un
+protocole du projet comme un résultat publié.
 
 ## Cohérence
 
@@ -118,6 +138,9 @@ classiques, matching, calibration et recalage, tracking, détection.
 | Repère, unité ou origine des coordonnées implicites | Erreur de calcul en projet | Contrat des données (FR-031) |
 | Défaut d'une bibliothèque présenté comme propriété de la méthode | Confusion méthode/implémentation | Source scientifique distincte (FR-036) |
 | Lien vers la fiche absent ou différent du dossier | Carte orpheline ou mal rangée | Wikilink et domaine |
+| Titre, tableau, citation ou `$` hors formule dans un champ | Le paquet Anki refuse la carte | Anomalie de conversion de l'inventaire |
+| Réponse allongée par paraphrase ou répétition | Charge de révision sans gain | Ce que chaque paragraphe ajoute à l'objectif |
+| Calcul ou ablation sans mention « construit » ou « proposé » | Confusion avec un résultat mesuré | Origine du chiffre et preuve d'exécution |
 
 ## Gravité
 
@@ -125,6 +148,7 @@ classiques, matching, calibration et recalage, tracking, détection.
   sans ambiguïté ; réponse révélée au recto ; contradiction avec la fiche.
 - **Important** : formulation trop forte ou nuance manquante qui induit en
   erreur ; source qui ne soutient pas l'affirmation ; objectif double ;
-  doublon ; contrat des données implicite là où il compte.
+  doublon ; contrat des données implicite là où il compte ; réponse sous le
+  plancher ou refusée par la conversion du paquet.
 - **Mineur** : style, notation incohérente sans conséquence, référence trop
   vague mais exacte, lien améliorable.

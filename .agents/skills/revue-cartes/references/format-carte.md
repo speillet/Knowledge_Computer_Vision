@@ -1,10 +1,10 @@
 # Modèle de carte du pilote
 
-Format attendu par `scripts/check_vault.py` et par Obsidian_to_Anki 3.6.0
-(modèle `CV-Pilote`). Il est expérimental : ne pas le modifier sans passer par
-la spec et le contrat `specs/001-cv-knowledge-base/contracts/obsidian-anki.md`.
-Ce modèle reste hors du vault : une ligne `START` dans un guide, un index ou
-une fiche serait importée par le plugin.
+Format attendu par `scripts/check_vault.py` et exporté vers AnkiDroid par
+`scripts/build_apkg.py` (modèle `CV-Pilote`, voir `docs/export-apkg.md`). Il est
+expérimental : ne pas le modifier sans passer par la spec et le contrat
+`specs/001-cv-knowledge-base/contracts/obsidian-anki.md`. Ce modèle reste hors du
+vault : le contrôleur refuse une ligne `START` dans un guide, un index ou une fiche.
 
 ## Bloc
 
@@ -56,9 +56,14 @@ END
   les adapter à la fiche parente.
   Le contrôleur du pilote exige `provenance::agent` : une carte rédigée par
   l'apprenant demandera de faire évoluer le contrôleur.
-- **Identité Anki** : après une synchronisation, le plugin ajoute
-  `<!--ID: 1234567890-->` entre `Tags:` et `END`. Ne jamais l'écrire, le
-  copier dans une autre carte ni le déplacer.
-- **Contenu** : maths en `$…$` et `$$…$$` ; blocs de code autorisés, sans
-  dépendre d'une coloration ; image locale seulement avec un nom de fichier
-  unique dans le vault ; aucun espace en fin de ligne.
+- **Identité Anki** : le paquet calcule le GUID de la note à partir de l'ID
+  (`genanki.guid_for("CV-Pilote", ID)`), indépendamment du contenu. Changer
+  l'ID d'une carte existante crée une nouvelle note sur le téléphone et y laisse
+  l'ancienne. Les commentaires `<!--ID: …-->` de l'ancien plugin ne sont plus
+  produits : s'il en reste un, ne pas le modifier ni le copier.
+- **Contenu** : maths en `$…$` et `$$…$$` ; paragraphes, listes simples, gras,
+  italique, code et liens ; image locale avec un nom de fichier unique dans le
+  vault ; aucun espace en fin de ligne. Le paquet refuse titres, tableaux,
+  citations et `$` hors formule : l'inventaire le signale.
+- **Longueur** : au moins 180 mots lexicaux dans `Reponse`, sans plafond ni
+  remplissage ; le noyau reste court et corrigible.

@@ -43,8 +43,10 @@ reste à rédiger : sa présence ne valide pas la couverture du domaine.
 
 Pour auditer, corriger ou enrichir des fiches et cartes existantes, utiliser le
 skill du dépôt `revue-cartes` (`$revue-cartes` dans Codex, `/revue-cartes`
-dans Claude Code). Il confronte les affirmations à leurs sources, préserve IDs
-et identités Anki, consigne les corrections et soumet les ajouts à l'apprenant.
+dans Claude Code). Il confronte les affirmations à leurs sources, préserve les
+IDs dont dérivent les notes Anki, consigne les corrections, approfondit les
+réponses par défaut (« audit seulement » sur demande) et fait trancher les
+propositions par l'apprenant dans `docs/revues/propositions.md`.
 
 ## Sources et documentation
 
