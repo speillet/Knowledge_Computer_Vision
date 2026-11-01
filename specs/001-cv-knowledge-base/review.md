@@ -1,193 +1,120 @@
-# Revue de pertinence et de complétude des specs
+# Review of relevance and completeness of specs
 
-**Date** : 2026-10-18
-**Périmètre** : spécification, cartographie, contrat pédagogique et recherche d'export.
-**Type de revue** : auto-revue assistée par l'agent auteur, confrontée à des sources
-primaires ; elle ne constitue pas une expertise scientifique indépendante.
-**Résultat** : révisions éditoriales 2 à 6 du brouillon, toujours à relire avec
-l'utilisateur. La révision 3 provient de la revue complémentaire ci-dessous,
-la révision 4 de l'organisation thématique du vault (FR-039) et la révision 5
-de l'ajout des pôles métiers.
+> Language update — 2026-10-31: this review records the earlier design decision. The learner has since requested English throughout the repository; FR-002 and the learning contract now require English.
 
-## Appréciation
+**Date**: 2026-10-18 **Perimeter**: specification, mapping, teaching contract and export research. **Type of review**: self-review assisted by the authoring agent, confronted with primary sources; it does not constitute independent scientific expertise. **Result**: Editorial revisions 2 to 6 of the draft, always to read with the user. The revision 3 comes from the complementary review below, the revision 4 of the thematic organization of the vault (FR-039) and the revision 5 of the addition of business divisions.
 
-La structure répond bien au profil confirmé : ingénieur expérimenté, bases
-ML/DL acquises, besoin de spécificités de vision et d'un jugement industriel.
-Le français, les réponses développées et les compléments mathématiques/code
-restent adaptés à cette demande.
+## Assessment
 
-La première version était cependant plus précise sur la présence des documents
-et l'export que sur la profondeur par famille et le transfert des connaissances.
-Les grandes rubriques laissaient aussi plusieurs familles peu représentées.
-La révision précise ces points sans promettre une exhaustivité universelle.
+The structure responds well to the confirmed profile: experienced engineer, acquired ML/DL bases, need for specific vision and industrial judgment. French, the answers developed and the mathematical/code complements remain adapted to this demand.
 
-## Constats et corrections
+The first version, however, was more specific about the presence of documents and export than about depth per family and knowledge transfer. The main headings also left several families with little representation. The revision clarifies these points without promising universal completeness.
 
-Les niveaux d'impact ci-dessous décrivent l'effet sur le projet, pas un score
-scientifique de qualité. « Corrigé dans les exigences » ne signifie pas que
-les fiches existent ou que le résultat pédagogique est démontré.
+## Findings and corrections
 
-| ID | Impact | Faiblesse de la première version | Correction de la révision 2 | État |
+The impact levels below describe the effect on the project, not a quality scientific score. "Corrected in requirements" does not mean that the reference notes exist or that the pedagogical result is demonstrated.
+
+| ID | Impact | Weakness of the first version | Correction of revision 2 | State |
 | --- | --- | --- | --- | --- |
-| RV-01 | Élevé | Des domaines nommés pouvaient masquer des sous-familles absentes, notamment la segmentation classique et le matching appris | Inventaire enrichi : Otsu/watershed/GrabCut, LightGlue/LoFTR, ICP, suivi de points, anomalies et acquisition | Corrigé dans la cartographie ; contenu à produire |
-| RV-02 | Élevé | Une priorité de lecture n'indiquait pas la profondeur à atteindre | Repérage, usage opérationnel et approfondissement, avec compétences et dépendances par méthode ; FR-030 | Corrigé dans les exigences |
-| RV-03 | Élevé | Présence d'une fiche et de cartes assimilable à tort à une compétence applicable | Baseline, variation contrôlée et cas nouveaux de choix/diagnostic ; FR-033/034, SC-006/009 | Corrigé ; essais à réaliser |
-| RV-04 | Élevé | Une réponse très détaillée n'avait pas de frontière claire entre essentiel et facultatif | Noyau attendu, approfondissement et erreurs bloquantes ; FR-015, SC-003 | Corrigé dans le contrat pédagogique |
-| RV-05 | Moyen | Les six sujets du pilote étaient concentrés sur le classique 2D | Trois extensions contrastées : segmentation classique, matching appris, recalage 3D ; SC-004 | Proposition renforcée, à relire |
-| RV-06 | Élevé | Les erreurs de contrat de données et de temporalité restaient peu explicites | Repères, types/plages, normalisation, crops et cibles, cadence et causalité ; FR-031/032 | Corrigé dans les exigences |
-| RV-07 | Moyen | Une source primaire unique ne distinguait pas propriété générale et particularité de bibliothèque | Traçabilité scientifique/implémentation, traitement des divergences et preuve de revue ; FR-036/037 | Corrigé dans le contrat |
-| RV-08 | Moyen | La revue de forme initiale ne mesurait pas l'utilité réelle des cartes | Première tentative, rappel différé, ambiguïtés et corrections ; FR-035, SC-008 | Protocole défini ; aucun résultat encore obtenu |
-| RV-09 | Moyen | Les capacités d'un plugin documenté pouvaient être confondues avec une intégration validée | Recherche et essais restent séparés ; préparation éditoriale possible pendant le choix du plugin ; FR-028 | Dépendance ouverte, explicitement conservée |
+| RV-01 | High | Named domains could mask absent subfamilies, including classical segmentation and learned matching | Enriched inventory: Otsu/watershed/GrabCut, LightGlue/LoFTR, ICP, points tracking, anomalies and acquisition | Corrected in cartography; content to produce |
+| RV-02 | High | A reading priority did not indicate the depth to be reached | Identification, operational use and further explanation, with skills and dependencies by method; FR-030 | Corrected in requirements |
+| RV-03 | High | Presence of a reference note and flashcards incorrectly equated to an applicable skill | Baseline, controlled variation and new cases of choice/diagnosis; FR-033/034, SC-006/009 | Corrected; tests to be carried out |
+| RV-04 | High | A very detailed answer had no clear line between essential and optional | expected answer, further explanation and blocking errors; FR-015, SC-003 | Corrected in the teaching contract |
+| RV-05 | Medium | The six pilot subjects were focused on the classic 2D | Three contrasting extensions: classic segmentation, learned matching, registration 3D; SC-004 | Reinforced proposal, to be reviewed |
+| RV-06 | High | Data contract and timing errors remained unclear | coordinate frames, types/beaches, normalization, crops and targets, cadence and causation; FR-031/032 | Corrected in requirements |
+| RV-07 | Medium | A single primary source did not distinguish between general property and library peculiarity. | Scientific traceability/implementation, processing of discrepancies and proof of review; FR-036/037 | Corrected in the contract |
+| RV-08 | Medium | The initial form review did not measure the real utility of the flashcards | First attempt, delayed recall, ambiguities and corrections; FR-035, SC-008 | Defined protocol; no results yet obtained |
+| RV-09 | Medium | The capabilities of a documented plugin could be confused with a validated integration | Research and essays remain separate; editorial preparation possible during the choice of the plugin; FR-028 | Open dependency, explicitly preserved |
 
-## Revue complémentaire (révision 3)
+## Complementary review (revision 3)
 
-**Type** : revue par un second agent (Claude Code) des documents de la
-révision 2 ; ni expertise scientifique indépendante, ni essai dans Obsidian ou Anki.
+**Type**: Reviewed by a second agent (Claude Code) of the documents of the revision 2; no independent scientific expertise, nor testing in Obsidian or Anki.
 
-| ID | Impact | Faiblesse de la révision 2 | Correction de la révision 3 | État |
+| ID | Impact | Weakness of the revision 2 | Correction of revision 3 | State |
 | --- | --- | --- | --- | --- |
-| RV-10 | Élevé | Le mode de rédaction n'était pas spécifié : une source présente n'est pas une source vérifiée, et relire un contenu généré apprend moins que le produire | Provenance de rédaction, confrontation des affirmations centrales à la source ; FR-038, SC-010 ; répartition proposée dans les hypothèses | Corrigé dans les exigences ; répartition à décider |
-| RV-11 | Élevé | Le coût réel de révision des cartes développées n'était pas mesuré | Durée par carte et charge projetée du premier lot, sans plafond a priori ; FR-035, SC-008 | Protocole défini ; aucune mesure encore |
-| RV-12 | Moyen | Le candidat d'export, sans release depuis 2024-01, n'avait ni solution de repli ni vérification sur le client de révision | Maintenance constatée, paquet `.apkg` en plan B, rendu sur le client utilisé ; [recherche](research.md) | Recherche complétée ; essais à réaliser |
-| RV-13 | Moyen | Aucun sujet du pilote n'éprouvait le type de fiche métrique/protocole | IoU et AP (COCO) ajoutés au premier étage ; SC-004 | Proposition, à relire |
-| RV-14 | Moyen | Le jugement de conception de bout en bout n'avait pas de famille de cartes | Famille « Conception de système » ; inventaire du domaine 14 ; cas tirés de l'expérience de l'apprenant, anonymisés | Corrigé dans le contrat |
-| RV-15 | Faible | FR-014 listait six familles de cartes contre sept dans le contrat ; « P1 » désignait deux échelles ; « quatorze domaines » était codé en dur | FR-014 renvoie au contrat ; vagues V0–V2 ; comptes de domaines retirés | Corrigé |
-| RV-16 | Faible | Aucun moyen de suivre la maîtrise, pourtant distincte des états éditoriaux | Domaine et famille exportés comme étiquettes ; FR-026 | Corrigé dans les exigences |
+| RV-10 | High | The writing mode was not specified: a source present is not a verified source, and re-reading a generated content learns less than producing it | Source of writing, confrontation of central statements at the source; FR-038, SC-010; distribution proposed in the hypotheses | Corrected in requirements; allocation to be decided |
+| RV-11 | High | The actual revision cost of the developed flashcards was not measured | Duration by flashcard and projected load of the first batch, without a priori ceiling; FR-035, SC-008 | Protocol defined; no measures yet |
+| RV-12 | Medium | The export candidate, without release since 2024-01, had no fallback solution or verification on the revision client | Maintenance found, package `.apkg` in plan B, rendered on the customer used; [recherche](research.md) | Research completed; tests to be carried out |
+| RV-13 | Medium | No pilot subject experienced the reference note metric/protocol type | IoU and AP (COCO) added to the first floor; SC-004 | Proposal, to be reviewed |
+| RV-14 | Medium | The end-to-end design judgment had no family of flashcards | System Design family; 14 domain inventory; cases from the learner experience, anonymized | Corrected in the contract |
+| RV-15 | Faible | FR-014 listed six families of flashcards against seven in the contract; "P1" designated two scales; "fourteen domains" was hard-coded | FR-014 refers to contract; V0 – V2 waves; domain accounts removed | Corrected |
+| RV-16 | Faible | No way to follow the mastery, yet distinct from the editorial states | Domain and family exported as labels; FR-026 | Corrected in requirements |
 
-Points examinés sans modification : FR-007 à FR-010 reprennent la section
-« Équations, code et illustrations » du contrat, mais leurs numéros sont cités
-par cette revue et par la checklist de pertinence ; ils sont conservés.
-Les principes candidats à la constitution sont listés dans les hypothèses de
-la spec, sans être ajoutés à la constitution.
+Points examined without modification: FR-007 to FR-010 take up the section “Equations, code and illustrations” of the contract, but their numbers are cited by this review and by the relevance checklist; they are kept. The principles for the constitution are listed in the assumptions of the spec, without being added to the constitution.
 
-## Enrichissement par pôles métiers (révision 5)
+## Enrichment by business units (revision 5)
 
-**Demande** (2026-10-18) : couvrir six pôles liés à des familles de métiers,
-de A (Image Understanding) à F (Vision Systems & Deployment).
-**Type** : enrichissement par un agent (Claude Code) selon les décisions de
-l'utilisateur ; aucune fiche ni carte produite.
+**Demande** (2026-10-18): Cover six business family-related clusters, from A (Image Understanding) to F (Vision Systems & Deployment). **Type**: enrichment by an agent (Claude Code) according to the decisions of the user; no reference note or flashcard produced.
 
-Décisions de l'utilisateur :
+User's decisions:
 
-- les pôles forment une surcouche des domaines existants, qui restent
-  l'organisation du vault ;
-- « socle d'abord » : V0 inchangé, entrées clés des pôles en V1, le reste en V2 ;
-- les specs sont enrichies d'abord ; le report dans le vault suit par les
-  tâches T015 à T018.
+- the poles form an overlay of the existing domains, which remain the organization of the vault;
+- "Plinth first": V0 unchanged, key inputs of the poles in V1, the rest in V2;
+- the specs are enriched first; the carry-over in the vault follows by the tasks T015 to T018.
 
-Changements : section « Pôles métiers » de la [cartographie](curriculum.md) ;
-parcours 6, FR-040 à FR-043, SC-011/012 et entité « Pôle métier » dans la spec ;
-étiquettes de pôle dans le contrat des cartes ; CHK025 à CHK027.
+Changes: [cartographie](curriculum.md) “Business Poles” section; 6, FR-040 to FR-043, SC-011/012 and “Business Pole” entity in the spec; pole labels in the flashcards contract; CHK025 to CHK027.
 
-Limites : les entrées des pôles sont des noms de méthodes et d'outils à
-documenter ; leurs sources primaires seront vérifiées à la rédaction de chaque
-fiche, comme pour le reste de l'inventaire. Les entrées des pôles D et F
-évoluent vite : elles seront datées et réexaminées à chaque lot.
+Limitations: Pole entries are names of methods and tools to be documented; their primary sources will be checked at the writing of each reference note, as for the rest of the inventory. The entrances to the D and F poles evolve quickly: they will be dated and re-examined at each lot.
 
-## Traçabilité des résultats attendus
+## Traceability of expected results
 
-| Groupe | Exigences | Critères liés |
+| Groupe | Exigences | Related criteria |
 | --- | --- | --- |
-| Profil, couverture et navigation | FR-001 à FR-005, FR-025 à FR-027, FR-029/030 | SC-001 à SC-003 |
-| Exactitude, contrats et preuves | FR-006 à FR-013, FR-031/032, FR-036 à FR-038 | SC-002, SC-004, SC-009/010 |
-| Révision, jugement et transfert | FR-014 à FR-019, FR-033 à FR-035 | SC-002/003, SC-006, SC-008/009 |
-| Export et maintenance des relations | FR-020 à FR-024, FR-028, FR-039 | SC-004/005, SC-007 |
-| Pôles métiers | FR-040 à FR-043 | SC-011/012 |
+| Profile, Coverage and Navigation | FR-001 to FR-005, FR-025 to FR-027, FR-029/030 | SC-001 to SC-003 |
+| Accuracy, contracts and evidence | FR-006 to FR-013, FR-031/032, FR-036 to FR-038 | SC-002, SC-004, SC-009/010 |
+| Review, Judgement and Transfer | FR-014 to FR-019, FR-033 to FR-035 | SC-002/003, SC-006, SC-008/009 |
+| Export and maintenance of relationships | FR-020 to FR-024, FR-028, FR-039 | SC-004/005, SC-007 |
+| Business divisions | FR-040 to FR-043 | SC-011/012 |
 
-Cette correspondance relie exigences et résultats. Le plan et les tâches
-existent désormais ; la révision 6 ci-dessous précise leur état réel.
+This correspondence links requirements and results. The plan and tasks now exist; the 6 revision below specifies their actual state.
 
-## Sources primaires de la revue
+## Primary sources of the journal
 
-Les ajouts sont des choix de couverture proposés pour ce profil. Les sources
-suivantes vérifient l'existence et la nature des familles concernées, sans
-établir qu'il faudrait approfondir chaque variante au même niveau.
+Additions are coverage choices offered for this profile. The following sources verify the existence and nature of the families concerned, without establishing that each variant should be deepened at the same level.
 
-- OpenCV : [seuillage et Otsu](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html),
-  [watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html)
-  et [GrabCut](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html)
-  rendent concrète la couverture de segmentation classique.
-- Les dépôts des auteurs de [LightGlue](https://github.com/cvg/LightGlue)
-  et [LoFTR](https://github.com/zju3dv/LoFTR) étayent l'ajout du matching appris
-  et de ses différences de composants et de représentation.
-- [Open3D : recalage global](https://www.open3d.org/docs/latest/tutorial/pipelines/global_registration.html)
-  présente la relation entre correspondances, initialisation globale et
-  raffinement local ICP, absente de l'ancien inventaire 3D détaillé.
-- [RAFT](https://github.com/princeton-vl/RAFT) et
-  [CoTracker](https://github.com/facebookresearch/co-tracker) représentent
-  respectivement des familles de flot optique appris et de suivi de points,
-  à distinguer du suivi d'identités d'objets.
-- [OpenCV calib3d](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html)
-  documente notamment calibration, stéréo et hand-eye ;
-  [l'alignement ECC](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html)
-  justifie de couvrir aussi le recalage par intensités.
-- [PatchCore dans Anomalib](https://anomalib.readthedocs.io/en/latest/markdown/guides/reference/models/image/patchcore.html)
-  fournit une entrée concrète pour l'anomalie/localisation en inspection.
-- [Le protocole KITTI tracking](https://www.cvlibs.net/datasets/kitti/eval_tracking.php)
-  illustre l'importance des conventions de métrique et du périmètre de temps mesuré.
-- [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/)
-  soutient la couverture tests/données/surveillance d'un système ML ; seules
-  les implications spécifiques à la vision sont approfondies ici.
+- OpenCV: [Threshold and Otsu](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html), [watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html) and [GrabCut](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html) make the classic segmentation coverage concrete.
+- The [LightGlue](https://github.com/cvg/LightGlue) and [LoFTR](https://github.com/zju3dv/LoFTR) authors' repositories support the addition of learned matching and its differences in components and representation.
+- [Open3D : recalage global](https://www.open3d.org/docs/latest/tutorial/pipelines/global_registration.html) presents the relationship between matches, global initialization, and local ICP refinement, absent from the previous detailed 3D inventory.
+- [RAFT](https://github.com/princeton-vl/RAFT) and [CoTracker](https://github.com/facebookresearch/co-tracker) respectively represent families of optical flow learned and tracking points, to be distinguished from tracking object identities.
+- [OpenCV calib3d](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) documents in particular calibration, stereo and hand-eye; [ECC Alignment](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html) justifies also covering the registration by intensities.
+- [PatchCore in Anomalib](https://anomalib.readthedocs.io/en/latest/markdown/guides/reference/models/image/patchcore.html) provides a concrete input for anomaly/location inspection.
+- [The KITTI tracking protocol](https://www.cvlibs.net/datasets/kitti/eval_tracking.php) illustrates the importance of metric conventions and the measured time perimeter.
+- [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/) supports the testing/data/monitoring coverage of an ML system; only vision-specific implications are explored here.
 
-Context7 a été réellement consulté pendant cette revue : résolution OpenCV
-et Open3D, puis requêtes ciblées sur `/websites/opencv_4_13_0` pour la segmentation
-classique et `/websites/open3d` pour le recalage. Les références officielles ont
-ensuite été lues pour corroborer les synthèses.
+Context7 was actually consulted during this review: resolution OpenCV and Open3D, then targeted queries on `/websites/opencv_4_13_0` for the classic segmentation and `/websites/open3d` for the registration. Official references were then read to corroborate the summaries.
 
-## Limites et décisions encore ouvertes
+## Limitations and decisions still open
 
-- Le catalogue est plus représentatif, mais reste un inventaire de recherche :
-  les fiches et les cartes n'ont pas encore démontré leur exactitude ou leur utilité.
-- Priorités, profondeurs et pilote renforcé sont des propositions, pas de
-  nouveaux choix attribués à l'utilisateur.
-- Le plugin d'export et les modèles de notes restent à valider dans les applications.
-- La répartition de la rédaction entre l'apprenant et un agent reste à décider (FR-038).
-- Le découpage de la production en lots après le pilote reste à décider.
-- Aucun pôle n'est encore choisi comme cible de carrière ; relever la priorité
-  d'un pôle est une décision de l'apprenant.
-- La constitution n'est pas ratifiée. Aucun principe ne lui a été ajouté implicitement.
-- La checklist formelle Spec Kit nécessitait un `plan.md`, absent
-  lors du premier cadrage. La commande a signalé ce prérequis ; la présente revue et
-  [sa checklist](checklists/relevance.md) sont éditoriales et manuelles.
-- L'analyse formelle croisée spec/plan/tasks aura lieu lorsque les trois
-  documents seront analysés selon son workflow ; cette revue de cohérence
-  ne se présente pas comme une exécution de `$speckit-analyze`.
+- The catalogue is more representative, but remains a research inventory: the reference notes and flashcards have not yet demonstrated their accuracy or usefulness.
+- Priorities, depths and enhanced driver are propositions, not new choices attributed to the user.
+- The export plugin and note templates remain to be validated in the applications.
+- The distribution of the writing between the learner and an agent remains to be decided (FR-038).
+- The division of production into batches after the pilot remains to be decided.
+- No pole is yet chosen as a career target; raising the priority of a pole is a decision of the learner.
+- The constitution has not been ratified. No principle has been implicitly added to it.
+- The formal checklist Spec Kit required a `plan.md`, which was absent during the first framing. The order has indicated this requirement; this review and [sa checklist](checklists/relevance.md) are editorial and manual.
+- The formal cross-analysis spec/plan/tasks will take place when the three documents are analyzed according to its workflow; this consistency review does not present itself as an execution of `$speckit-analyze`.
 
-## Revue de la mise à jour et implémentation — révision 6
+## Review of the update and implementation –  revision 6
 
-Les six pôles sont pertinents comme parcours complémentaires au socle. Ils
-restent une surcouche, avec une fiche canonique par sujet et aucune promesse
-d'aptitude à un poste. Corrections appliquées :
+The six poles are relevant as complementary routes to the base. They remain an overlay, with a canonical reference note per subject and no promise of suitability for a position. Corrections applied:
 
 | ID | Constat | Correction |
 | --- | --- | --- |
-| RV-17 | V0 et priorité V1 des entrées de pôles pouvaient se contredire | Conserver V0 pour un sujet déjà prioritaire |
-| RV-18 | SC-011 ne demandait que des énoncés malgré FR-042 | Exiger réponses de référence et critères de correction |
-| RV-19 | L'ancien périmètre interdisait une rédaction élargie maintenant demandée | Autoriser préparation éditoriale, garder les gates d'export et d'essai |
-| RV-20 | Échelle/yaw VIO, occupation et VLA pouvaient mêler tâches et jauges | Conventions, observabilité et frontière perception/action précisées |
-| RV-21 | INT8/FP8 pouvait suggérer un support ou gain universel | Conditionner au runtime, opérateurs et matériel ; mesurer bout en bout |
-| RV-22 | Formats médicaux, biométrie et métriques pouvaient masquer leur protocole | Unités, validation externe, FMR/FNMR/PAD et limites précisés |
-| RV-23 | Un dossier ou nom cité pouvait être compté comme couverture détaillée | SC-013 et inventaire séparent 52 fiches rédigées, 224 cartes et approfondissements ouverts |
+| RV-17 | V0 and priority V1 of the pole inputs could contradict each other | Keep V0 for an already priority topic |
+| RV-18 | SC-011 only requested statements despite FR-042 | Require reference answers and correction criteria |
+| RV-19 | The former perimeter forbade an expanded drafting now requested | Allow editorial preparation, keep export and trial gates |
+| RV-20 | Scale/yaw VIO, occupation and VLA could mix tasks and gauges | Conventions, observability and defined perception/action boundaries |
+| RV-21 | INT8/FP8 could suggest universal support or gain | Runtime conditioning, operators and equipment; measuring end to end |
+| RV-22 | Medical formats, biometrics and metrics could mask their protocol | Units, external validation, FMR/FNMR/PAD and specified limits |
+| RV-23 | A file or name cited could be counted as a detailed cover | SC-013 and inventory separate 52 reference notes written, 224 flashcards and further study open |
 
-Les 45 nouvelles fiches et 177 nouvelles cartes complètent les quatorze thèmes.
-Les sujets avancés ont une profondeur affichée ; 129 entrées d'approfondissement
-restent identifiées individuellement. Les cas métiers sont reliés par ID et
-les douze cas de transfert ont des corrigés réservés. Les contrôles exécutables
-et preuves se trouvent dans le journal du vault. Aucune session de rappel,
-validation indépendante ou synchronisation réelle n'est déclarée réussie.
+The 45 new reference notes and 177 new flashcards complete the fourteen themes. Advanced topics have a depth displayed; 129 entries of further explanation remain identified individually. Business cases are linked by ID and the twelve transfer cases have reserved corrections. Executable checks and evidence can be found in the vault log. No reminder session, independent validation, or actual synchronization is declared successful.
 
-## Étape suivante pertinente
+## Relevant next step
 
-Essayer le pilote dans les applications, puis mesurer le rappel initial et
-différé sur l’échantillon fixé avant résultats.
-Le pilote doit permettre de modifier le contrat s'il génère du remplissage,
-des réponses impossibles à corriger ou des comparaisons insuffisamment justifiées.
+Try the driver in the applications, then measure the initial and delayed recall on the sample set before results. The pilot must be able to modify the contract if it generates filling, impossible-to-correct answers or insufficiently justified comparisons.
 
-## Revue avant publication
+## Review before publication
 
-La revue à deux axes est consignée dans le
-[rapport de livraison](../../docs/pre-merge-review.md). Le gabarit du skill
-local inclut maintenant les tags de pôles attendus. Les entrées APP ont un
-lien thématique, mais leurs compétences et dépendances restent à préparer
-(T023) : SC-001 est partiellement satisfait pour ce backlog, sans remettre
-en cause la couverture thématique du lot livré (SC-013).
+The two-axis review is recorded in the [Delivery Report](../../docs/pre-merge-review.md). The local skill template now includes the expected pole tags. The APP entries have a thematic link, but their skills and dependencies remain to be prepared (T023): SC-001 is partially satisfied for this backlog, without calling into question the thematic coverage of the lot delivered (SC-013).

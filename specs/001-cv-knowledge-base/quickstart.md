@@ -1,6 +1,6 @@
-# Valider le premier lot
+# Validate the first lot
 
-Depuis la racine du dépôt :
+From the root of the repository:
 
 ```sh
 python3 scripts/sync_catalog.py --check
@@ -10,23 +10,10 @@ python3 examples/pilot_math.py
 python3 examples/curriculum_math.py
 ```
 
-Le contrôleur doit terminer sans erreur : liens locaux, identités, champs,
-métadonnées et critères de correction. Les tests vérifient aussi des défauts
-volontaires et des résultats numériques attendus ; ils ne prouvent pas la
-justesse scientifique de chaque phrase ou la synchronisation.
+The controller must complete without errors: local links, identities, fields, metadata and correction criteria. The tests also check for intentional defects and expected numerical results; they do not prove the scientific accuracy of each sentence or the synchronization.
 
-Dans Obsidian, ouvrir `vault/`, puis `00-Accueil.md`. Lire une fiche et ouvrir
-son fichier de cartes. Les formules doivent être lisibles, les liens résolus
-et le schéma SORT visible. La procédure applicative et les gabarits sont
-présentés dans [le guide Anki](../../vault/01-Parcours/Guide-Anki.md).
+In Obsidian, open `vault/`, then `00-Accueil.md`. Read a reference note and open its flashcards file. The formulas must be legible, the links resolved and the schema SORT visible. The application procedure and templates are presented in [the Anki Guide](../../vault/01-Parcours/Guide-Anki.md).
 
-L'essai Anki se fait dans les quatorze sous-decks thématiques de `CV::Pilote`,
-avec le modèle `CV-Pilote`. Les directives des fichiers déterminent le sous-deck.
-Vérifier nombre de notes **et** de cartes, répétition sans doublon, modification
-d'une réponse après une révision réelle, identité et historique conservés.
-Tester aussi déplacement/renommage, suppression et conflit sur une note d'essai.
-Synchroniser via AnkiWeb, attendre les médias, puis contrôler sur AnkiDroid
-les cartes de l'échantillon fixé dans [le journal](../../vault/01-Parcours/Suivi-pilote.md).
+The Anki test is done in the fourteen thematic subdecks of `CV::Pilote`, with the model `CV-Pilote`. File directives determine the subdeck. Check number of **and** notes of flashcards, repeat without duplicates, change a response after a real, identity and historical revision retained. Also test displacement/rename, deletion, and conflict on a test note. Synchronize vian AnkiWeb, wait for the media, then check on AnkiDroid the flashcards of the sample fixed in [The Journal](../../vault/01-Parcours/Suivi-pilote.md).
 
-Consigner les versions réelles, les observations et les échecs. Aucune de ces
-étapes applicatives n'est marquée réussie par la présence des fichiers.
+Record actual versions, observations, and failures. None of these application steps is marked successful by the presence of files.

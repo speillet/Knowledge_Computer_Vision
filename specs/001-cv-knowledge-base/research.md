@@ -1,207 +1,120 @@
-# Recherche : interopérabilité Obsidian et Anki
+# Search: interoperability Obsidian and Anki
 
-**Vérification documentaire** : 2026-10-18.
-**Statut** : recherche de conception ; aucune installation ni synchronisation exécutée.
+**Document verification**: 2026-10-18. **Status**: Design search; no installation or synchronization performed.
 
-## Plugin correspondant probablement au souvenir
+## Plugin probably corresponding to the memory
 
-Le candidat probable est **Obsidian_to_Anki**, également présenté comme
-« Obsidian to Anki », avec l'identifiant `obsidian-to-anki-plugin`.
-Le manifeste du [projet officiel](https://github.com/ObsidianToAnki/Obsidian_to_Anki)
-consulté indique la version 3.6.0 et une utilisation sur ordinateur.
-Cela ne permet pas d'identifier avec certitude le plugin dont l'utilisateur se souvient.
+The likely candidate is **Obsidian_to_Anki**, also presented as "Obsidian to Anki", with the identifier `obsidian-to-anki-plugin`. The manifest of the [projet officiel](https://github.com/ObsidianToAnki/Obsidian_to_Anki) consulted indicates the version 3.6.0 and use on computer. This does not allow to identify with certainty the plugin that the user remembers.
 
-Sa [fiche dans l'annuaire Obsidian](https://community.obsidian.md/plugins/obsidian-to-anki-plugin)
-était accessible. En revanche, le JSON téléchargé du
-[registre officiel](https://github.com/obsidianmd/obsidian-releases/blob/master/community-plugins.json)
-ne contenait pas cet identifiant. Le motif de cette divergence n'a pas été établi.
-La disponibilité dans le catalogue intégré doit être vérifiée avant adoption.
+His [reference note in the directory Obsidian](https://community.obsidian.md/plugins/obsidian-to-anki-plugin) was accessible. On the other hand, the JSON downloaded from the [registre officiel](https://github.com/obsidianmd/obsidian-releases/blob/master/community-plugins.json) did not contain this identifier. The reason for this discrepancy has not been established. Availability in the integrated catalogue must be checked before adoption.
 
-L'API GitHub, consultée le 2026-10-18, indique pour ce dépôt une dernière
-release 3.6.0 publiée le 2024-01-24, un dernier commit le 2024-02-01 et
-277 issues ouvertes ; le dépôt n'est pas archivé. Près de trois ans sans
-release rendent nécessaire de vérifier la compatibilité avec les versions
-courantes d'Obsidian, d'Anki et d'AnkiConnect, et justifient une solution de repli.
+The API GitHub, consulted on 2026-10-18, indicates for this deposit a last release 3.6.0 published on 2024-01-24, a last commit the 2024-02-01 and 277 open issues; the deposit is not archived. Almost three years without release make it necessary to check compatibility with the current versions of Obsidian, Anki and AnkiConnect, and justify a fallback solution.
 
-## Capacités documentées
+## Documented capabilities
 
-| Besoin | Constat documentaire | Conséquence pour le pilote |
+| Need | Documentary findings | Consequences for the pilot |
 | --- | --- | --- |
-| Plusieurs cartes dans un document | Plusieurs blocs de notes peuvent cohabiter dans un fichier | Compatible en principe avec plusieurs cartes liées à une fiche |
-| Réponses développées | Champs multilignes, paragraphes et listes documentés | Vérifier une réponse longue et sa lisibilité |
-| Équations | Maths inline et en bloc documentées | Vérifier symboles, matrices et conventions utilisées |
-| Images locales | Liens Markdown et embeds Obsidian documentés | Vérifier résolution et transfert des médias vers Anki |
-| Code | Inline et blocs documentés ; le test de la release 3.6.0 confirme une coloration avec CSS distante | Prévoir un style local et vérifier la lecture hors connexion sur AnkiDroid |
-| Mise à jour | Identifiant ajouté à la source pour retrouver la note Anki | Préserver l'identifiant et tester l'absence de doublons |
-| Communication | Anki Desktop ouvert et AnkiConnect requis | Vérifier l'environnement d'essai |
+| Several flashcards in one document | Multiple blocks of notes can coexist in a file | Compatible in principle with several flashcards linked to a reference note |
+| Answers developed | Documented multi-line fields, paragraphs, and lists | Check a long answer and its readability |
+| Equations | Maths inline and block documented | Check symbols, matrices and conventions used |
+| Local Images | Markdown links and documented Obsidian embeds | Check resolution and media transfer to Anki |
+| Code | Inline and documented blocks; release test 3.6.0 confirms coloring with remote CSS | Provide a local style and check offline playback on AnkiDroid |
+| update | Identifier added to the source to find the note Anki | Preserve the identifier and test for no duplicates |
+| Communication | Anki Open Desktop and AnkiConnect required | Check the test environment |
 
-Sources primaires :
+Primary sources:
 
-- [Format des champs](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Field-formatting).
-- [Mathématiques](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Math-formatting).
-- [Exemples de rendu, médias et code](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/test).
-- [Mise à jour de notes](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Updating-existing-notes).
+- [Format of fields](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Field-formatting).
+- [Mathematics](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Math-formatting).
+- [Rendering, media and code examples](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/test).
+- [update of notes](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Updating-existing-notes).
 
-La documentation d'installation du projet demande notamment d'autoriser
-`app://obsidian.md` dans AnkiConnect, puis de redémarrer Anki. Aucun réglage
-des applications personnelles n'a été modifié pendant ce cadrage.
+The installation documentation of the project requires that you allow `app://obsidian.md` in AnkiConnect, then restart Anki. No settings for personal applications were changed during this framing.
 
-## Identités et source canonique
+## Identities and canonical source
 
-Le plugin peut ajouter un commentaire de la forme `<!--ID: …-->`. Cette identité
-de synchronisation ne doit pas être recopiée dans une nouvelle note.
-L'identifiant pédagogique stable et l'identité de synchronisation ont des rôles distincts.
+The plugin can add a comment of the form `<!--ID: …-->`. This synchronization identity should not be copied to a new note. The stable pedagogical identifier and synchronization identity have distinct roles.
 
-Le modèle de note et les noms de champs réellement présents dans Anki doivent
-être vérifiés : les libellés d'un exemple ne garantissent pas ceux d'une
-installation localisée. Nombres de notes et de cartes générées sont deux
-mesures distinctes.
+The note template and field names actually present in Anki must be checked: the labels of an example do not guarantee those of a localized installation. Numbers of notes and flashcards generated are two separate measures.
 
-Le comportement de suppression ou de conflit ne se déduit pas du fonctionnement
-des mises à jour. Les modifications pédagogiques se font dans le vault ; les
-exceptions et reprises seront documentées après observation du pilote.
+Deletion or conflicting behavior is not inferred from the operation of updates. Educational changes are made in the vault; exceptions and covers will be documented after observation of the pilot.
 
-## Alternative identifiée
+## Identified Alternative
 
-[Yanki](https://github.com/kitschpatrol/yanki-obsidian) apparaît dans le registre
-consulté et documente MathJax, médias et coloration du code. Il associe un fichier
-Obsidian à une note Anki. Cette contrainte change l'organisation par rapport
-à plusieurs blocs dans une même fiche ; Yanki reste une alternative à évaluer,
-pas une décision adoptée implicitement.
+[Yanki](https://github.com/kitschpatrol/yanki-obsidian) appears in the accessed registry and documents MathJax, media and code coloring. It associates a Obsidian file with an Anki note. This constraint changes the organization with respect to several blocks in the same reference note; Yanki remains an alternative to evaluate, not an implicitly adopted decision.
 
-Les exigences restent formulées par capacités pour permettre ce choix sans
-réécrire les objectifs pédagogiques.
+The requirements remain formulated by abilities to allow this choice without rewriting the educational objectives.
 
-## Solution de repli : paquet `.apkg` généré
+## Folder solution: generated `.apkg` package
 
-Une bibliothèque comme [genanki](https://github.com/kerrickstaley/genanki)
-génère un paquet `.apkg` à importer dans Anki. Selon sa documentation, une note
-importée avec le même GUID qu'une note existante remplace celle-ci si les
-modèles ont les mêmes champs. Dériver le GUID de l'identifiant pédagogique
-stable relierait donc directement la source et la note, sans AnkiConnect ni
-commentaire d'identité dans le vault.
+A library like [genanki](https://github.com/kerrickstaley/genanki) generates a `.apkg` package to import into Anki. According to its documentation, a note imported with the same GUID as an existing note replaces it if the templates have the same fields. Diverting the GUID from the stable pedagogical identifier would therefore directly link the source and the note, without AnkiConnect or identity commentary in the vault.
 
-Cette option reste à éprouver : conservation de l'historique de révision après
-réimportation, options de mise à jour de l'importateur d'Anki et transfert des
-médias. Elle constitue un outil sur mesure, exclu de la phase actuelle ; elle
-n'est envisagée qu'en cas d'échec du pilote avec un plugin.
+This option remains to be tried: retention of the revision history after reimportation, options of update from the importer of Anki and media transfer. It is a custom tool, excluded from the current phase; it is only considered in case of failure of the driver with a plugin.
 
-## Client de révision
+## Review client
 
-Le client confirmé pendant l'implémentation est **AnkiDroid sur Android**.
-Formules, images et blocs de code doivent être vérifiés sur
-ce client : un rendu correct sur ordinateur ne garantit pas celui d'un mobile.
+The client confirmed during implementation is **AnkiDroid on Android**. Formulas, images and blocks of code must be checked on this client: a correct rendering on a computer does not guarantee that of a mobile.
 
-## Utilisation de Context7
+## Use of Context7
 
-La recherche a appelé le MCP distant Context7 : `resolve-library-id`, puis
-`query-docs` sur `/obsidiantoanki/obsidian_to_anki`. Les résultats ont été
-corroborés dans les sources primaires ci-dessus.
+The search called the remote MCP Context7: `resolve-library-id`, then `query-docs` on `/obsidiantoanki/obsidian_to_anki`. The results were corroborated in the primary sources above.
 
-Context7 a également été interrogé sur `/websites/opencv_4_13_0` pour le
-matching et la calibration. Les fiches devront vérifier les détails dans les
-références officielles : une synthèse de documentation ne suffit pas à garantir
-les propriétés de toutes les variantes d'une API.
+Context7 was also asked about `/websites/opencv_4_13_0` for matching and calibration. The reference notes will have to check the details in the official references: a documentation synthesis is not enough to guarantee the properties of all the variants of an API.
 
-## Pilote d'export à réaliser pendant la conception
+## Export driver to be carried out during the design
 
-| Vérification | Résultat attendu | État |
+| Validation | Expected result | State |
 | --- | --- | --- |
-| Disponibilité et prérequis | Installation reproductible du candidat retenu, versions consignées | Non exécuté |
-| Modèle et champs | Mapping documenté avec les noms réels | Non exécuté |
-| Première création | Nombres de notes/cartes conformes au modèle, identités distinctes | Non exécuté |
-| Export répété sans modification | Aucun doublon, nombres inchangés | Non exécuté |
-| Modification d'un verso | Même note mise à jour, historique conservé à modèle inchangé | Non exécuté |
-| Texte développé | Paragraphes et listes lisibles, sans troncature essentielle | Non exécuté |
-| Formules | Maths inline, bloc et matrice lisibles | Non exécuté |
-| Médias | Image locale visible dans Anki ; déplacement documenté | Non exécuté |
-| Code | Indentation, caractères et retours à la ligne préservés | Non exécuté |
-| Client de révision | Formules, image et code lisibles sur le client réellement utilisé | Non exécuté |
-| Étiquettes | Domaine et famille présents comme étiquettes dans Anki | Non exécuté |
-| Identifiants | Copie d'une nouvelle carte et déplacement d'une carte existante distingués | Non exécuté |
-| Suppressions et conflits | Comportement documenté avant usage sur un vrai deck | Non exécuté |
+| Availability and prerequisites | Reproducible installation of the successful candidate, recorded versions | Not executed |
+| Model and fields | Documented mapping with real names | Not executed |
+| First creation | Number of notes/flashcards conforming to the model, distinct identities | Not executed |
+| Repeated export without modification | No duplicates, unchanged numbers | Not executed |
+| Modification of a verso | Same note update, historical preserved to unchanged model | Not executed |
+| Text developed | Legible paragraphs and lists, without essential truncation | Not executed |
+| Formules | Maths inline, readable block and matrix | Not executed |
+| Media | Local image visible in Anki; documented displacement | Not executed |
+| Code | Indentation, characters and line returns preserved | Not executed |
+| Review client | Customer-readable formulas, image and code actually used | Not executed |
+| Labels | Domain and family present as labels in Anki | Not executed |
+| Identifiants | Copy of a new flashcard and displacement of an existing flashcard distinguished | Not executed |
+| Deletion and conflict | Documented behavior before use on a real deck | Not executed |
 
-Le test de conservation de l'historique nécessite une carte réellement révisée
-dans le deck d'essai avant modification. La seule conservation d'un identifiant
-ne constitue pas une preuve de conservation de l'historique.
+The historical preservation test requires a flashcard actually revised in the test deck before modification. Retention of an identifier alone does not constitute proof of retention of the history.
 
-La syntaxe de production reste conditionnée à ce pilote. Un contrat expérimental
-et un guide sont maintenant fournis pour les sept sujets initiaux ; aucune
-validation réelle d'export n'est déduite de leur présence.
+The production syntax remains conditioned to this driver. An experimental contract and a guide are now provided for the initial seven subjects; no actual export validation is inferred from their presence.
 
-## Décisions de conception du premier lot — 2026-10-18
+## Design decisions for the first batch –  2026-10-18
 
-**Décision** : tester Obsidian_to_Anki 3.6.0 sur les sept fichiers de cartes
-du pilote, modèle `CV-Pilote` à quatre champs et une carte par note.
-Ces fichiers sont désormais répartis dans cinq répertoires thématiques,
-à la demande de l'utilisateur ; les autres thèmes restent à rédiger.
-**Raison** : conserver plusieurs cartes par sujet, champs explicites et ID
-pédagogique stable, sans dépendre du nom localisé du modèle Basic.
-**Alternatives** : Yanki reste possible mais change l'organisation ; `.apkg`
-reste une solution de repli, aucun exporteur sur mesure n'est ajouté.
+**Decision**: test Obsidian_to_Anki 3.6.0 on the driver's seven flashcards files, four-field `CV-Pilote` model and one flashcard per note. These files are now distributed in five thematic directories, at the request of the user; the other themes remain to be written. **Reason**: Keep several flashcards per subject, explicit fields and stable pedagogical ID, without depending on the localised name of the Basic model. **Alternatives**: Yanki remains possible but changes the organization; `.apkg` remains a fallback solution, no custom exporters are added.
 
-**Décision** : poursuivre la préparation éditoriale sans installer Anki dans
-les applications personnelles. **Raison** : Anki Desktop est absent ; le parseur
-officiel peut être testé isolément mais ne simule pas une collection réelle.
-**Alternative** : attendre les applications ; elle n'est pas nécessaire pour
-rédiger le pilote autorisé. Les essais applicatifs restent ouverts.
+**Decision**: Continue editorial preparation without installing Anki in personal applications. **Reason**: Anki Desktop is missing; the official parser can be tested in isolation but does not simulate an actual collection. **Alternative**: Wait for applications; it is not necessary to write the authorized driver. Application testing remains open.
 
-Context7 : résolution d'OpenCV puis interrogation `/websites/opencv_4_13_0`
-sur normes et matching ; résolution et interrogation du plugin effectuées dans
-la recherche de format. Résultats confrontés aux API et au code officiels.
+Context7: resolution of OpenCV then query `/websites/opencv_4_13_0` on standards and matching; plugin resolution and query performed in format search. Results against official APIs and code.
 
-Le [contrat](contracts/obsidian-anki.md), le
-[guide du vault](../../vault/01-Parcours/Guide-Anki.md) et le
-[journal des preuves](../../vault/01-Parcours/Suivi-pilote.md) précisent
-versions, contrôles effectués et limites. La coloration et le comportement des
-wikilinks ont été corrigés à partir de l'exécution locale du convertisseur.
+The [contrat](contracts/obsidian-anki.md), [The vault](../../vault/01-Parcours/Guide-Anki.md) and [Journal of Evidence](../../vault/01-Parcours/Suivi-pilote.md) specify versions, controls performed and limits. The coloring and behavior of wikilinks have been fixed from the local runtime of the converter.
 
-## Organisation par thème — demande du 2026-10-18
+## Organization by theme –  request from 2026-10-18
 
-**Décision** : reprendre les répertoires numérotés par dizaine et le sommaire
-central du [dépôt indiqué](https://github.com/speillet/Knowledge_AI_Engineering/tree/5fdbfe259e53d01361cf6337f6c494b4663db592).
-Chaque thème contient ses cartes et un sous-dossier de références ; les IDs
-pédagogiques restent inchangés, le deck cible suit le thème.
-**Raison** : retrouver l'organisation déjà utilisée par l'apprenant et réviser
-une thématique dans Anki. Les noms et domaines sont dans `vault_sections.json`.
+**Decision**: take the directories numbered by ten and the central summary of the [Deposit Indicated](https://github.com/speillet/Knowledge_AI_Engineering/tree/5fdbfe259e53d01361cf6337f6c494b4663db592). Each theme contains its flashcards and a subfolder of references; the pedagogical IDs remain unchanged, the target deck follows the theme. **Reason**: find the organization already used by the learner and revise a theme in Anki. Names and domains are in `vault_sections.json`.
 
-Le réglage de scan à racine vide et le scan récursif ont été revérifiés via
-Context7, puis dans `main.ts` et `src/settings.ts` de la release 3.6.0 : le
-réglage vide sélectionne les fichiers Markdown du vault. Les gabarits et les
-exemples de syntaxe restent hors vault, et le contrôleur refuse les marqueurs
-de note dans les guides, index et références.
+The empty root scan setting and the recursive scan were rechecked via Context7, then in `main.ts` and `src/settings.ts` of the release 3.6.0: the empty setting selects the Markdown files of the vault. Templates and syntax examples remain out of vault, and the controller rejects note markers in guides, indexes, and references.
 
-## Extension aux quatorze thèmes — 2026-10-18
+## Extension to fourteen themes –  2026-10-18
 
-La demande de couverture élargie autorise la rédaction de 45 sujets
-supplémentaires. Les sept sujets et 47 cartes ci-dessus désignent le lot initial ;
-le catalogue courant contient 52 fiches et 224 cartes. Il garde 129 sujets
-à approfondir individuellement. Les trois recherches complémentaires ont
-confronté les affirmations centrales à des sources primaires ; elles ne valent
-ni relecture scientifique indépendante ni validation de toutes les phrases.
+The request for expanded coverage allows the drafting of additional 45 topics. The seven subjects and 47 flashcards above designate the initial batch; the current catalog contains 52 reference notes and 224 flashcards. It keeps 129 subjects to explore individually. The three complementary researches have confronted the central claims with primary sources; they are not worth independent scientific proofreading or validation of all sentences.
 
-Context7 a été interrogé sur les API OpenCV 4.13 (calibration, géométrie,
-seuils, watershed, flot), Open3D (recalage global/ICP) et TensorRT (quantification,
-mesure et limites du support). Les résultats ont été confrontés aux pages
-et articles officiels, cités dans les fiches. Les tutoriels OpenCV cités en
-4.12 et les paramètres dépendant d’une version gardent leur version explicite.
-La documentation TensorRT courante est évolutive ; aucun support matériel
-ou gain INT8/FP8 universel n’en est déduit.
+Context7 was asked about the APIs OpenCV 4.13 (calibration, geometry, thresholds, watershed, flow), Open3D (registration global/ICP) and TensorRT (quantification, measurement and limits of the support). The results were compared with the official pages and articles cited in the reference notes. The OpenCV tutorials quoted in 4.12 and the version-dependent settings keep their version explicit. The current TensorRT documentation is scalable; no universal hardware support or gain INT8/FP8 is inferred.
 
-Passages centraux consultés, par famille :
+Central passages consulted, by family:
 
-| Famille | Source primaire et point contrôlé |
+| Family | Primary source and controlled point |
 | --- | --- |
-| Estimation | [Eigen, least squares](https://eigen.tuxfamily.org/dox/group__LeastSquares.html), conditionnement des équations normales ; [Solà](https://arxiv.org/abs/1711.02508), conventions d’erreur de rotation et reset ESKF |
-| Géométrie | [OpenCV solvePnP](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html), minimum API et repères ; [Open3D ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), initialisation locale ; [Zhang/Scaramuzza](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf), jauges d’alignement VO/VIO |
-| Matching et segmentation | [LightGlue](https://github.com/cvg/LightGlue), matches clairsemés ; [LoFTR](https://arxiv.org/abs/2104.00680), detector-free ; [SAM](https://arxiv.org/abs/2304.02643) et [SAM 2](https://arxiv.org/abs/2408.00714), prompts, mémoire et causalité |
-| Détection et tracking | [DETR](https://arxiv.org/abs/2005.12872), affectation d’entraînement et prédiction en ensemble ; [ByteTrack](https://arxiv.org/abs/2110.06864), association des détections faibles ; [HOTA](https://arxiv.org/abs/2009.07736), agrégation par seuil |
-| Représentations | [CLIP](https://arxiv.org/abs/2103.00020) et [SigLIP](https://arxiv.org/abs/2303.15343), objectifs et limites des scores ; [PatchCore](https://arxiv.org/abs/2106.08265), mémoire de patches et pondération du score |
-| Imagerie et métriques | [DICOM C.7.6.2](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), repères/espacement ; [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z), choix des métriques selon la tâche |
-| Systèmes | [TensorRT, quantification](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-quantized-types.html), support conditionnel ; [GStreamer queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), sens des politiques leaky |
+| Estimation | [Eigen, least squares](https://eigen.tuxfamily.org/dox/group__LeastSquares.html), normal equation conditioning; [Solà](https://arxiv.org/abs/1711.02508), rotation error conventions and reset ESKF |
+| Geometry | [OpenCV solvePnP](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html), minimum API and coordinate frames; [Open3D ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), local initialization; [Zhang/Scaramuzza](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf), alignment gauges VO/VIO |
+| Matching and segmentation | [LightGlue](https://github.com/cvg/LightGlue), sparse matches; [LoFTR](https://arxiv.org/abs/2104.00680), detector-free; [SAM](https://arxiv.org/abs/2304.02643) and [SAM 2](https://arxiv.org/abs/2408.00714), prompt, memory and causality |
+| Detection and tracking | [DETR](https://arxiv.org/abs/2005.12872), drive assignment and ensemble prediction; [ByteTrack](https://arxiv.org/abs/2110.06864), association of weak detections; [HOTA](https://arxiv.org/abs/2009.07736), aggregation by threshold |
+| Representations | [CLIP](https://arxiv.org/abs/2103.00020) and [SigLIP](https://arxiv.org/abs/2303.15343), goals and score limits; [PatchCore](https://arxiv.org/abs/2106.08265), patch memory and score weighting |
+| Imaging and Metrics | [DICOM C.7.6.2](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), coordinate frames/spacing; [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z), choice of metrics according to the task |
+| Systems | [TensorRT, quantification](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-quantized-types.html), conditional support; [GStreamer tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), meaning of leaky policies |
 
-Les équations analytiques et scénarios construits sont distingués des résultats
-des auteurs. Seuls `examples/pilot_math.py` et `examples/curriculum_math.py`
-ont été exécutés : aucun entraînement, séquence de tracking, recalage 3D,
-export réel ou benchmark GPU n’a été réalisé. Le journal consigne séparément
-l’exécution du parseur officiel sur 224 notes et ses limites de simulation.
+The constructed analytical equations and scenarios are distinguished from the authors' results. Only `examples/pilot_math.py` and `examples/curriculum_math.py` have been executed: no training, tracking sequence, registration 3D, actual export or GPU benchmark has been performed. The journal records separately the execution of the official parser on 224 notes and its simulation limits.

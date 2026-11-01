@@ -1,244 +1,234 @@
-# Contrat pédagogique des fiches et des cartes
+# Learning contract for reference notes and flashcards
 
-**Statut** : proposition issue des choix confirmés, à éprouver sur le pilote.
+**Status**: proposal based on confirmed choices, to be tested in the pilot.
 
-## Profil et langue
+## Learner profile and language
 
-Les explications ciblent un ingénieur ayant déjà les bases ML/DL. Elles portent
-sur les spécificités de vision : modèles, hypothèses, géométrie, représentations,
-paramètres, protocoles, compromis et échecs. Une notion générale est rappelée
-lorsqu'elle débloque une explication concrète.
+Explanations target an engineer who already knows ML/DL foundations. They focus
+on vision-specific models, assumptions, geometry, representations, parameters,
+protocols, tradeoffs and failure modes. Revisit a general concept when it is
+needed to explain a concrete problem.
 
-Les textes sont en français. Noms originaux, acronymes, termes techniques anglais
-et identifiants de code sont conservés. Les termes importants sont introduits
-avec leur équivalent français si cela aide, puis employés de manière cohérente.
+All prose is in English, following the learner's request of 2026-10-31.
+Retain original method names, acronyms and code identifiers. Define important
+terms when first introduced and use them consistently. Historical paths,
+metadata keys, tags and Anki schema names remain stable for compatibility.
 
-## Contrat d'une fiche de référence
+## Reference note contract
 
-Chaque fiche validée couvre les rubriques suivantes. Une rubrique non applicable
-est signalée et justifiée plutôt que remplie artificiellement.
+Each validated reference note covers the entries below. Mark and justify an
+inapplicable entry rather than filling it artificially.
 
-| Rubrique | Contenu attendu |
+| Section | Expected content |
 | --- | --- |
-| Problème | Besoin, tâche, entrées/sorties et place dans un pipeline |
-| Intuition | Mécanisme, illustration ou exemple filé utile |
-| Prérequis | Notions nécessaires et liens pour combler un manque |
-| Hypothèses | Conditions d'application, observations et cas dégénérés |
-| Déroulement | Étapes, rôle de chaque étape et pseudocode utile |
-| Mathématiques | Équations expliquées, conventions, symboles, dimensions/unités pertinentes |
-| Paramètres | Effets, interactions, sensibilité et démarche de réglage |
-| Propriétés | Invariances, approximations et limites des garanties |
-| Coût et implémentation | Complexité ou facteurs de coût ; code expliqué et statut d'exécution |
-| Évaluation | Protocole, métriques, données pertinentes et limites de la mesure |
-| Échecs et diagnostic | Symptômes, causes possibles, vérifications discriminantes et remèdes conditionnels |
-| Alternatives et sources | Comparaisons sous conditions, usages industriels, sources primaires et cartes associées |
+| Problem | Need, task, inputs/outputs and role in a pipeline |
+| Intuition | Mechanism, illustration or useful example |
+| Prerequisites | Required knowledge and links to fill a gap |
+| Assumptions | Applicability conditions, observability and degenerate cases |
+| Procedure | Steps, purpose of each step and useful pseudocode |
+| Mathematics | Explained equations, conventions, symbols and relevant dimensions/units |
+| Parameters | Effects, interactions, sensitivity and a tuning approach |
+| Properties | Invariances, approximations and limits of guarantees |
+| Cost and implementation | Complexity or cost drivers; explained code and execution status |
+| Evaluation | Protocol, metrics, relevant data and measurement limitations |
+| Failure modes and diagnosis | Symptoms, possible causes, discriminating checks and conditional remedies |
+| Alternatives and sources | Conditional comparisons, industrial applications, primary sources and related flashcards |
 
-La fiche peut être longue. Sous-sections, schémas et liens doivent permettre
-de retrouver les éléments sans imposer une lecture linéaire à chaque révision.
+Reference notes may be long. Subsections, diagrams and links must make details
+accessible without requiring a complete linear reading during every review.
 
-Le contrat s'adapte au type de fiche : problème, méthode, comparaison,
-métrique/protocole ou pipeline. Toute notion n'a pas à être présentée comme
-un algorithme. Les rubriques nécessaires sont déterminées par la profondeur
-et les compétences affichées dans l'inventaire ; leur non-applicabilité est justifiée.
+Adapt this contract to the note type: problem, method, comparison,
+metric/protocol or pipeline. Concepts need not all be presented as algorithms.
+Required sections depend on the depth and competencies stated in the inventory;
+justify any inapplicable section.
 
-Les entrées/sorties précisent, lorsque pertinent, repères, formes et types des
-données, plages de valeurs, couleur, unités et normalisation. Les changements
-de résolution, crop, padding ou coordonnées restent traçables jusqu'à la sortie.
-Les hypothèses de cadence et d'accès aux frames futures sont explicites.
+Where relevant, specify input/output coordinate frames, shapes and data types,
+value ranges, color conventions, units and normalization. Trace resolution
+changes, cropping, padding and coordinate transformations through to the output.
+Make frame-rate assumptions and access to future frames explicit.
 
-## Contrat d'une carte
+## Flashcard contract
 
-Une carte comporte :
+A flashcard contains:
 
-- Un identifiant pédagogique stable et une fiche parente.
-- Un objectif de rappel explicite et un type de question.
-- Une question contextualisée, compréhensible hors de la fiche.
-- Une réponse directe, suivie des explications utiles.
-- Les conditions de validité, limites ou contre-exemples pertinents.
-- Les critères permettant de décider si la réponse donnée est satisfaisante.
-- Les références et un lien vers l'approfondissement dans la fiche.
-- Son domaine, sa famille et les pôles servis par sa fiche, exportés comme
-  étiquettes pour suivre la maîtrise par domaine et par pôle dans Anki.
-- Sa provenance de rédaction : apprenant, agent ou mixte.
+- A stable pedagogical ID and a parent reference note.
+- One explicit recall objective and a question family.
+- A contextualized question understandable without opening the reference note.
+- A direct answer followed by useful explanations.
+- Relevant validity conditions, limitations or counterexamples.
+- Criteria for deciding whether the learner's answer is satisfactory.
+- Sources and a link to further detail in the reference note.
+- Its domain, family and the career tracks served by its reference note,
+  exported as tags to track mastery by domain and career track in Anki.
+- Authorship provenance: learner, agent or mixed.
 
-La réponse peut contenir paragraphes, équations, listes, schémas et code.
-Sa longueur dépend de ce qu'il faut expliquer. Une comparaison peut constituer
-un seul objectif cohérent ; plusieurs questions indépendantes dans une carte
-doivent être retravaillées. Aucun nombre uniforme de cartes par méthode
-ni plafond de mots ou de durée n'est imposé.
+Answers may contain paragraphs, equations, lists, diagrams and code. Length
+follows explanatory needs. A comparison can constitute one coherent objective;
+several independent questions within a card need redesign. No uniform number
+of cards per method, word ceiling or review-time ceiling is imposed.
 
-**Choix éditorial confirmé le 2026-10-24** : l'apprenant demande des cartes
-longues sur tous les sujets. Chaque verso développe le mécanisme, un exemple
-ou raisonnement suivi et les hypothèses ou limites utiles à son objectif.
-Le contrôle `python3 scripts/learning_path.py` signale une réponse sous
-180 mots lexicaux (`re.findall(r'\w+', Reponse)`). Ce seuil sert à repérer les
-réponses trop brèves dans ce projet ; il ne mesure ni compréhension ni qualité,
-ne fixe aucun plafond et ne justifie pas d'ajouter du remplissage. La règle de
-correction reste le noyau attendu, même quand le verso est long.
+**Editorial choice confirmed on 2026-10-24**: the learner requests long cards
+for every subject. Each answer develops the mechanism, a worked example or
+reasoning sequence, and assumptions or limitations relevant to its objective.
+`python3 scripts/learning_path.py` flags answers below 180 lexical words
+(`re.findall(r'\w+', Reponse)`). This threshold identifies overly brief answers
+in this project; it does not measure understanding or quality, impose a ceiling
+or justify filler. The expected answer remains the grading rule even when the
+full explanation is long.
 
-La réponse directe reste repérable au début du verso. Les détails sont organisés
-par rôle : mécanisme, raisonnement, limites, exemple. Le recto ne doit pas
-révéler la réponse par un titre ou un extrait de source.
+Keep the direct answer visible at the beginning of the back. Organize details
+by purpose: mechanism, reasoning, limitations and example. Do not reveal the
+answer on the front through a title or source extract.
 
-### Noyau attendu et approfondissement
+### Expected answer and further explanation
 
-Le verso distingue trois éléments :
+The back has three elements:
 
-- **Noyau attendu** : points nécessaires pour satisfaire l'objectif annoncé.
-- **Approfondissement** : détails, dérivations, exemples et connexions utiles,
-  conservés dans la réponse développée sans devoir tous être récités à chaque révision.
-- **Erreurs bloquantes** : contresens qui invalident la réponse, par exemple
-  confusion de tâche, de repère ou d'hypothèse déterminante.
+- **Expected answer**: the points required to satisfy the stated objective.
+- **Further explanation**: useful details, derivations, examples and connections
+  retained in the detailed answer without requiring recitation at every review.
+- **Blocking errors**: misconceptions that invalidate the answer, such as
+  confusing the task, coordinate frame or a decisive assumption.
 
-Une réponse est satisfaisante si tous les points du noyau sont couverts sans
-erreur bloquante. L'absence d'un détail facultatif n'est pas un échec de rappel.
-Si le noyau devient trop composite pour être corrigé sans ambiguïté, des cartes
-complémentaires peuvent être ajoutées en conservant une carte de synthèse développée.
-Le nombre de points attendus dépend de l'objectif, sans quota uniforme.
+An answer is satisfactory when it covers all required points without a blocking
+error. Missing an optional detail is not a recall failure. If the expected
+answer becomes too composite to grade unambiguously, add focused cards while
+retaining a detailed synthesis card. The number of required points depends on
+the objective; there is no uniform quota.
 
-## Familles de cartes
+## Card families
 
-Les consignes suivantes illustrent la conception ; leurs réponses pédagogiques
-ne sont pas encore rédigées.
+These prompts illustrate the design; their educational answers are not yet written.
 
-| Famille | Objectif | Exemple de consigne |
+| Family | Objective | Example prompt |
 | --- | --- | --- |
-| Compréhension | Expliquer une méthode avec ses hypothèses | Décrire le pipeline d'ORB et le rôle de ses composants |
-| Raisonnement mathématique | Interpréter ou reconstruire une relation | Expliquer une erreur de reprojection et ses conventions |
-| Déroulement algorithmique | Suivre les étapes et leur raison d'être | Décrire une itération d'estimation robuste et son acceptation |
-| Comparaison et décision | Choisir selon des contraintes explicites | Comparer SIFT et ORB pour un matching sous budget de calcul |
-| Diagnostic | Départager les causes possibles d'un échec | Vérifier une homographie instable malgré de nombreux matches |
-| Mise en pratique | Comprendre un extrait de code ou un réglage | Relier un matcher à la représentation des descripteurs |
-| Évaluation | Interpréter une mesure et ses angles morts | Expliquer les conclusions permises par un score de tracking |
-| Conception de système | Proposer une chaîne complète sous contraintes | Concevoir le contrôle de pièces sur une ligne cadencée, des exigences à la validation |
+| Understanding | Explain a method and its assumptions | Describe the ORB pipeline and each component's role |
+| Mathematical reasoning | Interpret or reconstruct a relationship | Explain reprojection error and its conventions |
+| Algorithmic procedure | Follow steps and explain their purpose | Describe one robust-estimation iteration and its acceptance criterion |
+| Comparison and decision | Choose under explicit constraints | Compare SIFT and ORB for matching under a compute budget |
+| Diagnosis | Distinguish possible causes of failure | Investigate an unstable homography despite many matches |
+| Practice | Understand a code extract or parameter setting | Relate the matcher to the descriptor representation |
+| Evaluation | Interpret a measurement and its blind spots | Explain what a tracking score supports |
+| System design | Propose a complete pipeline under constraints | Design inspection on a production line, from requirements to validation |
 
-Les familles pertinentes sont couvertes sans multiplier les questions redondantes.
-Les cloze et cartes inversées ne sont pas imposées ; leur ajout doit servir
-un objectif identifié et être vérifié avec le modèle de note retenu.
+Cover relevant families without multiplying redundant questions. Cloze and
+reversed cards are optional; add them only for an identified purpose and verify
+them with the selected note template. English family labels map to the stable
+internal tag values documented in the flashcard template.
 
-## Pratique et transfert
+## Practice and transfer
 
-Pour une famille prioritaire, les contenus doivent relier :
+For a priority family, content must connect:
 
-1. Une référence simple ou une baseline, avec hypothèses et résultat attendu.
-2. Une variation contrôlée : bruit, échelle, occultation, seuil, cadence,
-   initialisation ou autre facteur pertinent.
-3. Une prédiction argumentée de l'effet de cette variation.
-4. Une observation ou mesure, puis l'explication d'un éventuel écart.
+1. A simple reference case or baseline, with assumptions and expected result.
+2. A controlled variation: noise, scale, occlusion, threshold, frame rate,
+   initialization or another relevant factor.
+3. A reasoned prediction of the effect of that variation.
+4. An observation or measurement, followed by an explanation of any discrepancy.
 
-Une expérimentation peut être petite et ciblée ; elle n'impose pas de réentraîner
-tous les réseaux ni de construire une plateforme d'exercices séparée.
-Un cas analytique est acceptable s'il est explicitement identifié comme tel.
+An experiment may be small and targeted. It need not retrain every network or
+require a separate exercise platform. An analytical case is acceptable when
+explicitly identified as such.
 
-Les scénarios de validation du transfert ne doivent pas être des copies des
-exemples déjà corrigés. Pour chacune des six familles du pilote — matching,
-calibration/géométrie, tracking, détection, segmentation classique et recalage
-3D — deux scénarios sont préparés avec une réponse de référence : un choix
-de méthode et un diagnostic sur un contexte différent.
+Transfer-validation scenarios must differ from already worked examples. For
+each of the six pilot families — matching, calibration/geometry, tracking,
+detection, classical segmentation and 3D registration — prepare two scenarios
+with reference answers: one method-selection case and one diagnosis in a
+different context.
 
-Leur correction examine : adéquation à la tâche, hypothèses/conventions,
-justification du choix, vérification discriminante et limites de la conclusion.
-Chaque critère applicable doit être satisfait ; une non-applicabilité est justifiée.
+Grade suitability for the task, assumptions/conventions, justification,
+a discriminating check and limits of the conclusion. Satisfy every applicable
+criterion and justify any inapplicability.
 
-Les incidents rencontrés par l'apprenant en projet sont une source de cas
-réalistes. Ils sont anonymisés, ne conservent aucune donnée confidentielle
-et suivent les mêmes critères de correction.
+Incidents from the learner's project work provide realistic cases. Anonymize
+them, retain no confidential data and apply the same grading criteria.
 
-## Vérifier l'utilité des cartes
+## Assessing card usefulness
 
-Le pilote pédagogique consigne une première tentative et un rappel différé
-lors d'une autre session, aux dates choisies par l'apprenant. Aucune durée
-optimale ou performance de mémorisation n'est présupposée.
+The learning pilot records a first attempt and delayed recall in another
+session, on dates chosen by the learner. No optimal interval or memory
+performance is assumed.
 
-L'échantillon est choisi avant les résultats et couvre toutes les familles
-du pilote ainsi que chaque type de carte produit. Sa composition et ses limites
-sont conservées ; les échecs ne sont pas retirés du bilan a posteriori.
+Select the sample before observing results. Cover every pilot family and each
+card type produced; retain its composition and limitations. Do not remove
+failed cards from the sample after testing.
 
-Pour chaque carte essayée : résultat selon son noyau, durée de révision,
-ambiguïtés, surcharge ressentie, indices révélant la réponse et modifications
-nécessaires sont notés.
-Une question impossible à corriger clairement, une erreur scientifique ou une
-information essentielle révélée au recto empêche sa validation éditoriale
-tant que le défaut n'est pas corrigé.
+For each tested card, record performance against its expected answer, review
+time, ambiguity, perceived overload, answer-revealing cues and required
+changes. An ungradable question, scientific error or essential information
+revealed on the front prevents editorial validation until corrected.
 
-Les résultats de rappel et de transfert restent distincts : réciter une
-explication connue ne démontre pas, seul, le diagnostic d'une scène nouvelle.
+Keep recall and transfer results separate: reciting a familiar explanation
+does not by itself demonstrate diagnosis of a new scene.
 
-Les durées mesurées servent à estimer la charge quotidienne du premier lot de
-production. Aucun plafond n'est fixé a priori. Si l'apprenant juge cette charge
-excessive, les options sont de scinder les cartes trop composites, d'espacer
-davantage les cartes de comparaison et de diagnostic dans un deck dédié, ou de
-réduire le nombre de cartes par fiche.
+Use measured times to estimate daily workload for the first production batch.
+Do not impose a ceiling in advance. If the learner finds the workload excessive,
+options include splitting overly composite cards, spacing comparison and
+diagnosis cards further apart in a dedicated deck, or reducing cards per note.
 
-## Équations, code et illustrations
+## Equations, code and illustrations
 
-- Introduire les symboles au voisinage de leur première utilisation.
-- Définir repères, sens des transformations, dimensions et unités utiles.
-- Expliquer le rôle et les conditions d'utilisation des équations.
-- Placer les dérivations nécessaires dans le raisonnement ; les calculs de
-  détail peuvent figurer dans un approfondissement lié.
-- Distinguer pseudocode, extrait illustratif et exemple exécuté. Signaler un
-  exemple non exécuté au lieu d'en annoncer un résultat vérifié.
-- Pour un exemple exécutable : dépendances/versions pertinentes, entrées,
-  résultat attendu et conditions de reproductibilité utiles.
-- Un appel de bibliothèque doit éclairer l'algorithme et ne suffit pas, seul,
-  à en expliquer le fonctionnement.
-- Chaque visuel a une légende, une fonction explicative et une provenance ;
-  les conditions de réutilisation et fichiers nécessaires sont conservés.
+- Introduce symbols near their first use.
+- Define coordinate frames, transformation direction, dimensions and relevant units.
+- Explain the purpose and conditions of equations.
+- Include necessary derivations in the reasoning; detailed calculations may
+  live in a linked explanation.
+- Distinguish pseudocode, illustrative extracts and executed examples.
+  Identify unexecuted examples instead of claiming verified results.
+- For executable examples, state relevant dependencies/versions, inputs,
+  expected results and useful reproducibility conditions.
+- Use library calls to illuminate the algorithm; a call alone does not explain it.
+- Give each visual a caption, explanatory purpose and source. Retain required
+  reuse conditions and source files.
 
-## Sources, revue et corrections
+## Sources, review and corrections
 
-Une propriété algorithmique est sourcée dans un article ou une référence
-scientifique primaire pertinente. Une affirmation propre à une implémentation
-est reliée à sa documentation ou à son code officiel et à sa version.
-Les deux niveaux sont distingués ; la sortie d'une bibliothèque ne remplace
-pas la justification d'une propriété générale.
+Source algorithmic properties in relevant primary papers or reference works.
+Tie implementation-specific claims to official documentation or code and its
+version. Distinguish these levels: a library's output does not justify a
+general property.
 
-Une divergence entre sources est consignée avec les variantes et conditions
-comparées. Une affirmation centrale non résolue reste marquée incertaine et
-empêche de valider la fiche correspondante.
+Record disagreements between sources with the variants and conditions being
+compared. An unresolved central claim remains uncertain and prevents validation
+of its reference note.
 
-Chaque revue conserve sa date, son auteur ou relecteur, les sources examinées,
-les limites et la liste des corrections. Une auto-revue est nommée comme telle ;
-elle n'est pas présentée comme une validation indépendante.
-Une correction scientifique identifie les cartes affectées et les remet à
-relire avant publication de leur nouvelle version.
+Each review records its date, author or reviewer, sources examined, limitations
+and corrections. Label self-review explicitly; do not present it as independent
+validation. A scientific correction identifies affected cards and checks them
+again before publication of their new version.
 
-### Rédaction et appropriation
+### Authorship and ownership of learning
 
-Chaque fiche et carte indique si elle a été rédigée par l'apprenant, par un
-agent ou par les deux. Une affirmation centrale rédigée par un agent est
-confrontée au passage précis de la source citée ; la présence d'une référence
-ne suffit pas.
+Each reference note and flashcard records whether the learner, an agent or both
+authored it. Check an agent-authored central claim against the precise cited
+passage; the presence of a citation alone is insufficient.
 
-Relire un contenu généré n'équivaut pas à le produire. L'effet de génération
-([Slamecka et Graf, 1978](https://doi.org/10.1037/0278-7393.4.6.592)) montre
-qu'une information produite par l'apprenant est mieux retenue qu'une information
-seulement lue, dans des tâches verbales simples. Son ampleur pour des cartes
-techniques reformulées n'est pas établie ici. La répartition du travail reste
-une décision ouverte de la spec.
+Reading generated content is not equivalent to producing it. The generation
+effect ([Slamecka and Graf, 1978](https://doi.org/10.1037/0278-7393.4.6.592))
+shows better retention for learner-generated information than for information
+only read in simple verbal tasks. Its applicability to reformulated technical
+flashcards is not established here. The division of authoring work remains an
+open specification decision.
 
-## Grille de revue éditoriale
+## Editorial review checklist
 
-1. Le problème et l'objectif de rappel sont-ils explicites ?
-2. Les hypothèses, conventions et limites sont-elles vérifiables ?
-3. Les explications sont-elles cohérentes, et chaque source citée soutient-elle
-   réellement l'affirmation ?
-4. Les comparaisons donnent-elles des raisons conditionnelles ?
-5. Les critères fournis permettent-ils de corriger une réponse ?
-6. Les cartes apportent-elles des angles complémentaires sans doublons inutiles ?
-7. Le contenu reste-t-il lisible et complet après export ?
+1. Are the problem and recall objective explicit?
+2. Are assumptions, conventions and limitations verifiable?
+3. Are explanations consistent, and does each source support the associated claim?
+4. Do comparisons give conditional reasons?
+5. Are the criteria sufficient to grade an answer?
+6. Do cards provide complementary perspectives without unnecessary duplication?
+7. Does content remain readable and complete after export?
 
-La réussite de cette revue est distincte de la maîtrise personnelle de
-l'apprenant et de la réussite technique d'un export.
+Passing this review is separate from personal mastery and technical export success.
 
-## Fondement pédagogique et limite de l'inférence
+## Educational basis and limits of inference
 
-[Roediger et Karpicke](https://psychnet.wustl.edu/memory/wp-content/uploads/2018/04/Roediger-Karpicke-2006_PsychSci.pdf)
-étudient le rappel actif et la rétention différée de passages en prose. Leur
-travail soutient l'intérêt du rappel pour un contenu développé, sans déterminer
-une longueur optimale de flashcard ni certifier une expertise professionnelle.
+[Roediger and Karpicke](https://psychnet.wustl.edu/memory/wp-content/uploads/2018/04/Roediger-Karpicke-2006_PsychSci.pdf)
+study retrieval practice and delayed retention of prose passages. Their work
+supports retrieval practice for detailed content without establishing an optimal
+flashcard length or certifying professional expertise.
 
-Le couple fiche complète / cartes à objectif explicite est un choix de conception
-adapté à la demande. Le pilote servira à en évaluer profondeur, lisibilité
-et facilité de correction.
+The combination of complete reference notes and cards with explicit objectives
+is a design choice suited to the request. The pilot will assess its depth,
+readability and ease of grading.

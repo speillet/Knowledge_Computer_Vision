@@ -1,46 +1,25 @@
-# Modèle de données du pilote
+# Pilot data model
 
-## Fiche canonique
+## reference note Canonical
 
-Front matter : `id`, `type`, `domaine`, `poles`, `priorite`, `profondeur`, `statut`,
-`provenance`, `revision`, `tags`. L'ID est stable et indépendant du chemin.
-Les prérequis, compétences, notions connexes, sources et cartes sont des liens
-dans le corps, lisibles sans plugin. `provenance: agent` décrit la rédaction.
+Front matter: `id`, `type`, `domaine`, `poles`, `priorite`, `profondeur`, `statut`, `provenance`, `revision`, `tags`. The ID is stable and path independent. The prerequisites, skills, related notions, sources and flashcards are links in the body, readable without plugin. `provenance: agent` describes the writing.
 
-États distincts : inventorié → rédigé → relu. La relecture nomme son responsable
-et sa portée ; l'auto-revue ne signifie pas validation indépendante.
-L'export et la maîtrise personnelle ne sont pas des états de rédaction.
+Separate states: inventoried → written → reread. The review names its manager and its scope; self-review does not mean independent validation. Export and personal mastery are not states of writing.
 
-## Carte
+## flashcard
 
-Une note `CV-Pilote` comprend quatre champs ordonnés : `ID`, `Question`,
-`Reponse`, `Source`. Un seul gabarit produit une seule carte, sans inverse.
-Le champ `ID` est un identifiant pédagogique tel que `CV-SIFT-001` ; il reste
-inchangé lors d'une correction. `Source` relie la fiche et le passage primaire.
-Au-dessus du bloc, les métadonnées donnent objectif, famille et provenance.
-Les tags de domaine, famille et ID sont également exportés.
-Le champ `poles` est une liste non vide de lettres uniques A à F ; les cartes
-portent les mêmes rattachements en tags `pole::A` à `pole::F`. Ces pôles décrivent
-un parcours, pas une aptitude certifiée. Le contrôleur refuse lettres inconnues,
-doublons et désaccords entre la fiche et ses cartes. Les cas métiers portent
-en plus `cas_pole::<lettre>::conception` ou `cas_pole::<lettre>::diagnostic`.
+A `CV-Pilote` note includes four ordered fields: `ID`, `Question`, `Reponse`, `Source`. A single template produces a single flashcard, without reverse. The `ID` field is an educational identifier such as `CV-SIFT-001`; it remains unchanged during a correction. `Source` connects the reference note and the primary passage. Above the block, metadata gives objective, family, and provenance. Domain, family and ID tags are also exported. The field `poles` is a non-empty list of single letters A to F; the flashcards carries the same attachments in tags `pole::A` to `pole::F`. These poles describe a course, not a certified aptitude. The controller refuses unknown letters, duplicates and disagreements between the reference note and its flashcards. Business cases also carry `cas_pole::<lettre>::conception` or `cas_pole::<lettre>::diagnostic`.
 
-Le commentaire numérique ajouté par le plugin identifie une note Anki : il est
-distinct de l'ID pédagogique, absent avant la première synchronisation, conservé
-lors d'un déplacement et retiré seulement lors de la création d'une nouvelle note.
+The numerical comment added by the plugin identifies a note Anki: it is distinct from the pedagogical ID, absent before the first synchronization, kept during a move and removed only when creating a new note.
 
-## Couverture et preuves
+## Coverage and Evidence
 
-L'inventaire affiche par entrée domaine, type, priorité, profondeur, prérequis,
-compétences, fiche/cartes et lacunes. Il ne déduit pas la maîtrise de la présence
-d'une carte. Les preuves dans le journal du pilote précisent environnement,
-date, responsable, observation et limites ; une ligne vide signifie « non testé ».
+The inventory displays by input domain, type, priority, depth, prerequisites, skills, reference note/flashcards and gaps. It does not infer control of the presence of a flashcard. The evidence in the pilot’s log specifies environment, date, responsibility, observation and limits; an empty line means “untested”.
 
-## Intégrité
+## Integrity
 
-- Un ID de fiche et un ID de carte sont uniques dans leur catégorie.
-- Une carte possède une fiche existante et une source primaire explicite.
-- Chaque réponse contient noyau attendu, approfondissement et erreurs bloquantes.
-- Un lien relatif pointe vers un fichier existant à l'intérieur du vault.
-- Un export vérifié n'est déclaré qu'après création, répétition, mise à jour,
-  conservation de l'historique et contrôle du rendu sur AnkiDroid.
+- A reference note ID and a flashcard ID are unique in their category.
+- A flashcard has an existing reference note and an explicit primary source.
+- Each response contains expected answer, further explanation and blocking errors.
+- A relative link points to an existing file inside the vault.
+- A verified export is only declared after creation, repetition, update, historical preservation and check of the rendering on AnkiDroid.
