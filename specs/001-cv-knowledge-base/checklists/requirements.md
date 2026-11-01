@@ -1,51 +1,37 @@
-# Checklist de qualité : base de connaissances CV senior
+# Quality Checklist: Senior CV Knowledge Base
 
-**Objet** : qualité du brouillon de spécification, pas son implémentation.
-**Date** : 2026-10-18
-**Révision** : 5 ; complétée par [la revue de pertinence](../review.md)
-**Spécification** : [spec.md](../spec.md)
+**Subject matter**: quality of the draft specification, not its implementation. **Date** : 2026-10-18 **Revision** : 5 ; completed by [the Relevance Review](../review.md) **Specification** : [spec.md](../spec.md)
 
-## Qualité du contenu
+## Quality of content
 
-- [x] Choix confirmés et propositions éditoriales sont distingués.
-- [x] Public expérimenté et lacunes prioritaires sont décrits.
-- [x] Les exigences portent sur les besoins et résultats ; les détails du
-  plugin sont isolés dans la recherche.
-- [x] Les sections obligatoires du modèle Spec Kit sont renseignées en français.
+- [x] Confirmed selections and editorial proposals are distinguished.
+- [x] Experienced public and priority gaps are described.
+- [x] Requirements are about needs and results; plugin details are isolated in the search.
+- [x] The mandatory sections of the Spec Kit model are indicated in English.
 
-## Complétude des exigences
+## Completeness of requirements
 
-- [x] Aucun marqueur de clarification ne masque une exigence indéfinie.
-- [x] Les exigences sont identifiées, vérifiables et sans quota arbitraire de cartes.
-- [x] Les critères de réussite contrôlent les artefacts et leurs relations.
-- [x] Les critères de réussite n'imposent pas une technologie d'implémentation.
-- [x] Les parcours disposent de scénarios d'acceptation.
-- [x] Les cas limites scientifiques, pédagogiques et d'export sont identifiés.
-- [x] L'inventaire évolutif est distinct du contenu effectivement produit.
-- [x] Les pôles métiers complètent les domaines sans créer de fiche canonique concurrente.
-- [x] Dépendances et hypothèses, dont la constitution non ratifiée, sont explicites.
+- [x] No clarification marker hides an indefinite requirement.
+- [x] Requirements are identified, verifiable and without arbitrary quota of flashcards.
+- [x] Success criteria control artifacts and their relationships.
+- [x] Success criteria do not require implementation technology.
+- [x] Courses have acceptance scenarios.
+- [x] The scientific, educational and export boundary cases are identified.
+- [x] Scalable inventory is distinct from actual content produced.
+- [x] The business poles complete the domains without creating a competing canonical reference note.
+- [x] Dependencies and assumptions, including the unratified constitution, are explicit.
 
-## Préparation de la suite
+## Preparation of the Suite
 
-- [x] Le contrat décrit une fiche et une carte acceptables.
-- [x] Les parcours couvrent compréhension, choix, diagnostic, révision et maintenance.
-- [x] Le choix du plugin est assorti d'un pilote de validation.
-- [x] Les vérifications documentaires et tests réellement exécutés sont distingués.
+- [x] The contract describes an acceptable reference note and flashcard.
+- [x] Courses cover understanding, choice, diagnosis, review and maintenance.
+- [x] The plugin choice comes with a validation driver.
+- [x] Document checks and tests actually performed are distinguished.
 
-## Limites de cette revue
+## Limitations of this review
 
-Le premier contrôle portait essentiellement sur la forme des exigences.
-La révision 2 ajoute les niveaux de profondeur, contrats de données, critères
-de correction, preuves de revue et évaluation du transfert. La révision 3
-ajoute provenance de rédaction, mesure de la charge de révision, solution de
-repli d'export et famille de conception de système. La révision 5 ajoute
-les six pôles métiers en surcouche des domaines. La
-[checklist de pertinence](relevance.md) conserve les questions de relecture.
+The first check focused on the form of the requirements. The 2 revision adds depth levels, data contracts, correction criteria, review evidence and transfer evaluation. The 3 revision adds drafting provenance, revision load measurement, export fallback solution and system design family. The 5 revision adds the six business clusters to the top of the domains. The [Relevance Checklist](relevance.md) retains the re-reading questions.
 
-Les cases décrivent la qualité du brouillon. Elles ne signifient pas que
-l'utilisateur a ratifié la constitution, accepté chaque entrée de l'inventaire
-ou validé le plugin. Aucun test d'export n'a été exécuté et aucun contenu
-pédagogique du pilote n'a encore été produit.
+The boxes describe the quality of the draft. They do not mean that the user has ratified the constitution, accepted each entry of the inventory or validated the plugin. No export tests have been run and no driver instructional content has yet been produced.
 
-La suite consiste à relire le cadrage, formaliser les principes convenus et
-concevoir le pilote. Cette checklist ne déclenche pas une production massive.
+The next step is to review the framing, formalize the agreed principles and design the pilot. This checklist does not trigger mass production.

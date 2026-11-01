@@ -37,7 +37,7 @@
   },
   {
     "id": "APP-004",
-    "titre": "ESKF : injection et reset détaillés",
+    "titre": "ESKF: detailed injection and reset",
     "domaine": "d01",
     "poles": [
       "B",
@@ -49,7 +49,7 @@
   },
   {
     "id": "APP-005",
-    "titre": "Caméras événementielles",
+    "titre": "Event cameras",
     "domaine": "d02",
     "poles": [
       "B"
@@ -60,7 +60,7 @@
   },
   {
     "id": "APP-006",
-    "titre": "LiDAR : modèles de bruit",
+    "titre": "LiDAR: noise models",
     "domaine": "d02",
     "poles": [
       "C"
@@ -71,7 +71,7 @@
   },
   {
     "id": "APP-007",
-    "titre": "Radar : modèles de mesure",
+    "titre": "Radar: measurement models",
     "domaine": "d02",
     "poles": [
       "C"
@@ -82,7 +82,7 @@
   },
   {
     "id": "APP-008",
-    "titre": "ToF : ambiguïtés et bruit",
+    "titre": "ToF: Ambiguities and Noise",
     "domaine": "d02",
     "poles": [
       "C"
@@ -93,7 +93,7 @@
   },
   {
     "id": "APP-009",
-    "titre": "Optiques télécentriques",
+    "titre": "Telecentric optics",
     "domaine": "d02",
     "poles": [
       "E"
@@ -104,7 +104,7 @@
   },
   {
     "id": "APP-010",
-    "titre": "Line-scan : calibration complète",
+    "titre": "Line-scan: full calibration",
     "domaine": "d02",
     "poles": [
       "E"
@@ -115,7 +115,7 @@
   },
   {
     "id": "APP-011",
-    "titre": "Imagerie multispectrale",
+    "titre": "Multispectral Imaging",
     "domaine": "d02",
     "poles": [
       "E"
@@ -137,7 +137,7 @@
   },
   {
     "id": "APP-013",
-    "titre": "Géoréférencement",
+    "titre": "Georeferencing",
     "domaine": "d02",
     "poles": [
       "E"
@@ -148,7 +148,7 @@
   },
   {
     "id": "APP-014",
-    "titre": "DICOM et NIfTI : lecture des transformations",
+    "titre": "DICOM and NifTI: reading transformations",
     "domaine": "d02",
     "poles": [
       "E"
@@ -159,7 +159,7 @@
   },
   {
     "id": "APP-015",
-    "titre": "Fourier et filtrage fréquentiel",
+    "titre": "Fourier and frequency filtering",
     "domaine": "d03",
     "poles": [
       "B",
@@ -172,7 +172,7 @@
   },
   {
     "id": "APP-016",
-    "titre": "Restauration et déconvolution",
+    "titre": "Restoration and deconvolution",
     "domaine": "d03",
     "poles": [
       "B",
@@ -185,7 +185,7 @@
   },
   {
     "id": "APP-017",
-    "titre": "Harris : localisation",
+    "titre": "Harris: Location",
     "domaine": "d04",
     "poles": [
       "B",
@@ -196,8 +196,8 @@
     "connexe": "CV-MATCHING",
     "fiche": "CV-CORNERS",
     "competences": [
-      "relier réponse Harris, conditionnement et localisation",
-      "diagnostiquer une sélection de points concentrée"
+      "link Harris response, conditioning and localization",
+      "Diagnose a concentrated selection of points"
     ],
     "prerequis": [
       "CV-FILTRES",
@@ -206,7 +206,7 @@
   },
   {
     "id": "APP-018",
-    "titre": "Shi–Tomasi : critères",
+    "titre": "Shi – Tomasi: criteria",
     "domaine": "d04",
     "poles": [
       "B",
@@ -217,8 +217,8 @@
     "connexe": "CV-MATCHING",
     "fiche": "CV-CORNERS",
     "competences": [
-      "interpréter la plus petite valeur propre",
-      "régler qualité relative et espacement des coins"
+      "interpret the smallest eigenvalue",
+      "set relative quality and corner spacing"
     ],
     "prerequis": [
       "CV-FILTRES",
@@ -238,8 +238,8 @@
     "connexe": "CV-MATCHING",
     "fiche": "CV-FAST-BRIEF",
     "competences": [
-      "décrire le segment test et ses variantes",
-      "séparer répétabilité et vitesse de détection"
+      "describe the test segment and its variants",
+      "Separate repeatability and detection speed"
     ],
     "prerequis": [
       "CV-CORNERS"
@@ -258,8 +258,8 @@
     "connexe": "CV-MATCHING",
     "fiche": "CV-FAST-BRIEF",
     "competences": [
-      "construire un test binaire et sa distance",
-      "diagnostiquer la sensibilité à la rotation"
+      "Building a Binary Test and Its Distance",
+      "Diagnose sensitivity to rotation"
     ],
     "prerequis": [
       "CV-CORNERS"
@@ -279,7 +279,7 @@
   },
   {
     "id": "APP-022",
-    "titre": "FLANN : index et métriques",
+    "titre": "FLANN: index and metrics",
     "domaine": "d04",
     "poles": [
       "B",
@@ -290,8 +290,8 @@
     "connexe": "CV-MATCHING",
     "fiche": "CV-FLANN",
     "competences": [
-      "choisir index et métrique compatibles",
-      "mesurer rappel, construction et coût amorti"
+      "choose compatible index and metric",
+      "measure recall, construction and amortized cost"
     ],
     "prerequis": [
       "CV-MATCHING"
@@ -310,7 +310,7 @@
   },
   {
     "id": "APP-024",
-    "titre": "LightGlue : adaptation du calcul",
+    "titre": "LightGlue: adaptation of the calculation",
     "domaine": "d04",
     "poles": [
       "B"
@@ -321,7 +321,7 @@
   },
   {
     "id": "APP-025",
-    "titre": "LoFTR : correspondances coarse-to-fine",
+    "titre": "LoFTR: Coarse-to-fine correspondences",
     "domaine": "d04",
     "poles": [
       "B"
@@ -344,8 +344,8 @@
     "connexe": "CV-MULTICALIB",
     "fiche": "CV-FISHEYE",
     "competences": [
-      "distinguer projection angulaire et pinhole",
-      "valider les résidus périphériques et la rectification"
+      "Distinguish Angular and Pinhole Projection",
+      "validate the residuals devices and rectification"
     ],
     "prerequis": [
       "CV-ZHANG",
@@ -354,7 +354,7 @@
   },
   {
     "id": "APP-027",
-    "titre": "Hand-eye : solveurs et dégénérescences",
+    "titre": "Hand-eye: Solvers and Degenerations",
     "domaine": "d05",
     "poles": [
       "B",
@@ -366,8 +366,8 @@
     "connexe": "CV-MULTICALIB",
     "fiche": "CV-HANDEYE",
     "competences": [
-      "dériver AX=XB avec repères nommés",
-      "concevoir des mouvements observables et valider la fermeture"
+      "derive AX=XB with coordinate frames named",
+      "design observable movements and validate the closure"
     ],
     "prerequis": [
       "CV-SE3",
@@ -376,7 +376,7 @@
   },
   {
     "id": "APP-028",
-    "titre": "Calibration temporelle multicapteurs",
+    "titre": "Multisensor temporal calibration",
     "domaine": "d05",
     "poles": [
       "B",
@@ -389,7 +389,7 @@
   },
   {
     "id": "APP-029",
-    "titre": "PnP : variantes et ambiguïtés",
+    "titre": "PnP: variants and ambiguities",
     "domaine": "d05",
     "poles": [
       "B",
@@ -413,7 +413,7 @@
   },
   {
     "id": "APP-031",
-    "titre": "Rectification stéréo",
+    "titre": "Stereo Correction",
     "domaine": "d05",
     "poles": [
       "B",
@@ -641,7 +641,7 @@
   },
   {
     "id": "APP-051",
-    "titre": "Espace libre et traversabilité",
+    "titre": "Free space and traversability",
     "domaine": "d06",
     "poles": [
       "C"
@@ -674,7 +674,7 @@
   },
   {
     "id": "APP-054",
-    "titre": "ViT : architecture et transfert",
+    "titre": "ViT: architecture and transfer",
     "domaine": "d07",
     "poles": [
       "A"
@@ -685,7 +685,7 @@
   },
   {
     "id": "APP-055",
-    "titre": "Swin : fenêtres décalées",
+    "titre": "Swin: offset windows",
     "domaine": "d07",
     "poles": [
       "A"
@@ -696,7 +696,7 @@
   },
   {
     "id": "APP-056",
-    "titre": "ConvNeXt : recette",
+    "titre": "ConvNeXt: recipe",
     "domaine": "d07",
     "poles": [
       "A"
@@ -729,7 +729,7 @@
   },
   {
     "id": "APP-059",
-    "titre": "LoRA et adapters visuels",
+    "titre": "LoRA and visual adaptors",
     "domaine": "d07",
     "poles": [
       "A"
@@ -740,7 +740,7 @@
   },
   {
     "id": "APP-060",
-    "titre": "SigLIP : loss détaillée",
+    "titre": "SigLIP: detailed loss",
     "domaine": "d07",
     "poles": [
       "A",
@@ -764,7 +764,7 @@
   },
   {
     "id": "APP-062",
-    "titre": "PatchCore : repondération",
+    "titre": "PatchCore: reweighting",
     "domaine": "d07",
     "poles": [
       "A",
@@ -776,7 +776,7 @@
   },
   {
     "id": "APP-063",
-    "titre": "ArcFace : marge angulaire",
+    "titre": "ArcFace: angular margin",
     "domaine": "d07",
     "poles": [
       "E"
@@ -787,7 +787,7 @@
   },
   {
     "id": "APP-064",
-    "titre": "PAD et cadre ISO/IEC 30107",
+    "titre": "PAD and ISO/IEC 30107 framework",
     "domaine": "d07",
     "poles": [
       "E"
@@ -798,7 +798,7 @@
   },
   {
     "id": "APP-065",
-    "titre": "CRNN et CTC",
+    "titre": "CRNN and CTC",
     "domaine": "d07",
     "poles": [
       "E"
@@ -866,7 +866,7 @@
   },
   {
     "id": "APP-071",
-    "titre": "Pose articulée 2D et 3D",
+    "titre": "pose articulated 2D and 3D",
     "domaine": "d08",
     "poles": [
       "A",
@@ -878,7 +878,7 @@
   },
   {
     "id": "APP-072",
-    "titre": "Pose 6D d'objet",
+    "titre": "pose 6D Object",
     "domaine": "d08",
     "poles": [
       "A",
@@ -962,7 +962,7 @@
   },
   {
     "id": "APP-079",
-    "titre": "Contours actifs",
+    "titre": "Active contours",
     "domaine": "d09",
     "poles": [
       "A",
@@ -998,7 +998,7 @@
   },
   {
     "id": "APP-082",
-    "titre": "SAM 2 : mémoire vidéo",
+    "titre": "SAM 2: video memory",
     "domaine": "d09",
     "poles": [
       "A",
@@ -1043,7 +1043,7 @@
   },
   {
     "id": "APP-086",
-    "titre": "Localisation temporelle d'actions",
+    "titre": "Temporal location of actions",
     "domaine": "d10",
     "poles": [
       "D"
@@ -1054,7 +1054,7 @@
   },
   {
     "id": "APP-087",
-    "titre": "Video-LLM et mémoire longue",
+    "titre": "Video-LLM and long memory",
     "domaine": "d10",
     "poles": [
       "D"
@@ -1088,8 +1088,8 @@
     "connexe": "CV-FLOT",
     "fiche": "CV-FARNEBACK",
     "competences": [
-      "relier coefficients quadratiques et déplacement",
-      "évaluer les limites du flot dense et de sa pyramide"
+      "linking quadratic coefficients and displacement",
+      "Evaluate the limits of the dense flow and its pyramid"
     ],
     "prerequis": [
       "CV-FLOT",
@@ -1098,7 +1098,7 @@
   },
   {
     "id": "APP-090",
-    "titre": "RAFT : corrélations et update",
+    "titre": "RAFT: correlations and update",
     "domaine": "d10",
     "poles": [
       "B",
@@ -1122,7 +1122,7 @@
   },
   {
     "id": "APP-092",
-    "titre": "MeanShift et CamShift",
+    "titre": "MeanShift and CamShift",
     "domaine": "d11",
     "poles": [
       "C",
@@ -1134,8 +1134,8 @@
     "connexe": "CV-SOT",
     "fiche": "CV-MEANSHIFT",
     "competences": [
-      "relier backprojection, centroïde et fenêtre adaptative",
-      "diagnostiquer ambiguïté de couleur et perte de cible"
+      "linking backprojection, centroid and adaptive window",
+      "Diagnose color ambiguity and target loss"
     ],
     "prerequis": [
       "CV-SOT",
@@ -1144,7 +1144,7 @@
   },
   {
     "id": "APP-093",
-    "titre": "Filtres de corrélation",
+    "titre": "Correlation Filters",
     "domaine": "d11",
     "poles": [
       "C",
@@ -1156,8 +1156,8 @@
     "connexe": "CV-SOT",
     "fiche": "CV-CORRELATION",
     "competences": [
-      "expliquer corrélation, structure circulante et adaptation",
-      "interpréter PSR, dérive et protocole de reset"
+      "explain correlation, circulating structure and adaptation",
+      "interpret PSR, drift and reset protocol"
     ],
     "prerequis": [
       "CV-SOT",
@@ -1166,7 +1166,7 @@
   },
   {
     "id": "APP-094",
-    "titre": "SiamFC et suivi siamois",
+    "titre": "SiamFC and Siamese follow-up",
     "domaine": "d11",
     "poles": [
       "C",
@@ -1289,7 +1289,7 @@
   },
   {
     "id": "APP-104",
-    "titre": "Diffusion latente : sampler et guidance",
+    "titre": "Latent diffusion: sampler and guidance",
     "domaine": "d12",
     "poles": [
       "A",
@@ -1313,7 +1313,7 @@
   },
   {
     "id": "APP-106",
-    "titre": "Long-tail et stratégie d'annotation",
+    "titre": "Long-tail and annotation strategy",
     "domaine": "d13",
     "poles": [
       "A"
@@ -1324,7 +1324,7 @@
   },
   {
     "id": "APP-107",
-    "titre": "NDS et mAP nuScenes",
+    "titre": "NDS and mAP nuScenes",
     "domaine": "d13",
     "poles": [
       "C"
@@ -1383,7 +1383,7 @@
   },
   {
     "id": "APP-112",
-    "titre": "FMR et FNMR",
+    "titre": "FMR and FNMR",
     "domaine": "d13",
     "poles": [
       "A",
@@ -1395,7 +1395,7 @@
   },
   {
     "id": "APP-113",
-    "titre": "FAR et FRR système",
+    "titre": "FAR and FRR system",
     "domaine": "d13",
     "poles": [
       "A",
@@ -1419,7 +1419,7 @@
   },
   {
     "id": "APP-115",
-    "titre": "Métriques PAD",
+    "titre": "Metrics PAD",
     "domaine": "d13",
     "poles": [
       "A",
@@ -1467,7 +1467,7 @@
   },
   {
     "id": "APP-119",
-    "titre": "TensorRT : précision et kernels",
+    "titre": "TensorRT: precision and kernels",
     "domaine": "d14",
     "poles": [
       "A",
@@ -1503,7 +1503,7 @@
   },
   {
     "id": "APP-122",
-    "titre": "ROS 2 et QoS",
+    "titre": "ROS 2 and QoS",
     "domaine": "d14",
     "poles": [
       "C",
@@ -1542,7 +1542,7 @@
   },
   {
     "id": "APP-125",
-    "titre": "GStreamer et zéro-copie",
+    "titre": "GStreamer and zero-copy",
     "domaine": "d14",
     "poles": [
       "C",
@@ -1555,7 +1555,7 @@
   },
   {
     "id": "APP-126",
-    "titre": "Jetson et NPU",
+    "titre": "Jetson and NPU",
     "domaine": "d14",
     "poles": [
       "F"
@@ -1566,7 +1566,7 @@
   },
   {
     "id": "APP-127",
-    "titre": "Thermique et consommation",
+    "titre": "Thermal and consumption",
     "domaine": "d14",
     "poles": [
       "F"
@@ -1588,7 +1588,7 @@
   },
   {
     "id": "APP-129",
-    "titre": "OTA et rollback",
+    "titre": "OTA and Rollback",
     "domaine": "d14",
     "poles": [
       "F"

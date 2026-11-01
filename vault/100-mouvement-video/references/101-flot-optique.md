@@ -7,80 +7,109 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 2
+revision: 4
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
 ---
-# Flot optique : Lucas–Kanade, Farnebäck et RAFT
+# Optical flow: Lucas–Kanade, Farnebäck and RAFT
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Estimer des déplacements image entre frames, sparse ou denses, sans les confondre avec des identités d'objets. Entrées : images avec cadence, prétraitement et sens temporel ; sortie : vecteurs dans le repère pixel et indicateurs selon méthode.
+Estimate image displacements between frames, sparse or dense, without confusing them with object identities. Inputs: images with cadence, preprocessing and time direction; output: vectors in the coordinate frame pixel and indicators according to method.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-MATCHING](../../40-features-matching/references/43-detecteurs-matchers.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-MATCHING](../../40-features-matching/references/43-detecteurs-matchers.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Lucas–Kanade linéarise une constance photométrique et suppose un mouvement cohérent local. La pyramide étend les déplacements utiles ; Farnebäck propose une estimation dense par représentation polynomiale locale. RAFT exploite features, corrélations all-pairs et mises à jour récurrentes.
+Lucas – Kanade linearizes a photometric constancy and assumes a local coherent movement. The pyramid extends the useful displacements; Farnebäck proposes a dense estimation by local polynomial representation. RAFT leverages features, all-peer correlations and recurring updates.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-La linéarisation donne $I_xu+I_yv+I_t\approx0$, u,v en pixels entre frames si les dérivées suivent ce pas. Le système local nécessite des gradients dans plusieurs directions. Un flux entre frames n'est une vitesse px/s qu'après division par l'intervalle approprié.
+Linearization gives $I_xu+I_yv+I_t\approx0$, u,v in pixels between frames if the derivatives follow this step. The local system requires gradients in several directions. A flow between frames is a px/s speed only after division by the appropriate interval.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Fenêtre, pyramide, texture, bruit, résolution et occultation. RAFT à deux images n'apporte pas intrinsèquement une identité long terme. Constance d'intensité et petits déplacements sont des hypothèses de la méthode linéarisée, pas de toute vision vidéo.
+Window, pyramid, texture, noise, resolution and occlusion. RAFT to two images does not intrinsically provide a long-term identity. Constantity of intensity and small displacements are hypotheses of the linearized method, not of any video vision.
 
-## Coût et implémentation
+## Cost and implementation
 
-Une corrélation all-pairs a un coût mémoire important selon la résolution des features ; une implémentation peut l'optimiser. Aucun code de flot exécuté ; pas de FPS comparé hors matériel/protocole.
+An all-pair correlation has a significant memory cost depending on the resolution of the features; an implementation can optimize it. No flow code executed; no FPS compared except hardware/protocol.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : translation synthétique et référence de déplacement ; varier illumination puis occultation séparément. Mesurer EPE sur régions observables et masques d'occlusion, pas seulement une visualisation de couleurs.
+Baseline: synthetic translation and displacement reference; vary illumination and then occlusion separately. Measure EPE on observable regions and occlusion masks, not just a color visualization.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Sur une arête, l'aperture problem laisse une direction ambiguë ; sous occultation, la correspondance peut disparaître. `status=1` d'une API ne prouve pas la vérité physique ; contrôler aller-retour et validité.
+On an edge, the aperture problem leaves an ambiguous direction; under occlusion, the correspondence may disappear. `status=1` of an API does not prove the physical truth; check round trip and validity.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Features suivies, flot dense, tracker d'objets ou ReID selon la sortie. Une caméra mobile crée du flot de fond même si aucun objet ne bouge dans le monde.
+Tracked features, dense flow, object tracker or ReID depending on output. A mobile camera creates background flow even if no object moves in the world.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent contrainte de luminance, ouverture et correspondance dense. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop a constraint of luminance, aperture and dense correspondence. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-FLOT-001
+### Case linked to CV-FLOT-001
 
-**Question de travail** : Pourquoi $I_xu+I_yv+I_t=0$ ne détermine-t-il pas un mouvement 2D unique à un pixel ?
+**Question of work**: Why does $I_xu+I_yv+I_t=0$ fail to determine a unique 2D motion at a pixel?
 
-**Réponse de référence** : Une équation ne contraint pas deux inconnues sans hypothèses/voisinage ; une arête peut garder une ambiguïté tangentielle.
+**Reference Response**: An equation does not constrain two unknowns without assumptions/neighboring; an edge can keep a tangential ambiguity.
 
-**Lecture de la contrainte** : le gradient spatial fournit une direction selon laquelle une variation d'intensité renseigne le déplacement. Le mouvement tangent à une arête uniforme change peu les intensités : plusieurs vecteurs peuvent alors satisfaire la même équation. C'est un manque d'information locale, pas nécessairement une erreur du solveur.
+**Reading the constraint**: The spatial gradient provides a direction in which a variation in intensity informs displacement. The movement tangent to a uniform edge changes little the intensities: several vectors can then satisfy the same equation. This is a lack of local information, not necessarily a mistake of the solver.
 
-**Exemple et limite** : un bord vertical qui glisse vers le haut peut sembler presque inchangé dans une petite fenêtre. Ajouter des pixels du même bord ne crée pas une seconde direction indépendante. Un voisinage comportant un coin peut mieux contraindre les deux composantes si le mouvement y reste suffisamment cohérent et la photométrie stable. Examiner conditionnement, taille de fenêtre et validité de l'hypothèse avant d'augmenter les itérations. Une régularisation peut choisir une solution parmi plusieurs plausibles ; elle ajoute alors une hypothèse, et non une observation certaine du déplacement.
+**Example and Limit**: A vertical edge that slides upwards may seem almost unchanged in a small window. Adding pixels of the same edge does not create a second independent direction. A neighbourhood with a corner can better constrain the two components if the movement remains sufficiently coherent and the photometry stable. Examine conditioning, window size, and hypothesis validity before increasing iterations. A regularization can choose one of several plausible solutions; it then adds a hypothesis, and not a certain observation of the displacement.
 
-### Cas lié à CV-FLOT-004
+### Case linked to CV-FLOT-004
 
-**Question de travail** : Un point devient invisible mais le flot retourne encore un vecteur. Comment interpréter cette sortie ?
+**Question of work**: A point becomes invisible, but the optical flow model still returns a vector. How should this output be interpreted?
 
-**Réponse de référence** : Comme une estimation sous les hypothèses du modèle, sans correspondance observable garantie ; examiner masque d’occlusion et cohérence.
+**Reference Response**: As an estimate under the assumptions of the model, with no guaranteed observable correspondence; examine occlusion mask and consistency.
 
-**Pourquoi la densité ne prouve rien** : un algorithme dense peut remplir des régions où les données ne contiennent plus de correspondant visible. La valeur produite peut venir du contexte, de la régularisation ou d'un modèle appris. Ces mécanismes donnent une hypothèse utile, mais pas une observation nouvelle de la surface cachée.
+**Why density doesn’t prove anything**: A dense algorithm can fill regions where the data no longer contains a visible match. The value produced can come from context, regularization, or a learned model. These mechanisms give a useful hypothesis, but not a new observation of the hidden surface.
 
-**Contrôle proposé** : distinguer occultation, sortie de champ et erreur de matching. Pour un aller-retour, évaluer le flot inverse à la position atteinte dans l'autre image, en tenant compte de l'interpolation et des limites du champ. Une incohérence signale un problème possible ; une cohérence ne garantit pas l'identité sur une texture répétitive. Mesurer séparément les régions selon un protocole de visibilité annoncé. À l'inférence, une vérité terrain d'occultation n'est pas disponible par magie : la politique de confiance doit utiliser uniquement les informations réellement fournies au système.
+**check**: distinguish occlusion, field exit and matching error. For a round trip, evaluate the inverse flow at the position reached in the other image, taking into account the interpolation and the limits of the field. An inconsistency signals a possible problem; consistency does not guarantee identity on a repetitive texture. Measure regions separately according to an announced visibility protocol. At the inference, a ground truth of occlusion is not magically available: the trust policy must use only the information actually provided to the system.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Optical Flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html), Lucas–Kanade, pyramides et flot dense. Les autres développements figurent dans les [cartes associées](../101-flot-optique.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Optical Flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html), Lucas-Kanade, pyramids and dense flow. The other developments are in the [flashcards](../101-flot-optique.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
+
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-FLOT-001
+
+**Situation**: Why does $I_xu+I_yv+I_t=0$ fail to determine a unique 2D motion at a pixel?
+
+**Lucas – Kanade System**: stack the window gradients in a $A$ matrix with each row equal to $(I_x,I_y)$, and set $b=-I_t$. The least squares give $A^TA\,d=A^Tb$, with $d=(u,v)^T$. Two sufficiently informative eigenvalues of $A^TA$ are required to constrain both directions; an edge typically produces a weak direction. Expanding the window may bring new gradients, but possibly violates the assumption of shared motion by mixing two objects. A good selection of points therefore simultaneously seeks spatial information and neighborhood coherence, not just a large gradient amplitude.
+
+### CV-FLOT-002
+
+**Situation**: An optical flow vector represents 4 pixels between two images. Does this imply a velocity of 4 px/s?
+
+**Change of grid**: If the second string works on an image resized by $(s_x,s_y)$, the same displacement becomes $(s_xu,s_yv)$. To compare image speeds, first put the vectors in a common grid and then use the real acquisition intervals. A lost frame eventually doubles the interval, without the physical speed having doubled. In perspective, even a constant 3D translation produces depth-dependent image displacements; an apparent size variation can also change the field. The conversion pixels→meters therefore requires a scene and camera model, beyond a division by the nominal rate.
+
+### CV-FLOT-003
+
+**Situation**: What distinct roles do correlations and recurrent updates play in RAFT?
+
+**Dimensions of Correlation**: for two feature maps $h\times w$, an all-peer compatibility connects each site of the first to each site of the second, $(hw)^2$ values before optimizations. The volume encodes candidate similarities, not a bijective assignment of pixels. Updates look at this volume around predicted positions and adjust the flow; multiple sources may target a nearby region, and occlusionss do not always offer a match. Separating memory from volume, cost per iteration, and number of iterations helps to understand the resolution compromise. The recurrence of refinement is not a guarantee of physical convergence or identity.
+
+### CV-FLOT-004
+
+**Situation**: A point becomes invisible, but the optical flow model still returns a vector. How should this output be interpreted?
+
+**residual round trip**: note $F_{12}$ moving the 1 image to 2 and $F_{21}$ back. For a pixel $x$ of the first image, calculate $e(x)=\|F_{12}(x)+F_{21}(x+F_{12}(x))\|$ in pixels, only when the return sampling is valid. A trust rule can compare this residual to a tolerance dependent on movement and noise, to be validated on reserved data. A periodic texture can produce an erroneous translation and then its exact opposite: the zero residual then proves nothing on the real surface. Keep the visibility failure distinct from a simple large digital residual.
+
+**Passages consulted for these developments**: [OpenCV 4.13.0, Optical Flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html), Lucas-Kanade equation and system; grid compositions and changes deduced; [Teed–Deng, RAFT](https://arxiv.org/html/2003.12039v3), figure 1 and presentation of all-pair and updated correlations.
+
+## Sources and flashcards
 
 - [OpenCV, optical flow/Lucas–Kanade](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html).
-- [RAFT, §§3.1–3.3](https://arxiv.org/abs/2003.12039).
-- [Cartes associées](../101-flot-optique.md).
+- [RAFT, §§3.1 – 3.3](https://arxiv.org/abs/2003.12039).
+- [Related flashcards](../101-flot-optique.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

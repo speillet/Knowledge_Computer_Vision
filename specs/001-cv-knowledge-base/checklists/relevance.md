@@ -1,57 +1,48 @@
-# Checklist de pertinence et de couverture
+# Relevance and coverage checklist
 
-**Objet** : qualité des exigences pédagogiques et scientifiques du brouillon.
-**Création** : 2026-10-18
-**Spécification** : [spec.md](../spec.md)
-**Rapport d'évaluation** : [review.md](../review.md)
-**Profondeur** : revue approfondie par l'auteur et le relecteur du cadrage.
+**Subject matter**: quality of the educational and scientific requirements of the draft. **Establishment** : 2026-10-18 **Specification** : [spec.md](../spec.md) **Evaluation report** : [review.md](../review.md) **Depth** : in-depth review by the author and the editor of the framing.
 
-Checklist éditoriale créée manuellement après constat du prérequis `plan.md`
-de la commande Spec Kit. Les cases sont laissées ouvertes pour la relecture.
-Une case cochée signifiera que la qualité de l'exigence a été examinée, pas
-que les fiches sont produites ni que l'apprenant a acquis la compétence.
+Editorial checklist created manually after the `plan.md` prerequisite of the Spec Kit command is established. The boxes are left open for proofreading. A ticked box will mean that the quality of the requirement has been reviewed, not that the reference notes is being produced or that the learner has acquired competence.
 
-## Complétude de la couverture
+## Complete coverage
 
-- [ ] CHK001 Le profil expérimenté et les rappels ML/DL sont-ils distingués des nouveaux apprentissages ? [Complétude, Spec FR-001]
-- [ ] CHK002 Les familles classiques, géométriques et apprises sont-elles explicites au-delà des noms de domaines ? [Complétude, Spec FR-003/004, curriculum]
-- [ ] CHK003 Le niveau cible et les compétences de chaque méthode sont-ils définis séparément de sa priorité et de son état éditorial ? [Clarté, Spec FR-026/030]
-- [ ] CHK004 Les dépendances obligatoires et liens connexes ont-ils des rôles distincts ? [Cohérence, Spec FR-005, curriculum]
-- [ ] CHK005 Acquisition, contrats de données, temporalité et pré/posttraitements sont-ils présents dans les exigences des sujets concernés ? [Couverture, Spec FR-031/032]
+- [ ] CHK001 Are experienced profiles and ML/DL reminders distinguished from new learning? [Complete, Spec FR-001]
+- [ ] CHK002 Are classical, geometric and learned families explicit beyond domain names? [Complete, Spec FR-003/004, curriculum]
+- [ ] CHK003 Are the target level and skills of each method defined separately from its priority and editorial status? [Clarity, Spec FR-026/030]
+- [ ] CHK004 Do mandatory dependencies and related links have distinct roles? [Coherence, Spec FR-005, curriculum]
+- [ ] CHK005 Acquisition, data contracts, temporality and pre/post-processing are they present in the requirements of the subjects concerned? [Cover, Spec FR-031/032]
 
-## Pertinence pédagogique
+## Pedagogical relevance
 
-- [ ] CHK006 Le contrat permet-il des réponses développées tout en définissant un noyau de correction ? [Clarté, Spec FR-015/017, learning-design]
-- [ ] CHK007 Le statut des approfondissements facultatifs et erreurs bloquantes est-il sans ambiguïté ? [Clarté, Spec FR-015/037]
-- [ ] CHK008 Les exigences distinguent-elles rappel d'un exemple et raisonnement sur un cas nouveau ? [Couverture, Spec FR-034/035]
-- [ ] CHK009 Les conditions d'un choix ou diagnostic réussi sont-elles explicitement définies ? [Mesurabilité, Spec SC-006]
-- [ ] CHK010 Le protocole d'essai peut-il conduire à corriger le contrat des cartes sans imposer une durée de révision arbitraire ? [Pertinence, Spec FR-035, SC-008]
-- [ ] CHK011 Une baseline et une variation contrôlée sont-elles demandées pour chaque famille du pilote ? [Complétude, Spec FR-033, SC-009]
-- [ ] CHK021 La provenance de rédaction et l'appropriation des cartes par l'apprenant sont-elles exigées ? [Traçabilité, Spec FR-038, SC-010]
-- [ ] CHK022 La charge de révision est-elle mesurée sans plafond arbitraire ? [Mesurabilité, Spec FR-035, SC-008]
+- [ ] CHK006 Does the contract allow developed answers while defining a core of correction? [Clarity, Spec FR-015/017, learning-design]
+- [ ] CHK007 Is the status of optional further studys and blocking errors unambiguous? [Clarity, Spec FR-015/037]
+- [ ] CHK008 Do requirements distinguish between a recall of an example and reasoning about a new case? [Cover, Spec FR-034/035]
+- [ ] CHK009 Are the conditions for a successful choice or diagnosis explicitly defined? [Measurability, Spec SC-006]
+- [ ] CHK010 Can the test protocol lead to the correction of the flashcards contract without imposing an arbitrary revision period? [Relevance, Spec FR-035, SC-008]
+- [ ] CHK011 Is a baseline and a controlled variation required for each pilot family? [Complete, Spec FR-033, SC-009]
+- [ ] CHK021 Is the origin of the writing and the appropriation of flashcards by the learner required? [Traceability, Spec FR-038, SC-010]
+- [ ] CHK022 Is the revision load measured without an arbitrary ceiling? [Measurability, Spec FR-035, SC-008]
 
-## Exactitude et preuves
+## Accuracy and Evidence
 
-- [ ] CHK012 Les propriétés générales et les particularités d'implémentation ont-elles des exigences de provenance distinctes ? [Traçabilité, Spec FR-012/013/036]
-- [ ] CHK013 Le traitement d'une contradiction centrale entre sources est-il défini ? [Cas limite, Spec FR-036]
-- [ ] CHK014 Les exigences mathématiques couvrent-elles repères, unités et conditions d'application ? [Complétude, Spec FR-007/027/031]
-- [ ] CHK015 Une fiche validée a-t-elle une définition indépendante de la simple présence de ses rubriques ? [Mesurabilité, Spec FR-037, Entités principales]
-- [ ] CHK016 Auto-revue, revue indépendante, exemple exécuté et contenu non exécuté sont-ils distingués ? [Clarté, Spec FR-009/037]
+- [ ] CHK012 Do general properties and implementation features have distinct origin requirements? [Traceability, Spec FR-012/013/036]
+- [ ] CHK013 Is the treatment of a central contradiction between sources defined? [Limit case, Spec FR-036]
+- [ ] CHK014 Do mathematical requirements cover coordinate frames, units and conditions of application? [Complete, Spec FR-007/027/031]
+- [ ] CHK015 Does a validated reference note have a definition independent of the mere presence of its headings? [Measurability, Spec FR-037, Principal Entities]
+- [ ] CHK016 Self-review, independent review, executed example and unexecuted content are distinguished? [Clarity, Spec FR-009/037]
 
-## Cohérence et limites
+## Consistency and limits
 
-- [ ] CHK017 Le pilote initial et ses extensions sont-ils cohérents entre la spec et la cartographie ? [Cohérence, Spec SC-004, curriculum]
-- [ ] CHK018 Le statut de dépendance du plugin permet-il d'avancer sur le cadrage sans le déclarer validé ? [Dépendance, Spec FR-028, research]
-- [ ] CHK019 La réussite éditoriale, l'export et la maîtrise personnelle restent-ils distincts ? [Cohérence, Spec FR-026, SC-005/008]
-- [ ] CHK020 Les exigences bornent-elles la couverture sans promettre tous les algorithmes ou un statut professionnel par mémorisation ? [Clarté, Spec FR-029, Hypothèses]
-- [ ] CHK023 Les familles de cartes n'ont-elles qu'une définition, dans le contrat ? [Cohérence, Spec FR-014, learning-design]
-- [ ] CHK024 Une solution de repli d'export et le rendu sur le client de révision sont-ils prévus ? [Dépendance, Spec SC-005, research]
-- [ ] CHK025 Chaque entrée propre à un pôle a-t-elle un seul domaine d'accueil et une seule fiche canonique ? [Cohérence, Spec FR-040, SC-012, curriculum]
-- [ ] CHK026 Chaque pôle a-t-il un cas de conception et un cas de diagnostic propres à ses métiers ? [Couverture, Spec FR-042, SC-011]
-- [ ] CHK027 L'avancement d'un pôle reste-t-il distinct de la maîtrise et d'une aptitude à un poste ? [Clarté, Spec FR-041, FR-043]
+- [ ] CHK017 Are the initial pilot and its extensions consistent between spec and mapping? [Coherence, Spec SC-004, curriculum]
+- [ ] CHK018 Does the dependency status of the plugin allow you to advance on the framing without declaring it validated? [Dependence, Spec FR-028, research]
+- [ ] CHK019 Do editorial success, export and personal mastery remain distinct? [Coherence, Spec FR-026, SC-005/008]
+- [ ] CHK020 Do requirements limit coverage without promising all algorithms or a professional status by memorization? [Clarity, Spec FR-029, Assumptions]
+- [ ] CHK023 Do flashcards families have only one definition in the contract? [Coherence, Spec FR-014, learning-design]
+- [ ] CHK024 Is an export fallback solution and rendering on the revision client planned? [ Dependence, Spec SC-005, research]
+- [ ] CHK025 Does each entrance specific to a pole have a single host domain and a single canonical reference note? [Coherence, Spec FR-040, SC-012, curriculum]
+- [ ] CHK026 Does each pole have a design case and a diagnostic case specific to its trades? [Cover, Spec FR-042, SC-011]
+- [ ] CHK027 Does the advancement of a pole remain distinct from mastery and suitability for a position? [Clarity, Spec FR-041, FR-043]
 
 ## Notes
 
-Le rapport lié consigne l'évaluation effectuée et ses limites. Cette checklist
-est disponible pour une relecture ultérieure ; ses marqueurs ne doivent pas
-être modifiés par une future étape d'implémentation pour contourner la revue.
+The linked report records the assessment and its limitations. This checklist is available for later review; its markers should not be modified by a future implementation step to bypass the review.

@@ -1,19 +1,16 @@
 ## Summary
 
-<!-- Expliquer le problème et le résultat. Relier la spec ou l'issue si disponible.
-Ajouter un petit diff, arbre ou schéma si cela aide la relecture. -->
+<!-- Explain the problem and resulting behavior. Link the spec or issue when available. Include a small diff, tree or diagram if it helps review. -->
 
 ## Evidence
 
 - **Before:**
 - **After:**
 
-<!-- Donner les vérifications exécutées et leurs résultats.
-Pour un export Anki : création, mise à jour, formules, médias et doublons.
-Signaler clairement les vérifications qui restent à faire. -->
+<!-- State the checks performed and their results. For Anki export: creation, update, equations, media and duplicate prevention. Identify checks still pending. -->
 
-## Merge Danger
+## Merge impact
 
-**Door:** <!-- one-way ou two-way ; préciser si nécessaire. -->
+**Reversibility:** <!-- One-way or two-way; explain when needed. -->
 
-**Blast Radius:** <!-- Contenu, export, outillage, etc. -->
+**Affected areas:** <!-- Learning content, export, tooling, etc. -->

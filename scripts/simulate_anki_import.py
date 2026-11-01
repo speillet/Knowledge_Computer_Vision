@@ -1,12 +1,8 @@
-"""Simule import, révision et ré-importation du paquet avec le moteur d'Anki.
+"""Simulates import, revision and re-import of the package with the Anki engine.
 
-    uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1 \\
-        python scripts/simulate_anki_import.py
+uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1 python scripts/simulate_anki_import.py
 
-Tout se passe dans un dossier temporaire : copie du vault et des gabarits,
-collection Anki jetable. Ni le dépôt ni une collection personnelle ne sont
-modifiés. La simulation ne remplace pas l'essai sur AnkiDroid : elle ne dit
-rien du rendu ni de la version installée sur le téléphone.
+Everything happens in a temporary folder: copy of the vault and templates, disposable collection Anki. Neither the deposit nor a personal collection is changed. The simulation does not replace the test on AnkiDroid: it says nothing about the rendering or the version installed on the phone.
 """
 
 import argparse
@@ -27,15 +23,15 @@ MARKER = "[simulation]"
 
 
 def check_reimport(result):
-    """Refuse une réimportation incomplète, avec ou sans changement du style."""
+    """Refuses an incomplete re-import, with or without a change in style."""
     failures = []
     if result["doublons"]:
-        failures.append("doublons après ré-importation")
+        failures.append('duplicates after re-import')
     for key, message in (
-        ("ids_de_notes_conserves", "notes recréées au lieu d'être mises à jour"),
-        ("mise_a_jour_appliquee", "contenu modifié non mis à jour"),
-        ("historique_conserve", "historique de révision modifié"),
-        ("css_mis_a_jour", "style modifié non mis à jour"),
+        ("ids_de_notes_conserves", 'notes recreated instead of being updated'),
+        ("mise_a_jour_appliquee", 'Modified content not updated'),
+        ("historique_conserve", 'Revision history changed'),
+        ("css_mis_a_jour", 'Modified style not updated'),
     ):
         if key in result and not result[key]:
             failures.append(message)
@@ -43,7 +39,7 @@ def check_reimport(result):
 
 
 def import_package(col, path):
-    """Importe comme le dialogue par défaut : mises à jour « si plus récent »."""
+    """Imports as the default dialog: updates "if more recent"."""
     from anki.collection import ImportAnkiPackageOptions, ImportAnkiPackageRequest
 
     enum = ImportAnkiPackageOptions.DESCRIPTOR.fields_by_name["update_notes"].enum_type
@@ -55,13 +51,13 @@ def import_package(col, path):
 
 
 def notes_by_id(col):
-    """ID pédagogique → (id de note, champs)."""
+    """Map pedagogical IDs to (note ID, fields)."""
     rows = col.db.all("SELECT id, flds FROM notes")
     return {flds.split(FIELD_SEPARATOR)[0]: (nid, flds) for nid, flds in rows}
 
 
 def review(col, note_id):
-    """Répond « Bien » à la carte de la note, comme une révision réelle."""
+    """Reply "Good" to the flashcard of the note, as an actual revision."""
     from anki.scheduler.v3 import CardAnswer
 
     card = col.get_card(col.card_ids_of_note(note_id)[0])
@@ -79,19 +75,19 @@ def scheduling(col, note_id):
 
 
 def mark_card(vault, card_id):
-    """Modifie la rubrique Erreurs bloquantes d'une carte dans la copie du vault."""
+    """Changes the Blocking Errors section of a flashcard in the copy of the vault."""
     for path in vault.glob("*/*.md"):
         text = path.read_text(encoding="utf-8")
-        pattern = rf"(^ID: {re.escape(card_id)}\n(?:.*\n)*?\*\*Erreurs bloquantes\*\* : )"
+        pattern = rf"(^ID: {re.escape(card_id)}\n(?:.*\n)*?\*\*Blocking errors\*\*\s*:\s*)"
         changed, count = re.subn(pattern, rf"\1{MARKER} ", text, count=1, flags=re.M)
         if count:
             path.write_text(changed, encoding="utf-8")
             return
-    raise ValueError(f"carte {card_id} introuvable")
+    raise ValueError(f"flashcard {card_id} not found")
 
 
 def build(vault, anki_dir, out_dir):
-    time.sleep(1.1)  # date de modification des notes à la seconde : garantir « plus récent »
+    time.sleep(1.1)  # date of change of the notes to the second: guarantee "most recent"
     build_package(vault, out_dir, timestamp=time.time(), anki_dir=anki_dir)
     return out_dir / PACKAGE_NAME
 
@@ -113,7 +109,7 @@ def simulate(vault, anki_dir, reviewed=3):
             total = len(first)
             report["import_initial"] = {"notes": total, "cartes": col.card_count()}
             if col.card_count() != total:
-                failures.append("nombre de cartes différent du nombre de notes")
+                failures.append('number of flashcards different from the number of notes')
 
             import_package(col, initial_package)
             unchanged = notes_by_id(col)
@@ -123,7 +119,7 @@ def simulate(vault, anki_dir, reviewed=3):
                 "notes_et_contenu_conserves": first == unchanged,
             }
             if first != unchanged or col.card_count() != total:
-                failures.append("identités, contenu ou nombre modifiés sans correction")
+                failures.append('changed identities, contents or numbers without correction')
 
             chosen = sorted(first)[:reviewed]
             for card_id in chosen:

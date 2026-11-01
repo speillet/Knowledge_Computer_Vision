@@ -1,68 +1,74 @@
-# VAE, GAN et diffusion pour génération/restauration — cartes
+# Flashcards — VAEs, GANs and diffusion for generation and restoration
 
-Fiche : [[120-generatif-multimodal/references/122-generation-restauration|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[120-generatif-multimodal/references/122-generation-restauration|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::120-generatif-multimodal
 
 ## CV-DIFFUSION-001
 
-Objectif : séparer apprentissage et sampling. Famille : comprehension. Provenance : agent.
+Objective: separating learning and sampling. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DIFFUSION-001
-Question: Dans un modèle de diffusion, pourquoi entraînement et sampling ne sont-ils pas la même opération ?
-Reponse: **Noyau attendu** : L’entraînement apprend une règle de débruitage sous une distribution de bruit ; le sampling utilise cette règle dans une procédure pour produire une sortie.
+Question: Why are training and sampling different operations in a diffusion model?
+Reponse: **Expected answer**: Training learns a de-noise rule under a noise distribution; sampling uses this rule in a procedure to produce an output.
 
-**Approfondissement** : Le choix du sampler, du nombre d’étapes et du conditionnement change coût et résultats sans rendre la sortie vraie par définition.
+**Further explanation**: The choice of sampler, number of steps and conditioning changes cost and results without making the output true by definition.
 
-**Décomposition du processus** : durant l'apprentissage, on construit des exemples bruités à des niveaux choisis et on optimise une cible de prédiction selon la formulation. Au sampling, les poids sont utilisés dans une suite d'opérations pour transformer une condition et du bruit en sortie. Les données vues et les décisions prises à ces deux moments diffèrent.
+**Decomposition of the process**: During learning, we build noisy examples at selected levels and optimize a prediction target according to the formulation. In sampling, weights are used in a sequence of operations to transform a condition and noise into output. The data viewed and decisions made at these two moments differ.
 
-**Exemple de contrôle** : conserver poids et conditionnement, puis comparer plusieurs nombres d'étapes et seeds sur un ensemble défini. Mesurer coût, diversité et fidélité à la condition plutôt que conclure depuis une seule image favorable. Le marginal forward à un niveau de bruit n'est pas toute la procédure inverse de génération. Une sortie vraisemblable peut remplir des détails non observés ; elle ne devient pas une mesure physique parce que l'entraînement a convergé. Pour une tâche de restauration, la conservation de l'information critique doit donc être évaluée séparément.
+**Example of check**: maintain weight and conditioning, then compare multiple steps and seeds on a defined set. Measure cost, diversity and loyalty to the condition rather than conclude from a single favorable image. The marginal forward at a noise level is not the entire reverse generation procedure. A likely exit may fill in unobserved details; it does not become a physical measurement because the training has converged. For a restoration task, the retention of critical information must therefore be evaluated separately.
 
-**Erreurs bloquantes** : Assimiler le processus forward d’ajout de bruit à toute la génération.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; [DDPM, équation 4 et algorithmes 1–2](https://arxiv.org/abs/2006.11239).
+**Noise target**: In the current DDPM parameterization, draw a level $t$ and a noise $\epsilon$, build $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$, then minimize an error in predicting this noise. With this convention, an estimate of the clean image can be written $\hat x_0=(x_t-\sqrt{1-\bar\alpha_t}\epsilon_\theta(x_t,t))/\sqrt{\bar\alpha_t}$. This relationship alone is not a complete sampler: transitions, variances, levels traveled and conditioning remain to be defined. Other settings predict another target. Naming the one used avoids applying an output interpretation formula to the wrong tensor.
+
+**Blocking errors**: Assimilate the forward process of adding noise to the entire generation.
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; [DDPM, equation 4 and algorithms 1 – 2](https://arxiv.org/abs/2006.11239); [Ho et al., DDPM, Algorithm 1 – 2 and §3.2, noise prediction; project algebraic inversion](https://arxiv.org/html/2006.11239v2), see 2026-10-30.
 Tags: cv::pilote cv::d12 famille::comprehension cv_id::CV-DIFFUSION-001 provenance::agent pole::A pole::D pole::E
 END
 
 ## CV-DIFFUSION-002
 
-Objectif : situer la diffusion latente. Famille : comparaison. Provenance : agent.
+Objective: locate the latent diffusion. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DIFFUSION-002
-Question: Quel compromis ajoute une diffusion dans l’espace latent d’un autoencodeur ?
-Reponse: **Noyau attendu** : Réduire le coût spatial du processus au prix d’une représentation comprimée et de son erreur de reconstruction.
+Question: What tradeoff is introduced by performing diffusion in an autoencoder's latent space?
+Reponse: **Expected answer**: Reduce the spatial cost of the process at the cost of a compressed representation and its reconstruction error.
 
-**Approfondissement** : Évaluer aussi ce que l’autoencodeur peut perdre, notamment les petits défauts, et pas seulement le denoiser.
+**Further explanation**: Also assess what the autoencoder can lose, including small defects, and not just the denoiser.
 
-**Deux sources possibles de perte** : l'autoencodeur transforme l'image en une représentation plus compacte, puis le processus génératif agit dans cet espace. Un détail mal conservé par la première transformation peut être difficile à préserver ensuite, même si le débruitage latent fonctionne selon son objectif.
+**Two possible sources of loss**: The autoencoder transforms the image into a more compact representation, and then the generative process acts in this space. A detail poorly preserved by the first transformation can be difficult to preserve afterwards, even if the latent noise removal works according to its purpose.
 
-**Ablation proposée** : comparer d'abord l'image brute à sa reconstruction autoencodeur sans ajout du processus de diffusion. Examiner les petits défauts et les frontières utiles, puis introduire la génération à condition identique. Mesurer qualité perceptuelle et fidélité métier séparément, avec références réservées. Cette séparation localise l'origine d'une dégradation et évite de tout attribuer au sampler. La compression vise un compromis de calcul et de représentation ; sa pertinence dépend de ce que l'application doit conserver. Une perte peu visible pour une scène générale peut être décisive pour une rayure ou une mesure fine.
+**Proposed ablation**: First compare the raw image to its autoencoder reconstruction without adding the diffusion process. Examine small defects and useful boundaries, and then introduce generation under the same condition. Measure perceptual quality and business loyalty separately, with reserved references. This separation locates the origin of a degradation and avoids assigning everything to the sampler. The compression is aimed at a compromise of calculation and representation; its relevance depends on what the application should keep. An inconspicuous loss for a general scene can be decisive for a scratch or fine measurement.
 
-**Erreurs bloquantes** : Supposer la compression sans conséquence sur la fidélité.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; [Latent Diffusion Models, §§3.1–3.2 et fig. 1 : compression perceptuelle et diffusion latente](https://arxiv.org/abs/2112.10752).
+**Spatial size check**: If the encoder reduces each image dimension by a factor of $f$, the latent grid has about $HW/f^2$ positions, with a different number of channels. This reduction alone does not predict time savings, as decoder, attention and iterations have their own costs. Note $\tilde x=D(E(x))$ and compare $x$ to $\tilde x$ isolates the reconstruction of the autoencoder before diffusion. Specially evaluate structures smaller than the effective compression support. A good average reconstruction can preserve the large shapes while modifying a rare detail that the product precisely seeks to measure.
+
+**Blocking errors**: Supposing compression without consequence on fidelity.
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; [Latent Diffusion Models, §§3.1 – 3.2 and fig. 1: Perceptual compression and latent diffusion](https://arxiv.org/abs/2112.10752); [Rombach et al., Latent Diffusion, §3.1, compression and reconstruction; spatial balance and inverse problem deduced](https://arxiv.org/html/2112.10752v2), see 2026-10-30.
 Tags: cv::pilote cv::d12 famille::comparaison cv_id::CV-DIFFUSION-002 provenance::agent pole::A pole::D pole::E
 END
 
 ## CV-DIFFUSION-003
 
-Objectif : protéger une observation industrielle. Famille : diagnostic. Provenance : agent.
+Objective: to protect an industrial observation. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DIFFUSION-003
-Question: Une super-résolution rend une image nette mais modifie une fissure. Pourquoi est-ce un défaut pour l’inspection ?
-Reponse: **Noyau attendu** : La plausibilité visuelle n’est pas la fidélité à l’observation critique ; le modèle peut supprimer ou inventer une structure.
+Question: Super-resolution makes an image sharp but changes a crack. Why is this a defect in an inspection system?
+Reponse: **Expected answer** Visual plausibility is not fidelity to critical observation; the model can suppress or invent a structure.
 
-**Approfondissement** : Comparer aux données de référence et conserver le brut ; choisir une mesure adaptée au défaut.
+**Further explanation**: Compare to the reference data and keep the crude; choose a measurement adapted to the defect.
 
-**Pourquoi la netteté peut tromper** : plusieurs images détaillées peuvent être compatibles avec une observation basse résolution. Le modèle utilise ses régularités apprises pour choisir une reconstruction plausible. Cette décision peut créer une texture crédible sans correspondre à la fissure réellement présente.
+**Why Can Clarity Deceive?**: Multiple detailed images can be compatible with low-resolution observation. The model uses its learned regularities to choose a plausible reconstruction. This decision can create a credible texture without matching the actual crack present.
 
-**Validation proposée** : conserver le brut et, si possible, une référence acquise avec une résolution adaptée, puis mesurer conservation, largeur et localisation des défauts. Comparer à une restauration simple avec hypothèses explicites et examiner les erreurs sur cas rares. Ne pas remplacer la preuve d'acquisition par une image générée plus convaincante. Une amélioration de score perceptuel ou de reconstruction globale peut masquer la modification d'une structure petite mais critique. Le choix dépend de l'objectif : produire une illustration et mesurer une fissure n'exigent pas la même fidélité. Aucun générateur n'est exécuté dans ce cas, qui sert à raisonner sur le contrat de sortie.
+**Proposed Validation**: preserve the crude and, if possible, a reference acquired with an adapted resolution, then measure preservation, width and location of defects. Compare to a simple restoration with explicit assumptions and examine errors on rare cases. Do not replace the proof of acquisition with a more convincing generated image. An improvement in perceptual score or overall reconstruction may mask the modification of a small but critical structure. The choice depends on the objective: producing an illustration and measuring a crack do not require the same fidelity. No generator is executed in this case, which is used to reason on the output contract.
 
-**Erreurs bloquantes** : Valider une mesure dimensionnelle sur une image plus jolie seulement.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Fiche complète]] ; Cas construit du projet : fidélité à une fissure versus plausibilité ; [Latent Diffusion Models, §3.1 et fig. 1](https://arxiv.org/abs/2112.10752) documente le rôle de la compression/reconstruction.
+**Non-unique inverse problem**: If the acquisition is $y=Hx+n$, multiple high-resolution $x$ images can produce almost the same $y$ when $H$ loses high frequencies. For a detail $\delta$ such as $H\delta\simeq0$, $x$ and $x+\delta$ are difficult to distinguish from the measurement. The generative model then chooses with its learned preferences, without proof that the crack added or removed is real. Consistency $H\hat x\simeq y$ is useful but insufficient to validate the details of the poorly observed kernel. This derivation explains why keeping the raw measurement and a physical reference remains essential for inspection.
+
+**Blocking errors**: Validate a dimensional measurement on a prettier image only.
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; Constructed case of the project: fidelity to a crack versus plausibility; [Latent Diffusion Models, §3.1 and fig. 1](https://arxiv.org/abs/2112.10752) documents the role of compression/reconstruction.
 Tags: cv::pilote cv::d12 famille::diagnostic cv_id::CV-DIFFUSION-003 provenance::agent pole::A pole::D pole::E
 END

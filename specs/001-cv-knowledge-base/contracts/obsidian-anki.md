@@ -1,53 +1,17 @@
-# Contrat expérimental Obsidian–Anki
+# Experimental contract Obsidian – Anki
 
-**Version** : pilote 2, 2026-10-24. Ne généraliser qu'après les essais réels.
+**Version**: 2, 2026-10-24 driver. Generalize only after the actual tests.
 
-Le chemin actuel construit un paquet `.apkg` depuis le même Markdown ; le
-plugin décrit ci-dessous reste un candidat historique. Le contrat complémentaire
-[export direct](../../../docs/export-apkg.md) fixe les identités, la conversion,
-les critères d'acceptation et les limites de cette chaîne. Aucun import de
-paquet et de plugin ne doit alimenter la même collection.
+The current path builds a `.apkg` package from the same Markdown; the plugin described below remains a historical candidate. The complementary contract [Direct Export](../../../docs/export-apkg.md) sets the identities, conversion, acceptance criteria and limits of this chain. No package and plugin imports should feed the same collection.
 
-Le dossier `vault/` est la racine à ouvrir dans Obsidian. Les cartes sont classées
-dans les répertoires thématiques définis par `scripts/vault_sections.json`,
-avec leurs fiches complètes dans `references/` et un `00-index.md` par thème.
-Un scan à racine vide couvre tous ces dossiers ; un dossier thématique permet
-un essai restreint. Seuls les fichiers de cartes contiennent des blocs de notes.
-Les exemples de syntaxe et gabarits restent hors vault. Le contrôleur vérifie
-qu'aucun bloc de note n'est ajouté dans les guides ou références.
-La configuration se fait dans l'application, sans embarquer
-ses fichiers privés ou le code du plugin dans Git.
+The `vault/` folder is the root to open in Obsidian. The flashcards are classified in the thematic directories defined by `scripts/vault_sections.json`, with their complete reference notes in `references/` and one `00-index.md` per theme. An empty root scan covers all these folders; a thematic folder allows a restricted trial. Only flashcards files contain blocks of notes. Examples of syntax and templates remain outside vault. The controller checks that no notepads are added to the guides or references. The configuration is done in the application, without embedding its private files or the plugin code in Git.
 
-Le modèle Anki s'appelle exactement `CV-Pilote` (`modelId: 1153189853` pour
-les paquets), avec les champs `ID`,
-`Question`, `Reponse`, `Source` dans cet ordre. Les trois gabarits se trouvent
-dans `anki/`. Le champ `ID` n'apparaît pas sur le recto. La source canonique
-reste le Markdown ; les réponses ne sont pas modifiées en parallèle dans Anki.
+The Anki model is called exactly `CV-Pilote` (`modelId: 1153189853` for packages), with the fields `ID`, `Question`, `Reponse`, `Source` in that order. The three templates are in `anki/`. The `ID` field does not appear on the front. The canonical source remains the Markdown; the answers are not modified in parallel in Anki.
 
-Chaque fichier de cartes définit un seul deck cible
-`CV::Pilote::<répertoire-thématique>`, par exemple
-`CV::Pilote::40-features-matching`. Les quatorze sous-decks regroupent
-282 notes et 282 cartes. Le statut reste rédigé et l’export expérimental ;
-les totaux et pôles se vérifient dans le catalogue généré.
-Un bloc commence
-par `START` sur une ligne seule, suivi du nom du modèle et de ses quatre champs ;
-les noms de champs ne sont pas traduits. `Tags:` précède `END`.
-Après synchronisation, le plugin peut ajouter son commentaire ID avant `END` :
-le préserver. Ne jamais inventer un tel commentaire avant export.
+Each flashcards file defines a single `CV::Pilote::<topic-directory>` target deck, e.g. `CV::Pilote::40-features-matching`. The fourteen subdecks include 282 notes and 282 flashcards. The status remains written and the export experimental; the totals and poles are verified in the generated catalog. A block starts with `START` on a single line, followed by the model name and its four fields; field names are not translated. `Tags:` precedes `END`. After synchronization, the plugin can add its comment ID before `END`: preserve it. Never make such a comment before exporting.
 
-Les cartes utilisent des wikilinks depuis la racine du vault vers leurs fiches
-et des sources HTTPS consultables sur Android. Le lien de fiche
-dans Anki dépend de la conversion du plugin et de la présence du vault sur
-l'appareil : il est à tester, pas présenté comme une navigation mobile garantie.
-La réponse contient le nécessaire à la révision sans ce lien.
+flashcards use wikilinks from the root of vault to their reference notes and searchable HTTPS sources on Android. The link of reference note in Anki depends on the conversion of the plugin and the presence of the vault on the device: it is to be tested, not presented as a guaranteed mobile navigation. The answer contains the necessary for the revision without this link.
 
-Maths `$…$` et `$$…$$`, blocs de code sans dépendance de coloration, image locale
-SVG originale. Le gabarit ne contient aucun script distant. Le convertisseur
-du plugin peut ajouter une CSS distante de coloration ; le style local doit
-maintenir la lisibilité hors connexion, ce qui reste à vérifier sur le client.
-Le SVG fait partie du test de transfert des médias ; son affichage sur Android
-ne peut pas être certifié par un contrôle statique.
+Maths `$…$` and `$$…$$`, code blocks without color dependency, original SVG local image. The template contains no remote scripts. The plugin's converter can add a remote CSS coloring; the local style must maintain offline readability, which remains to be checked on the client. The SVG is part of the media transfer test; its display on Android cannot be certified by a static check.
 
-Les suppressions, renommages et conflits restent expérimentaux : les exercer
-sur des copies dédiées au test selon le guide, jamais les déduire de la mise à
-jour d'un simple verso. L'adoption définitive du plugin est conditionnée aux essais.
+The deletions, renamings and conflicts remain experimental: exercise them on copies dedicated to the test according to the guide, never deduce them from the update of a simple verso. The final adoption of the plugin is subject to testing.

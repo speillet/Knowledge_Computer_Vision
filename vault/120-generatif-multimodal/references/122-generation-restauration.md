@@ -7,83 +7,106 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
 ---
-# VAE, GAN et diffusion pour génération/restauration
+# VAEs, GANs and diffusion for generation and restoration
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Générer ou restaurer une image selon un objectif distinct de la mesure physique. Entrées : bruit/conditionnement ou image dégradée ; sortie : image plausible sous modèle. Une texture ajoutée peut être visuellement crédible et factuellement fausse.
+Generate or restore an image according to a goal distinct from the physical measurement. Inputs: noise/conditioning or degraded image; output: plausible image under model. An added texture can be visually credible and factually false.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-VAE apprend un espace latent probabiliste ; GAN oppose génération et discrimination ; diffusion apprend un débruitage dans un processus bruité. La diffusion latente déplace ce processus dans l'espace d'un autoencodeur ; la compression devient une partie du compromis.
+VAE learns a probabilistic latent space; GAN opposes generation and discrimination; diffusion learns a de-noise in a noisy process. Latent diffusion moves this process into the space of an autoencoder; compression becomes part of the compromise.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Un échantillon du marginal forward au niveau $t$ peut s’écrire $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$, $\epsilon\sim\mathcal N(0,I)$, avec $\bar\alpha_t=\prod_{s=1}^{t}(1-\beta_s)$ et $\beta_s$ la variance de bruit de chaque transition. Ce n’est pas une transition élémentaire depuis $x_{t-1}$ ; $t$ indexe le niveau de bruit. L'entraînement et la procédure d'échantillonnage sont distincts. Les unités dépendent de la représentation normalisée, pas d'une échelle radiométrique physique implicite.
+A sample of the marginal forward at the $t$ level can be written as $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$, $\epsilon\sim\mathcal N(0,I)$, with $\bar\alpha_t=\prod_{s=1}^{t}(1-\beta_s)$ and $\beta_s$ the noise variance of each transition. This is not an elementary transition since $x_{t-1}$; $t$ indexes the noise level. The training and the sampling procedure are distinct. The units depend on the normalized representation, not an implicit physical radiometric scale.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Données, conditionnement, niveaux de bruit, sampler, étapes, guidance et seed. Les variantes changent ; moins d'étapes n'a pas un effet universel sur qualité et fidélité. Une sortie conditionnée ne garantit pas la conservation de tous détails observés.
+Data, conditioning, noise levels, sampler, steps, guidance and seed. Variants change; fewer steps do not have a universal effect on quality and fidelity. A conditioned exit does not guarantee the preservation of all observed details.
 
-## Coût et implémentation
+## Cost and implementation
 
-Autoencodeur, résolutions et itérations de génération dominent coût/mémoire. Aucun générateur exécuté, aucune image synthétique présentée comme mesure réelle.
+Self-encoder, resolutions and generation iterations dominate cost/memory. No generator executed, no synthetic image presented as actual measurement.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : restauration classique adaptée au bruit, puis modèle appris avec références non dégradées si disponibles. Varier niveau de dégradation et mesurer fidélité des défauts, pas seulement qualité perceptuelle globale.
+Baseline: classic restoration adapted to noise, then learned model with references not degraded if available. Vary degradation level and measure defect fidelity, not just overall perceptual quality.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Un défaut disparaît après super-résolution : vérifier que l'objectif favorise la plausibilité plutôt que sa conservation. Conserver image brute et preuve liée à la mesure utile.
+A defect disappears after super-resolution: check that the lens promotes plausibility rather than preservation. Keep raw image and proof related to the useful measure.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Génératif pour synthèse/annotation assistée selon validation ; modèle de mesure explicite pour métrologie. Les données synthétiques doivent être évaluées face aux distributions réelles.
+Generating for synthesis/assisted annotation according to validation; explicit measurement model for metrology. Synthetic data must be evaluated against actual distributions.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent distribution conditionnelle et fidélité de la restauration. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop conditional distribution and restoration fidelity. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-DIFFUSION-001
+### Case linked to CV-DIFFUSION-001
 
-**Question de travail** : Dans un modèle de diffusion, pourquoi entraînement et sampling ne sont-ils pas la même opération ?
+**Question of work**: Why are training and sampling different operations in a diffusion model?
 
-**Réponse de référence** : L’entraînement apprend une règle de débruitage sous une distribution de bruit ; le sampling utilise cette règle dans une procédure pour produire une sortie.
+**Reference Response**: Training learns a de-noise rule under a noise distribution; sampling uses this rule in a procedure to produce an output.
 
-**Décomposition du processus** : durant l'apprentissage, on construit des exemples bruités à des niveaux choisis et on optimise une cible de prédiction selon la formulation. Au sampling, les poids sont utilisés dans une suite d'opérations pour transformer une condition et du bruit en sortie. Les données vues et les décisions prises à ces deux moments diffèrent.
+**Decomposition of the process**: During learning, we build noisy examples at selected levels and optimize a prediction target according to the formulation. In sampling, weights are used in a sequence of operations to transform a condition and noise into output. The data viewed and decisions made at these two moments differ.
 
-**Exemple de contrôle** : conserver poids et conditionnement, puis comparer plusieurs nombres d'étapes et seeds sur un ensemble défini. Mesurer coût, diversité et fidélité à la condition plutôt que conclure depuis une seule image favorable. Le marginal forward à un niveau de bruit n'est pas toute la procédure inverse de génération. Une sortie vraisemblable peut remplir des détails non observés ; elle ne devient pas une mesure physique parce que l'entraînement a convergé. Pour une tâche de restauration, la conservation de l'information critique doit donc être évaluée séparément.
+**Example of check**: maintain weight and conditioning, then compare multiple steps and seeds on a defined set. Measure cost, diversity and loyalty to the condition rather than conclude from a single favorable image. The marginal forward at a noise level is not the entire reverse generation procedure. A likely exit may fill in unobserved details; it does not become a physical measurement because the training has converged. For a restoration task, the retention of critical information must therefore be evaluated separately.
 
-### Cas lié à CV-DIFFUSION-003
+### Case linked to CV-DIFFUSION-003
 
-**Question de travail** : Une super-résolution rend une image nette mais modifie une fissure. Pourquoi est-ce un défaut pour l’inspection ?
+**Question of work**: Super-resolution makes an image sharp but changes a crack. Why is this a defect in an inspection system?
 
-**Réponse de référence** : La plausibilité visuelle n’est pas la fidélité à l’observation critique ; le modèle peut supprimer ou inventer une structure.
+**Reference Response** Visual plausibility is not fidelity to critical observation; the model can suppress or invent a structure.
 
-**Pourquoi la netteté peut tromper** : plusieurs images détaillées peuvent être compatibles avec une observation basse résolution. Le modèle utilise ses régularités apprises pour choisir une reconstruction plausible. Cette décision peut créer une texture crédible sans correspondre à la fissure réellement présente.
+**Why Can Clarity Deceive?**: Multiple detailed images can be compatible with low-resolution observation. The model uses its learned regularities to choose a plausible reconstruction. This decision can create a credible texture without matching the actual crack present.
 
-**Validation proposée** : conserver le brut et, si possible, une référence acquise avec une résolution adaptée, puis mesurer conservation, largeur et localisation des défauts. Comparer à une restauration simple avec hypothèses explicites et examiner les erreurs sur cas rares. Ne pas remplacer la preuve d'acquisition par une image générée plus convaincante. Une amélioration de score perceptuel ou de reconstruction globale peut masquer la modification d'une structure petite mais critique. Le choix dépend de l'objectif : produire une illustration et mesurer une fissure n'exigent pas la même fidélité. Aucun générateur n'est exécuté dans ce cas, qui sert à raisonner sur le contrat de sortie.
+**Proposed Validation**: preserve the crude and, if possible, a reference acquired with an adapted resolution, then measure preservation, width and location of defects. Compare to a simple restoration with explicit assumptions and examine errors on rare cases. Do not replace the proof of acquisition with a more convincing generated image. An improvement in perceptual score or overall reconstruction may mask the modification of a small but critical structure. The choice depends on the objective: producing an illustration and measuring a crack do not require the same fidelity. No generator is executed in this case, which is used to reason on the output contract.
 
-**Repère documentaire de cette passe** : [Latent Diffusion Models](https://arxiv.org/html/2112.10752v2), §3, espace latent et conditionnement. Les autres développements figurent dans les [cartes associées](../122-generation-restauration.md).
+**Documentary reference for this pass**: [Latent Diffusion Models](https://arxiv.org/html/2112.10752v2), §3, latent space and conditioning. The other developments are in the [flashcards](../122-generation-restauration.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [VAE, résumé et §2](https://arxiv.org/abs/1312.6114) : modèle latent et inférence variationnelle.
-- [GAN, résumé](https://arxiv.org/abs/1406.2661) : apprentissage adversarial générateur/discriminateur.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [DDPM, processus et objectif](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html).
+### CV-DIFFUSION-001
+
+**Situation**: Why are training and sampling different operations in a diffusion model?
+
+**Noise target**: In the current DDPM parameterization, draw a level $t$ and a noise $\epsilon$, build $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$, then minimize an error in predicting this noise. With this convention, an estimate of the clean image can be written $\hat x_0=(x_t-\sqrt{1-\bar\alpha_t}\epsilon_\theta(x_t,t))/\sqrt{\bar\alpha_t}$. This relationship alone is not a complete sampler: transitions, variances, levels traveled and conditioning remain to be defined. Other settings predict another target. Naming the one used avoids applying an output interpretation formula to the wrong tensor.
+
+### CV-DIFFUSION-002
+
+**Situation**: What tradeoff is introduced by performing diffusion in an autoencoder's latent space?
+
+**Spatial size check**: If the encoder reduces each image dimension by a factor of $f$, the latent grid has about $HW/f^2$ positions, with a different number of channels. This reduction alone does not predict time savings, as decoder, attention and iterations have their own costs. Note $\tilde x=D(E(x))$ and compare $x$ to $\tilde x$ isolates the reconstruction of the autoencoder before diffusion. Specially evaluate structures smaller than the effective compression support. A good average reconstruction can preserve the large shapes while modifying a rare detail that the product precisely seeks to measure.
+
+### CV-DIFFUSION-003
+
+**Situation**: Super-resolution makes an image sharp but changes a crack. Why is this a defect in an inspection system?
+
+**Non-unique inverse problem**: If the acquisition is $y=Hx+n$, multiple high-resolution $x$ images can produce almost the same $y$ when $H$ loses high frequencies. For a detail $\delta$ such as $H\delta\simeq0$, $x$ and $x+\delta$ are difficult to distinguish from the measurement. The generative model then chooses with its learned preferences, without proof that the crack added or removed is real. Consistency $H\hat x\simeq y$ is useful but insufficient to validate the details of the poorly observed kernel. This derivation explains why keeping the raw measurement and a physical reference remains essential for inspection.
+
+**Passages consulted for these developments**: [Ho et al., DDPM](https://arxiv.org/html/2006.11239v2), Algorithm 1 – 2 and §3.2, noise prediction; algebraic reversal of the project; [Rombach et al., Latent Diffusion](https://arxiv.org/html/2112.10752v2), §3.1, compression and reconstruction; spatial balance and inverse problem deduced.
+
+## Sources and flashcards
+
+- [VAE, summary and §2](https://arxiv.org/abs/1312.6114): latent model and variational inference.
+- [GAN, summary](https://arxiv.org/abs/1406.2661): Adversarial generator/discriminator learning.
+
+- [DDPM, process and objective](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html).
 - [Latent Diffusion Models](https://arxiv.org/abs/2112.10752).
-- [Cartes associées](../122-generation-restauration.md).
+- [Related flashcards](../122-generation-restauration.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

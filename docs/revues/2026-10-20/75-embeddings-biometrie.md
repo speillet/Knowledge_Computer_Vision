@@ -1,45 +1,44 @@
-# Revue — Reconnaissance biométrique, ArcFace et PAD — 2026-10-20
+# Review –  Biometric recognition, ArcFace and PAD –  2026-10-20
 
-## Synthèse
+## Overview
 
-2 cartes auditées. 0 bloquant ; 1 important (source PAD absente) ; 1 mineur.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+2 flashcards audited. 0 blocking; 1 important (source PAD missing); 1 minor. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-2 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 1 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+2 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 1 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-BIOMETRIE-001 | Confirmé : objectifs identité/PAD distincts | distinguer identité et présentation. | 45 mots à l’entrée ; un contraste évaluable | Fiche et format contrôlés | Important | Source PAD ajoutée |
-| CV-BIOMETRIE-002 | Confirmé : FNMR mesurée à FMR fixé ; EER distinct par définition | choisir un point d’exploitation. | 47 mots à l’entrée ; un point d’exploitation | Fiche et format contrôlés | Mineur | Source datée |
+| CV-BIOMETRIE-001 | Confirmed: distinct identity/PAD objectives | Distinguish between identity and presentation. | 45 words at the entrance; an evaluable contrast | reference note and controlled format | Important | Source PAD added |
+| CV-BIOMETRIE-002 | Confirmed: FNMR measured at FMR set; EER distinct by definition | Choose an operating point. | 47 words at the entrance; an operating point | reference note and controlled format | Minor | Source dated |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Marge angulaire d’ArcFace et erreurs de comparaison FRTE vérifiées ; PAD confronté au résumé primaire du NIST. L’EER n’est pas une mesure universelle à tous les seuils : déduction du protocole de courbe. La fiche reste au repérage ; FAR/FRR système et échecs d’acquisition exigent une spécification propre pour une étude détaillée. Aucune conformité ni certification évaluée.
+ArcFace’s angular margin and FRTE comparison errors checked; PAD confronted with NIST’s primary summary. The EER is not a universal measure at all thresholds: deduction from the curve protocol. The reference note remains to be tracked; FAR/FRR system and acquisition failures require a specific specification for detailed study. No compliance or certification assessed.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; source PAD et champs Source corrigés.
+reference note revision 2; source PAD and source fields corrected.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Définir une évaluation 1:N avec galerie ouverte | Contrat d’identification seulement évoqué | Évaluation | Une carte, trois critères ; durée à mesurer | NIST FRTE 1:N |
+| Set a rating 1:N with open gallery | Identification contract only mentioned | Evaluation | One flashcard, three criteria; duration to be measured | NIST FRTE 1:N |
 
-Familles absentes : algorithme, comprehension, conception, diagnostic, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, diagnosis, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [Deng et al., ArcFace, objectif de marge angulaire](https://arxiv.org/abs/1801.07698) : PDF résumé et objectif.
-- [NIST FRTE 1:1, définitions FMR/FNMR, consulté le 2026-10-20](https://pages.nist.gov/frvt/html/frvt11.html) : paragraphes Accuracy, seuil fixé.
-- [Ngan et al. 2023, NISTIR 8491, résumé PAD](https://www.nist.gov/publications/face-analysis-technology-evaluation-fate-part-10-performance-passive-software-based)
+- [Deng et al., ArcFace, angular margin objective](https://arxiv.org/abs/1801.07698): PDF summary and objective.
+- [NIST FRTE 1:1, definitions FMR/FNMR, consulted on 2026-10-20](https://pages.nist.gov/frvt/html/frvt11.html): Accuracy paragraphs, threshold set.
+- [Ngan et al. 2023, NISTIR 8491, summary PAD](https://www.nist.gov/publications/face-analysis-technology-evaluation-fate-part-10-performance-passive-software-based)
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

@@ -1,0 +1,326 @@
+{
+  "date": "2026-10-30",
+  "environnement": "Python 3, standard library; synthetic calculations, no image/video model executed",
+  "nombre": 33,
+  "calculs": [
+    {
+      "carte": "CV-HANDEYE-001",
+      "calcul": "G0 X C0 = Y, max error",
+      "resultat": 6.661338147750939e-16,
+      "attendu": 0,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-HANDEYE-001",
+      "calcul": "G1 X C1 = Y, max error",
+      "resultat": 2.220446049250313e-16,
+      "attendu": 0,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-HANDEYE-001",
+      "calcul": "G2 X C2 = Y, max error",
+      "resultat": 4.440892098500626e-16,
+      "attendu": 0,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-MULTICALIB-001",
+      "calcul": "AX=XB on non-parallel rotations",
+      "resultat": 7.771561172376096e-16,
+      "attendu": 0,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-SVD-005",
+      "calcul": "DLT line multiplied by h",
+      "resultat": 0.0,
+      "attendu": 0,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-SVD-005",
+      "calcul": "DLT line multiplied by h",
+      "resultat": 0.0,
+      "attendu": 0,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-STEREO-001",
+      "calcul": "fB/d = 1000 × 0,2 / 20",
+      "resultat": 10.0,
+      "attendu": 10,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-STEREO-002",
+      "calcul": "sigma Z for d=20 and sigma d=0,5",
+      "resultat": 0.25,
+      "attendu": 0.25,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-STEREO-002",
+      "calcul": "sigma Z for d=10 and sigma d=0,5",
+      "resultat": 1.0,
+      "attendu": 1,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-FISHEYE-001",
+      "calcul": "angular radius to 60°, focal length 300",
+      "resultat": 314.1592653589793,
+      "attendu": 314.1592653589793,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-CLIP-002",
+      "calcul": "softmax two logits, difference log 19",
+      "resultat": 0.9500000000000001,
+      "attendu": 0.95,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-CLIP-002",
+      "calcul": "add third logit equal to first",
+      "resultat": 0.48717948717948717,
+      "attendu": 0.48717948717948717,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-NMS-001",
+      "calcul": "IoU A/B of the non-transitive counter-example",
+      "resultat": 0.5384615384615384,
+      "attendu": 0.5384615384615384,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-NMS-001",
+      "calcul": "IoU A/C of the non-transitive counter-example",
+      "resultat": 0.25,
+      "attendu": 0.25,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-NMS-004",
+      "calcul": "Penalized score, sigma 0,5",
+      "resultat": 0.22242984036255528,
+      "attendu": 0.2224298403625553,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-DETECTEURS-007",
+      "calcul": "center-ness FCOS",
+      "resultat": 0.4472135954999579,
+      "attendu": 0.4472135954999579,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-FARNEBACK-002",
+      "calcul": "displacement dx",
+      "resultat": 2.0,
+      "attendu": 2,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-FARNEBACK-002",
+      "calcul": "Displacement dy",
+      "resultat": -1.0,
+      "attendu": -1,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-FARNEBACK-003",
+      "calcul": "Image speed x",
+      "resultat": 100.0,
+      "attendu": 100,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-FARNEBACK-003",
+      "calcul": "Image speed and",
+      "resultat": -50.0,
+      "attendu": -50,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-FARNEBACK-005",
+      "calcul": "object size after three reductions",
+      "resultat": 0.75,
+      "attendu": 0.75,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-REPRESENTATIONS-001",
+      "calcul": "tokens 224, patches 16",
+      "resultat": 196.0,
+      "attendu": 196,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-REPRESENTATIONS-001",
+      "calcul": "tokens 448, patches 16",
+      "resultat": 784.0,
+      "attendu": 784,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-BIOMETRIE-002",
+      "calcul": "error-free terminal n=1000",
+      "resultat": 0.0029912495450953314,
+      "attendu": 0.0029912495450953314,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-IOU-AP-006",
+      "calcul": "IoU square side10 offset2",
+      "resultat": 0.6666666666666666,
+      "attendu": 0.6666666666666666,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-IOU-AP-007",
+      "calcul": "accuracy to prevalence0,001",
+      "resultat": 0.09016393442622951,
+      "attendu": 0.09016393442622951,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-VIDEO-002",
+      "calcul": "Probability sampling constructed",
+      "resultat": 0.1,
+      "attendu": 0.1,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-PIPELINE-002",
+      "calcul": "saturation time 400/(240-200)",
+      "resultat": 10.0,
+      "attendu": 10,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-DEPLOIEMENT-001",
+      "calcul": "Amdahl f0,1 and s2",
+      "resultat": 1.0526315789473684,
+      "attendu": 1.0526315789473684,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-MEANSHIFT-001",
+      "calcul": "Center Weighted Two Masses",
+      "resultat": 13.0,
+      "attendu": 13,
+      "tolerance": 1e-09
+    },
+    {
+      "carte": "CV-ICP-002",
+      "calcul": "Jacobian rotation x, centred difference",
+      "resultat": -0.7398076210863268,
+      "attendu": -0.7398076211353315,
+      "tolerance": 1e-08
+    },
+    {
+      "carte": "CV-ICP-002",
+      "calcul": "Jacobian rotation y, centred difference",
+      "resultat": -0.24621778260811317,
+      "attendu": -0.246217782649107,
+      "tolerance": 1e-08
+    },
+    {
+      "carte": "CV-ICP-002",
+      "calcul": "Jacobian rotation z, centred difference",
+      "resultat": 0.36999999999398625,
+      "attendu": 0.37,
+      "tolerance": 1e-08
+    }
+  ],
+  "entrees_matricielles": {
+    "hand_eye": {
+      "X": {
+        "axe": "y",
+        "angle_rad": 0.4,
+        "translation_m": [
+          0.1,
+          -0.05,
+          0.2
+        ]
+      },
+      "Y": {
+        "axe": "z",
+        "angle_rad": -0.2,
+        "translation_m": [
+          1,
+          2,
+          3
+        ]
+      },
+      "G": [
+        {
+          "axe": "x",
+          "angle_rad": 0.3,
+          "translation_m": [
+            0.1,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "axe": "y",
+          "angle_rad": -0.7,
+          "translation_m": [
+            0.3,
+            0.1,
+            -0.2
+          ]
+        },
+        {
+          "axe": "z",
+          "angle_rad": 1.2,
+          "translation_m": [
+            -0.2,
+            0.5,
+            0.7
+          ]
+        }
+      ],
+      "construction": "C_i = inverse(X) inverse(G_i) Y"
+    },
+    "dlt": {
+      "h": [
+        1.2,
+        0.1,
+        3,
+        -0.2,
+        0.9,
+        4,
+        0.001,
+        -0.002,
+        1
+      ],
+      "point_source": [
+        120,
+        80
+      ]
+    },
+    "jacobien_icp": {
+      "point_transforme": [
+        0.7,
+        -0.3,
+        1.2
+      ],
+      "normale_unitaire": [
+        0.3,
+        0.4,
+        "sqrt(0.75)"
+      ],
+      "point_cible": [
+        0.1,
+        0.2,
+        0.8
+      ],
+      "pas_rad": 1e-06,
+      "difference": "centred; rotation to the left"
+    }
+  }
+}

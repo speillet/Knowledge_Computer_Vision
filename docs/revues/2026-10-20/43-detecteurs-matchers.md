@@ -1,50 +1,49 @@
-# Revue — Détecteurs locaux, descripteurs et matchers — 2026-10-20
+# Review –  Local detectors, descriptors and matchers –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. 0 bloquant ; 1 important (source absente) ; 1 constat mineur partagé (attribution des cas).
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. 0 blocking; 1 important (source absent); 1 minor finding shared (case attribution). Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 2 mineure, 1 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 2 minor, 1 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-MATCHING-001 | Confirmé : deux valeurs propres et ambiguïté tangentielle | interpréter la matrice de structure. | 45 mots à l’entrée ; un mécanisme | Fiche et format contrôlés | Aucune | Conserver |
-| CV-MATCHING-002 | Non soutenu par les anciennes références ; confirmé par FAST/BRIEF | séparer détecteur et descripteur. | 42 mots à l’entrée ; deux rôles distincts | Fiche et format contrôlés | Important | Sources remplacées |
-| CV-MATCHING-003 | Paramètres/index confirmés ; effet aval déduit | mesurer une recherche approximative. | 54 mots à l’entrée ; quatre contrôles liés | Fiche et format contrôlés | Mineur | Attribution précisée |
-| CV-MATCHING-004 | Diagnostic construit ; symétrie non résolue par réciprocité | choisir un contrôle géométrique. | 48 mots à l’entrée ; un contrôle géométrique | Fiche et format contrôlés | Mineur | Attribution précisée |
+| CV-MATCHING-001 | Confirmed: two eigenvalues and tangential ambiguity | interpret the structure matrix. | 45 words at the entrance; a mechanism | reference note and controlled format | None | Keep |
+| CV-MATCHING-002 | Not supported by old references; confirmed by FAST/BRIEF | separate detector and descriptor. | 42 words at entry; two separate roles | reference note and controlled format | Important | Sources replaced |
+| CV-MATCHING-003 | Parameters/indexes confirmed; downstream effect inferred | Measure an approximate search. | 54 words at entry; four related controls | reference note and controlled format | Minor | Assigning specified |
+| CV-MATCHING-004 | Diagnosis built; symmetry not resolved by reciprocity | choose a geometric check. | 48 words at the entrance; a geometric check | reference note and controlled format | Minor | Assigning specified |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : matrice et score Harris, score minimum Shi–Tomasi, cercle FAST, descripteur binaire BRIEF, variantes AKAZE, compromis FLANN. Le coût exhaustif n×m est un comptage de comparaisons, pas une complexité indépendante de la dimension. Les contrôles de couverture, symétrie et succès final sont des déductions du projet. Aucun doublon de noyau détecté.
+Confirmed: Harris matrix and score, minimum Shi – Tomasi score, circle FAST, binary descriptor BRIEF, AKAZE variants, compromise FLANN. The comprehensive cost n×m is a comparison count, not a dimension-independent complexity. The coverage, symmetry and final success checks are deductions from the project. No kernel duplicates detected.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 et sources des cartes 002–004. Réponses et objectifs conservés.
+reference note revision 2 and sources of the flashcards 002 – 004. Responses and objectives retained.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune carte nouvelle ; relier au cas SIFT/ORB | Évaluation comparative déjà interrogée | Navigation | Aucun rappel ajouté | Lowe ; Rublee |
+| No new flashcard; link to case SIFT/ORB | Comparative assessment already questioned | Navigation | No reminders added | Lowe ; Rublee |
 
-Familles absentes : algorithme, comprehension, conception, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [Harris, Theory](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), matrice M et score R.
-- [Shi–Tomasi, Theory](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html), minimum des valeurs propres.
+- [Harris, Theory](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), matrix M and score R.
+- [Shi–Tomasi, Theory](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html), minimum eigenvalues.
 - [OpenCV 4.13.0, FAST, Feature Detection](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html)
 - [OpenCV 4.13.0, BRIEF, Theory](https://docs.opencv.org/4.13.0/dc/d7d/tutorial_py_brief.html)
-- [OpenCV 4.13.0, AKAZE, Detailed Description et DescriptorType](https://docs.opencv.org/4.13.0/d8/d30/classcv_1_1AKAZE.html)
+- [OpenCV 4.13.0, AKAZE, Detailed Description and DescriptorType](https://docs.opencv.org/4.13.0/d8/d30/classcv_1_1AKAZE.html)
 - [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html)
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

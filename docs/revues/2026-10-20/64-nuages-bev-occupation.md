@@ -1,53 +1,52 @@
-# Revue — Nuages, BEV et représentations d’occupation — 2026-10-20
+# Review –  Clouds, BEV and Occupational Representations –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. 0 bloquant ; 1 important (sources manquantes dans la fiche et 003) ; 1 mineur partagé.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. 0 blocking; 1 important (missing sources in the reference note and 003); 1 minor shared. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 4 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 4 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-BEV-001 | Confirmé : colonne verticale et pseudo-image | distinguer voxel pilier et BEV. | 51 mots à l’entrée ; une comparaison spatiale | Fiche et format contrôlés | Mineur | Source ciblée |
-| CV-BEV-002 | Confirmé : inconnu distinct du libre | préserver l’inconnu. | 47 mots à l’entrée ; un contrat de visibilité | Fiche et format contrôlés | Mineur | Source ciblée |
-| CV-BEV-003 | Confirmé : classification implicite et SDF distinctes | séparer les sens d’occupation. | 52 mots à l’entrée ; deux objets mathématiques | Fiche et format contrôlés | Important | Source ciblée |
-| CV-BEV-004 | Déduit de compensation ego et acquisition temporelle | vérifier une fusion BEV. | 46 mots à l’entrée ; diagnostic discriminant | Fiche et format contrôlés | Mineur | Source ciblée |
-| CV-BEV-005 | Cas construit ; distinction visibilité/sécurité correcte | concevoir une perception d’entrepôt. | 83 mots à l’entrée ; carte de conception, charge à mesurer | Fiche et format contrôlés | Mineur | Source ciblée |
+| CV-BEV-001 | Confirmed: vertical column and pseudo-image | distinguish voxel pillar and BEV. | 51 words at the entrance; a spatial comparison | reference note and controlled format | Minor | Targeted source |
+| CV-BEV-002 | Confirmed: unknown distinct from free | Preserving the unknown. | 47 words at the entrance; a visibility contract | reference note and controlled format | Minor | Targeted source |
+| CV-BEV-003 | Confirmed: Implicit classification and SDF distinct | Separate the sense of occupation. | 52 words at the input; two mathematical objects | reference note and controlled format | Important | Targeted source |
+| CV-BEV-004 | Ego compensation deduction and time acquisition | check a BEV merge. | 46 words at entry; discriminating diagnosis | reference note and controlled format | Minor | Targeted source |
+| CV-BEV-005 | Constructed case; correct visibility/security distinction | Designing a warehouse perception. | 83 words at input; flashcard design, load to measure | reference note and controlled format | Minor | Targeted source |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : PointPillars encode sans bins de hauteur, BEVFormer aligne les features historiques et traite les vues ; OctoMap encode l’inconnu ; Occupancy Networks prédit un score d’intérieur/extérieur, DeepSDF une distance signée. Les résumés primaires suffisent aux mentions de PointNet++, LSS et BEVFusion, sans auditer leurs architectures complètes. Aucune garantie de collision ni sécurité n’est tirée des scores.
+Confirmed: PointPillars encodes without height bins, BEVFormer aligns historical features and processes views; OctoMap encodes the unknown; Occupancy Networks predicts an indoor/outdoor score, DeepSDF a signed distance. The primary summaries suffice for the mentions of PointNet++, LSS and BEVFusion, without auditing their complete architectures. No guarantee of collision or safety is taken from the scores.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; références ajoutées ; sources des cartes ciblées.
+reference note revision 2; added references; targeted flashcards sources.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Quantifier mémoire d’une grille et taille de cellule | Choix résolution/portée sous budget | Raisonnement | Une carte, un calcul ; durée à mesurer | PointPillars §7.1 ; comptage de cellules du projet |
+| Quantify grid memory and cell size | Choice of resolution/budget scope | Reasoning | A flashcard, a calculation; duration to be measured | PointPillars §7.1; cell count of the project |
 
-Familles absentes : algorithme, evaluation, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, evaluation, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [Lang et al., PointPillars, §2.1](https://arxiv.org/abs/1812.05784) : HTML §2.1.
-- [Li et al., BEVFormer, §§3.3–3.4](https://arxiv.org/abs/2203.17270) : HTML §3.4, alignement ego.
-- [OctoMap, Full 3D model, consulté le 2026-10-20](https://octomap.github.io/)
-- [Mescheder et al., Occupancy Networks, §3.1](https://arxiv.org/abs/1812.03828) : équations 1–2.
-- [Park et al., DeepSDF, §3](https://arxiv.org/abs/1901.05103) : zéro et signe au §3.
-- [Qi et al., PointNet++, résumé](https://arxiv.org/abs/1706.02413)
-- [Philion–Fidler, Lift-Splat-Shoot, résumé](https://arxiv.org/abs/2008.05711)
-- [Liu et al., BEVFusion, résumé (version v3)](https://arxiv.org/abs/2205.13542)
+- [Lang et al., PointPillars, §2.1](https://arxiv.org/abs/1812.05784): HTML §2.1.
+- [Li et al., BEVFormer, §§3.3 – 3.4](https://arxiv.org/abs/2203.17270): HTML §3.4, ego alignment.
+- [OctoMap, Full 3D model, viewed on 2026-10-20](https://octomap.github.io/)
+- [Mescheder et al., Occupancy Networks, §3.1](https://arxiv.org/abs/1812.03828): equations 1 – 2.
+- [Park et al., DeepSDF, §3](https://arxiv.org/abs/1901.05103): zero and sign at §3.
+- [Qi et al., PointNet++, summary](https://arxiv.org/abs/1706.02413)
+- [Philion – Fidler, Lift-Splat-Shoot, summary](https://arxiv.org/abs/2008.05711)
+- [Liu et al., BEVFusion, summary (version v3)](https://arxiv.org/abs/2205.13542)
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API. Pages CVF indisponibles via le lecteur web ; textes arXiv des mêmes articles consultés.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation. CVF pages unavailable via the web reader; arXiv texts of the same articles consulted.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

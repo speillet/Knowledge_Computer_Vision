@@ -1,110 +1,120 @@
-# Recalage global et ICP local — cartes
+# Flashcards — Global registration and local ICP
 
-Fiche : [[60-vision-3d/references/62-recalage-global-icp|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[60-vision-3d/references/62-recalage-global-icp|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::60-vision-3d
 
 ## CV-ICP-001
 
-Objectif : séparer initialisation globale et raffinement. Famille : algorithme. Provenance : agent.
+Objective: separate global initialization and refinement. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ICP-001
-Question: Pourquoi combiner FPFH/RANSAC puis ICP plutôt que lancer ICP depuis n’importe quelle pose ?
-Reponse: **Noyau attendu** : L’initialisation globale cherche une zone compatible à partir de correspondances ; ICP affine localement et peut converger sur de mauvaises associations.
+Question: Why combine FPFH/RANSAC with subsequent ICP instead of initializing ICP from any arbitrary pose?
+Reponse: **Expected answer**: The global initialization looks for a compatible zone from matches; ICP refines locally and can converge on bad associations.
 
-**Approfondissement** : FPFH décrit la géométrie ; la pose doit être estimée puis validée. Le succès dépend aussi du recouvrement et des symétries.
+**Further explanation**: FPFH describes the geometry; the pose must be estimated and then validated. Success also depends on overlap and symmetries.
 
-**Pourquoi l'initialisation compte** : ICP construit ou actualise des associations à partir de la pose courante. Si cette pose est éloignée, les plus proches voisins peuvent représenter d'autres surfaces ; optimiser sur ces paires peut renforcer un mauvais alignement local. La recherche globale utilise d'autres indices pour proposer une région de pose avant le raffinement.
+**Why the initialization counts**: ICP builds or updates associations from the current pose. If this pose is far away, the nearest neighbors can represent other surfaces; optimizing on these pairs can reinforce a local misalignment. Global research uses other clues to propose a region of pose before refinement.
 
-**Exemple construit** : deux pieds identiques d'une pièce peuvent offrir deux alignements locaux plausibles. Un faible résidu après ICP ne désigne pas automatiquement le bon pied. Contrôler l'orientation et la translation finales, le recouvrement et des surfaces distinctives réservées. Consigner sens source→cible et unités avant toute comparaison. Les features géométriques et RANSAC apportent des hypothèses utiles ; elles restent limitées par texture géométrique, symétries et recouvrement. Une odométrie ou une contrainte métier peut fournir une autre initialisation si elle est justifiée et évaluée.
+**Constructed example**: Two identical supports on a part can offer two plausible local alignments. A weak residual after ICP does not automatically indicate the correct support. check final orientation and translation, covering and reserved distinctive surfaces. Record direction source→target and units before any comparison. The geometric features and RANSAC provide useful hypotheses; they remain limited by geometric texture, symmetry and overlap. An odometry or business constraint can provide another initialization if it is justified and evaluated.
 
-**Erreurs bloquantes** : Présenter ICP comme un solveur global garanti.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+**Concrete local loop**: At iteration $k$, transform each source point by $T_k$, search for target neighbors, reject incompatible pairs, and then estimate a $\Delta T_k$ fix. With a correction expressed in the target coordinate frame, dial $T_{k+1}=\Delta T_kT_k$. A correction in the source coordinate frame consists of the other side: mixing these conventions produces a poor optimization trajectory. The rapprochement of the neighbors and the resolution of pose are two different steps. A good initialization facilitates physical associations, while a threshold that is too wide can accept foreign surfaces and a threshold that is too strict removes the constraints necessary for refinement.
+
+**Blocking errors**: Present ICP as a guaranteed global solver.
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::algorithme cv_id::CV-ICP-001 provenance::agent pole::B pole::C
 END
 
 ## CV-ICP-002
 
-Objectif : interpréter un résidu point-to-plane. Famille : raisonnement. Provenance : agent.
+Objective: interpret a residual point-to-plane. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ICP-002
-Question: Que mesure $n^T(Rp+t-q)$ dans ICP point-to-plane ?
-Reponse: **Noyau attendu** : La composante du désalignement selon la normale cible unitaire, en unité de longueur.
+Question: What does $n^T(Rp+t-q)$ measure in point-to-plane ICP?
+Reponse: **Expected answer**: The component of the misalignment according to the normal unit target, in unit length.
 
-**Approfondissement** : Sur un plan, un déplacement tangent peut peu changer ce résidu ; contrôler observabilité et pose, pas seulement RMSE.
+**Further explanation**: On a plane, a tangent displacement can change little that residual; check observable and pose, not just RMSE.
 
-**Lecture géométrique** : le vecteur $Rp+t-q$ est une erreur 3D entre un point source transformé et son correspondant cible. Le produit avec la normale conserve seulement sa composante perpendiculaire au plan tangent local. Le carré de ce scalaire pénalise donc l'écart à cette surface dans une direction particulière.
+**Geometric reading**: The $Rp+t-q$ vector is a 3D error between a transformed source point and its target correspondent. The product with the normal retains only its component perpendicular to the local tangent plane. The square of this scalar thus penalizes the gap at this surface in a particular direction.
 
-**Exemple analytique** : pour une normale $(0,0,1)^T$, un déplacement de dix centimètres selon $x$ ne change pas directement ce résidu, tandis qu'un déplacement selon $z$ le change. Sur une scène composée d'un seul plan, certaines translations tangentes peuvent ainsi rester mal contraintes. Plusieurs orientations de surfaces peuvent fournir des contraintes complémentaires, si les associations et normales sont correctes. Le choix point-to-plane exploite la structure locale ; il ne transforme pas chaque correspondance en trois observations indépendantes. Vérifier la pose avec des contraintes ou une référence qui couvrent les mouvements utiles.
+**Analytical example**: for a normal $(0,0,1)^T$, a displacement of ten centimeters according to $x$ does not directly change this residual, while a displacement according to $z$ changes it. On a scene composed of a single plane, some tangent translations can thus remain poorly constrained. Several surface orientations can provide additional stresses, if the associations and normals are correct. The point-to-plane choice exploits the local structure; it does not transform each match into three independent observations. Check the pose with constraints or a reference that covers useful movements.
 
-**Erreurs bloquantes** : Prendre ce scalaire pour une erreur complète 3D dans toutes directions.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+**Linearization of the residual**: Put $s=Rp+t$ and apply a small disturbance to the left $s'\simeq s+\delta t+\delta\omega\times s$. The residual becomes $r'\simeq r+n^T\delta t+(s\times n)^T\delta\omega$. Its Jacobian is therefore a line of six components for the order translation then rotation. Stacking these lines directly shows the movements that the scene constrains. For all vertical normals, horizontal translations do not appear in this local model. This derivation assumes fixed matches and normals during the step; updating them to the next iteration makes the overall problem more complex than a single linear system.
+
+**Blocking errors**: Take this scalar for a complete 3D error in all directions.
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-ICP-002 provenance::agent pole::B pole::C
 END
 
 ## CV-ICP-003
 
-Objectif : refuser un petit consensus trompeur. Famille : diagnostic. Provenance : agent.
+Objective: Reject a small, misleading consensus. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ICP-003
-Question: ICP annonce un petit RMSE mais n’aligne qu’un coin de deux nuages. Que rapporter ?
-Reponse: **Noyau attendu** : Recouvrement, seuil, distribution des correspondances et erreur de pose sur référence indépendante.
+Question: ICP reports low RMSE but aligns only a corner of two point clouds. What should be reported?
+Reponse: **Expected answer**: overlap, threshold, distribution of matches and error of pose on independent reference.
 
-**Approfondissement** : Le RMSE conditionne son résultat aux paires retenues ; réduire le consensus peut faire baisser le nombre sans améliorer la tâche.
+**Further explanation**: The RMSE conditions its result to the selected pairs; reducing the consensus can lower the number without improving the task.
 
-**Pourquoi la mesure peut s'améliorer à tort** : un RMSE calculé sur les correspondances retenues résume seulement cet ensemble. Un seuil très strict peut conserver un petit coin bien aligné et exclure presque tout le reste. Le chiffre diminue alors sans que la pose explique la partie importante de la scène.
+**Why the measure can be wrongly improved**: A RMSE calculated on the selected matches summarizes only this set. A very strict threshold can keep a small corner well aligned and exclude almost everything else. The number then decreases without the pose explaining the important part of the scene.
 
-**Comparaison proposée** : annoncer seuil, unités, nombre et répartition des paires, proportion de recouvrement selon la convention du protocole, puis erreur de transformation lorsque la référence existe. Visualiser les régions non expliquées et tester les mêmes paramètres sur des scènes réservées. Si la pièce est symétrique, examiner des repères distinctifs ou des contraintes supplémentaires. La qualité d'un ajustement local n'est pas la qualité de toute la registration : il faut définir la zone utile et ce qu'un échec coûte au système avant de classer deux poses sur un scalaire.
+**Proposed comparison**: announce threshold, units, number and distribution of pairs, overlap proportion according to protocol convention, then transformation error when reference exists. View unexplained regions and test the same settings on reserved scenes. If the piece is symmetrical, consider distinctive coordinate frames or additional stresses. The quality of a local adjustment is not the quality of the entire registration: it is necessary to define the useful area and what a failure costs the system before classifying two poses on a scalar.
 
-**Erreurs bloquantes** : Classer la pose au RMSE seul.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+**Effect of the threshold on statistics**: if the distances are $d_1,\ldots,d_m$, the RMSE is $\sqrt{\sum_i d_i^2/m}$. Removing all large distances can reduce it while greatly reducing $m$; the two experiments no longer focus on the same points. Also comparing the two directions source→target and target→source can reveal asymmetrical coverage, especially with different densities. An analysis by reserved physical regions prevents a dense area from dominating the score. These measurements complete the reference error of pose; they do not, on their own, remove the ambiguity of a perfectly symmetrical object.
+
+**Blocking errors**: Classify the pose to RMSE alone.
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-ICP-003 provenance::agent pole::B pole::C
 END
 
 ## CV-ICP-004
 
-Objectif : garder les unités du recalage. Famille : pratique. Provenance : agent.
+Objective: keep the units of the registration. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ICP-004
-Question: Pourquoi réutiliser un seuil ICP de 0,02 après passage des nuages de mètres à millimètres change-t-il le problème ?
-Reponse: **Noyau attendu** : Le seuil est une longueur dans l’unité des coordonnées ; il faut propager l’échelle aux paramètres pertinents.
+Question: Why does reusing an ICP threshold of 0.02 after converting point clouds from meters to millimeters change the problem?
+Reponse: **Expected answer**: Threshold is a length in the unit of coordinates; the scale must be propagated to the relevant parameters.
 
-**Approfondissement** : Vérifier voxel et voisinages aussi, puis le modèle de bruit.
+**Further explanation**: Check voxel and neighborhoods too, then the noise pattern.
 
-**Calcul d'échelle** : 0,02 m correspond à 20 mm. Si les coordonnées sont multipliées par mille mais le seuil reste numériquement 0,02, le rayon admissible devient mille fois plus petit dans la scène physique. Le nombre de correspondances et le comportement de l'optimisation peuvent changer brutalement.
+**Calculation of scale**: 0,02 m corresponds to 20 mm. If the coordinates are multiplied by a thousand but the threshold remains numerically 0,02, the permissible radius becomes a thousand times smaller in the physical scene. The number of matches and optimization behavior can change abruptly.
 
-**Contrôle complet** : convertir ensemble les coordonnées, translations, tailles de voxel et rayons de voisinage exprimés en longueur. Les rotations restent sans unité, tandis que les coûts quadratiques suivent le carré de l'échelle. Dans un exemple construit, appliquer le même recalage avant et après conversion cohérente doit décrire la même transformation physique, à effets numériques près. Vérifier ce cas simple avant de modifier les critères d'arrêt ou l'initialisation. Une normalisation des données doit donc être une transformation de contrat tracée, et non une modification isolée des points d'entrée.
+**check complete**: convert together the coordinates, translations, voxel sizes and neighbor radii expressed in length. Rotations remain unitless, while quadratic costs follow the square of the scale. In a constructed example, applying the same registration before and after consistent conversion must describe the same physical transformation, with numerical effects to the nearest. Check this simple case before changing the stop criteria or initialization. A normalization of the data must therefore be a traced contract transformation, not an isolated modification of the entry points.
 
-**Erreurs bloquantes** : Traiter le seuil comme un nombre sans unité.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+**residuals and covariance**: if all lengths are multiplied by $a$, a metric residual becomes $r'=ar$ and its covariance becomes $\Sigma'=a^2\Sigma$. The normalized residual $r^T\Sigma^{-1}r$ then remains invariant. A robust loss set in meters also requires a converted scale, unlike a loss applied after properly processed whitening. Absolute displacement or cost tolerances can change direction with units; relative criteria must be interpreted according to their exact definition. This reasoning makes it possible to distinguish a coherent unit change from a voluntary change in physical weighting in a registration or a merger of constraints.
+
+**Blocking errors**: Treat the threshold as a unitless number.
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::pratique cv_id::CV-ICP-004 provenance::agent pole::B pole::C
 END
 
 ## CV-ICP-005
 
-Objectif : choisir une variante ICP. Famille : comparaison. Provenance : agent.
+Objective: Choose an ICP variant. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ICP-005
-Question: Point-to-plane remplace-t-il toujours avantageusement point-to-point ?
-Reponse: **Noyau attendu** : Il exploite des normales fiables et une géométrie qui contraint les mouvements utiles ; il peut être mal posé sur certaines surfaces ou normales bruitées.
+Question: Is point-to-plane ICP always a better replacement for point-to-point ICP?
+Reponse: **Expected answer**: It exploits reliable normals and a geometry that constrains useful movements; it can be ill-posed on certain surfaces or normal noise.
 
-**Approfondissement** : Comparer initialisation, estimation des normales et précision de pose dans le protocole cible.
+**Further explanation**: Compare initialization, normal estimation, and accuracy of pose in the target protocol.
 
-**Comparaison des informations utilisées** : point-to-point pénalise une différence de positions selon trois composantes ; point-to-plane utilise une approximation locale de surface. Lorsque les normales et l'initialisation sont adaptées, cette approximation peut être efficace. Si les normales sont instables ou la géométrie pauvre, le critère peut perdre son intérêt ou laisser certaines directions peu contraintes.
+**Comparison of the information used**: point-to-point penalizes a difference of positions according to three components; point-to-plane uses a local surface approximation. When normals and initialization are adjusted, this approximation can be effective. If the normals are unstable or the geometry poor, the criterion may lose its interest or leave some directions little constrained.
 
-**Ablation construite** : conserver nuages, correspondances initiales, seuil et référence, puis comparer les variantes en faisant varier séparément le bruit des normales et le recouvrement. Mesurer erreur de pose, convergence, échecs et coût. Une baisse du résidu propre à une variante n'est pas directement comparable au résidu d'une autre formulation. Le bon choix dépend de la surface observée et de la précision demandée. Ne pas utiliser un seul cas plan favorable pour annoncer une supériorité sur toutes les pièces et toutes les initialisations.
+**Constructed ablation**: keep clouds, initial matches, threshold and reference, then compare variants by varying the noise of normals and overlap separately. Measure pose error, convergence, failures and cost. A drop in the residual specific to one variant is not directly comparable to the residual of another formulation. The right choice depends on the observed surface area and the accuracy required. Do not use a single favorable plan case to advertise superiority over all coins and all initializations.
 
-**Erreurs bloquantes** : Annoncer une domination universelle d’une variante.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Fiche complète]] ; [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+**Where do the normals come from**: A current local estimator centers the neighbors, calculates their covariance matrix and takes the eigenvector of smallest eigenvalue as the plane normal. A neighborhood too small becomes sensitive to noise; too large, it mixes edges and curved surfaces. If eigenvalues do not distinguish a normal direction, the local surface is itself ambiguous. For the residual point-to-plane isolated square, reversing the sign of a normal does not change the cost; a consistent orientation may nevertheless be required by other steps such as descriptors or rejection rules. Compare the quality of pose with this provenance of the explained normals.
+
+**Blocking errors**: Announce universal domination of a variant.
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-ICP-005 provenance::agent pole::B pole::C
 END

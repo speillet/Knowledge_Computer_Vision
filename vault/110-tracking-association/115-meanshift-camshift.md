@@ -1,89 +1,97 @@
-# MeanShift et CamShift — suivre une distribution d’apparence — cartes
+# Flashcards — MeanShift and CamShift — tracking an appearance distribution
 
-Fiche : [[110-tracking-association/references/115-meanshift-camshift|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[110-tracking-association/references/115-meanshift-camshift|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::110-tracking-association
 
 ## CV-MEANSHIFT-001
 
-Objectif : expliquer une itération MeanShift. Famille : algorithme. Provenance : agent.
+Objective: Explain a MeanShift iteration. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MEANSHIFT-001
-Question: Que calcule une itération MeanShift sur une image de backprojection, et que faire si la fenêtre ne contient aucune masse ?
-Reponse: **Noyau attendu** : Calculer le centroïde des scores dans la fenêtre, puis déplacer la fenêtre vers ce centre. Si la masse totale $M_{00}$ est nulle, le centroïde est indéfini : ne pas diviser et appliquer une politique de perte/recherche explicite.
+Question: What does one MeanShift iteration compute on a backprojection image, and what should happen if the window contains no mass?
+Reponse: **Expected answer**: Calculate the centroid of scores in the window, and then move the window to that center. If the total mass $M_{00}$ is zero, the centroid is indefinite: do not divide and apply an explicit loss/search policy.
 
-**Approfondissement** : $x_c=M_{10}/M_{00}$ et $y_c=M_{01}/M_{00}$ utilisent les moments pondérés. Le processus cherche une concentration locale et dépend de l’initialisation. La backprojection ne certifie pas l’identité de l’objet.
+**Further explanation**: $x_c=M_{10}/M_{00}$ and $y_c=M_{01}/M_{00}$ use weighted moments. The process looks for local concentration and depends on initialization. The backprojection does not certify the identity of the object.
 
-**Lecture des moments** : la backprojection attribue une masse à chaque position selon sa compatibilité avec l'apparence de référence. Le centroïde pondéré donne un déplacement de fenêtre vers cette concentration. Avec deux masses 1 et 3 placées à 10 et 14 pixels, le centre vaut $(10+42)/4=13$ pixels : il n'est pas la moyenne non pondérée des positions.
+**Reading moments**: The backprojection assigns a mass to each position according to its compatibility with the reference appearance. The weighted centroid gives a window shift towards this concentration. With two masses 1 and 3 placed at 10 and 14 pixels, the center is $(10+42)/4=13$ pixels: it is not the unweighted average of positions.
 
-**Limite de décision** : si toute la masse est nulle, aucune position moyenne n'est définie par ces observations. Une sortie numérique arbitraire masquerait une absence d'information. Signaler la perte ou appliquer une recherche annoncée, puis évaluer cette politique. Même avec une masse positive, un fond de couleur semblable peut attirer la fenêtre ; la concentration trouvée ne vérifie donc pas l'identité de l'objet initialisé.
+**Decision limit**: If the whole mass is zero, no mean position is defined by these observations. An arbitrary digital output would mask a lack of information. Report the loss or apply an advertised search, and then evaluate this policy. Even with a positive mass, a background of similar color can attract the window, so the concentration found does not verify the identity of the initialized object.
 
-**Erreurs bloquantes** : Diviser par une masse nulle ; présenter le mode atteint comme un maximum global garanti.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Fiche complète]] ; [OpenCV 4.13, Meanshift and Camshift, Theory et contrats de sortie](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
+**Weighted iteration**: For $p(x,y)\ge0$ scores in window $W$, the current center displacement $c$ is $m(c)=\sum_Wp(x,y)(x,y)^T/\sum_Wp(x,y)-c$, in this uniform window model. A common multiplication of all scores by a positive constant does not change the centroid; adding a uniform mass can instead move it towards the geometric center of the window. This distinction explains why normalizing the histogram and changing its contrast are not always equivalent operations. The stop criterion measures a move or budget of iterations, without establishing that the found mode represents the original object.
+
+**Blocking errors**: Divide by zero mass; present the achieved mode as a guaranteed global maximum.
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
 Tags: cv::pilote cv::d11 famille::algorithme cv_id::CV-MEANSHIFT-001 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-MEANSHIFT-002
 
-Objectif : distinguer MeanShift et CamShift. Famille : comparaison. Provenance : agent.
+Objective: distinguish MeanShift and CamShift. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MEANSHIFT-002
-Question: La cible se rapproche de la caméra, mais une fenêtre de suivi reste trop petite. Qu’apporte CamShift par rapport au MeanShift usuel ?
-Reponse: **Noyau attendu** : Le MeanShift usuel déplace une fenêtre de taille fixe ; CamShift adapte taille et orientation à la distribution observée, en utilisant ses moments. Cela traite une variation d’apparence projetée, pas une estimation métrique de pose.
+Question: The target approaches the camera, but the tracking window remains too small. What does CamShift add compared with usual MeanShift?
+Reponse: **Expected answer**: The usual MeanShift moves a window of fixed size; CamShift adapts size and orientation to the observed distribution, using its moments. This treats a projected appearance variation, not a metric estimate of pose.
 
-**Approfondissement** : Une adaptation peut aussi englober du fond ou un distracteur si la backprojection est mauvaise. Comparer les deux à histogramme et initialisation identiques, en mesurant overlap et pertes, sans conclure à une robustesse universelle.
+**Further explanation**: An adaptation can also include background or distractor if the backprojection is bad. Compare the two to identical histogram and initialization, measuring overlap and losses, without concluding to universal robustness.
 
-**Pourquoi l'échelle évolue** : lorsque la cible occupe une plus grande surface dans l'image, une fenêtre fixe peut n'en contenir qu'une partie ou perdre son centre d'apparence. Les moments de la distribution fournissent des indications pour adapter une fenêtre à l'étendue projetée observée.
+**Why the scale is evolving**: When the target occupies a larger area in the image, a fixed window may contain only a portion of it or lose its center of appearance. The timings of the distribution provide indications for adapting a window to the projected extent observed.
 
-**Exemple de limite** : si un distracteur de même couleur entre dans la région, il contribue lui aussi aux moments. La fenêtre peut s'agrandir pour un mauvais motif, sans que l'algorithme détecte cette confusion. Comparer position, overlap et taille sur des séquences avec changement d'échelle, à histogramme constant. Vérifier ensuite illumination et occultation séparément. L'adaptation résout une dimension du contrat de suivi ; elle ne fournit ni profondeur ni identité garantie, et une boîte tournée dans l'image n'est pas une pose 3D.
+**Example of limit**: If a distractor of the same color enters the region, it also contributes to the moments. The window can expand for a bad reason, without the algorithm detecting this confusion. Compare position, overlap, and size on scale-shifting sequences at constant histogram. Then check illumination and occlusion separately. The adaptation solves one dimension of the tracking contract; it provides no depth or guaranteed identity, and a rotated box in the image is not a pose 3D.
 
-**Erreurs bloquantes** : Confondre boîte orientée 2D et orientation 3D ; annoncer une adaptation fiable en toute occultation.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Fiche complète]] ; [OpenCV 4.13, Meanshift and Camshift, Theory et contrats de sortie](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
+**Moments of extent**: Around the centroid, the matrix of normalized central moments $\begin{bmatrix}\mu_{20}&\mu_{11}\\\mu_{11}&\mu_{02}\end{bmatrix}/M_{00}$ describes the dispersion 2D of the mass. Its eigenvectors give main axes; their values inform the extent according to a window conversion convention. Close values make the orientation undetermined, as for an almost circular distribution. These quantities describe the backprojection in the image plane, not the physical axes 3D of the part. A distractor can change center, orientation and size simultaneously. The appearance mask should therefore be inspected before interpreting a suitable window as a reliable geometric measurement of the target.
+
+**Blocking errors**: Confound box oriented 2D and orientation 3D; announce a reliable adaptation in any occlusion.
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
 Tags: cv::pilote cv::d11 famille::comparaison cv_id::CV-MEANSHIFT-002 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-MEANSHIFT-003
 
-Objectif : diagnostiquer un distracteur de couleur. Famille : diagnostic. Provenance : agent.
+Objective: Diagnose a color distractor. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MEANSHIFT-003
-Question: Un suivi CamShift saute sur une autre pièce de même couleur. Pourquoi augmenter le nombre d’itérations peut-il aggraver le problème ?
-Reponse: **Noyau attendu** : Le modèle d’histogramme ne distingue pas nécessairement les deux pièces. Plus d’itérations peut converger davantage vers la mauvaise concentration. Inspecter la backprojection, la ROI et la séparation cible/fond avant de régler l’arrêt.
+Question: CamShift jumps to another part of the same color. Why can increasing the number of iterations make the problem worse?
+Reponse: **Expected answer**: The histogram model does not necessarily distinguish the two pieces. More iterations may converge more towards the wrong concentration. Inspect the backprojection, ROI, and target/bottom separation before setting the stop.
 
-**Approfondissement** : Conserver une politique de perte, ajouter une information de texture ou un détecteur si l’identité importe. Un pic de couleur fort peut être correct pour le modèle statistique et faux pour le besoin métier.
+**Further explanation**: Keep a loss policy, add texture information or a detector if identity matters. A strong color peak can be correct for the statistical model and false for the business need.
 
-**Distinction entre modèle et objectif métier** : la distribution peut présenter un mode fort sur le distracteur parce qu'il correspond bien à l'histogramme. Converger vers ce mode est compatible avec le critère d'apparence, tout en étant faux pour l'identité souhaitée. Le problème vient alors de l'information qui distingue les cibles, pas seulement du nombre d'itérations.
+**Distinction between model and business objective**: The distribution may have a strong mode on the distractor because it matches the histogram. Converging to this mode is compatible with the appearance criterion, while being false for the desired identity. The problem then comes from the information that distinguishes the targets, not just the number of iterations.
 
-**Enquête proposée** : afficher backprojection et fenêtre à l'instant du saut, puis comparer un masque ou une représentation plus discriminante à tracker constant. Tester le retour après occultation et les cas où le fond change. Un ajout de texture ou une détection peut apporter une observation nouvelle ; il faut encore vérifier son association. Si les pièces restent visuellement identiques, reconnaître l'ambiguïté et définir une politique de perte plutôt que transformer un score de couleur en certitude.
+**Proposed investigation**: display backprojection and window at the moment of the jump, then compare a mask or a more discriminating representation to constant tracker. Test the return after occlusion and the cases where the background changes. A texture addition or a detection can bring a new observation; it is still necessary to check its association. If the pieces remain visually identical, recognize ambiguity and define a policy of loss rather than turning a color score into certainty.
 
-**Erreurs bloquantes** : Assimiler convergence de MeanShift et bonne identité.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Fiche complète]] ; [OpenCV 4.13, Meanshift and Camshift, Theory et contrats de sortie](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
+**Identity missing from histogram**: A histogram retains color frequency and loses much of their spatial arrangement. Two different objects can therefore produce very similar distributions, even with a high backprojection mass. An ROI containing more pixels of the desired color can attract the window without being the target. Testing a background of the same color and then a textured distractor makes it possible to verify this hypothesis. Adding a spatial descriptor or detection changes the information used and requires a new evaluation; increasing the number of iterations does not restore the spatial relationships that the histogram model has deleted.
+
+**Blocking errors**: Assimilate convergence of MeanShift and good identity.
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
 Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-MEANSHIFT-003 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-MEANSHIFT-004
 
-Objectif : évaluer couleur et adaptation séparément. Famille : evaluation. Provenance : agent.
+Objective: Evaluate color and adaptation separately. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MEANSHIFT-004
-Question: Quel essai permet de vérifier si une amélioration vient de l’adaptation CamShift plutôt que d’un nouvel histogramme ?
-Reponse: **Noyau attendu** : Garder le même histogramme, les mêmes frames et la même initialisation ; comparer fenêtre fixe et fenêtre adaptative sur un changement d’échelle. Mesurer centre, overlap, taille et pertes, puis tester séparément un changement d’histogramme.
+Question: Which experiment distinguishes an improvement due to CamShift adaptation from one due to a new histogram?
+Reponse: **Expected answer**: Keep the same histogram, frames, and initialization; compare fixed window and adaptive window on a scale change. Measure center, overlap, size, and losses, and then separately test a histogram change.
 
-**Approfondissement** : Ajouter ensuite illumination et distracteurs un facteur à la fois. Les pixels peu saturés rendent la teinte peu informative ; documenter les masques et canaux utilisés. Ces variations sont proposées et n’ont pas été exécutées sur vidéo ici.
+**Further explanation**: Then add illumination and distractors one factor at a time. Low-saturated pixels make the shade little informative; document the masks and channels used. These variations are proposed and have not been executed on video here.
 
-**Logique de l'ablation** : changer uniquement l'adaptation de fenêtre teste son effet sur le contrat de localisation. Modifier en même temps l'histogramme change les masses sur lesquelles le déplacement est calculé, ce qui empêche d'attribuer l'amélioration à un seul mécanisme.
+**The logic of ablation**: Changing only the window adaptation tests its effect on the location contract. Modifying the histogram at the same time changes the masses on which the displacement is calculated, which prevents assigning the improvement to a single mechanism.
 
-**Expérience construite** : utiliser une séquence où la cible grossit progressivement, puis une autre où un distracteur apparaît sans changement d'échelle. Garder les mêmes critères de perte et de réinitialisation, et rapporter les erreurs sur toutes les frames. Une fenêtre adaptative peut aider le premier cas et nuire au second si la masse du distracteur la déforme. La comparaison doit rendre visible ce compromis. Les canaux, bins et masques sont des paramètres du modèle d'apparence ; leur réglage demande une autre ablation et des données réservées.
+**Experience built**: Use one sequence where the target gradually grows, then another where a distractor appears without scaling. Keep the same loss and reset criteria, and report errors on all frames. An adaptive window can help the first case and harm the second if the mass of the distractor distorts it. The comparison must make this compromise visible. Channels, bins and masks are parameters of the appearance model; their setting requires another ablation and reserved data.
 
-**Erreurs bloquantes** : Modifier simultanément histogramme, masque et tracker puis attribuer le résultat à CamShift seul.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Fiche complète]] ; [OpenCV 4.13, Meanshift and Camshift, Theory et contrats de sortie](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
+**Two factors, four tests**: To distinguish adaptation and appearance, compare histogram H1 with fixed/adaptive window, then histogram H2 with the same two policies. Measure overlap, center error and initialization losses and identical sequences. The interaction can be important: an adaptive window benefits from a clean backprojection but encompasses more background with a poorly separated histogram. A change of binning modifies the trade-off between color discrimination and noise robustness; a low-saturation mask further changes the retained pixels. These choices must be recorded separately to make the result reproducible and attributable to the mechanism actually modified.
+
+**Blocking errors**: Simultaneously edit histogram, mask and tracker and assign the result to CamShift alone.
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-MEANSHIFT-004 provenance::agent pole::C pole::D pole::E
 END

@@ -7,247 +7,293 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 9
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
 ---
-# Détection : Faster R-CNN, familles YOLO et DETR
+# Detection: Faster R-CNN, YOLO families and DETR
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Localiser et classer des objets selon boîtes, scores et labels. Entrées : images et annotations avec repères/tailles ; sorties : ensemble de détections. Les particularités sont affectation, localisation et posttraitements, au-delà des bases DL déjà acquises.
+Locate and classify objects according to boxes, scores and labels. Inputs: images and annotations with coordinate frames/sizes; outputs: detection set. The peculiarities are assignment, localization and post-processing, beyond the DL bases already acquired.
 
-### Plusieurs instances, plusieurs classes, plusieurs labels
+### Multiple instances, multiple classes, multiple labels
 
-Le nombre d'objets et le nombre de classes sont deux dimensions distinctes.
-Détecter trois voitures et deux vélos demande cinq localisations d'instances,
-réparties sur deux catégories présentes dans l'image. Un modèle de détection
-multiclasse peut donc produire plusieurs objets de chaque classe ; il ne se
-réduit ni à un label pour l'image entière ni à une boîte par classe.
+The number of objects and the number of classes are two distinct dimensions. Detecting three cars and two bicycles requires five instance locations, divided into two categories present in the image. A multiclass detection model can therefore produce several objects of each class; it does not reduce to a label for the entire image or to a box per class.
 
-La classification **multi-étiquette** concerne plusieurs labels valides pour
-une même instance, si la taxonomie le prévoit. Par exemple, un contrat peut
-retenir à la fois « véhicule » et « voiture » ; d'autres jeux n'annotent que
-la catégorie la plus spécifique. Deux labels exclusifs proposés sur le même
-objet représentent une ambiguïté à résoudre, pas automatiquement deux objets.
-Les cas et leur politique d'annotation sont des exemples du projet.
+The **Multi-label** classification concerns several valid labels for the same instance, if the taxonomy so provides. For example, a contract can retain both "vehicle" and "car"; other datasets only annotate the most specific category. Two exclusive labels offered on the same object represent an ambiguity to be solved, not automatically two objects. The cases and their annotation policy are examples of the project.
 
-YOLOv3 §2.2 illustre la distinction : ses classifieurs logistiques indépendants
-permettent une formulation multi-étiquette, contrairement à un softmax modélisant
-des classes exclusives. Cela ne suffit pas à déterminer les
-labels finaux : supervision, seuils, éventuel choix de la meilleure classe et
-posttraitement doivent suivre le contrat. Ne pas attribuer ce choix à toutes
-les versions YOLO. [YOLOv3 v1, §2.2](https://arxiv.org/html/1804.02767v1)
+YOLov3 §2.2 illustrates the distinction: its independent logistic classifiers allow a multi-label formulation, unlike a softmax modeling exclusive classes. This is not enough to determine the final labels: supervision, thresholds, possible choice of the best class and post-processing must follow the contract. Do not assign this choice to all YOLO versions. [YOLov3 v1, §2.2](https://arxiv.org/html/1804.02767v1)
 
-Pour l'inférence et l'évaluation, conserver le triplet boîte, score et classe
-pour chaque hypothèse, ainsi que son image d'origine. Distinguer ensuite :
-plusieurs hypothèses d'une instance, plusieurs instances de même classe et
-objets de classes différentes qui se recouvrent. Les
-[cas NMS multiclasses et multi-instances](81-nms.md#détections-multiples-classes-et-tailles-de-boîtes)
-montrent pourquoi le recouvrement seul ne tranche pas cette identité.
+For inference and evaluation, keep the triplet box, score and class for each hypothesis, as well as its original image. Then distinguish: several hypotheses of an instance, several instances of the same class and objects of different classes that overlap. The [NMS multi-class and multi-instance cases](81-nms.md#multiple-detections-classes-and-sizes-of-boxes) show why overlap alone does not slice this identity.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-IOU-AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md) ; [CV-NMS](81-nms.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-IOU-AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md); [CV-NMS](81-nms.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Faster R-CNN propose des régions avec RPN puis les traite avec une tête partageant des features. YOLO regroupe plusieurs conceptions one-stage dont il faut nommer la variante. DETR prédit un ensemble et utilise un matching biparti pendant l'entraînement.
+Faster R-CNN offers regions with RPN and then treats them with a head sharing features. YOLO brings together several one-stage designs whose variant must be named. DETR predicts a set and uses bipartite matching during training.
 
-### Assignation dense : exemple FCOS
+### Dense assignment: example FCOS
 
-Dans FCOS décrit aux §§3.1–3.2 de l'article, les sites de prédiction remplacent les anchors, mais doivent toujours recevoir une supervision. Un site est admissible pour une boîte s'il est à l'intérieur et si sa plus grande distance aux quatre bords appartient à la plage du niveau FPN. Parmi plusieurs boîtes admissibles, celle de plus petite aire est retenue ; sans boîte admissible, le site est négatif. Le filtrage par taille réduit les ambiguïtés entre objets superposés. Ce mécanisme n'est ni une NMS ni une règle commune à tous les détecteurs anchor-free ; les variantes avec center sampling modifient la sélection des sites.
+In FCOS described in §§3.1 – 3.2 of the article, the prediction sites replace the anchors, but must still receive supervision. A site is eligible for a box if it is inside and its greatest distance to the four edges belongs to the range of level FPN. Among several eligible boxes, the smaller box is retained; without eligible box, the site is negative. Size filtering reduces ambiguity between superimposed objects. This mechanism is neither a NMS nor a common rule for all anchor-free detectors; variants with center sampling modify site selection.
 
-### Pyramide de features : FPN
+### Features Pyramid: FPN
 
-Le chemin descendant propage les représentations sémantiques profondes vers des résolutions plus fines. Les connexions latérales ajoutent les features du backbone, moins sous-échantillonnées et mieux localisées. Dans la construction originale, une projection $1\times1$ aligne les canaux, puis une addition fusionne les cartes de même taille ; une convolution $3\times3$ suit la fusion. La pyramide ainsi construite à partir d'une image aide à traiter plusieurs échelles, notamment les petits objets, sans constituer une garantie de rappel. Simplement agrandir la dernière feature map ne restitue pas l'information des niveaux fins. Aucune pyramide ne garantit la récupération des détails supprimés dans l'image d'entrée.
+The descending path propagates deep semantic representations to finer resolutions. Side connections add the features of the backbone, less undersampled and better localized. In the original construction, a $1\times1$ projection aligns the channels, then an addition merges feature maps of the same size; a convolution $3\times3$ follows the merge. The pyramid thus constructed from an image helps to process several scales, including small objects, without being a guarantee of recall. Simply magnifying the last feature map does not return the information of the fine levels. No pyramid guarantees recovery of deleted details in the input image.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Une loss combine termes de classe et localisation selon l'affectation. Pour DETR, choisir une bijection de coût minimal lie cibles et requêtes ; les requêtes sans cible apprennent no-object. Ce matching d'apprentissage n'est ni la NMS ni le matching d'évaluation. Les boîtes normalisées doivent être restituées dans le bon repère.
+A loss combines class terms and location according to the assignment. For DETR, choose a minimum cost bijection links targets and queries; requests without a target learn no-object. This learning matching is neither the NMS nor the evaluation matching. Standardized boxes must be returned in the correct coordinate frame.
 
-### Cibles de boîtes en distances
+### Targets of boxes in distances
 
-Pour FCOS, utiliser des coordonnées continues dans l'image d'entrée : origine en haut à gauche, $x$ vers la droite, $y$ vers le bas, unités en pixels. Au site $(x,y)$ associé à la boîte $(x_0,y_0,x_1,y_1)$, les cibles sont
+For FCOS, use continuous coordinates in the input image: origin at the top left, $x$ to the right, $y$ to the bottom, units in pixels. At the $(x,y)$ site associated with the $(x_0,y_0,x_1,y_1)$ box, the targets are
 
 $$
 (l,t,r,b)=(x-x_0,\;y-y_0,\;x_1-x,\;y_1-y).
 $$
 
-Le décodage restitue $(x-l,y-t,x+r,y+b)$. Il faut d'abord ramener le site de la feature map dans le repère image ; une éventuelle normalisation par le stride doit être inversée. Exemple analytique du projet : site $(40,30)$ et boîte $(20,10,90,70)$ donnent $(20,20,50,40)$ pixels, puis exactement la boîte initiale au décodage. Les largeurs continues n'utilisent pas de terme $+1$.
+Decoding returns $(x-l,y-t,x+r,y+b)$. First, the feature map site must be returned to the coordinate frame image; any normalization by the stride must be reversed. Analytical example of the project: site $(40,30)$ and box $(20,10,90,70)$ give $(20,20,50,40)$ pixels, then exactly the initial box to decoding. Continuous widths do not use a $+1$ term.
 
-### Classification dense : Focal Loss
+### Dense classification : Focal Loss
 
-Avec $p_t$ la probabilité attribuée au label binaire correct, la forme pondérée est
+With $p_t$ the probability assigned to the correct binary label, the weighted form is
 
 $$
 \mathrm{FL}(p_t)=-\alpha_t(1-p_t)^\gamma\log p_t.
 $$
 
-$\alpha_t$ pondère la classe ; $\gamma\geq0$ module la contribution selon la difficulté. Pour $\gamma=0$, on retrouve l'entropie croisée pondérée. Pour $\gamma>0$, les exemples déjà bien classés pèsent moins, ce qui limite l'accumulation des nombreux négatifs faciles en détection dense. À $\gamma=2$, les facteurs multiplicatifs valent $0{,}01$ pour $p_t=0{,}9$ et $0{,}81$ pour $p_t=0{,}1$ ; ils modulent la loss, pas directement son gradient. La méthode ne supprime pas les négatifs et n'est pas conçue pour neutraliser les annotations erronées parmi les cas difficiles.
+$\alpha_t$ weighs the class; $\gamma\geq0$ modulates the contribution according to the difficulty. For $\gamma=0$, we find the weighted cross entropy. For $\gamma>0$, already well-ranked examples weigh less, which limits the accumulation of many easy negatives in dense detection. At $\gamma=2$, the multiplicative factors are $0{,}01$ for $p_t=0{,}9$ and $0{,}81$ for $p_t=0{,}1$; they modulate the loss, not directly its gradient. The method does not remove negatives and is not designed to neutralize erroneous annotations among difficult cases.
 
-### Localisation sans recouvrement : GIoU
+### Location without overlap : GIoU
 
-Pour deux boîtes rectangulaires alignées sur les axes, d'aires positives, $A$ et $B$, soit $C$ le plus petit rectangle aligné sur les axes qui les contient. Avec $|\cdot|$ l'aire,
+For two rectangular boxes aligned on the axes, positive areas, $A$ and $B$, $C$ is the smallest rectangle aligned on the axes that contains them. With $|\cdot|$ the area,
 
 $$
 \operatorname{GIoU}(A,B)=\operatorname{IoU}(A,B)-\frac{|C\setminus(A\cup B)|}{|C|},\qquad L_{\mathrm{GIoU}}=1-\operatorname{GIoU}(A,B).
 $$
 
-Si les boîtes restent strictement disjointes, $1-\operatorname{IoU}$ reste à 1 : ce terme seul n'indique pas comment les rapprocher. GIoU ajoute une pénalité géométrique sur la partie vide du rectangle englobant. Exemple analytique en coordonnées continues : $A=(0,0,2,2)$ et $B=(3,0,5,2)$ ont une union d'aire 8 et un rectangle $C$ d'aire 10, d'où GIoU $=-0{,}2$ et loss $=1{,}2$. Déplacer $B$ en $(2{,}5,0,4{,}5,2)$ réduit la loss à $10/9$, alors qu'IoU reste nul. Cela illustre le signal supplémentaire, sans garantir une convergence ou une AP supérieure pour toute recette.
+If the boxes remain strictly disjoint, $1-\operatorname{IoU}$ remains at 1: this term alone does not indicate how to bring them together. GIoU adds a geometric penalty on the empty part of the enclosing rectangle. Analytical example in continuous coordinates: $A=(0,0,2,2)$ and $B=(3,0,5,2)$ have a union of area 8 and a rectangle $C$ of area 10, hence GIoU $=-0{,}2$ and loss $=1{,}2$. Moving $B$ to $(2{,}5,0,4{,}5,2)$ reduces the loss to $10/9$, while IoU remains zero. This illustrates the additional signal, without guaranteeing a convergence or a superior AP for any recipe.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Résolution, assigner, poids des losses, anchors ou centres, scores, NMS/top-k. Les règles de sortie varient : la conception DETR permet de se passer de NMS. Les recettes d'une version YOLO ne définissent pas toute la famille.
+Resolution, Assign, Weight of Losses, Anchors or Centers, Scores, NMS/top-k. The output rules vary: the DETR design makes it possible to do without NMS. Recipes from a YOLO version do not define the whole family.
 
-## Coût et implémentation
+## Cost and implementation
 
-Backbone, multiéchelles, nombre de régions/requêtes et posttraitements comptent ; mesurer toute la chaîne. Aucun modèle entraîné ou benchmark exécuté.
+Backbone, multiscale, number of regions/requests and postprocessing count; measure the entire chain. No trained model or benchmark executed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-### Expérience proposée : ne faire varier que la résolution
+### Proposed experiment: only vary the resolution
 
-Ce protocole du projet est **à exécuter** ; aucun résultat sur images n'est disponible.
+This project protocol is **to be executed**; no image results are available.
 
-1. **Baseline** : choisir un checkpoint et un backend acceptant les deux tailles, figer poids, classes et jeu de validation annoté, séparé de l'entraînement par scène. Consigner les versions et la politique d'annotation. Utiliser une entrée letterbox $1280\times1280$.
-2. **Variation** : passer à $640\times640$, sans réentraînement. Garder interpolation, normalisation, politique de padding, seuil de score, NMS éventuelle et plafonds de détections identiques. Seules les dimensions et les transformations de coordonnées qui en découlent changent. Archiver les prédictions décodées avant filtrage, après seuil de score, puis après NMS ou le posttraitement propre au modèle.
-3. **Prédiction à confronter** : les petits objets pourraient perdre des détails ou être moins bien localisés ; le coût du réseau pourrait baisser. Ce sont des hypothèses, ni une baisse d'AP nécessaire ni une promesse de latence totale.
-4. **Mesures** : remettre toutes les boîtes dans l'image d'origine. Comparer AP50, AP75, AP par taille et rappel à score/IoU fixés, avec les mêmes règles d'ignore/crowd et de plafonnement. Définir les strates de taille une seule fois depuis les annotations d'origine, selon le protocole choisi ; ne pas déplacer un objet de strate parce qu'on a réduit l'entrée. Pour chaque étape de filtrage, mesurer la couverture des mêmes GT, de bonne classe et au même seuil IoU, sans compter les doublons comme des objets supplémentaires.
-5. **Diagnostic et coût** : examiner les erreurs par classe, taille, densité et étape, ainsi que les images correspondantes. Chronométrer décodage, resize/transferts, réseau et posttraitement sur le même matériel, précision et batch, avec échauffement et répétitions documentés ; rapporter latence complète et dispersion. Un cas où la GT n'est plus couverte après NMS distingue un problème de sélection d'une absence de proposition correcte.
-6. **Conclusion limitée** : formuler une hypothèse à partir des cas et tester ensuite une seule correction sur validation. Figer les choix avant test. Un gain sur ce jeu et ce checkpoint ne classe pas universellement Faster R-CNN, YOLO et DETR.
+1. **Baseline**: choose a checkpoint and a backend accepting both sizes, freeze weights, classes and annotated validation dataset, separated from the training by scene. Record the versions and the annotation policy. Use an entry letterbox $1280\times1280$.
+2. **Variation**: upgrade to $640\times640$, without retraining. Keep interpolation, standardization, padding policy, score threshold, possible NMS and identical detection ceilings. Only the resulting dimensions and coordinate transformations change. Archive decoded predictions before filtering, after score threshold, and after NMS or model-specific postprocessing.
+3. **Prediction to confront**: Small objects could lose details or be less well located; the cost of the network could drop. These are assumptions, neither a necessary AP drop nor a promise of total latency.
+4. **Measurements**: return all boxes to the original image. Compare AP50, AP75, AP per size and recall to score/IoU set, with the same ignore/crowd and cap rules. Define the size strata only once from the original annotations, depending on the protocol chosen; do not move a stratum object because the entry has been reduced. For each filtering step, measure the coverage of the same GT, of good class and at the same threshold IoU, not counting duplicates as additional objects.
+5. **Diagnosis and cost**: Examine errors by class, size, density, and step, as well as corresponding images. Time decoding, resize/transfers, network and postprocessing on the same hardware, accuracy and batch, with warm-up and documented repetitions; report full latency and dispersion. A case where the GT is no longer covered after NMS distinguishes a selection problem from a lack of a correct proposal.
+6. **Limited conclusion**: formulate a hypothesis from the cases and then test a single correction on validation. Freeze the choices before testing. A win on this dataset and this checkpoint does not rank universally Faster R-CNN, YOLO and DETR.
 
-Le cadre AP est celui de la [fiche IoU/AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md) ; les seuils de score, de NMS et d'évaluation restent distincts.
+The AP framework is that of the [reference note IoU/AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md); the score, NMS and evaluation thresholds remain distinct.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Boxes correctes avant posttraitement mais sorties manquantes : inspecter seuils/NMS. Loss bonne mais rappel faible : vérifier assignation, labels, stride, échelle et protocole avant de changer le backbone.
+Correct boxes before postprocessing but missing outputs: inspect thresholds/NMS. Loss good but weak recall: check assignment, labels, stride, scale and protocol before changing the backbone.
 
-### Lire les erreurs au-delà de l'AP globale
+### Read errors beyond the global AP
 
-TIDE §2.2 sépare six familles. Dans les cas simples sans ignore/crowd, les seuils $t_b=0{,}1$ et $t_f=0{,}5$ servent ici d'illustration, comme dans l'article ; ils ne sont pas universels. Le tableau évite les égalités aux seuils et les conflits entre plusieurs GT, qui demandent les règles complètes de l'outil.
+TIDE §2.2 separates six families. In simple cases without ignorance/crowd, the thresholds $t_b=0{,}1$ and $t_f=0{,}5$ serve here as an illustration, as in the article; they are not universal. The table avoids boundary equalities and conflicts between multiple GTs, which require the full rules of the tool.
 
-| Famille | Lecture d'un cas simple | Vérification proposée par le projet |
+| Family | Reading a simple case | Verification proposed by the project |
 | --- | --- | --- |
-| Classification | Bonne localisation, mauvaise classe | Classes proches, définition des labels et annotations |
-| Localisation | Bonne classe, recouvrement intermédiaire entre $t_b$ et $t_f$ | Repère, cibles, précision des boîtes et échelle |
-| Classification et localisation | Mauvaise classe et recouvrement intermédiaire | Examiner conjointement image, label et boîte |
-| Doublon | Bonne classe et recouvrement suffisant, GT déjà associée à une détection mieux scorée | Classe, scores et posttraitement ; ne pas compter deux TP |
-| Fond | Recouvrement inférieur à $t_b$ avec toutes les GT | Faux objet ou objet réel non annoté |
-| GT manquée | GT non détectée et non déjà expliquée par les erreurs de classification/localisation | Couverture avant/après filtrage, échelle, occultation et données |
+| Classification | Good location, poor class | Close classes, definition of labels and annotations |
+| Location | Good class, intermediate overlap between $t_b$ and $t_f$ | coordinate frame, Targets, Box Accuracy and Scale |
+| Classification and localization | Poor class and intermediate overlap | Examine jointly image, label and box |
+| Duplicate | Good class and sufficient coverage, GT already associated with better scoring detection | Class, scores and post-processing; do not count two TP |
+| Background | Cover less than $t_b$ with all GT | False object or unannotated real object |
+| GT missed | GT not detected and not already explained by classification/location errors | Coverage before/after filtering, scale, occlusion and data |
 
-Trois situations indépendantes avec une seule GT « voiture » : IoU $0{,}8$ et classe « camion » donnent une erreur de classification ; IoU $0{,}3$ et classe « voiture », une erreur de localisation ; une seconde boîte « voiture » d'IoU $0{,}8$ après une boîte mieux scorée déjà associée, un doublon. Ces classifications utilisent les hypothèses du cas, pas une causalité déduite d'un score agrégé.
+Three independent situations with a single GT "car": IoU $0{,}8$ and class "truck" give a classification error; IoU $0{,}3$ and class "car", a location error; a second "car" box of IoU $0{,}8$ after a higher-scoring box already associated, a duplicate. These classifications use case assumptions, not a causality deduced from an aggregated score.
 
-Le nombre brut d'erreurs ne mesure pas leur effet sur l'AP : leur rang par score compte. TIDE estime des effets par corrections oracles appliquées séparément à la même baseline (§§2.2–2.3). Ces gains ne s'additionnent pas en général (annexe A.1) et ne prédisent pas le gain d'un réentraînement réel. Les contrôles proposés ci-dessus sont des pistes, pas des causes prouvées par la taxonomie.
+The raw number of errors does not measure their effect on the AP: their rank by score counts. TIDE estimates effects by oracle corrections applied separately to the same baseline (§§2.2 – 2.3). These gains generally do not add up (Appendix A.1) and do not predict the gain of an actual retraining. The controls proposed above are tracks, not taxonomically proven causes.
 
-### Qualité des annotations
+### Quality of annotations
 
-Une détection non associée à une GT et non ignorée est comptée FP par le protocole, même si une inspection confirme un objet réel omis. Un score élevé ne suffit pas à trancher : vérifier l'image, la classe attendue, les objets partiels, les conventions de boîte, les exclusions et le traitement crowd/ignore. TIDE §3.4 et annexe D montrent des exemples d'annotations manquantes ou ambiguës ; l'annexe E montre aussi que la gestion des détections ignorées influence le diagnostic.
+A detection not associated with a GT and not ignored is counted FP by the protocol, even if an inspection confirms an omitted real object. A high score is not enough: check the image, the expected class, partial objects, box conventions, exclusions and crowd/ignore processing. TIDE §3.4 and Appendix D show examples of missing or ambiguous annotations; Appendix E also shows that the management of ignored detections influences diagnosis.
 
-Protocole proposé par le projet : examiner un échantillon documenté sans privilégier un modèle, appliquer des règles d'annotation stables, faire arbitrer les cas ambigus, puis versionner les corrections. Réévaluer tous les modèles comparés sur cette même version, en conservant les résultats antérieurs. Ne pas retirer sélectivement les FP d'un modèle pour améliorer son score. Une omission d'objet est différente d'une exclusion intentionnelle par la politique du jeu.
+Protocol proposed by the project: review a documented sample without privileging a model, apply stable annotation rules, arbitrate ambiguous cases, and then version corrections. Re-evaluate all models compared on the same version, keeping the previous results. Do not selectively remove the FP from a model to improve its score. An object omission is different from an intentional exclusion by the dataset’s policy.
 
-### Tailles, rapports d'aspect et précision des boîtes
+### Box sizes, aspect ratios and accuracy
 
-Une même image peut contenir simultanément de petites et grandes boîtes,
-carrées ou allongées. Une taille d'entrée fixe n'impose pas des dimensions de
-boîtes fixes : les coordonnées sont régressées ; niveaux de features et,
-selon la méthode, formes d'anchors organisent les prédictions. YOLOv3 décrit
-par exemple sa régression au §2.1 et ses prédictions à plusieurs échelles
-au §2.3 ; FCOS utilise les distances et plages déjà présentées ici.
+The same image can simultaneously contain small and large boxes, square or elongated. A fixed input size does not impose fixed box dimensions: coordinates are regressed; feature levels and, depending on the method, anchor shapes organize predictions. YOLov3 describes for example its regression to §2.1 and its multi-scale predictions to §2.3; FCOS uses the distances and ranges already presented here.
 
-La taille relative des boîtes compte aussi **après** la prédiction. Une inclusion
-peut avoir une faible IoU : voir le [calcul NMS](81-nms.md#inclusion-et-boîtes-de-tailles-très-différentes).
-À l'évaluation, une même erreur absolue peut pénaliser très différemment les
-objets. Cas analytiques du projet, rectangles alignés sur les axes, coordonnées
-continues dans un même repère en pixels,
-boîte prédite de même largeur/hauteur que sa GT mais translatée :
+The relative size of the boxes also counts as **after** prediction. An inclusion may have a low IoU: see [calcul NMS](81-nms.md#inclusion-and-boxes-of-very-different-sizes). On evaluation, the same absolute error can penalize objects very differently. Analytical case of the project, rectangles aligned on the axes, continuous coordinates in the same coordinate frame in pixels, predicted box of the same width/height as its GT but translated:
 
-| Taille GT et prédiction | Translation $(\Delta x,\Delta y)$ | Intersection / union | IoU |
+| GT size and prediction | Translation $(\Delta x,\Delta y)$ | Intersection / union | IoU |
 | --- | --- | --- | --- |
 | $4\times4$ | $(2,0)$ pixels | $8/24$ | $1/3$ |
 | $40\times40$ | $(2,0)$ pixels | $1520/1680$ | $19/21\approx0{,}905$ |
 | $40\times4$ | $(2,0)$ pixels | $152/168$ | $19/21\approx0{,}905$ |
 | $40\times4$ | $(0,2)$ pixels | $80/240$ | $1/3$ |
 
-Deux pixels d'erreur représentent une fraction différente de la dimension
-concernée. Une boîte allongée est ici bien plus sensible au déplacement sur
-son axe court. Ce n'est pas une contradiction avec l'invariance d'IoU lorsque
-l'on redimensionne **ensemble** les deux boîtes : ici l'erreur reste fixée à
-deux pixels. Dérivation de la définition d'IoU, [GIoU v2, §3, équation 1](https://arxiv.org/html/1902.09630v2), calculs vérifiés sans détecteur exécuté.
+Two error pixels represent a different fraction of the dimension involved. An elongated box here is much more sensitive to displacement on its short axis. This is not a contradiction with the invariance of IoU when we resize the two boxes **together**: here the error remains fixed at two pixels. derivation of the definition of IoU, [GIoU v2, §3, equation 1](https://arxiv.org/html/1902.09630v2), verified calculations without detector executed.
 
-Dans le protocole proposé, croiser classe, taille, rapport d'aspect et densité
-sur les mêmes annotations, puis inspecter les distributions de scores et les
-pertes avant/après posttraitement. Ne pas conclure qu'un réglage est bon pour
-les petites boîtes à partir de la seule AP moyenne ; ne pas changer de repère
-ou de convention d'aire entre tailles.
+In the proposed protocol, cross-class, size, aspect ratio, and density on the same annotations, and then inspect the score distributions and post-processing losses. Do not conclude that a setting is good for small boxes from the only average AP; do not change coordinate frame or area convention between sizes.
 
-### Cas analytique : resize, padding et NMS
+### Analytical case: resize, padding and NMS
 
-Pour une image de largeur 1920 et hauteur 1080 redimensionnée sans déformation dans $640\times640$, le facteur est $1/3$. L'image utile devient $640\times360$ ; le padding centré ajoute 140 pixels en haut et en bas. Avec coordonnées continues, origine en haut à gauche : $x'=x/3$, $y'=y/3+140$ ; l'inverse est $x=3x'$, $y=3(y'-140)$.
+For an image of width 1920 and height 1080 resized without deformation in $640\times640$, the factor is $1/3$. The useful image becomes $640\times360$; the centered padding adds 140 pixels at the top and bottom. With continuous coordinates, origin top left: $x'=x/3$, $y'=y/3+140$; the reverse is $x=3x'$, $y=3(y'-140)$.
 
-La boîte GT $(900,450,912,459)$, de taille $12\times9$, devient $G=(300,290,304,293)$, de taille $4\times3$. L'aller-retour doit restituer exactement la boîte d'origine. Cette géométrie ne prouve pas à elle seule pourquoi un modèle échoue : il faut examiner ses sorties aux différentes étapes.
+The box GT $(900,450,912,459)$, size $12\times9$, becomes $G=(300,290,304,293)$, size $4\times3$. The round trip must return exactly the original box. This geometry alone does not prove why a model fails: it is necessary to examine its outputs at the different stages.
 
-Exemple construit, une GT, une classe, aucune zone ignorée, deux candidates seulement, seuil de score $0{,}1$, hard NMS pour IoU $>0{,}4$, évaluation à IoU $0{,}5$ :
+Constructed example, a GT, a class, no area ignored, two candidates only, score threshold $0{,}1$, hard NMS for IoU $>0{,}4$, evaluation at IoU $0{,}5$:
 
-| Candidate dans l'entrée | Score | IoU avec $G$ | Avant NMS | Après NMS |
+| Candidate in the Entrance | Score | IoU with $G$ | Before NMS | After NMS |
 | --- | --- | --- | --- | --- |
-| $P=(300,290,304,293)$ | $0{,}8$ | 1 | Couvre la GT | Supprimée |
-| $Q=(301{,}5,290,305{,}5,293)$ | $0{,}9$ | $5/11\approx0{,}455$ | Ne couvre pas la GT au seuil d'évaluation | Conservée |
+| $P=(300,290,304,293)$ | $0{,}8$ | 1 | Covers the GT | Deleted |
+| $Q=(301{,}5,290,305{,}5,293)$ | $0{,}9$ | $5/11\approx0{,}455$ | Does not cover the GT at the assessment threshold | Preserved |
 
-Les deux candidates passent le seuil de score. Leur IoU mutuelle vaut $5/11>0{,}4$ : Q, mieux scorée, supprime P. Le rappel de cette GT passe de 1 à 0 ; ici, la perte se situe dans le posttraitement, car une proposition correcte existait à cette résolution. Cela ne démontre pas que toute baisse d'AP après resize vient de NMS. Si aucune candidate correcte n'existe avant filtrage, examiner plutôt la taille effective, les features, les données et l'assignation d'entraînement. Le mécanisme de suppression est documenté par Soft-NMS §4 ; les nombres sont un calcul du projet, sans inférence réseau.
+Both candidates pass the score threshold. Their mutual IoU is worth $5/11>0{,}4$: Q, better scored, removes P. The recall of this GT goes from 1 to 0; here, the loss lies in the postprocessing, because a correct proposal existed at this resolution. This does not show that any drop in AP after resize comes from NMS. If no correct candidate exists before filtering, look instead at the actual size, features, data, and training assignment. The deletion mechanism is documented by Soft-NMS §4; the numbers are a calculation of the project, without network inference.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Comparer architecture + recette + supervision + coût complet ; la catégorie one/two-stage seule ne prédit pas la qualité ni la latence.
+Compare architecture + recipe + supervision + full cost; the one/two-stage category alone does not predict quality or latency.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent contrats d’architecture, appariement et décomposition des erreurs. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These built cases develop architectural contracts, matching and decomposition of errors. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-DETECTEURS-001
+### Case linked to CV-DETECTEURS-001
 
-**Question de travail** : Dans Faster R-CNN, traiter des régions implique-t-il de relancer le backbone complet sur chaque crop ?
+**Question of work**: In Faster R-CNN, does processing regions require running the entire backbone again on each crop?
 
-**Réponse de référence** : Non : la conception partage des features entre RPN et tête par régions, avec extraction de représentations régionales.
+**Reference Response**: No: the design shares features between RPN and head by region, with extraction of regional representations.
 
-**Lecture du partage de calcul** : le backbone transforme l'image en cartes de features communes. Le réseau de propositions et la tête exploitent ensuite ces représentations selon la variante. Le traitement par régions ajoute un coût lié au nombre et à la taille des représentations régionales, sans imposer de refaire toute l'extraction sur l'image brute pour chacune.
+**Reading the calculation share**: the backbone transforms the image into common feature maps. The network of proposals and the head then exploit these representations according to the variant. Regional processing adds a cost related to the number and size of regional representations, without requiring that all extraction be repeated on the raw image for each.
 
-**Exemple de comparaison construite** : deux implémentations peuvent avoir le même backbone mais des nombres de propositions différents, et donc des temps de tête différents. Mesurer extraction, propositions, opérations régionales et posttraitement séparément pour identifier le goulet. Une catégorie two-stage décrit l'organisation des décisions ; elle ne donne pas une formule universelle de latence. Conserver résolution, batch et seuils dans le protocole, et comparer aussi la qualité sur les petits objets et scènes denses. Le choix produit repose sur ce bilan complet, plutôt que sur le seul nombre d'étapes annoncé.
+**Example of comparison built**: Two implementations can have the same backbone but different number of proposals, and therefore different lead times. Measure extraction, proposals, regional operations and postprocessing separately to identify the drop. A two-stage category describes the organization of decisions; it does not give a universal latency formula. Keep resolution, batch and thresholds in the protocol, and also compare quality on small objects and dense scenes. The product choice is based on this complete balance sheet, rather than just the number of steps announced.
 
-### Cas lié à CV-DETECTEURS-013
+### Case linked to CV-DETECTEURS-013
 
-**Question de travail** : Une tâche demande de localiser trois voitures et deux vélos, avec un seul label par objet. Est-ce nécessairement une classification multi-étiquette par boîte ? Distinguer nombre d'instances, classes présentes et labels par instance.
+**Question of work**: A task requires localizing three cars and two bicycles, with one label per object. Is this necessarily multilabel classification per box? Distinguish the number of instances, classes present and labels per instance.
 
-**Réponse de référence** : Non : il y a cinq instances, deux classes présentes, mais un label par instance dans ce contrat. La détection peut produire plusieurs instances d'une même classe. Multi-étiquette signifie que plusieurs labels sont valides pour une même instance, selon la taxonomie.
+**Reference Response**: No: there are five instances, two classes present, but one label per instance in this contract. Detection can produce multiple instances of the same class. Multi-tag means that multiple labels are valid for the same instance, depending on the taxonomy.
 
-**Exemple de contrat** : cinq objets distincts de deux catégories demandent cinq décisions de localisation et de classe, sans imposer plusieurs labels sur chacune. Une taxonomie hiérarchique peut ajouter une autre règle, mais il faut alors la définir dans les annotations et les sorties attendues.
+**Example of contract**: Five distinct objects in two categories require five location and class decisions, without imposing multiple labels on each. A hierarchical taxonomy can add another rule, but it must then be defined in the annotations and expected outputs.
 
-**Conséquence pour le pipeline** : des boîtes proches peuvent représenter doublons, catégories concurrentes ou objets distincts. NMS ne connaît pas directement cette sémantique. Examiner labels par instance et couverture des annotations avant de transformer une sortie multiclasse en une règle de suppression. Cette distinction relie supervision, posttraitement et évaluation, au lieu de déduire le contrat du seul nombre de labels présents dans l'image.
+**Impact on the pipeline**: Close boxes can represent duplicates, competing categories, or separate objects. NMS does not know this semantics directly. Examine labels by instance and annotation coverage before turning a multiclass output into a deletion rule. This distinction links supervision, postprocessing and evaluation, instead of deducting the contract from the number of labels present in the image alone.
 
-**Repère documentaire de cette passe** : [DETR](https://arxiv.org/html/2005.12872v3), §3, prédiction d’ensemble et matching. Les autres développements figurent dans les [cartes associées](../82-detection-fasterrcnn-yolo-detr.md).
+**Documentary reference for this pass**: [DETR](https://arxiv.org/html/2005.12872v3), §3, ensemble prediction and matching. The other developments are in the [flashcards](../82-detection-fasterrcnn-yolo-detr.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) et [YOLOX, §2.1 : passage anchor-free](https://arxiv.org/abs/2107.08430), exemples concrets de variantes.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-DETECTEURS-001
+
+**Situation**: In Faster R-CNN, does processing regions require running the entire backbone again on each crop?
+
+**Cost scales**: If the backbone produces a map of $H'\times W'\times C$ features, this extraction is shared. A head then processes $K$ regions reduced to a fixed spatial representation; its work grows with the number of proposals selected, according to the architecture. Increasing K can improve coverage while weighing down head and post-processing, without changing the backbone’s main cost. Measuring the recall of proposals before classification is therefore useful: a region never proposed will not be found by a better head. A poor final score may come from RPN coverage or from the decision on already correct regions.
+
+### CV-DETECTEURS-002
+
+**Situation**: Why must a version be named when describing a YOLO model's anchors, losses or NMS?
+
+**Versioned Decoding**: An anchor offset representation, edge distances, and distance distribution do not describe the same regression tensor. Box conversion requires sites or anchors, strides, activations, and conventions of the exact variant. An export can move this decoding in the graph and remove a Python step without changing its mathematical necessity. For a given revision, make a known output and then check decoded box and back into the original image. This interface test separates a decoder error from a drive difference, without claiming that a choice is shared by the entire YOLO family.
+
+### CV-DETECTEURS-003
+
+**Situation**: What is Hungarian matching used for during DETR training, and why is it different from NMS?
+
+**Cost of Matching**: For $y_i$ targets and $\hat y_j$ predictions, we look for an injective assignment minimizing $\sum_i C(y_i,\hat y_{\sigma(i)})$, where the cost combines class compatibility and geometry according to the formulation. Swap the order in which annotations are presented should not change the overall problem. Once the assignment is selected, the losses supervise the pairs selected and the lack of subject matter of the other requests. Discreet pair selection and differentiable loss calculation are two operations. The number of requests also limits the number of possible exits; a scene denser than this ability requires an explicit examination of this constraint.
+
+### CV-DETECTEURS-004
+
+**Situation**: Track A — diagnosis: with checkpoint and images fixed, small-object AP falls when $1920\times1080$ images are resized to a $640\times640$ input with preserved aspect ratio and centered padding. Some objects originally measure $12\times9$ pixels. Which checks distinguish possible causes?
+
+**Controllable Transformation**: in this ideal letterbox, $x'=x/3$ and $y'=y/3+140$; the reverse is $x=3x'$ and $y=3(y'-140)$. A one-pixel error in the grid already corresponds to three pixels in the original, under this convention. For an object that has become $4\times3$, a displacement of one pixel represents a significant fraction of its width or height and can cause the IoU to drop sharply. Check the rounding actually applied by preprocessing rather than assuming this exact pattern for any image. Comparing candidates before filtering then makes it possible to distinguish between sensitive location and deletion of an initially correct prediction.
+
+### CV-DETECTEURS-005
+
+**Situation**: Which information should accompany a speed comparison between two detectors?
+
+**Measurement under load**: note for each image arrival, beginning of service and decision available. Full latency includes queue wait and service; maximum throughput does not explain this wait when arrivals are irregular. Dense scenes can increase decoding and NMS while the backbone time remains close. Compare a distribution of number of candidates, then percentiles of delay and the rate of decisions too late. A high batch can dampen the engine but wait for several images before starting. The protocol must therefore reproduce the pace and processing policy of the product, in addition to the equipment announced.
+
+### CV-DETECTEURS-006
+
+**Situation**: In FCOS as described in paper §§3.1–3.2, how is a prediction location assigned its training target, including when several annotated boxes contain it?
+
+**Site and Level**: The four target distances verify $l=x-x_0$, $t=y-y_0$, $r=x_1-x$ and $b=y_1-y$. Eligibility by level is for $\max(l,t,r,b)$ in the cited formulation, not just on the box area. Two sites in the same box can therefore have different maximum distances. The "smaller area" rule sets out which boxes are still eligible; it does not allow an out of range box. To audit the assignment, count and view positives by object and level, keeping the exact edge conventions of the implementation. This can reveal a rare oversight without immediately blaming the loss.
+
+### CV-DETECTEURS-007
+
+**Situation**: In FCOS, image location $(x,y)=(40,30)$ is assigned to box $(x_0,y_0,x_1,y_1)=(20,10,90,70)$. Using continuous input-pixel coordinates with a top-left origin, what are its four targets $(l,t,r,b)$ to the left, top, right and bottom edges?
+
+**Geometry of the site**: The given distances have sums $l+r=70$ and $t+b=60$, equal to the width and height of the box. The center of it is $(55,40)$, distinct from the $(40,30)$ site. The center-ness target described by FCOS is $\sqrt{\min(l,r)/\max(l,r)\;\min(t,b)/\max(t,b)}$, here $\sqrt{(20/50)(20/40)}=\sqrt{0,2}\simeq0,447$. It expresses a geometric centrality, not a guaranteed IoU of the predicted box. This reading links distance asymmetry, auxiliary target and ranking, while keeping separate the calculated target values and the actually learned outputs.
+
+### CV-DETECTEURS-008
+
+**Situation**: In dense detection, how does Focal Loss reduce the dominance of many easy negatives beyond simple class weighting?
+
+**Contribution and gradient**: Comparing two examples of the same class with $p_t=0,99$ and $p_t=0,5$ gives, at $\gamma=2$, respective factors $10^{-4}$ and 0,25. The second is thus of much greater relative importance. The gradient does not correspond to that of a cross entropy multiplied by a fixed constant: the factor itself depends on $p_t$ and its derivative participates in the optimization. The numbers of positives, assignment rules and loss reduction in the lot still count. To interpret a workout, review these conventions before assigning an improvement or instability to the choice of $\gamma$ alone.
+
+### CV-DETECTEURS-009
+
+**Situation**: Two axis-aligned rectangular boxes $A$ and $B$ remain strictly disjoint during a small displacement. Why does loss $1-\operatorname{IoU}$ provide no guidance for this displacement, and which term does GIoU add?
+
+**Information still limited**: For two disjoint boxes whose union and enclosing rectangle keep the same area, GIoU can remain constant in certain local directions. The additional term provides a signal in many cases without becoming a complete and perfectly conditioned measure of all movements. Edges where intersection or enclosing rectangle change also introduce regime changes in the derivative. A small perturbation test of each coordinate makes it possible to compare the variations of loss to the expected geometry. This analysis concerns the regression of valid boxes; it does not correct a bad target matching or a wrong class.
+
+### CV-DETECTEURS-010
+
+**Situation**: For small-object detection, what do FPN's lateral connections provide beyond simply upsampling the backbone's final feature map?
+
+**Recurrence of fusion**: note $M_l=L_l(C_l)+\operatorname{Upsample}(M_{l+1})$ the fused map of the descending path, then $P_l=\operatorname{Conv}_{3\times3}(M_l)$ the smoothed output of the level, where $C_l$ is the feature of the backbone at the $l$ level and $L_l$ the lateral projection of the channels. Spatial sizes and alignment must be compatible for addition. A mismatch error can keep tensor shapes valid while harming the location. The map therefore merges observed lateral information and a reassembled context; it does not create a high-resolution image. Linking the strides to the actual sizes of the objects helps to choose which outputs and which levels to analyze.
+
+### CV-DETECTEURS-011
+
+**Situation**: Three independent cases each have one “car” GT instance, without ignore/crowd annotations. With TIDE thresholds $t_b=0{,}1$ and $t_f=0{,}5$, which error describes each FP: (a) “truck,” IoU $0{,}8$; (b) “car,” IoU $0{,}3$; (c) “car,” IoU $0{,}8$, with the GT already matched to a higher-score box?
+
+**Counted error and cause**: In the duplicate case, removing the first correct prediction could turn the second into TP without improving the object recall. This shows that the categories also depend on matching's ranking and rules. Conversely, correcting a class can retrieve a GT and simultaneously delete a FP according to the protocol. The oracle gains of several families do not necessarily add up as independent error numbers. For a real intervention, freeze the initial predictions, apply a precise correction and recalculate the complete metric. Diagnosis refers to a family of observed errors; the causal mechanism remains to be established.
+
+### CV-DETECTEURS-012
+
+**Situation**: A detector produces a highly confident box with no matched GT, although the image appears to contain an object of the target class. What should be checked before concluding that it confused the background with an object?
+
+**check of annotations**: A sample of disagreements from multiple models and regions drawn independently of their scores. An audit limited to very confident predictions of a system may favor its own biases. For each case, keep image, inclusion rule, old label, arbitration and new version of the dataset. A crowd or ignore zone does not necessarily follow the same count as an isolated object; apply the rules of the exact evaluator before qualifying a FP. After correction, recalculate all comparisons and keep previous results as historical, without mixing metrics produced on two different ground truths.
+
+### CV-DETECTEURS-013
+
+**Situation**: A task requires localizing three cars and two bicycles, with one label per object. Is this necessarily multilabel classification per box? Distinguish the number of instances, classes present and labels per instance.
+
+**Probability and contract of labels**: A softmax per box requires that the probabilities of the chosen categories share a total mass, which corresponds to an exclusive choice in this set. Independent sigmoids can represent multiple labels simultaneously, but do not automatically make "vehicle", "car" and exclusive categories consistent. The dataset of annotations and the rule of decision must specify these relationships. At the image scale, aggregating the presence of a category can lose the number of instances; three cars become a single presence indicator. Maintaining instance identities and their boxes avoids confusing scene classification with object detection.
+
+**Passages consulted for these developments** : [Carion et al., DETR](https://arxiv.org/html/2005.12872v3), §3.1, matching and supervision; project protocols and calculations; [Tian et al., FCOS](https://arxiv.org/html/1904.01355v5), §3.3center-ness, equation 3 ; example calculated by project; [Lin et al., Focal Loss](https://arxiv.org/html/1708.02002v2), §3, modulation of the loss; factors and commentary on the gradient deduced; [Rezatofighi et al., GIoU](https://arxiv.org/html/1902.09630v2), Algorithme 1 and §3.1 ; example of built sensitivity; [Lin et al., FPN](https://arxiv.org/html/1612.03144v2), §3, flashcards Merged and Smoothed 3×3 outings, figure 3.
+
+## Sources and flashcards
+
+- [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) and [YOLOX, §2.1: anchor-free passage](https://arxiv.org/abs/2107.08430), concrete examples of variants.
 
 - [Faster R-CNN, §3](https://arxiv.org/abs/1506.01497).
 - [YOLO original, §2](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html).
-- [DETR, §§3.1–3.2](https://arxiv.org/abs/2005.12872).
-- [FCOS, version 5, §§3.1–3.3 : sites, distances, niveaux et variantes de sélection](https://arxiv.org/html/1904.01355v5).
-- [Focal Loss, version 2, §§2 et 3.1–3.2 : déséquilibre, pondération et difficulté](https://arxiv.org/html/1708.02002v2).
-- [GIoU, version 2, §3 et algorithmes 1–2 : géométrie et loss](https://arxiv.org/html/1902.09630v2).
-- [FPN, version 2, §3 et figure 3 : chemins descendant et latéraux](https://arxiv.org/html/1612.03144v2).
-- [TIDE, version 2, §§2.2–2.3, 3.4 et annexes A.1, D–E : erreurs, oracles et annotations](https://arxiv.org/html/2008.08115v2).
-- [Soft-NMS, §4 : interaction scores, suppression et qualité de localisation](https://arxiv.org/html/1704.04503), consulté le 2026-10-21.
-- [YOLOv3, version 1, §§2.1–2.3 : régression, classes et échelles](https://arxiv.org/html/1804.02767v1), complément consulté le 2026-10-21.
-- [Cartes associées](../82-detection-fasterrcnn-yolo-detr.md).
+- [DETR, §§3.1 – 3.2](https://arxiv.org/abs/2005.12872).
+- [FCOS, version 5, §§3.1 – 3.3: sites, distances, levels and selection variants](https://arxiv.org/html/1904.01355v5).
+- [Focal Loss, version 2, §§2 and 3.1 – 3.2: imbalance, weighting and difficulty](https://arxiv.org/html/1708.02002v2).
+- [GIoU, version 2, §3 and algorithms 1 – 2: geometry and loss](https://arxiv.org/html/1902.09630v2).
+- [FPN, version 2, §3 and figure 3: descending and lateral paths](https://arxiv.org/html/1612.03144v2).
+- [TIDE, version 2, §§2.2 – 2.3, 3.4 and appendices A.1, D – E: errors, oracles and annotations](https://arxiv.org/html/2008.08115v2).
+- [Soft-NMS, §4: interaction scores, deletion and location quality](https://arxiv.org/html/1704.04503), accessed on 2026-10-21.
+- [YOLov3, version 1, §§2.1 – 2.3: regression, classes and scales](https://arxiv.org/html/1804.02767v1), supplement consulted on 2026-10-21.
+- [Related flashcards](../82-detection-fasterrcnn-yolo-detr.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.
 
-Enrichissement du 2026-10-21 : cartes CV-DETECTEURS-006 à 010, mécanismes d’apprentissage et FPN. Sources scientifiques consultées ; calculs synthétiques vérifiés, sans entraînement ni benchmark.
+Enrichment of the 2026-10-21: flashcards CV-DETECTEURS-006 to 010, learning mechanisms and FPN. Scientific sources consulted; synthetic calculations verified, without training or benchmark.
 
-Enrichissement du diagnostic du 2026-10-21 : cartes CV-DETECTEURS-011 et 012, cas 004 précisé et protocole de variation de résolution proposé. Cas géométrique/NMS calculé ; expérience sur images non exécutée.
+Enrichment of the diagnosis of 2026-10-21: flashcards CV-DETECTEURS-011 and 012, specified case 004 and proposed resolution variation protocol. Geometric case/NMS calculated; experiment on images not executed.
 
-Complément du 2026-10-21 : distinction instances/classes/étiquettes, carte CV-DETECTEURS-013, tailles et rapports d’aspect ; renvois vers les cas NMS multiclasses et imbriqués. Calculs synthétiques, sans mesure sur images.
+2026-10-21 add-in: instances/classes/tags distinction, flashcard CV-DETECTEURS-013, aspect ratios and sizes; cross-references to NMS multiclass and nested cases. Synthetic calculations, without measurement on images.

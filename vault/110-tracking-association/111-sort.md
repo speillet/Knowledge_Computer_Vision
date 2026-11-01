@@ -1,180 +1,196 @@
-# Cartes pilotes — SORT
+# Flashcards — SORT — multi-object tracking with motion and association
 
-Fiche : [[110-tracking-association/references/111-sort|SORT]]. Provenance : agent.
+reference note: [[110-tracking-association/references/111-sort|SORT]]. Source: Agent.
 
 TARGET DECK: CV::Pilote::110-tracking-association
 
 ## CV-SORT-001
 
-Objectif : séparer les responsabilités du tracker. Famille : comprehension. Provenance : agent.
+Objective: Separate the responsibilities of the tracker. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-001
-Question: Comment SORT transforme-t-il les détections successives en pistes, et pourquoi Kalman ne résout-il pas à lui seul l'identité ?
-Reponse: **Noyau attendu** : prédire les pistes avec Kalman, associer les boîtes aux détections par IoU et affectation, corriger les associées, puis gérer créations et disparitions. L'association choisit la mesure d'une piste ; Kalman estime l'état après ce choix, sans vérifier l'identité physique.
+Question: How does SORT turn successive detections into tracks, and why does Kalman filtering alone fail to resolve identity?
+Reponse: **Expected answer**: predict tracks with Kalman, associate boxes with detections by IoU and assignment, correct associates, and then manage creations and disappearances. The association chooses the measure of a track; Kalman estimates the state after this choice, without verifying the physical identity.
 
-**Approfondissement** : ![Pipeline causal SORT](../99-Ressources/cv-sort-pipeline.svg)
+**Further explanation**: ![Causal Pipeline SORT](../99-Ressources/cv-sort-pipeline.svg)
 
-Schéma original du projet, agent, licence MIT. Un filtre peut corriger avec confiance une mesure mal associée. SORT original n'utilise pas d'apparence pour lever cette ambiguïté et ne remplace pas le détecteur.
+Original scheme of the project, agent, MIT license. A filter can confidently correct a mismatched measurement. SORT original does not use appearance to remove this ambiguity and does not replace the detector.
 
-**Exemple de responsabilité** : au croisement de deux personnes, deux mesures peuvent être géométriquement plausibles pour une piste. Le filtre prédit des états et leurs incertitudes ; l'affectation choisit les couples effectivement utilisés pour la correction. Si ce choix échange les personnes, un état lisse peut suivre avec assurance la mauvaise identité.
+**Example of liability**: At the intersection of two people, two measurements can be geometrically plausible for a track. The filter predicts states and their uncertainties; the assignment chooses the torques actually used for the correction. If this choice exchanges people, a smooth state can confidently follow the wrong identity.
 
-**Diagnostic proposé** : conserver pour chaque frame les boîtes avant association, les prédictions, les coûts et les événements de création ou suppression. Une superposition finale sans cette chronologie ne permet pas de localiser l'erreur. Le schéma causal sépare ces fonctions pour choisir un correctif : améliorer le détecteur, la prédiction, l'association ou le cycle de vie selon la trace observée, plutôt qu'attribuer tout problème à Kalman.
+**Proposed diagnosis**: keep for each frame the boxes before association, predictions, costs and creation or deletion events. A final overlay without this timeline does not locate the error. The causal scheme separates these functions to choose a fix: improve the detector, prediction, association or life cycle according to the observed trace, rather than assigning any problem to Kalman.
 
-**Erreurs bloquantes** : attribuer la réidentification à Kalman ou attribuer la production des détections au tracker SORT.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [Bewley et al., §3](https://arxiv.org/abs/1602.00763).
+**Causal Order**: For each frame, the prediction advances all states even if the detector provides nothing. The association then compares measures and predicted tracks; only accepted pairs cause a correction. The remaining detections and the remaining trackss finally pass into rules of creation, confirmation, memorization or deletion. Invert correction and association would use a measure whose identity is not yet decided. A useful trace therefore also preserves the non-associations, and not only the couples retained. The internal state of the filter, the ID of track and the box actually emitted are three related but distinct elements of the output contract.
+
+**Blocking errors**: assign the re-identification to Kalman or assign the production of detections to the SORT tracker.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Bewley et al., §3](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::comprehension cv_id::CV-SORT-001 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-SORT-002
 
-Objectif : interpréter un état et ses unités. Famille : raisonnement. Provenance : agent.
+Objective: interpret a state and its units. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-002
-Question: Dans SORT original, que représentent les sept composantes d'état et quelles hypothèses temporelles faut-il vérifier quand la cadence change ?
-Reponse: **Noyau attendu** : $[u,v,s,r,\dot u,\dot v,\dot s]^T$ contient centre, aire, rapport largeur/hauteur et trois vitesses. La mesure porte sur $[u,v,s,r]$ ; le rapport est constant dans le modèle déterministe. La référence prend une frame comme pas de temps.
+Question: In original SORT, what do the seven state components represent, and which timing assumptions need checking when frame rate changes?
+Reponse: **Expected answer**: $[u,v,s,r,\dot u,\dot v,\dot s]^T$ contains center, area, width/height ratio and three speeds. The measurement is $[u,v,s,r]$; the ratio is constant in the deterministic model. The reference uses one frame as its time step.
 
-**Approfondissement** : centre en pixels, aire en pixels carrés, rapport sans unité ; vitesses par frame. Appeler le tracker à chaque frame même sans détection. Baisse de cadence et frames sautées changent les déplacements et l'incertitude : vérifier modèle, fréquence des appels et unités avant de régler les seuils.
+**Further explanation**: center in pixels, area in square pixels, ratio without unit; speeds per frame. Call the tracker at each frame even without detection. Lower frame rates and skipped frames change movement and uncertainty: check pattern, frequency of calls and units before setting thresholds.
 
-**Pourquoi les unités importent** : un déplacement de centre par frame change de signification si l'intervalle entre appels change. Deux frames consécutives à dix images/s sont plus éloignées dans le temps qu'à trente images/s. Le modèle et son bruit doivent correspondre à cette convention, ou être adaptés avec un pas temporel explicite.
+**Why Units Matter**: A shift of center per frame changes meaning if the interval between calls changes. Two frames consecutive to ten frames per second are more distant in time than to thirty frames per second. The model and its noise must correspond to this convention, or be adapted with an explicit time step.
 
-**Contrôle construit** : conserver une même séquence horodatée et comparer un traitement sans saut puis avec sous-échantillonnage. Vérifier mouvements prédits, erreurs d'association et durée physique de persistance des pistes. Un paramètre d'âge en nombre de frames ne conserve pas automatiquement sa durée en secondes. Ces éléments expliquent pourquoi un simple changement de cadence peut modifier la continuité des IDs sans changement du détecteur.
+**check**: maintain the same timestamped sequence and compare a treatment without jump and then with subsampling. Check for predicted movements, association errors, and physical persistence of tracks. An age parameter in terms of number of frames does not automatically keep its duration in seconds. These elements explain why a simple change of cadence can change the continuity of IDs without changing the detector.
 
-**Erreurs bloquantes** : prendre $s$ pour le score du détecteur, le rapport pour une vitesse ou supposer que le modèle s'adapte automatiquement au temps réel.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [Article, §3.2](https://arxiv.org/abs/1602.00763) ; [référence, L94](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94).
+**Back to the box**: with area $s>0$ and report $r=w/h>0$, rebuild $w=\sqrt{sr}$ and $h=\sqrt{s/r}$, then corners $(u\pm w/2,v\pm h/2)$. The positive domains of $s$ and $r$ are therefore essential; a linear extrapolation of the area can produce a non-physical state if it is not managed. For an explicit step $\Delta t$, the center transition becomes $u'=u+\dot u\Delta t$ and $v'=v+\dot v\Delta t$, with speeds now in pixels/s. Adapting only this transition without adapting the process noise and life cycle times still leaves inconsistent time conventions.
+
+**Blocking errors**: take $s$ for detector score, gear for speed or assume the model automatically adapts to real time.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Article, §3.2](https://arxiv.org/abs/1602.00763); [reference, L94](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::raisonnement cv_id::CV-SORT-002 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-SORT-003
 
-Objectif : interpréter le poids d'une mesure. Famille : raisonnement. Provenance : agent.
+Objective: interpret the weight of a measure. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-003
-Question: Pour une correction Kalman scalaire, $u^-=100$ px, $P^-=25$ px², $z=110$ px et $R=9$ px². Vers quelle valeur va la position corrigée, et que change une mesure plus incertaine ?
-Reponse: **Noyau attendu** : $K=P^-/(P^-+R)=25/34$, donc $u^+=u^-+K(z-u^-)\approx107,35$ px. Augmenter $R$ diminue le gain et rapproche l'estimation de la prédiction.
+Question: For a scalar Kalman update, $u^-=100$ px, $P^-=25$ px², $z=110$ px and $R=9$ px². What is the corrected position, and what changes when the measurement is less certain?
+Reponse: **Expected answer**: $K=P^-/(P^-+R)=25/34$, so $u^+=u^-+K(z-u^-)\approx107,35$ px. Increasing $R$ decreases the gain and brings the estimate closer to the prediction.
 
-**Approfondissement** : $P^+=(1-K)P^-\approx6,62$ px². Avec $R=100$ px², la position vaut 102 px. C'est un exemple exécuté de correction linéaire scalaire, pas tout l'état SORT ni une preuve que la mesure appartient à la bonne personne. Une mauvaise association reste une autre source d'erreur.
+**Further explanation**: $P^+=(1-K)P^-\approx6,62$ px². With $R=100$ px², the position is 102 px. This is an executed example of scalar linear correction, not the entire SORT state nor a proof that the measurement belongs to the right person. A bad association is another source of error.
 
-**Intuition de pondération** : le gain est sans unité et se situe ici entre zéro et un pour des variances positives. La correction est une fraction de l'innovation de dix pixels. Une mesure déclarée moins précise apporte moins d'information et déplace moins l'estimation ; elle réduit aussi moins son incertitude.
+**Weighting Intuition**: the gain is unitless and is between zero and one for positive variances. Correction is a fraction of innovation of ten pixels. A measure declared less accurate provides less information and less shifts the estimate; it also reduces its uncertainty.
 
-**Limite du calcul** : les valeurs supposent modèle linéaire, bruits compatibles et mesure correctement associée. Diminuer artificiellement $R$ rend le filtre plus réactif mais peut le rendre surconfiant face à une mauvaise mesure. Une covariance plus faible ne prouve pas une meilleure position réelle. L'exemple aide donc à comprendre le compromis prédiction/observation, avant le problème séparé de l'association d'objets.
+**Limit of calculation**: Values assume linear model, compatible noises and correctly associated measurement. Artificially decreasing $R$ makes the filter more responsive but can make it overconfident in the face of poor measurement. A lower covariance does not prove a better real position. The example thus helps to understand the prediction/observation trade-off, before the separate problem of object association.
 
-**Erreurs bloquantes** : rapprocher davantage l'estimation d'une mesure quand sa variance augmente, ou confondre variance et écart-type.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [référence Kalman de SORT](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94).
+**Merging scalar information**: For independent Gaussian errors in this model, the a posteriori variance checks $1/P^+=1/P^-+1/R$. The corrected average can be written as $P^+(u^-/P^-+z/R)$: each estimate is weighted by its precision, inverse of variance. This writing explains the decrease in uncertainty under assumptions, but not a certainty of identity. If the measurement belongs to another object, the probabilistic model used for this merge is violated; announcing a small $P^+$ does not detect it automatically. The gating and the association must therefore precede this interpretation of precision.
+
+**Blocking errors**: further approximates the estimation of a measure when its variance increases, or confuses variance and standard deviation.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [reference Kalman from SORT](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::raisonnement cv_id::CV-SORT-003 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-SORT-004
 
-Objectif : distinguer mémoire et émission. Famille : algorithme. Provenance : agent.
+Objective: Distinguish between memory and transmission. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-004
-Question: Dans la référence SORT épinglée avec `max_age=1`, que se passe-t-il après une puis deux frames consécutives sans détection associée, et une piste mémorisée est-elle forcément émise ?
-Reponse: **Noyau attendu** : la suppression intervient si `time_since_update > max_age`. Une frame manquée peut laisser la piste mémorisée ; la deuxième la supprime. La référence émet seulement les pistes mises à jour dans la frame et respectant ses conditions de hits.
+Question: In the pinned SORT implementation with `max_age=1`, what happens after one and then two consecutive frames without an associated detection? Is a retained track necessarily output?
+Reponse: **Expected answer**: deletion occurs if `time_since_update > max_age`. A missed frame can leave the track memorized; the second one deletes it. The reference only issues the tracks updates in the frame and meets its hit conditions.
 
-**Approfondissement** : `min_hits` filtre aussi les sorties avec une exception au démarrage global. Toujours appeler `update` avec un tableau vide de forme `(0, 5)`, par exemple `np.empty((0, 5))`, lorsque rien n'est détecté. Augmenter l'âge change le compromis entre continuité et maintien de fausses hypothèses ; cela ne crée pas une information de réidentification.
+**Further explanation**: `min_hits` also filters outputs with an exception to global boot. Always call `update` with an empty array of form `(0, 5)`, for example `np.empty((0, 5))`, when nothing is detected. Increasing age changes the trade-off between continuity and maintaining false assumptions; this does not create re-identification information.
 
-**Chronologie à expliciter** : mémoriser une piste permet de la réassocier plus tard, tandis qu'émettre une boîte décrit ce que le consommateur reçoit dans la frame courante. Ces deux décisions suivent des conditions distinctes dans la référence. Une absence à l'écran ne démontre donc pas à elle seule que la piste a déjà été détruite.
+**Chronology to explain**: Memorizing a track allows you to reassociate it later, while issuing a box describes what the consumer receives in the current frame. These two decisions follow separate conditions in the reference. An absence on the screen does not therefore alone demonstrate that the track has already been destroyed.
 
-**Test construit** : préparer une détection, une frame vide, puis un retour de détection, et tracer âge, hits, ID interne et sortie émise. Refaire avec deux frames vides et avec une cadence différente. Ne pas interpréter un âge en frames comme une durée universelle. Le résultat attendu concerne le commit épinglé ; une autre bibliothèque ou variante peut adopter un cycle différent.
+**Constructed test**: prepare a detection, an empty frame, then a detection feedback, and trace age, hits, internal ID and output. Rework with two empty frames and with a different cadence. Do not interpret an age in frames as a universal duration. The expected result is for the pinned commit; another library or variant may adopt a different cycle.
 
-**Erreurs bloquantes** : confondre piste conservée et boîte affichée, ou annoncer une suppression dès que l'âge est égal au maximum.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [référence, cycle de vie L199](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L199).
+**Physical Duration and Issue**: at 30 frames, a maximum age of one frame is approximately 33 ms between regular calls; at 10 images/s, approximately 100 ms. The exact deletion rule and updates still condition the timeline. A stored but not issued track can regain its old ID, while a consumer has not received any boxes during the absence. If the product requires a predicted box during this period, it is another contract that must be defined and evaluated, with a predicted status and appropriate uncertainty. Extending memory does not automatically provide this output or re-identification after expiration.
+
+**Blocking errors**: confuse retained track with displayed box, or announce deletion as soon as the age is equal to the maximum.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [reference, life cycle L199](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L199); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::algorithme cv_id::CV-SORT-004 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-SORT-005
 
-Objectif : comprendre le rejet après affectation. Famille : pratique. Provenance : agent.
+Objective: Understanding rejection after assignment. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-005
-Question: Une affectation maximise la somme des IoU $\begin{bmatrix}0.90&0.31\\0.31&0\end{bmatrix}$, puis rejette les paires sous 0,30. Pourquoi peut-elle garder moins de paires qu'une affectation visant d'abord leur admissibilité ?
-Reponse: **Noyau attendu** : la diagonale donne 0,90, contre 0,62 pour les croisées ; elle est donc choisie pour le score brut. Après rejet du zéro, il reste une paire. Les deux associations croisées auraient pourtant chacune dépassé le seuil.
+Question: An assignment maximizes the sum of IoUs $\begin{bmatrix}0.90&0.31\\0.31&0\end{bmatrix}$, then rejects pairs below 0.30. Why can it retain fewer pairs than an assignment that prioritizes admissibility?
+Reponse: **Expected answer**: the diagonal gives 0,90, against 0,62 for the crosses; it is therefore chosen for the raw score. After zero is rejected, there is a pair left. The two associations crossed each would have exceeded the threshold.
 
-**Approfondissement** : maximiser le score puis rejeter n'est pas identique à un problème d'affectation avec contraintes d'admissibilité et objectif explicite de cardinalité. C'est un contre-exemple analytique, pas un résultat statistique sur SORT. Le code a aussi un raccourci lorsque les associations admissibles sont non ambiguës.
+**Further explanation**: Maximizing the score and then rejecting is not identical to an assignment problem with eligibility constraints and explicit goal of cardinality. This is an analytical counterexample, not a statistical result on SORT. The code also has a shortcut when eligible associations are unambiguous.
 
-**Différence d'objectif** : optimiser une somme de similarités favorise une très bonne paire même si l'autre paire est ensuite inutilisable. Maximiser d'abord le nombre de couples admissibles exprime une autre préférence, qui peut conserver deux paires de qualité moyenne. Aucun nom d'algorithme d'affectation ne dispense de définir ce que le coût et les contraintes représentent.
+**Difference of purpose**: optimizing a sum of similarities favors a very good pair even if the other pair is then unusable. Maximizing the number of eligible pairs first expresses another preference, which can keep two pairs of average quality. No assignment algorithm name exempts from defining what cost and constraints represent.
 
-**Usage du contre-exemple** : tester séparément couples impossibles, choix de non-affectation et seuils, puis regarder les conséquences sur les IDs. Changer seulement le solveur sans modifier la formulation peut conserver le même comportement. La matrice jouet démontre une différence logique entre deux problèmes ; elle ne dit pas lequel produit les meilleures trajectoires sur toutes les scènes.
+**Use of counter-example**: separately test impossible pairs, non-assignment choices and thresholds, and then look at the consequences on IDs. Changing only the solver without changing the formulation can retain the same behavior. The toy matrix demonstrates a logical difference between two problems; it does not say which one produces the best trajectories on all scenes.
 
-**Erreurs bloquantes** : affirmer que tout gating après affectation est équivalent au gating avant, sans vérifier la formulation.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [association SORT, L154](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L154).
+**Explicit non-assignment**: An issue can introduce fictitious rows or columns representing a track without measurement and detection without track, with announced costs. This makes it possible to express that a poor association may be less desirable than a lack of correction. The choice of these costs determines the preference, and is not inferred from the use of Hungarian alone. If the priority objective is the cardinality of the allowable pairs, it must be represented explicitly before distinguishing by similarity. The counterexample of the flashcard therefore does not prescribe a universal formulation: it learns to verify the objective really solved and its temporal consequences.
+
+**Blocking errors**: assert that any post-assignment gating is equivalent to before gating, without checking the wording.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [association SORT, L154](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L154); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::pratique cv_id::CV-SORT-005 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-SORT-006
 
-Objectif : établir un diagnostic discriminant. Famille : diagnostic. Provenance : agent.
+Objective: Make a discriminating diagnosis. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-006
-Question: Une personne change d'identifiant après une occultation. Quelles observations permettent de distinguer détection manquée, piste expirée et mauvaise association ?
-Reponse: **Noyau attendu** : suivre, frame par frame, détections, prédictions, matrice d'IoU, associations et âge des pistes. Vérifier d'abord si la boîte existe, si la piste était encore mémorisée et si une paire admissible a été choisie.
+Question: A person's ID changes after occlusion. Which observations distinguish a missed detection, an expired track and an incorrect association?
+Reponse: **Expected answer**: track, frame by frame, detections, predictions, matrix of IoU, associations and age of tracks. Check first if the box exists, if the track was still memorized, and if an eligible pair was chosen.
 
-**Approfondissement** :
-- Boîte absente : examiner détecteur et NMS.
-- Piste supprimée : examiner durée d'absence et `max_age`.
-- Pistes concurrentes : examiner mouvement et ambiguïté d'apparence.
+**Further explanation**:
+- Absent box: examine detector and NMS.
+- track removed: examine duration of absence and `max_age`.
+- tracks competitors: examine movement and appearance ambiguity.
 
-Augmenter `max_age` aide seulement certaines absences ; une méthode avec apparence ou autre association peut être nécessaire. La cause n'est pas identifiable à partir du seul identifiant final.
+Increasing `max_age` only helps certain absences; a method with appearance or other association may be required. The cause is not identifiable from the final identifier alone.
 
-**Enquête temporelle** : repérer la dernière frame correctement associée, la première frame manquée, le moment éventuel de suppression et la première réapparition. Si la piste existe encore mais qu'une autre détection est choisie, le problème diffère d'une création normale après expiration.
+**Temporal investigation**: find the last frame correctly associated, the first frame missed, the possible moment of deletion and the first reappearance. If the track still exists but another detection is chosen, the problem differs from a normal creation after expiration.
 
-**Ablation proposée** : fixer les détections et changer uniquement le cycle de vie, puis fixer ce cycle et examiner une autre information d'association. Vérifier les conséquences sur les faux maintiens de pistes et les erreurs après croisement. Une durée de persistance plus longue peut aider une courte absence mais conserver une hypothèse devenue fausse. Le diagnostic doit expliquer l'événement observé et ses compromis, sans appliquer systématiquement le même paramètre à toute perte d'identité.
+**Proposed ablation**: fix detections and change only the life cycle, then fix this cycle and examine another association information. Check the consequences on false holds of tracks and errors after crossing. A longer duration of persistence can help a short absence but keep a false assumption. The diagnosis must explain the observed event and its compromises, without systematically applying the same parameter to any loss of identity.
 
-**Erreurs bloquantes** : prescrire automatiquement un âge plus élevé ou attribuer tout échange d'ID au filtre de Kalman.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [SORT, §§3.2–3.4](https://arxiv.org/abs/1602.00763).
+**Discriminant Chronology**: build an array with time, internal ID, associated detection, age since last correction and issue status. A new track after deleting the old one is not the same event as an exchange between two still active trackss. Replaying the same detections isolates this difference from the detector. If the track was active but the real box has a IoU too low, test prediction, cadence and gating; if two boxes are eligible, examine the complete matrix and assignment objective. This procedure links an intervention to an observed cause and makes it possible to measure the false supports that it can introduce elsewhere.
+
+**Blocking errors**: Automatically prescribe a higher age or assign any ID exchange to the Kalman filter.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §§3.2 – 3.4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-SORT-006 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-SORT-007
 
-Objectif : distinguer les tâches temporelles. Famille : comparaison. Provenance : agent.
+Objective: Distinguish between temporal tasks. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-007
-Question: Pourquoi un bon flot optique, une bonne AP de détection et une bonne réidentification ne suffisent-ils pas séparément à garantir un bon tracking multiobjet ?
-Reponse: **Noyau attendu** : le flot décrit des déplacements de points/pixels ; l'AP évalue des détections sans identité temporelle ; la ReID compare l'apparence d'identités. Le tracking combine observations, association et cycle de vie dans le temps.
+Question: Why do good optical flow, high detection AP and good re-identification each fail, on their own, to guarantee good multi-object tracking?
+Reponse: **Expected answer**: The stream describes point/pixel displacements; the AP evaluates detections without temporal identity; the ReID compares the appearance of identities. Tracking combines observations, association and life cycle over time.
 
-**Approfondissement** : des détections bien localisées peuvent être associées aux mauvaises pistes ; une apparence correcte peut manquer une détection ; un flot utile ne décide pas toujours entrées/sorties et occultations. Évaluer détection et association avec des métriques et séquences adaptées, sans substituer l'AP à un score d'identité.
+**Further explanation**: Well-localized detections may be associated with bad tracks; a correct appearance may miss detection; a useful stream does not always decide I/O and occlusions. Evaluate detection and association with appropriate metrics and sequences, without substituting the AP for an identity score.
 
-**Exemple construit** : un détecteur fournit les bonnes boîtes à chaque frame mais leur ordre est permuté au croisement. L'AP reste excellente si chaque boîte correspond bien à un objet, tandis qu'une association naïve par indice échange les identités. Un score spatial ne mesure pas cette erreur temporelle.
+**Constructed example**: A detector provides the right boxes to each frame but their order is swapped at the crossing. The AP remains excellent if each box corresponds to an object, while a naive association by index exchange identities. A spatial score does not measure this temporal error.
 
-**Évaluation proposée** : conserver la même séquence et examiner détection, association et gestion des disparitions séparément. Ajouter des occultations et des objets d'apparence proche pour observer les informations manquantes. Les composants peuvent être nécessaires sans être suffisants : une représentation ReID discriminante ne crée pas une boîte absente, et un flot précis ne décide pas seul la naissance d'une piste. Choisir la métrique selon la sortie promise par le système.
+**Proposed evaluation**: Keep the same sequence and examine detection, association, and disappearance management separately. Add occlusions and nearby objects to observe missing information. Components may be necessary without being sufficient: a discriminating ReID representation does not create an absent box, and a precise flow does not alone decide the birth of a track. Choose the metric according to the output promised by the system.
 
-**Erreurs bloquantes** : confondre ces sorties ou déduire la continuité d'identité de la seule AP.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [SORT, §§2–4](https://arxiv.org/abs/1602.00763).
+**Spatial Invariance at IDs**: Renaming the identifiers of all predictions to each frame does not change their boxes or classes. A detection metric calculated image by image can therefore remain exactly the same while identity continuity is destroyed. A ReID representation evaluated on isolated pairs also does not test the exclusivity constraints or the life cycle of a sequence. Constructing this ID permutation as a counterexample makes it possible to verify that the chosen metric penalizes the defect promised by the system. Measuring location, presence and temporal association separately avoids replacing one output with another.
+
+**Blocking errors**: confuse these outputs or deduce the identity continuity of the AP alone.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §§2 – 4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::comparaison cv_id::CV-SORT-007 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-SORT-008
 
-Objectif : définir une mesure de performance complète. Famille : evaluation. Provenance : agent.
+Objective: define a complete performance measure. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SORT-008
-Question: Le tracker seul dépasse la cadence demandée, mais le produit manque sa latence et perd des identités. Quelles mesures manquent à cette validation ?
-Reponse: **Noyau attendu** : mesurer acquisition, détection, NMS, transferts et tracking de bout en bout sur le matériel cible ; mesurer aussi les erreurs d'identité, les fragments et les dépendances aux détections sur des séquences représentatives.
+Question: The tracker alone exceeds the required frame rate, but the product misses its latency target and loses identities. Which measurements are missing from this validation?
+Reponse: **Expected answer**: measure acquisition, detection, NMS, transfers and end-to-end tracking on the target hardware; also measure identity errors, fragments and detection dependencies on representative sequences.
 
-**Approfondissement** : conserver latence et débit séparés, examiner les pics, densité d'objets et cadence. Des chiffres de vitesse du papier concernent son environnement et son composant. Utiliser des splits par séquence/scène, consigner seuils et versions, et ne pas annoncer de performance de tracking avec le seul temps de l'affectation.
+**Further explanation**: Keep latency and throughput separate, examine spikes, object density, and cadence. The speed figures of the paper relate to its environment and its component. Use splits per sequence/scene, record thresholds and versions, and do not announce tracking performance with the only time of assignment.
 
-**Ancienneté des observations** : le tracker peut être rapide tout en recevant des détections calculées sur des images anciennes. Une file d'attente ou une politique de batch peut augmenter le déplacement réel entre l'état estimé et la décision utilisée. Cela peut affecter simultanément latence et qualité d'association.
+**Ancillary observations**: The tracker can be fast while receiving detections calculated on old images. A queue or batch policy can increase the actual movement between the estimated state and the decision used. This can simultaneously affect latency and association quality.
 
-**Mesure proposée** : horodater capture, entrée de chaque étape et sortie, puis stratifier les délais et erreurs par densité d'objets. Comparer charge habituelle, pics et pertes de frames avec la même politique de file. Les performances publiées pour l'association seule ne remplacent pas cette trace. Un système exploitable doit tenir son budget temporel et sa qualité de pistes dans les mêmes conditions, avec une politique explicite lorsque la charge dépasse la capacité.
+**Proposed action**: timestamp capture, input of each step and output, then stratify delays and errors by object density. Compare usual load, peaks and frame losses with the same queue policy. The published performance for the association alone does not replace this trace. An exploitable system must keep its time budget and quality of tracks under the same conditions, with an explicit policy when the load exceeds the capacity.
 
-**Erreurs bloquantes** : présenter la fréquence du composant comme celle du système complet ou ignorer les échanges d'ID dans l'évaluation.
-Source: [[110-tracking-association/references/111-sort|Fiche SORT]] ; [SORT, §4](https://arxiv.org/abs/1602.00763).
+**Overload policy**: Processing all frames in a queue retains the sequence but can continuously increase their seniority if the service throughput is insufficient. Keeping only the most recent one reduces the wait but increases the intervals and movements between calls from the tracker. The two policies simultaneously change the time budget and the conditions of association. Compare them with actual timestamps, same detector and same scene, then measure late decisions, lost tracks and full cost. Acceleration of the single assignment solver may be ineffective if the drop is the decoding or the detector; a step-by-step trace identifies the truly limiting resource.
+
+**Blocking errors**: Present the component frequency as the full system frequency or ignore the ID exchanges in the evaluation.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-SORT-008 provenance::agent pole::C pole::D pole::E
 END

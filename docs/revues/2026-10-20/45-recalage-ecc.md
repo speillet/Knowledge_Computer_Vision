@@ -1,45 +1,44 @@
-# Revue — Recalage par intensités et ECC — 2026-10-20
+# Review –  registration by intensities and ECC –  2026-10-20
 
-## Synthèse
+## Overview
 
-3 cartes auditées. 0 bloquant ; 1 important dans la fiche (hypothèses photométriques) ; 1 mineur partagé (attribution).
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+3 flashcards audited. 0 blocking; 1 important in the reference note (photometric hypotheses); 1 minor shared (attribution). Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 3 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 3 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-ECC-001 | Confirmé : intensités, warp initial et appariement sparse | choisir matching ou optimisation photométrique. | 44 mots à l’entrée ; comparaison cohérente | Fiche et format contrôlés | Mineur | Source précisée |
-| CV-ECC-002 | Déduit : motifs périodiques et maxima concurrents | interpréter une convergence ECC. | 35 mots à l’entrée ; contrôles réservés évaluables | Fiche et format contrôlés | Mineur | Déduction identifiée |
-| CV-ECC-003 | Modèles confirmés ; compromis déduit | choisir un modèle de mouvement. | 43 mots à l’entrée ; une décision | Fiche et format contrôlés | Mineur | Déduction identifiée |
+| CV-ECC-001 | Confirmed: intensities, initial warp and matching sparse | choose matching or photometric optimization. | 44 words at entry; consistent comparison | reference note and controlled format | Minor | Specified source |
+| CV-ECC-002 | Deductible: periodic patterns and competing maxima | interpret an ECC convergence. | 35 words at entry; evaluable reserved controls | reference note and controlled format | Minor | Deduction Identified |
+| CV-ECC-003 | Models confirmed; compromise inferred | Choose a movement model. | 43 words at the entrance; a decision | reference note and controlled format | Minor | Deduction Identified |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés dans la documentation : optimisation par intensités, transformation initiale nécessaire pour déplacements importants, paramètres translation/rigide/affine/homographie, sens inverse pour affichage. Imprécision importante de la fiche corrigée : les conditions du raisonnement gain/offset sont désormais explicites. Les coûts par pixels/itérations et le surajustement sont des raisonnements ; aucun benchmark. Article ECC primaire non accessible lors de ce passage : son détail de dérivation reste non vérifiable ici.
+Confirmed in the documentation: optimization by intensities, initial transformation necessary for large movements, translation/rigid/affine/homography parameters, reverse direction for display. Important imprecision of the corrected reference note: the conditions of the gain/offset reasoning are now explicit. Costs per pixels/iterations and over-adjustment are reasoning; no benchmark. Article ECC primary not accessible during this passage: its detail of derivation remains unverifiable here.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 : conditions photométriques précisées. Sources des trois cartes ciblées.
+reference note revision 2: photometric conditions specified. Sources of the three targeted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Écrire la convention du warp retourné | Risque pratique présent seulement en approfondissement | Pratique | Une carte, un point test ; durée à mesurer | OpenCV 4.13, findTransformECC |
+| Write the warp convention returned | Practical risk present only in further explanation | Practice | A flashcard, a test point; duration to be measured | OpenCV 4.13, findTransformECC |
 
-Familles absentes : algorithme, comprehension, conception, evaluation, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, evaluation, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OpenCV 4.13.0, findTransformECC, modèle, initialisation et inverse warping](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html) : section findTransformECC, paramètres et paragraphes après la formule.
-- [Evangelidis–Psarakis 2008, résumé primaire via PubMed](https://pubmed.ncbi.nlm.nih.gov/18703836/) ; texte intégral auteur inaccessible, ne confirme pas la dérivation détaillée.
+- [OpenCV 4.13.0, findTransformECC, model, initialization and reverse warping](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html): findTransformECC section, parameters and paragraphs after the formula.
+- [Evangelidis – Psarakis 2008, primary summary via PubMed](https://pubmed.ncbi.nlm.nih.gov/18703836/); full text author inaccessible, does not confirm the detailed derivation.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

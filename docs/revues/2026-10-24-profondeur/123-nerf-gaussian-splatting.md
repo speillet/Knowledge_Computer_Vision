@@ -1,36 +1,36 @@
-# Revue — NeRF, 3D Gaussian Splatting et reconstruction — 2026-10-24
+# Review –  NeRF, 3D Gaussian Splatting and Reconstruction –  2026-10-24
 
-## Synthèse
+## Overview
 
-3 cartes examinées pour leur pertinence et leur développement ; 3 réponses enrichies sur accord explicite de l’apprenant. Axe travaillé : synthèse de vues, support d’observation et géométrie. Aucun nouvel objectif ni ID. Les questions restent des rappels de mécanisme, de choix ou de diagnostic utiles en projet. Aucun doublon d’objectif justifiant un retrait dans ce sujet.
+3 flashcards examined for their relevance and development; 3 enriched responses on explicit agreement of the learner. Axis worked: synthesis of views, observation support and geometry. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
-Constat éditorial : mécanisme ou mise à l’épreuve trop peu développé dans les réponses modifiées, gravité mineure. Aucun nouveau contresens bloquant établi par la confrontation ciblée ; cela ne certifie pas toutes les affirmations du noyau antérieur.
+Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-RENDU3D-001 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | comparaison : distinguer représentation implicite et primitives | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 51 → 191 mots lexicaux |
-| CV-RENDU3D-002 | Protocole proposé sous hypothèses ; noyau antérieur conservé | evaluation : séparer rendu et géométrie | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 49 → 190 mots lexicaux |
-| CV-RENDU3D-003 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | diagnostic : vérifier une scène peu observée | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 40 → 182 mots lexicaux |
+| CV-RENDU3D-001 | Deduction or example built under assumptions; previous core retained | Comparison: Distinguishing Implicit and Primitive Representation | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 51 → 191 lexical words |
+| CV-RENDU3D-002 | Proposed protocol under assumptions; previous core retained | evaluation: separating rendering and geometry | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 49 → 190 lexical words |
+| CV-RENDU3D-003 | Deduction or example built under assumptions; previous core retained | diagnosis: check a scene that has not been observed | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 40 → 182 lexical words |
 
-## Corrections appliquées
+## Corrections applied
 
-- [Réponses](../../../vault/120-generatif-multimodal/123-nerf-gaussian-splatting.md) : explications, exemples et vérifications développés, sans changer questions, objectifs, Source, tags ni identités. L’approfondissement reste facultatif pour réussir le rappel.
-- [Fiche](../../../vault/120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) : révision 3, deux cas guidés repris des cartes pour relier compréhension et contrôle ; statut `redige` conservé.
+- [Replies](../../../vault/120-generatif-multimodal/123-nerf-gaussian-splatting.md): explanations, examples and verifications developed, without changing questions, objectives, source, tags or identities. The further explanation remains optional to successfully recall.
+- [Reference note](../../../vault/120-generatif-multimodal/references/123-nerf-gaussian-splatting.md): revision 3, two guided cases taken from flashcards to link understanding and check; status `redige` preserved.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout en attente pour cette passe : le développement des réponses existantes est explicitement demandé. Aucune nouvelle carte créée. Les approfondissements APP encore ouverts restent dans l’inventaire ; ils ne sont pas déclarés couverts ici.
+No pending additions for this pass: the development of existing answers is explicitly requested. No new flashcard created. The still open further study APPs remain in inventory; they are not declared covered here.
 
 ## Sources
 
-- [NeRF](https://arxiv.org/html/2003.08934v2) : §3, champ et rendu volumétrique, passage consulté le 2026-10-24. Il soutient le mécanisme de référence ; il ne fournit pas les résultats des scénarios construits du projet.
-- Le site officiel 3D Gaussian Splatting a aussi été ouvert ; les contrôles de vues réservées sont proposés, sans entraînement ni rendu exécuté.
-- Vérifications de bibliothèques : OpenCV 4.13 via Context7 pour filtres/pyramides, features/matching, fisheye/hand-eye ; documentation primaire en complément. Les autres sujets utilisent les sources primaires précisées ci-dessus, sans prétendre à une couverture intégrale de Context7.
+- [NeRF](https://arxiv.org/html/2003.08934v2): §3, field and volumetric rendering, passage consulted on the 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- The official website 3D Gaussian Splatting has also been opened; reserved view controls are offered, without training or rendering.
+- Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
-## Contrôles et limites
+## Checks and limitations
 
-Voir les [preuves globales](00-bilan.md) pour les commandes exécutées et leurs résultats. La comparaison à `8c428b4` conserve IDs, objectifs, questions, Source et tags ; le contrôle de longueur utilise `re.findall(r"\w+", Reponse)`. Le nombre de mots est un garde-fou éditorial, sans garantie de mémorisation.
+See [Global Evidence](00-bilan.md) for executed commands and their results. Comparison to `8c428b4` retains IDs, objectives, questions, source and tags; the length check uses `re.findall(r"\w+", Reponse)`. The number of words is an editorial safeguard, with no guarantee of memorization.
 
-Confrontation documentaire ciblée et auto-revue pédagogique par agent Codex : les affirmations antérieures ne font pas toutes l’objet d’une nouvelle confirmation ligne à ligne. Les exemples analytiques sont déduits, les essais de diagnostic sont proposés ; aucune expérimentation image/vidéo ou validation indépendante n’est revendiquée. Rendu Obsidian/AnkiDroid et maîtrise de l’apprenant non vérifiés.
+Targeted documentary confrontation and educational self-review by agent Codex: not all previous statements are subject to a new confirmation line. Analytical examples are deduced, diagnostic tests are proposed; no image/video experimentation or independent validation is claimed. Rendered Obsidian/AnkiDroid and mastered the unverified learner.

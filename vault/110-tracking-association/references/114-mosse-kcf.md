@@ -7,73 +7,107 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 4
 prerequis: ["CV-SOT", "CV-FILTRES"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
 ---
-# MOSSE et KCF — tracking par filtres de corrélation
+# MOSSE and KCF — tracking with correlation filters
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SOT](113-tracking-monoobjet.md), [CV-FILTRES](../../30-traitement-image/references/31-filtrage-gradients.md).
-**Compétences visées** : expliquer la boucle d’un filtre de tracking; distinguer MOSSE et KCF; interpréter un PSR; rechercher une contamination du modèle; définir une comparaison honnête de trackers.
-Les notions connexes restent des alternatives, pas des dépendances implicites.
+**Required prerequisites**: [CV-SOT](113-tracking-monoobjet.md), [CV-FILTRES](../../30-traitement-image/references/31-filtrage-gradients.md). **Target competencies**: explain the loop of a tracking filter; distinguish MOSSE and KCF; interpret a PSR; look for contamination of the model; define an honest comparison of trackers. Related notions remain alternatives, not implicit dependencies.
 
-## Problème et contrat des données
+## Problem and data contract
 
-Suivre une cible initialisée dans une ROI, à partir de son apparence et d’une recherche locale. Entrées : image initiale, boîte cible et frames suivantes ; sortie : position ou boîte et éventuel score de réponse. Ce suivi mono-objet ne crée pas automatiquement des pistes pour tous les objets et ne garantit pas une ré-identification après disparition prolongée.
+Track an initialized target in an ROI, based on its appearance and local search. Inputs: initial image, target box and following frames; output: position or box and possible response score. This single-object tracking does not automatically create trackss for all objects and does not guarantee re-identification after prolonged disappearance.
 
-## Intuition et mécanisme
+## Intuition and mechanism
 
-Un filtre apprend à produire un pic centré sur la cible et une réponse plus faible autour. MOSSE adapte un filtre linéaire à partir d’exemples transformés et des frames acceptées ; KCF exploite une régression à noyau sur les décalages cycliques du patch. La structure circulante se diagonalise en Fourier, ce qui évite de résoudre une grande régression dense. Au suivi : extraire le patch → calculer la réponse → localiser le pic → contrôler la confiance → mettre à jour sous conditions. Une mise à jour sur la mauvaise cible renforce la dérive.
+A filter learns to produce a target-centered peak and a weaker response around it. MOSSE adapts a linear filter from transformed examples and accepted frames; KCF exploits a kernel regression on the cyclic offsets of the patch. The circulant structure is diagonalized to Fourier, which avoids solving a large dense regression. To follow up: extract patch → calculate response → locate peak → check trust → update under conditions. A update on the wrong target reinforces the drift.
 
-## Mathématiques et conventions
+## Mathematics and conventions
 
-Un objectif simplifié est $\min_h\sum_i\|h\star x_i-y_i\|^2+\lambda\|h\|^2$, où $x_i$ représente les features du patch, $h$ le filtre, $\star$ la corrélation circulaire et $y_i$ une réponse cible synthétique, souvent gaussienne. $\lambda\ge0$ régularise le filtre ; ces scores sont des unités arbitraires, pas des probabilités calibrées. Pour MOSSE, $\mathrm{PSR}=(r_{max}-\mu_{horspic})/\sigma_{horspic}$ compare le maximum à la moyenne et à l’écart-type du fond de réponse hors voisinage du pic. Définir ce voisinage et traiter un écart-type nul. Le seuil historique d’un papier ne vaut pas pour toute implémentation.
+A simplified lens is $\min_h\sum_i\|h\star x_i-y_i\|^2+\lambda\|h\|^2$, where $x_i$ represents the features of the patch, $h$ the filter, $\star$ the circular correlation and $y_i$ a synthetic, often Gaussian target response. $\lambda\ge0$ regularizes the filter; these scores are arbitrary units, not calibrated probabilities. For MOSSE, $\mathrm{PSR}=(r_{max}-\mu_{horspic})/\sigma_{horspic}$ compares the maximum to the mean and standard deviation of the out-of-peak response bottom. Define this neighborhood and process a zero standard deviation. The historical threshold of a paper is not valid for any implementation.
 
-## Paramètres, coût et limites
+## Parameters, cost and limitations
 
-La fenêtre de recherche limite le mouvement récupérable. La taille du patch, les features, le noyau, la régularisation et le taux d’apprentissage changent précision, mémoire et calcul. Les FFT coûtent typiquement $O(n\log n)$ pour $n$ échantillons par canal, mais tout le pipeline et les noyaux doivent être mesurés. Une fenêtre de Hann limite les discontinuités de bord sans supprimer le biais des décalages cycliques. Les extensions d’échelle ou de recherche long terme sont des variantes à nommer ; un KCF de base n’est pas automatiquement invariant à l’échelle.
+The search window limits the recoverable movement. Patch size, features, kernel, regularization, and learning rate change accuracy, memory, and computation. FFTs typically cost $O(n\log n)$ for $n$ samples per channel, but the entire pipeline and cores need to be measured. A Hann window limits edge discontinuities without removing the bias of cyclic shifts. Long-term scale or search extensions are variants to name; a basic KCF is not automatically scale-invariant.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline proposée : apparence figée après initialisation ; variation : mise à jour en ligne à taux fixé. Mesurer erreur de centre, overlap/success, perte de cible et délai de reprise, avec protocole de réinitialisation explicite. Introduire une occultation identique dans les deux essais pour tester la contamination du modèle. Exemple analytique : pic 0,8, moyenne hors pic 0,2 et écart-type 0,1 donnent PSR=6 ; ce score n’est pas une probabilité de 60 % ni un seuil universel de succès.
+Proposed baseline: fixed appearance after initialization; variation: update online at fixed rate. Measure center error, overlap/success, target loss, and recovery time, with explicit reset protocol. Introduce an identical occlusion in both tests to test for model contamination. Analytical example: peak 0,8, average out of peak 0,2 and standard deviation 0,1 give PSR=6; this score is not a probability of 60% nor a universal threshold of success.
 
-## Diagnostic et alternatives
+## Diagnosis and alternatives
 
-Si la boîte part sur le fond après une occultation, vérifier la mise à jour durant les frames ambiguës, la taille de recherche et les pics concurrents. Geler le modèle, déclarer la perte ou relancer un détecteur peut être préférable à toujours émettre une boîte. Pour un grand changement d’apparence ou une disparition, comparer un tracker siamois ou un pipeline détecteur+association. Les propositions sont des raisonnements du projet ; aucun tracker ni benchmark vidéo exécuté pour cette fiche.
+If the box leaves on the bottom after a occlusion, check the update during ambiguous frames, search size, and concurrent peaks. Freezing the model, declaring the loss, or restarting a detector may be preferable to always issuing a box. For a big change of appearance or disappearance, compare a Siamese tracker or a pipeline detector+association. The proposals are reasonings of the project; no tracker or video benchmark executed for this reference note.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent circulant, fenêtre et risque de contamination du modèle. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop circulating, window and risk of contamination of the model. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-CORRELATION-001
+### Case linked to CV-CORRELATION-001
 
-**Question de travail** : Comment un filtre de corrélation initialisé par une boîte suit-il la cible à la frame suivante ?
+**Question of work**: How does a correlation filter initialized from a box track the target in the next frame?
 
-**Réponse de référence** : Extraire une région de recherche et ses features, corréler avec le modèle, localiser le pic, contrôler la fiabilité puis adapter le modèle seulement selon la politique retenue. La réponse vise un pic de localisation, pas une classe sémantique.
+**Reference Response**: Extract a search region and its features, correlate with the model, locate the peak, check reliability and then adapt the model only according to the chosen policy. The answer is a location peak, not a semantic class.
 
-**Interprétation de la réponse** : chaque déplacement candidat dans la région de recherche reçoit un score de ressemblance au modèle. Le pic localise l'hypothèse préférée, mais son contraste et la présence de concurrents doivent être examinés avant une mise à jour. La zone de recherche exprime déjà une hypothèse sur le mouvement possible.
+**Interpretation of the answer**: Each candidate move in the search region receives a model-like score. The peak locates the preferred hypothesis, but its contrast and the presence of competitors must be examined before an update. The search area already expresses a hypothesis about possible movement.
 
-**Exemple construit** : une cible qui se déplace au-delà de cette zone peut laisser au fond le meilleur pic disponible. Apprendre alors ce fond transforme une perte de localisation en dérive persistante du modèle. Définir une politique de perte et de récupération, puis la tester sur grands déplacements et occultations. La vitesse de corrélation est utile seulement si les hypothèses de recherche et de mise à jour conviennent au besoin.
+**Constructed example**: A target moving beyond this area can leave the background with the best available peak. Learning then this background transforms a loss of location into a persistent drift of the model. Define a loss and recovery policy, then test it on big moves and occlusions. Correlation speed is useful only if the research and update assumptions are suitable as needed.
 
-### Cas lié à CV-CORRELATION-005
+### Case linked to CV-CORRELATION-005
 
-**Question de travail** : Deux trackers donnent des scores proches, mais l’un est réinitialisé après chaque perte. Que faut-il préciser pour comparer ?
+**Question of work**: Two trackers obtain similar scores, but one is reinitialized after each failure. What must be specified for a fair comparison?
 
-**Réponse de référence** : Le protocole d’initialisation et de réinitialisation, les séquences, les pertes, l’overlap et l’erreur de centre, ainsi que la latence complète. Un redémarrage après erreur change la tâche évaluée.
+**Reference Response**: Initialization and reset protocol, sequences, losses, overlap and center error, as well as full latency. A restart after error changes the evaluated task.
 
-**Pourquoi les resets changent la tâche** : une réinitialisation fournit au tracker une nouvelle localisation après un échec. Un système sans cette aide doit retrouver la cible ou rester en perte. Les deux protocoles n'exposent donc pas le modèle à la même accumulation d'erreurs ni à la même quantité d'information externe.
+**Why Resets Change the Task**: A reset provides the tracker with a new location after a failure. A system without this help must find the target or remain lost. The two protocols therefore do not expose the model to the same accumulation of errors or the same amount of external information.
 
-**Comparaison proposée** : conserver séquences, initialisation, règle de présence et critère de perte. Rapporter les échecs et les périodes de récupération en plus des mesures de localisation. Une moyenne calculée uniquement sur les frames réussies peut favoriser une méthode qui abandonne les cas difficiles. Pour un produit, inclure le coût et le délai de la procédure réelle de relance, qu'elle soit automatique ou humaine. Les scores restent interprétables uniquement avec ce contrat d'évaluation.
+**Proposed comparison**: keep sequences, initialization, presence rule and loss criterion. Report failures and recovery periods in addition to location measurements. An average calculated only on successful frames can favor a method that abandons difficult cases. For a product, include the cost and time of the actual recovery procedure, whether automatic or human. Scores remain interpretable only with this evaluation contract.
 
-**Repère documentaire de cette passe** : [Bolme et al., MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf), §§3–4, filtre et suivi. Les autres développements figurent dans les [cartes associées](../114-mosse-kcf.md).
+**Documentary reference for this pass**: [Bolme et al., MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf), §§3 – 4, filter and tracking. The other developments are in the [flashcards](../114-mosse-kcf.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Bolme et al. 2010, §§3.2–3.5, MOSSE, mise à jour et PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf).
-- [Henriques et al., KCF, §§4–5, structure circulante et noyaux](https://arxiv.org/pdf/1404.7584).
-- [Cartes associées](../114-mosse-kcf.md) : CV-CORRELATION-001 à 005.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Rédaction : Agent Codex, 2026-10-24. Sources primaires consultées et API OpenCV 4.13 vérifiées avec Context7. Calculs analytiques et protocoles proposés sont distingués des expériences ; aucun export réel, benchmark vidéo ni validation scientifique indépendante annoncé.
+### CV-CORRELATION-001
+
+**Situation**: How does a correlation filter initialized from a box track the target in the next frame?
+
+**From the pic to the image**: The answer is calculated in the coordinates of the patch or its features. Converting the maximum offset to the image requires the origin of the crop, its resizing, and any stride. A circular correlation convention also requires interpreting near-edge indices as appropriate signed offsets. An error here can produce a jump despite a correctly calculated peak. Check a known synthetic translation and return to the coordinate frame image before setting the trust. The possible subpixel location refines the peak estimation; it does not guarantee equivalent physical accuracy on real images.
+
+### CV-CORRELATION-002
+
+**Situation**: What do cyclic shifts and kernels give KCF compared with a linear filter such as MOSSE?
+
+**Structured regression**: a regularized linear regression solves $\min_w\|Xw-y\|^2+\lambda\|w\|^2$. If the lines of $X$ are the cyclic shifts of the same signal, the circulant structure makes it possible to diagonalize the corresponding operations by Fourier transform. In a kernel regression, we work on a matrix of similarities whose structure must remain compatible. This explains the efficiency without assimilating a core to a deep network. The regularization parameter stabilizes learning according to the feature scale; it does not compensate for a target missing from the patch or an artificial edge hypothesis ill-suited to the scene.
+
+### CV-CORRELATION-003
+
+**Situation**: A response has a peak of 0.8, an off-peak mean of 0.2 and an off-peak standard deviation of 0.1. What is the PSR, and what does it mean?
+
+**Effect of a distractor**: If a second peak enters the area used to calculate average and standard deviation off peak, it can change the PSR of the first, even if its height remains the same. The size of the excluded area and the edges of the patch therefore participate in the definition of the score. A positive affine transformation $r'=ar+b$, with the same support and $a>0$, ideally retains the PSR, because numerator and standard deviation are multiplied by $a$. On the other hand, clipping, quantifying or changing the medium can break this invariance. The score is therefore comparable only with an identical calculation procedure and a threshold validated in its context.
+
+### CV-CORRELATION-004
+
+**Situation**: A correlation-filter tracker works before an occlusion, then persistently tracks the background. Which update error should be tested?
+
+**Separate research and learning**: Freeze updates retains a target model, but does not automatically change the region being crawled. After a long occlusion or a large shift, the target may return elsewhere and remain untraceable despite an intact model. Compare two separate interventions: freezing the model with unchanged search, then expanded search policy or detection with the same model. Measure false returns on distractors and recovery times, without using the true position to silently reset. This ablation distinguishes contamination, loss of spatial coverage and appearance ambiguity, which can produce a similar final box on the bottom.
+
+### CV-CORRELATION-005
+
+**Situation**: Two trackers obtain similar scores, but one is reinitialized after each failure. What must be specified for a fair comparison?
+
+**Measure of success**: A curve can report, for each $\tau$ threshold, the proportion of frames where the IoU of the target exceeds $\tau$, under an announced presence policy. The area under this curve describes something other than the accuracy of the center at a fixed pixel threshold. Two boxes of the same center but of very different sizes can have a good center error and a bad IoU. The resets still change which periods are evaluated and what information is provided. Publishing the rules with the curve and the losses allows to compare the compromises without retaining only the frames where the tracker has succeeded.
+
+**Passages consulted for these developments**: [Bolme et al., MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf), §3.1 – 3.2, edges and learning; mathematical complements and built protocols; [Henriques et al., KCF](https://arxiv.org/html/1404.7584v1), §IV, regression and circulant structure; project deductions.
+
+## Sources and flashcards
+
+- [Bolme et al. 2010, §§3.2 – 3.5, MOSSE, update and PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf).
+- [Henriques et al., KCF, §§4 – 5, circulant structure and kernels](https://arxiv.org/pdf/1404.7584).
+- [Related flashcards](../114-mosse-kcf.md): CV-CORRELATION-001 to 005.
+
+Editor: Agent Codex, 2026-10-24. Primary sources consulted and API OpenCV 4.13 verified with Context7. Analytical calculations and proposed protocols are distinguished from experiments; no actual export, video benchmark or independent scientific validation announced.

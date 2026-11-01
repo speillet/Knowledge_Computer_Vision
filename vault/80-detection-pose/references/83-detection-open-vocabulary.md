@@ -7,80 +7,103 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: ["CV-CLIP", "CV-DETECTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
 ---
-# Détection open-vocabulary et grounding
+# Open-vocabulary detection and grounding
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Localiser des régions liées à un texte ou à un vocabulaire évolutif. Distinguer classification image–texte, détection open-vocabulary et grounding référentiel. Entrées : image plus candidats/prompt ; sorties : boîtes ou régions avec scores selon le modèle.
+Locate regions related to an evolving text or vocabulary. Distinguish image – text classification, open-vocabulary detection and grounding repository. Inputs: image plus candidates/prompt; outputs: boxes or regions with scores according to the model.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-CLIP](../../70-reconnaissance-representations/references/72-clip-siglip.md) ; [CV-DETECTEURS](82-detection-fasterrcnn-yolo-detr.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-CLIP](../../70-reconnaissance-representations/references/72-clip-siglip.md); [CV-DETECTEURS](82-detection-fasterrcnn-yolo-detr.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Des méthodes telles qu'OWL-ViT et Grounding DINO relient représentations visuelles et langage pour produire des régions. Le vocabulaire textuel ne remplace pas un protocole d'annotation, les négatifs ni une politique de rejet.
+Methods such as OWL-ViT and Grounding DINO link visual representations and language to produce regions. Textual vocabulary does not replace an annotation protocol, negatives, or a rejection policy.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Une similarité région–texte et un seuil conduisent à une décision sous ensemble de candidats. La normalisation des scores dépend du modèle ; elle ne certifie pas présence, calibration ou absence d'objet hors vocabulaire.
+A region – text similarity and a threshold lead to a sub-set of candidates. The normalization of scores depends on the model; it does not certify presence, calibration or absence of object outside vocabulary.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Version, prompt, tokenisation, résolution et seuils. Tester synonymes, objets proches, négatifs et classes absentes ; « open » ne signifie pas taxonomie illimitée comprise parfaitement.
+Version, prompt, tokenization, resolution and thresholds. Testing synonyms, close objects, negatives, and absent classes; “open” does not mean unlimited taxonomy understood perfectly.
 
-## Coût et implémentation
+## Cost and implementation
 
-Encodage texte/image, nombre de candidats et posttraitements comptent. Aucun modèle exécuté et aucun gain de mise à jour mensuelle annoncé comme mesuré.
+Text/image encoding, number of candidates, and postprocessing count. No model executed and no monthly update gain announced as measured.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : détecteur fermé réentraîné versus approche texte sur nouveaux produits séparés du réglage. Mesurer AP/rappel, rejets et coût des mises à jour ; figer les formulations avant test.
+Baseline: Closed detector retrained versus text approach on new products separated from the setting. Measure AP/recall, rejects and cost of updates; freeze formulations before testing.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Faux positifs sur descriptions larges : analyser ambiguïté du texte et taxonomie. Un score haut n'est pas une preuve de grounding exact.
+False positives on broad descriptions: analyze text ambiguity and taxonomy. A high score is not proof of exact grounding.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Combiner détecteur connu, embeddings et annotations ciblées selon fréquence de nouveauté et tolérance d'erreur. Une génération VLM n'est pas une détection évaluée par boîtes.
+Combine known detector, embeddings and targeted annotations according to novelty frequency and error tolerance. A VLM generation is not a box-rated detection.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent vocabulaire variable, protocole et sortie localisée. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop variable vocabulary, protocol and localized output. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-OPENVOC-001
+### Case linked to CV-OPENVOC-001
 
-**Question de travail** : Pourquoi un classement CLIP d’une image ne remplace-t-il pas directement un détecteur open-vocabulary ?
+**Question of work**: Why can CLIP classification of an image not directly replace an open-vocabulary detector?
 
-**Réponse de référence** : Le classement image porte sur l’image globale ; la détection doit aussi localiser les instances avec un protocole de sortie adapté.
+**Reference Response**: Image ranking is about the global image; detection must also locate instances with a suitable output protocol.
 
-**Décomposition de la sortie** : une similarité globale image–texte peut indiquer qu'un contenu est compatible avec une description. Un détecteur doit en plus proposer des positions et distinguer plusieurs occurrences, avec leurs classes ou relations au texte. Un score sur l'image entière ne détermine ni ces boîtes ni leur nombre.
+**Decomposition of the output**: A global image – text similarity may indicate that a content is compatible with a description. A detector must also propose positions and distinguish several occurrences, with their classes or relationships to the text. A score on the entire image does not determine these boxes or their number.
 
-**Exemple construit** : une scène avec deux tasses et une assiette peut bien correspondre au texte « tasse » sans fournir la localisation de chaque tasse. L'évaluation de détection doit vérifier instances, coordonnées et objets manqués, y compris lorsque le prompt est absent de l'image. Un grounding référentiel peut demander encore une autre sortie, comme « la tasse à gauche de l'assiette ». Définir annotations, négatifs, seuils et métriques selon ce contrat. Le langage élargit l'interface des candidats ; il ne dispense pas de vérifier la précision spatiale et les confusions du domaine.
+**Constructed example**: A scene with two cups and a plate may well match the “cup” text without providing the location of each cup. The detection assessment should check instances, coordinates, and objects that are missed, including when the prompt is missing from the image. A referential grounding can require yet another output, such as "the cup to the left of the plate". Define annotations, negatives, thresholds and metrics according to this contract. The language expands the interface of the candidates; it does not dispense with checking the spatial accuracy and confusions of the domain.
 
-### Cas lié à CV-OPENVOC-003
+### Case linked to CV-OPENVOC-003
 
-**Question de travail** : Un prompt large donne des boîtes sur des objets apparentés mais hors cible. Que tester ?
+**Question of work**: A broad prompt produces boxes on related objects outside the target category. What should be tested?
 
-**Réponse de référence** : Définition de classe, formulations/négatifs et score de région sur validation ; inspecter les confusions et annotations.
+**Reference Response**: Class definition, formulations/negatives and region score on validation; inspect confusions and annotations.
 
-**Pourquoi le texte peut être en cause** : une description générale peut correspondre à plusieurs catégories visuelles que la taxonomie industrielle sépare. Un modèle peut donc retourner une région plausible pour le langage courant mais incorrecte pour le besoin. Un seuil unique ne résout pas nécessairement cette ambiguïté.
+**Why the text may be at issue**: A general description can correspond to several visual categories that industrial taxonomy separates. A model can therefore return a region plausible for current language but incorrect for need. A single threshold does not necessarily resolve this ambiguity.
 
-**Enquête construite** : consigner les classes visées et exclues, comparer des formulations plus précises et des négatifs proches sur validation, puis inspecter les régions et annotations. Séparer défaut de localisation et confusion de vocabulaire. Évaluer aussi l'absence de cible, car choisir le meilleur candidat ne prouve pas sa présence. Une nouvelle formulation doit être figée avant le test final. Si le domaine ne fournit pas d'indice discriminant visible, un meilleur prompt peut rester insuffisant ; l'interface doit alors permettre refus ou vérification plutôt que garantir une catégorie exacte.
+**Survey built**: Record target and excluded classes, compare more accurate formulations and close negatives on validation, and then inspect regions and annotations. Separate lack of localization and confusion of vocabulary. Also assess the absence of a target, because choosing the best candidate does not prove its presence. A new formulation must be frozen before the final test. If the domain does not provide a visible discriminating index, a better prompt may be insufficient; the interface must then allow denial or verification rather than guaranteeing an exact category.
 
-**Repère documentaire de cette passe** : [Grounding DINO](https://arxiv.org/html/2303.05499v4), méthode et protocole open-set. Les autres développements figurent dans les [cartes associées](../83-detection-open-vocabulary.md).
+**Documentary reference for this pass**: [Grounding DINO](https://arxiv.org/html/2303.05499v4), open-set method and protocol. The other developments are in the [flashcards](../83-detection-open-vocabulary.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [OWL-ViT, méthode](https://arxiv.org/abs/2205.06230).
-- [Grounding DINO, méthode](https://arxiv.org/abs/2303.05499).
-- [Cartes associées](../83-detection-open-vocabulary.md).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+### CV-OPENVOC-001
+
+**Situation**: Why can CLIP classification of an image not directly replace an open-vocabulary detector?
+
+**Where the text intervenes**: In Grounding DINO described by the cited article, textual representations can guide the selection of queries and participate in decoding regions. The interface is therefore not limited to classifying a global vector after the fact. For a map of outputs, check what each score represents: token, expression or aggregated category according to the implementation. Two occurrences of the same word in an image still require two distinct regions. A test built with an object, two objects and no object, with fixed prompt, allows to check cardinality and location without confusing the best linguistic compatibility with a certain presence.
+
+### CV-OPENVOC-002
+
+**Situation**: Track A — design: a product catalogue changes every month. How should a retrained closed-set detector be compared with an open-vocabulary detector?
+
+**Time division of the test**: simulate several updates to the catalog: set to an initial version, freeze the system, then introduce reserved products and close negatives. Measure the annotation and maintenance gain per cycle, as well as errors on old and new objects. The cost of a textual method includes the definition of categories and the validation of prompts; that of the closed includes collection, training and new validation. If one product is visually indistinguishable from another in the available image, no formulation is sufficient to guarantee the distinction. This protocol evaluates a capacity for evolution, rather than a single favorable photograph of the catalog.
+
+### CV-OPENVOC-003
+
+**Situation**: A broad prompt produces boxes on related objects outside the target category. What should be tested?
+
+**Separate vocabulary and location**: For each false positive, compare first the proposed region to the visible object, then the category of this object to the business definition. A correct box on a semantically neighboring object is a different problem than a box placed between multiple objects. Adding precise formulations can move scores from an entire distribution: re-evaluate recall and rejection, without assuming an invariant threshold to prompt. Record the exact expressions, their tokenization if it affects the interpretation of scores and the rules of grouping into labels. These elements are part of the decision-making model and must be versioned with the checkpoint.
+
+**Passages consulted for these developments**: [Liu et al., Grounding DINO](https://arxiv.org/html/2303.05499v4), §3.2 – 3.3, text-guided selection and decoding; project testing.
+
+## Sources and flashcards
+
+- [OWL-ViT, method](https://arxiv.org/abs/2205.06230).
+- [Grounding DINO, method](https://arxiv.org/abs/2303.05499).
+- [Related flashcards](../83-detection-open-vocabulary.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

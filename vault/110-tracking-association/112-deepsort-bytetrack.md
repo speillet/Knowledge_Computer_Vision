@@ -1,89 +1,97 @@
-# DeepSORT, ByteTrack et association multiobjet — cartes
+# Flashcards — DeepSORT, ByteTrack and multi-object association
 
-Fiche : [[110-tracking-association/references/112-deepsort-bytetrack|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[110-tracking-association/references/112-deepsort-bytetrack|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::110-tracking-association
 
 ## CV-ASSOCIATION-001
 
-Objectif : identifier l’ajout de DeepSORT. Famille : comparaison. Provenance : agent.
+Objective: Identify the addition of DeepSORT. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ASSOCIATION-001
-Question: Que rajoute DeepSORT au raisonnement d’association d’un SORT géométrique simple ?
-Reponse: **Noyau attendu** : Apparence/ReID et stratégies de gating/cascade, en plus du mouvement, selon sa conception.
+Question: What does DeepSORT add to the association reasoning of a simple geometry-based SORT tracker?
+Reponse: **Expected answer**: Appearance/ReID and gating/cascade strategies, in addition to movement, according to its design.
 
-**Approfondissement** : Un embedding n’élimine ni mauvaise détection ni ambiguïté et doit être validé dans le domaine cible.
+**Further explanation**: An embedding does not eliminate bad detection or ambiguity and must be validated in the target domain.
 
-**Raisonnement d'association** : deux boîtes proches peuvent se ressembler géométriquement tout en appartenant à des personnes différentes. Une distance d'apparence ajoute une observation qui peut les distinguer ; le mouvement et le gating restreignent les candidats plausibles. La cascade organise ces décisions selon la méthode, au lieu de transformer le filtre en reconnaissance d'identité.
+**Reasoning for Association**: Two nearby boxes can look similar geometrically while belonging to different people. An apparent distance adds an observation that can distinguish them; movement and gating restrict plausible candidates. The cascade organizes these decisions according to the method, instead of turning the filter into identity recognition.
 
-**Exemple de limite** : si les crops sont petits, occultés ou hors du domaine d'entraînement ReID, leurs embeddings peuvent devenir peu discriminants. Augmenter leur poids peut alors aggraver l'affectation. Contrôler distances de vraies et fausses paires dans le domaine cible, puis comparer mouvement seul, apparence seule et combinaison à détecteur fixe. La fusion de coûts doit avoir une interprétation et un protocole ; une proximité cosinus n'est pas automatiquement une probabilité calibrée d'être la même personne, ni une garantie après une disparition longue.
+**Example of limit**: If the crops are small, hidden or out of the ReID training area, their embeddings can become low discriminants. Increasing their weight can then worsen the affectation. check distances from true and false pairs in the target range, then compare movement alone, appearance alone and fixed detector combination. The cost merger must have an interpretation and a protocol; a cosine proximity is not automatically a calibrated probability of being the same person, nor a guarantee after a long disappearance.
 
-**Erreurs bloquantes** : Présenter toute proximité d’apparence comme identité vraie.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [DeepSORT, §§2.1–2.3 : Mahalanobis, apparence et cascade](https://arxiv.org/abs/1703.07402).
+**Two cost geometries**: in the measurement space, $d_M^2=(z-\hat z)^TS^{-1}(z-\hat z)$ takes into account the predicted covariance $S$; for unitary embeddings, $d_C=1-a^Tb$ describes the angular deviation. The first is without unit after normalization, but does not have the same distribution or the same threshold as the second. High motion uncertainty widens plausible positions; it does not make appearance more discriminating. The waterfall also organizes the priority of the tracks according to their history. Checking costs, eligibility constraints and sequence of steps separately helps to understand what the combination actually brings.
+
+**Blocking errors**: Present any proximity of appearance as true identity.
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Full reference]]; [DeepSORT, §§2.1 – 2.3: Mahalanobis, appearance and waterfall](https://arxiv.org/abs/1703.07402); [Wojke et al., DeepSORT, §2.2, equations 1 – 4 and gating; §2.4, descriptor](https://arxiv.org/html/1703.07402v1), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::comparaison cv_id::CV-ASSOCIATION-001 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-ASSOCIATION-002
 
-Objectif : comprendre l’usage des faibles scores ByteTrack. Famille : algorithme. Provenance : agent.
+Objective: understand the use of low scores ByteTrack. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ASSOCIATION-002
-Question: ByteTrack crée-t-il une piste pour toute boîte de faible score ?
-Reponse: **Noyau attendu** : Non : il exploite d’abord les scores élevés, puis tente de récupérer des observations faibles pour des pistes restantes ; les faibles non associées sont rejetées selon le pipeline.
+Question: Does ByteTrack create a track for every low-score box?
+Reponse: **Expected answer**: No: it first exploits high scores, then tries to recover weak observations for the remaining tracks; the weak not associated are rejected according to the pipeline.
 
-**Approfondissement** : Vérifier version et cycle de vie ; garder de faibles observations n’est pas accepter indistinctement tous faux positifs.
+**Further explanation**: Check version and life cycle; keeping weak observations is not accepting indiscriminately all false positives.
 
-**Pourquoi garder certaines boîtes faibles** : une cible partiellement occultée peut rester visible tout en obtenant un score faible du détecteur. Supprimer systématiquement ces observations coupe une piste qui aurait pu être prolongée grâce à son historique. La seconde association cherche à récupérer cette information parmi les pistes encore candidates.
+**Why keep some boxes weak**: A partially obscured target can remain visible while achieving a low detector score. Systematically deleting these observations cuts a track that could have been extended thanks to its history. The second association seeks to retrieve this information among the tracks still candidates.
 
-**Compromis produit** : une boîte faible peut aussi être un faux positif. La relier à une piste existante sous des règles données n'est pas la même décision que créer une nouvelle identité sans historique. Tracer les deux étapes et les seuils dans la version utilisée. Dans un test construit, faire varier le score d'une vraie boîte occultée, à localisation fixe, puis introduire de fausses boîtes. Mesurer continuité et fausses pistes ensemble. Le titre de la méthode ne signifie donc pas que toute boîte, quel que soit son score et son contexte, devient une nouvelle piste.
+**Product Compromise**: A weak box can also be a false positive. Linking it to an existing track under given rules is not the same decision as creating a new identity without a history. Trace the two steps and thresholds in the version used. In a built test, vary the score of a real hidden box, with fixed location, and then introduce false boxes. Measure continuity and false tracks together. The title of the method does not mean that any box, regardless of its score and context, becomes a new track.
 
-**Erreurs bloquantes** : Assimiler la seconde association à une création massive de pistes faibles.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; [ByteTrack, §3 Algorithm 1 : deux associations et création depuis les scores élevés restants](https://arxiv.org/abs/2110.06864).
+**Two uses of score**: A threshold can be used to decide that an observation is reliable enough to initiate an identity, while allowing less confident observations to extend an already constrained track. These decisions do not have the same false positive cost. If a filter upstream of the detector removes all weak boxes, the second association no longer has the data it is supposed to exploit. So keep the contract thresholds of the entire chain, including NMS and top-k. Testing a real box whose score varies only allows to observe the transitions between priority association, recovery and rejection, without changing its geometry.
+
+**Blocking errors**: Assimilate the second association to a massive creation of weak tracks.
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Full reference]]; [ByteTrack, §3 Algorithm 1: two associations and creation from the remaining high scores](https://arxiv.org/abs/2110.06864); [Zhang et al., ByteTrack, §3, two associations and creation; built protocols](https://arxiv.org/html/2110.06864v3), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::algorithme cv_id::CV-ASSOCIATION-002 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-ASSOCIATION-003
 
-Objectif : contrôler le transfert ReID. Famille : diagnostic. Provenance : agent.
+Objective: check the transfer ReID. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ASSOCIATION-003
-Question: Un DeepSORT piéton préentraîné échange les IDs de pièces industrielles identiques. Quelle hypothèse vérifier ?
-Reponse: **Noyau attendu** : La discrimination et le domaine des embeddings, ainsi que qualité des crops et ambiguïtés physiques des pièces.
+Question: A pretrained pedestrian DeepSORT model swaps the IDs of identical industrial parts. Which assumption should be checked?
+Reponse: **Expected answer**: Discrimination and the field of embeddings, as well as the quality of the crops and physical ambiguities of the parts.
 
-**Approfondissement** : Comparer mouvement seul, apparence et combinaison sur séquences annotées ; aucune information d’apparence ne distingue deux objets visuellement identiques par principe.
+**Further explanation**: Compare movement alone, appearance and combination on annotated sequences; no information on appearance distinguishes two visually identical objects in principle.
 
-**Deux ambiguïtés possibles** : l'embedding peut mal transférer d'un domaine piéton vers des pièces, mais les pièces peuvent aussi être réellement indiscernables dans l'image. Dans le second cas, changer le réseau ne crée pas une information visuelle absente. Le mouvement, la cadence ou un marqueur distinctif peut être nécessaire pour réduire l'ambiguïté.
+**Two possible ambiguities**: embedding can transfer from a pedestrian domain to parts incorrectly, but parts can also be truly indistinguishable in the image. In the second case, changing the network does not create missing visual information. Movement, cadence, or a distinctive marker may be necessary to reduce ambiguity.
 
-**Enquête construite** : conserver les détections et comparer les distributions de distances pour mêmes et différentes pièces, avec leurs crops. Vérifier résolution, normalisation et occultation, puis comparer les associations sans apparence et avec plusieurs pondérations. Examiner les séquences de croisement plutôt qu'un score moyen d'embedding. Un gain sur des images isolées ne prouve pas la continuité d'identité pendant un contact ou une occultation. Si aucune observation ne départage les hypothèses, signaler l'incertitude au lieu de présenter l'ID comme certain.
+**Survey built**: preserve detections and compare distributions of distances for the same and different parts, with their crops. Check for resolution, normalization, and occlusion, and then compare associations without appearance and with multiple weights. Examine crossover sequences rather than an average embedding score. A gain on isolated images does not prove identity continuity during a contact or a occlusion. If there are no observations, report uncertainty instead of presenting the ID as certain.
 
-**Erreurs bloquantes** : Augmenter aveuglément le poids ReID.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; Diagnostic de transfert construit par le projet ; [DeepSORT, §2.3 : modèle d’apparence piéton](https://arxiv.org/abs/1703.07402).
+**Test of Separability**: build positive pairs of the same piece at several moments and negative pairs of different pieces under comparable conditions. Examine their distance distributions and overlap cases, especially after occlusion. If they overlap strongly, a threshold ReID cannot simultaneously eliminate all false matches and keep all true ones. A gallery contaminated by a bad crop can also make a track permanently close to a distractor. Then check the policy of update of the embeddings, and not just their weight in the cost. Movement or marking can provide additional information that is truly observable.
+
+**Blocking errors**: Blindly increase the weight ReID.
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Full reference]]; Transfer diagnosis built by the project; [DeepSORT, §2.4: pedestrian appearance model](https://arxiv.org/abs/1703.07402); [Wojke et al., DeepSORT, §2.2, equations 1 – 4 and gating; §2.4, descriptor](https://arxiv.org/html/1703.07402v1), consult the 2026-10-30.
 Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-ASSOCIATION-003 provenance::agent pole::C pole::D pole::E
 END
 
 ## CV-ASSOCIATION-004
 
-Objectif : séparer détecteur et association. Famille : evaluation. Provenance : agent.
+Objective: separate detector and association. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ASSOCIATION-004
-Question: Comment comparer deux trackers sans confondre leur association avec un détecteur différent ?
-Reponse: **Noyau attendu** : Fixer les mêmes détections ou rapporter explicitement les deux variations ; conserver séquences, seuils et protocole temporel.
+Question: How can two trackers be compared without confounding association quality with a different detector?
+Reponse: **Expected answer**: Fix the same detections or explicitly report the two variations; keep sequences, thresholds and time protocol.
 
-**Approfondissement** : Mesurer qualité des pistes et coût total ; AP du détecteur et score d’identité répondent à deux questions.
+**Further explanation**: Measure tracks quality and total cost; AP detector and identity score answer two questions.
 
-**Ablation causale proposée** : utiliser un fichier de détections horodatées commun aux deux trackers, avec mêmes boîtes, scores et classes. Les différences de pistes proviennent alors de leurs étapes temporelles et de leurs paramètres, dans les limites de ce contrôle. Pour comparer les systèmes complets, mesurer ensuite aussi chaque détecteur avec son tracker.
+**Proposed causal ablation**: Use a timestamped detection file common to both trackers, with the same boxes, scores, and classes. The differences of tracks then come from their temporal stages and their parameters, within the limits of this check. To compare the complete systems, then also measure each detector with its tracker.
 
-**Exemple de facteur confondant** : un détecteur qui retrouve une personne après occultation peut améliorer le score d'identité sans changement d'association. À l'inverse, une meilleure association peut être masquée par de nombreuses boîtes absentes. Reporter donc qualité de détection, erreurs d'identité, fragments, coût et règles de naissance/perte. Conserver un split par séquence et des réglages figés sur le test. Une comparaison équitable ne demande pas forcément un détecteur unique pour tous les usages, mais exige de dire précisément quelle composante a changé et ce que l'on peut lui attribuer.
+**Example of a confusing factor**: A detector that finds a person after occlusion can improve the identity score without changing the association. Conversely, a better association can be masked by many missing boxes. Report quality of detection, identity errors, fragments, cost and birth/loss rules. Keep one split per sequence and settings frozen on the test. A fair comparison does not necessarily require a single detector for all uses, but requires to say precisely which component has changed and what can be attributed to it.
 
-**Erreurs bloquantes** : Attribuer tout gain final au tracker sans contrôler l’amont.
-Source: [[110-tracking-association/references/112-deepsort-bytetrack|Fiche complète]] ; Protocole de comparaison proposé par le projet ; [SORT, §3.1 et tableau 1 : effet du détecteur](https://arxiv.org/abs/1602.00763).
+**Plan factoriel minimal**: compare association A and B on the same detector D1, then repeat on D2 if we want to study their interaction. The four systems reveal whether an association gain depends on more complete boxes or differently distributed scores. Keep the validation settings separate from the final evaluation. Report loss and recovery events, because an average can hide that a method wins only on sequences without occlusion. The shared detection file must keep timestamps and frame order, including empty frames; removing them changes the time problem instead of only check upstream.
+
+**Blocking errors**: Assign any final gain to the tracker without check upstream.
+Source: [[110-tracking-association/references/112-deepsort-bytetrack|Full reference]]; Comparison protocol proposed by the project; [SORT, §3.1 and table 1: effect of the detector](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see the 2026-10-30.
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-ASSOCIATION-004 provenance::agent pole::C pole::D pole::E
 END

@@ -7,83 +7,106 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
 ---
-# Morphologie et composantes connexes
+# Morphology and connected components
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Modifier une géométrie binaire et regrouper ses régions selon une connectivité. Entrées : masque avec polarité définie, structurant, ancrage et bord ; sorties : masque transformé ou labels. Un label de composante n'est ni une classe sémantique ni une identité temporelle.
+Modify a binary geometry and group its regions according to connectivity. Inputs: mask with defined polarity, structuring, anchoring and edge; outputs: transformed mask or labels. A component label is neither a semantic class nor a temporal identity.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-L'érosion retire les points sans voisinage compatible ; la dilatation étend le support. Ouverture et fermeture composent ces opérations dans des ordres différents. Les composantes connexes regroupent ensuite des pixels reliés selon 4 ou 8 voisins.
+Erosion removes points without compatible neighborhood; dilation extends the support. Opening and closing make up these operations in different orders. Connected components then group connected pixels according to 4 or 8 neighbors.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Pour un structurant symétrique B centré, $A\ominus B=\{x:x+B\subseteq A\}$ et $A\oplus B=\{a+b:a\in A,b\in B\}$. Une ouverture est $(A\ominus B)\oplus B$. B exprime une échelle en pixels : une variation de résolution change son sens physique.
+For a symmetrical B-centered structuring, $A\ominus B=\{x:x+B\subseteq A\}$ and $A\oplus B=\{a+b:a\in A,b\in B\}$. An opening is $(A\ominus B)\oplus B$. B expresses a scale in pixels: a variation in resolution changes its physical meaning.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Fixer taille/forme de B, itérations, connectivité et traitement des trous. Deux régions en contact peuvent fusionner ; une opération utile contre le bruit peut supprimer un vrai petit défaut.
+Fix B size/shape, iterations, connectivity and hole processing. Two regions in contact can merge; a useful operation against noise can remove a real small defect.
 
-## Coût et implémentation
+## Cost and implementation
 
-Le coût dépend de l'image, du structurant et de l'algorithme. Les labels sont internes à une image et peuvent être renumérotés. Pseudocode illustratif : nettoyer → étiqueter → mesurer → contrôler objets manquants ; aucune exécution image annoncée.
+The cost depends on the image, the structuring and the algorithm. Labels are internal to an image and can be renumbered. Illustrative pseudocode: clean → label → measure → check missing objects; no image execution announced.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation analytique : deux pixels qui se touchent seulement en diagonale sont deux composantes en 4-connectivité et une en 8-connectivité. Sur image réelle, mesurer erreurs de fusion/séparation avant de filtrer les petites régions.
+Analytical variation: two pixels that only touch diagonally are two components in 4-connectivity and one in 8-connectivity. On real image, measure merge/separation errors before filtering small regions.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Comptage trop faible : regarder les ponts ajoutés par dilatation/fermeture et la connectivité. Comptage trop élevé : inspecter fragments, bruit et structurant ; ne pas considérer la taille comme vérité sémantique.
+Counting too low: look at the bridges added by expansion/closure and connectivity. Counting too high: inspect fragments, noise and structuring; do not consider size as semantic truth.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Watershed à marqueurs pour séparer des objets joints ; segmentation d'instances si l'apparence et les contacts dépassent un modèle géométrique simple.
+Watershed with markers to separate joined objects; instance segmentation if the appearance and contacts exceed a simple geometric pattern.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent support géométrique, topologie et convention de connectivité. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop geometric support, topology and connectivity convention. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-MORPHO-001
+### Case linked to CV-MORPHO-001
 
-**Question de travail** : Quel effet géométrique distingue ouverture et fermeture binaires, et pourquoi choisir la taille du structurant avec la tâche ?
+**Question of work**: Which geometric effects distinguish binary opening and closing, and why must structuring-element size suit the task?
 
-**Réponse de référence** : L’ouverture érode puis dilate et peut retirer de petites structures de premier plan ; la fermeture dilate puis érode et peut combler des trous ou intervalles. Choisir le structurant selon les tailles et formes à conserver.
+**Reference Response**: The opening erodes then expands and can remove small foreground structures; the closure expands then erodes and can fill holes or gaps. Choose the structurer according to the sizes and shapes to keep.
 
-**Explication géométrique** : l'érosion exige que le structurant tienne dans le premier plan ; elle retire donc des positions proches de certaines frontières. La dilatation étend ensuite les positions conservées. Dans une ouverture, une structure trop étroite pour survivre à l'érosion ne réapparaît pas simplement parce qu'une dilatation suit. Dans une fermeture, des intervalles suffisamment petits peuvent être comblés.
+**Geometric explanation**: Erosion requires the structurer to hold in the foreground; it therefore removes positions close to certain borders. The dilation then extends the retained positions. In an opening, a structure too narrow to survive erosion does not reappear simply because dilation follows. In a closure, sufficiently small intervals can be filled.
 
-**Choix d'échelle** : une taille en pixels représente une taille physique seulement si résolution et géométrie sont connues. Un structurant utile sur une caméra peut effacer les défauts recherchés après un changement de résolution. Dans un exemple construit, comparer un défaut fin et une poussière de taille voisine montre que la morphologie ne possède aucune information sémantique pour les départager. Évaluer donc suppressions et fusions sur les cas critiques, avec polarité du masque, forme du structurant et traitement du bord explicités.
+**Choice of scale**: A pixel size represents a physical size only if resolution and geometry are known. A useful structurator on a camera can erase the defects sought after a resolution change. In a constructed example, comparing a fine defect and a dust of similar size shows that the morphology does not have any semantic information to distinguish them. Evaluate therefore suppressions and mergers on critical cases, with polarity of the mask, shape of the structurer and treatment of the edge explained.
 
-### Cas lié à CV-MORPHO-003
+### Case linked to CV-MORPHO-003
 
-**Question de travail** : Après fermeture morphologique, deux pièces proches sont comptées comme une seule. Quelle hypothèse vérifier ?
+**Question of work**: After morphological closing, two nearby parts are counted as one. Which assumption should be checked?
 
-**Réponse de référence** : Le structurant peut avoir créé un pont ; inspecter le masque avant/après et la distance entre objets.
+**Reference Response**: The structurer may have created a bridge; inspect the before/after mask and the distance between objects.
 
-**Mécanisme de l'erreur** : la dilatation peut joindre deux régions séparées par un intervalle plus petit que l'échelle du structurant. L'érosion suivante ne restaure pas nécessairement cet intervalle ; la fermeture peut conserver une région commune. L'étiquetage connexe compte alors correctement un seul ensemble relié, mais cet ensemble ne représente plus un seul objet du monde.
+**Mechanism of Error**: dilation can join two regions separated by an interval smaller than the structurant scale. The following erosion does not necessarily restore this interval; closure may retain a common area. The related labeling then correctly counts a single connected set, but this set no longer represents a single object of the world.
 
-**Contrôle construit** : afficher les pixels ajoutés entre les masques avant et après, puis faire varier la taille et l'orientation du structurant à image fixe. Si le nombre d'objets change quand le pont apparaît, la cause est localisée. Un filtrage par aire après fusion ne retrouve pas les deux pièces : il agit sur la région déjà regroupée. Selon la scène, préserver l'intervalle, utiliser des marqueurs de séparation ou une segmentation d'instances. Toute correction doit aussi être évaluée sur des objets réellement jointifs, pour éviter de résoudre un cas en fragmentant les autres.
+**check**: Display the pixels added between the before and after masks, and then vary the size and orientation of the still image structurer. If the number of objects changes when the bridge appears, the cause is localized. A filtering by area after fusion does not find the two pieces: it acts on the region already grouped. Depending on the scene, preserve the interval, use separation markers or instance segmentation. Any correction must also be evaluated on truly contiguous objects, to avoid solving one case by fragmenting the others.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Morphological Transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html), erosion, dilation, opening, closing. Les autres développements figurent dans les [cartes associées](../33-morphologie-composantes.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Morphological Transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html), erosion, dilation, opening, closing. The other developments are in the [flashcards](../33-morphologie-composantes.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [OpenCV 4.13.0, connectedComponents, paramètres connectivity et labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Pour la morphologie ensembliste avec les conventions annoncées, l’ouverture est anti-extensive et la fermeture extensive : elles peuvent supprimer de petites structures de premier plan ou combler de petits intervalles. Sur une image finie, le traitement des bords doit rester explicite.
+### CV-MORPHO-001
+
+**Situation**: Which geometric effects distinguish binary opening and closing, and why must structuring-element size suit the task?
+
+**Properties to know**: on ideal binary sets with the same structuring element, the opening is anti-extensive: its result is included in the initial foreground. The closure is extensive: it can be added. They are idempotent: applying a second time the complete operation with the same structuring element should no longer change the theoretical set obtained. Increasing the number of erosions and dilations on the other hand changes the effective support, and is not "repeat an identical opening". Finite images, edge values, and anchors must be consistent to find these properties in an implementation. Opening can break a thin bridge, closing can create a bridge; these topological changes can be decisive for counting objects.
+
+### CV-MORPHO-002
+
+**Situation**: A mask contains only two foreground pixels touching at one corner. How many components exist under 4-connectivity and 8-connectivity?
+
+**Built labeling algorithm**: browse the mask; at each foreground pixel not yet visited, create a label and explore by queue or stack its eligible neighbors. All affected pixels receive the same label, then the path resumes on the remaining pixels. This definition directly links the number of components to the number of routes launched. A practical implementation can use multiple passes or union-find, without changing the connectivity defined. Beware of the return of a library that includes the background in its number of labels: two components of foreground then give three labels in total. The properties of holes and contact also require a coherent neighborhood convention between background and foreground.
+
+### CV-MORPHO-003
+
+**Situation**: After morphological closing, two nearby parts are counted as one. Which assumption should be checked?
+
+**Why the area filter is too late**: The area of a merged component essentially adds those of the two parts and the pixels of the bridge. It can therefore perfectly pass a minimum threshold, even when the count is false. Separately measuring the distance between borders before closing, the width of the bridge created and the maximum distance inside each part helps to choose a remedy. A marker watershed can use two reliable centers to provide separation, but bad markers can oversegment a single piece. In the evaluation, explicitly distinguish merge error, division error and boundary error: an average pixel score can remain good despite an object lost on counting.
+
+**Passages consulted for these developments**: [OpenCV 4.13, Morphological Transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html), §§1 – 4, erosion, dilation, opening and closing; [OpenCV 4.13, connectedComponents](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html), connectivity and labels.
+
+## Sources and flashcards
+
+- [OpenCV 4.13.0, connectedComponents, connectivity settings and labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html).
+
+For the ensemblist morphology with the announced conventions, the opening is anti-extensive and the closure extensive: they can remove small structures foreground or fill small intervals. On a finished image, the edge processing must remain explicit.
 
 - [OpenCV, morphological transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html).
-- [Cartes associées](../33-morphologie-composantes.md).
+- [Related flashcards](../33-morphologie-composantes.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

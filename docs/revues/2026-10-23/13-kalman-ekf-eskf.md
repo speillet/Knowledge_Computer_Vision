@@ -1,96 +1,74 @@
-# Revue — Kalman, EKF, UKF et ESKF pour la fusion — 2026-10-23
+# Review –  Kalman, EKF, UKF and ESKF for merger –  2026-10-23
 
-## Synthèse
+## Overview
 
-Quatre cartes auditées, plus leur fiche. Aucune affirmation fausse, mais
-trois constats importants :
+Four flashcards audited, plus their reference note. No false statements, but three important ones:
 
-- une source UKF jamais lue depuis la première revue ;
-- un noyau d'innovation normalisée sans la loi du $\chi^2$, que sa propre
-  source donne pourtant ;
-- une carte « diagnostic » sans symptôme.
+- a UKF source never read since the first review;
+- a standardized innovation core without the $\chi^2$ law, which its own source gives;
+- a flashcard "diagnosis" without symptoms.
 
-Les corrections sont appliquées : fiche en révision 3, IDs et objectifs
-inchangés. Les trois enrichissements proposés ont été acceptés et rédigés en
-révision 4 : le sujet passe de 4 à 6 cartes, et CV-FUSION-004 est enrichie.
+Corrections are applied: reference note in revision 3, IDs and objectives unchanged. The three proposed enrichments were accepted and drafted in revision 4: the subject goes from 4 to 6 flashcards, and CV-FUSION-004 is enriched.
 
-Auto-revue : Agent Claude Code (`revue-cartes`). Statut éditorial `redige`.
+Self-review: Agent Claude Code (`revue-cartes`). Editorial status `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FUSION-001 | UKF non vérifiable jusqu'ici, puis confirmé (Julier et Uhlmann 1997, §3) ; « ESKF utilise un EKF » imprécis : Solà applique la prédiction et la jacobienne d'un EKF à l'erreur | Utile | Noyau net | Source marquée « à vérifier » depuis le 2026-10-18 | Important | Source lue ; formulation précisée ; nuance moyenne/covariance |
-| CV-FUSION-002 | Confirmé, mais la loi du $\chi^2$ et le seuil étaient omis ; « sans unité lorsque cohérent » imprécis | Forte : base du gating | Noyau trop vague pour « interpréter » | Lien absent avec le gating de DeepSORT (CV-ASSOCIATION) | Important | $\chi^2_m$, quantile, gating DeepSORT, sur/sous-confiance |
-| CV-FUSION-003 | Confirmé (Solà, éq. 285–288) | Forte | Recto en « pourquoi ne… pas » qui oriente ; aucun symptôme pour une carte diagnostic | Accord fiche | Important | Symptôme, test discriminant, $G\approx I$ |
-| CV-FUSION-004 | Confirmé (Solà, §5.4, annexe E) | Utile | « Une caméra ralentit » vague | Accord fiche | Mineur | Enrichissement proposé plutôt que correction |
+| CV-FUSION-001 | UKF not verifiable so far, then confirmed (Julier and Uhlmann 1997, §3); "ESKF uses an imprecise EKF": Solà applies the prediction and the Jacobian of a EKF to the error | Utile | Net Core | Source marked "to check" from 2026-10-18 | Important | Source read; formulation specified; medium grade/covariance |
+| CV-FUSION-002 | Confirmed, but the law of $\chi^2$ and threshold were omitted; "without unity when consistent" imprecise | Strong: the basis of the gating | Nose too vague to “interpret” | Absent link with the DeepSORT gating (CV-ASSOCIATION) | Important | $\chi^2_m$, quantile, feeding DeepSORT, on/under-trust |
+| CV-FUSION-003 | Confirmed (Solà, eq. 285 – 288) | Forte | Front in "why not... not" that directs; no symptoms for a flashcard diagnosis | Agreement reference note | Important | Symptom, discriminant test, $G\approx I$ |
+| CV-FUSION-004 | Confirmed (Solà, §5.4, Annex E) | Utile | A camera slows down | Agreement reference note | Minor | Proposed enrichment rather than correction |
 
-## Corrections appliquées
+## Corrections applied
 
-- `vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md`,
-  révision 3 :
-  - UKF et son ordre de précision ;
-  - ESKF décrit selon les équations de Solà ;
-  - loi du $\chi^2$ et quantiles recalculés ;
-  - seuil de DeepSORT ;
-  - $G$ et pratique $G=I$ ;
-  - sources précisées par équation.
-- `vault/10-mathematiques-estimation/13-kalman-ekf-eskf.md` : CV-FUSION-001,
-  002 et 003 corrigées ; lien arXiv PDF remplacé par la page de résumé dans
-  004.
-- Journal : trois lignes.
+- `vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md`, revision 3:
+  - UKF and its precision order;
+  - ESKF described according to Solà equations;
+  - $\chi^2$ and quantiles recalculated;
+  - threshold of DeepSORT;
+  - $G$ and practice $G=I$;
+  - Sources specified by equation.
+- `vault/10-mathematiques-estimation/13-kalman-ekf-eskf.md`: CV-FUSION-001, 002 and 003 fixed; link arXiv PDF replaced by summary page in 004.
+- Journal: Three lines.
 
-`grep` sur l'ancienne référence Julier et Uhlmann 2004 : aucune autre
-occurrence active dans le vault.
+`grep` on the former reference Julier and Uhlmann 2004: no other active occurrence in the vault.
 
-## Enrichissements acceptés et appliqués
+## Enrichments accepted and applied
 
-Tous acceptés le 2026-10-23 :
+All accepted on 2026-10-23:
 
-- **CV-FUSION-005**, pourquoi l'ESKF ;
-- **CV-FUSION-006**, forme de Joseph ;
-- **CV-FUSION-004**, enrichie. Raisonnement du projet : à 200 Hz, le
-  pas de propagation IMU ne dépend pas de la cadence caméra. La carte vise donc
-  les vrais pièges : propagation à pas figé, échantillons IMU perdus et image datée à
-  réception.
+- **CV-FUSION-005**, why the ESKF;
+- **CV-FUSION-006**, form of Joseph;
+- **CV-FUSION-004**, enriched. Reasoning of the project: at 200 Hz, the propagation step IMU does not depend on the camera rate. The flashcard therefore targets the real traps: fixed-step propagation, lost IMU samples and dated image upon receipt.
 
-Notation unifiée sur $R$ ; Solà note $V$ la covariance de mesure. Le total
-passe de 240 à 242 cartes ; les compteurs d'état courant sont mis à jour.
+Unified notation on $R$; Solà note $V$ the measurement covariance. The total goes from 240 to 242 flashcards; current state counters are updated.
 
-Table des propositions telle que soumise :
+Table of proposals as submitted:
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| CV-FUSION-005 : pourquoi une formulation à état d'erreur pour l'orientation IMU : erreur minimale, toujours proche de l'origine, petite, lente | Le « pourquoi » de l'ESKF n'est interrogé nulle part, alors qu'il structure tous les VIO filtrants | raisonnement | 1 carte ; noyau à 3 ou 4 points | Solà, §5.1 |
-| CV-FUSION-006 : covariance qui perd symétrie ou définie positivité ; forme $(I-KH)P$ instable, forme symétrique ou de Joseph | Bug d'implémentation fréquent, aucune carte | diagnostic | 1 carte ; noyau à 3 points | Solà, §6.1, note 26 |
-| CV-FUSION-004 : effet du $\Delta t$ réel sur chaque terme de covariance ; horodatage d'acquisition et non de réception ; mesures en retard | Carte juste mais générique | pratique, enrichissement de la carte | aucun nouveau rappel | Solà, §5.4.2, éq. 262–265, et annexe E, éq. 440 : exponentiel, quadratique, linéaire |
-| Fiche : formes de mise à jour de $P$, dépendance au $\Delta t$, avantages de l'ESKF | Rubriques Coût et Paramètres minces | fiche | sans carte | mêmes sources |
+| CV-FUSION-005: why an error-state formulation for orientation IMU: minimal error, always close to origin, small, slow | The "why" of the ESKF is not questioned anywhere, while it structures all the VIO filters | reasoning | 1 flashcard; core to 3 or 4 points | Solà, §5.1 |
+| CV-FUSION-006: covariance that loses symmetry or defines positivity; unstable $(I-KH)P$ form, symmetric or Joseph form | Frequent implementation bug, no flashcard | diagnosis | 1 flashcard; core at 3 points | Solà, §6.1, note 26 |
+| CV-FUSION-004: effect of the actual $\Delta t$ on each covariance term; acquisition timestamp and not reception timestamp; late measurements | flashcard fair but generic | practice, enrichment of the flashcard | No new reminders | Solà, §5.4.2, eq. 262 – 265, and Annex E, eq. 440: exponential, quadratic, linear |
+| reference note: update shapes from $P$, dependence on $\Delta t$, advantages of ESKF | Topics Cost and Thin Settings | reference note | without flashcard | The same sources |
 
 ## Sources
 
-- [Solà, Quaternion kinematics for the error-state Kalman filter](https://arxiv.org/abs/1711.02508),
-  PDF v1 lu en texte intégral :
-  - §5.1, quatre avantages ;
+- [Solà, Quaternion kinetics for the error-state Kalman filter](https://arxiv.org/abs/1711.02508), PDF v1 read in full text:
+  - §5.1, four advantages;
   - §5.2 ;
-  - §5.4.2, éq. 262–265 ;
-  - §6.1, éq. 272–278 et note 26 sur la forme de Joseph ;
-  - §6.3, éq. 284–288, et « G = I18 » dans la plupart des implémentations ;
-  - annexe E, éq. 438–442.
-- [Gamse, Nobakht-Ersi et Sharifi 2014, Sensors 14(10)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/) :
-  §2.2.2, éq. 5–10 ; §3.4.2, $m=3$, $\alpha=0{,}05$, seuil 7,815.
-- [Julier et Uhlmann 1997, SPIE 3068](https://doi.org/10.1117/12.280797),
-  §3, éq. 12–14. DOI vérifié par redirection vers SPIE ; texte lu sur une
-  copie de cours hébergée par Berkeley.
-- [Wojke, Bewley et Paulus 2017, DeepSORT](https://arxiv.org/abs/1703.07402),
-  §2.2 : seuil 9,4877.
-- Quantiles du $\chi^2$ recalculés avec SciPy 1.13.1.
-- Non vérifiable : Julier et Uhlmann 2004, Proceedings of the IEEE. Il n'est
-  plus cité.
+  - §5.4.2, eq. 262 – 265;
+  - §6.1, eq. 272 – 278 and note 26 on the form of Joseph;
+  - §6.3, eq. 284 – 288, and "G = I18" in most implementations;
+  - Annex E, Eq. 438 – 442.
+- [Gamse, Nobakht-Ersi and Sharifi 2014, Sensors 14(10)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/): §2.2.2, eq. 5 – 10; §3.4.2, $m=3$, $\alpha=0{,}05$, threshold 7,815.
+- [Julier and Uhlmann 1997, SPIE 3068](https://doi.org/10.1117/12.280797), §3, eq. 12 – 14. DOI verified by redirection to SPIE; text read on a course copy hosted by Berkeley.
+- [Wojke, Bewley and Paulus 2017, DeepSORT](https://arxiv.org/abs/1703.07402), §2.2: threshold 9,4877.
+- Quantiles of the $\chi^2$ recalculated with SciPy 1.13.1.
+- Julier and Uhlmann 2004, Proceedings of the IEEE. He is no longer quoted.
 
-## Contrôles et limites
+## Checks and limitations
 
-`check_vault.py` OK (240 cartes) après corrections, puis 242 cartes après
-ajouts, 34 tests réussis, catalogue régénéré puis à jour. L'inventaire
-comparé à l'état initial ne montre que les IDs ajoutés. Context7 n'est pas
-disponible dans cette session. Non vérifiés : export Anki, rendu Obsidian et
-AnkiDroid, maîtrise, validation indépendante.
+`check_vault.py` OK (240 flashcards) after corrections, then 242 flashcards after additions, 34 tests passed, catalog regenerated and then updated. The inventory compared to the initial state shows only the added IDs. Context7 is not available in this session. Not verified: export Anki, rendering Obsidian and AnkiDroid, mastering, independent validation.

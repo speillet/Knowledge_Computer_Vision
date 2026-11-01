@@ -1,42 +1,42 @@
-# Revue — Kalman, EKF, UKF et ESKF pour la fusion — 2026-10-18
+# Review –  Kalman, EKF, UKF and ESKF for merger –  2026-10-18
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 2 importante, 2 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 2 large, 2 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FUSION-001 | EKF/ESKF confirmé et précisé ; UKF non vérifiable | distinguer variantes de filtre. | Noyau fini ; 77 mots | Accord fiche et format | Important | Recouvrement explicité, source UKF séparée |
-| CV-FUSION-002 | Confirmé : NIS Eq.7 | interpréter une innovation normalisée. | Noyau fini ; 55 mots | Accord fiche et format | Important | Symboles et source ajoutés |
-| CV-FUSION-003 | Confirmé : reset covariance Eq.286 | préserver la covariance ESKF. | Noyau fini ; 50 mots | Accord fiche et format | Mineur | Section précisée |
-| CV-FUSION-004 | Confirmé : propagation en Δt ; diagnostic déduit | traiter temps et données manquantes. | Noyau fini ; 53 mots | Accord fiche et format | Mineur | Passages précisés |
+| CV-FUSION-001 | EKF/ESKF confirmed and specified; UKF unverifiable | distinguish filter variants. | Finished core; 77 words | reference note and format | Important | Explicit overlap, separate source UKF |
+| CV-FUSION-002 | Confirmed: NIS Eq.7 | interpret a standardized innovation. | Finished core; 55 words | reference note and format | Important | Symbols and source added |
+| CV-FUSION-003 | Confirmed: reset covariance Eq.286 | preserve the covariance ESKF. | Finished core; 50 words | reference note and format | Minor | Section specified |
+| CV-FUSION-004 | Confirmed: propagation in Δt; diagnosis deduced | Processing time and missing data. | Finished core; 53 words | reference note and format | Minor | Specified passages |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : étapes ESKF, reset de covariance, propagation avec pas temporel ; covariance d’innovation et pondération. Imprécis corrigé : ESKF n’est pas exclusif d’EKF. Non vérifiable dans le texte primaire consultable : détail des sigma-points UKF. Les diagnostics délais/biais/corrélations sont des raisonnements du projet. La variation de R doit être comprise dans un modèle fixé, pas comme un ordre universel composante par composante.
+Confirmed: ESKF steps, covariance reset, propagation with time pitch; innovation covariance and weighting. Fixed: ESKF is not exclusive to EKF. Unverifiable in the primary text searchable: detail of sigma-points UKF. Delay/bias/correlation diagnostics are the reasonings of the project. The variation of R must be included in a fixed model, not as a component-by-component universal order.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2, cartes 001–004 : sources ciblées ; 001 distingue les axes de comparaison ; 002 définit les symboles et corrige « dinnovation ». Aucun objectif ni ID changé.
+reference note revision 2, flashcards 001 – 004: targeted sources; 001 distinguishes the axes of comparison; 002 defines the symbols and corrects "innovation". No goals or IDs changed.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Contrôler cohérence NIS et résidus biaisés | Évaluer une covariance, au-delà du faible résidu | Évaluation ; une carte | 3 critères ; durée à mesurer | Gamse et al., §§2.2.2 et 3.4 |
+| check Consistency NIS and residuals biased | Evaluate covariance, beyond the low residual | Evaluation; a flashcard | 3 criteria; duration to be measured | Gamse et al., §§2.2.2 and 3.4 |
 
 ## Sources
 
-- [Solà, §§5.2 et 6.1–6.3](https://arxiv.org/pdf/1711.02508) : état nominal/erreur, correction et reset. §5.4/annexe E : discrétisation.
-- [Gamse et al. 2014, §2.2.2, équations 5–7](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/) : innovation et score sans unité.
-- [Julier et Uhlmann 2004, Unscented Filtering and Nonlinear Estimation (texte intégral à vérifier)](https://doi.org/10.1109/JPROC.2003.823141) : seul résumé disponible ; accès IEEE bloqué et copies PDF 1997/2004 indisponibles. Ne pas considérer le mécanisme UKF comme confirmé par Solà.
+- [Solà, §§5.2 and 6.1 – 6.3](https://arxiv.org/pdf/1711.02508): nominal/error status, correction and reset. §5.4/Annex E: discretization.
+- [Gamse et al. 2014, §2.2.2, equations 5 – 7](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/): innovation and score without unit.
+- [Julier and Uhlmann 2004, Unscented Filtering and Nonlinear Estimation](https://doi.org/10.1109/JPROC.2003.823141): only summary available; IEEE access blocked and PDF copies 1997/2004 unavailable. Do not consider the UKF mechanism as confirmed by Solà.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

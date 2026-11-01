@@ -1,138 +1,148 @@
-# Conventions des rapports de revue
+# Review report conventions
 
-Les rapports gardent la trace de ce qui a été vérifié, avec quelles sources et
-avec quelles limites. Ils ne valent ni relecture indépendante ni preuve de
-maîtrise. Les rapports existants de `docs/revues/` suivent ces conventions.
+Reports record what was checked, against which sources and with which limits.
+They establish neither independent review nor learner proficiency. Existing
+reports under `docs/revues/` follow these conventions.
 
-1. [Emplacement](#emplacement)
-2. [Cadrage d'un passage](#cadrage-dun-passage)
-3. [Rapport par sujet](#rapport-par-sujet)
-4. [Bilan d'un passage](#bilan-dun-passage)
-5. [Registre des propositions](#registre-des-propositions)
+1. [Location](#location)
+2. [Scope record](#scope-record)
+3. [Subject report](#subject-report)
+4. [Review overview](#review-overview)
+5. [Proposal register](#proposal-register)
 
-## Emplacement
+## Location
 
 ```text
 docs/revues/
-  propositions.md                      # registre unique, tous passages confondus
-  <AAAA-MM-JJ>[-<objet>]/              # un dossier par passage, objet facultatif
-    00-cadrage.md                      # passages à plusieurs sujets
-    <fichier-de-cartes>.md             # un rapport par sujet, ex. 81-nms.md
-    00-bilan.md                        # passages à plusieurs sujets
+  propositions.md                      # one register across all review passes
+  <YYYY-MM-DD>[-<purpose>]/             # one directory per pass; purpose optional
+    00-cadrage.md                      # required for multiple subjects
+    <card-filename>.md                 # one report per subject, e.g. 81-nms.md
+    00-bilan.md                        # required for multiple subjects
 ```
 
-Nommer le rapport comme le fichier de cartes du sujet : on retrouve ainsi tout
-l'historique d'un sujet avec `ls docs/revues/*/81-nms.md`. Ne pas réécrire un
-rapport d'un passage antérieur ; un nouveau passage crée un nouveau rapport.
+Use the subject's card filename for its report, so that
+`ls docs/revues/*/81-nms.md` retrieves its history. Do not rewrite a report from
+an earlier pass; create a new report for the new pass.
 
-## Cadrage d'un passage
+## Scope record
 
-À écrire avant le premier sujet, quand le passage en couvre plusieurs.
+Write this before the first subject in a pass covering several subjects.
 
 ```markdown
-# <Objet du passage> — <AAAA-MM-JJ>
+# <Review purpose> — <YYYY-MM-DD>
 
-Demande : <reformulation fidèle, avec les ajouts acceptés s'il y en a>.
-Mode : <approfondir (défaut) | audit seulement>. Périmètre : <sujets, nombre de fiches et de cartes>.
+Request: <faithful restatement, including accepted additions>.
+Mode: <approfondir (default) | audit only>.
+Scope: <subjects and counts of references and cards>.
 
-## Critères de livraison
-- <ce qui peut changer et ce qui doit rester stable : IDs, questions, noyaux…>
-- <niveau d'exigence sur les sources>
-- <contrôles à passer à la fin>
+## Delivery criteria
+
+- <permitted changes and invariants: IDs, questions, expected answers, etc.>
+- <source requirements>
+- <checks required at completion>
 ```
 
-## Rapport par sujet
+## Subject report
 
 ```markdown
-# Revue — <titre de la fiche> — <AAAA-MM-JJ>
+# Review — <reference title> — <YYYY-MM-DD>
 
-## Synthèse
-<n> cartes auditées, mode <…>. Gravité maximale par carte avant correction :
-<b> bloquante, <i> importante, <m> mineure, <s> sans défaut relevé.
-Auto-revue : Agent <Codex ou Claude Code> (`revue-cartes`). Statut éditorial : `redige`.
+## Overview
 
-## Constats par carte
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+<n> cards audited in <mode>. Highest severity per card before correction:
+<b> blocking, <i> important, <m> minor, <s> with no defect identified.
+Self-review: Agent <Codex or Claude Code> (revue-cartes).
+Editorial status: redige.
+
+## Findings by card
+
+| Card | Accuracy | Relevance | Gradability | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-NMS-004 | Non soutenu : seuil final attribué au §4, décrit au §5 | Senior : ordre de traitement après pénalité | Noyau en 2 points ; 234 mots | IoU sans arguments dans la formule | Importante | Source et notation corrigées |
+| CV-NMS-004 | Unsupported: final threshold attributed to §4, described in §5 | Senior task: processing order after score penalty | 2 expected criteria; 234 words | IoU arguments omitted | Important | Corrected source and notation |
 
-## Constats sur la fiche
-<affirmations vérifiées, divergences entre sources, rubriques creuses>
+## Reference findings
 
-## Corrections appliquées
-<fichier, changement et raison, source consultée ; révision de la fiche>
+<checked claims, source disagreements and shallow sections>
 
-## Propositions
-<identifiants du registre créés ou mis à jour par ce passage, avec leur statut>
+## Applied corrections
+
+<file, change, reason, consulted source and reference revision>
+
+## Proposals
+
+<register IDs created or updated in this pass, with their status>
 
 ## Sources
-<passages réellement consultés ; accès échoués et affirmations non revalidées>
 
-## Contrôles et limites
-<commandes et résultats ; reste non vérifié : rendu AnkiDroid, maîtrise de
-l'apprenant, validation indépendante>
+<passages actually consulted, failed accesses and claims not revalidated>
+
+## Checks and limitations
+
+<commands and results; unverified AnkiDroid rendering, learner proficiency
+and independent validation>
 ```
 
-Dans le tableau :
+In the findings table:
 
-- **Exactitude** donne le verdict et l'affirmation en cause, pas seulement
-  « confirmé ».
-- **Pertinence** est un jugement court : ce que la carte entraîne (mécanisme,
-  choix, diagnostic, évaluation) ou pourquoi elle est faible (anecdote, doublon,
-  cours général de DL).
-- **Corrigibilité** donne la taille du noyau et le nombre de mots lexicaux.
-- **Gravité** retient la plus haute de la carte.
-- « Sans défaut relevé » ne vaut pas certification.
+- **Accuracy** names the claim and verdict, rather than just saying confirmed.
+- **Relevance** explains what the card trains (mechanism, choice, diagnosis,
+  evaluation), or why it is weak (anecdote, duplicate or generic DL material).
+- **Gradability** gives the number of expected criteria and lexical words.
+- **Severity** records the highest severity for that card.
+- No defect identified does not constitute certification.
 
-## Bilan d'un passage
+## Review overview
 
 ```markdown
-# <Objet du passage> — bilan — <AAAA-MM-JJ>
+# <Review purpose> — overview — <YYYY-MM-DD>
 
-## Résultat
-<sujets et cartes examinés ; cartes modifiées ou conservées ; aucun ajout ni retrait d'ID, ou lesquels>
+## Result
 
-| Gravité maximale par carte avant correction | Cartes |
+<subjects and cards examined; cards changed or retained; IDs added or removed>
+
+| Highest severity per card before correction | Cards |
 | --- | ---: |
-| Bloquante | |
-| Importante | |
-| Mineure | |
-| Aucun défaut relevé | |
+| Blocking | |
+| Important | |
+| Minor | |
+| No defect identified | |
 | Total | |
 
-## Corrections principales
-<regroupées par nature : sources, conventions, critères de réponse…>
+## Main corrections
 
-## Propositions à décider
-<extrait du registre : les plus utiles d'abord, avec la décision de l'apprenant si elle a été prise>
+<grouped by source, convention, expected-answer criteria or another useful category>
 
-## Contrôles exécutés
-<commandes et résultats, comparaison des inventaires>
+## Proposals awaiting decisions
 
-## Limites
+<register excerpt, most useful first, including any learner decisions>
+
+## Checks performed
+
+<commands, results and inventory comparison>
+
+## Limitations
 ```
 
-Pour le mode `approfondir`, ajouter au résultat un tableau des mots lexicaux par
-réponse avant et après (minimum, médiane, maximum). Rappeler que ce compte
-repère les réponses trop brèves sans mesurer leur qualité.
+In `approfondir` mode, add a before/after table of answer word counts (minimum,
+median and maximum). Explain that the count flags short answers and does not
+measure their quality.
 
-## Registre des propositions
+## Proposal register
 
-`docs/revues/propositions.md` contient un tableau unique. Une ligne par
-proposition, avec un identifiant stable `P-<ID-fiche>-<NN>`, par exemple
-`P-CV-NMS-01` :
+`docs/revues/propositions.md` contains one table, with one row per proposal.
+Use stable IDs `P-<reference-ID>-<NN>`, for example `P-CV-NMS-01`.
 
-| ID | Fiche | Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue | Statut |
+| ID | Reference | Proposal | Gap addressed | Family or section | Review cost | Intended primary source | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 
-Statuts possibles :
+Supported statuses:
 
-- `à décider` : la proposition attend le choix de l'apprenant ;
-- `acceptée (AAAA-MM-JJ)` : à rédiger en mode `ajouter` ;
-- `refusée (AAAA-MM-JJ) : <raison>` : ne pas la reproposer sans fait nouveau ;
-- `reportée (AAAA-MM-JJ)` ;
-- `faite (AAAA-MM-JJ) : <IDs créés>`.
+- `pending`: awaiting the learner's decision;
+- `accepted (YYYY-MM-DD)`: to be written in `ajouter` mode;
+- `rejected (YYYY-MM-DD): <reason>`: do not propose again without new evidence;
+- `deferred (YYYY-MM-DD)`;
+- `completed (YYYY-MM-DD): <created IDs>`.
 
-Une proposition qui approfondit seulement une carte existante, sans nouvel ID,
-relève du mode `approfondir` et peut être appliquée dans un passage par défaut ;
-le noter dans le statut.
+A proposal that only deepens an existing card, without a new ID, belongs to
+`approfondir` mode and may be applied in the default pass. Record that in its status.

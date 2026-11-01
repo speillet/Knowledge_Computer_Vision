@@ -1,45 +1,44 @@
-# Revue — OCR et compréhension documentaire — 2026-10-20
+# Review –  OCR and documentary understanding –  2026-10-20
 
-## Synthèse
+## Overview
 
-3 cartes auditées. 0 bloquant ; 1 important (variante du protocole cité).
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+3 flashcards audited. 0 blocking; 1 important (variant of the cited protocol). Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 0 mineure, 2 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 0 minor, 2 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-OCR-001 | Confirmé : sorties distinctes ; choix métier déduit | séparer reconnaissance et structure. | 49 mots à l’entrée ; un besoin d’évaluation | Fiche et format contrôlés | Aucune | Source ciblée |
-| CV-OCR-002 | Confirmé pour CER classique ; divergence OCR-D explicitée | interpréter CER. | 51 mots à l’entrée ; conditions du score | Fiche et format contrôlés | Important | Convention précisée |
-| CV-OCR-003 | Diagnostic déduit de la chaîne de traitement | localiser un défaut d’ordre de lecture. | 44 mots à l’entrée ; localisation d’un composant | Fiche et format contrôlés | Aucune | Conserver |
+| CV-OCR-001 | Confirmed: distinct outputs; business choice deducted | Separate recognition and structure. | 49 words at the entrance; a need for evaluation | reference note and controlled format | None | Targeted source |
+| CV-OCR-002 | Confirmed for CER classic; OCR-D divergence explained | Interpreting CER. | 51 words at entry; conditions of the score | reference note and controlled format | Important | Convention specified |
+| CV-OCR-003 | Diagnosis deduced from the treatment chain | locate a reading order defect. | 44 words at the input; localization of a component | reference note and controlled format | None | Keep |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-CRNN : extraction/séquence/CTC ; TrOCR : encoder-decoder transformer ; LayoutLM : texte et positions ; Donut : génération structurée sans OCR séparé, confirmés au niveau de repérage par les textes primaires. OCR-D distingue plusieurs CER ; exemple propre : référence « a », prédiction « abc » donne 2/1=200 % avec la convention classique. En revanche, sa CER normalisée reste bornée. Les caractères et mots doivent être définis par protocole.
+CRNN: extraction/sequence/CTC; TrOCR: encoder-decoder transform; LayoutLM: text and positions; Donut: structured generation without separate OCR, confirmed at the level of identification by the primary texts. OCR-D distinguishes several CER; own example: reference “a”, prediction “abc” gives 2/1=200% with the classical convention. On the other hand, its normalized CER remains limited. Characters and words must be defined by protocol.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; distinction classique/normalisée et sources des trois cartes.
+reference note revision 2; classic/standardized distinction and sources of the three flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Agréger CER par micro/macro moyenne | Éviter de comparer des documents de longueurs différentes sans protocole | Évaluation | Une carte, un exemple ; durée à mesurer | OCR-D CER Granularity |
+| Aggregate CER per medium mic/macro | Avoid comparing documents of different lengths without protocol | Evaluation | A flashcard, an example; duration to be measured | OCR-D CER Granularity |
 
-Familles absentes : algorithme, comprehension, conception, evaluation, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, evaluation, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OCR-D, Text Evaluation, CER and WER, consulté le 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html) : sections Characters, Levenshtein, CER and WER lues.
-- [CRNN §2](https://arxiv.org/abs/1507.05717), [TrOCR résumé](https://arxiv.org/abs/2109.10282), [LayoutLM résumé/§2](https://arxiv.org/abs/1912.13318), [Donut résumé et figure 1](https://arxiv.org/abs/2111.15664) : PDFs extraits.
+- [OCR-D, Text Evaluation, CER and WER, Viewed on 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html) : sections Characters, Levenshtein, CER and WER lues.
+- [CRNN §2](https://arxiv.org/abs/1507.05717), [TrOCR summary](https://arxiv.org/abs/2109.10282), [LayoutLM summary/§2](https://arxiv.org/abs/1912.13318), [Donut summary and figure 1](https://arxiv.org/abs/2111.15664): Extracted PDFs.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

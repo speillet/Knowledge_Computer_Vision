@@ -7,79 +7,102 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 4
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
 ---
-# GrabCut, régions et modèles d’apparence
+# GrabCut, regions and appearance models
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Extraire un objet à partir d'une initialisation interactive et d'un modèle d'apparence. Entrées : image couleur et rectangle/labels ; sortie : masque selon labels sûrs/probables. Le modèle ne comprend pas automatiquement la sémantique de l'objet demandé.
+Extract an object from an interactive initialization and an appearance template. Inputs: color image and rectangle/labels; output: mask according to safe/probable labels. The model does not automatically understand the semantics of the requested object.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-GrabCut alterne estimation des distributions de couleur par mélanges gaussiens et optimisation d'une énergie par graph cut. Les termes unaires suivent l'apparence, les relations voisines encouragent une cohérence adaptée aux contours.
+GrabCut alternates the estimation of color distributions by Gaussian mixtures and the optimization of an energy by graph cut. The unary terms follow the appearance, the neighboring relations encourage a coherence adapted to the contours.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Une énergie schématique $E(L)=\sum_p U_p(L_p)+\lambda\sum_{p,q}V_{pq}(L_p,L_q)$ combine coût d'étiquette et régularisation spatiale. L est le masque de labels ; $\lambda$ règle un compromis propre à la variante. Une énergie minimisée n'est pas une preuve de masque métier correct.
+Schematic energy $E(L)=\sum_p U_p(L_p)+\lambda\sum_{p,q}V_{pq}(L_p,L_q)$ combines label cost and spatial regulation. L is the label mask; $\lambda$ settles a compromise specific to the variant. Minimized energy is not proof of correct business mask.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Rectangle initial, coups de pinceau, labels certains/probables, itérations et espace couleur. Fond/objet de couleurs proches, trous et transparence peuvent rendre le modèle d'apparence insuffisant.
+Initial rectangle, brush strokes, some/probable labels, iterations and color space. Background/object of close colors, holes and transparency can make the model look insufficient.
 
-## Coût et implémentation
+## Cost and implementation
 
-Mémoire du graphe et itérations dépendent de la résolution. Aucun appel GrabCut exécuté. Region growing ou contours actifs utilisent d'autres objectifs/initialisations ; ils ne sont ici qu'introduits comme alternatives.
+Graph memory and iterations depend on the resolution. No GrabCut call executed. Region growing or active contours use other objectives/initializations; they are only introduced here as alternatives.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : même objet et initialisation, puis rendre le fond similaire en couleur. Mesurer erreurs de masque et coût d'interaction, avec référence réservée.
+Proposed variation: same object and initialization, then make the background similar in color. Measure mask errors and interaction cost, with reserved reference.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-L'objet est tronqué : vérifier que des pixels utiles ne sont pas imposés comme fond sûr. Plus d'itérations ne contredit pas une contrainte initiale fausse.
+The object is truncated: check that useful pixels are not imposed as a safe background. More iterations do not contradict a false initial constraint.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Watershed pour marqueurs/topographie, méthodes apprises par prompt pour autre généralisation ; conserver coût d'interaction et hypothèses.
+Watershed for markers/topography, methods learned by prompt for other generalization; retain interaction cost and assumptions.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent optimisation conditionnelle et rôle des contraintes utilisateur. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These built cases develop conditional optimization and user constraint role. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-GRABCUT-001
+### Case linked to CV-GRABCUT-001
 
-**Question de travail** : Quelles deux opérations principales GrabCut alterne-t-il ?
+**Question of work**: Which two main operations does GrabCut alternate?
 
-**Réponse de référence** : Estimer les modèles d’apparence fond/objet puis optimiser les labels via graph cut dans l’énergie définie.
+**Reference Response**: Estimate the background/object appearance patterns and then optimize the labels via graph cut in the defined energy.
 
-**Intuition de l'alternance** : les labels actuels donnent des exemples de couleur pour le fond et le premier plan ; les modèles d'apparence influencent ensuite le coût de chaque attribution. Les relations entre voisins ajoutent une préférence spatiale. La nouvelle partition sert à une nouvelle estimation, dans les contraintes de l'initialisation.
+**Intuition of alternation**: Current labels give color examples for background and foreground; appearance patterns then influence the cost of each attribution. Relations between neighbors add a spatial preference. The new partition is used for a new estimate, within the constraints of the initialization.
 
-**Exemple de limite** : si une partie de la cible ressemble au fond, son coût d'apparence peut favoriser la mauvaise région. Une indication utilisateur peut apporter une information que la couleur seule ne fournit pas. Le procédé ne nomme pas automatiquement un objet selon une taxonomie et un minimum d'énergie n'est pas une preuve de vérité métier. Vérifier initialisation et labels sûrs avant d'augmenter les itérations. Pour comparer à une méthode promptable apprise, compter aussi les interventions, les échecs et le coût complet, et pas seulement le temps de la dernière optimisation.
+**Example of limit**: If a part of the target looks like the bottom, its cost of appearance can favor the wrong region. A user indication can provide information that color alone does not provide. The process does not automatically name an object according to a taxonomy and a minimum of energy is not proof of business truth. Check initialization and safe labels before increasing iterations. To compare to a learned promptable method, also count interventions, failures and full cost, and not just the time of the last optimization.
 
-### Cas lié à CV-GRABCUT-003
+### Case linked to CV-GRABCUT-003
 
-**Question de travail** : Pour extraire un objet avec couleurs proches du fond, pourquoi comparer coût d’interaction et hypothèses plutôt que seulement temps d’optimisation ?
+**Question of work**: When extracting an object whose colors resemble the background, why compare interaction cost and assumptions rather than optimization time alone?
 
-**Réponse de référence** : Les labels ajoutés par l’utilisateur peuvent fournir l’information manquante ; une solution rapide peut demander beaucoup de corrections.
+**Reference Response**: Labels added by the user can provide the missing information; a quick fix can require a lot of corrections.
 
-**Coût réellement payé** : un algorithme rapide peut demander plusieurs retouches si son modèle de couleur sépare mal cible et fond. Une méthode plus coûteuse par appel peut réduire l'interaction ; l'inverse est aussi possible. Les temps doivent inclure la procédure nécessaire pour atteindre une qualité définie.
+**Cost actually paid**: A fast algorithm can require several retouches if its color model separates wrong target and background. A more expensive per-call method can reduce interaction; the opposite is also possible. The times must include the procedure necessary to achieve a defined quality.
 
-**Protocole proposé** : fixer des images réservées, une règle d'initialisation et un budget de correction, puis mesurer qualité de masque, nombre d'interventions, temps total et taux d'échec. Ajouter séparément un fond plus proche de la cible pour tester l'hypothèse d'apparence. Conserver les cas non résolus dans le bilan. Un optimum de l'énergie indique que la procédure a satisfait son modèle ; il ne dit pas que ce modèle possède assez d'information pour distinguer l'objet utile. La comparaison doit donc relier hypothèses de la méthode et effort humain, sans choisir seulement sur la durée du solveur.
+**Proposed Protocol**: fix reserved images, a reset rule and a correction budget, then measure mask quality, number of interventions, total time and failure rate. Separately add a background closer to the target to test the appearance hypothesis. Keep unresolved cases in the balance sheet. An energy optimum indicates that the procedure has satisfied its model; it does not say that this model has enough information to distinguish the useful object. The comparison must therefore relate hypotheses of the method and human effort, without choosing only on the duration of the solver.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, GrabCut](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html), modèle, graph cut et labels certains/probables. Les autres développements figurent dans les [cartes associées](../92-grabcut-regions.md).
+**Documentary reference for this pass**: [OpenCV 4.13, GrabCut](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html), model, graph cut and some/likely labels. The other developments are in the [flashcards](../92-grabcut-regions.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [OpenCV GrabCut, théorie et masques](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
-- [Cartes associées](../92-grabcut-regions.md).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+### CV-GRABCUT-001
+
+**Situation**: Which two main operations does GrabCut alternate?
+
+**Energy and Cut**: for a binary label $L_p$, a unary term can be linked to $-\log p(I_p\mid L_p)$ under the corresponding color mixture. A schematic neighbor term $w_{pq}\mathbf1[L_p\ne L_q]$ penalizes a boundary between similar pixels; high contrast can reduce $w_{pq}$. With fixed appearance parameters and for a compatible binary energy, the cutoff of the graph optimizes this sub-problem. Alternating with the estimation of the mixtures does not imply an overall joint optimum of all the unknowns. Defining the solved sub-problem prevents confusing the solver's warranty with the correctness of the object model used.
+
+### CV-GRABCUT-002
+
+**Situation**: GrabCut consistently excludes part of an object despite more iterations. What should be checked first?
+
+**Hard Constraint and Preference**: A certain label conceptually prohibits the other attribution, while a probable label lets the energy choose. If an actual part of the object is attached to the bottom, changing the appearance settings does not make this solution admissible. In a built test, only correct this constraint, and then compare iterations on the same initial saved state. An improvement locates a contract defect; a persistent exclusion may still come from close colors or regularization. Distinguishing the four states of the mask until the final decision avoids losing interaction information by prematurely binarizing the labels.
+
+### CV-GRABCUT-003
+
+**Situation**: When extracting an object whose colors resemble the background, why compare interaction cost and assumptions rather than optimization time alone?
+
+**Quality curve – interaction**: Set a common rule to place the initial rectangle, and then a budget for corrections or user time. Measure quality after zero, one, and then multiple interactions and keep the rate of images that do not reach the target to the maximum budget. Clicks are only comparable if their policy and accessible information are announced; a correction chosen with the reference mask constitutes a different oracle from a real operator. Compare also borders and small useful regions. This protocol gives an exploitable compromise curve, instead of an isolated optimization time obtained after a particularly favorable initialization.
+
+**Passages consulted for these developments**: [OpenCV 4.13.0, GrabCut](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html), Theory, models and cut-off; sub-problem/alternative distinction and project protocols.
+
+## Sources and flashcards
+
+- [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+- [Related flashcards](../92-grabcut-regions.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

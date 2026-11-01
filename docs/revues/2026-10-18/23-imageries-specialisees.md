@@ -1,43 +1,43 @@
-# Revue — Line-scan, télédétection et volumes médicaux — 2026-10-18
+# Review –  Line-scan, remote sensing and medical volumes –  2026-10-18
 
-## Synthèse
+## Overview
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 2 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 2 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-IMAGERIES-001 | Confirmé : distances physiques et axes | propager les unités d’un volume. | Noyau fini ; 58 mots | Accord fiche et format | Mineur | Source DICOM ciblée |
-| CV-IMAGERIES-002 | Confirmé : trigger par déplacement | contrôler une acquisition line-scan. | Noyau fini ; 48 mots | Accord fiche et format | Important | Source line-scan ajoutée |
-| CV-IMAGERIES-003 | Risque déduit ; pas une garantie universelle | éviter une fuite géographique. | Noyau fini ; 46 mots | Accord fiche et format | Mineur | Attribution et URL corrigées |
+| CV-IMAGERIES-001 | Confirmed: physical distances and axes | propagate units of a volume. | Finished core; 58 words | reference note and format | Minor | Source DICOM targeted |
+| CV-IMAGERIES-002 | Confirmed: trigger per move | check is a line-scan acquisition. | Finished core; 48 words | reference note and format | Important | Source line-scan added |
+| CV-IMAGERIES-003 | Risk deducted; not a universal guarantee | Avoid a geographical flight. | Finished core; 46 words | reference note and format | Minor | Corrected Attribution and URL |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : métadonnées physiques DICOM/NIfTI ; dépendance de l’échelle line-scan au déplacement ; télécentricité sur sa plage d’usage. Déductions du projet : risque de fuite géographique, choix des splits, tests de raccord et absence de garantie clinique. HD95 n’est pas défini par DICOM : la carte vérifie uniquement son contrat d’unités, pas toutes ses variantes.
+Confirmed: physical metadata DICOM/NifTI; dependence of the line-scan scale on the displacement; telecentricity on its range of use. Deductions from the project: risk of geographical leakage, choice of splits, fitting tests and lack of clinical guarantee. HD95 is not defined by DICOM: the flashcard only checks its unit contract, not all its variants.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; références des cartes remplacées selon leur objet. Les domaines spécialisés restent au niveau repérage.
+reference note revision 2; references of the replaced flashcards according to their object. Specialized areas remain at the scouting level.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Distinguer espacement des coupes et épaisseur | Éviter une distance 3D fausse malgré des métadonnées présentes | Pratique ; une carte | 2 critères et un contre-exemple ; durée à mesurer | DICOM C.7-10 |
+| Differentiate spacing of cuts and thickness | Avoiding a false 3D distance despite present metadata | Practice; a flashcard | 2 criteria and a counter-example; duration to be measured | DICOM C.7-10 |
 
 ## Sources
 
-- [DICOM PS3.3, C.7.6.2.1.1, orientation/position et espacement (consulté le 2026-10-18)](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html) : table C.7-10 et équation de coordonnées.
-- [NIfTI-1.1, innovations du format](https://nifti.nimh.nih.gov/nifti-1/) : indices vers position par affine.
+- [DICOM PS3.3, C.7.6.2.1.1, orientation/position and spacing (accessed on 2026-10-18)](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html): table C.7-10 and equation of coordinates.
+- [NIfTI-1.1, innovations of the format](https://nifti.nimh.nih.gov/nifti-1/): indices to position per affine.
 - [Basler, GigE Line Scan Use Cases, Use Case 1 b (v136, 2026-10-01)](https://docs.baslerweb.com/line-scan-gige-use-cases).
-- [SpaceNet7, The Problem et The Data (consulté le 2026-10-18)](https://www.spacenet.ai/sn7-challenge/) : description des séries temporelles ; ancienne URL 404.
-- [Edmund Optics, The Advantages of Telecentricity](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/advantages-of-telecentricity/) : grandissement et distance.
+- [SpaceNet7, The Problem and The Data (accessed 2026-10-18)](https://www.spacenet.ai/sn7-challenge/): description of time series; old 404 URL.
+- [Edmund Optics, The Advantages of Telecentricity](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/advantages-of-telecentricity/): magnification and distance.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

@@ -1,110 +1,120 @@
-# Harris et Shi–Tomasi — structure locale et points suivables — cartes
+# Flashcards — Harris and Shi–Tomasi — local structure and trackable points
 
-Fiche : [[40-features-matching/references/46-harris-shi-tomasi|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[40-features-matching/references/46-harris-shi-tomasi|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::40-features-matching
 
 ## CV-CORNERS-001
 
-Objectif : interpréter les valeurs propres locales. Famille : raisonnement. Provenance : agent.
+Objective: Interpreting local values. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORNERS-001
-Question: Une fenêtre donne $M=\mathrm{diag}(100,1)$, une autre $M=\mathrm{diag}(20,20)$. Laquelle contraint mieux un petit déplacement 2D, et pourquoi ?
-Reponse: **Noyau attendu** : La seconde : sa plus petite valeur propre vaut 20 au lieu de 1. Les deux directions y sont contraintes ; la première ressemble à une arête, même si son gradient total est plus fort.
+Question: One window produces $M=\mathrm{diag}(100,1)$, and another produces $M=\mathrm{diag}(20,20)$. Which better constrains a small 2D displacement, and why?
+Reponse: **Expected answer**: The second: its smallest eigenvalue is 20 instead of 1. The two directions are constrained; the first one looks like an edge, even if its total gradient is stronger.
 
-**Approfondissement** : $E(d)\approx d^TMd$ approxime la variation d’intensité pour un petit déplacement $d$ en pixels. La direction associée à la petite valeur propre est difficile à observer. Il reste à vérifier stabilité photométrique et absence d’occultation.
+**Further explanation**: $E(d)\approx d^TMd$ approximates the intensity variation for a small $d$ displacement in pixels. The direction associated with the small eigenvalue is difficult to observe. It remains to check photometric stability and absence of occlusion.
 
-**Interprétation des directions** : avec la première matrice, un déplacement dans la direction associée à la valeur 1 modifie peu le patch. La grande valeur 100 ne compense pas cette direction faible. Avec la seconde, un déplacement unitaire dans n'importe quelle direction propre produit la même courbure locale de 20.
+**Interpretation of directions**: With the first matrix, a shift in the direction associated with the value 1 changes the patch little. The large 100 value does not compensate for this weak direction. With the second, a unit displacement in any proper direction produces the same local curvature of 20.
 
-**Utilisation proposée** : avant un suivi Lucas–Kanade, examiner donc le plus petit terme contraignant et la répartition des points. Un ensemble de coins bien conditionnés mais regroupés dans une petite zone ne garantit pas un recalage global stable. Les chiffres supposent le modèle local de petites translations et les mêmes unités de gradient ; comparer des matrices issues de normalisations différentes sans les aligner n'aurait pas le même sens.
+**Proposed use**: Before a Lucas – Kanade follow-up, examine the smallest binding term and the distribution of points. A set of well-conditioned corners but grouped in a small area does not guarantee a stable overall registration. The numbers assume the local model of small translations and the same gradient units; comparing matrices from different normalizations without aligning them would not have the same meaning.
 
-**Erreurs bloquantes** : Choisir uniquement la plus grande valeur propre ; confondre coin fort et correspondance certaine.
-Source: [[40-features-matching/references/46-harris-shi-tomasi|Fiche complète]] ; [Harris et Stephens 1988, auto-corrélation et réponse de coin](https://www.bmva-archive.org.uk/bmvc/1988/avc-88-023.pdf).
+**Diverting the local tensor**: for a small displacement $d$, $I(p+d)-I(p)\approx\nabla I(p)^Td$. The weighted sum of these squared deviations gives $d^T(\sum_p w_p\nabla I_p\nabla I_p^T)d$, so $M$. Constant error contours are ellipses: their large axis corresponds to the direction in which the image changes little. If the photometric noise model is isotropic and the problem is correctly posed, the local uncertainty of displacement is related to a matrix proportional to $M^{-1}$. A small eigenvalue then becomes a great directional uncertainty; it is a link with the followability, under assumptions, not a guarantee of future visibility.
+
+**Blocking errors**: Choose only the highest eigenvalue; confuse strong corner and certain match.
+Source: [[40-features-matching/references/46-harris-shi-tomasi|Full reference]]; [Harris and Stephens 1988, self-correlation and corner response](https://www.bmva-archive.org.uk/bmvc/1988/avc-88-023.pdf); [OpenCV 4.13, Harris, Theory, tensor and response](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html); [OpenCV 4.13, Shi – Tomasi, Theory and selection goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-CORNERS-001 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-CORNERS-002
 
-Objectif : distinguer scores Harris et Shi–Tomasi. Famille : comparaison. Provenance : agent.
+Objective: distinguish Harris and Shi – Tomasi scores. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORNERS-002
-Question: Que changent Harris et Shi–Tomasi dans la sélection de coins, et peut-on conserver le même seuil numérique ?
-Reponse: **Noyau attendu** : Harris prend $\lambda_1\lambda_2-k(\lambda_1+\lambda_2)^2$ ; Shi–Tomasi prend $\min(\lambda_1,\lambda_2)$. Les valeurs propres viennent de la matrice locale des produits de gradients. Les scores ont des échelles et unités différentes : recalibrer les seuils.
+Question: How do Harris and Shi–Tomasi differ in corner selection, and can the same numerical threshold be retained?
+Reponse: **Expected answer**: Harris takes $\lambda_1\lambda_2-k(\lambda_1+\lambda_2)^2$; Shi – Tomasi takes $\min(\lambda_1,\lambda_2)$. The eigenvalues come from the local matrix of the gradient products. Scores have different scales and units: recalibrate thresholds.
 
-**Approfondissement** : Shi–Tomasi teste directement la direction la moins informative. Harris pénalise une forte anisotropie via son paramètre $k$. Le choix dépend du pipeline ; aucune formule n’impose une meilleure performance sur toute scène.
+**Further explanation**: Shi – Tomasi directly tests the least informative direction. Harris penalizes a strong anisotropy via his parameter $k$. The choice depends on the pipeline; no formula imposes a better performance on any stage.
 
-**Dérivation d'échelle** : si les intensités sont multipliées par une constante $a$, les gradients sont multipliés par $a$ et les valeurs propres de $M$ par $a^2$, à opérateurs identiques. Le score Shi–Tomasi suit donc ce facteur, tandis que le score Harris suit $a^4$. Le même seuil numérique ne peut pas représenter la même sélectivité dans ces deux espaces.
+**derivation Scale**: if the intensities are multiplied by a constant $a$, the gradients are multiplied by $a$ and the eigenvalues of $M$ by $a^2$, with identical operators. The Shi – Tomasi score follows this factor, while the Harris score follows $a^4$. The same numerical threshold cannot represent the same selectivity in these two spaces.
 
-**Décision proposée** : fixer plage d'intensité, échelle des dérivées et fenêtre avant de régler le seuil. Comparer ensuite localisation, couverture et stabilité sous les perturbations pertinentes. Une différence de compte de coins peut venir de la normalisation des scores plutôt que d'une supériorité du mécanisme. Les deux critères décrivent une information locale, pas une probabilité de correspondance correcte.
+**Proposed action**: set intensity range, scale of derivatives and window before setting the threshold. Then compare location, coverage and stability under relevant disturbances. A difference in coin count can come from normalizing scores rather than a superiority of the mechanism. Both criteria describe local information, not a probability of correct matching.
 
-**Erreurs bloquantes** : Réutiliser le même seuil sans normalisation ; annoncer un classement universel.
-Source: [[40-features-matching/references/46-harris-shi-tomasi|Fiche complète]] ; [OpenCV 4.13, Shi–Tomasi, Theory et goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html).
+**Avoid confusing score and model**: Harris can calculate determinant and trace directly without diagonalizing $M$; Shi – Tomasi evaluates the smallest eigenvalue, $(\operatorname{tr}M-\sqrt{(M_{11}-M_{22})^2+4M_{12}^2})/2$ for a symmetric matrix $2\times2$. These are two summaries of the same tensor, not two new proofs of identity of the point. In the isotropic case $\lambda_1=\lambda_2=\lambda$, Harris gives $(1-4k)\lambda^2$ while Shi – Tomasi gives $\lambda$. Their evolution with the contrast and scale of the patch therefore differs even when the visual ranking of the best corners seems similar. Removing maxima and spacing remain separate steps of these formulas.
+
+**Blocking errors**: Reuse the same threshold without normalization; announce a universal ranking.
+Source: [[40-features-matching/references/46-harris-shi-tomasi|Full reference]]; [OpenCV 4.13, Shi – Tomasi, Theory and goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html); [OpenCV 4.13, Harris, Theory, tensor and response](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-CORNERS-002 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-CORNERS-003
 
-Objectif : régler une sélection de coins. Famille : pratique. Provenance : agent.
+Objective: Set a selection of corners. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORNERS-003
-Question: Dans OpenCV goodFeaturesToTrack 4.13, comment distinguer qualityLevel, minDistance et maxCorners ?
-Reponse: **Noyau attendu** : `qualityLevel` fixe un seuil relatif au meilleur score ; `minDistance` impose un espacement minimal en pixels ; `maxCorners` borne le nombre retourné. Ces réglages servent trois contraintes différentes.
+Question: In OpenCV 4.13 goodFeaturesToTrack, how do qualityLevel, minDistance and maxCorners differ?
+Reponse: **Expected answer**: `qualityLevel` sets a threshold relative to the best score; `minDistance` imposes a minimum spacing in pixels; `maxCorners` limits the number returned. These settings serve three different constraints.
 
-**Approfondissement** : Une image de contraste faible peut conserver des points avec un seuil relatif faible sans les rendre suivables. Vérifier aussi leur couverture spatiale et leur conditionnement. L’image et la dérivation doivent respecter le contrat du détecteur.
+**Further explanation**: A low contrast image can retain points with a low relative threshold without making them followable. Also check their space cover and conditioning. The image and the derivation must comply with the detector contract.
 
-**Exemple de réglage interprété** : si le meilleur score vaut 100 et le seuil relatif vaut 0,1, le seuil de sélection est lié à 10 dans cette image. Ce raisonnement ne donne pas un niveau absolu de qualité valable sur toutes les acquisitions. Une image presque uniforme peut avoir un meilleur score faible, malgré un seuil relatif respecté.
+**Example of an interpreted setting**: If the best score is 100 and the relative threshold is 0,1, the selection threshold is bound to 10 in this image. This reasoning does not give an absolute level of quality that is valid on all acquisitions. An almost uniform image can have a better low score, despite a relative threshold being respected.
 
-**Effets distincts** : augmenter la distance minimale répartit les positions mais peut retirer des détails proches utiles ; augmenter le quota ne crée pas davantage de candidats satisfaisants. Régler chaque contrainte avec une carte spatiale des points et une mesure aval. Pour comparer des acquisitions, relever aussi les scores absolus et le contraste. La sélection répond à un budget et une couverture ; la suivabilité demande encore une vérification temporelle.
+**Separate effects**: Increasing the minimum distance distributes positions but can remove useful close details; increasing the quota does not create more satisfactory candidates. Set each stress with a spatial map of points and a downstream measurement. To compare acquisitions, also raise the absolute scores and the contrast. The selection meets a budget and coverage; the followability still requires a temporal verification.
 
-**Erreurs bloquantes** : Lire qualityLevel comme une probabilité ; convertir minDistance en intensité.
-Source: [[40-features-matching/references/46-harris-shi-tomasi|Fiche complète]] ; [OpenCV 4.13, Shi–Tomasi, Theory et goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html).
+**Read the selection as a suite of filters**: first calculate the quality map, retain the local maxima, eliminate insufficient scores, then consider the candidates in descending order respecting the minimum distance and budget. Therefore, the quota does not replace a quality threshold. In a built-in case, if the only good points are close, increasing the spacing can get a lot and leave less than the number requested; this is not necessarily a failure of the API. To limit concentration, a mask of interest or quotas by region are choices of system to compare, keeping the same notion of score and the same units of distance.
+
+**Blocking errors**: Read qualityLevel as a probability; convert minDistance to intensity.
+Source: [[40-features-matching/references/46-harris-shi-tomasi|Full reference]]; [OpenCV 4.13, Shi – Tomasi, Theory and goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html); [OpenCV 4.13, Harris, Theory, tensor and response](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-CORNERS-003 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-CORNERS-004
 
-Objectif : distinguer détection et ambiguïté de matching. Famille : diagnostic. Provenance : agent.
+Objective: distinguish detection and matching ambiguity. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORNERS-004
-Question: Des coins très forts sur une grille répétitive donnent pourtant une mauvaise homographie. Quelles vérifications départagent un problème de détection d’un problème d’association ?
-Reponse: **Noyau attendu** : Vérifier répétabilité et localisation des coins, puis ambiguïté des descripteurs, répartition des matches et résidus géométriques. Des coins forts peuvent se ressembler et produire des associations fausses.
+Question: Strong corners on a repetitive grid still produce a poor homography. Which checks distinguish detection failure from incorrect association?
+Reponse: **Expected answer**: Check repeatability and location of corners, then ambiguity of descriptors, distribution of matches and geometric residuals. Strong corners can resemble each other and produce false associations.
 
-**Approfondissement** : Un contrôle construit consiste à conserver le détecteur et changer le filtrage des matches, puis inverser l’expérience. Le score local ne vérifie ni identité du point ni modèle d’homographie. Une forte concentration spatiale peut aussi mal contraindre l’estimation.
+**Further explanation**: A check built consists of keeping the detector and changing the filtering of matches, and then reversing the experience. The local score does not verify the identity of the point or model of homography. A high spatial concentration can also constrain the estimation.
 
-**Pourquoi les scores ne départagent pas les cases** : chaque intersection d'une grille peut présenter deux directions de gradient bien marquées. Le critère de coin confirme la localisation de chaque intersection, mais ne sait pas quelle intersection de la seconde image représente le même point du monde.
+**Why scores don't separate the boxes**: Each intersection of a grid can have two well marked gradient directions. The corner criterion confirms the location of each intersection, but does not know which intersection of the second image represents the same point in the world.
 
-**Test construit** : conserver les positions détectées et visualiser les candidats de chaque descripteur. Comparer les hypothèses de décalage d'une période avec des repères distinctifs réservés. Vérifier ensuite que les inliers couvrent la surface à recaler et pas une seule bande. Si les localisations restent stables mais les associations changent de case, agir sur les indices distinctifs ou les contraintes du problème. Une meilleure sélection locale peut réduire du bruit ; elle ne résout pas à elle seule une symétrie d'apparence.
+**Constructed test**: Keep the detected positions and visualize the candidates of each descriptor. Compare period offset assumptions with held-out distinctive landmarks. Then check that the inlays cover the surface at register and not a single strip. If the locations remain stable but the associations change boxes, act on the distinctive clues or constraints of the problem. Better local selection can reduce noise; it does not solve appearance symmetry on its own.
 
-**Erreurs bloquantes** : Augmenter seulement le nombre de coins ; assimiler score Harris et confiance de match.
-Source: [[40-features-matching/references/46-harris-shi-tomasi|Fiche complète]] ; [Harris et Stephens 1988, auto-corrélation et réponse de coin](https://www.bmva-archive.org.uk/bmvc/1988/avc-88-023.pdf).
+**Distinguish between local and global observation**: $M$ describes the curvature of a small translation cost around a given patch. It does not compare this patch to all other patches in an image. A grid can therefore give a strong curvature around each intersection, while producing several remote minima for matching between images. A known initial move can make local tracking possible without resolving the overall recognition of the correct box. To evaluate the detector alone, use a reference transformation and check the distance to the projected position; to match it, then examine which identity is selected among the candidates. Both rates do not have the same denominator.
+
+**Blocking errors**: Increase only the number of corners; assimilate Harris score and match confidence.
+Source: [[40-features-matching/references/46-harris-shi-tomasi|Full reference]]; [Harris and Stephens 1988, self-correlation and corner response](https://www.bmva-archive.org.uk/bmvc/1988/avc-88-023.pdf); [OpenCV 4.13, Harris, Theory, tensor and response](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html); [OpenCV 4.13, Shi – Tomasi, Theory and selection goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-CORNERS-004 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-CORNERS-005
 
-Objectif : évaluer une sélection pour le tracking. Famille : evaluation. Provenance : agent.
+Objective: Evaluate a selection for tracking. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORNERS-005
-Question: Pourquoi le nombre de coins détectés ne suffit-il pas pour comparer deux réglages destinés à Lucas–Kanade ?
-Reponse: **Noyau attendu** : Mesurer survie, erreur de déplacement, couverture spatiale et erreur de géométrie à budget et résolution comparables. Un réglage produisant davantage de points peut ajouter du bruit ou des points redondants.
+Question: Why is the number of detected corners insufficient for comparing settings intended for Lucas–Kanade tracking?
+Reponse: **Expected answer**: Measure survival, displacement error, spatial coverage and geometry error with comparable budget and resolution. A setting that produces more dots can add noise or redundant dots.
 
-**Approfondissement** : Variation proposée : imposer des quotas par cellules avec le même nombre total de points. Séparer séquences d’ajustement et d’évaluation ; noter flou et occultations. Ce protocole est une proposition du projet, pas un résultat publié.
+**Further explanation**: Proposed variation: impose quotas per cell with the same total number of points. Separate adjustment and evaluation sequences; note blur and occlusions. This protocol is a project proposal, not a published result.
 
-**Exemple de comparaison** : cent coins sur une seule texture peuvent être redondants et laisser la pièce utile sans observations. Cinquante points répartis peuvent mieux contraindre le mouvement demandé, mais seulement si leurs déplacements sont fiables. Le nombre ne décrit ni cette couverture ni la durée pendant laquelle les points restent visibles.
+**Example of comparison**: One hundred corners on a single texture can be redundant and leave the piece useful without observations. Fifty distributed points can best constrain the requested movement, but only if their movements are reliable. The number does not describe this coverage or how long the dots remain visible.
 
-**Protocole construit** : fixer résolution, budget total et critères de suivi, puis varier séparément score de sélection et quotas spatiaux. Mesurer erreurs sur des trajectoires de points annotées ou sur une géométrie indépendante, en comptant aussi les points perdus. Un faible résidu photométrique peut rester trompeur en cas de répétition. Rapporter la performance sur flou, faible texture et occultation, avec les mêmes règles de rejet pour tous les réglages.
+**Protocol built**: Set resolution, total budget and tracking criteria, then vary selection score and space quotas separately. Measure errors on annotated point trajectories or on independent geometry, also counting points lost. A low photometric residual can remain misleading in case of repetition. Report performance on blur, low texture and occlusion, with the same rejection rules for all settings.
 
-**Erreurs bloquantes** : Conclure sur le seul compteur de points ; changer plusieurs facteurs sans les consigner.
-Source: [[40-features-matching/references/46-harris-shi-tomasi|Fiche complète]] ; [OpenCV 4.13, Shi–Tomasi, Theory et goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html).
+**check round trip built**: Following $p_t$ to $\hat p_{t+1}$, then following the latter to $\hat p_t$ gives a $e_{FB}=\|\hat p_t-p_t\|_2$ cycle error in pixels. A big error signals a useful inconsistency to reject; a small error can also come from the same bad pattern found in both directions. It must therefore complete a displacement reference, not replace it. Compare the fraction of valid points by keeping the occlusions in the balance sheet. If a setting rejects almost all the hard points, its average error on survivors can drop while degrading the availability of the registration. Reliable monitoring and refusal policy must be evaluated together.
+
+**Blocking errors**: Conclude on the single point counter; change several factors without recording them.
+Source: [[40-features-matching/references/46-harris-shi-tomasi|Full reference]]; [OpenCV 4.13, Shi – Tomasi, Theory and goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html); [OpenCV 4.13, Harris, Theory, tensor and response](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-CORNERS-005 provenance::agent pole::B pole::C pole::E
 END

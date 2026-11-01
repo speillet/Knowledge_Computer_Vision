@@ -1,34 +1,27 @@
 # Revue — CV-SE3 — 2026-10-24
 
-## Synthèse
+## Overview
 
-Correction ciblée avant fusion de la PR existante. Matrice 3×3 composée avec poses homogènes 4×4 (FR-007). Définir M pour les vecteurs 3D et M_h pour les poses homogènes ; dimensions et côtés de composition explicites.
-Pas de carte ajoutée ni d’ID modifié ; fiche révision 5, statut `redige`.
-Les autres cartes du sujet ne font pas l’objet d’un nouvel audit exhaustif.
+Targeted correction before merging the existing PR. Matrix 3×3 composed with poses homogeneous 4×4 (FR-007). Define M for vectors 3D and M_h for homogeneous poses; explicit composition dimensions and sides. No flashcard added or ID changed; reference note revision 5, status `redige`. The other flashcards on the subject are not subject to a comprehensive re-audit.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SE3-006 | Point signalé vérifié avec les sources ci-dessous | Objectif existant conservé | Noyau et limites explicités | Fiche et carte accordées | Important | Corrigé |
+| CV-SE3-006 | Point reported checked with sources below | Existing objective retained | Core and Explicit Limits | reference note and flashcard granted | Important | Corrected |
 
-## Corrections appliquées
+## Corrections applied
 
-`vault/10-mathematiques-estimation/references/12-rotations-se3.md` et `vault/10-mathematiques-estimation/12-rotations-se3.md` : Définir M pour les vecteurs 3D et M_h pour les poses homogènes ; dimensions et côtés de composition explicites. Journal complété sans réécrire
-les preuves datées du passage précédent. Les identités pédagogiques et Anki
-restent stables.
+`vault/10-mathematiques-estimation/references/12-rotations-se3.md` and `vault/10-mathematiques-estimation/12-rotations-se3.md`: Define M for vectors 3D and M_h for homogeneous poses; explicit composition dimensions and sides. Journal completed without rewriting the evidence dated from the previous passage. Pedagogical identities and Anki remain stable.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout proposé dans ce correctif. Les nouveaux sujets prioritaires feront
-l’objet d’un lot distinct autorisé par l’apprenant le 2026-10-24.
+No additions proposed in this fix. The new priority subjects will be the subject of a separate batch authorized by the learner on the 2026-10-24.
 
 ## Sources
 
-[Solà et al., micro Lie theory, annexe D-A, équations 170–171](https://arxiv.org/html/1812.01537v9#A4.SS1) ; [REP 103, axes caméra](https://www.ros.org/reps/rep-0103.html). La correction dimensionnelle est une déduction algébrique du projet.
+[Solà et al., micro Lie theory, appendix D-A, equations 170 – 171](https://arxiv.org/html/1812.01537v9#A4.SS1); [REP 103, camera axes](https://www.ros.org/reps/rep-0103.html). Dimensional correction is an algebraic deduction of the project.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôleur, tests de la bibliothèque standard et comparaison d’inventaire
-exécutés avant publication. Aucun export réel, rendu AnkiDroid, mesure matérielle
-ou validation scientifique indépendante n’est déduit de cette auto-revue.
+Controller, standard library tests, and inventory comparison run before publication. No actual export, AnkiDroid rendering, material measurement or independent scientific validation is deducted from this self-review.

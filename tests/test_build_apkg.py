@@ -23,29 +23,29 @@ provenance: agent
 revision: 1
 tags: [cv/d04]
 ---
-# Fiche témoin
-Source : https://example.org/primary
+# Fixture reference note
+Source: https://example.org/primary
 """
-CARD = """# Cartes témoin
+CARD = """# Fixture flashcards
 
 TARGET DECK: CV::Pilote::40-features-matching
 
 ## CV-TEST-001
 
-Objectif : tester le paquet. Famille : comprehension. Provenance : agent.
+Objective: Test the package. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-TEST-001
-Question: Que vaut $x_i<1$ & pourquoi ?
-Reponse: **Noyau attendu** : réponse avec `code_$`.
+Question: What is $x_i<1$ and why?
+Reponse: **Expected answer**: response with `code_$`.
 
-**Approfondissement** :
-- premier point ;
+**Further explanation** :
+- The first point;
 - second point.
 
-**Erreurs bloquantes** : contresens.
-Source: [[40-features-matching/references/41-test|Fiche test]] ; [source](https://example.org/primary).
+**Blocking errors**: This is nonsense.
+Source: [[40-features-matching/references/41-test|reference note test]] ; [source](https://example.org/primary).
 Tags: cv::pilote cv::d04 famille::comprehension cv_id::CV-TEST-001 provenance::agent pole::B
 END
 """
@@ -81,42 +81,42 @@ class Conversion(unittest.TestCase):
         return md_to_html(text, card_path=self.card, vault=self.vault, fiche_url=URL, media=media)
 
     def test_math_uses_anki_delimiters_and_escapes_html(self):
-        html = self.convert(r"Si $a_i<b|c$ & $$\|x\|_2$$ alors.")
+        html = self.convert(r"If $a_i<b|c$ & $$\|x\|_2$$ then.")
         self.assertIn(r"\(a_i&lt;b|c\)", html)
         self.assertIn(r"\[\|x\|_2\]", html)
         self.assertIn("&amp;", html)
         self.assertNotIn("$", html)
 
     def test_code_keeps_dollars_and_markup_literal(self):
-        html = self.convert("Voir `a**b**$`.\n\n```python\nx = '<b>' + \"$\"\n```")
+        html = self.convert('See `a**b**$`.\n\n```python\nx = \'<b>\' + "$"\n```\n')
         self.assertIn("<code>a**b**$</code>", html)
         self.assertIn("<pre><code>x = '&lt;b&gt;' + \"$\"</code></pre>", html)
         self.assertNotIn("<p><pre>", html)
 
     def test_paragraph_followed_by_list(self):
-        html = self.convert("**Titre** :\n- un ;\n- deux.\n\nSuite *nuancée*.")
-        self.assertEqual(html, "<p><b>Titre</b> :</p><ul><li>un ;</li><li>deux.</li></ul>"
-                               "<p>Suite <i>nuancée</i>.</p>")
+        html = self.convert('**Title**:\n- one;\n- two.\n\nA *nuanced* continuation.')
+        self.assertEqual(html, '<p><b>Title</b>:</p><ul><li>one;</li><li>two.</li></ul>'
+                               '<p>A <i>nuanced</i> continuation.</p>')
 
     def test_links_wikilinks_and_images(self):
         (self.vault / "99-Ressources").mkdir()
         svg = self.vault / "99-Ressources/schema.svg"
         svg.write_text("<svg/>", encoding="utf-8")
         media = set()
-        html = self.convert("![Schéma](../99-Ressources/schema.svg) [[40-features-matching/references/41-test|Fiche]] "
+        html = self.convert('![Diagram](../99-Ressources/schema.svg) [[40-features-matching/references/41-test|Reference note]] '
                             "[article](https://example.org/a?b=1&c=2)", media)
-        self.assertIn('<img src="schema.svg" alt="Schéma">', html)
-        self.assertIn(f'<a href="{URL}40-features-matching/references/41-test.md">Fiche</a>', html)
+        self.assertIn('<img src="schema.svg" alt="Diagram">', html)
+        self.assertIn(f'<a href="{URL}40-features-matching/references/41-test.md">Reference note</a>', html)
         self.assertIn('<a href="https://example.org/a?b=1&amp;c=2">article</a>', html)
         self.assertEqual(media, {svg.resolve()})
 
     def test_wikilink_without_url_keeps_label(self):
-        html = md_to_html("[[40-features-matching/references/41-test|Fiche]]", card_path=self.card,
+        html = md_to_html('[[40-features-matching/references/41-test|Reference note]]', card_path=self.card,
                           vault=self.vault, fiche_url="")
-        self.assertEqual(html, "<p>Fiche</p>")
+        self.assertEqual(html, '<p>Reference note</p>')
 
     def test_unsupported_syntax_is_refused(self):
-        for text in ["| a | b |", "# Titre", "> citation", "prix $5", "![x](absente.svg)"]:
+        for text in ["| a | b |", "# Title", "> quotation", "price $5", "![x](missing.svg)"]:
             with self.subTest(text=text), self.assertRaises(ConversionError):
                 self.convert(text)
 
@@ -151,15 +151,15 @@ class VaultFixture(unittest.TestCase):
         self.assertEqual([card["id"] for card in cards], ["CV-TEST-001"])
         self.assertEqual(cards[0]["deck"], "CV::Pilote::40-features-matching")
         self.assertIn("pole::B", cards[0]["tags"])
-        self.assertTrue(cards[0]["fields"]["Reponse"].endswith("**Erreurs bloquantes** : contresens."))
+        self.assertTrue(cards[0]["fields"]["Reponse"].endswith('**Blocking errors**: This is nonsense.'))
 
-    @unittest.skipUnless(find_spec("genanki"), "genanki absent : uv run --no-project --with genanki==0.13.1")
+    @unittest.skipUnless(find_spec("genanki"), "genanki unavailable: uv run --no-project --with genanki==0.13.1")
     def test_rebuild_keeps_guid_and_updates_content(self):
         from scripts.build_apkg import build_package
 
         out = Path(self.temp.name) / "dist"
         first = build_package(self.vault, out, URL, timestamp=1_700_000_000)
-        self.card.write_text(CARD.replace("contresens.", "contresens corrigé."), encoding="utf-8")
+        self.card.write_text(CARD.replace("This is nonsense.", 'Corrected errors.'), encoding="utf-8")
         second = build_package(self.vault, out, URL, timestamp=1_700_000_100)
         self.assertEqual(first["cartes"]["CV-TEST-001"]["guid"], second["cartes"]["CV-TEST-001"]["guid"])
         self.assertEqual(compare_manifests(first, second)["modifiees"], ["CV-TEST-001"])
@@ -172,12 +172,12 @@ class VaultFixture(unittest.TestCase):
             connection = sqlite3.connect(Path(temp) / "collection.anki2")
             fields, mod = connection.execute("SELECT flds, mod FROM notes").fetchone()
             connection.close()
-        self.assertIn("contresens corrigé.", fields)
+        self.assertIn('Corrected errors.', fields)
         self.assertEqual(mod, 1_700_000_100)
         manifest = json.loads((out / MANIFEST_NAME).read_text(encoding="utf-8"))
         self.assertEqual(manifest["comptes"], {"notes": 1, "decks": 1, "medias": 0})
 
-    @unittest.skipUnless(find_spec("genanki"), "genanki absent : uv run --no-project --with genanki==0.13.1")
+    @unittest.skipUnless(find_spec("genanki"), "genanki unavailable: uv run --no-project --with genanki==0.13.1")
     def test_verifier_rejects_broken_card_links_and_note_identity(self):
         from scripts.build_apkg import build_package
 
@@ -187,8 +187,8 @@ class VaultFixture(unittest.TestCase):
         with zipfile.ZipFile(out / PACKAGE_NAME) as archive:
             original = {name: archive.read(name) for name in archive.namelist()}
         for mutation in (
-            "DELETE FROM cards", "UPDATE cards SET nid=-1", "UPDATE cards SET ord=1",
-            "UPDATE cards SET did=1", "UPDATE notes SET mid=0",
+            "DELETE FROM cards", "UPDATE cards SET nid=-1", 'UPDATE cards SET ord=1',
+            'UPDATE cards SET did=1', 'UPDATE notes SET mid=0',
             "UPDATE notes SET guid='brokenGuid'",
         ):
             with self.subTest(mutation=mutation):

@@ -1,36 +1,36 @@
-# Revue — OCR et compréhension documentaire — 2026-10-24
+# Review –  OCR and documentary understanding –  2026-10-24
 
-## Synthèse
+## Overview
 
-3 cartes examinées pour leur pertinence et leur développement ; 3 réponses enrichies sur accord explicite de l’apprenant. Axe travaillé : chaîne OCR, normalisation et métrique adaptée au document. Aucun nouvel objectif ni ID. Les questions restent des rappels de mécanisme, de choix ou de diagnostic utiles en projet. Aucun doublon d’objectif justifiant un retrait dans ce sujet.
+3 flashcards examined for their relevance and development; 3 enriched responses on explicit agreement of the learner. Worked axis: OCR chain, standardization and metric adapted to the document. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
-Constat éditorial : mécanisme ou mise à l’épreuve trop peu développé dans les réponses modifiées, gravité mineure. Aucun nouveau contresens bloquant établi par la confrontation ciblée ; cela ne certifie pas toutes les affirmations du noyau antérieur.
+Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-OCR-001 | Protocole proposé sous hypothèses ; noyau antérieur conservé | comparaison : séparer reconnaissance et structure | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 49 → 193 mots lexicaux |
-| CV-OCR-002 | Protocole proposé sous hypothèses ; noyau antérieur conservé | raisonnement : interpréter CER | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 51 → 197 mots lexicaux |
-| CV-OCR-003 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | diagnostic : localiser un défaut d’ordre de lecture | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 44 → 188 mots lexicaux |
+| CV-OCR-001 | Proposed protocol under assumptions; previous core retained | Comparison: separating recognition and structure | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 49 → 193 lexical words |
+| CV-OCR-002 | Proposed protocol under assumptions; previous core retained | Reasoning: Interpreting CER | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 51 → 197 lexical words |
+| CV-OCR-003 | Deduction or example built under assumptions; previous core retained | diagnosis: locate a reading order defect | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 44 → 188 lexical words |
 
-## Corrections appliquées
+## Corrections applied
 
-- [Réponses](../../../vault/70-reconnaissance-representations/74-ocr-documents.md) : explications, exemples et vérifications développés, sans changer questions, objectifs, Source, tags ni identités. L’approfondissement reste facultatif pour réussir le rappel.
-- [Fiche](../../../vault/70-reconnaissance-representations/references/74-ocr-documents.md) : révision 3, deux cas guidés repris des cartes pour relier compréhension et contrôle ; statut `redige` conservé.
+- [Replies](../../../vault/70-reconnaissance-representations/74-ocr-documents.md): explanations, examples and verifications developed, without changing questions, objectives, source, tags or identities. The further explanation remains optional to successfully recall.
+- [Reference note](../../../vault/70-reconnaissance-representations/references/74-ocr-documents.md): revision 3, two guided cases taken from flashcards to link understanding and check; status `redige` preserved.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout en attente pour cette passe : le développement des réponses existantes est explicitement demandé. Aucune nouvelle carte créée. Les approfondissements APP encore ouverts restent dans l’inventaire ; ils ne sont pas déclarés couverts ici.
+No pending additions for this pass: the development of existing answers is explicitly requested. No new flashcard created. The still open further study APPs remain in inventory; they are not declared covered here.
 
 ## Sources
 
-- [OCR-D, Evaluation](https://ocr-d.de/en/spec/ocrd_eval.html) : définitions, alignement et normalisation des erreurs, passage consulté le 2026-10-24. Il soutient le mécanisme de référence ; il ne fournit pas les résultats des scénarios construits du projet.
-- Le CER classique non borné est explicitement distingué de la convention OCR-D ; le cas d’insertions est un calcul du projet, pas une valeur publiée.
-- Vérifications de bibliothèques : OpenCV 4.13 via Context7 pour filtres/pyramides, features/matching, fisheye/hand-eye ; documentation primaire en complément. Les autres sujets utilisent les sources primaires précisées ci-dessus, sans prétendre à une couverture intégrale de Context7.
+- [OCR-D, Evaluation](https://ocr-d.de/en/spec/ocrd_eval.html): definitions, alignment and normalization of errors, passage consulted the 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- The classic unbounded CER is explicitly distinguished from the OCR-D convention; the insert case is a calculation of the project, not a published value.
+- Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
-## Contrôles et limites
+## Checks and limitations
 
-Voir les [preuves globales](00-bilan.md) pour les commandes exécutées et leurs résultats. La comparaison à `8c428b4` conserve IDs, objectifs, questions, Source et tags ; le contrôle de longueur utilise `re.findall(r"\w+", Reponse)`. Le nombre de mots est un garde-fou éditorial, sans garantie de mémorisation.
+See [Global Evidence](00-bilan.md) for executed commands and their results. Comparison to `8c428b4` retains IDs, objectives, questions, source and tags; the length check uses `re.findall(r"\w+", Reponse)`. The number of words is an editorial safeguard, with no guarantee of memorization.
 
-Confrontation documentaire ciblée et auto-revue pédagogique par agent Codex : les affirmations antérieures ne font pas toutes l’objet d’une nouvelle confirmation ligne à ligne. Les exemples analytiques sont déduits, les essais de diagnostic sont proposés ; aucune expérimentation image/vidéo ou validation indépendante n’est revendiquée. Rendu Obsidian/AnkiDroid et maîtrise de l’apprenant non vérifiés.
+Targeted documentary confrontation and educational self-review by agent Codex: not all previous statements are subject to a new confirmation line. Analytical examples are deduced, diagnostic tests are proposed; no image/video experimentation or independent validation is claimed. Rendered Obsidian/AnkiDroid and mastered the unverified learner.

@@ -1,47 +1,46 @@
-# Revue — GrabCut, régions et modèles d’apparence — 2026-10-20
+# Review –  GrabCut, regions and appearance models –  2026-10-20
 
-## Synthèse
+## Overview
 
-3 cartes auditées. Aucun défaut nécessitant correction. Trois objectifs distincts et corrigibles.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+3 flashcards audited. No defects requiring correction. Three distinct and correctable objectives. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 0 mineure, 3 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 0 minor, 3 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-GRABCUT-001 | Confirmé | expliquer l’alternance GrabCut. | 51 mots à l’entrée ; Noyau fini et autonome | Fiche et format contrôlés | — | Conserver |
-| CV-GRABCUT-002 | Raisonnement explicite du projet | contrôler une contrainte d’initialisation. | 50 mots à l’entrée ; Vérifications finies, sans promesse de résultat | Fiche et format contrôlés | — | Conserver |
-| CV-GRABCUT-003 | Raisonnement explicite du projet | choisir une interaction. | 52 mots à l’entrée ; Vérifications finies, sans promesse de résultat | Fiche et format contrôlés | — | Conserver |
+| CV-GRABCUT-001 | Confirmed | Explain the GrabCut alternation. | 51 words at the entrance; finite and autonomous core | reference note and controlled format | — | Keep |
+| CV-GRABCUT-002 | Explicit Reasoning of the Project | check is an initialization constraint. | 50 words at input; Verifications finished, no promise of result | reference note and controlled format | — | Keep |
+| CV-GRABCUT-003 | Explicit Reasoning of the Project | Choose an interaction. | 52 words at input; Verifications finished, no promise of result | reference note and controlled format | — | Keep |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : modèles GMM fond/objet, alternance estimation et coupe de graphe ; l'énergie de la fiche est expressément schématique, pas la transcription complète de l'article.
-- Confirmé : l'extérieur du rectangle est du fond sûr et les contraintes certaines ne sont pas révoquées par une simple itération. Les labels probables ont un autre rôle.
-- Déduction : des couleurs ambiguës peuvent nécessiter une intervention ; le coût d'annotation et la qualité doivent compléter le temps d'optimisation. Cette proposition n'est pas un benchmark.
-- Region growing et contours actifs sont seulement cités comme alternatives ; aucun fonctionnement détaillé ni comparaison quantitative à valider.
+- Confirmed: GMM models background/object, alternating estimation and graph cutting; the energy of the reference note is expressly schematic, not the complete transcription of the article.
+- Confirmed: the outside of the rectangle is safe background and some constraints are not revoked by a simple iteration. Probable labels have a different role.
+- Deduction: ambiguous colors may require intervention; annotation cost and quality must complete the optimization time. This proposal is not a benchmark.
+- Region growing and active contours are only cited as alternatives; no detailed operation or quantitative comparison to validate.
 
-## Corrections appliquées
+## Corrections applied
 
-Aucune correction nécessaire.
+No correction needed.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : comprehension, conception, evaluation, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: understanding, conception, evaluation, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OpenCV 4.13.0, GrabCut, Theory (hard-labelling, GMM, mincut) et Demo (labels)](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+- [OpenCV 4.13.0, GrabCut, Theory (hard-labelling, GMM, mincut) and Demo (labels)](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API. L'article original n'a pas été confronté intégralement ; le niveau d'affirmation contrôlé correspond au tutoriel officiel et à l'énergie explicitement schématique.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation. The original article was not confronted in full; the level of assertion controlled corresponds to the official tutorial and explicitly schematic energy.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

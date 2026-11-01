@@ -1,35 +1,28 @@
 # Revue — CV-FUSION — 2026-10-24
 
-## Synthèse
+## Overview
 
-Correction ciblée avant fusion de la PR existante. Soustraction de covariances présentée comme remède numérique et reset sans convention. Privilégier Joseph sous ses hypothèses, conserver surveillance ; reset local au premier ordre explicitement annoncé.
-Pas de carte ajoutée ni d’ID modifié ; fiche révision 5, statut `redige`.
-Les autres cartes du sujet ne font pas l’objet d’un nouvel audit exhaustif.
+Targeted correction before merging the existing PR. Subtraction of covariances presented as digital remedy and reset without convention. Prefer Joseph under his assumptions, keep surveillance; local reset to the first order explicitly announced. No flashcard added or ID changed; reference note revision 5, status `redige`. The other flashcards on the subject are not subject to a comprehensive re-audit.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FUSION-003 | Point signalé vérifié avec les sources ci-dessous | Objectif existant conservé | Noyau et limites explicités | Fiche et carte accordées | Important | Corrigé |
-| CV-FUSION-006 | Point signalé vérifié avec les sources ci-dessous | Objectif existant conservé | Noyau et limites explicités | Fiche et carte accordées | Important | Corrigé |
+| CV-FUSION-003 | Point reported checked with sources below | Existing objective retained | Core and Explicit Limits | reference note and flashcard granted | Important | Corrected |
+| CV-FUSION-006 | Point reported checked with sources below | Existing objective retained | Core and Explicit Limits | reference note and flashcard granted | Important | Corrected |
 
-## Corrections appliquées
+## Corrections applied
 
-`vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md` et `vault/10-mathematiques-estimation/13-kalman-ekf-eskf.md` : Privilégier Joseph sous ses hypothèses, conserver surveillance ; reset local au premier ordre explicitement annoncé. Journal complété sans réécrire
-les preuves datées du passage précédent. Les identités pédagogiques et Anki
-restent stables.
+`vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md` and `vault/10-mathematiques-estimation/13-kalman-ekf-eskf.md`: Favor Joseph under his assumptions, keep surveillance; local reset to the first order explicitly announced. Journal completed without rewriting the evidence dated from the previous passage. Pedagogical identities and Anki remain stable.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout proposé dans ce correctif. Les nouveaux sujets prioritaires feront
-l’objet d’un lot distinct autorisé par l’apprenant le 2026-10-24.
+No additions proposed in this fix. The new priority subjects will be the subject of a separate batch authorized by the learner on the 2026-10-24.
 
 ## Sources
 
-[Chin/JPL 2023, §III-A, équation 14](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf) ; [Solà 2017, §6.3, équations 285–294](https://arxiv.org/pdf/1711.02508).
+[Chin/JPL 2023, §III-A, equation 14](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf) ; [Solà 2017, §6.3, equations 285 – 294](https://arxiv.org/pdf/1711.02508).
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôleur, tests de la bibliothèque standard et comparaison d’inventaire
-exécutés avant publication. Aucun export réel, rendu AnkiDroid, mesure matérielle
-ou validation scientifique indépendante n’est déduit de cette auto-revue.
+Controller, standard library tests, and inventory comparison run before publication. No actual export, AnkiDroid rendering, material measurement or independent scientific validation is deducted from this self-review.

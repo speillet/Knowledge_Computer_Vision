@@ -7,85 +7,114 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
 ---
-# Capteurs, rolling shutter et synchronisation
+# Sensors, rolling shutter and synchronization
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Relier images, mesures IMU, LiDAR, radar ou ToF à un même temps et à des repères explicites. Une frame, un scan LiDAR et une mesure inertielle ne sont pas des observations instantanées de même durée.
+Link images, measurements IMU, LiDAR, radar or ToF to the same time and explicit coordinate frames. A frame, a LiDAR scan and an inertial measurement are not instantaneous observations of the same duration.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Distinguer instant de capture, durée d'intégration, lecture et arrivée du paquet. Le rolling shutter décale les lignes ; un scan tournant échantillonne des directions à des temps distincts. Trigger matériel et synchronisation d'horloges doivent être mesurés, pas supposés.
+Distinguish capture time, integration time, read and packet arrival. The rolling shutter shifts the lines; a rotating scan samples directions at distinct times. Hardware trigger and clock synchronization should be measured, not assumed.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Avec vitesse $v$ en m/s et retard $\Delta t$ en s, un décalage apparent de l'ordre de $v\Delta t$ apparaît en translation uniforme. La rotation ajoute un effet dépendant du bras de levier et de la profondeur. LiDAR/ToF infèrent une distance de propagation ; radar Doppler renseigne une vitesse radiale, pas directement le vecteur vitesse 3D complet.
+With speed $v$ in m/s and delay $\Delta t$ in s, an apparent shift of the order of $v\Delta t$ appears in uniform translation. Rotation adds an effect dependent on the lever arm and depth. LiDAR/ToF infer a propagation distance; Doppler radar provides a radial velocity, not directly the full velocity vector 3D.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Consigner origine d'horloge, offset, dérive, latence, fréquence et temps par point/ligne. Une pose extrinsèque fixe ne corrige pas toujours un retard temporel. Une exposition courte ne supprime pas à elle seule le rolling shutter.
+Record clock origin, offset, drift, latency, frequency and time per point/line. A fixed extrinsic pose does not always correct a time delay. A short exposure alone does not remove the rolling shutter.
 
-## Coût et implémentation
+## Cost and implementation
 
-Deskew et interpolation requièrent mouvement et timestamps ; leur précision dépend de ces modèles. Aucun ROS 2 ni driver n'est exécuté ; vérifier formats et QoS avant un exemple réel.
+Deskew and interpolation require movement and timestamps; their accuracy depends on these models. No ROS 2 or drivers are running; check formats and QoS before a real example.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Cas analytique : à 2 m/s et 50 ms d'écart, prévoir 0,10 m de décalage de translation. Contrôler séparément temps et extrinsèques sur séquences immobiles puis en mouvement.
+Analytical case: at 2 m/s and 50 ms difference, provide 0,10 m translation shift. check separately time and extrinsic on stationary sequences, then moving sequences.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Des obstacles se dédoublent surtout dans les virages : comparer données au même temps, deskew, extrinsèques et sens des transformations. L'immobilité peut masquer un offset.
+Obstacles break out especially in turns: compare data at the same time, deskew, extrinsic and sense of transformations. Immobility can mask an offset.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Global shutter, capteurs déclenchés, correction temporelle ou modèle rolling shutter selon cadence et mouvement ; aucun capteur n'est idéal pour toutes conditions.
+Global shutter, triggered sensors, time correction or rolling shutter model according to cadence and movement; no sensor is ideal for all conditions.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent séparer temps d’exposition, lecture et synchronisation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop separate exposure time, reading and synchronization. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-CAPTEURS-001
+### Case linked to CV-CAPTEURS-001
 
-**Question de travail** : Une exposition très courte suffit-elle à supprimer toute déformation rolling shutter ?
+**Question of work**: Is a very short exposure sufficient to eliminate all rolling-shutter distortion?
 
-**Réponse de référence** : Non : elle réduit le flou par ligne, mais les lignes peuvent encore représenter des instants différents.
+**Reference Response**: No: it reduces blur per line, but the lines can still represent different moments.
 
-**Décomposition du phénomène** : l'exposition décrit la durée pendant laquelle une ligne accumule la lumière ; le temps de lecture détermine le décalage entre lignes. Une scène mobile peut donc produire des lignes individuellement nettes mais prises à des positions différentes. Dans un exemple construit, une mire verticale qui se déplace horizontalement peut apparaître inclinée, sans flou marqué sur ses bords.
+**Decomposition of the phenomenon**: Exposure describes how long a line accumulates light; reading time determines the offset between lines. A moving scene can therefore produce individually sharp lines but taken at different positions. In a constructed example, a vertical calibration target that moves horizontally may appear inclined, with no marked blur on its edges.
 
-**Vérification proposée** : comparer immobilité, translation et rotation, puis faire varier séparément exposition et durée de lecture lorsque le matériel le permet. Si le raccourcissement de l'exposition améliore la netteté sans supprimer l'inclinaison, les deux effets ont bien été distingués. Un global shutter modifie la simultanéité de capture ; il ne garantit pas une exposition assez courte ni une bonne synchronisation avec un autre capteur. Le modèle de projection utilisé pour la calibration doit rester compatible avec l'acquisition réelle.
+**Proposed verification**: compare immobility, translation and rotation, and then vary exposure and playback time separately when the hardware allows. If the shortening of the exposure improves the sharpness without removing the inclination, the two effects have been well distinguished. A global shutter changes the capture simultaneity; it does not guarantee a fairly short exposure or a good synchronization with another sensor. The projection model used for calibration must remain compatible with the actual acquisition.
 
-### Cas lié à CV-CAPTEURS-004
+### Case linked to CV-CAPTEURS-004
 
-**Question de travail** : Pourquoi une mesure Doppler radar ne se substitue-t-elle pas directement à une vitesse cartésienne 3D ?
+**Question of work**: Why can a radar Doppler measurement not directly replace a 3D Cartesian velocity?
 
-**Réponse de référence** : Elle contraint la composante radiale relativement au capteur selon son modèle de mesure.
+**Reference Response**: It constrains the radial component relative to the sensor according to its measurement model.
 
-**Modèle de mesure** : si $\hat r$ est le vecteur unitaire du capteur vers la cible et $v_{rel}$ sa vitesse relative dans le même repère, la mesure idéale contraint $v_r=\hat r^Tv_{rel}$, avec une convention de signe à annoncer. C'est une projection scalaire. Toute composante orthogonale à $\hat r$ peut changer sans modifier cette mesure instantanée.
+**Model of measurement**: if $\hat r$ is the unit vector of the sensor towards the target and $v_{rel}$ its relative speed in the same coordinate frame, the ideal measurement constrains $v_r=\hat r^Tv_{rel}$, with a sign convention to be announced. It is a scalar projection. Any component orthogonal to $\hat r$ can change without changing this instantaneous measurement.
 
-**Exemple construit** : une cible qui traverse latéralement le champ peut avoir une vitesse importante et une composante radiale faible à un instant donné. Conclure qu'elle est immobile serait donc injustifié. Pour retrouver davantage de composantes, exploiter d'autres directions, plusieurs instants ou d'autres capteurs avec un modèle dynamique explicite. Si le porteur bouge, son propre mouvement contribue à la vitesse relative. Une fusion doit traiter cette contribution et l'incertitude de la mesure, plutôt que recopier le scalaire Doppler dans trois axes.
+**Constructed example**: A target that crosses the side of the field can have a high velocity and a low radial component at a given moment. To conclude that it is immobile would therefore be unjustified. To find more components, exploit other directions, several moments or other sensors with an explicit dynamic model. If the wearer moves, his own movement contributes to the relative speed. A merger must address this contribution and measurement uncertainty, rather than copying the Doppler scalar into three axes.
 
-**Repère documentaire de cette passe** : [Basler, Electronic Shutter Types](https://docs.baslerweb.com/electronic-shutter-types), global et rolling shutter. Les autres développements figurent dans les [cartes associées](../22-capteurs-horodatage.md).
+**Documentary reference for this pass**: [Basler, Electronic Shutter Types](https://docs.baslerweb.com/electronic-shutter-types), global and rolling shutter. The other developments are in the [flashcards](../22-capteurs-horodatage.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Zhang et Singh 2014, LOAM, §§II et V, correction de distorsion de mouvement](https://www.roboticsproceedings.org/rss10/p07.pdf).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-CAPTEURS-001
+
+**Situation**: Is a very short exposure sufficient to eliminate all rolling-shutter distortion?
+
+**Time model by line**: write $t(y)=t_0+y\tau_r$, where $y$ is the line index, $\tau_r$ is the offset between exposure starts in seconds per line, and $t_0$ is the offset of the first line. For a constant horizontal translation $v_{px}$, the offset between first and last line is approximately $v_{px}(H-1)\tau_r$, with $H$ the height. It depends on the total scan time, distinct from the local drag $|v_{px}|t_e$. It is an ideal built-in model: reading direction, overlay modes and timestamp definition vary depending on the camera. Even a global shutter can transmit its lines successively while having exposed the pixels simultaneously.
+
+### CV-CAPTEURS-002
+
+**Situation**: Two sensors observe an object moving at 2 m/s with a 50 ms time offset. What is the approximate spatial error under uniform translation?
+
+**Moving to an image measurement**: under perspective projection $u=f_xX/Z+c_x$, a small time error gives $\Delta u\approx f_x(v_XZ-Xv_Z)\Delta t/Z^2$. Here $X,Z$ are the camera coordinates in meters, $v_X,v_Z$ their derivatives in m/s, $f_x$ is in pixels and $c_x$ the main point. The derivative is local and here ignores the rotation; it shows why 0,10 m error world does not correspond to a universal number of pixels. For a target in the center, at 10 m, with $f_x=1000$ px and a transverse movement of 2 m/s, 50 ms give about 10 px. The sign depends on the relative movement and the direction of the shift.
+
+### CV-CAPTEURS-003
+
+**Situation**: Track C — diagnosis: camera–LiDAR obstacles appear doubled during turns but aligned at rest. How should this be investigated?
+
+**Chain of transformations to be explained**: if $T_{AB}$ transforms B to A, a point LiDAR $p_L$ acquired at $t_L$ can be brought to the camera of $t_C$ by $p_C=T_{CW}(t_C)T_{WL}(t_L)p_L$ in homogeneous coordinates. Under rigid mounting and consistent clocks, the fixed extrinsics are composed with the time-dependent poses. Implicitly replacing $t_L$ with $t_C$ removes the movement to be compensated and creates a structured error, especially in rotation or at great distance. The deskew requires the time of each point, an interpolated pose and an announced reference time. If objects move independently of the vehicle, the ego movement alone is not enough to make them static.
+
+### CV-CAPTEURS-004
+
+**Situation**: Why can a radar Doppler measurement not directly replace a 3D Cartesian velocity?
+
+**Elemental Observability**: for $H=\hat r^T$, the scalar measurement $z=Hv_{rel}+\epsilon$ constrains only one direction of a vector with three components. Its zero space has two dimensions: adding an orthogonal velocity to $\hat r$ leaves $z$ unchanged. A Cartesian velocity becomes conceivable with several independent directions and a model linking their observations to the same movement; three quasi-parallel measurements can remain very poorly conditioned. A rotation of coordinate frame gives $v'=Rv$ and $P'=RPR^T$ for a covariance $P$ and an exact rotation $R$. It re-expresses the available information without creating the two missing components; the uncertainty of the calibration may need to be added separately.
+
+**Passages consulted for these developments**: [Basler, Electronic Shutter Types](https://docs.baslerweb.com/electronic-shutter-types), Global and Rolling Shutter; [Zhang and Singh, LOAM](https://www.roboticsproceedings.org/rss10/p07.pdf), §§II and V, acquisition and distortion of movement; [TI TIDUF01](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf), §2.4.9, radial velocity.
+
+## Sources and flashcards
+
+- [Zhang and Singh 2014, LOAM, §§II and V, motion distortion correction](https://www.roboticsproceedings.org/rss10/p07.pdf).
 - [Texas Instruments, TIDUF01 (2021), §2.4.9](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf).
 
-Le calcul de décalage est cinématique et le cas caméra–LiDAR est construit par le projet ; Forster étaye la préintégration inertielle, pas la mesure Doppler.
+The offset calculation is kinematic and the camera – LiDAR case is built by the project; Forster supports inertial preintegration, not Doppler measurement.
 
 - [Basler, electronic shutter types](https://docs.baslerweb.com/electronic-shutter-types).
-- [Forster, IMU preintegration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf).
-- [Cartes associées](../22-capteurs-horodatage.md).
+- [Forster, IMU preintegration §§IV – VI](https://dellaert.github.io/files/Forster16tro.pdf).
+- [Related flashcards](../22-capteurs-horodatage.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

@@ -1,47 +1,46 @@
-# Revue — Épipolaire, PnP et triangulation — 2026-10-20
+# Review –  Epipolar, PnP and triangulation –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. 0 bloquant ; 1 important dans la fiche ; 1 mineur d’attribution.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. 0 blocking; 1 important in the reference note; 1 minor attribution. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 1 mineure, 3 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 1 minor, 3 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-EPIPOLAIRE-001 | Confirmé : coordonnées normalisées/pixels idéaux | distinguer E et F. | 45 mots à l’entrée ; objectif unique et noyau fini | Fiche et format contrôlés | Aucune | Conserver |
-| CV-EPIPOLAIRE-002 | Confirmé : translation à échelle près | interpréter l’échelle de translation. | 50 mots à l’entrée ; objectif unique et noyau fini | Fiche et format contrôlés | Aucune | Conserver |
-| CV-EPIPOLAIRE-003 | Confirmé : inconnues différentes | choisir PnP ou triangulation. | 56 mots à l’entrée ; objectif unique et noyau fini | Fiche et format contrôlés | Aucune | Conserver |
-| CV-EPIPOLAIRE-004 | Déduction géométrique vérifiée | détecter une faible parallaxe. | 41 mots à l’entrée ; objectif unique et noyau fini | Fiche et format contrôlés | Mineur | Attribution |
-| CV-EPIPOLAIRE-005 | Carte prudente correcte ; fiche généralisait à tort | respecter la variante minimale de pose. | 44 mots à l’entrée ; objectif unique et noyau fini | Fiche et format contrôlés | Important | Distinguer solvePnP et solveP3P |
+| CV-EPIPOLAIRE-001 | Confirmed: normalized coordinates/ideal pixels | distinguish E and F. | 45 words at input; single lens and finite core | reference note and controlled format | None | Keep |
+| CV-EPIPOLAIRE-002 | Confirmed: translation to scale | Interpret the translation scale. | 50 words at input; single lens and finite core | reference note and controlled format | None | Keep |
+| CV-EPIPOLAIRE-003 | Confirmed: unknown different | choose PnP or triangulation. | 56 words at input; single lens and finite core | reference note and controlled format | None | Keep |
+| CV-EPIPOLAIRE-004 | Checked Geometric Deduction | detect a low parallax. | 41 words at input; single lens and finite core | reference note and controlled format | Minor | Attribution |
+| CV-EPIPOLAIRE-005 | flashcard prudent correct; reference note mistakenly generalized | meet the minimum variant of pose. | 44 words at input; single lens and finite core | reference note and controlled format | Important | Distinguish between solvePnP and solveP3P |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-E=[t]×R et F=K₂⁻ᵀEK₁⁻¹ concordent avec le sens caméra 1→2 ; le centre caméra se déduit par inversion. Les docs confirment l’échelle arbitraire, la chiralité et les inconnues PnP/triangulation. Correction importante du contrat P3P de la fiche. Le raisonnement faible parallaxe n’est pas une expérience exécutée.
+E=[t]×R and F=K2⁻TEK1⁻1 match the camera direction 1→2; the camera center is inverted. The docs confirm the arbitrary scale, chirality and unknowns PnP/triangulation. Important correction of contract P3P of the reference note. Weak parallax reasoning is not an executed experiment.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; sources 004–005 ciblées.
+reference note revision 2; sources 004 – 005 targeted.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Dégénérescence en rotation pure | E ne fournit alors pas une direction de translation observable | Diagnostic | Une carte, deux critères ; durée à mesurer | Géométrie épipolaire, cas dégénérés |
+| Degeneration in pure rotation | E then does not provide an observable direction of translation | Diagnostic | One flashcard, two criteria; duration to be measured | Epipolar geometry, degenerate cases |
 
-Familles absentes : algorithme, conception, evaluation. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, design, evaluation. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OpenCV 4.13.0, solvePnP, Pose computation methods et P3P](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html)
-- [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P et triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html)
+- [OpenCV 4.13.0, solvePnP, pose computation methods and P3P](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html)
+- [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P and triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html)
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

@@ -1,128 +1,61 @@
-# Plan d’implémentation : pilote du vault
+# Implementation plan: vault driver
 
-**Branche** : `feat/obsidian-pilot` · **Date** : 2026-10-18
-**Entrée** : [spec.md](spec.md), [contrat pédagogique](learning-design.md).
+**Branche** : `feat/obsidian-pilot` · **Date** : 2026-10-18 **Entry** : [spec.md](spec.md), [Pedagogical Contract](learning-design.md).
 
-## Résumé
+## Summary
 
-Créer un vault autonome dans `vault/`, avec les sept sujets initiaux du pilote,
-des fiches canoniques et des cartes détaillées à objectif unique. Les trois
-extensions et la production du catalogue restent des étapes suivantes.
-Le client de révision confirmé est **AnkiDroid sur Android**.
+Create a stand-alone vault in `vault/`, with the initial seven pilot subjects, canonical reference notes, and detailed single-lens flashcards. The three extensions and the production of the catalog remain the next steps. The confirmed revision client is **AnkiDroid on Android**.
 
-## Contexte technique
+## Technical background
 
-- Markdown UTF-8, front matter YAML simple, liens relatifs et MathJax.
-- Obsidian pour lire et éditer ; Obsidian_to_Anki 3.6.0 comme candidat d’export
-  **pilote**, modèle explicite à quatre champs, une carte par note.
-- Anki Desktop + AnkiConnect pour l’export ; AnkiWeb pour rejoindre AnkiDroid.
-  Aucune application personnelle ni configuration de compte modifiée.
-- Python 3.9+ et bibliothèque standard pour les contrôles et expériences
-  arithmétiques : aucune dépendance nécessaire pour lire ou vérifier le vault.
-- Pas de synchroniseur, entraînement ou service ajouté. Le lot du 2026-10-24
-  ajoute le générateur `.apkg` décrit ci-dessous.
-- Aucun objectif de latence du système pédagogique ; les performances des
-  méthodes sont discutées avec leurs conditions, sans promesse matérielle.
+- Markdown UTF-8, simple YAML front matter, relative links and MathJax.
+- Obsidian to read and edit; Obsidian_to_Anki 3.6.0 as export candidate **pilote**, explicit four-field model, one flashcard per note.
+- Anki Desktop + AnkiConnect for export; AnkiWeb to join AnkiDroid. No personal application or account configuration changed.
+- Python 3.9+ and standard library for arithmetic checks and experiments: no dependencies needed to read or verify the vault.
+- No sync, drive or service added. The 2026-10-24 batch adds the `.apkg` generator described below.
+- No objective of latency of the educational system; the performance of the methods are discussed with their conditions, without material promise.
 
-## Contrôle des principes
+## check principles
 
-La constitution est toujours un modèle non ratifié : ses exemples ne sont pas
-des obligations. Les règles applicables proviennent d’AGENTS.md, du contrat et
-de la demande utilisateur. Avant et après conception : français, sources primaires,
-IDs stables, réponses évaluables, états séparés et absence de généralisation
-du format comme validé avant l’essai réel sont respectés. Aucun hook d’extension présent.
+The constitution is still an unratified model: its examples are not obligations. The applicable rules come from AGENTS.md, the contract and the user request. Before and after conception: English, primary sources, stable IDs, evaluable responses, separate states and no generalization of the format as validated before the actual test are respected. No extension hook present.
 
 ## Phase 0 — Recherche
 
-Conserver la recherche précédente ; lui ajouter les décisions de pilote.
-Vérifier les articles SIFT, ORB, RANSAC, Zhang, SORT et le code COCO officiel.
-Utiliser Context7 pour les API OpenCV et le format du plugin, puis confronter
-ces résultats aux sources officielles. Documenter les divergences de protocole.
+Keep the previous search; add the driver decisions to it. Check items SIFT, ORB, RANSAC, Zhang, SORT and the official COCO code. Use Context7 for the OpenCV APIs and plugin format, and then compare these results to official sources. Document protocol discrepancies.
 
-Le choix provisoire du plugin permet de préparer les fichiers du pilote ;
-il ne valide pas leur synchronisation. Anki Desktop n’étant pas installé,
-la validation réelle est une dépendance externe identifiée, avec un protocole
-exécutable par l’apprenant ; elle n’empêche pas la préparation éditoriale.
+The temporary choice of the plugin makes it possible to prepare the files of the driver; it does not validate their synchronization. Since Anki Desktop is not installed, the actual validation is an identified external dependency, with a protocol executable by the learner; it does not prevent editorial preparation.
 
-## Phase 1 — Conception
+## Phase 1 — Design
 
-- [Modèle de données](data-model.md) : sujets, fiches, cartes et preuves séparés.
-- [Contrat Markdown–Anki](contracts/obsidian-anki.md) : format et identité.
-- [Guide de validation](quickstart.md) : contrôles locaux et essai applicatif.
-- `vault/01-Parcours/Inventaire.md` garde visibles les quatorze domaines et
-  les lacunes ; seules les entrées avec artefacts sont rédigées.
+- [Data Model](data-model.md): Subjects, reference notes, flashcards and separate evidence.
+- [Contrat Markdown–Anki](contracts/obsidian-anki.md): format and identity.
+- [Validation Guide](quickstart.md): local controls and application testing.
+- `vault/01-Parcours/Inventaire.md` keeps visible the fourteen domains and gaps; only entries with artifacts are written.
 
 ## Structure retenue
 
 ```text
-vault/
-  .obsidian/app.json
-  00-Accueil.md
-  01-Parcours/             # inventaire, guide et journal des essais
-  40-features-matching/   # cartes SIFT et ORB, index, références complètes
-  50-calibration-geometrie/
-  80-detection-pose/
-  110-tracking-association/
-  130-evaluation-fiabilite/
-  ...                     # 14 thèmes, état « à rédiger » pour les autres
-  99-Ressources/           # schéma original
-anki/                     # gabarits du modèle, hors vault scanné
-examples/                 # expériences sans dépendance externe
-scripts/check_vault.py    # contrôle documentaire, pas un exporteur
-scripts/vault_sections.json # correspondance domaines / dossiers / titres
-tests/                    # cas d’erreur du contrôleur et calculs
+vault/ .obsidian/app.json 00-Home.md 01-Parcours/             # inventory, guide and test log 40-features-matching/   # flashcards SIFT and ORB, index, complete references 50-calibration-geometrie/ 80-detection-pose/ 110-tracking-association/ 130-evaluation-fiabilite/ ...                     # 14 Themes, “Writing” for Others 99-Ressources/           # original anki/ # template, out of vault scanned examples/ # experiences without external dependency scripts/check_vault.py # check not a scripts/vault_sections.json exporter # correspondence domains / records / titles tests/ # Controller Error and Calculations
 ```
 
-## Livraison et limites
+## Delivery and Limits
 
-Une première livraison comprend les sept références, les cartes et les contrôles
-locaux. Les états restent « rédigé / auto-revu », sans validation indépendante
-ni maîtrise présumée. Les sessions de rappel sont laissées à remplir.
-Les douze cas de transfert couvrant les six familles, les extensions, les tests
-Anki et la mesure pédagogique restent visibles dans [tasks.md](tasks.md).
-La préparation éditoriale élargie est autorisée par la demande actuelle ;
-le pilote technique et pédagogique reste à réussir avant adoption du format.
+A first delivery includes the seven references, the flashcards and local controls. The reports remain “written / self-reviewed”, without independent validation or presumed mastery. recall sessions are left to complete. The twelve transfer cases covering the six families, the extensions, the Anki tests and the pedagogical measure remain visible in [tasks.md](tasks.md). The expanded editorial preparation is allowed by the current application; the technical and pedagogical pilot remains to be succeeded before adoption of the format.
 
-## Organisation demandée après le premier lot
+## Organization requested after the first batch
 
-La demande du 2026-10-18 retient un répertoire par thématique, inspiré de
-Knowledge_AI_Engineering. Les cartes se trouvent directement dans le thème ;
-les fiches complètes sont regroupées dans son sous-dossier `references/`.
-Le sous-deck reprend le nom du thème, les IDs restent stables, et l'accueil
-relie les quatorze index. Liens, médias, contrôleur et test du parseur sont
-adaptés à cette structure avant toute nouvelle publication.
+The request of the 2026-10-18 retains a directory by theme, inspired by Knowledge_AI_Engineering. The flashcards are directly in the theme; the complete reference notes are grouped in its subfolder `references/`. The subdeck takes the name of the theme, the IDs remain stable, and the home links the fourteen indexes. Links, media, controller and parser test are adapted to this structure before any new publication.
 
-## Lot de couverture thématique — révision 6
+## Thematic coverage package –  revision 6
 
-La nouvelle demande étend la préparation éditoriale aux quatorze thèmes et
-aux six pôles ; les essais applicatifs et de rappel restent ouverts. Les
-fiches canoniques sont enrichies de `poles`, les cartes exportent `pole::A`
-à `pole::F`. Les sujets partagés restent dans un seul domaine et un seul fichier.
+The new request extends editorial preparation to the fourteen themes and six poles; application and recall essays remain open. The canonical reference notes is enriched with `poles`, the flashcards exports `pole::A` to `pole::F`. Shared topics remain in a single domain and file.
 
-Recherche : vérifier les références primaires par grandes familles, Context7
-pour les bibliothèques. Les corrections de cadrage portent sur priorités V0,
-observabilité et jauges VIO, occupation/surfaces implicites, frontière VLA/action,
-quantification conditionnée au backend et distinction thème/variante traitée.
+Search: check primary references by large families, Context7 for libraries. Framing corrections are based on priorities V0, observability and gauges VIO, implicit occupation/areas, boundary VLA/action, quantification conditioned to the backend and theme/variant distinction processed.
 
-Conception : conserver le modèle à quatre champs et les identités existantes.
-Ajouter des fiches structurées et cartes évaluables dans les répertoires existants,
-un inventaire d'entrées individuelles, une vue des pôles et des cas de transfert.
-La navigation et les comptes seront calculés depuis le contenu pour éviter
-les totaux périmés. Les tests vérifient pôles, parents et états ; ils ne certifient
-pas les textes scientifiques. Aucun hook d'extension n'est présent.
+Design: Keep the four-field model and existing identities. Add structured reference notes and evaluable flashcards to existing directories, an inventory of individual entries, a view of poles and transfer cases. Navigation and accounts will be calculated from the content to avoid outdated totals. The tests check poles, parents and states; they do not certify scientific texts. No extension hook is present.
 
-## Export direct — lot du 2026-10-24
+## Direct export –  lot of 2026-10-24
 
-Publier l'exporteur local préparé sur `feat/apkg-export`, avec genanki 0.13.1
-isolé par uv. Le vault et le modèle à quatre champs restent canoniques ;
-`modelId` reprend celui du paquet local existant (1153189853). Le GUID dépend
-du nom du modèle et de l'ID pédagogique. Cette chaîne alimente une collection
-distincte de celle du plugin historique.
+Publish the prepared local exporter on `feat/apkg-export`, with genanki 0.13.1 isolated by uv. The vault and the four-field model remain canonical; `modelId` takes that of the existing local packet (1153189853). The GUID depends on the name of the model and the pedagogical ID. This chain feeds a separate collection from that of the historical plugin.
 
-Critères : [contrat d'export direct](../../docs/export-apkg.md).
-`build_apkg.py` construit et relit ZIP/SQLite, compare les manifestes et embarque
-les médias ; `simulate_anki_import.py` teste dans une collection jetable le
-contenu, le style, les identités et l'historique avec anki 26.9.3 et Python 3.12.
-Le rendu AnkiDroid et les cas applicatifs de T010 restent ouverts. Une fusion
-publie les sources ; les paquets dans `dist/` ne sont pas versionnés et une
-release demande une action distincte.
+Criteria: [direct export contract](../../docs/export-apkg.md). `build_apkg.py` builds and rereads ZIP/SQLite, compares manifests and embeds media; `simulate_anki_import.py` tests content, style, identities and history in a disposable collection with anki 26.9.3 and Python 3.12. AnkiDroid rendering and T010 application cases remain open. A merge releases the sources; packages in `dist/` are not versioned and a release requires a separate action.

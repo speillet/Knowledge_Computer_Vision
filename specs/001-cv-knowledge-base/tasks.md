@@ -1,95 +1,52 @@
-# Tâches — premier lot et suite du pilote
+# Tasks –  first batch and pilot suite
 
-**Branche** : `feat/obsidian-pilot`. Les cases décrivent des résultats, pas des intentions.
+**Branche**: `feat/obsidian-pilot`. The boxes describe results, not intentions.
 
-- [x] T001 — Créer le vault autonome, son accueil et l'inventaire des 14 domaines.
-- [x] T002 — Rédiger les fiches SIFT et ORB, leurs sources et cartes.
-- [x] T003 — Rédiger RANSAC/homographie et calibration de Zhang, leurs cartes.
-- [x] T004 — Rédiger SORT, NMS et IoU/AP COCO, leurs cartes et connexions.
-- [x] T005 — Fournir les expériences arithmétiques exécutables et le schéma original.
-- [x] T006 — Fournir le modèle Anki, le guide AnkiDroid et le journal d'essai.
-- [x] T007 — Vérifier identités, liens, tags, format et cas d'erreur du contrôleur.
-- [x] T008 — Auto-revoir les affirmations centrales avec les passages primaires ;
-  consigner les limites et les résultats locaux.
-- [ ] T009 — Installer/configurer le candidat dans les applications de l'apprenant ;
-  consigner versions, champs et réglages réels.
-- [ ] T010 — Exécuter tout le pilote d'export, y compris historique, médias,
-  déplacements/suppressions/conflits et rendu sur AnkiDroid.
-- [x] T011 — Ajouter les extensions : segmentation classique, matching appris,
-  recalage global + ICP ; vérifier le format contrasté avant généralisation.
-- [x] T012 — Compléter les douze cas de transfert et les six familles de variations.
-- [ ] T013 — Faire les deux sessions de rappel ; mesurer ambiguïtés, durée,
-  correction et charge quotidienne avant de choisir le lot suivant.
+- [x] T001 –  Create the autonomous vault, its home and the inventory of 14 domains.
+- [x] T002 –  Write the reference notes SIFT and ORB, their sources and flashcards.
+- [x] T003 –  Write RANSAC/homography and calibration of Zhang, their flashcards.
+- [x] T004 –  Write SORT, NMS and IoU/AP COCO, their flashcards and connections.
+- [x] T005 –  Provide the executable arithmetic experiments and the original schema.
+- [x] T006 –  Provide model Anki, guide AnkiDroid and test log.
+- [x] T007 –  Verify identities, links, tags, format, and controller error cases.
+- [x] T008 –  Auto-review central statements with primary passages; record local limits and results.
+- [ ] T009 –  Install/configure candidate in learner applications; record actual versions, fields, and settings.
+- [ ] T010 –  Run all export driver, including history, media, moves/deletes/conflicts and renders on AnkiDroid.
+- [x] T011 –  Add extensions: classic segmentation, learned matching, registration global + ICP; check contrast format before generalization.
+- [x] T012 –  Complete the twelve cases of transfer and the six families of variations.
+- [ ] T013 –  Do the two recall sessions; measure ambiguity, duration, correction and daily load before choosing the next batch.
 
-T009–T010 dépendent des applications et du compte de l'apprenant ; T011–T013
-appartiennent à la suite du pilote, sans déclaration de validation anticipée.
+T009 – T010 depend on the applications and account of the learner; T011 – T013 belong to the driver suite, without early validation declaration.
 
-- [x] T014 — Appliquer l'organisation demandée par thématique : 14 index,
-  fiches/cartes regroupées, cinq sous-decks actifs, liens/médias adaptés et
-  IDs préservés ; revérifier contrôleur, tests et parseur officiel sur tout le vault.
-- [x] T015 — Reporter les pôles métiers dans `vault/01-Parcours/Inventaire.md` :
-  colonne « Pôles », entrées clés et approfondissements rattachés à leur domaine
-  d'accueil, scission des entrées groupées concernées (R02, X02, P03…).
-- [x] T016 — Ajouter une vue par pôle dans `vault/01-Parcours/` : domaines,
-  entrées, profondeur cible et avancement éditorial, sans déduire la maîtrise.
-- [x] T017 — Ajouter le champ `poles` aux fiches et les étiquettes de pôle aux
-  cartes ; mettre à jour `data-model.md`, `scripts/check_vault.py` et ses tests
-  pour valider les lettres A à F.
-- [x] T018 — Rédiger les douze cas de pôle, conception et diagnostic, avec
-  réponse de référence et critères de correction.
+- [x] T014 –  Apply the requested organization by theme: 14 index, reference notes/flashcards grouped together, five active subdecks, adapted links/media and preserved IDs; recheck controller, tests and official parser throughout the vault.
+- [x] T015 –  Report business divisions in `vault/01-Parcours/Inventaire.md`: column "Poles", key entries and further study related to their host domain, split of the group entries concerned (R02, X02, P03...).
+- [x] T016 –  Add a pole view in `vault/01-Parcours/`: domains, entries, target depth and editorial advancement, without inferring mastery.
+- [x] T017 –  Add field `poles` to reference notes and pole labels to flashcards; update `data-model.md`, `scripts/check_vault.py` and its tests to validate letters A to F.
+- [x] T018 –  Write the twelve pole cases, design and diagnosis, with reference response and correction criteria.
 
-T015–T018 découlent de la révision 5 de la spec (pôles métiers) ; ils ne
-modifient pas le pilote.
+T015 – T018 are derived from the 5 revision of the spec (business poles); they do not modify the driver.
 
-- [x] T019 — Revoir les specs mises à jour : priorités V0, profondeur, cas
-  corrigibles, jauges VIO, occupation, VLA, quantification et statut des preuves.
-- [x] T020 — Ajouter 45 fiches et 177 cartes : chaque domaine contient des
-  artefacts, sans assimiler les 129 approfondissements ouverts à des méthodes maîtrisées.
-- [x] T021 — Générer index, inventaire et vues des pôles depuis le contenu ;
-  vérifier étiquettes, cas métiers, liens, conservation des IDs et calculs.
-- [x] T022 — Publier en commits/PR cohérents, relire, fusionner dans l'ordre
-  des dépendances et vérifier le contenu final de main. Réalisé dans les PR
-  [#4](https://github.com/speillet/Knowledge_Computer_Vision/pull/4),
-  [#5](https://github.com/speillet/Knowledge_Computer_Vision/pull/5) et
-  [#6](https://github.com/speillet/Knowledge_Computer_Vision/pull/6) ;
-  [preuves après fusion](../../docs/publication-2026-10-18.md).
+- [x] T019 –  Review updated specs: V0 priorities, depth, correctable cases, VIO gauges, occupation, VLA, quantification and proof status.
+- [x] T020 –  Add 45 reference notes and 177 flashcards: each domain contains artifacts, without assimilating the open 129 further study to mastered methods.
+- [x] T021 –  Generate index, inventory, and pole views from content; check tags, business cases, links, ID retention, and calculations.
+- [x] T022 –  Publish in consistent commits/PR, reread, merge in order of dependencies and check the final hand content. Made in PR [#4](https://github.com/speillet/Knowledge_Computer_Vision/pull/4), [#5](https://github.com/speillet/Knowledge_Computer_Vision/pull/5) and [#6](https://github.com/speillet/Knowledge_Computer_Vision/pull/6); [Evidence after fusion](../../docs/publication-2026-10-18.md).
 
-T011/T012 signifient contenu préparé : les résultats image/vidéo proposés ne
-sont pas des expériences exécutées, et les cas de transfert n'ont pas été
-essayés par l'apprenant. T009/T010/T013 restent ouverts après la publication.
+T011/T012 means prepared content: the proposed image/video results are not executed experiments, and the transfer cases have not been tried by the learner. T009/T010/T013 remains open after publication.
 
-- [ ] T023 — Avant la rédaction des 119 approfondissements APP encore ouverts, définir pour
-  chacun les compétences observables et les dépendances obligatoires, distinctes
-  de son lien thématique connexe ; compléter l’inventaire et les sources.
-  SC-001/FR-030 restent partiellement satisfaits pour ce backlog. Les 60 fiches
-  du lot courant ont leurs compétences et prérequis ; cette tâche n’affecte pas
-  la présence effective de contenu dans les quatorze thèmes (SC-013).
+- [ ] T023 –  Before writing the still open 119 further study APP, define for each the observable skills and mandatory dependencies, separate from its related thematic link; complete the inventory and sources. SC-001/FR-030 remain partially satisfied for this backlog. The 60 reference notes of the current batch have their skills and prerequisites; this task does not affect the actual presence of content in the fourteen themes (SC-013).
 
-- [x] T024 — Vérifier et corriger les PR 13–16, puis les fusionner dans l’ordre :
-  dimensions SE(3), stabilité de covariance, contrôle postfit et contexte du resize.
-- [x] T025 — Ajouter huit fiches et 38 cartes sur les lacunes classiques prioritaires ;
-  relier dix cibles APP à leur contenu effectif sans supprimer leurs IDs.
+- [x] T024 –  Check and correct the PR 13 – 16, then merge them in order: SE dimensions(3), covariance stability, check postfit, and resize context.
+- [x] T025 –  Add eight reference notes and 38 flashcards on priority classic gaps; link ten APP targets to their actual content without removing their IDs.
 
-Les dix entrées APP désormais rédigées conservent leurs objectifs et prérequis.
-T023 reste ouverte pour les 119 autres ; T009/T010/T013 restent inchangées.
+The ten APP entries now written retain their objectives and prerequisites. T023 remains open for the other 119s; T009/T010/T013 remains unchanged.
 
-- [x] T026 — Publier l'exporteur `.apkg` local : modèle stable, conversion,
-  médias embarqués, contrôle ZIP/SQLite et comparaison des manifestes.
-- [x] T027 — Tester dans le moteur Anki 26.9.3 l'import, la réimportation sans
-  changement, trois révisions, les corrections de contenu et du style, avec
-  identités et historique conservés. Consigner les résultats dans le journal.
-- [x] T028 — Documenter la construction, l'import direct et son skill ; distinguer
-  cette chaîne des identités du plugin et la fusion d'une PR d'une release.
+- [x] T026 –  Publish the local `.apkg` exporter: stable model, conversion, embedded media, check ZIP/SQLite and manifest comparison.
+- [x] T027 –  Test in the engine Anki 26.9.3 import, reimport without change, three revisions, content and style corrections, with identities and history preserved. Record the results in the journal.
+- [x] T028 –  Document construction, direct import, and skill; distinguish this string from plugin identities, and merge a PR from a release.
 
-T026–T028 livrent l'export direct du 2026-10-24. Ils ne clôturent pas T009/T010 :
-installation personnelle, rendu Android et cas applicatifs restent à observer.
+T026 – T028 deliver the direct export of the 2026-10-24. They do not close T009/T010: personal installation, Android rendering and application cases remain to be observed.
 
-- [x] T029 — Développer les réponses existantes selon la demande du 2026-10-24 :
-  mécanismes, cas expliqués, hypothèses et contrôles, sans changer les identités
-  ni les objectifs ; aligner les fiches canoniques et tracer l'auto-revue.
-- [x] T030 — Ordonner les 60 sujets en neuf étapes adaptées au profil, avec
-  prérequis contrôlés, critères de passage et intégrations ; détecter les
-  réponses courtes sans confondre longueur et qualité.
+- [x] T029 –  Develop existing responses according to 2026-10-24 request: mechanisms, explained cases, hypotheses and controls, without changing identities or objectives; align canonical reference notes and trace self-review.
+- [x] T030 –  Order the 60 subjects in nine steps adapted to the profile, with controlled prerequisites, passage criteria and integrations; detect short answers without confusing length and quality.
 
-T029–T030 portent sur le lot existant. Elles ne ferment ni les 119 cibles APP
-restantes (T023), ni les essais applicatifs et de rappel (T009/T010/T013).
+T029 – T030 relate to the existing lot. They do not close the remaining 119 APP targets (T023), nor the application and recall tests (T009/T010/T013).

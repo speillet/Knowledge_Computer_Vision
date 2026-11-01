@@ -1,86 +1,67 @@
-# Revue — Graphes de facteurs et optimisation incrémentale — 2026-10-23
+# Review –  Factor Graphs and Incremental Optimization –  2026-10-23
 
-## Synthèse
+## Overview
 
-Trois cartes auditées, plus leur fiche. Aucune affirmation fausse. Il y a un
-constat important (CV-FACTEURS-001, question fermée) et deux cartes justes
-mais minces. Correction appliquée : fiche en révision 3, IDs et objectifs
-inchangés. Les quatre enrichissements proposés ont été acceptés et rédigés
-en révision 4 : le sujet passe de 3 à 5 cartes, et 002 et 003 sont enrichies.
+Three flashcards audited, plus their reference note. No false claims. There is one important observation (CV-FACTEURS-001, closed question) and two flashcards fair but thin. Correction applied: reference note in revision 3, IDs and objectives unchanged. The four enrichments proposed were accepted and drafted in revision 4: the subject goes from 3 to 5 flashcards, and 002 and 003 are enriched.
 
-Auto-revue : Agent Claude Code (`revue-cartes`). Statut éditorial `redige`.
+Self-review: Agent Claude Code (`revue-cartes`). Editorial status `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FACTEURS-001 | Confirmé (GTSAM §§2.3–2.4, 4.1, 7 ; Kaess §2) ; GTSAM ne formule pas l'équivalence MAP gaussien–moindres carrés | Faible sous forme oui/non | Question fermée : « Non » se devine | Accord fiche | Important | Question ouverte, représentation et éléments à fournir |
-| CV-FACTEURS-002 | Confirmé (Ceres, Gauge Invariance) | Forte | Noyau net | Recoupe CV-BA-003 sans la contredire | Aucun | Enrichissement proposé |
-| CV-FACTEURS-003 | Diagnostic du projet, plausible | Forte | Noyau net mais sans test discriminant | Accord fiche | Mineur | Enrichissement proposé |
+| CV-FACTEURS-001 | Confirmed (GTSAM §§2.3 – 2.4, 4.1, 7; Kaess §2); GTSAM does not formulae MAP equivalency gaussian – less squares | Weak in yes/no form | Question closed: "No" is guessing | Agreement reference note | Important | Open question, representation and elements to be provided |
+| CV-FACTEURS-002 | Confirmed (Ceres, Gauge Invariance) | Forte | Net Core | Cut CV-BA-003 without contradicting it | None | Proposed Enrichment |
+| CV-FACTEURS-003 | Project diagnosis, plausible | Forte | Net core but without discriminating test | Agreement reference note | Minor | Proposed Enrichment |
 
-## Corrections appliquées
+## Corrections applied
 
-- `vault/10-mathematiques-estimation/references/14-graphes-facteurs.md`,
-  révision 3 :
-  - définition biparti et rôle des `Values` ;
-  - prior de première pose ;
-  - élimination par QR creuse, fill-in et ordre incrémental ;
-  - sources précisées par section.
-- `vault/10-mathematiques-estimation/14-graphes-facteurs.md` : CV-FACTEURS-001
-  réécrite sans changer d'objectif.
-- Journal : une ligne.
+- `vault/10-mathematiques-estimation/references/14-graphes-facteurs.md`, revision 3:
+  - bipartite definition and role of `Values`;
+  - the first pose;
+  - elimination by QR sparse, fill-in and incremental order;
+  - sources specified by section.
+- `vault/10-mathematiques-estimation/14-graphes-facteurs.md`: CV-FACTEURS-001 rewritten without changing the objective.
+- Journal: A line.
 
-## Enrichissements acceptés et appliqués
+## Enrichments accepted and applied
 
-Tous acceptés le 2026-10-23 :
+All accepted on 2026-10-23:
 
-- **CV-FACTEURS-002**, jauge ;
-- **CV-FACTEURS-003**, test $\chi^2$ et réoptimisation sans la boucle ;
-- **CV-FACTEURS-004**, back-ends robustes ;
+- **CV-FACTEURS-002**, gauge ;
+- **CV-FACTEURS-003**, $\chi^2$ test and re-optimization without the loop;
+- **CV-FACTEURS-004**, robust back-ends;
 - **CV-FACTEURS-005**, iSAM2.
 
-La fiche reçoit la dimension de la jauge et ses traitements, le mécanisme
-d'iSAM2 et une rubrique sur les fausses boucles. Le total passe de 242 à 244
-cartes.
+The reference note receives the size of the gauge and its treatments, the mechanism of iSAM2 and a rubric on the false loops. The total goes from 242 to 244 flashcards.
 
-Table des propositions telle que soumise :
+Table of proposals as submitted:
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| CV-FACTEURS-002 : dimension de la jauge selon les capteurs (pose graph 6, BA monoculaire 7, visuel-inertiel 4 : position et lacet) et les trois traitements (fixer, prior, laisser libre) | La carte ne dit pas combien de degrés sont libres ni comment les traiter | approfondissement seul | aucun nouveau rappel | Zhang, Gallego et Scaramuzza 2018, RA-L, résumé, §I et table I ; Ceres, Gauge Invariance |
-| CV-FACTEURS-003 : test par facteur, résidu blanchi au carré comparé à un quantile du $\chi^2$ | Le diagnostic actuel n'a pas de test chiffré | approfondissement seul | aucun nouveau rappel | Agarwal et al. 2013, §III ; Gamse et al. 2014 (CV-FUSION-002) |
-| CV-FACTEURS-004 : fermetures de boucle robustes : perte robuste, contraintes commutables, DCS | Le perceptual aliasing rend un front-end sans faux positifs impossible ; aucune carte sur le back-end robuste | comparaison | 1 carte ; noyau à 3 points | Agarwal et al. 2013, résumé et §III : $s=\min(1, 2\Phi/(\Phi+\chi^2))$ ; Sünderhauf et Protzel 2012, à lire |
-| CV-FACTEURS-005 : ce que recalcule iSAM2 à chaque mesure : partie affectée de l'arbre de Bayes, relinéarisation fluide, mises à jour partielles | Le mot « incrémental » est cité sans mécanisme | algorithme | 1 carte ; noyau à 3 points | Kaess et al. 2012, §§3–4 |
+| CV-FACTEURS-002: gauge size according to the sensors (pose graph 6, monocular BA 7, visual-inertial 4: position and yaw) and the three treatments (fix, prior, leave free) | The flashcard does not say how many degrees are free or how to treat them | further explanation alone | No new reminders | Zhang, Gallego and Scaramuzza 2018, RA-L, summary, §I and table I; Ceres, Gauge Invariance |
+| CV-FACTEURS-003: factor test, residual squared compared to a quantile of $\chi^2$ | The current diagnosis does not have an encrypted test | further explanation alone | No new reminders | Agarwal et al. 2013, §III; Gamse et al. 2014 (CV-FUSION-002) |
+| CV-FACTEURS-004: robust loop closures: robust loss, switchable stresses, DCS | Perceptual aliasing makes a front-end without false positives impossible; no flashcard on robust back-end | comparison | 1 flashcard; core at 3 points | Agarwal et al. 2013, summary and §III: $s=\min(1, 2\Phi/(\Phi+\chi^2))$; Sünderhauf and Protzel 2012, to read |
+| CV-FACTEURS-005: what iSAM2 recalculates at each measurement: affected part of the Bayes tree, fluid relinearization, partial updates | The word “incremental” is quoted without mechanism | algorithm | 1 flashcard; core at 3 points | Kaess et al. 2012, §§3 – 4 |
 
 ## Sources
 
-- [Dellaert, Factor Graphs and GTSAM](https://gtsam.org/tutorials/intro.html),
-  consulté le 2026-10-23 :
+- [Dellaert, Factor Graphs and GTSAM](https://gtsam.org/tutorials/intro.html), accessed on 2026-10-23:
   - §1, graphe biparti ;
-  - §2.3, graphe et `Values` ;
-  - §2.4, estimée initiale du MAP ;
-  - §4.1, prior de première pose, seul lien au repère global ;
-  - §7, iSAM et arbre de Bayes ;
-  - fill-in et COLAMD ne sont pas mentionnés.
-- [Kaess et al. 2012, iSAM2, IJRR](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf),
-  texte intégral :
-  - §2, cas gaussien, moindres carrés et QR creuse ;
-  - §3.4, ordre incrémental et COLAMD ;
-  - §§4.1–4.2, relinéarisation fluide et mises à jour partielles.
-- Pour les propositions :
-  - [Zhang, Gallego et Scaramuzza 2018](https://rpg.ifi.uzh.ch/docs/RAL18_Zhang.pdf),
-    prépublication des auteurs : 4 degrés de liberté non observables en
-    visuel-inertiel, 7 en BA monoculaire, trois approches de précision
-    similaire et covariances reliées ;
-  - [Agarwal et al. 2013, DCS](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf),
-    texte intégral : résumé et §III.
-- Non lu : Sünderhauf et Protzel 2012. Le dépôt QUT n'a fourni que la notice ;
-  seule sa reprise par Agarwal et al. a été lue.
+  - §2.3, graph and `Values`;
+  - §2.4, initial estimate of MAP;
+  - §4.1, prior of first pose, only link to the global coordinate frame;
+  - §7, iSAM and Bayes tree;
+  - Fill-in and COLAMD  are not mentioned.
+- [Kaess et al. 2012, iSAM2, IJRR](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf), full text:
+  - §2, Gaussian case, least squares and sparse QR;
+  - §3.4, incremental order and COLAMD;
+  - §§4.1 – 4.2, smooth relinearization and partial updates.
+- For proposals:
+  - [Zhang, Gallego and Scaramuzza 2018](https://rpg.ifi.uzh.ch/docs/RAL18_Zhang.pdf), prepublication of the authors: 4 degrees of freedom not observable in visual-inertial, 7 in monocular BA, three approaches of similar precision and related covariances;
+  - [Agarwal et al. 2013, DCS](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf), full text: summary and §III.
+- Unread: Sünderhauf and Protzel 2012. The QUT repository provided only the record; only its rework by Agarwal et al. was read.
 
-## Contrôles et limites
+## Checks and limitations
 
-`check_vault.py` OK (242 cartes) après correction, puis 244 après ajouts ;
-34 tests réussis ; catalogue régénéré puis à jour ; inventaire sans ID
-disparu ni identité Anki modifiée. Context7 n'est pas
-disponible dans cette session. Non vérifiés : export Anki, rendu Obsidian et
-AnkiDroid, maîtrise, validation indépendante.
+`check_vault.py` OK (242 flashcards) after correction, then 244 after additions; 34 tests passed; catalog regenerated then updated; inventory without ID disappeared or identity Anki modified. Context7 is not available in this session. Not verified: export Anki, rendering Obsidian and AnkiDroid, mastering, independent validation.

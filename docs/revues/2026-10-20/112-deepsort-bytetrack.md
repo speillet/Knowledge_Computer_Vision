@@ -1,52 +1,51 @@
-# Revue — DeepSORT, ByteTrack et association multiobjet — 2026-10-20
+# Review –  DeepSORT, ByteTrack and multiobject association –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Mécanismes confirmés ; attribution et sources précisées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. Confirmed mechanisms; attribution and sources specified. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 4 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 4 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-ASSOCIATION-001 | Confirmé ; source précisée | identifier l’ajout de DeepSORT. | 44 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Cibler source |
-| CV-ASSOCIATION-002 | Confirmé ; source précisée | comprendre l’usage des faibles scores ByteTrack. | 62 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Cibler source |
-| CV-ASSOCIATION-003 | Déduction conditionnelle du projet | contrôler le transfert ReID. | 48 mots à l’entrée ; Contrôle de domaine précis | Fiche et format contrôlés | mineur | Attribuer diagnostic |
-| CV-ASSOCIATION-004 | Protocole du projet | séparer détecteur et association. | 49 mots à l’entrée ; Variables à fixer finies | Fiche et format contrôlés | mineur | Citer effet détecteur |
+| CV-ASSOCIATION-001 | Confirmed; source specified | Identify the addition of DeepSORT. | 44 words at the entrance; Goal retained | reference note and controlled format | Minor | Cibler source |
+| CV-ASSOCIATION-002 | Confirmed; source specified | understand the use of low scores ByteTrack. | 62 words at the entrance; Goal retained | reference note and controlled format | Minor | Cibler source |
+| CV-ASSOCIATION-003 | Conditional deduction of the project | check the transfer ReID. | 48 words at entry; check precise domain | reference note and controlled format | Minor | Assign diagnostic |
+| CV-ASSOCIATION-004 | Project Protocol | separate detector and association. | 49 words at entry; variables to fix finite | reference note and controlled format | Minor | Quote Detector Effect |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : DeepSORT utilise distance de mouvement, gating Mahalanobis, plus petite distance cosinus à la mémoire et cascade privilégiant les pistes vues récemment. La fiche ne prétend pas que toutes ces distances sont des probabilités.
-- Confirmé : ByteTrack Algorithm 1 associe d'abord les détections fortes, puis les faibles aux pistes restantes ; les nouvelles pistes viennent des fortes non associées.
-- Confirmé : AB3DMOT associe détections 3D, Kalman 3D et Hungarian (résumé/introduction) ; le besoin de conventions 3D en découle.
-- Le transfert aux pièces industrielles est une hypothèse à tester, pas une mesure du papier. L'impossibilité de distinguer des objets par une apparence identique est conditionnée à cette seule information.
-- SORT tableau 1 démontre que changer le détecteur change le résultat du tracker ; le protocole contrôlé proposé est cohérent.
+- Confirmed: DeepSORT uses motion distance, gating Mahalanobis, smaller distance cosine to memory and cascade favoring the tracks views recently. The reference note does not claim that all these distances are probabilities.
+- Confirmed: ByteTrack Algorithm 1 first associates strong detections, then weak to the remaining tracks; the new tracks comes from strong not associated.
+- Confirmed: AB3DMOT combines detections 3D, Kalman 3D and Hungarian (summary/introduction); the need for conventions 3D follows.
+- Transfer to industrial parts is a hypothesis to be tested, not a measure of paper. The impossibility of distinguishing objects by an identical appearance is conditioned by this information alone.
+- SORT table 1 demonstrates that changing the detector changes the result of the tracker; the proposed controlled protocol is consistent.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée, bibliographie complétée pour l’effet du détecteur ; sources des quatre cartes ciblées.
+reference note revised, bibliography completed for the effect of the detector; sources of the four targeted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Expliquer la priorité de la cascade DeepSORT | La carte 001 nomme la cascade sans rappeler son mécanisme | algorithme | 1 carte ; priorité aux pistes récemment observées | DeepSORT §2.2 Listing 1 |
+| Explain the priority of the DeepSORT waterfall | The flashcard 001 names the waterfall without recalling its mechanism | algorithm | 1 flashcard; priority to recently observed tracks | DeepSORT §2.2 Listing 1 |
 
-Familles absentes : comprehension, conception, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: understanding, design, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [DeepSORT, §§2.1–2.3, équation 3 et Listing 1](https://arxiv.org/abs/1703.07402).
-- [ByteTrack, §3 Algorithm 1 et paragraphe de création](https://arxiv.org/abs/2110.06864).
-- [AB3DMOT, résumé et introduction](https://arxiv.org/abs/2008.08063).
-- [SORT, §3.1 et tableau 1](https://arxiv.org/abs/1602.00763).
+- [DeepSORT, §§2.1 – 2.3, equation 3 and Listing 1](https://arxiv.org/abs/1703.07402).
+- [ByteTrack, §3 Algorithm 1 and creation paragraph](https://arxiv.org/abs/2110.06864).
+- [AB3DMOT, summary and introduction](https://arxiv.org/abs/2008.08063).
+- [SORT, §3.1 and table 1](https://arxiv.org/abs/1602.00763).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

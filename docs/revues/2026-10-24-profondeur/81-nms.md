@@ -1,39 +1,39 @@
-# Revue — NMS — supprimer des détections redondantes — 2026-10-24
+# Review –  NMS –  remove redundant detections –  2026-10-24
 
-## Synthèse
+## Overview
 
-6 cartes examinées pour leur pertinence et leur développement ; 6 réponses enrichies sur accord explicite de l’apprenant. Axe travaillé : suppression, seuil d’égalité et rappel des objets proches. Aucun nouvel objectif ni ID. Les questions restent des rappels de mécanisme, de choix ou de diagnostic utiles en projet. Aucun doublon d’objectif justifiant un retrait dans ce sujet.
+6 flashcards examined for their relevance and development; 6 enriched responses on explicit agreement of the learner. Axis worked: deletion, equality threshold and recall of nearby objects. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
-Constat éditorial : mécanisme ou mise à l’épreuve trop peu développé dans les réponses modifiées, gravité mineure. Aucun nouveau contresens bloquant établi par la confrontation ciblée ; cela ne certifie pas toutes les affirmations du noyau antérieur.
+Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-NMS-001 | Protocole proposé sous hypothèses ; noyau antérieur conservé | algorithme : dérouler hard NMS | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 100 → 214 mots lexicaux |
-| CV-NMS-002 | Protocole proposé sous hypothèses ; noyau antérieur conservé | comprehension : distinguer trois seuils | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 117 → 235 mots lexicaux |
-| CV-NMS-003 | Protocole proposé sous hypothèses ; noyau antérieur conservé | comparaison : choisir le périmètre d'une suppression | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 136 → 238 mots lexicaux |
-| CV-NMS-004 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | raisonnement : expliquer l'effet de Soft-NMS | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 125 → 234 mots lexicaux |
-| CV-NMS-005 | Protocole proposé sous hypothèses ; noyau antérieur conservé | diagnostic : localiser la cause d'une disparition | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 139 → 254 mots lexicaux |
-| CV-NMS-006 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | raisonnement : interpréter l'inclusion de boîtes dans une suppression par IoU | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 98 → 222 mots lexicaux |
+| CV-NMS-001 | Proposed protocol under assumptions; previous core retained | algorithm: unroll hard NMS | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 100 → 214 lexical words |
+| CV-NMS-002 | Proposed protocol under assumptions; previous core retained | understanding: distinguishing three thresholds | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 117 → 235 lexical words |
+| CV-NMS-003 | Proposed protocol under assumptions; previous core retained | comparison: choose the perimeter of a deletion | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 136 → 238 lexical words |
+| CV-NMS-004 | Deduction or example built under assumptions; previous core retained | Reasoning: Explaining the effect of Soft-NMS | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 125 → 234 lexical words |
+| CV-NMS-005 | Proposed protocol under assumptions; previous core retained | diagnosis: locate the cause of a disappearance | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 139 → 254 lexical words |
+| CV-NMS-006 | Deduction or example built under assumptions; previous core retained | reasoning: interpret the inclusion of boxes in a deletion by IoU | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 98 → 222 lexical words |
 
-## Corrections appliquées
+## Corrections applied
 
-- [Réponses](../../../vault/80-detection-pose/81-nms.md) : explications, exemples et vérifications développés, sans changer questions, objectifs, Source, tags ni identités. L’approfondissement reste facultatif pour réussir le rappel.
-- [Fiche](../../../vault/80-detection-pose/references/81-nms.md) : révision 5, deux cas guidés repris des cartes pour relier compréhension et contrôle ; statut `redige` conservé.
+- [Replies](../../../vault/80-detection-pose/81-nms.md): explanations, examples and verifications developed, without changing questions, objectives, source, tags or identities. The further explanation remains optional to successfully recall.
+- [Reference note](../../../vault/80-detection-pose/references/81-nms.md): revision 5, two guided cases taken from flashcards to link understanding and check; status `redige` preserved.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout en attente pour cette passe : le développement des réponses existantes est explicitement demandé. Aucune nouvelle carte créée. Les approfondissements APP encore ouverts restent dans l’inventaire ; ils ne sont pas déclarés couverts ici.
+No pending additions for this pass: the development of existing answers is explicitly requested. No new flashcard created. The still open further study APPs remain in inventory; they are not declared covered here.
 
 ## Sources
 
-- [Soft-NMS](https://arxiv.org/html/1704.04503v2) : méthode et décroissance des scores, passage consulté le 2026-10-24. Il soutient le mécanisme de référence ; il ne fournit pas les résultats des scénarios construits du projet.
-- Les divergences article/implémentations déjà consignées sont conservées ; aucun changement de seuil opérationnel n’est préconisé sans validation.
-- Vérifications de bibliothèques : OpenCV 4.13 via Context7 pour filtres/pyramides, features/matching, fisheye/hand-eye ; documentation primaire en complément. Les autres sujets utilisent les sources primaires précisées ci-dessus, sans prétendre à une couverture intégrale de Context7.
+- [Soft-NMS](https://arxiv.org/html/1704.04503v2): method and decrease of scores, passage consulted the 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- Article divergences/implementations already recorded are retained; no operational threshold changes are recommended without validation.
+- Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
-## Contrôles et limites
+## Checks and limitations
 
-Voir les [preuves globales](00-bilan.md) pour les commandes exécutées et leurs résultats. La comparaison à `8c428b4` conserve IDs, objectifs, questions, Source et tags ; le contrôle de longueur utilise `re.findall(r"\w+", Reponse)`. Le nombre de mots est un garde-fou éditorial, sans garantie de mémorisation.
+See [Global Evidence](00-bilan.md) for executed commands and their results. Comparison to `8c428b4` retains IDs, objectives, questions, source and tags; the length check uses `re.findall(r"\w+", Reponse)`. The number of words is an editorial safeguard, with no guarantee of memorization.
 
-Confrontation documentaire ciblée et auto-revue pédagogique par agent Codex : les affirmations antérieures ne font pas toutes l’objet d’une nouvelle confirmation ligne à ligne. Les exemples analytiques sont déduits, les essais de diagnostic sont proposés ; aucune expérimentation image/vidéo ou validation indépendante n’est revendiquée. Rendu Obsidian/AnkiDroid et maîtrise de l’apprenant non vérifiés.
+Targeted documentary confrontation and educational self-review by agent Codex: not all previous statements are subject to a new confirmation line. Analytical examples are deduced, diagnostic tests are proposed; no image/video experimentation or independent validation is claimed. Rendered Obsidian/AnkiDroid and mastered the unverified learner.

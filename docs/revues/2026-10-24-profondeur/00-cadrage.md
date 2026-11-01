@@ -1,26 +1,15 @@
-# Reprise pédagogique des cartes et du parcours
+# Pedagogical resumption of the flashcards and the course
 
-Demande du 2026-10-24 : vérifier la pertinence des cartes existantes, enrichir
-leurs explications et rendre le parcours senior cohérent. L'apprenant demande
-des cartes longues et autorise leur enrichissement. Périmètre : les 60 sujets
-et 282 cartes présents ; les 119 approfondissements ouverts restent distincts.
+Request of the 2026-10-24: check the relevance of the existing flashcards, enrich their explanations and make the senior course consistent. The learner requires long flashcards and allows them to be enriched. Perimeter: the 60 subjects and 282 flashcards present; the 119 further study open remain distinct.
 
-## Critères de livraison
+## Criteria for delivery
 
-- Conserver chaque ID, objectif de rappel, fiche parente et identité Anki.
-- Garder un noyau fini et corrigible ; développer l'approfondissement avec
-  mécanisme, exemple interprété, hypothèse et limite liés à la question.
-- Contrôler toutes les réponses avec un seuil de repérage de 180 mots lexicaux,
-  sans plafond. Ce seuil éditorial évite les réponses de quelques lignes ;
-  il ne mesure ni la qualité ni la mémorisation et ne justifie aucun remplissage.
-- Conserver les sources des propriétés ; distinguer les exemples et protocoles
-  construits par le projet des résultats publiés et des essais exécutés.
-- Définir un ordre explicite pour les 60 sujets, respecter les dépendances,
-  proposer des critères de passage et des applications de transfert.
-- Relier le parcours depuis l'accueil ; distinguer ordre d'apprentissage,
-  classement thématique, prérequis et liens connexes.
-- Vérifier le vault, les identités, le catalogue et la conversion du paquet.
-  L'auto-revue et les contrôles locaux ne valident pas la maîtrise ni le rendu Android.
+- Keep each ID, recall objective, parent reference note and identity Anki.
+- Keep a finite and correctable kernel; develop the further explanation with mechanism, interpreted example, hypothesis and limit related to the issue.
+- check all answers with a threshold of 180 lexical words, without ceiling. This editorial threshold avoids the answers of a few lines; it does not measure the quality or the memorization and does not justify any filling.
+- Keep sources of properties; distinguish examples and protocols built by the project from published results and run tests.
+- Define an explicit order for 60 subjects, respect dependencies, propose pass criteria and transfer applications.
+- Link the course from the reception; distinguish learning order, thematic ranking, prerequisites and related links.
+- Check the vault, identities, catalog, and package conversion. Auto-review and local controls do not validate Android control or rendering.
 
-Les rapports par sujet indiquent les passages consultés et les limites de la
-confrontation. Les preuves anciennes datées restent intactes.
+The reports by subject indicate the passages consulted and the limits of the confrontation. Old evidence remains intact.

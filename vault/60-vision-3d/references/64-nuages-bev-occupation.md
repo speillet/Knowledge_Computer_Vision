@@ -7,87 +7,122 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-SE3", "CV-CAPTEURS", "CV-MULTICALIB"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
 ---
-# Nuages, BEV et représentations d’occupation
+# Point clouds, BEV and occupancy representations
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Représenter l'environnement pour la perception robotique. Distinguer nuages irréguliers, voxels, piliers, tenseur BEV et volume sémantique. Entrées : points/images et poses synchronisées ; sortie : représentation avec résolution, visibilité et repère explicités.
+Representing the environment for robotic perception. Distinguish between irregular clouds, voxels, pillars, tensor BEV and semantic volume. Inputs: synchronized points/images and poses; output: representation with resolution, visibility and coordinate frame explained.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md) ; [CV-CAPTEURS](../../20-acquisition-images/references/22-capteurs-horodatage.md) ; [CV-MULTICALIB](../../50-calibration-geometrie/references/55-calibration-multicapteurs.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md); [CV-CAPTEURS](../../20-acquisition-images/references/22-capteurs-horodatage.md); [CV-MULTICALIB](../../50-calibration-geometrie/references/55-calibration-multicapteurs.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-PointNet++ agrège des voisinages de points ; voxels/piliers organisent l'espace. Lift-Splat-Shoot projette des features image dans un repère spatial avec hypothèses de profondeur ; BEVFormer agrège vues et temps ; BEVFusion combine des modalités selon sa conception. Ces méthodes ne rendent pas la calibration facultative.
+PointNet++ aggregates point neighborhoods; voxels/pillars organize the space. Lift-Splat-Shoot projects image features in a spatial coordinate frame with depth assumptions; BEVFormer aggregates views and time; BEVFusion combines modalities according to its design. These methods do not make calibration optional.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Une grille utilise une taille de cellule en mètres et une origine/étendue. La cartographie probabiliste sépare libre, occupé et inconnu. Une Occupancy Network approxime une fonction intérieur/extérieur continue ; une SDF utilise une distance signée et une surface au niveau zéro. Aucune de ces représentations n'est automatiquement une probabilité calibrée de collision.
+A grid uses a cell size in meters and an origin/extension. Probabilistic mapping separates free, busy, and unknown. An Occupancy Network approximates a continuous indoor/outdoor function; a SDF uses a signed distance and a zero-level surface. None of these representations is automatically a calibrated probability of collision.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Résolution, limites spatiales, compensation ego, masques de visibilité et classes doivent être choisis. Augmenter la finesse augmente mémoire et sparsité ; un voxel non observé ne devient pas libre par défaut.
+Resolution, spatial limits, ego compensation, visibility masks and classes must be chosen. Increasing fineness increases memory and sparsity; an unobserved voxel does not become free by default.
 
-## Coût et implémentation
+## Cost and implementation
 
-Coût des points, du volume dense/sparse et des fenêtres temporelles ; transferts et fusion comptent. Aucun modèle BEV ou robot exécuté.
+Cost of points, dense/split volume and time windows; transfers and merge count. No model BEV or robot executed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : masquer un capteur ou augmenter l'offset temporel en gardant scène et modèle fixes. Mesurer couverture, doublons et erreurs par distance, y compris l'espace inconnu.
+Proposed variation: mask a sensor or increase the time offset by keeping the scene and model fixed. Measure coverage, duplicates, and errors per distance, including unknown space.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Objets fantômes : vérifier synchronisation et ego-motion. Carte vide : contrôler axes, ROI, unités et FOV. La libre traversabilité exige davantage qu'une absence de boîte détectée.
+Ghost objects: check for synchronization and ego-motion. empty map: check axes, ROI, units and FOV. Free traversability requires more than a detected box absence.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Carte d'occupation géométrique, prédiction sémantique, surface reconstruite et liste d'objets remplissent des contrats distincts ; le choix dépend de l'interface aval.
+geometric occupancy map, semantic prediction, reconstructed surface and list of objects fill separate contracts; the choice depends on the downstream interface.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent visibilité, inconnue et limites de la représentation spatiale. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop visibility, unknown and limits of spatial representation. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-BEV-001
+### Case linked to CV-BEV-001
 
-**Question de travail** : Pourquoi un pilier vertical et un voxel 3D ne conservent-ils pas la même organisation spatiale ?
+**Question of work**: Why do a vertical pillar and a 3D voxel preserve different spatial organization?
 
-**Réponse de référence** : Le voxel discrétise aussi la hauteur ; le pilier regroupe les points d’une colonne, ensuite encodée en pseudo-image.
+**Reference Response**: The voxel also discretizes the height; the pillar groups the points of a column, then encoded in pseudo-image.
 
-**Lecture des représentations** : une grille de voxels discrétise les trois dimensions spatiales ; un pilier regroupe une colonne verticale avant d'en produire des features. Une pseudo-image BEV organise ensuite des informations dans le plan horizontal. Le regroupement peut encoder la hauteur sans conserver une case explicite pour chaque altitude.
+**Reading of representations**: a grid of voxels discretizes the three spatial dimensions; a pillar groups a vertical column before producing features. A pseudo-image BEV then organizes information in the horizontal plane. The grouping can encode the height without keeping an explicit box for each altitude.
 
-**Exemple construit** : un obstacle bas et une structure en hauteur peuvent occuper les mêmes coordonnées horizontales. Leur distinction dépend de l'information verticale effectivement conservée et exploitée, pas du seul mot BEV. Définir origine, résolution en mètres, étendue et repère avant de comparer les tenseurs. Une BEV issue de caméras nécessite elle aussi des hypothèses de projection et de profondeur. Le choix de représentation est donc un compromis entre information, mémoire, calcul et interface de perception, et non une simple conversion universelle d'un nuage en image.
+**Constructed example**: a low obstacle and a height structure can occupy the same horizontal coordinates. Their distinction depends on the vertical information actually retained and exploited, not on the single word BEV. Set origin, resolution in meters, extent, and coordinate frame before comparing tensors. A BEV from cameras also requires projection and depth assumptions. The choice of representation is therefore a compromise between information, memory, calculation and perception interface, and not a simple universal conversion of a cloud into an image.
 
-### Cas lié à CV-BEV-005
+### Case linked to CV-BEV-005
 
-**Question de travail** : Cas C — conception : un robot d’entrepôt utilise caméras et LiDAR. Quelle interface de perception et quel protocole construire ?
+**Question of work**: Track C — design: a warehouse robot uses cameras and LiDAR. Which perception interface and evaluation protocol should be built?
 
-**Réponse de référence** : Définir objets/occupation attendus, repères/temps, visibilité et incertitude ; concevoir fusion et comportement en cas de perte puis tester obstacles rares, occultations et latence.
+**Reference Response**: Define expected objects/occupation, coordinate frames/time, visibility and uncertainty; design fusion and behavior in case of loss and then test rare obstacles, occlusions and latency.
 
-**Interface proposée** : fournir pour chaque sortie le repère, l'instant de validité, la zone observée, les classes ou états d'occupation et une indication d'incertitude exploitable. Prévoir ce qui se passe si un capteur disparaît ou si les données deviennent anciennes. Une liste de boîtes et une carte d'espace libre ne répondent pas au même besoin.
+**Proposed interface**: provide for each output the coordinate frame, the time of validity, the observed area, the classes or occupancy states and an indication of usable uncertainty. Predict what happens if a sensor disappears or the data becomes old. A list of boxes and a map of free space do not meet the same need.
 
-**Protocole de transfert** : construire des cas avec obstacle partiellement occulté, objet rare, matière peu réfléchissante et désynchronisation contrôlée. Mesurer erreurs par distance, zones inconnues traitées à tort comme libres et latence de bout en bout. Comparer modalités seules et fusion pour identifier l'apport réel de chacune. Les critères sont ceux de la perception et de son contrat ; la validation de la commande et de la sécurité globale demande un périmètre distinct et n'est pas déduite d'une AP moyenne.
+**Transfer Protocol**: build cases with partially hidden obstacle, rare object, low-reflective material and controlled desynchronization. Measure errors by distance, unknown areas wrongly treated as free, and end-to-end latency. Compare single terms and merger to identify the actual contribution of each. The criteria are those of the collection and its contract; the validation of the order and the global security requires a separate perimeter and is not deducted from an average AP.
 
-**Repère documentaire de cette passe** : [OctoMap, documentation officielle](https://octomap.github.io/octomap/doc/index.html), présentation du modèle d’occupation probabiliste. Les autres développements figurent dans les [cartes associées](../64-nuages-bev-occupation.md).
+**Documentary reference for this pass**: [OctoMap, documentation officielle](https://octomap.github.io/octomap/doc/index.html), presentation of the probabilistic occupation model. The other developments are in the [flashcards](../64-nuages-bev-occupation.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Qi et al., PointNet++, résumé](https://arxiv.org/abs/1706.02413)
-- [Philion–Fidler, Lift-Splat-Shoot, résumé](https://arxiv.org/abs/2008.05711)
-- [Liu et al., BEVFusion, résumé (version v3)](https://arxiv.org/abs/2205.13542)
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-BEV-001
+
+**Situation**: Why do a vertical pillar and a 3D voxel preserve different spatial organization?
+
+**Cost of discretization**: for a range $L_x\times L_y\times L_z$ and cells $\Delta x,\Delta y,\Delta z$, a dense volume contains about $(L_x/\Delta x)(L_y/\Delta y)(L_z/\Delta z)$ cells. Divide each step by two multiplies their number by eight; a horizontal grid alone is multiplied by four. The actual memory still depends on the channels, the precision and the sparse representation. The horizontal index of a point can be $i=\lfloor(x-x_{\min})/\Delta x\rfloor$ with out-of-ROI rejection. Defining this rounding and the convention of the terminals avoids the shifts of a cell between labels, sensors and network outputs.
+
+### CV-BEV-002
+
+**Situation**: Why does the absence of a return or detection not establish that a volume is free?
+
+**Radius Model**: a geometric feedback can inform the space traversed before impact as free and a region near impact as occupied, under the model of the sensor. The portion behind the impact remains hidden. Beam width, distance uncertainty and moving objects limit this interpretation. In a binary probabilistic update, log-odds $\ell=\log(p/(1-p))$ make it possible to add the information of the measurements according to the assumptions of independence and the prior. Repeating a correlated measure does not create as much independent information. The map must therefore retain provenance, visibility and seniority, in addition to the occupancy value.
+
+### CV-BEV-003
+
+**Situation**: How does a robotic occupancy grid differ from an Occupancy Network for reconstruction?
+
+**Surface and units**: For an implicit occupation function $o_\theta(x)$, a surface is extracted at a selected level $o_\theta(x)=\tau$. For an ideal SDF $s(x)$, the surface is $s(x)=0$ and $|s(x)|$ represents a distance, according to the sign convention. Far from singularities, a true signed distance satisfies $\|\nabla s\|=1$; a learned function does not automatically ensure this property. The coordinates can be normalized during learning: returning to the meters requires the corresponding transformation. A plausible surface level therefore does not validate the metric distances or the probabilistic calibration of an output used by another module.
+
+### CV-BEV-004
+
+**Situation**: BEV objects are localized correctly at rest but displaced during rotation. Which data should be examined?
+
+**Aligning the historical**: If $T_{w\leftarrow e(t)}$ gives the coordinate frame ego to the time $t$ in the world, a historical point is transported to the current time by $p_{e(t)}=T_{w\leftarrow e(t)}^{-1}T_{w\leftarrow e(t_0)}p_{e(t_0)}$. This compensation assumes the static point in the world. A moving pedestrian retains a residual displacement after correction of the ego-motion; treating it as an extrinsic defect would be another confusion. check first static structures, and then parse the moving objects separately. The time per point of a scan may require several transformations, and not a single pose for the entire frame, when the movement during the acquisition is significant.
+
+### CV-BEV-005
+
+**Situation**: Track C — design: a warehouse robot uses cameras and LiDAR. Which perception interface and evaluation protocol should be built?
+
+**Testable Grid Contract**: accompany the tensor of its origin, its axes, its resolution, its terminals, its timestamp and its visibility mask. For a cell declared free, to be able to link the decision to observations that really forced this region. A constructed test places an obstacle behind a pallet, then changes the point of view: the cell must go from unknown to observed according to the new measurements, without considering the initial vacuum of the tensor as evidence. Also assess the shelf life of moving obstacles and the response to outdated data. These tests verify the semantics of the interface, beyond the average accuracy of the boxes.
+
+**Passages consulted for these developments**: [OctoMap](https://octomap.github.io/), Full 3D model, free/occupied/unknown space; [Li et al., BEVFormer](https://arxiv.org/html/2203.17270v2), §3.4, time history; transformations and tests derived by the project.
+
+## Sources and flashcards
+
+- [Qi et al., PointNet++, summary](https://arxiv.org/abs/1706.02413)
+- [Philion – Fidler, Lift-Splat-Shoot, summary](https://arxiv.org/abs/2008.05711)
+- [Liu et al., BEVFusion, summary (version v3)](https://arxiv.org/abs/2205.13542)
 - [Park et al., DeepSDF, §3](https://arxiv.org/abs/1901.05103)
 
 - [PointPillars, architecture](https://openaccess.thecvf.com/content_CVPR_2019/html/Lang_PointPillars_Fast_Encoders_for_Object_Detection_From_Point_Clouds_CVPR_2019_paper.html).
-- [BEVFormer, méthode](https://arxiv.org/abs/2203.17270).
+- [BEVFormer, method](https://arxiv.org/abs/2203.17270).
 - [OctoMap, probabilistic occupancy](https://octomap.github.io/octomap/doc/index.html).
-- [Occupancy Networks, surface implicite](https://openaccess.thecvf.com/content_CVPR_2019/html/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.html).
-- [Cartes associées](../64-nuages-bev-occupation.md).
+- [Occupancy Networks, implicit surface](https://openaccess.thecvf.com/content_CVPR_2019/html/Mescheder_Occupancy_Networks_Learning_3D_Reconstruction_in_Function_Space_CVPR_2019_paper.html).
+- [Related flashcards](../64-nuages-bev-occupation.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

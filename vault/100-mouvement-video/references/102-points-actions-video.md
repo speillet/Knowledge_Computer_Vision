@@ -7,84 +7,113 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 7
 prerequis: ["CV-FLOT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
 ---
-# Suivi de points, actions et compréhension vidéo
+# Point tracking, actions and video understanding
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Distinguer trajectoires de points, classification de clips et localisation temporelle d'actions. Entrées : frames horodatées et éventuellement points/prompts ; sorties : trajectoires/visibilité, labels de clip ou intervalles. Leur protocole causal et leur supervision diffèrent.
+Distinguish between point trajectories, clip classification and temporal location of actions. Inputs: time-stamped frames and possibly points/prompts; outputs: trajectories/visibility, clip labels or intervals. Their causal protocol and supervision differ.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-FLOT](101-flot-optique.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-FLOT](101-flot-optique.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-CoTracker exploite les interactions spatiales/temporelles pour prédire points et visibilité. TimeSformer et ViViT traitent des patches vidéo avec attention selon leur architecture. VideoMAE préentraîne par reconstruction de tubes masqués ; une tâche finale doit ensuite être définie.
+CoTracker uses spatial/temporal interactions to predict points and visibility. TimeSformer and ViViT handle video patches with attention according to their architecture. VideoMAE pretrains by reconstruction of hidden tubes; a final task must then be defined.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Échantillonner une frame toutes les $\Delta t$ secondes limite les événements directement observés. Un événement plus court peut être manqué selon sa phase. Une fenêtre de L frames à fréquence f couvre environ $(L-1)/f$ secondes entre premier et dernier timestamp ; la convention de durée doit être annoncée.
+Sampling a frame every $\Delta t$ seconds limits directly observed events. A shorter event can be missed depending on its phase. A window of L frames at frequency f covers about $(L-1)/f$ seconds between first and last timestamp; the duration convention must be announced.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Version CoTracker/CoTracker3, mode online/offline, stride, fenêtre, visibilité et accès au futur. Un mode fenêtré online peut introduire un délai. Les ratios élevés de masquage VideoMAE sont un choix de méthode, pas une règle universelle.
+Version CoTracker/CoTracker3, online/offline mode, stride, window, visibility and access to the future. An online window mode can introduce a delay. VideoMAE’s high masking ratios are a choice of method, not a universal rule.
 
-## Coût et implémentation
+## Cost and implementation
 
-Frames, tokens spatio-temporels, fenêtre et mémoire dominent. Aucun modèle exécuté ; ne pas comparer temps de clip et latence de décision en flux.
+Frames, time-space tokens, window and memory dominate. No models executed; do not compare clip time and streaming decision latency.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : modèle image agrégé puis modèle temporel, mêmes frames et données. Inverser l'ordre ou raréfier l'échantillonnage pour tester l'usage du temps ; mesurer événements courts, visibilité et frontières d'action.
+Baseline: Aggregate image model and then time model, same frames and data. Reverse order or rarefied sampling to test time usage; measure short events, visibility, and action boundaries.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Bon score de clip mais action mal localisée : vérifier que la sortie est un label global et non un intervalle. Points corrects mais mauvais objet : une trajectoire de point n'est pas une classe d'objet.
+Good clip score but poorly localized action: check that the output is a global label and not an interval. Correct points but wrong object: A point path is not an object class.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Pipeline détection/tracking/règles pour des événements définis ; modèle vidéo ou VLM selon contexte et annotations. Contrôler fuite entre clips d'une même séquence.
+Pipeline detection/tracking/rules for defined events; video model or VLM depending on context and annotations. check leak between clips of the same sequence.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent trajectoires de points, visibilité et horizon temporel. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop point trajectories, visibility and time horizon. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-VIDEO-001
+### Case linked to CV-VIDEO-001
 
-**Question de travail** : Quelle différence entre CoTracker, classification vidéo et localisation temporelle d’action ?
+**Question of work**: How do CoTracker, video classification and temporal action localization differ?
 
-**Réponse de référence** : CoTracker suit des points avec visibilité ; la classification étiquette un clip ; la localisation estime aussi des intervalles temporels.
+**Reference Response**: CoTracker tracks points with visibility; classification labels a clip; localization also estimates time intervals.
 
-**Contrats à distinguer** : une trajectoire de point répond à « où se trouve cette observation au fil du temps ? ». Un label de clip répond à « quelle action caractérise cet extrait ? ». Un intervalle temporel ajoute une estimation de début et de fin. Une sortie peut être correcte pour l'un de ces contrats et insuffisante pour un autre.
+**Contracts to distinguish**: A point path answers “where is this observation over time?” A music video label answers “what action characterizes this excerpt?”. A time interval adds a start and end estimate. One output may be correct for one of these contracts and insufficient for another.
 
-**Exemple construit** : reconnaître qu'une personne s'assoit dans un clip ne fournit pas nécessairement l'instant de contact avec la chaise. Suivre un point de vêtement ne fournit pas non plus automatiquement la classe d'action. Définir la sortie utile avant de choisir architecture et métrique : erreur de point, visibilité, classification ou frontières temporelles. Préciser les frames accessibles au modèle et le délai de décision. Une performance obtenue avec le clip complet ne valide pas une alarme devant se déclencher avant la fin de l'événement.
+**Constructed example**: recognizing that a person sits in a clip does not necessarily provide the instant of contact with the chair. Following a garment point also does not automatically provide the action class. Define the useful output before choosing architecture and metric: point error, visibility, classification, or time boundaries. Specify the frames accessible to the model and the decision time. A performance obtained with the full clip does not validate an alarm to be triggered before the end of the event.
 
-### Cas lié à CV-VIDEO-004
+### Case linked to CV-VIDEO-004
 
-**Question de travail** : Un classifieur vidéo reconnaît l’action même après permutation des frames. Que tester avant d’affirmer qu’il comprend la dynamique ?
+**Question of work**: A video classifier still recognizes an action after the frames are shuffled. What should be tested before claiming it understands temporal dynamics?
 
-**Réponse de référence** : Comparer à une baseline image/contexte, contrôler les labels et les actions qui exigent réellement l’ordre.
+**Reference Response**: Compare to an image/context baseline, check labels and actions that actually require order.
 
-**Hypothèse alternative** : la présence d'un outil, d'un décor ou d'une posture caractéristique peut suffire à prédire le label du clip. La permutation des frames préserve une grande partie de ces indices. Une accuracy élevée ne permet donc pas, seule, d'attribuer la décision à l'ordre temporel.
+**Alternative Hypothesis**: The presence of a tool, a decor or a characteristic posture can be enough to predict the label of the clip. Frame swapping preserves many of these clues. A high accuracy does not, therefore, alone allow to attribute the decision to the temporal order.
 
-**Ablation proposée** : comparer le modèle à une agrégation de prédictions image, puis sélectionner des cas où les mêmes états visuels dans un ordre différent correspondent à des événements différents. Contrôler échantillonnage, labels, arrière-plan et fuite entre clips voisins. Si la performance reste identique sur des tâches réellement sensibles à l'ordre, examiner les informations utilisées. Une chute après permutation soutient une dépendance temporelle, mais ne prouve pas toute forme de compréhension causale. Le raisonnement doit rester lié aux tâches et aux contrôles effectués, pas au seul nom de l'architecture.
+**Proposed ablation**: Compare the model to an aggregation of image predictions, and then select cases where the same visual states in a different order correspond to different events. check sampling, labels, background and leakage between neighboring clips. If the performance remains the same on tasks that are really sensitive to order, look at the information used. A fall after permutation sustains a temporal dependence, but does not prove any form of causal understanding. Reasoning must remain tied to the tasks and controls performed, not just in the name of the architecture.
 
-**Repère documentaire de cette passe** : [CoTracker3](https://arxiv.org/abs/2410.11831), résumé, tâche de suivi de points. Les autres développements figurent dans les [cartes associées](../102-points-actions-video.md).
+**Documentary reference for this pass**: [CoTracker3](https://arxiv.org/abs/2410.11831), summary, point tracking task. The other developments are in the [flashcards](../102-points-actions-video.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [ViViT, résumé](https://arxiv.org/abs/2103.15691) : tokens spatio-temporels et classification vidéo.
-- [CoTracker3, résumé et introduction](https://arxiv.org/abs/2410.11831) : variantes offline (fenêtre unique) et online (fenêtres glissantes).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-VIDEO-001
+
+**Situation**: How do CoTracker, video classification and temporal action localization differ?
+
+**Axis of annotations**: A point path can be represented by $(x_t,y_t,v_t)$, where $v_t$ describes a visibility according to the protocol. A clip label is a category associated with a window; a time location provides at least one category and an interval $[t_d,t_f]$. Cutting a long video into tagged clips can give rough time cues, but does not automatically create precise boundaries. To compare systems, keep timestamps and match rules with actual events. A point followed on a person is neither a complete identity of the person nor an annotation of action without an additional definition.
+
+### CV-VIDEO-002
+
+**Situation**: A video is summarized with one frame per second. Why can detection of a 100 ms event not be guaranteed?
+
+**Sampling phase**: In a constructed model where an event of duration $d<\Delta$ begins with a uniform phase with respect to a grid of steps $\Delta$, and where an instantaneous capture is sufficient, the probability that at least one sample falls into the event is $d/\Delta$. For 100 ms and a step of 1 s, it is 0,1 under these assumptions. This is not a predicted performance of a real model: exposure, visibility, and persistent clues change the problem. The calculation shows, however, why varying the phase is essential and why a demonstration where the event falls exactly on a frame does not validate a guaranteed recall.
+
+### CV-VIDEO-003
+
+**Situation**: A point tracker uses a window containing future frames. Can its output be compared directly with a zero-delay causal model?
+
+**Minimum time for context**: if an estimate for $t$ uses a frame at $t+h$, its availability cannot precede $t+h$, even before transfer and calculation. A latency measurement limited to the network pass would therefore omit at least this context delay. With sliding windows, specify which exits are temporary and which are revised afterwards. Evaluating the first decision and the final trajectory separately makes the comparison readable. A method can remain useful in line with an accepted deadline; the word causal, on the other hand, requires that each decision at the time in question uses only the observations already available according to the announced contract.
+
+### CV-VIDEO-004
+
+**Situation**: A video classifier still recognizes an action after the frames are shuffled. What should be tested before claiming it understands temporal dynamics?
+
+**Permutation and reverse order**: An average $z=L^{-1}\sum_t f(I_t)$ aggregation is mathematically invariant to permutation; a good score obtained in this way can come from visual states or context, without encoding their order. Building pairs like take/pose an object, with close states but a different order, tests another property. check also that permutation does not create an unusual artifact that would cause the model to fall for the wrong reason. Comparing inversion, permutation and cadence by changing only one factor helps to support the use of time without assimilating any temporal sensitivity to a complete understanding of the scene.
+
+**Passages consulted for these developments**: algebraic complements and protocols built by the project; the previous references of the subject remain below, without new full validation of their claims.
+
+## Sources and flashcards
+
+- [ViViT, summary](https://arxiv.org/abs/2103.15691): spatiotemporal tokens and video classification.
+- [CoTracker3, summary and introduction](https://arxiv.org/abs/2410.11831): offline (single window) and online (slippery windows) variants.
 
 - [CoTracker, §3](https://arxiv.org/abs/2307.07635).
 - [TimeSformer](https://arxiv.org/abs/2102.05095).
 - [VideoMAE](https://arxiv.org/abs/2203.12602).
-- [Cartes associées](../102-points-actions-video.md).
+- [Related flashcards](../102-points-actions-video.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

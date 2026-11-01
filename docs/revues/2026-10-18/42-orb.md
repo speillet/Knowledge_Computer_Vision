@@ -1,45 +1,45 @@
-# Revue — Cartes pilotes — ORB — 2026-10-18
+# Review –  flashcards drivers –  ORB –  2026-10-18
 
-## Synthèse
+## Overview
 
-6 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 1 mineure, 5 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+6 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 1 minor, 5 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-ORB-001 | Confirmé : FAST/Harris/centroïde/rBRIEF | reconstruire le mécanisme d'ORB. | Noyau fini ; 97 mots | Accord fiche et format | Aucune | Conserver |
-| CV-ORB-002 | Confirmé par définition et exemple binaire | relier représentation et distance. | Noyau fini ; 106 mots | Accord fiche et format | Aucune | Conserver |
-| CV-ORB-003 | Confirmé : WTA_K et defaultNorm | choisir la norme après changement de variante. | Noyau fini ; 103 mots | Accord fiche et format | Aucune | Conserver |
-| CV-ORB-004 | Confirmé : réciprocité vs ratio | distinguer deux filtres de correspondances. | Noyau fini ; 96 mots | Accord fiche et format | Aucune | Conserver |
-| CV-ORB-005 | Confirmé : limites de couverture en échelle | diagnostiquer une perte de répétabilité. | Noyau fini ; 104 mots | Accord fiche et format | Aucune | Conserver |
-| CV-ORB-006 | Conception explicitement proposée | articuler contrainte de calcul et réussite de tâche. | Noyau fini ; 111 mots | Accord fiche et format | Mineur | Passages applicatifs ajoutés |
+| CV-ORB-001 | Confirmed: FAST/Harris/centroid/rBRIEF | rebuild the ORB mechanism. | Finished core; 97 words | reference note and format | None | Keep |
+| CV-ORB-002 | Confirmed by binary definition and example | Linking representation and distance. | Finished core; 106 words | reference note and format | None | Keep |
+| CV-ORB-003 | Confirmed: WTA_K and defaultNorm | select the norm after changing the variant. | Finished core; 103 words | reference note and format | None | Keep |
+| CV-ORB-004 | Confirmed: Reciprocity vs ratio | distinguish between two matching filters. | Finished core; 96 words | reference note and format | None | Keep |
+| CV-ORB-005 | Confirmed: Coverage Limits in Scale | Diagnose a loss of repeatability. | Finished core; 104 words | reference note and format | None | Keep |
+| CV-ORB-006 | Design explicitly proposed | articulating computational constraint and task success. | Finished core; 111 words | reference note and format | Minor | Added Application Passages |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : score Harris de sélection, moments centrés, tests orientés, choix hors ligne, 256 bits, couverture discrète d’échelle ; normes selon WTA_K et réciprocité. Exemple recalculé : un bit changé, écart numérique 128. Les diagnostics et la baseline embarquée sont des propositions, pas des performances publiées. Extraits API non exécutés.
+Confirmed: Harris selection score, centered moments, oriented tests, offline choice, 256 bits, discrete scale coverage; WTA_K norms and reciprocity. Example recalculated: one bit changed, numerical deviation 128. Diagnostics and embedded baseline are propositions, not published performance. Unexecuted API extracts.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 3 et source CV-ORB-006 précisée ; contenu scientifique et objectifs conservés.
+reference note revision 3 and specified source CV-ORB-006; scientific content and objectives retained.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Réutiliser le protocole CV-SIFT-007 | L’évaluation comparative existe déjà ; éviter un doublon ORB | Navigation, aucune carte | Aucun rappel supplémentaire | Rublee §§4.4 et 6.1 |
+| Reuse the CV-SIFT-007 protocol | Benchmarking already exists; avoid a duplicate ORB | Navigation, no flashcard | No additional reminders | Rublee §§4.4 and 6.1 |
 
 ## Sources
 
-- [Rublee et al., copie du papier](https://sites.cc.gatech.edu/classes/AY2024/cs4475_summer/images/ORB_an_efficient_alternative_to_SIFT_or_SURF.pdf), §§3–4, 6 et conclusion.
+- [Rublee et al., copy of paper](https://sites.cc.gatech.edu/classes/AY2024/cs4475_summer/images/ORB_an_efficient_alternative_to_SIFT_or_SURF.pdf), §§3 – 4, 6 and conclusion.
 - [OpenCV ORB 4.13.0](https://docs.opencv.org/4.13.0/db/d95/classcv_1_1ORB.html), create/WTA_K.
-- [Code officiel tag 4.13.0, ORB_Impl::defaultNorm](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/src/orb.cpp), corps de fonction consulté directement.
+- [Code officiel tag 4.13.0, ORB_Impl::defaultNorm](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/src/orb.cpp), function body consulted directly.
 - [Matching OpenCV 4.13.0](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), Basics of Brute-Force Matcher.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

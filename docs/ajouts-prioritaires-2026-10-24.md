@@ -1,91 +1,44 @@
-# Ajouts prioritaires — 2026-10-24
+# Priority additions –  2026-10-24
 
-Périmètre autorisé : intégrer les PR existantes et compléter les lacunes prioritaires,
-selon le choix explicite de l’apprenant. Huit nouvelles fiches et 38 cartes visent
-matching classique, calibration et tracking. Les 244 IDs du lot après PR 16 sont
-préservés ; le lot courant compte 60 fiches et 282 cartes.
+Permitted Scope: Integrate existing RAs and complete priority gaps, as explicitly identified in the learner. Eight new reference notes and 38 flashcards targets classic matching, calibration and tracking. The 244 IDs of the batch after PR 16 are preserved; the current batch counts 60 reference notes and 282 flashcards.
 
-## Choix du contenu et sources
+## Choice of content and sources
 
-Les méthodes sont retenues pour leur utilité de choix ou de diagnostic, et non
-pour compléter artificiellement chaque famille de carte. Chaque fiche fournit
-contrat des données, mécanisme, mathématiques, limites, coût, évaluation et
-variation contrôlée. Les expériences proposées sont distinctes des calculs
-analytiques réellement exécutés.
+The methods are chosen for their usefulness in choice or diagnosis, and not to artificially complete each family of flashcard. Each reference note provides contract data, mechanism, mathematics, limits, cost, evaluation and controlled variation. The proposed experiments are distinct from the analytical calculations actually performed.
 
-| Sujet | Lacune et compétences | Source effectivement consultée |
+| Subject | Gaps and skills | Source actually consulted |
 | --- | --- | --- |
-| Harris et Shi–Tomasi — structure locale et points suivables | APP-017 ; APP-018 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [Harris et Stephens 1988, auto-corrélation et réponse de coin](https://www.bmva-archive.org.uk/bmvc/1988/avc-88-023.pdf) |
-| FAST et BRIEF — détecter un coin puis décrire son voisinage | APP-019 ; APP-020 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [Rosten et Drummond 2006, §§2–3, segment test et apprentissage](https://www.edwardrosten.com/work/rosten_2006_machine.pdf) |
-| FLANN — recherche approchée et contrat de distance | APP-022 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [Muja et Lowe 2009, §§2–3, recherche approchée et configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf) |
-| Calibration fisheye — projection angulaire et validation hors centre | APP-026 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [OpenCV 4.13, fisheye, Detailed Description et estimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html) |
-| Hand-eye calibration — résoudre AX = XB sans mélanger les repères | APP-027 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [OpenCV 4.13, calibrateHandEye, repères, équations et minimum de mouvements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) |
-| Farnebäck — flot dense par expansion polynomiale | APP-089 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [Farnebäck 2003, §§2–3, expansion et déplacement, §3.5 multi-échelle](https://www.diva-portal.org/smash/get/diva2:273847/FULLTEXT01.pdf) |
-| MOSSE et KCF — tracking par filtres de corrélation | APP-093 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [Bolme et al. 2010, §§3.2–3.5, MOSSE, mise à jour et PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf) |
-| MeanShift et CamShift — suivre une distribution d’apparence | APP-092 : mécanisme, choix, diagnostic et évaluation, niveau usage opérationnel | [OpenCV 4.13, Meanshift and Camshift, Theory et contrats de sortie](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html) |
+| Harris and Shi – Tomasi –  local structure and followable points | APP-017; APP-018: mechanism, choice, diagnosis and evaluation, operational use level | [Harris and Stephens 1988, self-correlation and corner response](https://www.bmva-archive.org.uk/bmvc/1988/avc-88-023.pdf) |
+| FAST and BRIEF –  detect a corner and then describe its vicinity | APP-019; APP-020: mechanism, choice, diagnosis and evaluation, operational use level | [Rosten and Drummond 2006, §§2 – 3, test and learning segment](https://www.edwardrosten.com/work/rosten_2006_machine.pdf) |
+| FLANN –  close search and distance contract | APP-022: mechanism, choice, diagnosis and evaluation, level of operational use | [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf) |
+| Calibration fisheye –  Angular projection and off-centre validation | APP-026: mechanism, choice, diagnosis and evaluation, level of operational use | [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html) |
+| Hand-eye calibration –  solve AX = XB without mixing the coordinate frames | APP-027: mechanism, choice, diagnosis and evaluation, level of operational use | [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) |
+| Farnebäck –  dense flow by polynomial expansion | APP-089: mechanism, choice, diagnosis and evaluation, level of operational use | [Farnebäck 2003, §§2 – 3, expansion and displacement, §3.5 multi-scale](https://www.diva-portal.org/smash/get/diva2:273847/FULLTEXT01.pdf) |
+| MOSSE and KCF –  Correlation filter tracking | APP-093: mechanism, choice, diagnosis and evaluation, level of operational use | [Bolme et al. 2010, §§3.2 – 3.5, MOSSE, update and PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf) |
+| MeanShift and CamShift –  follow an appearance distribution | APP-092: mechanism, choice, diagnosis and evaluation, level of operational use | [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html) |
 
-Les documentations OpenCV 4.13 ont été consultées directement et avec Context7 :
-résolution `/websites/opencv_4_13_0`, puis requêtes sur conventions fisheye/hand-eye,
-coins/descripteurs/matching, et flot/tracking. Les interfaces ont été vérifiées,
-mais aucun appel OpenCV ou solveur complet n’a été exécuté. Les publications
-FAST, BRIEF, FLANN, Farnebäck, MOSSE et KCF ont été ouvertes avec leurs passages
-méthodologiques ; aucun chiffre de vitesse historique n’est promis sur le matériel
-cible. Le PDF original de Shi–Tomasi hébergé par CMU n’a pas été accessible ;
-le critère et le contrat OpenCV sont sourcés par sa documentation officielle.
+The OpenCV 4.13 documentation was consulted directly and with Context7: resolution `/websites/opencv_4_13_0`, then requests on fisheye/hand-eye conventions, corners/descriptors/matching, and flow/tracking. The interfaces have been checked, but no OpenCV or full solver calls have been executed. Publications FAST, BRIEF, FLANN, Farnebäck, MOSSE and KCF have been opened with their methodological passages; no historical speed figures are promised on the target material. The original PDF of Shi – Tomasi hosted by CMU was not accessible; the criterion and the contract OpenCV are supported by its official documentation.
 
-## Inventaire et profondeur
+## Inventory and depth
 
-Les dix entrées APP correspondantes restent versionnées avec leur ID, leurs
-compétences et leurs dépendances, et pointent vers les fiches rédigées.
-119 cibles restent ouvertes. Une comparaison de deux méthodes partage une fiche
-canonique ; elle ne prétend pas traiter tous leurs dérivés ou implémentations.
-Une promotion de cible exige désormais une fiche réelle : le catalogue refuse
-une référence absente ou un ID APP dupliqué.
+The ten corresponding APP entries remain versioned with their ID, skills, and dependencies, and point to the written reference notes. 119 targets remain open. A comparison of two methods shares a canonical reference note; it does not purport to process all their derivatives or implementations. A target promotion now requires a real reference note: the catalog refuses an absent reference or a duplicated APP ID.
 
-## Calculs contrôlés
+## Controlled calculations
 
-Python standard, calculs exécutés hors dépôt : réponses Harris −308,04 et 336 ;
-Hamming 2 ; exemple de coûts construits FLANN 2,1 contre 0,3 s puis 12 contre
-30 s ; projection à 60° et focale 300 px : 314,16 contre 519,62 px ; déplacement
-quadratique (2,−1) px ; flot converti (100,−50) px/s ; PSR 6 et centroïde 13 px.
-Ces calculs n’exécutent ni détecteur, ni recherche de voisins, ni calibration,
-ni suivi vidéo. Ils ne constituent pas un benchmark ou une mesure physique.
+Standard Python, calculations executed out of repository: Harris answers −308,04 and 336 ; Hamming 2 ; example of built costs FLANN 2,1 against 0,3 s then 12 against 30 s; projection to 60° and focal length 300 px : 314,16 against 519,62 px; quadratic displacement (2,−1) px; converted flow (100,−50) px/s ; PSR 6 and Centroid 13 px. These calculations do not perform any detector, neighbor search, calibration, or video tracking. They are not a benchmark or a physical measure.
 
-## Contrôles et limites
+## Checks and limitations
 
-Résultats exécutés : 37 tests réussis ; contrôleur OK sur 141 documents Markdown,
-60 fiches et 282 cartes ; catalogue à jour sur 18 documents ; 129 IDs APP conservés
-(dix fiches associées, 119 entrées ouvertes). Les fichiers des 244 cartes déjà
-présentes après PR 16 restent inchangés par ce lot.
+Results executed: 37 successful tests; OK controller on 141 Markdown documents, 60 reference notes and 282 flashcards; up-to-date catalog on 18 documents; 129 APP IDs retained (ten reference notes associated, 119 open entries). The files of the 244 flashcards already present after PR 16 remain unchanged by this batch.
 
-Le `main.js` officiel Obsidian_to_Anki 3.6.0 a été retéléchargé et son SHA256
-vérifié : `dcca559c8001a041ff11a5def4c6f9096969514249d1938db78ec6a7ee55bfef`.
-Un harness temporaire, avec API Obsidian et identités Anki simulées, a scanné les
-141 fichiers : 282 notes et IDs uniques, 14 sous-decks, puis 282 mises à jour
-et zéro ajout à la seconde passe. Maths, bloc de code et SVG ont été convertis.
-Aucune requête à Anki n’a été envoyée ; le harness n’est pas inclus dans le dépôt
-et ne prouve pas l’historique ou le rendu applicatif.
-Provenance agent et état `redige` conservés. Export réel, historique Anki,
-rendu Android, rappel et validation scientifique indépendante restent ouverts.
-Le travail `.apkg` présent dans le workspace initial est préservé sans publication
-ou reconstruction dans ce lot.
+The official `main.js` Obsidian_to_Anki 3.6.0 has been reloaded and its SHA256 checked: `dcca559c8001a041ff11a5def4c6f9096969514249d1938db78ec6a7ee55bfef`. A temporary harness, with API Obsidian and simulated Anki identities, scanned the 141 files: 282 unique notes and IDs, 14 subdecks, then 282 updates and zero additions to the second pass. Maths, code block and SVG have been converted. No requests to Anki have been sent; harness is not included in the repository and does not prove the history or application rendering. Provenance agent and state `redige` preserved. Real export, historical Anki, Android rendering, recall and independent scientific validation remain open. The `.apkg` work present in the initial workspace is preserved without publication or reconstruction in this batch.
 
 ## Standards
 
-Revue `code-review` du diff `046300b1…3776c973`, par un agent distinct : aucun
-écart bloquant ou important, aucun smell de conception actionnable. Les tests
-du catalogue portent sur conservation des cibles et refus de métadonnées
-incohérentes ; ils ne jugent pas l’exactitude scientifique des cartes.
+`code-review` review of diff `046300b1…3776c973`, by a separate agent: no blocking or important deviation, no smell of actionable design. The catalog tests focus on target retention and denial of inconsistent metadata; they do not judge the scientific accuracy of flashcards.
 
 ## Spec
 
-Deux écarts repérés puis corrigés : priorités APP/fiches désormais alignées en
-V0 pour ce lot consacré aux lacunes classiques exprimées (FR-043) ; contexte
-eye-in-hand, mire fixe et sens des transformations redéfinis dans CV-HANDEYE-004
-pour une révision autonome (FR-007/016). La promotion de priorité concerne
-uniquement les dix cibles traitées, pas les 119 restantes. Aucun autre défaut
-algorithmique bloquant ou débordement de périmètre identifié dans ce passage.
+Two deviations identified and then corrected: priorities APP/reference notes now aligned in V0 for this lot devoted to the classical shortcomings expressed (FR-043); context eye-in-hand, calibration target fixed and sense of transformations redefined in CV-HANDEYE-004 for an autonomous revision (FR-007/016). Priority promotion is only for the ten targets processed, not the remaining 119. No other algorithmic blocking or perimeter overflow defects identified in this passage.
 
-Standards : aucun constat à corriger ; Spec : deux constats corrigés. Les
-essais applicatifs et la préparation des 119 cibles ouvertes restent distincts
-de cette livraison éditoriale.
+Standards: no observations to correct; Spec: two observations corrected. Application testing and the preparation of the 119 open targets remain distinct from this editorial delivery.

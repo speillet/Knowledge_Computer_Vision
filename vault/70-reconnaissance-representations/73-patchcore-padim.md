@@ -1,91 +1,99 @@
-# Inspection : golden template, PatchCore et PaDiM — cartes
+# Flashcards — Inspection: golden templates, PatchCore and PaDiM
 
-Fiche : [[70-reconnaissance-representations/references/73-patchcore-padim|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[70-reconnaissance-representations/references/73-patchcore-padim|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::70-reconnaissance-representations
 
 ## CV-ANOMALIES-001
 
-Objectif : choisir modèle de nominal. Famille : comparaison. Provenance : agent.
+Objective: Choose a nominal model. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ANOMALIES-001
-Question: Quel compromis distingue golden template, PatchCore et PaDiM pour inspection ?
-Reponse: **Noyau attendu** : Template compare à une référence alignée ; PatchCore utilise une banque de features ; PaDiM estime des distributions avec covariance par position.
+Question: Which tradeoffs distinguish golden-template inspection, PatchCore and PaDiM?
+Reponse: **Expected answer**: Template compares to an aligned reference; PatchCore uses a feature bank; PaDiM estimates covariance distributions by position.
 
-**Approfondissement** : Choisir selon variabilité nominale, alignement, mémoire et évaluation métier ; aucun ne connaît tous défauts possibles.
+**Further explanation**: Choose according to nominal variability, alignment, memory and business evaluation; none knows about any possible defects.
 
-**Lecture des hypothèses** : une comparaison directe au template exige que les écarts géométriques et photométriques légitimes soient suffisamment maîtrisés. Une banque de patches nominaux cherche des voisins représentatifs ; un modèle de distribution par position représente autrement la variabilité et les corrélations. Le mot anomalie désigne ici un écart à cette référence, pas une définition universelle du défaut métier.
+**Reading the assumptions**: A direct comparison to the template requires that legitimate geometric and photometric deviations are sufficiently controlled. A nominal patch bank looks for representative neighbors; a position distribution model otherwise represents variability and correlations. The word anomaly here designates a deviation from this reference, not a universal definition of the business defect.
 
-**Exemple construit** : un éclairage nouveau peut déplacer toutes les features et augmenter les scores sans pièce physiquement défectueuse. Un défaut absent de l'apprentissage peut au contraire être peu visible dans la représentation. Comparer les méthodes sur lots indépendants, défauts critiques et variations nominales, avec coût complet et seuil de décision. Une bonne localisation de score doit encore être reliée à une tolérance métier. Le choix dépend de ce qui est stable dans l'acquisition et de ce qui doit être considéré comme acceptable.
+**Constructed example**: New lighting can move all features and increase scores without physically defective parts. On the contrary, a defect that is absent from the learning process may not be very visible in the representation. Compare methods on independent batches, critical defects and nominal variations, with full cost and decision threshold. A good score location still needs to be linked to a business tolerance. The choice depends on what is stable in the acquisition and what should be considered acceptable.
 
-**Erreurs bloquantes** : Décrire ces scores comme des probabilités universelles de défectuosité.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [Roth et al., PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [Defard et al., PaDiM, §III, équations 1–2](https://arxiv.org/abs/2011.08785) ; baseline template définie par le projet.
+**Geometry of distance**: In PaDiM, a direction of high nominal variance is less penalized by the Mahalanobis distance than a direction of low variance. Covariance is therefore not only used to change the global scale; it also represents correlations between features. When there are few observations relative to their size, regularizing $\Sigma$ for example with a diagonal term is necessary to avoid an unstable inversion, under a documented choice. A pixel template can be more interpretable but very sensitive to registration. Comparing the three approaches thus imposes of check both the spatial coordinate frame and the representation of the acceptable variations.
+
+**Blocking errors**: Describe these scores as universal probabilities of failure.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); baseline template defined by the project; [Defard et al., PaDiM, §III-B, equation 1, covariance and regularization; geometric interpretation deduced](https://arxiv.org/html/2011.08785v1), see the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-ANOMALIES-001 provenance::agent pole::A pole::E
 END
 
 ## CV-ANOMALIES-002
 
-Objectif : expliquer le coreset. Famille : raisonnement. Provenance : agent.
+Objective: Explain the coreset. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ANOMALIES-002
-Question: Dans PatchCore, à quoi sert un coreset de features nominales ?
-Reponse: **Noyau attendu** : Réduire la banque en conservant une représentation utile de sa diversité, pour limiter mémoire et recherche.
+Question: What is the purpose of a coreset of nominal features in PatchCore?
+Reponse: **Expected answer**: Reduce the bank by maintaining a useful representation of its diversity, to limit memory and research.
 
-**Approfondissement** : Le sous-échantillonnage modifie un compromis couverture/coût ; mesurer les défauts et faux rejets, pas seulement la taille de banque.
+**Further explanation**: Undersampling changes a hedging/cost trade-off; measuring defects and false releases, not just bank size.
 
-**Compromis de représentation** : une banque exhaustive peut contenir beaucoup de patches redondants. En sélectionner un sous-ensemble représentatif réduit mémoire et calcul de voisins, mais peut retirer des variations nominales rares. Une pièce conforme peu représentée peut alors devenir artificiellement éloignée de la banque.
+**Compromise of representation**: An exhaustive bank can contain many redundant patches. Selecting a representative subset reduces memory and neighbor calculation, but can remove rare nominal variations. A poorly represented compliant coin can then become artificially distant from the bank.
 
-**Ablation proposée** : conserver extracteur, données et seuil de comparaison, puis faire varier seulement la taille ou la sélection de banque. Mesurer temps, mémoire, faux rejets par condition nominale et défauts manqués. Vérifier aussi que la banque n'est pas contaminée par des pièces mal classées comme nominales. Un coreset est une approximation de la diversité de référence, pas un jeu d'exemples positifs de défauts. La mémoire réduite constitue un gain de ressource ; son utilité produit exige encore que la couverture nécessaire soit conservée au point de fonctionnement retenu.
+**Proposed ablation**: keep extractor, data and comparison threshold, then vary only the bank size or selection. Measure time, memory, false rejections by nominal condition and missed defects. Also check that the bank is not contaminated with coins misclassified as nominal. A coreset is an approximation of reference diversity, not a set of positive examples of defects. The reduced memory is a resource gain; its product utility still requires that the necessary coverage be retained at the chosen operating point.
 
-**Erreurs bloquantes** : Prendre le coreset pour un ensemble de défauts supervisés.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [PaDiM, §III](https://arxiv.org/abs/2011.08785).
+**Greedy selection**: After a defined initialization, a hedging policy chooses the nominal point currently furthest from its neighbor in the subset already selected. It thus seeks to cover the space of features rather than to keep only the frequent examples. The paper uses a projection to speed up the selection; the approximation must remain distinguished from a perfect cover. With $m$ features of dimension $d$ stored on $b$ bytes, the bank alone costs about $mdb$ bytes, excluding indexes. Reducing $m$ acts directly on this storage, but searching, extracting, and transferring memory can limit full latency differently.
+
+**Blocking errors**: Take the coreset for a set of supervised defects.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [PaDiM, §III](https://arxiv.org/abs/2011.08785); [Roth et al., PatchCore, §3.2, Algorithm 1, gluton selection; project cost scenarios and calculations](https://arxiv.org/html/2106.08265v2), see 2026-10-30.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-ANOMALIES-002 provenance::agent pole::A pole::E
 END
 
 ## CV-ANOMALIES-003
 
-Objectif : détecter une dérive du nominal. Famille : diagnostic. Provenance : agent.
+Objective: detect a drift of the nominal. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ANOMALIES-003
-Question: Le score d’anomalie monte sur toutes les pièces après changement d’éclairage. Que tester ?
-Reponse: **Noyau attendu** : Comparer acquisition/prétraitement, recalage et distribution des features au nominal, puis examiner des pièces réellement contrôlées.
+Question: Anomaly scores rise for every part after an illumination change. What should be tested?
+Reponse: **Expected answer**: Compare acquisition/preprocessing, registration and feature distribution to nominal, then examine actually controlled parts.
 
-**Approfondissement** : Réviser la référence ou le système lumineux après validation ; changer le seuil seul peut cacher de vrais défauts.
+**Further explanation**: Revise the reference or the light system after validation; changing the threshold alone can hide real defects.
 
-**Diagnostic par hypothèses** : la hausse peut correspondre à une vraie dérive produit, à un changement lumineux ou à une rupture du prétraitement. Le score seul ne départage pas ces explications parce qu'il mesure un écart à la référence apprise.
+**Diagnosis by Hypotheses**: The rise may correspond to a real product drift, a light change or a break in the pretreatment. The score alone does not separate these explanations because it measures a deviation from the learned reference.
 
-**Enquête construite** : repasser des pièces physiquement contrôlées sous les deux acquisitions, comparer les images et les features à prétraitement constant, puis tester le recalage. Examiner également les petites zones critiques, pas seulement la moyenne de score. Si l'éclairage est la cause, stabiliser l'acquisition ou réviser le nominal avec une validation indépendante. Augmenter le seuil peut faire disparaître les alertes tout en masquant un défaut auparavant détectable. Une correction doit donc être évaluée simultanément sur conformité et défauts connus, et son domaine de validité documenté. L'absence d'alerte après réglage n'est pas en soi une preuve de résolution.
+**Survey built**: iron physically controlled parts under the two acquisitions, compare images and features with constant preprocessing, and then test the registration. Also look at small critical areas, not just the average score. If lighting is the cause, stabilize the acquisition or revise the nominal with independent validation. Increasing the threshold can cause alerts to disappear while masking a previously detectable defect. A correction must therefore be evaluated simultaneously on conformity and known defects, and its documented scope of validity. The absence of an alert after setting is not in itself a proof of resolution.
 
-**Erreurs bloquantes** : Étiqueter automatiquement toute hausse de score comme défaut physique.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [Roth et al., PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; diagnostic d’acquisition déduit par le projet.
+**Paired experience**: Pick up the same compliant parts before and after the light change and compare their scores by region. Then do the same for known defects. This makes it possible to study the displacement of the nominal and the separation between conformity and defect, instead of arbitrarily moving an overall threshold. If the two populations get closer, restoring the rate of false releases by increasing the threshold can greatly degrade the recall of defects. Documenting also exposure, saturation and white balance: a normalization of features does not recover visual information lost in saturated pixels. The result must be checked on other parts and lots.
+
+**Blocking errors**: Automatically label any score increase as a physical defect.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deducted by the project.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-ANOMALIES-003 provenance::agent pole::A pole::E
 END
 
 ## CV-ANOMALIES-004
 
-Objectif : concevoir une inspection à défauts rares. Famille : conception. Provenance : agent.
+Objective: design an inspection with rare defects. Family: design. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ANOMALIES-004
-Question: Cas E — conception : très peu d’images défectueuses, ligne cadencée. Quelle baseline et quelle validation proposer ?
-Reponse: **Noyau attendu** : Stabiliser acquisition, définir défauts critiques et tolérances, comparer template/anomalie nominale puis mesurer rejets et défauts manqués sur lots indépendants et variations réalistes.
+Question: Track E — design: only a few defective images are available for a production line with a fixed cycle time. Which baseline and validation should be proposed?
+Reponse: **Expected answer**: Stabilize acquisition, define critical defects and tolerances, compare template/nominal anomaly then measure rejections and defects missed on independent batches and realistic variations.
 
-**Approfondissement** : Prévoir revue des cas incertains, coût complet et suivi des dérives ; aucun taux global ne remplace les défauts rares du besoin.
+**Further explanation**: Provide for review of uncertain cases, full cost and tracking of drifts; no global rate replaces rare defects of need.
 
-**Conception proposée** : distinguer une pièce rejetée à tort, un défaut manqué et un cas soumis à vérification. Leur coût n'est pas identique. Stabiliser d'abord l'image et le recalage rend la baseline interprétable ; choisir ensuite si une référence unique ou une distribution nominale représente suffisamment la variabilité acceptable.
+**Proposed design**: distinguish a wrongly rejected part, a missed defect and a case subject to verification. Their cost is not the same. Stabilizing the image first and the registration makes the baseline interpretable; then choosing whether a single reference or a nominal distribution sufficiently represents acceptable variability.
 
-**Validation** : séparer pièces et lots entre réglage et test, couvrir les défauts critiques même rares et les perturbations nominales réalistes. Mesurer le point de décision retenu, le taux de vérification et la latence complète sur la ligne visée. Une AUROC résume une courbe de classement ; elle ne donne pas directement le nombre de défauts manqués au seuil exploité. Prévoir collecte et revue de nouveaux cas avant de modifier la référence, afin de ne pas intégrer silencieusement une dérive produit au nominal.
+**Validation**: separate parts and batches between adjustment and test, cover even rare critical defects and realistic nominal disturbances. Measure the decision point, verification rate and full latency on the target line. A AUROC summarizes a ranking curve; it does not directly give the number of defects missed at the threshold exploited. Provide for the collection and review of new cases before modifying the reference, so as not to silently integrate a drift produced at the nominal.
 
-**Erreurs bloquantes** : Valider sur les seules images nominales ou l’AUROC moyenne.
+**Translation in industrial load**: at a rate of $\lambda$ pieces/s and average processing time $T$ s/piece, a service capacity of less than $\lambda$ accumulates a queue even with a good detection score. For the point of operation, report false discharges among the conformants, missed defects among the defectives and number of batch checks. Zero defects missed on a small sample does not prove a zero rate: the size of the test and the diversity of defects limit the conclusion. Defining set-aside sets and critical cases before threshold setting connects the learning metrics to the actual process being evaluated.
 
-**Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Fiche complète]] ; [Roth et al., PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265) ; [Defard et al., PaDiM, §III, équations 1–2](https://arxiv.org/abs/2011.08785) ; protocole industriel proposé par le projet.
+**Blocking errors**: Validate only on nominal images or the average AUROC.
+
+**Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); industrial protocol proposed by the project.
 Tags: cv::pilote cv::d07 famille::conception cv_id::CV-ANOMALIES-004 provenance::agent pole::A pole::E cas_pole::E::conception
 END

@@ -1,45 +1,44 @@
-# Revue — Calibration multicapteurs, hand-eye et temps — 2026-10-20
+# Review –  Multisensor calibration, hand-eye and time –  2026-10-20
 
-## Synthèse
+## Overview
 
-3 cartes auditées. 0 bloquant ; 2 importants (convention et source).
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+3 flashcards audited. 0 blocking; 2 important (convention and source). Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 2 importante, 0 mineure, 1 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 2 large, 0 minor, 1 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-MULTICALIB-001 | Confirmé mais fiche ne donnait aucune convention complète | interpréter hand-eye. | 51 mots à l’entrée ; objectif de convention | Fiche et format contrôlés | Important | Chaîne définie |
-| CV-MULTICALIB-002 | Confirmé : axes non parallèles ; test de stabilité déduit | évaluer des mouvements informatifs. | 44 mots à l’entrée ; cause et action | Fiche et format contrôlés | Aucune | Source ciblée |
-| CV-MULTICALIB-003 | Non soutenu par hand-eye seul ; LOAM confirme le deskew | séparer intrinsèques extrinsèques et temps. | 44 mots à l’entrée ; trois responsabilités liées | Fiche et format contrôlés | Important | Source LOAM |
+| CV-MULTICALIB-001 | Confirmed but reference note gave no complete convention | Interpreting hand-eye. | 51 words at the entrance; convention objective | reference note and controlled format | Important | Defined string |
+| CV-MULTICALIB-002 | Confirmed: non-parallel axes; stability test deduced | Evaluate informative movements. | 44 words at the entrance; cause and action | reference note and controlled format | None | Targeted source |
+| CV-MULTICALIB-003 | Not supported by hand-eye alone; LOAM confirms the deskew | separating intrinsic extrinsic and time. | 44 words at the entrance; three related responsibilities | reference note and controlled format | Important | Source LOAM |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Chaîne eye-in-hand et axes informatifs confrontés à OpenCV ; déformation du scan confrontée à LOAM. Le choix de trajectoires réservées et le diagnostic en mouvement sont des propositions du projet. Aucune calibration temporelle automatiquement produite par calibrateHandEye n’est revendiquée.
+Eye-in-hand chain and informative axes confronted with OpenCV; deformation of the scan confronted with LOAM. The choice of reserved trajectories and the diagnosis in motion are proposals of the project. No time calibration automatically produced by CalibrateHandEye is claimed.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 : repères explicités ; sources des trois cartes ciblées.
+reference note revision 2: coordinate frames explained; sources of the three targeted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Diagnostiquer offset et dérive d’horloge séparément | Un offset fixe ne modélise pas toute désynchronisation | Diagnostic | Une carte ; durée à mesurer | Kalibr, calibration temporelle |
+| Diagnose offset and clock drift separately | A fixed offset does not model any desynchronization | Diagnostic | A flashcard; duration to be measured | Kalibr, calibration temporelle |
 
-Familles absentes : algorithme, comprehension, conception, evaluation, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, evaluation, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OpenCV 4.13.0, calibrateHandEye, équations eye-in-hand et note sur les axes](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html)
-- [Zhang–Singh 2014, LOAM, §§II, IV et V-B](https://www.roboticsproceedings.org/rss10/p07.pdf) : PDF téléchargé, interpolations temporelles des points §V-B.
+- [OpenCV 4.13.0, calibrateHandEye, eye-in-hand equations and note on axes](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html)
+- [Zhang – Singh 2014, LOAM, §§II, IV and V-B](https://www.roboticsproceedings.org/rss10/p07.pdf): Downloaded PDF, time interpolations of §V-B points.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

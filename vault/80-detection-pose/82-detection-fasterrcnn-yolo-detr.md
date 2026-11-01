@@ -1,276 +1,302 @@
-# Détection : Faster R-CNN, familles YOLO et DETR — cartes
+# Flashcards — Detection: Faster R-CNN, YOLO families and DETR
 
-Fiche : [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::80-detection-pose
 
 ## CV-DETECTEURS-001
 
-Objectif : situer le partage de features. Famille : comprehension. Provenance : agent.
+Objective: Find the sharing of features. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-001
-Question: Dans Faster R-CNN, traiter des régions implique-t-il de relancer le backbone complet sur chaque crop ?
-Reponse: **Noyau attendu** : Non : la conception partage des features entre RPN et tête par régions, avec extraction de représentations régionales.
+Question: In Faster R-CNN, does processing regions require running the entire backbone again on each crop?
+Reponse: **Expected answer**: No: the design shares features between RPN and head by region, with extraction of regional representations.
 
-**Approfondissement** : Distinguer coût des propositions et de la tête ; mesurer le nombre de régions et la variante d’implémentation.
+**Further explanation**: Distinguish the cost of proposals and head; measure the number of regions and the implementation variant.
 
-**Lecture du partage de calcul** : le backbone transforme l'image en cartes de features communes. Le réseau de propositions et la tête exploitent ensuite ces représentations selon la variante. Le traitement par régions ajoute un coût lié au nombre et à la taille des représentations régionales, sans imposer de refaire toute l'extraction sur l'image brute pour chacune.
+**Reading the calculation share**: the backbone transforms the image into common feature maps. The network of proposals and the head then exploit these representations according to the variant. Regional processing adds a cost related to the number and size of regional representations, without requiring that all extraction be repeated on the raw image for each.
 
-**Exemple de comparaison construite** : deux implémentations peuvent avoir le même backbone mais des nombres de propositions différents, et donc des temps de tête différents. Mesurer extraction, propositions, opérations régionales et posttraitement séparément pour identifier le goulet. Une catégorie two-stage décrit l'organisation des décisions ; elle ne donne pas une formule universelle de latence. Conserver résolution, batch et seuils dans le protocole, et comparer aussi la qualité sur les petits objets et scènes denses. Le choix produit repose sur ce bilan complet, plutôt que sur le seul nombre d'étapes annoncé.
+**Example of comparison built**: Two implementations can have the same backbone but different number of proposals, and therefore different lead times. Measure extraction, proposals, regional operations and postprocessing separately to identify the drop. A two-stage category describes the organization of decisions; it does not give a universal latency formula. Keep resolution, batch and thresholds in the protocol, and also compare quality on small objects and dense scenes. The product choice is based on this complete balance sheet, rather than just the number of steps announced.
 
-**Erreurs bloquantes** : Décrire deux étapes comme deux backbones complets obligatoires par région.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Faster R-CNN, §3 : partage des convolutions](https://arxiv.org/abs/1506.01497).
+**Cost scales**: If the backbone produces a map of $H'\times W'\times C$ features, this extraction is shared. A head then processes $K$ regions reduced to a fixed spatial representation; its work grows with the number of proposals selected, according to the architecture. Increasing K can improve coverage while weighing down head and post-processing, without changing the backbone’s main cost. Measuring the recall of proposals before classification is therefore useful: a region never proposed will not be found by a better head. A poor final score may come from RPN coverage or from the decision on already correct regions.
+
+**Blocking errors**: Describe two steps as two mandatory complete backbones per region.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [Faster R-CNN, §3: sharing convolutions](https://arxiv.org/abs/1506.01497).
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-001 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-002
 
-Objectif : ne pas généraliser toute la famille YOLO. Famille : comparaison. Provenance : agent.
+Objective: Do not generalize the whole YOLO family. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-002
-Question: Pourquoi faut-il nommer une version lorsqu’on décrit anchors, losses ou NMS d’un YOLO ?
-Reponse: **Noyau attendu** : La famille contient des variantes et recettes hétérogènes ; ces choix ne se déduisent pas du seul nom YOLO.
+Question: Why must a version be named when describing a YOLO model's anchors, losses or NMS?
+Reponse: **Expected answer**: The family contains heterogeneous variants and recipes; these choices are not inferred from the name YOLO alone.
 
-**Approfondissement** : Comparer version/checkpoint/résolution et protocole complets.
+**Further explanation**: Compare full version/checkpoint/resolution and protocol.
 
-**Pourquoi le nom ne suffit pas** : une famille peut évoluer dans la représentation des boîtes, l'assignation d'entraînement, les losses et la sélection finale. Une explication correcte pour un article peut devenir fausse si on l'applique à un checkpoint issu d'une autre recette portant un nom voisin.
+**Why the name is not enough**: a family can evolve in the representation of the boxes, the training assignment, the bones and the final selection. A correct explanation for an article can become false if applied to a checkpoint from another recipe with a neighboring name.
 
-**Fiche de configuration proposée** : relever dépôt et révision, architecture, données, prétraitement, résolution, stratégie de supervision et posttraitement réellement exécuté. Vérifier quelques boîtes connues à travers encodage et décodage. Comparer ensuite les systèmes sur les mêmes annotations, critères et coûts inclus. Une variation dite anchor-free ne supprime pas la nécessité d'assigner des cibles d'apprentissage. Une sortie sans NMS doit elle aussi être décrite par son contrat. Ce niveau de précision permet de relier une erreur à une décision de conception au lieu de généraliser un détail à toutes les générations.
+**reference note proposed configuration**: Record repository and revision, architecture, data, preprocessing, resolution, monitoring policy and postprocessing actually executed. Check some known boxes through encoding and decoding. Then compare the systems on the same annotations, criteria and costs included. An anchor-free variation does not eliminate the need to assign learning targets. An exit without NMS must also be described by his contract. This level of precision makes it possible to link an error to a design decision instead of generalizing a detail to all generations.
 
-**Erreurs bloquantes** : Attribuer les choix du YOLO original à toutes les générations.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) ; [YOLOX, §2.1 : anchor-free, tête découplée et assignation](https://arxiv.org/abs/2107.08430).
+**Versioned Decoding**: An anchor offset representation, edge distances, and distance distribution do not describe the same regression tensor. Box conversion requires sites or anchors, strides, activations, and conventions of the exact variant. An export can move this decoding in the graph and remove a Python step without changing its mathematical necessity. For a given revision, make a known output and then check decoded box and back into the original image. This interface test separates a decoder error from a drive difference, without claiming that a choice is shared by the entire YOLO family.
+
+**Blocking errors**: Assign the original YOLO to all generations.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) ; [YOLOX, §2.1: anchor-free, decoupled head and assignment](https://arxiv.org/abs/2107.08430).
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-DETECTEURS-002 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-003
 
-Objectif : distinguer les trois affectations. Famille : algorithme. Provenance : agent.
+Objective: distinguish between the three assignments. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-003
-Question: En DETR, à quoi sert le matching Hungarian de l’entraînement et pourquoi n’est-ce pas une NMS ?
-Reponse: **Noyau attendu** : Il associe cibles et requêtes pour définir la supervision, avec no-object pour les autres ; la NMS supprime des prédictions à l’inférence.
+Question: What is Hungarian matching used for during DETR training, and why is it different from NMS?
+Reponse: **Expected answer**: It associates targets and queries to define supervision, with no-object for others; the NMS deletes predictions at inference.
 
-**Approfondissement** : L’appariement de l’évaluateur est encore une étape distincte. La prédiction d’ensemble peut éviter NMS dans cette conception.
+**Further explanation**: The matching of the evaluator is still a separate step. The overall prediction can avoid NMS in this design.
 
-**Déroulement de la supervision** : les prédictions de requêtes sont comparées aux cibles pour choisir une correspondance de coût minimal. La loss utilise cette correspondance pour apprendre les classes et les boîtes ; les requêtes restantes apprennent l'absence d'objet selon la formulation. Cette décision utilise les annotations pendant l'entraînement.
+**Conduct of supervision**: Query predictions are compared to targets to choose a minimal cost match. The loss uses this match to learn classes and boxes; the remaining queries learn the absence of an object depending on the formulation. This decision uses annotations during training.
 
-**Contraste avec l'inférence** : une NMS compare entre elles des prédictions disponibles sans annotations pour réduire les doublons. L'évaluateur compare encore autrement prédictions et vérité terrain afin de compter erreurs et succès. Les trois opérations peuvent parler d'appariement ou de boîtes, mais leurs entrées, objectifs et moments d'utilisation diffèrent. Dans un diagnostic construit, examiner d'abord à quel stade un objet est mal supervisé, supprimé ou compté. Le matching biparti n'est donc ni une recette universelle de posttraitement ni une preuve automatique d'absence de doublons pour toute variante déployée.
+**Contrast with Inference**: A NMS compares available predictions without annotations to reduce duplicates. The evaluator compares predictions and truth in the field in order to count errors and success. The three operations can be matching or boxes, but their inputs, objectives and times of use differ. In a constructed diagnosis, first examine at which stage an object is poorly supervised, deleted, or counted. Bi-party matching is therefore neither a universal postprocessing recipe nor an automatic proof of absence of duplicates for any variant deployed.
 
-**Erreurs bloquantes** : Décrire les trois mécanismes comme un seul matching interchangeable.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [DETR, §3.1, fig. 1 et équations 1–2](https://arxiv.org/abs/2005.12872).
+**Cost of Matching**: For $y_i$ targets and $\hat y_j$ predictions, we look for an injective assignment minimizing $\sum_i C(y_i,\hat y_{\sigma(i)})$, where the cost combines class compatibility and geometry according to the formulation. Swap the order in which annotations are presented should not change the overall problem. Once the assignment is selected, the losses supervise the pairs selected and the lack of subject matter of the other requests. Discreet pair selection and differentiable loss calculation are two operations. The number of requests also limits the number of possible exits; a scene denser than this ability requires an explicit examination of this constraint.
+
+**Blocking errors**: Describe the three mechanisms as a single interchangeable matching.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [DETR, §3.1, fig. 1 and equations 1 – 2](https://arxiv.org/abs/2005.12872); [Carion et al., DETR, §3.1, matching and supervision; project protocols and calculations](https://arxiv.org/html/2005.12872v3), see 2026-10-30.
 Tags: cv::pilote cv::d08 famille::algorithme cv_id::CV-DETECTEURS-003 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-004
 
-Objectif : analyser les petits objets après resize. Famille : diagnostic. Provenance : agent.
+Objective: analyze small objects after resize. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-004
-Question: Cas A — diagnostic : à checkpoint et images fixés, l'AP des petits objets chute quand des images $1920\times1080$ passent à une entrée $640\times640$ avec conservation du ratio et padding centré. Certains objets font $12\times9$ pixels à l'origine. Quels contrôles distinguent les causes possibles ?
-Reponse: **Noyau attendu** : Vérifier d'abord l'aller-retour des boîtes avec resize et padding. Mesurer ensuite leur taille effective et le rappel de ces mêmes objets avant filtrage, après seuil de score, puis après NMS éventuelle. Une GT couverte avant mais plus après désigne une perte de sélection ; si aucune candidate correcte n'existe en amont, examiner échelle, features et assignation d'entraînement.
+Question: Track A — diagnosis: with checkpoint and images fixed, small-object AP falls when $1920\times1080$ images are resized to a $640\times640$ input with preserved aspect ratio and centered padding. Some objects originally measure $12\times9$ pixels. Which checks distinguish possible causes?
+Reponse: **Expected answer**: First check the return of boxes with resize and padding. Then measure their effective size and recall of these same objects before filtering, after score threshold, then after NMS possible. A GT covered before but after denotes a selection loss; if no correct candidate exists upstream, examine scale, features, and drive assignment.
 
-**Approfondissement** : Le facteur est $1/3$, le padding vertical 140 pixels par côté, l'objet devient $4\times3$. La fiche calcule un cas où une boîte parfaite de score $0{,}8$ disparaît au profit d'une boîte moins bien localisée de score $0{,}9$. Conserver classes, seuil IoU et strates de taille d'origine pour comparer le rappel. La petite taille seule ne prouve pas une perte d'information responsable de l'échec.
+**Further explanation**: The factor is $1/3$, the vertical padding 140 pixels per side, the object becomes $4\times3$. The reference note calculates a case where a perfect $0{,}8$ score box disappears in favor of a less well located $0{,}9$ score box. Keep classes, threshold IoU and original size strata to compare the recall. The small size alone does not prove a loss of information responsible for the failure.
 
-**Erreurs bloquantes** : Oublier d'inverser le padding, compter les doublons comme du rappel, ou régler les seuils sur le test.
+**Controllable Transformation**: in this ideal letterbox, $x'=x/3$ and $y'=y/3+140$; the reverse is $x=3x'$ and $y=3(y'-140)$. A one-pixel error in the grid already corresponds to three pixels in the original, under this convention. For an object that has become $4\times3$, a displacement of one pixel represents a significant fraction of its width or height and can cause the IoU to drop sharply. Check the rounding actually applied by preprocessing rather than assuming this exact pattern for any image. Comparing candidates before filtering then makes it possible to distinguish between sensitive location and deletion of an initially correct prediction.
 
-**Critères de correction du cas** : trois contrôles discriminants (géométrie, échelle, filtrage), hypothèses explicites et conclusion conditionnelle. Cas construit ; calcul géométrique vérifié, aucune observation terrain.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; diagnostic et calculs du projet ; [FPN, version 2, §3](https://arxiv.org/html/1612.03144v2) ; [Soft-NMS, §4](https://arxiv.org/html/1704.04503).
+**Blocking errors**: Forget to reverse padding, count duplicates as recall, or set thresholds on the test.
+
+**Criteria for correction of the case**: three discriminatory controls (geometry, scale, filtering), explicit assumptions and conditional conclusion. Case built; geometric calculation verified, no field observations.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; project diagnosis and calculations; [FPN, version 2, §3](https://arxiv.org/html/1612.03144v2); [Soft-NMS, §4](https://arxiv.org/html/1704.04503).
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-004 provenance::agent pole::A pole::C pole::E cas_pole::A::diagnostic
 END
 
 ## CV-DETECTEURS-005
 
-Objectif : comparer des pipelines de détection. Famille : evaluation. Provenance : agent.
+Objective: compare detection pipelines. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-005
-Question: Quelles informations joindre à une comparaison de vitesse entre deux détecteurs ?
-Reponse: **Noyau attendu** : Matériel, backend/précision, résolution, batch, nombre d’objets, pré/posttraitements, transferts et protocole de latence/débit.
+Question: Which information should accompany a speed comparison between two detectors?
+Reponse: **Expected answer**: Hardware, backend/precision, resolution, batch, number of objects, pre/postprocessing, transfers and latency/debit protocol.
 
-**Approfondissement** : Mesurer aussi qualité à seuils figés et tailles critiques. Un temps moteur seul n’est pas une latence caméra→décision.
+**Further explanation**: Measure also quality at fixed thresholds and critical sizes. A single engine time is not a latency camera→decision.
 
-**Comparer la même grandeur** : le débit en batch mesure une quantité d'images traitées par unité de temps ; la latence décrit le délai subi par une observation. Un moteur peut améliorer le premier tout en ajoutant de l'attente avant de traiter une image isolée.
+**Compare the same size**: Batch rate measures the amount of images processed per unit of time; latency describes the delay experienced by an observation. An engine can improve the first while adding waiting time before processing an isolated image.
 
-**Protocole proposé** : annoncer échauffement, synchronisation des mesures, inclusion des copies et du décodage, puis rapporter une distribution de latences dans des conditions de charge représentatives. Vérifier la qualité avec les mêmes seuils, surtout pour tailles et classes critiques. Les paramètres de top-k ou de score peuvent réduire le coût du posttraitement tout en changeant le rappel : ils font partie de la configuration. Une comparaison utile au produit porte sur les mêmes sorties, la même cible matérielle et la même exigence de décision. Un FPS isolé d'un article ne démontre ni cette comparabilité ni le respect d'un budget caméra→décision.
+**Proposed Protocol**: announce warm-up, synchronization of measurements, inclusion of copies and decoding, then report a latencies distribution under representative load conditions. Check the quality with the same thresholds, especially for critical sizes and classes. The top-k or score settings can reduce the cost of postprocessing while changing the recall: they are part of the configuration. A useful comparison to the product involves the same outputs, the same material target and the same decision requirement. An FPS isolated from an article does not demonstrate this comparability or compliance with a budget camera→decision.
 
-**Erreurs bloquantes** : Comparer des FPS dont les périmètres diffèrent.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; Protocole de comparaison proposé par le projet ; périmètres de calcul discutés dans [Faster R-CNN, §4.1](https://arxiv.org/abs/1506.01497).
+**Measurement under load**: note for each image arrival, beginning of service and decision available. Full latency includes queue wait and service; maximum throughput does not explain this wait when arrivals are irregular. Dense scenes can increase decoding and NMS while the backbone time remains close. Compare a distribution of number of candidates, then percentiles of delay and the rate of decisions too late. A high batch can dampen the engine but wait for several images before starting. The protocol must therefore reproduce the pace and processing policy of the product, in addition to the equipment announced.
+
+**Blocking errors**: Compare FPS with different perimeters.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; Comparison protocol proposed by the project; calculation scopes discussed in [Faster R-CNN, §4.1](https://arxiv.org/abs/1506.01497).
 Tags: cv::pilote cv::d08 famille::evaluation cv_id::CV-DETECTEURS-005 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-006
 
-Objectif : reconstruire l'assignation des sites dans FCOS. Famille : algorithme. Provenance : agent.
+Objective: rebuild site assignment in FCOS. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-006
-Question: Dans le FCOS décrit aux §§3.1–3.2 de l'article, comment un site de prédiction reçoit-il sa cible à l'entraînement, y compris lorsque plusieurs boîtes annotées le contiennent ?
-Reponse: **Noyau attendu** : Retenir les boîtes contenant le site et compatibles avec la plage de distances du niveau FPN. S'il en reste plusieurs, choisir celle de plus petite aire ; s'il n'en reste aucune, le site est négatif. La boîte retenue fournit la classe et les cibles de régression.
+Question: In FCOS as described in paper §§3.1–3.2, how is a prediction location assigned its training target, including when several annotated boxes contain it?
+Reponse: **Expected answer**: Hold the boxes containing the site and compatible with the distance range of the FPN level. If there are several, choose the smaller area; if there are none, the site is negative. The selected box provides the class and regression targets.
 
-**Approfondissement** : La plage porte sur la plus grande des quatre distances aux bords. Il s'agit de la formulation décrite dans ces sections, avant les variantes avec center sampling : anchor-free ne signifie pas « sans assignation ».
+**Further explanation**: The beach covers the largest of the four distances to the edges. This is the formulation described in these sections, before the variants with center sampling: anchor-free does not mean "without assignment".
 
-**Rôle de cette décision** : le site ne reçoit pas une boîte simplement parce qu'elle existe dans l'image ; il doit être admissible dans la géométrie et le niveau concernés. La sélection résout les conflits de supervision avant la loss. La NMS ne remplit pas ce rôle, puisqu'elle traite des prédictions lors de la sélection finale.
+**Role of this decision**: The site does not receive a box simply because it exists in the image; it must be admissible in the geometry and level concerned. The selection resolves supervisory conflicts before the loss. The NMS does not fulfill this role, since it deals with predictions during the final selection.
 
-**Exemple construit** : deux objets superposés peuvent contenir le même site, mais la règle de taille et d'aire choisit la cible décrite par cette formulation. Changer l'assigner change alors les exemples positifs et les régressions apprises. Pour diagnostiquer des objets manqués, visualiser les sites réellement supervisés plutôt que se limiter à la courbe de loss globale.
+**Constructed example**: Two overlapping objects may contain the same site, but the size and area rule chooses the target described by this formulation. Changing the assignment then changes the positive examples and the regressions learned. To diagnose missed objects, visualize sites that are actually supervised rather than limited to the overall loss curve.
 
-**Erreurs bloquantes** : Attribuer la cible par NMS ou supposer que tout site intérieur est positif sur tous les niveaux.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [FCOS, version 5, §§3.1–3.2](https://arxiv.org/html/1904.01355v5).
+**Site and Level**: The four target distances verify $l=x-x_0$, $t=y-y_0$, $r=x_1-x$ and $b=y_1-y$. Eligibility by level is for $\max(l,t,r,b)$ in the cited formulation, not just on the box area. Two sites in the same box can therefore have different maximum distances. The "smaller area" rule sets out which boxes are still eligible; it does not allow an out of range box. To audit the assignment, count and view positives by object and level, keeping the exact edge conventions of the implementation. This can reveal a rare oversight without immediately blaming the loss.
+
+**Blocking errors**: Assign the target by NMS or assume that any indoor site is positive on all levels.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [FCOS, version 5, §§3.1 – 3.2](https://arxiv.org/html/1904.01355v5).
 Tags: cv::pilote cv::d08 famille::algorithme cv_id::CV-DETECTEURS-006 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-007
 
-Objectif : calculer les cibles de régression en distances. Famille : pratique. Provenance : agent.
+Objective: Calculate the distance regression targets. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-007
-Question: Dans FCOS, un site image $(x,y)=(40,30)$ est associé à la boîte $(x_0,y_0,x_1,y_1)=(20,10,90,70)$. En coordonnées continues, en pixels d'entrée, origine en haut à gauche, quels sont ses quatre targets $(l,t,r,b)$ vers les bords gauche, haut, droit et bas ?
-Reponse: **Noyau attendu** : $(l,t,r,b)=(x-x_0,y-y_0,x_1-x,y_1-y)=(20,20,50,40)$ pixels.
+Question: In FCOS, image location $(x,y)=(40,30)$ is assigned to box $(x_0,y_0,x_1,y_1)=(20,10,90,70)$. Using continuous input-pixel coordinates with a top-left origin, what are its four targets $(l,t,r,b)$ to the left, top, right and bottom edges?
+Reponse: **Expected answer**: $(l,t,r,b)=(x-x_0,y-y_0,x_1-x,y_1-y)=(20,20,50,40)$ pixels.
 
-**Approfondissement** : Le décodage $(x-l,y-t,x+r,y+b)$ redonne $(20,10,90,70)$. Le site est déjà exprimé dans l'image : ne pas le multiplier à nouveau par le stride. Exemple analytique construit et calculé, sans réseau exécuté.
+**Further explanation**: Decoding $(x-l,y-t,x+r,y+b)$ restores $(20,10,90,70)$. The site is already expressed in the image: do not multiply it again by the stride. Analytical example built and calculated, with no network executed.
 
-**Interprétation géométrique** : chaque valeur est une longueur depuis le site jusqu'à une face dans le même repère. La somme gauche+droit donne la largeur de la boîte, et haut+bas sa hauteur. Le site n'est pas nécessairement le centre : les distances peuvent donc être asymétriques.
+**Geometric interpretation**: Each value is a length from the site to a face in the same coordinate frame. The left sum+right gives the width of the box, and high+low its height. The site is not necessarily the center, so distances can be asymmetrical.
 
-**Contrôle proposé** : encoder une boîte connue, la décoder, puis appliquer l'inverse du resize/padding pour retrouver l'annotation d'origine. Tester aussi un site près d'un bord. Si une normalisation par stride existe dans une autre implémentation, la déclarer et l'inverser exactement une fois. Un réseau peut apprendre des valeurs numériques tout en produisant des boîtes fausses si ces conventions sont mélangées à l'interface.
+**check**: Encode a known box, decode it, then apply the reverse of the resize/padding to find the original annotation. Also test a site near an edge. If a string normalization exists in another implementation, declare it and reverse it exactly once. A network can learn numeric values while producing false boxes if these conventions are mixed at the interface.
 
-**Erreurs bloquantes** : Confondre ces distances avec centre/largeur/hauteur, les exprimer en cellules de feature map ou ajouter 1 aux différences de coordonnées continues.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [FCOS, version 5, §3.1, équation 1 et décodage](https://arxiv.org/html/1904.01355v5) ; calcul du projet.
+**Geometry of the site**: The given distances have sums $l+r=70$ and $t+b=60$, equal to the width and height of the box. The center of it is $(55,40)$, distinct from the $(40,30)$ site. The center-ness target described by FCOS is $\sqrt{\min(l,r)/\max(l,r)\;\min(t,b)/\max(t,b)}$, here $\sqrt{(20/50)(20/40)}=\sqrt{0,2}\simeq0,447$. It expresses a geometric centrality, not a guaranteed IoU of the predicted box. This reading links distance asymmetry, auxiliary target and ranking, while keeping separate the calculated target values and the actually learned outputs.
+
+**Blocking errors**: Confound these distances with center/width/height, express them in feature map cells or add 1 to the continuous coordinate differences.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [FCOS, version 5, §3.1, equation 1 and decoding](https://arxiv.org/html/1904.01355v5); project calculation.
 Tags: cv::pilote cv::d08 famille::pratique cv_id::CV-DETECTEURS-007 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-008
 
-Objectif : expliquer la modulation des négatifs faciles par Focal Loss. Famille : comprehension. Provenance : agent.
+Objective: Explain the modulation of easy negatives by Focal Loss. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-008
-Question: En détection dense, pourquoi Focal Loss réduit-elle la domination des très nombreux négatifs faciles, au-delà d'une simple pondération des classes ?
-Reponse: **Noyau attendu** : Elle multiplie l'entropie croisée par $(1-p_t)^\gamma$, où $p_t$ est la probabilité du label correct et $\gamma>0$. Un négatif facile a $p_t$ proche de 1 : sa contribution diminue fortement. Une pondération de classe seule ne distingue pas exemples faciles et difficiles de cette classe.
+Question: In dense detection, how does Focal Loss reduce the dominance of many easy negatives beyond simple class weighting?
+Reponse: **Expected answer**: It multiplies the cross entropy by $(1-p_t)^\gamma$, where $p_t$ is the probability of the correct label and $\gamma>0$. An easy negative has $p_t$ close to 1: its contribution decreases sharply. A class weighting alone does not distinguish between easy and difficult examples of this class.
 
-**Approfondissement** : La forme complète est $-\alpha_t(1-p_t)^\gamma\log p_t$. $\alpha_t$ pondère la classe ; $\gamma=0$ redonne l'entropie croisée pondérée. À $\gamma=2$ et $p_t=0{,}9$, le facteur vaut $0{,}01$. L'accent relatif sur les cas difficiles ne protège pas des mauvaises annotations.
+**Further explanation**: The complete form is $-\alpha_t(1-p_t)^\gamma\log p_t$. $\alpha_t$ weights the class; $\gamma=0$ returns the weighted cross entropy. At $\gamma=2$ and $p_t=0{,}9$, the factor is $0{,}01$. The relative focus on difficult cases does not protect against poor annotations.
 
-**Sens de la modulation** : pour un négatif correctement classé comme fond, la probabilité du label correct peut être proche de un. Sa perte réduite empêche de nombreux cas faciles d'écraser l'apprentissage des exemples plus difficiles. La pondération de classe agit sur une autre dimension du déséquilibre.
+**Sense of modulation**: For a negative correctly classified as background, the probability of the correct label can be close to one. Its reduced loss prevents many easy cases from overwhelming learning of more difficult examples. Class weighting acts on another dimension of imbalance.
 
-**Limite de diagnostic** : un exemple difficile peut être informatif ou mal annoté. Lui donner davantage d'importance relative ne garantit donc pas une meilleure supervision. Dans une ablation construite, conserver assignation et données, comparer les distributions de contributions et les erreurs par taille et classe. La formule décrit une modification de l'objectif, pas une promesse de rappel supérieur sur toute configuration de détecteur.
+**Limit of diagnosis**: A difficult example can be informative or misannotated. Giving it greater relative importance therefore does not guarantee better supervision. In a built ablation, keep assignment and data, compare contribution distributions and errors by size and class. The formula describes a modification of the lens, not a promise of superior recall on any detector configuration.
 
-**Erreurs bloquantes** : Confondre $p_t$ avec la probabilité d'objet pour un négatif, ou dire que la loss élimine tous les négatifs.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [Focal Loss, version 2, §§2 et 3.1–3.2, équation 5](https://arxiv.org/html/1708.02002v2).
+**Contribution and gradient**: Comparing two examples of the same class with $p_t=0,99$ and $p_t=0,5$ gives, at $\gamma=2$, respective factors $10^{-4}$ and 0,25. The second is thus of much greater relative importance. The gradient does not correspond to that of a cross entropy multiplied by a fixed constant: the factor itself depends on $p_t$ and its derivative participates in the optimization. The numbers of positives, assignment rules and loss reduction in the lot still count. To interpret a workout, review these conventions before assigning an improvement or instability to the choice of $\gamma$ alone.
+
+**Blocking errors**: Confound $p_t$ with object probability for a negative, or say that the loss eliminates all negatives.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [Focal Loss, version 2, §§2 and 3.1 – 3.2, equation 5](https://arxiv.org/html/1708.02002v2).
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-008 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-009
 
-Objectif : expliquer le signal de GIoU pour des boîtes disjointes. Famille : raisonnement. Provenance : agent.
+Objective: explain the signal of GIoU for disjointed boxes. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-009
-Question: Deux boîtes rectangulaires $A$ et $B$, alignées sur les axes, restent strictement disjointes pendant un petit déplacement. Pourquoi la loss $1-\operatorname{IoU}$ ne guide-t-elle pas ce déplacement, et quel terme GIoU ajoute-t-elle ?
-Reponse: **Noyau attendu** : L'intersection reste nulle, donc IoU reste nul et sa loss constante à 1. GIoU soustrait à IoU la fraction vide du plus petit rectangle aligné sur les axes contenant les deux boîtes : $|C\setminus(A\cup B)|/|C|$. Ce terme géométrique peut varier même sans recouvrement et fournir un signal à la régression.
+Question: Two axis-aligned rectangular boxes $A$ and $B$ remain strictly disjoint during a small displacement. Why does loss $1-\operatorname{IoU}$ provide no guidance for this displacement, and which term does GIoU add?
+Reponse: **Expected answer**: The intersection remains zero, so IoU remains zero and its constant loss at 1. GIoU subtracts from IoU the empty fraction of the smallest rectangle aligned on the axes containing the two boxes: $|C\setminus(A\cup B)|/|C|$. This geometric term can vary even without overlap and provide a signal for regression.
 
-**Approfondissement** : Pour $A=(0,0,2,2)$ et $B=(3,0,5,2)$ en coordonnées continues, l'union vaut 8 et $|C|=10$ : GIoU $=-0{,}2$, loss $=1{,}2$. Rapprocher $B$ en $(2{,}5,0,4{,}5,2)$ donne une loss de $10/9$, IoU toujours nul. Calcul synthétique ; pas de garantie générale de convergence.
+**Further explanation**: For $A=(0,0,2,2)$ and $B=(3,0,5,2)$ in continuous coordinates, the union is 8 and $|C|=10$: GIoU $=-0{,}2$, loss $=1{,}2$. Approaching $B$ in $(2{,}5,0,4{,}5,2)$ gives a loss of $10/9$, IoU always zero. Synthetic calculation; no general guarantee of convergence.
 
-**Pourquoi le terme supplémentaire aide** : les positions relatives influencent l'espace vide du rectangle englobant même lorsque l'intersection ne change pas. La loss dispose ainsi d'une variation géométrique absente du seul recouvrement dans ce cas. Cela ne signifie pas que toute direction de déplacement soit parfaitement renseignée.
+**Why the Additional Term Helps**: Relative positions influence the empty space of the enclosing rectangle even when the intersection does not change. The loss thus has a geometric variation absent from the only overlap in this case. This does not mean that any direction of travel is perfectly informed.
 
-**Validation proposée** : vérifier le calcul sur des boîtes simples, puis distinguer signal de localisation et classement des scores. Une meilleure loss sur des paires de boîtes n'implique pas une meilleure AP si assignation, scores ou annotations posent problème. Comparer les variantes avec mêmes données et recette autant que possible, en examinant les erreurs concrètes de localisation sur des observations réservées.
+**Proposed Validation**: check the calculation on simple boxes, then distinguish location signal and score ranking. A better loss on pairs of boxes does not imply a better AP if assignment, scores or annotations are a problem. Compare variants with the same data and recipe as much as possible, examining concrete location errors on reserved observations.
 
-**Erreurs bloquantes** : Affirmer qu'une absence de recouvrement impose GIoU nul, ou remplacer $C$ par l'union des deux boîtes.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [GIoU, version 2, §3.1 et algorithmes 1–2](https://arxiv.org/html/1902.09630v2) ; calcul du projet.
+**Information still limited**: For two disjoint boxes whose union and enclosing rectangle keep the same area, GIoU can remain constant in certain local directions. The additional term provides a signal in many cases without becoming a complete and perfectly conditioned measure of all movements. Edges where intersection or enclosing rectangle change also introduce regime changes in the derivative. A small perturbation test of each coordinate makes it possible to compare the variations of loss to the expected geometry. This analysis concerns the regression of valid boxes; it does not correct a bad target matching or a wrong class.
+
+**Blocking errors**: Claim that a non-overlay imposes GIoU null, or replace $C$ with the union of the two boxes.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [GIoU, version 2, §3.1 and algorithms 1 – 2](https://arxiv.org/html/1902.09630v2); project calculation.
 Tags: cv::pilote cv::d08 famille::raisonnement cv_id::CV-DETECTEURS-009 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-010
 
-Objectif : expliquer l'apport des connexions latérales de FPN. Famille : comprehension. Provenance : agent.
+Objective: explain the contribution of the lateral connections of FPN. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-010
-Question: Pour détecter de petits objets, que gagne une FPN avec ses connexions latérales par rapport au seul suréchantillonnage de la dernière feature map du backbone ?
-Reponse: **Noyau attendu** : Elle associe les représentations sémantiques profondes remontées par le chemin descendant aux features plus fines et mieux localisées du backbone. Le seul suréchantillonnage de la carte profonde ne restitue pas l'information spatiale de ces niveaux fins.
+Question: For small-object detection, what do FPN's lateral connections provide beyond simply upsampling the backbone's final feature map?
+Reponse: **Expected answer**: It combines the deep semantic representations brought up by the descending path with the finer and better localized features of the backbone. The map deep oversampling alone does not return spatial information from these fine levels.
 
-**Approfondissement** : Dans FPN original, projection latérale $1\times1$, addition à résolution commune, puis convolution $3\times3$. C'est une pyramide de features issue d'une image, pas nécessairement plusieurs images redimensionnées. Elle ne garantit pas la récupération des détails déjà perdus par le resize d'entrée.
+**Further explanation**: In FPN original, side projection $1\times1$, addition at common resolution, then convolution $3\times3$. It is a pyramid of features from an image, not necessarily several resized images. It does not guarantee the recovery of details already lost by the input resize.
 
-**Différence entre calcul et observation** : interpoler une carte profonde augmente son nombre de positions mais ne recrée pas les détails qu'elle ne représente plus. Les connexions latérales apportent au contraire des features issues de résolutions plus fines de la chaîne. Leur fusion vise à combiner localisation et information sémantique.
+**Difference Between Calculation and Observation**: Interpolating a deep map increases its number of positions but does not recreate the details it no longer represents. The lateral connections, on the contrary, bring features from finer resolutions of the chain. Their fusion aims to combine location and semantic information.
 
-**Contrôle construit** : comparer petits objets et grands objets à résolution d'entrée fixée, en changeant seulement l'accès aux niveaux fins. Examiner rappel, localisation et coût. Si le petit objet ne couvre déjà presque aucun pixel dans l'entrée, une FPN ne restaure pas l'information physique détruite par l'acquisition ou le resize. La pyramide de features est une brique du système, pas un substitut à un contrat d'image adapté.
+**check**: Compare small objects and large objects with fixed input resolution, changing only access to fine levels. Review recall, location and cost. If the small object already covers almost no pixels in the input, a FPN does not restore the physical information destroyed by the acquisition or resize. The feature pyramid is a system brick, not a substitute for a suitable image contract.
 
-**Erreurs bloquantes** : Attribuer de nouveaux détails observés à l'interpolation seule, ou confondre FPN et pyramide d'images.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [FPN, version 2, §3 et figure 3](https://arxiv.org/html/1612.03144v2).
+**Recurrence of fusion**: note $M_l=L_l(C_l)+\operatorname{Upsample}(M_{l+1})$ the fused map of the descending path, then $P_l=\operatorname{Conv}_{3\times3}(M_l)$ the smoothed output of the level, where $C_l$ is the feature of the backbone at the $l$ level and $L_l$ the lateral projection of the channels. Spatial sizes and alignment must be compatible for addition. A mismatch error can keep tensor shapes valid while harming the location. The map therefore merges observed lateral information and a reassembled context; it does not create a high-resolution image. Linking the strides to the actual sizes of the objects helps to choose which outputs and which levels to analyze.
+
+**Blocking errors**: Assign new observed details to interpolation alone, or confuse FPN with pyramid of images.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [FPN, version 2, §3 and figure 3](https://arxiv.org/html/1612.03144v2).
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-010 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-011
 
-Objectif : distinguer des erreurs de classe, de localisation et de doublon. Famille : diagnostic. Provenance : agent.
+Objective: Distinguish between class, location, and duplicate errors. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-011
-Question: Trois cas indépendants ont chacun une seule GT « voiture », sans ignore/crowd. Avec les seuils TIDE $t_b=0{,}1$, $t_f=0{,}5$, quelle erreur décrit chaque FP : (a) « camion », IoU $0{,}8$ ; (b) « voiture », IoU $0{,}3$ ; (c) « voiture », IoU $0{,}8$, mais la GT est déjà associée à une boîte de score supérieur ?
-Reponse: **Noyau attendu** : (a) Classification : localisation suffisante, mauvaise classe. (b) Localisation : bonne classe, recouvrement intermédiaire. (c) Doublon : classe et localisation suffisantes, mais la GT a déjà une détection associée.
+Question: Three independent cases each have one “car” GT instance, without ignore/crowd annotations. With TIDE thresholds $t_b=0{,}1$ and $t_f=0{,}5$, which error describes each FP: (a) “truck,” IoU $0{,}8$; (b) “car,” IoU $0{,}3$; (c) “car,” IoU $0{,}8$, with the GT already matched to a higher-score box?
+Reponse: **Expected answer**: (a) Classification: Sufficient localisation, bad class. (b) Location: good class, intermediate overlap. (c) Doubling: class and localisation sufficient, but the GT already has an associated detection.
 
-**Approfondissement** : TIDE distingue aussi l'erreur combinée classe/localisation, le fond et les GT manquées non déjà expliquées par classification/localisation. Orienter les vérifications vers labels/classes, géométrie ou posttraitement selon le cas, sans en déduire automatiquement une cause. Le nombre de FP seul ne mesure pas la perte d'AP : leur classement par score compte aussi.
+**Further explanation**: TIDE also distinguishes between class/location combined error, background, and missed GT not already explained by classification/location. Orient checks to labels/classes, geometry or postprocessing as appropriate, without automatically inferring a cause. The number of FP alone does not measure the loss of AP: their score ranking also counts.
 
-**Utilité du classement** : il indique où chercher une explication, sans identifier automatiquement la cause. Une mauvaise classe peut venir d'une taxonomie ambiguë ou d'un modèle ; une mauvaise localisation peut venir du réseau ou d'une transformation de coordonnées ; un doublon peut refléter le posttraitement.
+**Usefulness of the classification**: indicates where to look for an explanation, without automatically identifying the cause. A bad class can come from an ambiguous taxonomy or a model; a bad location can come from the network or a transformation of coordinates; a duplicate can reflect the postprocessing.
 
-**Protocole proposé** : sélectionner des exemples de chaque famille, conserver image, annotations et étapes de sortie, puis tester une hypothèse à la fois. Le rang des erreurs par score compte pour l'AP : corriger plusieurs erreurs de faible score n'a pas forcément le même effet qu'une erreur très confiante. Une correction oracle est un outil de diagnostic du protocole, pas la prédiction du gain d'un réentraînement réel.
+**Proposed Protocol**: Select examples of each family, retain image, annotations and output steps, and then test one hypothesis at a time. The rank of errors by score counts for the AP: correcting several errors of low score does not necessarily have the same effect as a very confident error. An oracle correction is a tool for diagnosing the protocol, not predicting the gain of an actual retraining.
 
-**Erreurs bloquantes** : Compter (c) comme un second TP, ou attribuer (a) à une mauvaise localisation.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [TIDE, version 2, §2.2 : types et pondération des erreurs](https://arxiv.org/html/2008.08115v2) ; cas construits du projet.
+**Counted error and cause**: In the duplicate case, removing the first correct prediction could turn the second into TP without improving the object recall. This shows that the categories also depend on matching's ranking and rules. Conversely, correcting a class can retrieve a GT and simultaneously delete a FP according to the protocol. The oracle gains of several families do not necessarily add up as independent error numbers. For a real intervention, freeze the initial predictions, apply a precise correction and recalculate the complete metric. Diagnosis refers to a family of observed errors; the causal mechanism remains to be established.
+
+**Blocking errors**: Count (c) as a second TP, or assign (a) to a bad location.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [TIDE, version 2, §2.2: types and weighting of errors](https://arxiv.org/html/2008.08115v2); built cases of the project.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-011 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-012
 
-Objectif : diagnostiquer un faux positif pouvant provenir d'une annotation manquante. Famille : diagnostic. Provenance : agent.
+Objective: Diagnose a false positive that may come from a missing annotation. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-012
-Question: Un détecteur produit une boîte très confiante sans GT associée ; l'image semble pourtant montrer un objet de la classe visée. Que vérifier avant de conclure à une confusion avec le fond ?
-Reponse: **Noyau attendu** : Confronter l'image à la politique d'annotation : présence et classe réelles, conventions de boîte, exclusions et règles crowd/ignore. Si l'objet aurait dû être annoté mais a été omis, une détection non ignorée est comptée FP malgré sa pertinence visuelle. La confiance du modèle ne suffit pas à prouver l'omission.
+Question: A detector produces a highly confident box with no matched GT, although the image appears to contain an object of the target class. What should be checked before concluding that it confused the background with an object?
+Reponse: **Expected answer**: Confronting the image with the annotation policy: real presence and class, box conventions, exclusions and crowd/ignore rules. If the object should have been annotated but was omitted, a non-ignored detection is counted FP despite its visual relevance. The trust of the model is not enough to prove the omission.
 
-**Approfondissement** : Le projet propose de faire arbitrer les cas ambigus, versionner les corrections et réévaluer tous les modèles sur la même GT corrigée, en conservant l'ancien bilan. TIDE documente des objets manquants et des flags crowd erronés ; cela ne rend pas tous les FP suspects ni toutes les annotations exhaustives.
+**Further explanation**: The project proposes to arbitrate ambiguous cases, version corrections and re-evaluate all models on the same corrected GT, keeping the old balance sheet. TIDE documents missing objects and erroneous crowd flags; this does not make all FP suspicious or all exhaustive annotations.
 
-**Arbitrage proposé** : faire vérifier le cas selon une règle d'annotation commune à tous les modèles, avec accès à l'image et au contexte utile. Conserver les objets exclus intentionnellement distincts des omissions accidentelles. Documenter version et motifs des corrections.
+**Proposed Arbitration**: Have the case checked according to an annotation rule common to all models, with access to the image and the useful context. Keep objects intentionally excluded from accidental omissions. Document version and reasons for corrections.
 
-**Limite de la conclusion** : un modèle peut être très confiant et faux ; l'apparence de plausibilité ne suffit donc pas à créer une nouvelle vérité terrain. Réévaluer l'ensemble des systèmes sur la même version corrigée évite de favoriser celui dont les sorties ont déclenché la revue. L'enquête porte sur la qualité du benchmark autant que sur celle du détecteur, et son résultat doit rester traçable.
+**Limitation of conclusion**: a model can be very confident and false; the appearance of plausibility is not enough to create a new truth ground. Re-evaluating all systems on the same corrected version avoids favoring the one whose outputs triggered the review. The quality of the benchmark as well as that of the detector is investigated, and its result must be traceable.
 
-**Erreurs bloquantes** : Supprimer les FP gênants d'un seul modèle, ou transformer automatiquement toute détection confiante en annotation.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [TIDE, version 2, §3.4 et annexes D–E : annotations ambiguës/manquantes et détections ignorées](https://arxiv.org/html/2008.08115v2) ; protocole de correction proposé par le projet.
+**check of annotations**: A sample of disagreements from multiple models and regions drawn independently of their scores. An audit limited to very confident predictions of a system may favor its own biases. For each case, keep image, inclusion rule, old label, arbitration and new version of the dataset. A crowd or ignore zone does not necessarily follow the same count as an isolated object; apply the rules of the exact evaluator before qualifying a FP. After correction, recalculate all comparisons and keep previous results as historical, without mixing metrics produced on two different ground truths.
+
+**Blocking errors**: Remove annoying FPs from a single model, or automatically turn any confident detection into annotation.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [TIDE, version 2, §3.4 and appendices D – E: ambiguous/missing annotations and ignored detections](https://arxiv.org/html/2008.08115v2); correction protocol proposed by the project.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-012 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-DETECTEURS-013
 
-Objectif : distinguer instances, classes et étiquettes par instance. Famille : comprehension. Provenance : agent.
+Objective: distinguish instances, classes, and labels by instance. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DETECTEURS-013
-Question: Une tâche demande de localiser trois voitures et deux vélos, avec un seul label par objet. Est-ce nécessairement une classification multi-étiquette par boîte ? Distinguer nombre d'instances, classes présentes et labels par instance.
-Reponse: **Noyau attendu** : Non : il y a cinq instances, deux classes présentes, mais un label par instance dans ce contrat. La détection peut produire plusieurs instances d'une même classe. Multi-étiquette signifie que plusieurs labels sont valides pour une même instance, selon la taxonomie.
+Question: A task requires localizing three cars and two bicycles, with one label per object. Is this necessarily multilabel classification per box? Distinguish the number of instances, classes present and labels per instance.
+Reponse: **Expected answer**: No: there are five instances, two classes present, but one label per instance in this contract. Detection can produce multiple instances of the same class. Multi-tag means that multiple labels are valid for the same instance, depending on the taxonomy.
 
-**Approfondissement** : Des labels hiérarchiques comme « véhicule » et « voiture » peuvent coexister si les annotations l'autorisent ; deux classes exclusives proposées sur le même objet restent une ambiguïté. YOLOv3 utilise des classifieurs logistiques indépendants, mais les labels effectivement rendus dépendent aussi des seuils et du posttraitement. Une NMS par classe ne garantit ni un label unique par instance ni une seule boîte par classe.
+**Further explanation**: Hierarchical labels such as "vehicle" and "car" can coexist if annotations allow; two exclusive classes offered on the same object remain an ambiguity. YOLov3 uses independent logistic classifiers, but the labels actually rendered also depend on the thresholds and postprocessing. A NMS per class does not guarantee a single label per instance or a single box per class.
 
-**Exemple de contrat** : cinq objets distincts de deux catégories demandent cinq décisions de localisation et de classe, sans imposer plusieurs labels sur chacune. Une taxonomie hiérarchique peut ajouter une autre règle, mais il faut alors la définir dans les annotations et les sorties attendues.
+**Example of contract**: Five distinct objects in two categories require five location and class decisions, without imposing multiple labels on each. A hierarchical taxonomy can add another rule, but it must then be defined in the annotations and expected outputs.
 
-**Conséquence pour le pipeline** : des boîtes proches peuvent représenter doublons, catégories concurrentes ou objets distincts. NMS ne connaît pas directement cette sémantique. Examiner labels par instance et couverture des annotations avant de transformer une sortie multiclasse en une règle de suppression. Cette distinction relie supervision, posttraitement et évaluation, au lieu de déduire le contrat du seul nombre de labels présents dans l'image.
+**Impact on the pipeline**: Close boxes can represent duplicates, competing categories, or separate objects. NMS does not know this semantics directly. Examine labels by instance and annotation coverage before turning a multiclass output into a deletion rule. This distinction links supervision, postprocessing and evaluation, instead of deducting the contract from the number of labels present in the image alone.
 
-**Erreurs bloquantes** : Confondre plusieurs objets dans une image avec plusieurs labels pour un objet, ou limiter la sortie à une boîte par catégorie.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Fiche complète]] ; [YOLOv3, version 1, §§2.2–2.3](https://arxiv.org/html/1804.02767v1) ; [Torchvision 0.29, batched_nms : séparation des catégories](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html) ; exemples de contrats du projet.
+**Probability and contract of labels**: A softmax per box requires that the probabilities of the chosen categories share a total mass, which corresponds to an exclusive choice in this set. Independent sigmoids can represent multiple labels simultaneously, but do not automatically make "vehicle", "car" and exclusive categories consistent. The dataset of annotations and the rule of decision must specify these relationships. At the image scale, aggregating the presence of a category can lose the number of instances; three cars become a single presence indicator. Maintaining instance identities and their boxes avoids confusing scene classification with object detection.
+
+**Blocking errors**: Confuse multiple objects in an image with multiple labels for an object, or limit output to one box per category.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [YOLov3, version 1, §§2.2 – 2.3](https://arxiv.org/html/1804.02767v1); [Torchvision 0.29, batched_nms: separation of categories](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html); examples of project contracts.
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-013 provenance::agent pole::A pole::C pole::E
 END

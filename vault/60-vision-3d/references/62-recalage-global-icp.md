@@ -7,80 +7,115 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: ["CV-SE3", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
 ---
-# Recalage global et ICP local
+# Global registration and local ICP
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Estimer une transformation rigide source→cible entre nuages exprimés dans des unités compatibles. Sorties : pose et mesures de recouvrement/résidu sous seuil donné. Une pose correcte exige plus qu'un faible RMSE sur un petit sous-ensemble.
+Estimate a rigid transformation source→target between clouds expressed in compatible units. Outputs: pose and overlap measures/residual under given threshold. A correct pose requires more than a low RMSE on a small subset.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md) ; [CV-SVD](../../10-mathematiques-estimation/references/11-moindres-carres-svd.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md); [CV-SVD](../../10-mathematiques-estimation/references/11-moindres-carres-svd.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Réduire éventuellement par voxels, estimer normales et FPFH, rechercher des correspondances et une initialisation globale robuste ; raffiner localement par ICP. ICP alterne associations et optimisation avec une hypothèse d'initialisation suffisamment proche.
+Reduce by voxels, estimate normals and FPFH, search for matches and a robust global initialization; refine locally by ICP. ICP alternates associations and optimization with a sufficiently close initialization hypothesis.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Point-to-point : $\sum_i\|Rp_i+t-q_i\|^2$. Point-to-plane : $\sum_i[n_i^T(Rp_i+t-q_i)]^2$, normales cibles unitaires. Résidus en mètres si nuages métriques, coûts en m². Une surface plane laisse mal contraints certains déplacements tangents et rotations ; un changement d'objectif ne crée pas les contraintes absentes.
+Point-to-point: $\sum_i\|Rp_i+t-q_i\|^2$. Point-to-plane: $\sum_i[n_i^T(Rp_i+t-q_i)]^2$, normal unit targets. residuals in meters if metric clouds, costs in m². A flat surface leaves some tangential displacements and rotations poorly constrained; a change of objective does not create the absent stresses.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Voxel, rayons de voisinage, seuil de correspondance, rejet et critères d'arrêt sont relatifs à l'échelle et au bruit. Les ratios du tutoriel Open3D sont illustratifs. FPFH 33D est un descripteur, pas une pose.
+Voxel, neighbourhood radii, correspondence threshold, rejection and stop criteria are relative to scale and noise. The Open3D tutorial ratios are illustrative. FPFH 33D is a descriptor, not a pose.
 
-## Coût et implémentation
+## Cost and implementation
 
-Recherche des voisins, normales, features et itérations dominent. Aucun nuage réel traité ; les API legacy et tensor Open3D ne sont pas mélangées en code supposé exécutable.
+Look for neighbors, normal, features and iterations dominate. No real cloud processed; legacy and tensor Open3D APIs are not mixed into supposedly executable code.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation analytique : mêmes points et correspondances connues, puis initialisation éloignée avec plus proches voisins. Prédire un risque d'associations erronées et de minimum local. Comparer pose de référence, recouvrement et erreur hors consensus.
+Analytical variation: same points and known matches, then remote initialization with nearest neighbors. Predict a risk of erroneous associations and local minimum. Compare pose reference, overlap and error out of consensus.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Faible RMSE mais pose fausse : inspecter symétrie, zone de recouvrement, seuil et répartition des contraintes. Une plaque plane peut glisser sans grands résidus point-to-plane.
+Low RMSE but pose false: inspect symmetry, overlap area, threshold and stress distribution. A flat plate can slide without large residuals point-to-plane.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Initialisation par features, odométrie/IMU, contraintes métier ou recalage multivue. Toujours annoncer sens de pose et qualité de la référence.
+Initialization by features, odometry/IMU, business constraints or registration multiview. Always announce sense of pose and quality of reference.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent initialisation, correspondances et directions peu contraintes. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop initialization, correspondences and directions with little constraint. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-ICP-001
+### Case linked to CV-ICP-001
 
-**Question de travail** : Pourquoi combiner FPFH/RANSAC puis ICP plutôt que lancer ICP depuis n’importe quelle pose ?
+**Question of work**: Why combine FPFH/RANSAC with subsequent ICP instead of initializing ICP from any arbitrary pose?
 
-**Réponse de référence** : L’initialisation globale cherche une zone compatible à partir de correspondances ; ICP affine localement et peut converger sur de mauvaises associations.
+**Reference Response**: The global initialization looks for a compatible zone from matches; ICP refines locally and can converge on bad associations.
 
-**Pourquoi l'initialisation compte** : ICP construit ou actualise des associations à partir de la pose courante. Si cette pose est éloignée, les plus proches voisins peuvent représenter d'autres surfaces ; optimiser sur ces paires peut renforcer un mauvais alignement local. La recherche globale utilise d'autres indices pour proposer une région de pose avant le raffinement.
+**Why the initialization counts**: ICP builds or updates associations from the current pose. If this pose is far away, the nearest neighbors can represent other surfaces; optimizing on these pairs can reinforce a local misalignment. Global research uses other clues to propose a region of pose before refinement.
 
-**Exemple construit** : deux pieds identiques d'une pièce peuvent offrir deux alignements locaux plausibles. Un faible résidu après ICP ne désigne pas automatiquement le bon pied. Contrôler l'orientation et la translation finales, le recouvrement et des surfaces distinctives réservées. Consigner sens source→cible et unités avant toute comparaison. Les features géométriques et RANSAC apportent des hypothèses utiles ; elles restent limitées par texture géométrique, symétries et recouvrement. Une odométrie ou une contrainte métier peut fournir une autre initialisation si elle est justifiée et évaluée.
+**Constructed example**: Two identical supports on a part can offer two plausible local alignments. A weak residual after ICP does not automatically indicate the correct support. check final orientation and translation, covering and reserved distinctive surfaces. Record direction source→target and units before any comparison. The geometric features and RANSAC provide useful hypotheses; they remain limited by geometric texture, symmetry and overlap. An odometry or business constraint can provide another initialization if it is justified and evaluated.
 
-### Cas lié à CV-ICP-005
+### Case linked to CV-ICP-005
 
-**Question de travail** : Point-to-plane remplace-t-il toujours avantageusement point-to-point ?
+**Question of work**: Is point-to-plane ICP always a better replacement for point-to-point ICP?
 
-**Réponse de référence** : Il exploite des normales fiables et une géométrie qui contraint les mouvements utiles ; il peut être mal posé sur certaines surfaces ou normales bruitées.
+**Reference Response**: It exploits reliable normals and a geometry that constrains useful movements; it can be ill-posed on certain surfaces or normal noise.
 
-**Comparaison des informations utilisées** : point-to-point pénalise une différence de positions selon trois composantes ; point-to-plane utilise une approximation locale de surface. Lorsque les normales et l'initialisation sont adaptées, cette approximation peut être efficace. Si les normales sont instables ou la géométrie pauvre, le critère peut perdre son intérêt ou laisser certaines directions peu contraintes.
+**Comparison of the information used**: point-to-point penalizes a difference of positions according to three components; point-to-plane uses a local surface approximation. When normals and initialization are adjusted, this approximation can be effective. If the normals are unstable or the geometry poor, the criterion may lose its interest or leave some directions little constrained.
 
-**Ablation construite** : conserver nuages, correspondances initiales, seuil et référence, puis comparer les variantes en faisant varier séparément le bruit des normales et le recouvrement. Mesurer erreur de pose, convergence, échecs et coût. Une baisse du résidu propre à une variante n'est pas directement comparable au résidu d'une autre formulation. Le bon choix dépend de la surface observée et de la précision demandée. Ne pas utiliser un seul cas plan favorable pour annoncer une supériorité sur toutes les pièces et toutes les initialisations.
+**Constructed ablation**: keep clouds, initial matches, threshold and reference, then compare variants by varying the noise of normals and overlap separately. Measure pose error, convergence, failures and cost. A drop in the residual specific to one variant is not directly comparable to the residual of another formulation. The right choice depends on the observed surface area and the accuracy required. Do not use a single favorable plan case to advertise superiority over all coins and all initializations.
 
-**Repère documentaire de cette passe** : [Open3D 0.19, ICP registration](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), Point-to-plane ICP et évaluation. Les autres développements figurent dans les [cartes associées](../62-recalage-global-icp.md).
+**Documentary reference for this pass**: [Open3D 0.19, ICP registration](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), Point-to-plane ICP and evaluation. The other developments are in the [flashcards](../62-recalage-global-icp.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Open3D 0.19.0, ICP point-to-point et point-to-plane](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-ICP-001
+
+**Situation**: Why combine FPFH/RANSAC with subsequent ICP instead of initializing ICP from any arbitrary pose?
+
+**Concrete local loop**: At iteration $k$, transform each source point by $T_k$, search for target neighbors, reject incompatible pairs, and then estimate a $\Delta T_k$ fix. With a correction expressed in the target coordinate frame, dial $T_{k+1}=\Delta T_kT_k$. A correction in the source coordinate frame consists of the other side: mixing these conventions produces a poor optimization trajectory. The rapprochement of the neighbors and the resolution of pose are two different steps. A good initialization facilitates physical associations, while a threshold that is too wide can accept foreign surfaces and a threshold that is too strict removes the constraints necessary for refinement.
+
+### CV-ICP-002
+
+**Situation**: What does $n^T(Rp+t-q)$ measure in point-to-plane ICP?
+
+**Linearization of the residual**: Put $s=Rp+t$ and apply a small disturbance to the left $s'\simeq s+\delta t+\delta\omega\times s$. The residual becomes $r'\simeq r+n^T\delta t+(s\times n)^T\delta\omega$. Its Jacobian is therefore a line of six components for the order translation then rotation. Stacking these lines directly shows the movements that the scene constrains. For all vertical normals, horizontal translations do not appear in this local model. This derivation assumes fixed matches and normals during the step; updating them to the next iteration makes the overall problem more complex than a single linear system.
+
+### CV-ICP-003
+
+**Situation**: ICP reports low RMSE but aligns only a corner of two point clouds. What should be reported?
+
+**Effect of the threshold on statistics**: if the distances are $d_1,\ldots,d_m$, the RMSE is $\sqrt{\sum_i d_i^2/m}$. Removing all large distances can reduce it while greatly reducing $m$; the two experiments no longer focus on the same points. Also comparing the two directions source→target and target→source can reveal asymmetrical coverage, especially with different densities. An analysis by reserved physical regions prevents a dense area from dominating the score. These measurements complete the reference error of pose; they do not, on their own, remove the ambiguity of a perfectly symmetrical object.
+
+### CV-ICP-004
+
+**Situation**: Why does reusing an ICP threshold of 0.02 after converting point clouds from meters to millimeters change the problem?
+
+**residuals and covariance**: if all lengths are multiplied by $a$, a metric residual becomes $r'=ar$ and its covariance becomes $\Sigma'=a^2\Sigma$. The normalized residual $r^T\Sigma^{-1}r$ then remains invariant. A robust loss set in meters also requires a converted scale, unlike a loss applied after properly processed whitening. Absolute displacement or cost tolerances can change direction with units; relative criteria must be interpreted according to their exact definition. This reasoning makes it possible to distinguish a coherent unit change from a voluntary change in physical weighting in a registration or a merger of constraints.
+
+### CV-ICP-005
+
+**Situation**: Is point-to-plane ICP always a better replacement for point-to-point ICP?
+
+**Where do the normals come from**: A current local estimator centers the neighbors, calculates their covariance matrix and takes the eigenvector of smallest eigenvalue as the plane normal. A neighborhood too small becomes sensitive to noise; too large, it mixes edges and curved surfaces. If eigenvalues do not distinguish a normal direction, the local surface is itself ambiguous. For the residual point-to-plane isolated square, reversing the sign of a normal does not change the cost; a consistent orientation may nevertheless be required by other steps such as descriptors or rejection rules. Compare the quality of pose with this provenance of the explained normals.
+
+**Passages consulted for these developments**: [Open3D 0.19.0](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), Point-to-point and Point-to-plane ICP; project linearization and scale analyses; [Open3D 0.19.0](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html), FPFH and RANSAC; no Open3D execution.
+
+## Sources and flashcards
+
+- [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html).
 - [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
-- [Cartes associées](../62-recalage-global-icp.md).
+- [Related flashcards](../62-recalage-global-icp.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

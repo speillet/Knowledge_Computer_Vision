@@ -7,86 +7,127 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 8
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
 ---
-# Kalman, EKF, UKF et ESKF pour la fusion
+# Kalman, EKF, UKF and ESKF for sensor fusion
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Fusionner mesures et prédictions horodatées en représentant leurs incertitudes. Entrées : modèle d'état, mesures, bruit et timestamps ; sortie : état estimé et covariance. Les incertitudes supposées et les associations conditionnent la cohérence du résultat.
+Merge time-stamped measurements and predictions by representing their uncertainties. Inputs: state model, measurements, noise and timestamps; output: estimated state and covariance. The supposed uncertainties and associations condition the consistency of the result.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SE3](12-rotations-se3.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SE3](12-rotations-se3.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Kalman linéaire alterne prédiction et correction. EKF linéarise les modèles. UKF propage $2n+1$ sigma-points déterministes à travers les fonctions non linéaires, sans jacobienne ; sa moyenne a un ordre de précision supérieur à l'EKF, sa covariance le même ordre (Julier et Uhlmann 1997, §3, équations 12–14). ESKF sépare état nominal et petite erreur tangentielle. Chez Solà, l'erreur suit la prédiction d'un EKF (annexe E, équations 439–440), et sa correction utilise la jacobienne d'un EKF classique composée avec celle de l'erreur (§6.1, équation 278). Ce n'est donc pas une alternative mutuellement exclusive à EKF. Corriger l'erreur puis l'injecter dans la pose exige aussi un reset cohérent de covariance.
+Kalman linear alternates prediction and correction. EKF linearizes the models. UKF propagates $2n+1$ sigma-deterministic points through nonlinear functions, without Jacobian; its mean has an order of precision greater than EKF, its covariance the same order (Julier and Uhlmann 1997, §3, equations 12 – 14). ESKF separates nominal state and small tangential error. At Solà, the error follows the prediction of a EKF (Appendix E, equations 439 – 440), and its correction uses the Jacobian of a classical EKF composed with that of the error (§6.1, equation 278). This is not a mutually exclusive alternative to EKF. Correcting the error and then injecting it into the pose also requires a consistent covariance reset.
 
-Solà (§5.1) justifie la formulation à état d'erreur par quatre propriétés. L'erreur d'orientation est minimale, ce qui évite la redondance du quaternion et le risque de covariance singulière lié à sa contrainte. L'erreur opère près de l'origine, loin des singularités de paramétrisation, ce qui garde la linéarisation valide. Elle reste petite, si bien que ses produits du second ordre sont négligeables. Sa dynamique est lente, la dynamique rapide étant intégrée dans l'état nominal : les corrections peuvent venir moins souvent que les prédictions. Le cycle (§5.2) : intégrer l'état nominal sans bruit, prédire la loi de l'erreur, la corriger à l'arrivée d'une mesure non IMU, l'injecter, puis la remettre à zéro.
+Solà (§5.1) justifies the error-state formulation with four properties. The orientation error is minimal, which avoids the redundancy of the quaternion and the risk of singular covariance related to its constraint. The error operates near the origin, far from the parameterization singularities, which keeps the linearization valid. It remains small, so that its second-order products are negligible. Its dynamics are slow, the rapid dynamics being integrated in the nominal state: corrections can come less often than predictions. The cycle (§5.2): integrate the nominal state without noise, predict the law of error, correct it at the arrival of a non-IMU measurement, inject it, then reset it to zero.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-L'innovation est $\nu=z-h(x^-)$, de covariance $S=HP^-H^T+R$ dans l'EKF. Avec $S$ définie positive, le score $\nu^TS^{-1}\nu$ est sans unité, puisque $S$ porte les unités de $\nu$. Si l'innovation est gaussienne, centrée, blanche et de covariance $S$, il suit une loi du $\chi^2$ à $m$ degrés de liberté, $m$ étant le nombre d'observations (Gamse et al. 2014, §2.2.2, équations 7–10). Un rejet au-delà de $\chi^2_{m;1-\alpha}$ signale un écart dans la prédiction, le modèle stochastique ou l'observation, sans dire lequel. Quantiles à 95 % recalculés : 3,84 ($m=1$), 5,99 ($m=2$), 7,81 ($m=3$), 9,49 ($m=4$). DeepSORT utilise 9,4877 pour une mesure de dimension 4 (§2.2). Raisonnement du projet : des scores trop souvent élevés sur une séquence signalent un filtre surconfiant, trop souvent faibles un filtre sous-confiant.
+The innovation is $\nu=z-h(x^-)$, of covariance $S=HP^-H^T+R$ in the EKF. With $S$ set positive, the $\nu^TS^{-1}\nu$ score is unitless, since $S$ carries the units of $\nu$. If the innovation is Gaussian, centered, white and covariance $S$, it follows a law of $\chi^2$ to $m$ degrees of freedom, $m$ being the number of observations (Gamse et al. 2014, §2.2.2, equations 7 – 10). A rejection beyond $\chi^2_{m;1-\alpha}$ signals a deviation in prediction, stochastic model, or observation, without saying which. Quantiles at 95 % recalculated: 3,84 ($m=1$), 5,99 ($m=2$), 7,81 ($m=3$), 9,49 ($m=4$). DeepSORT uses 9,4877 for a dimension measurement 4 (§2.2). Reasoning the project: too often high scores on a sequence signal an overconfident filter, too often low a subtrust filter.
 
-$P^-=FP^+F^T+Q$ utilise le pas de temps réel. Sur un pas $\Delta t$, Solà montre trois dépendances différentes (annexe E, équation 440) : le terme dynamique est exponentiel, le bruit de mesure IMU contribue en $\Delta t^2$, les perturbations comme les marches aléatoires des biais en $\Delta t$. Les covariances d'impulsion le traduisent : $\sigma_{\tilde a_n}^2\Delta t^2I$ pour la vitesse, $\sigma_{a_w}^2\Delta t\,I$ pour le biais accéléromètre (§5.4.2, équations 262–265). Propager échantillon IMU par échantillon avec le $\Delta t$ réel, et appliquer une mesure caméra à son instant d'acquisition, sont donc des conditions de cohérence ; le traitement des retards par tampon et re-propagation est une proposition du projet. Dans l'ESKF, après injection, $\hat{\delta x}\leftarrow0$ et $P\leftarrow GPG^T$ selon la jacobienne de reset $G$ (Solà, §6.3, équations 285–288). Pour l’erreur angulaire locale $R_{vrai}=R_{nom}\operatorname{Exp}(\delta\theta)$ de Solà, $G_\theta\approx I-[\hat{\delta\theta}/2]_\times$ au premier ordre ; les autres blocs diagonaux sont identitaires. $G\approx I$ néglige le changement de coordonnées pour une petite correction ; une erreur angulaire globale demande une jacobienne différente. Remettre l'erreur moyenne à zéro ne remet pas l'incertitude à zéro.
+$P^-=FP^+F^T+Q$ uses real-time step. On a step $\Delta t$, Solà shows three different dependencies (Appendix E, equation 440): the dynamic term is exponential, the measurement noise IMU contributes in $\Delta t^2$, the disturbances as the random steps of the biases in $\Delta t$. Pulse covariances translate it: $\sigma_{\tilde a_n}^2\Delta t^2I$ for speed, $\sigma_{a_w}^2\Delta t\,I$ for accelerometer bias (§5.4.2, equations 262 – 265). Spreading sample IMU per sample with the actual $\Delta t$, and applying a camera measurement at its acquisition time, are therefore conditions of consistency; the processing of delays by buffer and re-propagation is a proposal of the project. In ESKF, after injection, $\hat{\delta x}\leftarrow0$ and $P\leftarrow GPG^T$ according to reset Jacobian $G$ (Solà, §6.3, equations 285 – 288). For the local angular error $R_{vrai}=R_{nom}\operatorname{Exp}(\delta\theta)$ from Solà, $G_\theta\approx I-[\hat{\delta\theta}/2]_\times$ at first order; the other diagonal blocks are identical. $G\approx I$ neglects the change of coordinates for a small correction; a global angular error requires a different Jacobian. Resetting the average error to zero does not reset the uncertainty to zero.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Choisir état, fréquence, Q/R, traitement des biais, délais et mesure absente. Un bruit artificiellement petit donne une confiance excessive. UKF ne garantit pas de réparer toute non-linéarité, distribution multimodale ou mauvais modèle.
+Choose Status, Frequency, Q/A, Bias Processing, Delay, and Absent Measure. Artificially small noise gives excessive confidence. UKF does not guarantee to repair any non-linearity, multimodal distribution or bad model.
 
-## Coût et implémentation
+## Cost and implementation
 
-L'état et la fréquence dominent les produits matriciels ; la cohérence temporelle prime sur une promesse de fréquence. Aucune implémentation complète de filtre n'est fournie ; l'exemple scalaire exécuté du premier lot illustre seulement une correction.
+State and frequency dominate matrix products; temporal consistency takes precedence over a frequency promise. No complete filter implementation is provided; the scalar example executed in the first batch only illustrates a correction.
 
-Forme de la mise à jour de covariance. La soustraction $P^+=P^--KSK^T$, avec $S=HP^-H^T+R$, reste vulnérable aux arrondis. Chin/JPL 2023 (§III-A, équation 14) privilégie la forme de Joseph $P^+=(I-KH)P^-(I-KH)^T+KRK^T$. $P^-$ désigne la covariance avant correction, $K$ le gain, $H$ la jacobienne de mesure et $R$ sa covariance de bruit. Sous indépendance des erreurs de prédiction et de mesure et avec $P^-,R$ semi-définies positives, la somme de termes quadratiques préserve la semi-définie positivité en arithmétique exacte ; elle réduit le risque numérique mais n’offre pas de garantie absolue en flottants. Surveiller symétrie, valeurs propres et conditionnement ; une factorisation Cholesky exige la positivité stricte. Une implémentation square-root peut être comparée si nécessaire. Symétriser $(P+P^T)/2$ ne corrige pas à elle seule une valeur propre négative. Les symptômes et tests sont des diagnostics proposés par le projet.
+Form of covariance update. The $P^+=P^--KSK^T$ subtraction, with $S=HP^-H^T+R$, remains vulnerable to rounding. Chin/JPL 2023 (§III-A, equation 14) favors the form of Joseph $P^+=(I-KH)P^-(I-KH)^T+KRK^T$. $P^-$ denotes the covariance before correction, $K$ the gain, $H$ the measurement Jacobian and $R$ its noise covariance. Under the independence of prediction and measurement errors and with $P^-,R$ semi-definite positive, the sum of quadratic terms preserves the semi-definite positivity in exact arithmetic; it reduces the numerical risk but does not offer an absolute guarantee in floats. Monitoring symmetry, eigenvalues, and conditioning; a Cholesky factorization requires strict positivity. A square-root implementation can be compared if necessary. Symmetrize $(P+P^T)/2$ does not correct a negative eigenvalue on its own. Symptoms and tests are diagnoses offered by the project.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : augmenter R en conservant mesure/prédiction ; la correction doit suivre moins fortement la mesure. Vérifier ensuite l'innovation sur séquences réservées ; une covariance faible seule n'atteste pas la précision réelle.
+Proposed variation: increase R while retaining measurement/prediction; correction should follow less strongly the measurement. Then check the innovation on reserved sequences; a low covariance alone does not attest to the actual accuracy.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Deux capteurs en désaccord : comparer horodatage, extrinsèques, unités, biais et corrélations avant de diminuer R. Des innovations systématiquement biaisées suggèrent autre chose qu'un bruit blanc accru.
+Two sensors disagree: compare timestamp, extrinsic, units, bias and correlations before decreasing R. Systematically biased innovations suggest something other than increased white noise.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Filtrage pour faible latence ; lissage/graphes pour réestimer plusieurs états. Une mesure redondante corrélée ne doit pas être comptée deux fois comme information indépendante.
+Filtering for low latency; smoothing/graphs to re-estimate multiple states. A correlated redundant measurement should not be counted twice as independent information.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent innovations, covariance et réinitialisation de l’ESKF. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These built cases develop innovations, covariance and reset of the ESKF. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-FUSION-001
+### Case linked to CV-FUSION-001
 
-**Question de travail** : Comment distinguer EKF, UKF et ESKF sans les classer en précision absolue ?
+**Question of work**: How do EKF, UKF and ESKF differ, without ranking them by absolute accuracy?
 
-**Réponse de référence** : l'EKF linéarise modèles et mesures autour de l'estimée courante. L'UKF propage $2n+1$ sigma-points choisis de façon déterministe à travers les fonctions non linéaires, sans jacobienne. L'ESKF intègre un état nominal non linéaire et estime une petite erreur autour de lui, avec les équations de prédiction et de correction d'un EKF appliquées à cette erreur. Ces noms décrivent donc des choix qui se combinent, pas trois catégories exclusives.
+**Reference Response**: The EKF linearizes models and measurements around the current estimate. The UKF propagates $2n+1$ sigma-points selected deterministically through nonlinear functions, without Jacobian. The ESKF integrates a nonlinear nominal state and estimates a small error around it, with the prediction and correction equations of a EKF applied to this error. These names therefore describe choices that combine, not three exclusive categories.
 
-**Choix de conception** : commencer par la représentation de l'état, la non-linéarité des observations et le coût acceptable. Le filtre retenu doit être évalué sur des innovations et des erreurs de trajectoire cohérentes. Une meilleure approximation locale de propagation ne corrige pas une mauvaise extrinsèque, une association fausse ou une horloge décalée ; ces défauts appartiennent au modèle et aux données.
+**Choice of design**: Begin with the representation of state, non-linearity of observations, and acceptable cost. The selected filter must be evaluated on consistent innovations and trajectory errors. A better local approximation of propagation does not correct a bad extrinsic, false association, or offbeat clock; these defects belong to the model and the data.
 
-### Cas lié à CV-FUSION-005
+### Case linked to CV-FUSION-005
 
-**Question de travail** : Pour fusionner IMU et caméra avec une orientation représentée par un quaternion, pourquoi estimer une petite erreur autour d'un état nominal intégré, plutôt que l'état complet dans un EKF ?
+**Question of work**: When fusing IMU and camera measurements with quaternion orientation, why estimate a small error around an integrated nominal state rather than the complete state in an EKF?
 
-**Réponse de référence** : l'erreur d'orientation est minimale, trois paramètres pour trois degrés de liberté : on évite la redondance du quaternion et le risque de covariance singulière lié à sa contrainte de norme. L'erreur reste petite et proche de l'origine, loin des singularités de paramétrisation : la linéarisation reste valide, les produits du second ordre sont négligeables et les jacobiennes simples. Sa dynamique est lente, la dynamique rapide étant intégrée dans l'état nominal : les corrections peuvent arriver moins souvent que les prédictions IMU.
+**Reference Response**: the orientation error is minimal, three parameters for three degrees of freedom: we avoid the redundancy of the quaternion and the risk of singular covariance related to its norm constraint. The error remains small and close to the origin, far from the singularities of parameterization: the linearization remains valid, the products of the second order are negligible and the Jacobians simple. Its dynamics are slow, the rapid dynamics being integrated in the nominal state: corrections can happen less often than predictions IMU.
 
-**Intuition pour le suivi** : l'état nominal porte le mouvement important, tandis que l'erreur décrit un voisinage local. La petite taille de l'erreur justifie une approximation locale seulement tant que l'estimation reste proche de la réalité. Une mauvaise initialisation ou une longue absence de mesure peut sortir de ce domaine ; conserver un quaternion normalisé n'établit pas à lui seul la cohérence du filtre.
+**Intuition for follow-up**: The nominal state carries the important movement, while the error describes a local neighborhood. The small size of the error justifies a local approximation only as long as the estimate remains close to reality. A bad initialization or a long absence of measurement may leave this domain; keeping a normal quaternion does not alone establish the consistency of the filter.
 
-**Repère documentaire de cette passe** : [Solà, Quaternion kinematics for the error-state Kalman filter](https://arxiv.org/html/1711.02508v1), §6.3, injection et reset de l’erreur. Les autres développements figurent dans les [cartes associées](../13-kalman-ekf-eskf.md).
+**Documentary reference for this pass**: [Solà, Quaternion kinetics for the error-state Kalman filter](https://arxiv.org/html/1711.02508v1), §6.3, injection and reset error. The other developments are in the [flashcards](../13-kalman-ekf-eskf.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Gamse et al. 2014, Statistical Process Control of a Kalman Filter Model, §2.2.2, équations 5–10, et §3.4.2](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/).
-- [Julier et Uhlmann 1997, A New Extension of the Kalman Filter to Nonlinear Systems, SPIE 3068, §3, équations 12–14](https://doi.org/10.1117/12.280797) : sigma-points, ordre de précision, absence de jacobienne. Version de l'éditeur payante ; texte lu sur une copie de cours hébergée par Berkeley. L'article de 2004 aux Proceedings of the IEEE, cité auparavant, n'a pas été lu.
-- [Wojke, Bewley et Paulus 2017, DeepSORT, §2.2](https://arxiv.org/abs/1703.07402) : seuil $\chi^2$ à 95 % en dimension 4.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [Solà, Quaternion kinematics for the error-state Kalman filter](https://arxiv.org/abs/1711.02508) : §5.1 avantages de l'ESKF, §5.2 principe, §5.4.2 équations 262–265, §6.1 équations 274–278 et note 26, §6.3 équations 285–288, annexe E équations 438–440.
-- [Chin/JPL 2023, stabilité numérique et forme de Joseph, §III-A](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf).
-- [Cartes associées](../13-kalman-ekf-eskf.md) : CV-FUSION-001 à 006.
+### CV-FUSION-001
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet. Révisions 3 et 4 : auto-revue `revue-cartes` par Agent Claude Code le 2026-10-23, corrections puis enrichissements acceptés par l'apprenant, sans validation indépendante.
+**Situation**: How do EKF, UKF and ESKF differ, without ranking them by absolute accuracy?
+
+**Common Basis of Calculation**: in an approximation EKF, $x^-=f(x^+,u)$ and $P^-=FP^+F^T+Q$, then $K=P^-H^T(HP^-H^T+R)^{-1}$. $F$ and $H$ are the Jacobians of dynamics and measurement; $Q$ and $R$ describe their uncertainties in the coordinates and no time announced. We correct with innovation, by solving a system to calculate the gain rather than an explicit inverse. The UKF replaces some of these linearizations by the propagation of weighted points; the ESKF changes the coordinates in which the small correction is estimated. A truly multimodal distribution, like two possible visual associations, is not rendered unimodal by this change of calculation.
+
+### CV-FUSION-002
+
+**Situation**: In a filter, $\nu$ is the innovation, defined as measurement minus prediction, and $S$ is its positive-definite covariance. What does $\nu^TS^{-1}\nu$ measure in an innovation check?
+
+**Non-reverse calculation and selection effect**: if $S=LL^T$, solve $Le=\nu$ and then calculate $e^Te$ gives the score. For independent measurements of fixed dimensions, its nominal expectation is $m$, before selection. On the other hand, keeping only observations that have passed the gating artificially reduces the average observed; it can no longer be naively compared to $m$ to conclude a too great covariance. Similarly, testing multiple candidates and then retaining the best changes the distribution. Check noise consistency on baseline observations and consider releases. A succession of innovations of the same sign also reveals a temporal structure that a histogram of norms can mask.
+
+### CV-FUSION-003
+
+**Situation**: In a camera–IMU ESKF, orientation covariance drops almost to zero after every correction. Subsequent measurements are rejected by gating or barely change the state. Which reset error should be investigated first, and what is the correct treatment?
+
+**Also preserve correlations.**: If the error is split into $\theta$ orientation and other $a$ variables, the reset transforms $P_{\theta a}$ into $G_\theta P_{\theta a}$ and $P_{a\theta}$ into $P_{a\theta}G_\theta^T$, not just the $P_{\theta\theta}$ block. These terms can transfer information from a visual observation to position, speed, or bias at the next correction. Erroneously canceling them changes the filter. A constructed check consists of comparing the distribution of small perturbations before and after injection in their respective coordinates: the numerical description changes, while the physical states represented must remain close. Testing the reset separately avoids confusing it with the legitimate reduction of uncertainty due to measurement.
+
+### CV-FUSION-004
+
+**Situation**: The camera drops from 30 to 10 frames/s with variable latency, while the IMU stays at 200 Hz. Which timing contract must sensor fusion respect?
+
+**Do not mix density and discrete variance**: for a position – speed state subjected to a continuous white acceleration of spectral density $q$, the ideal integration gives $Q_d=q\begin{bmatrix}\Delta t^3/3&\Delta t^2/2\\\Delta t^2/2&\Delta t\end{bmatrix}$. If we assume instead a constant random acceleration on each interval, of variance $\sigma_a^2$, the block becomes $\sigma_a^2\begin{bmatrix}\Delta t^4/4&\Delta t^3/2\\\Delta t^3/2&\Delta t^2\end{bmatrix}$. These two analytical cases describe different noises; replacing one with the other with an unchanged numerical value is false. The powers of $\Delta t$ are therefore not chosen by copying a matrix: they come from the noise model and its integration, with their units.
+
+### CV-FUSION-005
+
+**Situation**: When fusing IMU and camera measurements with quaternion orientation, why estimate a small error around an integrated nominal state rather than the complete state in an EKF?
+
+**Example of a minimum error state**: A nominal inertial state can hold position $p$, speed $v$, quaternion $q$, accelerometer bias $b_a$ and gyro bias $b_g$. This represents 16 stored components, but an error of dimension 15 when the orientation uses three local coordinates and the gravity is known here. A typical correction injects $p\leftarrow p+\delta p$, $v\leftarrow v+\delta v$, $R\leftarrow R\operatorname{Exp}(\delta\theta)$, then the additive biases. The IMU measures a specific force and angular velocity, not directly a position: you have to remove the biases, express the acceleration in the correct coordinate frame and process the gravity according to the model. The exact size and content change if one also estimates gravity or calibration.
+
+### CV-FUSION-006
+
+**Situation**: After thousands of Kalman filter updates, Cholesky factorization of $P$ fails or a variance becomes negative, although the models appear correct. Which implementation issue should be checked, and which update form mitigates it?
+
+**Origin of Joseph**: if the error before measurement is $e^-$ and the measurement noise $n$, the linear correction gives $e^+=(I-KH)e^- -Kn$. Taking the covariance and assuming their independence, the two crossed terms cancel each other out and we find the sum of Joseph. If measurement and prediction share the same information, these terms are no longer automatically zero: the stability of the algebraic form does not validate the statistical hypothesis. A square-root alternative propagates a covariance factor rather than $P$ directly; it improves the numerical properties in its frame, but requires a consistent implementation of prediction, correction, and reset. Adding an arbitrary diagonal to each failure can hide an invalid template.
+
+**Passages consulted for these developments**: [Solà, Quaternion kinematics](https://arxiv.org/html/1711.02508v1), §§5 – 6, status, correction and reset; Appendix E, noise integration; [Chin/JPL 2023](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf), §III-A, Joseph shape; square-root sections.
+
+## Sources and flashcards
+
+- [Gamse et al. 2014, Statistical Process Control of a Kalman Filter Model, §2.2.2, equations 5 – 10, and §3.4.2](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/).
+- [Julier and Uhlmann 1997, A New Extension of the Kalman Filter to Nonlinear Systems, SPIE 3068, §3, Equations 12 – 14](https://doi.org/10.1117/12.280797): sigma-points, precision order, absence of Jacobian. Paid publisher version; text read on a course copy hosted by Berkeley. 2004's previously cited article at the Proceedings of the IEEE has not been read.
+- [Wojke, Bewley and Paulus 2017, DeepSORT, §2.2](https://arxiv.org/abs/1703.07402): threshold $\chi^2$ to 95% in dimension 4.
+
+- [Solà, Quaternion kinetics for the error-state Kalman filter](https://arxiv.org/abs/1711.02508) : §5.1 Benefits of theESKF, §5.2 principe, §5.4.2 Equations 262–265, §6.1 Equations 274–278 and note 26, §6.3 Equations 285–288Appendix E Equations 438–440.
+- [Chin/JPL 2023, digital stability and Joseph shape, §III-A](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf).
+- [Related flashcards](../13-kalman-ekf-eskf.md): CV-FUSION-001 to 006.
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project. Revisions 3 and 4: self-review `revue-cartes` by Agent Claude Code on 2026-10-23, corrections and enrichments accepted by the learner, without independent validation.

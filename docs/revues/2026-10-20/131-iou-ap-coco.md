@@ -1,56 +1,55 @@
-# Revue — IoU et AP — protocole COCO de détection — 2026-10-20
+# Review –  IoU and AP –  COCO detection protocol –  2026-10-20
 
-## Synthèse
+## Overview
 
-7 cartes auditées. Aucun défaut scientifique nouveau ; une coquille de fiche corrigée.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+7 flashcards audited. No new scientific defects; a corrected reference note shell. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-7 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 0 mineure, 7 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+7 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 0 minor, 7 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-IOU-AP-001 | Confirmé | calculer un recouvrement dans le bon contrat. | 98 mots à l’entrée ; Noyau fini, contexte et conventions explicites | Fiche et format contrôlés | — | Conserver |
-| CV-IOU-AP-002 | Confirmé | distinguer mesure locale et protocole agrégé. | 124 mots à l’entrée ; Noyau fini, contexte et conventions explicites | Fiche et format contrôlés | — | Conserver |
-| CV-IOU-AP-003 | Confirmé | expliquer la pénalité d'un doublon. | 94 mots à l’entrée ; Noyau fini, contexte et conventions explicites | Fiche et format contrôlés | — | Conserver |
-| CV-IOU-AP-004 | Confirmé | reconstruire une AP interpolée simple. | 110 mots à l’entrée ; Noyau fini, contexte et conventions explicites | Fiche et format contrôlés | — | Conserver |
-| CV-IOU-AP-005 | Confirmé | comparer des évaluateurs avec prudence. | 113 mots à l’entrée ; Noyau fini, contexte et conventions explicites | Fiche et format contrôlés | — | Conserver |
-| CV-IOU-AP-006 | Déduction du protocole | diagnostiquer un écart selon l'exigence de localisation. | 103 mots à l’entrée ; Diagnostic fini ; pas de cause affirmée sans preuve | Fiche et format contrôlés | — | Conserver |
-| CV-IOU-AP-007 | Déduction du protocole | relier moyenne benchmark et décision métier. | 103 mots à l’entrée ; Diagnostic fini ; pas de cause affirmée sans preuve | Fiche et format contrôlés | — | Conserver |
+| CV-IOU-AP-001 | Confirmed | calculate a overlap in the right contract. | 98 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
+| CV-IOU-AP-002 | Confirmed | Distinguish between local measurement and aggregated protocol. | 124 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
+| CV-IOU-AP-003 | Confirmed | Explain the penalty for a duplicate. | 94 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
+| CV-IOU-AP-004 | Confirmed | rebuild a simple interpolated AP. | 110 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
+| CV-IOU-AP-005 | Confirmed | Compare evaluators with caution. | 113 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
+| CV-IOU-AP-006 | Deduction from protocol | diagnose a deviation according to the location requirement. | 103 words at the entrance; Diagnosis finished; no cause asserted without proof | reference note and controlled format | — | Keep |
+| CV-IOU-AP-007 | Deduction from protocol | link average benchmark and business decision. | 103 words at the entrance; Diagnosis finished; no cause asserted without proof | reference note and controlled format | — | Keep |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : format officiel bbox [x,y,width,height], coordonnées flottantes ; `maskApi.c` calcule les aires continues sans +1. L'IoU du pilote est sans unité.
-- Confirmé par `evaluateImg` : tri des détections par score, GT ordinaire associée au plus une fois, crowd réutilisable, cas ignorés et filtres d'aire distincts.
-- Confirmé par `accumulate`/`Params` : enveloppe de précision, 101 rappels, dix seuils IoU ; catégories sans GT valide laissées à −1 puis exclues, catégorie valide sans détection à zéro.
-- Divergence réellement constatée : la page officielle dit top-100 toutes classes ; le code épinglé découpe par image/catégorie lorsque useCats=1 avant de tronquer maxDet. La nuance existante est donc conservée.
-- Recalcul exécuté : TP/FP/TP donne 0,834983 ; une seule GT détectée sur deux donne 0,504950. La variation de rang est une déduction de l'enveloppe, sans conclusion sur le coût métier d'un FP.
-- Les cartes 006/007 sont des protocoles de diagnostic/évaluation proposés, pas des mesures du projet.
+- Confirmed: official bbox format [x,y,width,height], floating coordinates; `maskApi.c` calculates continuous areas without +1. The pilot's IoU is without a unit.
+- Confirmed by `evaluateImg`: Sorting detections by score, ordinary GT associated at most once, reusable crowd, ignored cases and separate area filters.
+- Confirmed by `accumulate`/`Params`: precision envelope, 101 reminders, ten thresholds IoU; categories without valid GT left to −1 then excluded, category valid without zero detection.
+- Difference really noted: the official page says top-100 all classes; the code pinned cut by image/category when useCats=1 before truncate maxDet. The existing nuance is preserved.
+- Recalculation executed: TP/FP/TP gives 0,834983; only one GT detected out of two gives 0,504950. The change in rank is a deduction from the envelope, with no conclusion on the business cost of a FP.
+- The flashcards 006/007 are proposed diagnostic/evaluation protocols, not project measures.
 
-## Corrections appliquées
+## Corrections applied
 
-Accord grammatical dans la fiche ; sept cartes conservées.
+Grammatical chord in reference note; seven flashcards preserved.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : comparaison, conception. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: comparison, conception. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [COCO, page effectivement chargée : detection-eval.htm](https://cocodataset.org/dataset/detection-eval.htm), métriques et point 6.
+- [COCO, page actually loaded: detection-eval.htm](https://cocodataset.org/dataset/detection-eval.htm), metric and point 6.
 - [COCO, format-results.htm](https://cocodataset.org/dataset/format-results.htm), Object Detection.
 - [cocoeval.py, commit 8c9bcc3, evaluateImg/accumulate/Params](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), lu via raw.
-- [maskApi.c, même commit, bbIou/rleIou](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/common/maskApi.c).
+- [maskApi.c, same commit, bbIou/rleIou](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/common/maskApi.c).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API. Le code épinglé utilise notamment np.float : il a été lu, pas exécuté avec un environnement NumPy actuel. Aucun fonctionnement logiciel actuel de cet ancien commit n’est revendiqué.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation. The pinned code uses np.float in particular: it was read, not executed with a current NumPy environment. No current software operation of this old commit is claimed.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

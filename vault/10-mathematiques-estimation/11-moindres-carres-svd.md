@@ -1,168 +1,186 @@
-# Moindres carrés, SVD et conditionnement — cartes
+# Flashcards — Least squares, SVD and conditioning
 
-Fiche : [[10-mathematiques-estimation/references/11-moindres-carres-svd|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::10-mathematiques-estimation
 
 ## CV-SVD-001
 
-Objectif : distinguer résidu et identifiabilité. Famille : raisonnement. Provenance : agent.
+Objective: distinguish residual and identifiability. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-001
-Question: Une estimation linéaire $\hat x=\arg\min_x\|Ax-b\|_2$ a un résidu très faible, mais $\hat x$ change fortement quand les mesures $b$ sont légèrement perturbées. Avec la SVD fine $A=U\Sigma V^T$ de rang colonne plein, quelle relation explique qu'un bon ajustement ne garantisse pas des paramètres fiables ?
-Reponse: **Noyau attendu** : $\delta\hat x=V\Sigma^{-1}U^T\delta b=\sum_i\frac{u_i^T\delta b}{\sigma_i}v_i$ : la perturbation est amplifiée par $1/\sigma_i$ le long du vecteur singulier droit $v_i$. Réciproquement, déplacer $x$ de $t\,v_i$ ne change $Ax$ que de $|t|\,\sigma_i$ en norme : si $\sigma_i$ est petite, les paramètres bougent sans que le résidu change. Un petit résidu ne prouve donc pas l'identifiabilité ; il faut inspecter les petites valeurs singulières et $\kappa_2(A)=\sigma_{\max}/\sigma_{\min}$.
+Question: A linear estimate $\hat x=\arg\min_x\|Ax-b\|_2$ has a very small residual, but $\hat x$ changes substantially when the measurements $b$ are slightly perturbed. For a full-column-rank thin SVD $A=U\Sigma V^T$, what relationship explains why a good fit does not guarantee reliable parameters?
+Reponse: **Expected answer**: $\delta\hat x=V\Sigma^{-1}U^T\delta b=\sum_i\frac{u_i^T\delta b}{\sigma_i}v_i$: the disturbance is amplified by $1/\sigma_i$ along the right singular vector $v_i$. Conversely, moving $x$ from $t\,v_i$ only changes $Ax$ from $|t|\,\sigma_i$ to norm: if $\sigma_i$ is small, the parameters move without the residual changing. A small residual therefore does not prove identifiability; it is necessary to inspect the small singular values and $\kappa_2(A)=\sigma_{\max}/\sigma_{\min}$.
 
-**Approfondissement** : cas exécuté par le projet : deux colonnes qui diffèrent de $10^{-3}$ donnent $\sigma_2\approx10^{-3}$ ; perturber $b$ de $10^{-3}$ selon $u_2$ déplace $\hat x$ d'une norme 1 selon $v_2\approx(1,-1)/\sqrt2$, résidu toujours nul. Ceres montre le même effet sur la covariance : $(J^TJ)^{-1}$ atteint $\pm2\cdot10^{14}$ pour un jacobien presque singulier. $\kappa_2$ dépend des unités des colonnes : mettre les paramètres à l'échelle avant de conclure.
+**Further explanation**: case executed by the project: two columns that differ from $10^{-3}$ give $\sigma_2\approx10^{-3}$; disrupt $b$ of $10^{-3}$ according to $u_2$ moves $\hat x$ of a norm 1 according to $v_2\approx(1,-1)/\sqrt2$, residual always zero. Ceres shows the same effect on covariance: $(J^TJ)^{-1}$ reaches $\pm2\cdot10^{14}$ for an almost singular Jacobian. $\kappa_2$ depends on the units of the columns: scale the parameters before concluding.
 
-**Erreurs bloquantes** : assimiler petit résidu et paramètres fiables ; attribuer la sensibilité aux grandes valeurs singulières ; confondre les directions de paramètres $v_i$ et de mesures $u_i$.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Rank of the Jacobian et `min_reciprocal_condition_number` (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; relation dérivée de la SVD par le projet.
+**Reading subspaces**: For $m\ge n$ and a full column rank, $\hat b=A\hat x=UU^Tb$ is the projection of $b$ on the column space, while the orthogonal residual is $(I-UU^T)b$. A disturbance in this space can strongly change $\hat x$ without increasing this residual. This is precisely why the diagnosis must examine both fit and sensitivity. If a singular value is exactly zero, some components are no longer determined by observations: the pseudo-inverse chooses a solution of minimum norm, without establishing that this solution is physically true. These equalities are deductions from the SVD, with $U$ containing the singular observable columns.
+
+**Blocking errors**: assimilate small residual and reliable parameters; assign sensitivity to large singular values; confuse the directions of $v_i$ parameters and $u_i$ measurements.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Ceres, Covariance Estimation, Rank of the Jacobian and `min_reciprocal_condition_number` (accessed on 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); relation derived from the SVD by the project; [Ceres, Solving Non-linear Least Squares, Linearization, Trust Region and Linear Solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d01 famille::raisonnement cv_id::CV-SVD-001 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-002
 
-Objectif : choisir QR ou équations normales. Famille : comparaison. Provenance : agent.
+Objective: choose QR or normal equations. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-002
-Question: Pour résoudre $\min_x\|Ax-b\|_2$ avec $A$ de rang colonne plein, quand préférer une factorisation QR ou SVD de $A$, et quand les équations normales $A^TAx=A^Tb$ résolues par Cholesky restent-elles un choix défendable ?
-Reponse: **Noyau attendu** : former $A^TA$ élève le conditionnement au carré, $\kappa_2(A^TA)=\kappa_2(A)^2$, et fait perdre environ deux fois plus de chiffres significatifs. QR, ou SVD plus précise mais plus lente et utile pour diagnostiquer le rang, s'impose dès que $A$ est mal conditionnée, même modérément. Les équations normales sont en général les plus rapides, surtout pour $A$ haute et étroite : elles restent défendables si $A$ est bien conditionnée après mise à l'échelle, et les grands problèmes creux comme le bundle adjustment les exploitent par Cholesky creux et complément de Schur.
+Question: To solve $\min_x\|Ax-b\|_2$ with a full-column-rank matrix $A$, when should you prefer QR or SVD factorization of $A$, and when are the normal equations $A^TAx=A^Tb$ solved by Cholesky still a defensible choice?
+Reponse: **Expected answer**: Forming $A^TA$ raises the squared conditioning, $\kappa_2(A^TA)=\kappa_2(A)^2$, and loses about twice as many significant figures. QR, or SVD more accurate but slower and useful for diagnosing rank, is required as soon as $A$ is poorly conditioned, even moderately. Normal equations are generally the fastest, especially for high and narrow $A$: they remain defensible if $A$ is well conditioned after scaling, and large sparse problems such as bundle adjustment exploit them by Schur's Cholesky sparse and complement.
 
-**Approfondissement** : ordre de grandeur : avec $\kappa_2(A)=10^6$, environ 6 des 16 chiffres de la double précision sont menacés avec QR, 12 avec les équations normales. Ceres conseille `DENSE_QR` pour les petits problèmes denses et `SPARSE_SCHUR` pour les BA à milliers de caméras. Factoriser puis résoudre : l'inverse explicite est inutile.
+**Further explanation**: order of magnitude: with $\kappa_2(A)=10^6$, about 6 of the 16 digits of the double precision are threatened with QR, 12 with the normal equations. Ceres advises `DENSE_QR` for small, dense problems and `SPARSE_SCHUR` for BAs with thousands of cameras. Factor and then solve: the explicit inverse is useless.
 
-**Lecture pour un projet** : choisir le solveur après avoir examiné rang, échelles et structure creuse. Un temps de résolution inférieur ne compense pas des paramètres devenus inutilisables. Comparer aussi la stabilité lorsque les observations sont légèrement perturbées, avec le même objectif et les mêmes unités.
+**Reading for a project**: choose the solver after examining rank, scales and sparse structure. A lower resolution time does not compensate for parameters that have become unusable. Also compare stability when observations are slightly disturbed, with the same objective and the same units.
 
-**Erreurs bloquantes** : dire que deux formulations mathématiquement équivalentes sont numériquement identiques ; exclure les équations normales en toute circonstance, y compris pour un BA creux.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Triggs et al. 2000, §4.3, QR et équations normales](https://inria.hal.science/inria-00548290) ; [Eigen 5.0.1-dev, Solving linear least squares systems, Using normal equations (consulté le 2026-10-23)](https://libeigen.gitlab.io/eigen/docs-nightly/group__LeastSquares.html) ; [Ceres, Solving Non-linear Least Squares, Linear Solvers et Schur complement trick (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
+**What QR does**: with the reduced factorization $A=QR$, $Q^TQ=I$ and upper triangular $R$, we project $b$ into $Q^Tb$ and then solve $R\hat x=Q^Tb$ by substitution. Orthogonal transformations preserve norms and avoid forming column products of $A^TA$. The SVD replaces this triangle with singular directions and allows a low numerical rank to be explicitly processed. In a dense problem with $m\gg n$, costs depend mostly on $mn^2$ at different constants; in a sparse system, factor filling and elimination order can become decisive. Comparing only the dimensions of the system is therefore not enough to predict time and memory.
+
+**Blocking errors**: say that two mathematically equivalent formulations are numerically identical; exclude normal equations in any circumstance, including for a sparse BA.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Triggs et al. 2000, §4.3, QR and normal equations](https://inria.hal.science/inria-00548290); [Eigen 5.0.1-dev, Solving linear least squares systems, Using normal equations (accessed on 2026-10-23)](https://libeigen.gitlab.io/eigen/docs-nightly/group__LeastSquares.html); [Ceres, Solving Non-linear Least Squares, Linear Solvers and Schur complement trick (accessed 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_solving.html); [Ceres, Covariance Estimation, Introduction, Gauge Invariance and Rank of the Jacobian](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), see the 2026-10-30.
 Tags: cv::pilote cv::d01 famille::comparaison cv_id::CV-SVD-002 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-003
 
-Objectif : pondérer des résidus hétérogènes. Famille : pratique. Provenance : agent.
+Objective: weighting heterogeneous residuals. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-003
-Question: Un objectif de calibration additionne une erreur pixel et une erreur en mètres. Comment éviter un poids dicté par les unités ?
-Reponse: **Noyau attendu** : Définir la covariance $C$ des résidus, supposée définie positive, puis les blanchir : avec $C=LL^T$, utiliser $L^{-1}r$. Sa norme au carré est $r^TC^{-1}r$, sans dimension et pondérée par l’incertitude.
+Question: A calibration objective adds an error in pixels to an error in meters. How can you prevent the units from determining their relative weights?
+Reponse: **Expected answer**: Set the covariance $C$ of the residuals, assumed to be positive definite, and then whiten them: with $C=LL^T$, use $L^{-1}r$. Its norm squared is $r^TC^{-1}r$, dimensionless and weighted by uncertainty.
 
-**Approfondissement** : Changer mètres en millimètres ne doit pas changer arbitrairement la solution. Exemple calculé par le projet : $r_{px}=0{,}8$ px avec $\sigma_{px}=0{,}5$ px, $r=3$ mm avec $\sigma=2$ mm. La somme brute des carrés vaut 0,64 en mètres et 9,64 en millimètres : l'unité choisit quel terme domine. La somme blanchie vaut 4,81 dans les deux cas. Vérifier modèle de bruit et corrélations ; une perte robuste éventuelle s'applique ensuite au résidu blanchi.
+**Further explanation**: Changing meters to millimeters must not arbitrarily change the solution. Example calculated by the project: $r_{px}=0{,}8$ px with $\sigma_{px}=0{,}5$ px, $r=3$ mm with $\sigma=2$ mm. The gross sum of the squares is 0,64 in meters and 9,64 in millimeters: the unit chooses which term dominates. The amount cleared is 4,81 in both cases. Check noise pattern and correlations; a possible robust loss then applies to the whitened residual.
 
-**Interprétation** : le blanchiment exprime chaque écart relativement au bruit que le modèle lui attribue. Un résidu de deux pixels peut être banal avec une incertitude de dix pixels et surprenant avec une incertitude de 0,1 pixel. Les termes hors diagonale de $C$ comptent si les observations sont corrélées : diviser chaque composante par son écart-type n'est alors pas un blanchiment complet. Une pondération choisie pour obtenir une belle solution ne devient pas automatiquement un modèle de bruit justifié.
+**Interpretation**: The whitening expresses each deviation relative to the noise attributed to it by the model. A two-pixel residual can be banal with an uncertainty of ten pixels and surprising with an uncertainty of 0,1 pixels. The off-diagonal terms of $C$ count if the observations are correlated: dividing each component by its standard deviation is then not a complete whitening. A weighting chosen to obtain a beautiful solution does not automatically become a justified noise model.
 
-**Erreurs bloquantes** : Additionner les valeurs brutes puis interpréter leur somme comme une vraisemblance.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Introduction et Rank of the Jacobian (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html).
+**Why Invariance to Units Works**: For invertible linear transformation of $r'=Dr$ units, the correct covariance becomes $C'=DCD^T$. Then $r'^TC'^{-1}r'=r^TC^{-1}r$. Changing the residuals without changing their covariance breaks this invariance. Whitening by Cholesky is calculated by solving $Lz=r$, rather than materializing $L^{-1}$. If two errors come from the same detection or sensor, correlations can make their naïve addition overconfident. They must be modelled or independence announced as an approximation; a robust loss does not repair this double counting. The quadratic form is dimensionless, but the final covariances of the parameters retain their own units.
+
+**Blocking errors**: Add the raw values and interpret their sum as a likelihood.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Ceres, Covariance Estimation, Introduction and Rank of the Jacobian (consulted on 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); [Ceres, Solving Non-linear Least Squares, Linearization, Trust Region and Linear Solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), see 2026-10-30.
 Tags: cv::pilote cv::d01 famille::pratique cv_id::CV-SVD-003 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-004
 
-Objectif : distinguer outliers et rang déficient. Famille : diagnostic. Provenance : agent.
+Objective: distinguish outliers and deficient rank. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-004
-Question: Après RANSAC, une transformation estimée sur un large consensus change notablement d'une exécution ou d'un sous-ensemble d'inliers à l'autre. Quels contrôles départagent des outliers restés parmi les inliers et une configuration presque dégénérée ?
-Reponse: **Noyau attendu** : des outliers résiduels se voient dans les résidus des inliers, avec une queue près du seuil ; retirer ces points ou resserrer le seuil stabilise l'estimation. Une quasi-dégénérescence se voit dans la géométrie des inliers, alignés, concentrés ou presque coplanaires selon le modèle, et dans une petite valeur singulière après normalisation : la solution varie selon une même direction même sur des inliers propres. Le rejet d'outliers ne crée pas les contraintes manquantes : seules une meilleure couverture ou un modèle plus contraint corrigent ce second cas.
+Question: After RANSAC, a transformation fitted to a large consensus changes substantially between runs or inlier subsets. Which checks distinguish remaining outliers from a nearly degenerate configuration?
+Reponse: **Expected answer**: residual outliers are seen in the residuals of the inliers, with a tail near the threshold; removing these points or tightening the threshold stabilizes the estimate. A quasi-degeneration is seen in the geometry of the inliers, aligned, concentrated or almost coplanar according to the model, and in a small singular value after normalization: the solution varies in the same direction even on own inliers. The rejection of outliers does not create the missing constraints: only a better cover or a more constrained model corrects this second case.
 
-**Approfondissement** : cas publié : avec un plan dominant, un échantillon de sept correspondances dont au moins cinq vérifient une homographie donne une géométrie épipolaire compatible avec tout le plan ; d'où un large consensus pour une matrice fondamentale mal déterminée (Chum, Werner et Matas 2005). Pour un système homogène $Lh=0$, c'est l'avant-dernière valeur singulière qui doit rester nettement non nulle.
+**Further explanation**: published case: with a dominant plane, a sample of seven correspondences of which at least five verify a homography gives an epipolar geometry compatible with the whole plane; hence a broad consensus for a poorly determined fundamental matrix (Chum, Werner and Matas 2005). For a homogeneous system $Lh=0$, it is the penultimate singular value that must remain clearly non-zero.
 
-**Contrôle proposé** : conserver les mêmes observations, réajuster sur plusieurs sous-ensembles et visualiser la direction de variation des paramètres. Comparer ensuite une meilleure répartition spatiale plutôt qu'un simple quota plus élevé. Les deux causes peuvent coexister : corriger les outliers ne valide pas encore la géométrie restante.
+**check**: maintain the same observations, readjust to several subsets and visualize the direction of parameter variation. Then compare a better spatial distribution rather than a simple higher quota. The two causes can coexist: correcting the outliers does not yet validate the remaining geometry.
 
-**Erreurs bloquantes** : supposer qu'un estimateur robuste corrige une géométrie dégénérée ; conclure à des outliers dès qu'une solution est instable.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Chum, Werner et Matas 2005, résumé et théorème du plan dominant](https://dspace.cvut.cz/bitstream/10467/9495/1/2005-Two-view-geometry-estimation-unaffected-by-dominant-plane.pdf) ; [Hartley 1997, §4, rôle de $d_1/d_8$](https://doi.org/10.1109/34.601246) ; [Ceres, Covariance Estimation, Rank of the Jacobian (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; tests discriminants proposés par le projet.
+**What spectrum to examine**: for a homogeneous system with nine parameters whose scale is arbitrary, we expect a single solution direction. If the points are quite numerous, a second direction almost zero means that several transformations explain almost as much of the data. The ratio between the last singular values informs this separation; for the minimum eight-line system, the exact kernel must also be taken into account, because a reduced SVD may not return its vector. These diagnoses are specific to the model and its normalization: always using the same spectral threshold on arbitrary units would be misleading. A spot test then examines the geometric effect of this ambiguity.
+
+**Blocking errors**: assume that a robust estimator corrects a degenerate geometry; conclude to outliers as soon as a solution is unstable.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Chum, Werner and Matas 2005, summary and theorem of the dominant plane](https://dspace.cvut.cz/bitstream/10467/9495/1/2005-Two-view-geometry-estimation-unaffected-by-dominant-plane.pdf); [Hartley 1997, §4, role of $d_1/d_8$](https://doi.org/10.1109/34.601246); [Ceres, Covariance Estimation, Rank of the Jacobian (consulted on 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); discriminatory tests proposed by the project; [Ceres, Solving Non-linear Least Squares, Linearization, Trust Region and Linear Solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d01 famille::diagnostic cv_id::CV-SVD-004 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-005
 
-Objectif : dérouler une estimation DLT. Famille : algorithme. Provenance : agent.
+Objective: Make a DLT estimate. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-005
-Question: Décris l'estimation linéaire (DLT) d'une homographie $H$ à partir de $n\ge4$ correspondances de points : quel système construit-on, quelle contrainte impose-t-on et quel vecteur retient-on comme solution ?
-Reponse: **Noyau attendu** : chaque correspondance fournit deux équations linéaires homogènes en les neuf coefficients $h$ de $H$ ; on les empile en $Lh=0$, avec $L\in\mathbb R^{2n\times9}$. $H$ n'étant défini qu'à un facteur près, on minimise $\|Lh\|$ sous $\|h\|=1$, ce qui exclut $h=0$. La solution est le vecteur singulier droit de $L$ associé à la plus petite valeur singulière, c'est-à-dire le vecteur propre de $L^TL$ de plus petite valeur propre.
+Question: Describe direct linear transformation (DLT) estimation of a homography $H$ from $n\ge4$ point correspondences: which system is constructed, which constraint is imposed, and which vector is selected as the solution?
+Reponse: **Expected answer**: each correspondence provides two homogeneous linear equations in the nine coefficients $h$ of $H$; they are stacked in $Lh=0$, with $L\in\mathbb R^{2n\times9}$. Since $H$ is only defined to one factor, $\|Lh\|$ is minimized under $\|h\|=1$, which excludes $h=0$. The solution is the right singular vector of $L$ associated with the smallest singular value, i.e. the eigenvector of $L^TL$ of smallest eigenvalue.
 
-**Approfondissement** : ce coût algébrique n'a pas de sens physique : Zhang s'en sert pour initialiser, puis minimise l'erreur de reprojection par Levenberg-Marquardt. Pour $F$, chaque correspondance donne une équation et il en faut au moins huit ; on impose ensuite le rang 2 en annulant la plus petite valeur singulière de $F$. Normaliser les coordonnées avant de construire $L$.
+**Further explanation**: This algebraic cost makes no physical sense: Zhang uses it to initialize, then minimizes the Levenberg-Marquardt reprojection error. For $F$, each match gives an equation and requires at least eight; then we impose the rank 2 by canceling the smallest singular value of $F$. Normalize the coordinates before building $L$.
 
-**Interprétation du minimum** : la contrainte de norme élimine la solution triviale, mais ne donne pas une unité physique au résidu algébrique. Une bonne initialisation linéaire doit donc être contrôlée dans l'espace où le produit est utilisé, par exemple avec des distances de reprojection sur des points réservés.
+**Interpretation of the minimum**: norm constraint eliminates the trivial solution, but does not give a physical unit to the algebraic residual. A good linear initialization must therefore be controlled in the space where the product is used, for example with reprojection distances on reserved points.
 
-**Erreurs bloquantes** : retenir le vecteur de la plus grande valeur singulière ; résoudre $Lh=0$ par moindres carrés sans contrainte ; croire que la DLT minimise l'erreur de reprojection.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Zhang 1998, MSR-TR-98-71, §3.2 et annexe A](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf) ; [Hartley 1997, §§2.2–2.3](https://doi.org/10.1109/34.601246).
+**Explicit construction of a line**: for $(x,y)\mapsto(u,v)$, attach $h=(h_{11},h_{12},h_{13},h_{21},h_{22},h_{23},h_{31},h_{32},h_{33})^T$. The projective relation gives lines $[x,y,1,0,0,0,-ux,-uy,-u]$ and $[0,0,0,x,y,1,-vx,-vy,-v]$. These constraints are stacked and then the solution vector is put back into a $3\times3$ matrix. With exactly four pairs, the matrix is $8\times9$: you have to get the full right kernel, not blindly select the last vector of a truncated factorization. The four points must provide independent constraints. An arbitrary normalization of $h_{33}$ is not possible if this component is zero or too close to zero; the homogeneous geometry allows other scaling choices.
+
+**Blocking errors**: hold the vector of the greatest singular value; solve $Lh=0$ by least squares without constraint; believe that the DLT minimizes the reprojection error.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Zhang 1998, MSR-TR-98-71, §3.2 and Annex A](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [Hartley 1997, §§2.2 – 2.3](https://doi.org/10.1109/34.601246); [Ceres, Covariance Estimation, Introduction, Gauge Invariance and Rank of the Jacobian](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); [Ceres, Solving Non-linear Least Squares, Linearization, Trust Region and Linear Solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), see the 2026-10-30.
 Tags: cv::pilote cv::d01 famille::algorithme cv_id::CV-SVD-005 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-006
 
-Objectif : relier normalisation et conditionnement de la DLT. Famille : raisonnement. Provenance : agent.
+Objective: linking standardization and conditioning of the DLT. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-006
-Question: Pourquoi une DLT construite sur des coordonnées pixel brutes, de l'ordre de $10^3$, est-elle mal conditionnée, et quelle normalisation proposée par Hartley y remédie ?
-Reponse: **Noyau attendu** : une ligne de la matrice mélange des termes de l'ordre de 1, des coordonnées de l'ordre de $10^3$ et des produits de l'ordre de $10^6$ ; les entrées de $L^TL$ s'étalent sur une douzaine d'ordres de grandeur et le vecteur solution devient très sensible au bruit. Pour chaque image séparément, translater les points pour amener leur centroïde à l'origine, puis les mettre à l'échelle de façon isotrope pour une distance moyenne de $\sqrt2$ ; estimer $\hat H$ sur ces points, puis dénormaliser : $H=T'^{-1}\hat HT$. La solution algébrique n'étant pas invariante à ces transformations, la normalisation change l'estimateur, pas seulement les arrondis.
+Question: Why is DLT built from raw pixel coordinates on the order of $10^3$ poorly conditioned, and which normalization proposed by Hartley addresses this?
+Reponse: **Expected answer**: a row of the matrix mixes terms of the order of 1, coordinates of the order of $10^3$ and products of the order of $10^6$; the inputs of $L^TL$ are spread over a dozen orders of magnitude and the solution vector becomes very sensitive to noise. For each image separately, translate the points to bring their centroid to the origin, then scale them isotropically for an average distance of $\sqrt2$; estimate $\hat H$ on these points, then denormalize: $H=T'^{-1}\hat HT$. Since the algebraic solution is not invariant to these transformations, normalization changes the estimator, not just the rounded ones.
 
-**Approfondissement** : Hartley mesure un conditionnement amélioré d'environ $10^8$ sur la paire « house ». Cas exécuté par le projet : avec 50 points répartis sur 1920×1080, $\sigma_1/\sigma_8$ passe de $8\cdot10^6$ à 4 mais l'erreur reste vers 0,2 px ; avec 20 points dans un carré de 200 px, l'erreur médiane sur l'image passe d'environ 1000 px à 28 px. La normalisation ne crée pas la couverture manquante. Pour $F$ : $F=T'^T\hat FT$.
+**Further explanation**: Hartley measures an improved conditioning of about $10^8$ on the "house" pair. Case executed by the project: with 50 points spread over 1920×1080, $\sigma_1/\sigma_8$ Passing $8\cdot10^6$ To 4 But the error remains towards 0,2 px; with 20 points in a square of 200 px, the median error on the image is reduced from about 1000 px to 28 px. Normalization does not create the missing coverage. For $F$: $F=T'^T\hat FT$.
 
-**Erreurs bloquantes** : oublier la dénormalisation ; présenter la normalisation comme un simple arrondi sans effet sur la solution ; croire qu'elle compense une mauvaise répartition des points.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Hartley 1997, §§3–5 et 7.3.1](https://doi.org/10.1109/34.601246) ; [Zhang 1998, annexe A](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf) ; calcul exécuté par le projet.
+**Calculate the normalization**: for points $p_i=(x_i,y_i)$, calculate $c=n^{-1}\sum_i p_i$, the average distance $\bar d=n^{-1}\sum_i\|p_i-c\|_2$, then $s=\sqrt2/\bar d$ if $\bar d>0$. The homogeneous transformation has lines $(s,0,-sc_x)$, $(0,s,-sc_y)$ and $(0,0,1)$. It must be calculated separately in each image. If all the points coincide, this operation is indefinite: it is not a simple rounding problem, but an absence of usable geometry. After denormalization, compare the residuals in pixels in the original images; a residual expressed in the centered and reduced coordinates does not keep the same numerical threshold.
+
+**Blocking errors**: forget about denormalization; present normalization as a simple rounding without effect on the solution; believe that it compensates for a bad distribution of points.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Hartley 1997, §§3 – 5 and 7.3.1](https://doi.org/10.1109/34.601246); [Zhang 1998, annexe A](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); calculation executed by the project; [Ceres, Covariance Estimation, Introduction, Gauge Invariance and Rank of the Jacobian](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); [Ceres, Solving Non-linear Least Squares, Linearization, Trust Region and Linear Solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), see the 2026-10-30.
 Tags: cv::pilote cv::d01 famille::raisonnement cv_id::CV-SVD-006 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-007
 
-Objectif : situer Gauss-Newton et Levenberg-Marquardt. Famille : comprehension. Provenance : agent.
+Objective: Gauss-Newton and Levenberg-Marquardt. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-007
-Question: Pour raffiner une calibration en minimisant une erreur de reprojection non linéaire, que calcule une itération de Gauss-Newton, comment Levenberg-Marquardt la rend-elle plus sûre, et quelle condition ces deux méthodes exigent-elles ?
-Reponse: **Noyau attendu** : Gauss-Newton linéarise les résidus autour de l'estimée courante, $r(x+\delta)\approx r(x)+J\delta$, et résout le moindres carrés linéaire $J^TJ\delta=-J^Tr$ : il approche le hessien par $J^TJ$, ce qui suppose des résidus petits ou un modèle presque linéaire. Levenberg-Marquardt amortit le pas, $(J^TJ+\lambda D^TD)\delta=-J^Tr$ : $\lambda$ augmente quand la baisse prédite du coût ne se réalise pas, ce qui raccourcit le pas vers la descente de gradient, et diminue sinon vers Gauss-Newton. Les deux sont locales : elles exigent une initialisation proche, en général une solution linéaire comme la DLT ou la solution fermée de Zhang.
+Question: When refining calibration by minimizing nonlinear reprojection error, what does one Gauss–Newton iteration compute, how does Levenberg–Marquardt make the step safer, and what condition do both methods require?
+Reponse: **Expected answer**: Gauss-Newton linearizes the residuals around the current estimate, $r(x+\delta)\approx r(x)+J\delta$, and solves the least linear square $J^TJ\delta=-J^Tr$: it approaches the Hessian by $J^TJ$, which assumes small residuals or a nearly linear model. Levenberg-Marquardt cushions the step, $(J^TJ+\lambda D^TD)\delta=-J^Tr$: $\lambda$ increases when the predicted drop in cost does not occur, which shortens the step towards the gradient descent, and otherwise decreases towards Gauss-Newton. Both are local: they require a close initialization, usually a linear solution like the DLT or Zhang's closed solution.
 
-**Approfondissement** : Ceres présente LM comme une région de confiance de rayon $\mu$, doublé si la baisse réelle suit la prédiction et divisé par deux sinon ; $D$ est souvent la racine de la diagonale de $J^TJ$. Le système se résout comme en CV-SVD-002, par QR, Cholesky ou Schur. Quand les termes négligés ne le sont pas, Gauss-Newton converge beaucoup plus lentement.
+**Further explanation**: Ceres presents LM as a trust region of radius $\mu$, doubled if the actual drop follows the prediction and halved otherwise; $D$ is often the root of the diagonal of $J^TJ$. The system is solved as in CV-SVD-002, by QR, Cholesky or Schur. When neglected terms are not, Gauss-Newton converges much more slowly.
 
-**Erreurs bloquantes** : croire que LM trouve le minimum global quelle que soit l'initialisation ; confondre amortissement et perte robuste ; dire que Gauss-Newton utilise le hessien exact.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Triggs et al. 2000, §§4.2–4.3](https://inria.hal.science/inria-00548290) ; [Ceres, Solving Non-linear Least Squares, Trust Region Methods et Levenberg-Marquardt (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_solving.html) ; [Zhang 1998, §3.2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
+**Neglected by Gauss-Newton**: for $F(x)=\tfrac12\sum_i r_i(x)^2$, the exact hessian is $J^TJ+\sum_i r_i\nabla^2r_i$. Large errors or a strong curvature of the model make the second term potentially important. The damping of LM makes the step more careful, without turning the wrong projection into a good model. An iteration must compare the actual cost after update to the decline predicted by linearization, accept or decline the step, and then adjust its trusted region. Stopping only because the parameters no longer move can also mean a blocked step: check cost convergence, gradient, scales and physical validity of the solution.
+
+**Blocking errors**: Believe that LM finds the global minimum regardless of the initialization; confuse depreciation and robust loss; say that Gauss-Newton uses the exact hessian.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Triggs et al. 2000, §§4.2 – 4.3](https://inria.hal.science/inria-00548290); [Ceres, Solving Non-linear Least Squares, Trust Region Methods and Levenberg-Marquardt (accessed 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_solving.html); [Zhang 1998, §3.2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [Ceres, Covariance Estimation, Introduction, Gauge Invariance and Rank of the Jacobian](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), see the 2026-10-30.
 Tags: cv::pilote cv::d01 famille::comprehension cv_id::CV-SVD-007 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-008
 
-Objectif : régler l'échelle d'une perte robuste. Famille : pratique. Provenance : agent.
+Objective: Adjust the scale of a robust loss. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-008
-Question: Dans Ceres, on ajoute une `HuberLoss(a)` ou une `CauchyLoss(a)` à des blocs de résidus de reprojection. Sur quelle quantité agit la perte et comment choisir $a$, selon que les résidus sont en pixels ou blanchis ?
-Reponse: **Noyau attendu** : la perte $\rho$ s'applique à $s=\|f\|^2$, la norme au carré du bloc de résidus ; elle imite le coût quadratique pour les petits résidus et réduit le poids des grands. L'échelle $a$ a l'unité de la norme du résidu, $\rho(s,a)=a^2\rho(s/a^2)$ : en pixels pour des résidus en pixels, en écarts-types pour des résidus blanchis. On la choisit d'après le bruit attendu des inliers.
+Question: In Ceres, a `HuberLoss(a)` or `CauchyLoss(a)` is attached to reprojection residual blocks. Which quantity does the loss act on, and how should $a$ be chosen for pixel residuals versus whitened residuals?
+Reponse: **Expected answer**: $\rho$ loss applies to $s=\|f\|^2$, the square block norm of residuals; it mimics the quadratic cost for small residuals and reduces the weight of large ones. The $a$ scale has the norm unit of residual, $\rho(s,a)=a^2\rho(s/a^2)$: in pixels for residuals in pixels, in standard deviations for whitened residuals. It is chosen according to the expected noise of the inliers.
 
-**Approfondissement** : Huber reste quadratique jusqu'à $\|f\|=a$ puis croît linéairement ; Cauchy vaut $a^2\log(1+s/a^2)$. Le poids $\rho'(s)$ décroît en $1/\|f\|$ pour Huber et en $1/\|f\|^2$ pour Cauchy. Exemple du projet, avec un bruit d'inliers de 0,5 px : $a=1$ en pixels commence à réduire les résidus au-delà de $2\sigma$, $a=1$ en blanchi dès $1\sigma$. La perte raffine autour d'une initialisation : elle ne remplace pas RANSAC face à de nombreux outliers, ni un modèle juste quand toutes les observations sont affectées.
+**Further explanation**: Huber remains quadratic until $\|f\|=a$ and then grows linearly; Cauchy is $a^2\log(1+s/a^2)$. The weight $\rho'(s)$ decreases in $1/\|f\|$ for Huber and in $1/\|f\|^2$ for Cauchy. Example of the project, with an insider noise of 0,5 px: $a=1$ in pixels begins to reduce the residuals beyond $2\sigma$, $a=1$ in whitened from $1\sigma$. Loss refines around an initialization: it does not replace RANSAC in front of many outliers, nor a model just when all observations are affected.
 
-**Erreurs bloquantes** : exprimer $a$ comme un seuil sur la norme au carré ; croire qu'une perte robuste rejette les outliers quelle que soit l'initialisation.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Modeling Non-linear Least Squares, LossFunction (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html) ; [Triggs et al. 2000, §3.3](https://inria.hal.science/inria-00548290) ; exemple chiffré du projet.
+**Interpretation of weights**: in an approximation of reweighted least squares, the block $f$ receives a weight related to $\rho'(\|f\|^2)$; we therefore apply approximately $\sqrt{\rho'}$ to its components and its Jacobian. The exact solver can also take into account $\rho''$: this reasoning explains the influence without describing all its numerical corrections. For a reprojection error 2D, treat $(e_x,e_y)$ as a block together reduces the observation contribution; two separate scalar losses are another objective. After whitening, the threshold refers to a multidimensional norm: "two standard deviations" of an axis does not automatically give a probability of rejection of the entire block.
+
+**Blocking errors**: Express $a$ as a threshold on the norm squared; believe that a robust loss rejects outliers regardless of initialization.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Ceres, Modeling Non-linear Least Squares, LossFunction (accessed on 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html); [Triggs et al. 2000, §3.3](https://inria.hal.science/inria-00548290); numerical example of the project; [Ceres, Covariance Estimation, Introduction, Gauge Invariance and Rank of the Jacobian](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); [Ceres, Solving Non-linear Least Squares, Linearization, Trust Region and Linear Solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), see the 2026-10-30.
 Tags: cv::pilote cv::d01 famille::pratique cv_id::CV-SVD-008 provenance::agent pole::B pole::C
 END
 
 ## CV-SVD-009
 
-Objectif : interpréter une covariance d'estimation. Famille : evaluation. Provenance : agent.
+Objective: interpret an estimation covariance. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SVD-009
-Question: Après un ajustement par moindres carrés non linéaires, on lit l'incertitude des paramètres dans $(J^TJ)^{-1}$, avec $J$ le jacobien à la solution. Sous quelles conditions cette lecture est-elle valable, et que ne mesure-t-elle pas ?
-Reponse: **Noyau attendu** : il faut des résidus blanchis, de covariance identité, et un $J$ de rang colonne plein ; la matrice obtenue est alors la dispersion locale de l'estimée, qui n'approche sa covariance qu'asymptotiquement. Si $J$ est déficient en rang (jauge, paramètre non observable), $J^TJ$ n'est pas inversible : fixer la jauge, reparamétrer ou utiliser une pseudo-inverse. Elle ne mesure ni un biais de modèle, comme une distorsion mal modélisée, ni l'effet d'outliers : elle suppose modèle et bruit corrects.
+Question: After nonlinear least squares, parameter uncertainty is inferred from $(J^TJ)^{-1}$, where $J$ is the Jacobian at the solution. Under which conditions is this interpretation valid, and what does it fail to measure?
+Reponse: **Expected answer**: whitened residuals, of identity covariance, and a $J$ of column rank full; the matrix obtained is then the local dispersion of the estimate, which approaches its covariance only asymptotically. If $J$ is deficient in rank (gauge, parameter not observable), $J^TJ$ is not invertible: fix the gauge, reparameterize or use a pseudo-inverse. It measures neither a model bias, like a mismodeled distortion, nor the effect of outliers: it assumes correct model and noise.
 
-**Approfondissement** : Triggs et al. jugent l'approximation asymptotique bien moins sûre pour les petits problèmes de géométrie et les réseaux faibles. Par défaut, Ceres échoue sur un jacobien déficient (`Compute()` renvoie faux) ; `DENSE_SVD` calcule une pseudo-inverse pour les problèmes petits ou moyens. Un jacobien presque singulier donne des variances absurdes, d'où `min_reciprocal_condition_number`. Les termes hors diagonale révèlent des paramètres que les données ne séparent pas (CV-ZHANG-006).
+**Further explanation**: Triggs et al. find the asymptotic approximation much less safe for small geometry problems and weak networks. By default, Ceres fails on a deficient Jacobian (`Compute()` returns false); `DENSE_SVD` calculates a pseudo-inverse for small or medium problems. An almost singular Jacobian gives absurd variances, hence `min_reciprocal_condition_number`. Off-diagonal terms reveal parameters that the data do not separate (CV-ZHANG-006).
 
-**Décision proposée** : confronter les intervalles annoncés à des répétitions ou des perturbations contrôlées, en conservant jauge et unités. Une faible dispersion autour d'une solution biaisée reste compatible avec une mauvaise précision. Séparer donc incertitude locale, variation entre acquisitions et adéquation du modèle physique.
+**Proposed action**: Compare the announced intervals to controlled repetitions or disturbances, keeping gauge and units. A low dispersion around a biased solution remains compatible with poor accuracy. Separate local uncertainty, variation between acquisitions and adequacy of the physical model.
 
-**Erreurs bloquantes** : lire $(J^TJ)^{-1}$ sans blanchiment ni contrôle du rang ; prendre une faible variance pour une preuve d'exactitude du modèle.
-Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Fiche complète]] ; [Ceres, Covariance Estimation, Introduction, Gauge Invariance, Rank of the Jacobian et Covariance::Options (consulté le 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; [Triggs et al. 2000, §3.1](https://inria.hal.science/inria-00548290).
+**Limit of the pseudo-inverse**: undoing a singular direction to construct a pseudo-inverse does not demonstrate zero physical variance in that direction. An unfixed gauge describes a family of equivalent solutions; it is necessary to announce the coordinates or relative quantities in which an uncertainty makes sense. After a local reparameterization $y=g(x)$, the first-order propagation is $C_y\approx G C_xG^T$, $G=\partial g/\partial x$. Cross terms can then strongly influence a distance or a relative pose. Reading only the diagonal standard deviations loses these couplings. A local covariance resulting from a robust cost also requires announcing the chosen approximation convention, rather than automatically using the ordinary Gaussian formula.
+
+**Blocking errors**: read $(J^TJ)^{-1}$ without whitening or rank check; take a low variance for proof of model accuracy.
+Source: [[10-mathematiques-estimation/references/11-moindres-carres-svd|Full reference]]; [Ceres, Covariance Estimation, Introduction, Gauge Invariance, Rank of the Jacobian and Covariance::Options (accessed on 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); [Triggs et al. 2000, §3.1](https://inria.hal.science/inria-00548290); [Ceres, Solving Non-linear Least Squares, Linearization, Trust Region and Linear Solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), see 2026-10-30.
 Tags: cv::pilote cv::d01 famille::evaluation cv_id::CV-SVD-009 provenance::agent pole::B pole::C
 END

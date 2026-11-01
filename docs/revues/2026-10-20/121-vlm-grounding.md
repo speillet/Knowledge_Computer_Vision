@@ -1,54 +1,53 @@
-# Revue — VLM, grounding et frontière vision–action — 2026-10-20
+# Review –  VLM, grounding and frontier vision – action –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Une imprécision importante de la fiche sur entraînement/décodage corrigée ; bibliographie complétée.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. An important inaccuracy of the reference note on corrected drive/decoding; bibliography completed. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 4 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 4 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-VLM-001 | Confirmé, source ciblée | situer encodeur VLM et VLA. | 57 mots à l’entrée ; Objectif unique conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-VLM-002 | Confirmé, source ciblée | situer un connecteur visuel. | 57 mots à l’entrée ; Objectif unique conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-VLM-003 | Déduction du projet explicite | concevoir un index vidéo. | 85 mots à l’entrée ; Protocole fini, sans promesse de résultat | Fiche et format contrôlés | mineur | Attribuer le cas |
-| CV-VLM-004 | Déduction du projet explicite | départager hallucination et observation insuffisante. | 93 mots à l’entrée ; Protocole fini, sans promesse de résultat | Fiche et format contrôlés | mineur | Attribuer le cas |
+| CV-VLM-001 | Confirmed, targeted source | locate encoder VLM and VLA. | 57 words at the entrance; Unique purpose retained | reference note and controlled format | Minor | Specify source |
+| CV-VLM-002 | Confirmed, targeted source | Locate a visual connector. | 57 words at the entrance; Unique purpose retained | reference note and controlled format | Minor | Specify source |
+| CV-VLM-003 | Deduction from the explicit project | Create a video index. | 85 words at entry; finished protocol, no promise of result | reference note and controlled format | Minor | Assign the case |
+| CV-VLM-004 | Deduction from the explicit project | Distinct hallucination and insufficient observation. | 93 words at entry; finished protocol, no promise of result | reference note and controlled format | Minor | Assign the case |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : BLIP-2 §3.1 relie encodeur et LLM gelés via un Q-Former produisant un nombre fixe de features ; LLaVA original utilise une projection et un instruction tuning (§4) ; Flamingo §2 accepte images/vidéos entrelacées avec texte.
-- Corrigé dans la fiche : l'objectif d'entraînement sur tokens n'est pas identique au décodage, qui peut rechercher ou échantillonner une sortie.
-- Confirmé : OpenVLA prédit des actions tokenisées décodées en actions continues. RT-2 et π0 sont seulement situés comme interfaces d'action ; sources de leurs résumés ajoutées. Aucun protocole robotique n'est validé ici.
-- Florence-2 : caractère multitâche confirmé dans le résumé ; fonctionnement détaillé hors périmètre.
-- Les deux cas d'indexation/hallucination proposent une enquête expérimentale ; ils ne démontrent pas une correction universelle par prompt.
+- Confirmed: BLIP-2 §3.1 links encoder and LLM frozen via a Q-Former producing a fixed number of features; original LLaVA uses projection and tuning instruction (§4); Flamingo §2 accepts interlaced images/videos with text.
+- Fixed in the reference note: the drive lens on tokens is not identical to decoding, which can search for or sample an output.
+- Confirmed: OpenVLA predicts tokenized actions decoded into continuous actions. RT-2 and π0 are only located as action interfaces; sources of their added summaries. No robotic protocol is validated here.
+- Florence-2: multitasking character confirmed in the summary; detailed operation out of scope.
+- The two cases of indexation/hallucination offer an experimental investigation; they do not demonstrate a universal correction per prompt.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée, comparaison 001 contextualisée et sources des quatre cartes ciblées.
+reference note revised, 001 contextualized comparison and sources of the four targeted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, evaluation, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, evaluation, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [BLIP-2, §§3.1–3.3](https://arxiv.org/abs/2301.12597).
-- [LLaVA original, §§4.1–4.2](https://arxiv.org/abs/2304.08485).
-- [Flamingo, introduction et §2.2](https://arxiv.org/abs/2204.14198).
-- [OpenVLA, architecture](https://openvla.github.io/), consultée le 20 octobre 2026.
-- [Florence-2, résumé](https://arxiv.org/abs/2311.06242) ; [RT-2, résumé/fig. 1](https://arxiv.org/abs/2307.15818) ; [π0, résumé](https://arxiv.org/abs/2410.24164).
-- [CLIP, §2.3](https://arxiv.org/abs/2103.00020), passage contrôlé dans la revue 72.
+- [BLIP-2, §§3.1 – 3.3](https://arxiv.org/abs/2301.12597).
+- [LLaVA original, §§4.1 – 4.2](https://arxiv.org/abs/2304.08485).
+- [Flamingo, introduction and §2.2](https://arxiv.org/abs/2204.14198).
+- [OpenVLA, architecture](https://openvla.github.io/), accessed on 20 October 2026.
+- [Florence-2, summary](https://arxiv.org/abs/2311.06242) ; [RT-2, summary/fig. 1](https://arxiv.org/abs/2307.15818) ; [π, summary](https://arxiv.org/abs/2410.24164).
+- [CLIP, §2.3](https://arxiv.org/abs/2103.00020), controlled passage in the journal 72.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

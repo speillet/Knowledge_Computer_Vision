@@ -1,0 +1,139 @@
+{
+  "date": "2026-11-01",
+  "base_main_commit": "aeef20929223bdc3164555b9b77a7d6ef902b7a5",
+  "validation_source_commit": "18ee590eea2dbc70d09727d3a607fbfa181778c3-modifie",
+  "unit_tests_passed": 62,
+  "content_invariants": {
+    "cards": 282,
+    "references": 60,
+    "decks": 14,
+    "answer_words": {
+      "min": 253,
+      "median": 295.0,
+      "max": 406
+    },
+    "issues": [],
+    "guids_preserved": true
+  },
+  "local_markdown_links": {
+    "checked_links": 3135,
+    "issues": []
+  },
+  "inventory_comparison": "No added or removed IDs; no changed legacy Anki identity comments.",
+  "anki_schema_unchanged": true,
+  "french_to_english_import": {
+    "old_package_sha256": "081d51ef6970433833a2e8acd72177db02baf85f9916fd8275b174e2fa47c13c",
+    "new_package_sha256": "5fb11acedbb31710ba0515d7cba5485326dc577fc1472cd389cba5bf3191ed0d",
+    "notes_before": 282,
+    "notes_after": 282,
+    "cards_after": 282,
+    "note_ids_preserved": true,
+    "updated_notes": 282,
+    "reviewed_cards": [
+      "CV-ACQUISITION-001",
+      "CV-ACQUISITION-002",
+      "CV-ACQUISITION-003"
+    ],
+    "scheduling_and_history_preserved": true,
+    "english_rubrics_in_all_notes": true,
+    "second_import_idempotent": true
+  },
+  "standard_import_simulation": {
+    "resultat": "OK",
+    "import_initial": {
+      "notes": 282,
+      "cartes": 282
+    },
+    "reimport_sans_modification": {
+      "notes": 282,
+      "cartes": 282,
+      "notes_et_contenu_conserves": true
+    },
+    "reimport_contenu": {
+      "notes": 282,
+      "doublons": false,
+      "ids_de_notes_conserves": true,
+      "carte_modifiee": "CV-ACQUISITION-001",
+      "mise_a_jour_appliquee": true,
+      "historique_conserve": true,
+      "avant": {
+        "CV-ACQUISITION-001": {
+          "carte": 1793571639585,
+          "type": 1,
+          "queue": 1,
+          "due": 1793572296,
+          "ivl": 0,
+          "reps": 1,
+          "lapses": 0,
+          "revlog": 1
+        },
+        "CV-ACQUISITION-002": {
+          "carte": 1793571639587,
+          "type": 1,
+          "queue": 1,
+          "due": 1793572385,
+          "ivl": 0,
+          "reps": 1,
+          "lapses": 0,
+          "revlog": 1
+        },
+        "CV-ACQUISITION-003": {
+          "carte": 1793571639589,
+          "type": 1,
+          "queue": 1,
+          "due": 1793572304,
+          "ivl": 0,
+          "reps": 1,
+          "lapses": 0,
+          "revlog": 1
+        }
+      },
+      "apres": {
+        "CV-ACQUISITION-001": {
+          "carte": 1793571639585,
+          "type": 1,
+          "queue": 1,
+          "due": 1793572296,
+          "ivl": 0,
+          "reps": 1,
+          "lapses": 0,
+          "revlog": 1
+        },
+        "CV-ACQUISITION-002": {
+          "carte": 1793571639587,
+          "type": 1,
+          "queue": 1,
+          "due": 1793572385,
+          "ivl": 0,
+          "reps": 1,
+          "lapses": 0,
+          "revlog": 1
+        },
+        "CV-ACQUISITION-003": {
+          "carte": 1793571639589,
+          "type": 1,
+          "queue": 1,
+          "due": 1793572304,
+          "ivl": 0,
+          "reps": 1,
+          "lapses": 0,
+          "revlog": 1
+        }
+      }
+    },
+    "reimport_type_de_note_modifie": {
+      "notes": 282,
+      "doublons": false,
+      "ids_de_notes_conserves": true,
+      "css_mis_a_jour": true,
+      "carte_modifiee": "CV-ACQUISITION-002",
+      "mise_a_jour_appliquee": true,
+      "historique_conserve": true
+    }
+  },
+  "limitations": [
+    "Targeted translation review against the French source, not a complete native-language proofread or new independent scientific audit.",
+    "Actual AnkiDroid rendering and phone reimport remain untested.",
+    "Local Anki packages are verification artifacts; no release is published by merging this PR."
+  ]
+}

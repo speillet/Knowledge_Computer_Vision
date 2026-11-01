@@ -1,35 +1,28 @@
 # Revue — CV-FACTEURS — 2026-10-24
 
-## Synthèse
+## Overview
 
-Correction ciblée avant fusion de la PR existante. Test de résidu post-ajustement assimilable à une innovation indépendante ; relinéarisation omise dans les cliques affectées. Présenter le seuil comme heuristique, contrôler corrélations et retrait de boucle ; inclure variables relinéarisées.
-Pas de carte ajoutée ni d’ID modifié ; fiche révision 5, statut `redige`.
-Les autres cartes du sujet ne font pas l’objet d’un nouvel audit exhaustif.
+Targeted correction before merging the existing PR. Test of residual post-adjustment similar to an independent innovation; relinearization omitted in the affected cliques. Present the threshold as heuristic, check correlations and loop withdrawal; include relinearized variables. No flashcard added or ID changed; reference note revision 5, status `redige`. The other flashcards on the subject are not subject to a comprehensive re-audit.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FACTEURS-003 | Point signalé vérifié avec les sources ci-dessous | Objectif existant conservé | Noyau et limites explicités | Fiche et carte accordées | Important | Corrigé |
-| CV-FACTEURS-005 | Point signalé vérifié avec les sources ci-dessous | Objectif existant conservé | Noyau et limites explicités | Fiche et carte accordées | Important | Corrigé |
+| CV-FACTEURS-003 | Point reported checked with sources below | Existing objective retained | Core and Explicit Limits | reference note and flashcard granted | Important | Corrected |
+| CV-FACTEURS-005 | Point reported checked with sources below | Existing objective retained | Core and Explicit Limits | reference note and flashcard granted | Important | Corrected |
 
-## Corrections appliquées
+## Corrections applied
 
-`vault/10-mathematiques-estimation/references/14-graphes-facteurs.md` et `vault/10-mathematiques-estimation/14-graphes-facteurs.md` : Présenter le seuil comme heuristique, contrôler corrélations et retrait de boucle ; inclure variables relinéarisées. Journal complété sans réécrire
-les preuves datées du passage précédent. Les identités pédagogiques et Anki
-restent stables.
+`vault/10-mathematiques-estimation/references/14-graphes-facteurs.md` and `vault/10-mathematiques-estimation/14-graphes-facteurs.md`: Present the threshold as heuristic, check correlations and loop removal; include relinearized variables. Journal completed without rewriting the evidence dated from the previous passage. Pedagogical identities and Anki remain stable.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout proposé dans ce correctif. Les nouveaux sujets prioritaires feront
-l’objet d’un lot distinct autorisé par l’apprenant le 2026-10-24.
+No additions proposed in this fix. The new priority subjects will be the subject of a separate batch authorized by the learner on the 2026-10-24.
 
 ## Sources
 
-[Kaess et al., iSAM2, §4.1, algorithmes 5–6](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf) ; [Agarwal et al. 2013, §III](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf). La réserve sur le résidu postfit est un raisonnement statistique du projet.
+[Kaess et al., iSAM2, §4.1, algorithms 5 – 6](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf); [Agarwal et al. 2013, §III](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf). The reservation on the residual postfit is a statistical reasoning of the project.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôleur, tests de la bibliothèque standard et comparaison d’inventaire
-exécutés avant publication. Aucun export réel, rendu AnkiDroid, mesure matérielle
-ou validation scientifique indépendante n’est déduit de cette auto-revue.
+Controller, standard library tests, and inventory comparison run before publication. No actual export, AnkiDroid rendering, material measurement or independent scientific validation is deducted from this self-review.

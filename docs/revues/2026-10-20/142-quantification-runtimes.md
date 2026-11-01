@@ -1,55 +1,54 @@
-# Revue — PTQ, QAT, INT8/FP8 et runtimes — 2026-10-20
+# Review –  PTQ, QAT, INT8/FP8 and runtimes –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. Portée de la formule entière et sources de support précisées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. Scope of the entire formula and specified sources of support. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 4 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 4 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-QUANT-001 | Confirmé ; source datée et ciblée | distinguer PTQ et QAT. | 52 mots à l’entrée ; Noyau fini, objectif conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-QUANT-002 | Confirmé ; source datée et ciblée | interpréter échelle et saturation. | 44 mots à l’entrée ; Noyau fini, objectif conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-QUANT-003 | Confirmé avec source complémentaire | vérifier le support d’un runtime. | 38 mots à l’entrée ; Contrat de support fini | Fiche et format contrôlés | important | Ajouter ONNX Runtime |
-| CV-QUANT-004 | Déduction du projet explicite | diagnostiquer une absence de gain INT8. | 80 mots à l’entrée ; Hypothèses et critères de mesure finis | Fiche et format contrôlés | mineur | Attribuer le raisonnement |
-| CV-QUANT-005 | Déduction du projet explicite | contrôler qualité et performance ensemble. | 54 mots à l’entrée ; Hypothèses et critères de mesure finis | Fiche et format contrôlés | mineur | Attribuer le raisonnement |
+| CV-QUANT-001 | Confirmed; source dated and targeted | distinguish PTQ and QAT. | 52 words at the entrance; Finished core, objective retained | reference note and controlled format | Minor | Specify source |
+| CV-QUANT-002 | Confirmed; source dated and targeted | interpret scale and saturation. | 44 words at the entrance; Finished core, objective retained | reference note and controlled format | Minor | Specify source |
+| CV-QUANT-003 | Confirmed with additional source | Check the support of a runtime. | 38 words at entry; Support contract completed | reference note and controlled format | important | Ajouter ONNX Runtime |
+| CV-QUANT-004 | Deduction from the explicit project | diagnose an absence of gain INT8. | 80 words at entry; finite assumptions and measurement criteria | reference note and controlled format | Minor | Attributing Reasoning |
+| CV-QUANT-005 | Deduction from the explicit project | check quality and performance together. | 54 words at entry; finite assumptions and measurement criteria | reference note and controlled format | Minor | Attributing Reasoning |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : PTQ après entraînement avec données représentatives ; QAT simule les effets pendant l'entraînement. La fiche ne reprend pas une supériorité universelle de QAT.
-- Formule précisée : quantification affine entière avec bornes et arrondi contractuel ; ONNX QuantizeLinear-21 explicite saturation et nearest-even. Le FP8 reste une représentation distincte.
-- Confirmé : ONNX Runtime affecte les opérateurs/sous-graphes aux Execution Providers selon GetCapability ; le format d'échange ne promet pas un unique graphe matériel optimisé.
-- Confirmé : support TensorRT distingue plateformes, versions compatibles et modes de compatibilité matérielle ; aucune portabilité universelle ni absence universelle de compatibilité n'est affirmée.
-- OpenVINO/LiteRT sont nommés comme runtimes, mais aucune matrice complète de support de ces produits n'a été auditée. Aucune commande ni accélération chiffrée annoncée.
-- Diagnostics et protocole qualité/coût : propositions du projet.
+- Confirmed: PTQ after training with representative data; QAT simulates effects during training. The reference note does not regain a universal superiority of QAT.
+- Specified formula: full affine quantification with terminals and contractual rounding; ONNX QuantizeLinear-21 explicit saturation and nearest-even. The FP8 remains a separate representation.
+- Confirmed: ONNX Runtime assigns operators/subgraphs to Execution Providers according to GetCapability; the swap format does not promise a single optimized hardware graph.
+- Confirmed: support TensorRT distinguishes between platforms, compatible versions and hardware compatibility modes; no universal portability or universal lack of compatibility is asserted.
+- OpenVINO/LiteRT are named as runtimes, but no complete support matrix for these products has been audited. No orders or numerical acceleration announced.
+- Diagnostics and quality/cost protocol: project proposals.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée, formule annotée ; sources des cinq cartes ciblées.
+reference note revised, annotated formula; sources of the five targeted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, comprehension, conception. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [TensorRT, Quantization Workflows : PTQ/QAT, granularités et Q/DQ](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html).
+- [TensorRT, Quantization Workflows: PTQ/QAT, granularity and Q/DQ](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html).
 - [TensorRT, Support Matrix : portability and compatibility](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
 - [ONNX QuantizeLinear, version 21, Summary](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21).
-- [ONNX Runtime, Execution Providers et GetCapability](https://onnxruntime.ai/docs/execution-providers/).
+- [ONNX Runtime, Execution Providers and GetCapability](https://onnxruntime.ai/docs/execution-providers/).
 - [TensorRT, benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API. Pages latest consultées le 20 octobre 2026 ; leur contenu peut évoluer. Aucun environnement de runtime construit.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation. Pages last viewed on 20 October 2026; their content may change. No runtime environment built.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

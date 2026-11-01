@@ -1,4 +1,4 @@
-# État local d'Obsidian ; la configuration partageable reste versionnable.
+# Local Obsidian state; shareable configuration remains versionable.
 **/.obsidian/workspace.json
 **/.obsidian/workspace-mobile.json
 **/.obsidian/cache/
@@ -6,7 +6,7 @@ vault/.obsidian/*
 !vault/.obsidian/app.json
 .trash/
 
-# Fichiers locaux et identifiants.
+# Local files and credentials.
 .DS_Store
 .env
 .env.*
@@ -15,4 +15,4 @@ __pycache__/
 .venv/
 dist/
 
-# Les skills .agents/skills et les modèles .specify restent versionnables.
+# Skills in .agents/skills and templates in .specify remain versionable.

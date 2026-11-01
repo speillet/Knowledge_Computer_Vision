@@ -1,15 +1,11 @@
-"""Inventaire en lecture seule des cartes du vault, pour le skill revue-cartes.
+"""Read-only inventory of the flashcards of the vault, for the skill revue-cartes.
 
-Liste, par fichier de cartes : deck, IDs, familles, objectifs, provenance,
-longueur des réponses, sources et GUID de la note Anki. Signale les réponses
-sous le plancher du contrat (scripts/learning_path.py) et les syntaxes que le
-générateur de paquet refuse (scripts/build_apkg.py). Calcule les familles
-absentes et le prochain ID libre par préfixe. Avec --comparer, compare
-l'inventaire courant à un JSON produit avant modification.
+List decks, IDs, families, objectives, provenance, Anki GUIDs, answer lengths
+and sources. Flag unsupported export syntax and answers below the contract
+threshold. Report missing families and next free IDs. With --compare, compare
+against a saved inventory.
 
-Ce script ne remplace pas scripts/check_vault.py : il décrit le contenu pour
-l'audit, sans juger la conformité complète du format. Bibliothèque standard,
-Python 3.9+.
+This script does not replace scripts/check_vault.py: it describes the contents for the audit, without judging the complete conformity of the format. Standard library, Python 3.9+.
 """
 
 import argparse
@@ -23,7 +19,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 try:
     from build_apkg import ConversionError, convert_card, expected_guid
     from learning_path import MIN_ANSWER_WORDS
-except ImportError:  # vault isolé, hors du dépôt : contrôles d'export indisponibles
+except ImportError:  # Export checks are unavailable outside the repository.
     ConversionError = convert_card = expected_guid = None
     MIN_ANSWER_WORDS = None
 
@@ -31,30 +27,35 @@ MODEL = "CV-Pilote"
 FIELDS = ["ID", "Question", "Reponse", "Source"]
 FAMILIES = ["comprehension", "raisonnement", "algorithme", "comparaison",
             "diagnostic", "pratique", "evaluation", "conception"]
-HEADER = re.compile(r"Objectif : (.*?) Famille : (\S+?)\. Provenance : (\S+?)\.")
+HEADER = re.compile(r"Objective: (.*?) Family: (\S+?)\. Provenance: (\S+?)\.")
+FAMILY_TAGS = {
+    "understanding": "comprehension", "reasoning": "raisonnement",
+    "algorithm": "algorithme", "comparison": "comparaison", "diagnosis": "diagnostic",
+    "practice": "pratique", "evaluation": "evaluation", "design": "conception",
+}
 URL = re.compile(r"https?://[^\s)>\]]+")
 WIKILINK = re.compile(r"\[\[([^\]|#]+)")
 SYNC = re.compile(r"<!--ID: (\d+)-->")
 
 
 def words(text):
-    """Mots lexicaux, comme scripts/learning_path.py."""
+    """Count lexical words using the curriculum validator's convention."""
     return len(re.findall(r"\w+", text))
 
 
 def parse_card_file(path, vault):
-    """Retourne la description d'un fichier de cartes et ses anomalies."""
+    """Returns the description of a flashcards file and its anomalies."""
     text = path.read_text(encoding="utf-8")
     rel = str(path.relative_to(vault)) if path.is_relative_to(vault) else str(path)
     anomalies = []
     decks = re.findall(r"^TARGET DECK: (.+)$", text, re.M)
     if len(decks) != 1:
-        anomalies.append(f"{rel}: {len(decks)} ligne(s) TARGET DECK au lieu d'une")
+        anomalies.append(f"{rel}: {len(decks)} line(s) TARGET DECK instead of a")
     starts = len(re.findall(r"^START$", text, re.M))
     ends = len(re.findall(r"^END$", text, re.M))
     blocks = list(re.finditer(r"^START\n(.*?)\nEND$", text, re.M | re.S))
     if not (starts == ends == len(blocks)):
-        anomalies.append(f"{rel}: START={starts}, END={ends}, blocs complets={len(blocks)}")
+        anomalies.append(f"{rel}: START={starts}, END={ends}, complete blocks={len(blocks)}")
 
     cards, previous_end = [], 0
     for block in blocks:
@@ -63,7 +64,7 @@ def parse_card_file(path, vault):
         lines = block[1].splitlines()
         fields, current, tags, sync_ids = {}, None, [], []
         if not lines or lines[0] != MODEL:
-            anomalies.append(f"{rel}: bloc sans modèle {MODEL}")
+            anomalies.append(f"{rel}: block without model {MODEL}")
         for line in lines[1:]:
             if line.startswith("Tags: "):
                 tags = line[6:].split()
@@ -80,15 +81,15 @@ def parse_card_file(path, vault):
             elif current:
                 fields[current] += "\n" + line
         identity = fields.get("ID", "").strip()
-        label = identity or "bloc sans ID"
+        label = identity or "block without ID"
         missing = [name for name in FIELDS if not fields.get(name, "").strip()]
         if missing:
-            anomalies.append(f"{rel}: {label} : champ(s) absent(s) {', '.join(missing)}")
+            anomalies.append(f"{rel}: {label}: missing field(s) {', '.join(missing)}")
         head = HEADER.search(header)
         if identity and f"## {identity}\n" not in header:
-            anomalies.append(f"{rel}: {identity} : titre ## absent avant le bloc")
+            anomalies.append(f"{rel}: {identity} missing ## heading before block")
         if not head:
-            anomalies.append(f"{rel}: {label} : ligne Objectif/Famille/Provenance absente")
+            anomalies.append(f"{rel}: {label}: missing Objective/Family/Provenance line")
         family_tags = [t[len("famille::"):] for t in tags if t.startswith("famille::")]
         domain_tags = [t[len("cv::"):] for t in tags if re.fullmatch(r"cv::d\d{2}", t)]
         source = fields.get("Source", "")
@@ -101,15 +102,15 @@ def parse_card_file(path, vault):
                 convert_card(card, vault)
             except ConversionError as error:
                 conversion = str(error)
-                anomalies.append(f"{rel}: conversion du paquet refusée : {error}")
+                anomalies.append(f"{rel}: package conversion rejected: {error}")
         below = MIN_ANSWER_WORDS is not None and answer_words < MIN_ANSWER_WORDS
         if below:
-            anomalies.append(f"{rel}: {label} : réponse de {answer_words} mots lexicaux, "
-                             f"sous le plancher de {MIN_ANSWER_WORDS}")
+            anomalies.append(f"{rel}: {label}: answer has {answer_words} lexical words, "
+                             f"below the threshold of {MIN_ANSWER_WORDS}")
         cards.append({
             "id": identity,
             "famille": family_tags[0] if len(family_tags) == 1 else None,
-            "famille_entete": head[2] if head else None,
+            "famille_entete": FAMILY_TAGS.get(head[2], head[2]) if head else None,
             "objectif": head[1] if head else None,
             "provenance": head[3] if head else None,
             "domaine": domain_tags[0] if len(domain_tags) == 1 else None,
@@ -126,10 +127,10 @@ def parse_card_file(path, vault):
         })
         card = cards[-1]
         if card["famille"] and card["famille_entete"] and card["famille"] != card["famille_entete"]:
-            anomalies.append(f"{rel}: {identity} : famille du tag ({card['famille']}) "
-                             f"différente de l'en-tête ({card['famille_entete']})")
+            anomalies.append(f"{rel}: {identity} The Tag Family ({card['famille']}) "
+                             f"different from the header ({card['famille_entete']})")
         if len(sync_ids) > 1:
-            anomalies.append(f"{rel}: {identity} : plusieurs commentaires d'identité du plugin")
+            anomalies.append(f"{rel}: {identity}: multiple plugin identity comments")
 
     covered = sorted({c["famille"] for c in cards if c["famille"]})
     return {
@@ -146,7 +147,7 @@ def inventory(target):
     if not target.exists():
         raise FileNotFoundError(target)
     root = target if target.is_dir() else target.parent
-    vault = next((p for p in [target, *target.parents] if (p / "00-Accueil.md").is_file()), root)
+    vault = next((p for p in [target, *target.parents] if (p / '00-Accueil.md').is_file()), root)
     candidates = [target] if target.is_file() else sorted(target.rglob("*.md"))
     files, anomalies = [], []
     for path in candidates:
@@ -163,7 +164,7 @@ def inventory(target):
         decks[description["deck"]] = decks.get(description["deck"], 0) + len(description["cartes"])
         for card in description["cartes"]:
             if card["id"] in seen:
-                anomalies.append(f"ID dupliqué {card['id']} : {seen[card['id']]} et {description['fichier']}")
+                anomalies.append(f"Duplicate ID {card['id']} : {seen[card['id']]} and {description['fichier']}")
             seen[card["id"]] = description["fichier"]
             match = re.fullmatch(r"(.+)-(\d{3})", card["id"])
             if match:
@@ -181,23 +182,23 @@ def inventory(target):
 
 
 def compare(before, after):
-    """IDs disparus ou ajoutés, et commentaires d'identité du plugin modifiés.
+    """Report changed IDs or legacy plugin identity comments.
 
-    Le GUID de la note Anki dérive de l'ID : un ID disparu est une note qui
-    restera sur le téléphone jusqu'à sa suppression manuelle.
+    A removed pedagogical ID leaves its Anki note on the phone until the
+    learner removes it manually. GUIDs are derived from pedagogical IDs.
     """
     def index(data):
         return {c["id"]: c for f in data["fichiers"] for c in f["cartes"]}
     old, new = index(before), index(after)
     lines = []
     for identity in sorted(old.keys() - new.keys()):
-        lines.append(f"ID disparu : {identity}")
+        lines.append(f"ID removed : {identity}")
     for identity in sorted(new.keys() - old.keys()):
-        lines.append(f"ID ajouté : {identity}")
+        lines.append(f"ID added: {identity}")
     for identity in sorted(old.keys() & new.keys()):
         before_comment = old[identity].get("commentaire_plugin", old[identity].get("identite_anki"))
         if before_comment != new[identity]["commentaire_plugin"]:
-            lines.append(f"Commentaire d'identité du plugin modifié pour {identity} : "
+            lines.append(f"Plugin identity comment changed for {identity}: "
                          f"{before_comment} -> {new[identity]['commentaire_plugin']}")
     return lines
 
@@ -205,9 +206,9 @@ def compare(before, after):
 def render(data):
     floor = data["plancher_mots"]
     out = [f"Vault : {data['racine_vault']}",
-           f"Fichiers de cartes : {data['totaux']['fichiers']} ; cartes : {data['totaux']['cartes']}"]
+           f"Files from flashcards: {data['totaux']['fichiers']} ; flashcards {data['totaux']['cartes']}"]
     if not data["controles_export"]:
-        out.append("Contrôles de conversion et de plancher indisponibles hors du dépôt.")
+        out.append("Conversion and answer-length checks are unavailable outside the repository.")
     for deck, count in sorted(data["totaux"]["decks"].items(), key=lambda item: str(item[0])):
         out.append(f"  {deck} : {count}")
     for description in data["fichiers"]:
@@ -216,32 +217,32 @@ def render(data):
         for card in description["cartes"]:
             flag = f" < {floor}" if card["sous_plancher"] else ""
             pole = ",".join(card["poles"]) or "-"
-            out.append(f"- {card['id']} | {card['famille']} | {card['mots_reponse']} mots{flag} | "
-                       f"pôles {pole} | {card['objectif']}")
-        out.append(f"Familles absentes : {', '.join(description['familles_absentes']) or 'aucune'}")
+            out.append(f"- {card['id']} | {next((label for label, tag in FAMILY_TAGS.items() if tag == card['famille']), card['famille'])} | {card['mots_reponse']} words{flag} | "
+                       f"career tracks {pole} | {card['objectif']}")
+        out.append(f"Absent families: {', '.join(next((label for label, tag in FAMILY_TAGS.items() if tag == family), family) for family in description['familles_absentes']) or 'none'}")
     out.append("")
-    out.append("Prochains IDs libres : " + ", ".join(data["prochain_id"].values()))
-    out.append("Anomalies : " + ("aucune" if not data["anomalies"] else ""))
+    out.append('Next free IDs: ' + ", ".join(data["prochain_id"].values()))
+    out.append('Anomalies: ' + ("none" if not data["anomalies"] else ""))
     out.extend(f"- {problem}" for problem in data["anomalies"])
     return "\n".join(out)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("chemin", nargs="?", type=Path, default=Path("vault"),
-                        help="fichier de cartes ou dossier (défaut : vault)")
-    parser.add_argument("--json", action="store_true", help="sortie JSON complète")
-    parser.add_argument("--comparer", type=Path,
-                        help="JSON d'un inventaire antérieur à comparer")
+    parser.add_argument("chemin", metavar="PATH", nargs="?", type=Path, default=Path("vault"),
+                        help='flashcards file or folder (default: vault)')
+    parser.add_argument("--json", action="store_true", help='Complete JSON output')
+    parser.add_argument("--compare", "--comparer", dest="comparer", metavar="MANIFEST", type=Path,
+                        help='JSON of an earlier inventory to compare')
     args = parser.parse_args()
     try:
         data = inventory(args.chemin)
     except FileNotFoundError as error:
-        print(f"Chemin introuvable : {error}", file=sys.stderr)
+        print(f"Path not found: {error}", file=sys.stderr)
         return 2
     if args.comparer:
         differences = compare(json.loads(args.comparer.read_text(encoding="utf-8")), data)
-        print("\n".join(differences) if differences else "Aucun ID disparu ou ajouté.")
+        print("\n".join(differences) if differences else 'No difference in ID or Anki identity.')
         return 1 if differences else 0
     print(json.dumps(data, ensure_ascii=False, indent=2) if args.json else render(data))
     return 1 if data["anomalies"] else 0

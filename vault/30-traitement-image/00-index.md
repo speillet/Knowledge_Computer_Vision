@@ -1,13 +1,13 @@
-# Traitement d'image classique
+# Classical image processing
 
-Filtres, gradients, morphologie, contours et transformations.
+Filters, gradients, morphology, contours and transformations.
 
-| Sujet | Référence | Cartes | Pôles |
+| Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [Filtres, gradients et pyramides](31-filtrage-gradients.md) | [Lire](references/31-filtrage-gradients.md) | 4 | A, B, E, F |
-| [Canny et Hough : contours, droites et segments](32-canny-hough.md) | [Lire](references/32-canny-hough.md) | 4 | B, E, F |
-| [Morphologie et composantes connexes](33-morphologie-composantes.md) | [Lire](references/33-morphologie-composantes.md) | 3 | A, E |
+| [Filters, gradients and pyramids](31-filtrage-gradients.md) | [Read](references/31-filtrage-gradients.md) | 4 | A, B, E, F |
+| [Canny and Hough: edges, lines and segments](32-canny-hough.md) | [Read](references/32-canny-hough.md) | 4 | B, E, F |
+| [Morphology and connected components](33-morphologie-composantes.md) | [Read](references/33-morphologie-composantes.md) | 3 | A, E |
 
-Sous-deck : `CV::Pilote::30-traitement-image`. Statut : rédigé ; export et maîtrise non vérifiés.
+Subdeck: `CV::Pilote::30-traitement-image`. Status: drafted; device import and mastery unverified.
 
-[Accueil](../00-Accueil.md) · [Inventaire](../01-Parcours/Inventaire.md) · [Pôles](../01-Parcours/Poles-metiers.md).
+[Home](../00-Accueil.md) · [Inventory](../01-Parcours/Inventaire.md) · [Career tracks](../01-Parcours/Poles-metiers.md).

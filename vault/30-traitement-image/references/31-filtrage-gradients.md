@@ -7,84 +7,113 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
 ---
-# Filtres, gradients et pyramides
+# Filters, gradients and pyramids
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Atténuer certaines perturbations sans détruire les structures nécessaires au pipeline. Entrée : image, type/plage et bruit supposé ; sortie : image filtrée ou dérivées. Les conditions aux bords et l'échelle du noyau font partie de l'algorithme.
+Mitigate certain disturbances without destroying the structures needed for the pipeline. Input: image, type/range and assumed noise; Output: filtered or derived image. Edge conditions and kernel scale are part of the algorithm.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Gaussien : moyenne pondérée spatiale linéaire. Médian : statistique d'ordre non linéaire utile pour impulsions. Bilatéral : poids de proximité et de similarité photométrique. Dériver amplifie certaines hautes fréquences ; lisser puis dériver choisit une échelle d'analyse.
+Gaussian: linear spatial weighted average. Median: Nonlinear order statistics useful for pulses. Bilateral: weight of proximity and photometric similarity. Differentiation amplifies certain high frequencies; smoothing before differentiation selects an analysis scale.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-La convolution discrète écrit $J(p)=\sum_q K(q)I(p-q)$, avec noyau normalisé pour une moyenne. Pour une intensité scalaire, dans un bilatéral gaussien, le poids est proportionnel à $\exp(-\|p-q\|^2/(2\sigma_s^2)-|I(p)-I(q)|^2/(2\sigma_r^2))$ puis renormalisé. $\sigma_s$ est en pixels ; $\sigma_r$ dans l'unité d'intensité. Pour $I'=I/255$, conserver les poids photométriques exige $\sigma_r'=\sigma_r/255$. Le cas couleur remplace la différence scalaire par une distance dans l’espace couleur choisi.
+The discrete convolution writes $J(p)=\sum_q K(q)I(p-q)$, with normalized kernel for an average. For a scalar intensity, in a Gaussian bilateral, the weight is proportional to $\exp(-\|p-q\|^2/(2\sigma_s^2)-|I(p)-I(q)|^2/(2\sigma_r^2))$ and then renormalized. $\sigma_s$ is in pixels; $\sigma_r$ in the unit of intensity. For $I'=I/255$, maintaining photometric weights requires $\sigma_r'=\sigma_r/255$. The color case replaces the scalar difference with a distance in the chosen color space.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Taille, sigma, bord et plage photométrique doivent être fixés. Un filtre préservant relativement les contours ne conserve pas tous les petits défauts. Une pyramide suppose un filtrage approprié avant décimation.
+Size, sigma, edge and photometric range must be fixed. A relatively contour-preserving filter does not retain all the small defects. A pyramid requires proper filtering before decimation.
 
-## Coût et implémentation
+## Cost and implementation
 
-Le Gaussien séparable permet deux passes 1D ; un bilatéral naïf visite chaque voisin du support pour chaque pixel. Aucun benchmark ni appel OpenCV exécuté ici.
+The separable Gaussian allows two 1D passes; a naive bilateral visits each neighbor of the support for each pixel. No benchmark or OpenCV call executed here.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : même image avec bruit gaussien puis impulsionnel, à protocole fixe. Comparer résidu de bruit et rappel d'un petit défaut ; optimiser la qualité du pipeline aval, pas seulement une image visuellement lisse.
+Proposed variation: same image with Gaussian noise then impulse, fixed protocol. Compare residual noise and recall a small defect; optimize the quality of the downstream pipeline, not just a visually smooth image.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Des contours disparaissent : inspecter échelle du filtre et contraste du détail. Une teinte change au bord : vérifier padding et espace couleur avant de changer le réseau.
+Contours disappear: inspect filter scale and detail contrast. A shade changes at the edge: check padding and color space before changing the network.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Choisir le modèle de bruit et la tâche ; restauration apprise ou débruitage spécialisé peuvent aider mais doivent être comparés à une baseline simple.
+Choosing the noise pattern and task; learned restoration or specialized denoise may help but need to be compared to a simple baseline.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent effet du support, unités du bilatéral et sous-échantillonnage. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop support effect, bilateral units and subsampling. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-FILTRES-001
+### Case linked to CV-FILTRES-001
 
-**Question de travail** : Pourquoi le médian peut-il convenir à du bruit impulsionnel sans être un remplaçant universel du Gaussien ?
+**Question of work**: Why can a median filter suit impulse noise without universally replacing Gaussian filtering?
 
-**Réponse de référence** : Il rejette des valeurs extrêmes locales via l’ordre, tandis que le Gaussien moyenne ; l’effet dépend du bruit et des structures.
+**Reference Response**: It rejects local extreme values via order, while the Gaussian average; the effect depends on noise and structures.
 
-**Mécanisme concret** : dans un voisinage où la plupart des intensités valent environ 100 et une valeur vaut 255, une moyenne propage l'influence de cette impulsion à sa sortie, tandis qu'une médiane peut rester proche du niveau majoritaire. En revanche, une rayure réelle très fine peut elle aussi devenir minoritaire dans le voisinage et disparaître. Le filtre ne sait pas distinguer une impulsion parasite d'un défaut utile sur leur seule taille.
+**Concrete mechanism**: in a neighborhood where most intensities are about 100 and a value is 255, an average propagates the influence of this pulse at its output, while a median can remain close to the majority level. On the other hand, a very thin real scratch can also become a minority in the neighborhood and disappear. The filter does not know how to distinguish a parasitic pulse from a useful defect on their size alone.
 
-**Choix proposé** : comparer plusieurs supports sur un lot contenant bruit, bords et détails critiques. Garder identiques les étapes aval, puis mesurer défauts manqués et erreurs de localisation. Un support plus grand augmente l'échelle de modification de l'image. Le médian ne se décrit pas comme une convolution linéaire ; le Gaussien réalise une moyenne pondérée dont le comportement fréquentiel aide à construire des pyramides. Ces différences expliquent le choix, sans établir de classement universel.
+**Proposed choice**: compare multiple media on a batch containing noise, edges and critical details. Keep the downstream steps identical, and then measure missed defects and location errors. Larger support increases the scale of image modification. The median does not describe itself as a linear convolution; the Gaussian achieves a weighted average whose frequency behavior helps to build pyramids. These differences explain the choice, without establishing a universal ranking.
 
-### Cas lié à CV-FILTRES-004
+### Case linked to CV-FILTRES-004
 
-**Question de travail** : Pourquoi ne suffit-il pas de prendre un pixel sur deux pour construire une pyramide de matching ?
+**Question of work**: Why is simply retaining every other pixel insufficient for constructing a matching pyramid?
 
-**Réponse de référence** : La décimation sans filtrage peut replier les hautes fréquences en aliasing et changer les structures observées.
+**Reference Response**: Decimation without filtering can fold high frequencies into aliasing and change observed structures.
 
-**Chaîne de raisonnement** : réduire la grille diminue la fréquence spatiale maximale représentable. Une alternance rapide d'intensités peut alors être interprétée comme un motif plus lent si l'on décime directement. Le lissage préalable atténue les composantes incompatibles avec la nouvelle grille ; la décimation réduit ensuite le nombre d'échantillons. Le préfiltre choisit donc ce qui est conservé avant la perte de résolution.
+**Chain of reasoning**: Reducing the grid decreases the maximum representable spatial frequency. A rapid alternation of intensities can then be interpreted as a slower pattern if one decimates directly. Pre-smoothing attenuates components that are incompatible with the new grid; decimation then reduces the number of samples. The prefilter therefore chooses what is stored before the loss of resolution.
 
-**Conséquence pour le matching** : les gradients et extrema utilisés comme features changent si la texture est repliée. Deux vues du même objet peuvent produire des descripteurs instables simplement à cause du rééchantillonnage. Dans un test construit, comparer le nombre de correspondances géométriquement vérifiées sur une mire réduite avec et sans préfiltre, à détecteur constant. Une meilleure stabilité ne constitue pas une invariance parfaite à l'échelle : un détail trop petit finit par disparaître même avec une pyramide correctement filtrée.
+**Consequences for Matching**: The gradients and extrema used as features change if the texture is folded. Two views of the same object can produce unstable descriptors simply because of resampling. In a constructed test, compare the number of geometrically verified matches on a reduced calibration target with and without a prefilter, with constant detector. Better stability is not a perfect invariance at scale: too small a detail ends up disappearing even with a properly filtered pyramid.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Smoothing Images](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), Median Blur et Bilateral Filter. Les autres développements figurent dans les [cartes associées](../31-filtrage-gradients.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Smoothing Images](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), Median Blur and Bilateral Filter. The other developments are in the [flashcards](../31-filtrage-gradients.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Tomasi et Manduchi 1998, Bilateral Filtering, §§2–3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-FILTRES-001
+
+**Situation**: Why can a median filter suit impulse noise without universally replacing Gaussian filtering?
+
+**Linking the operation to the noise**: for a normalized linear filter $J(p)=\sum_q k_q I(p-q)$ and independent noises of variance $\sigma_n^2$, the output variance is $\sigma_n^2\sum_q k_q^2$. A uniform average of nine samples therefore divides it by nine, under these assumptions, but also mixes their signals. The median depends on the rank of the values: an isolated pulse can stay away from the central rank without drawing the result towards it. Noise correlations, edges and fine details change these tradeoffs. The Gaussian is separable: two convolutions 1D replace a convolution 2D for the same kernel produced, without making a median equivalent to this operation.
+
+### CV-FILTRES-002
+
+**Situation**: When intensities are normalized from [0,255] to [0,1], what changes for a bilateral filter's photometric sigma?
+
+**Complete form and role of standardization**: for a pixel $p$, write $J(p)=\sum_q w_{pq}I(q)/\sum_q w_{pq}$, with $w_{pq}=\exp(-\|p-q\|^2/(2\sigma_s^2))\exp(-(I(p)-I(q))^2/(2\sigma_r^2))$. The first factor favors nearby neighbors, the second one those whose intensity resembles that of the center. The denominator adapts the sum of the weights to the local content; without it, an edge could simply darken the result by rejecting neighbors. The weights depend on the image: it is a non-linear operation, even if the output looks like an average. The noise of the central pixel also influences which neighbors will be considered similar; preserving a contour remains conditional.
+
+### CV-FILTRES-003
+
+**Situation**: Denoising improves PSNR but removes scratches. How should this preprocessing be evaluated?
+
+**Make the compromise quantifiable**: $PSNR=10\log_{10}(L^2/MSE)$, with $L$ the maximum of the range announced and $MSE$ the average squared errors against a reference. Modifying $L$ or normalization without consistency changes the score. If a defect occupies a fraction $p$ of the pixels and undergoes an amplitude error $a$, its contribution to the MSE is only $pa^2$: it can remain small even if all its pixels are lost. Then measure the probability of detecting a defective part and the frequency of false alarms per part, with rules of association and constant thresholds. The reference to PSNR must itself be justified; a noisy image used as "clean" changes the problem.
+
+### CV-FILTRES-004
+
+**Situation**: Why is simply retaining every other pixel insufficient for constructing a matching pyramid?
+
+**Building the Levels**: A Gaussian pyramid follows $I_{\ell+1}(x,y)=(G_\ell*I_\ell)(2x,2y)$ in an example of decimation by two. Coordinates are approximately converted by $p_0=2^\ell p_\ell$, respecting the exact pixel center conventions. A five-ray window at the $\ell=3$ level covers about forty pixels of radius in the initial image: its physical support has changed. This is useful for bringing back a large displacement in a local capture area, but it can mix objects or eliminate a fine structure. Propagate coordinates, descriptor radius, and geometric thresholds in the same system of units, rather than treating levels as independent images.
+
+**Passages consulted for these developments**: [OpenCV 4.13, Smoothing Images](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), Theory, Gaussian, Median and Bilateral Filter; [OpenCV 4.13, PSNR/SSIM](https://docs.opencv.org/4.13.0/d5/dc4/tutorial_video_input_psnr_ssim.html), PSNR definition; built rarity example; [OpenCV 4.13, Image Pyramids](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html), Gaussian Pyramid, filtering and decimation.
+
+## Sources and flashcards
+
+- [Tomasi and Manduchi 1998, Bilateral Filtering, §§2 – 3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf).
 - [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
 
-Le protocole de rappel des défauts plutôt que PSNR seul est un choix d’évaluation du projet, sans résultat expérimental annoncé.
+The defect recall protocol rather than PSNR alone is a project evaluation choice, with no experimental results announced.
 
 - [OpenCV, smoothing images : Theory](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html).
-- [Cartes associées](../31-filtrage-gradients.md).
+- [Related flashcards](../31-filtrage-gradients.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

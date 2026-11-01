@@ -1,41 +1,41 @@
-# Revue — Graphes de facteurs et optimisation incrémentale — 2026-10-18
+# Review –  Factor Graphs and Incremental Optimization –  2026-10-18
 
-## Synthèse
+## Overview
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 3 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 3 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FACTEURS-001 | Confirmé : graphe ≠ solution | séparer représentation et solveur. | Noyau fini ; 48 mots | Accord fiche et format | Mineur | Passages ciblés |
-| CV-FACTEURS-002 | Confirmé : ambiguïté globale | expliquer une jauge. | Noyau fini ; 52 mots | Accord fiche et format | Mineur | Source sur la jauge |
-| CV-FACTEURS-003 | Diagnostic déduit du rôle des facteurs | vérifier une fermeture de boucle. | Noyau fini ; 47 mots | Accord fiche et format | Mineur | Cas distingué des résultats publiés |
+| CV-FACTEURS-001 | Confirmed: graph ≠ solution | separating representation and solver. | Finished core; 48 words | reference note and format | Minor | Targeted Passages |
+| CV-FACTEURS-002 | Confirmed: global ambiguity | Explain a gauge. | Finished core; 52 words | reference note and format | Minor | Source on the gauge |
+| CV-FACTEURS-003 | Diagnosis deduced from the role of factors | Check for a loop closure. | Finished core; 47 words | reference note and format | Minor | Distinguished case from published results |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : factorisation distincte du solveur ; version incrémentale avec rélinéarisation sélective ; coût dépendant de sparsité et ordre ; jauge sans référence absolue. Imprécis corrigé : objectif MAP quadratique sous hypothèses gaussiennes et covariances fixes. Une fausse loop closure et les contrôles proposés sont un scénario du projet.
+Confirmed: separate factorization of the solver; incremental version with selective relinearization; cost dependent on sparsity and order; gauge without absolute reference. Fixed Imprecises: Quadratic MAP objective under Gaussian assumptions and fixed covariances. A false loop closure and the proposed controls are a project scenario.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 : hypothèses de la formulation et sources. Les cartes gardent leur noyau ; sources mieux ciblées.
+reference note revision 2: hypotheses of the formulation and sources. The flashcards keep their core; sources better targeted.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Expliquer ce que conserve une marginalisation | Éviter de supprimer l’information avec les anciens états | Raisonnement ; une carte | 3 critères ; durée à mesurer | Kaess et al., §3, Bayes tree |
+| Explain what marginalisation holds | Avoid deleting information with old states | Reasoning; a flashcard | 3 criteria; duration to be measured | Kaess et al., §3, Bayes tree |
 
 ## Sources
 
-- [Dellaert, Factor Graphs and GTSAM, §§2.3–2.4, 4.1 et 7 (consulté le 2026-10-18)](https://gtsam.org/tutorials/intro.html).
-- [Kaess et al. 2012, iSAM2, §2 Gaussian Case et §4](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf) : PDF téléchargé directement et texte extrait, après échec du lecteur web ; §2 distingue le cas gaussien, §4 décrit rélinéarisation et réordonnancement.
-- [Ceres, Covariance Estimation, Gauge Invariance (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html#gauge-invariance).
+- [Dellaert, Factor Graphs and GTSAM, §§2.3 – 2.4, 4.1 and 7 (accessed on 2026-10-18)](https://gtsam.org/tutorials/intro.html).
+- [Kaess et al. 2012, iSAM2, §2 Gaussian Case and §4](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf): PDF downloaded directly and extracted text, after failure of the web reader; §2 distinguishes the Gaussian case, §4 describes relinearization and reordering.
+- [Ceres, Covariance Estimation, Gauge Invariance (accessed on 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html#gauge-invariance).
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

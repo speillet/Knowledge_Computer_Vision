@@ -1,47 +1,47 @@
-# Revue — Cartes pilotes — SIFT — 2026-10-18
+# Review –  flashcards drivers –  SIFT –  2026-10-18
 
-## Synthèse
+## Overview
 
-7 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 1 mineure, 6 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+7 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 1 minor, 6 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SIFT-001 | Confirmé : extraction distincte de géométrie | situer les composants d'un pipeline de correspondances. | Noyau fini ; 103 mots | Accord fiche et format | Aucune | Conserver |
-| CV-SIFT-002 | Confirmé : DoG et 26 voisins | expliquer la recherche d'une échelle caractéristique. | Noyau fini ; 120 mots | Accord fiche et format | Aucune | Conserver |
-| CV-SIFT-003 | Confirmé : orientation, 128, normalisations | justifier la construction du descripteur. | Noyau fini ; 105 mots | Accord fiche et format | Aucune | Conserver |
-| CV-SIFT-004 | Confirmé ; ratios recalculés | interpréter le ratio test. | Noyau fini ; 101 mots | Accord fiche et format | Aucune | Conserver |
-| CV-SIFT-005 | Confirmé : limites aux vues obliques | distinguer les limites des invariances. | Noyau fini ; 106 mots | Accord fiche et format | Aucune | Conserver |
-| CV-SIFT-006 | Scénario explicitement construit ; cohérent | diagnostiquer un consensus trompeur. | Noyau fini ; 105 mots | Accord fiche et format | Aucune | Conserver |
-| CV-SIFT-007 | Protocole du projet ; références précisées | construire une comparaison sous contrainte. | Noyau fini ; 102 mots | Accord fiche et format | Mineur | Sources d’évaluation ciblées |
+| CV-SIFT-001 | Confirmed: separate geometry extraction | Locate the components of a mapping pipeline. | Finished core; 103 words | reference note and format | None | Keep |
+| CV-SIFT-002 | Confirmed: DoG and 26 neighbors | Explain the search for a characteristic scale. | Finished core; 120 words | reference note and format | None | Keep |
+| CV-SIFT-003 | Confirmed: orientation, 128, standardizations | justify the construction of the descriptor. | Finished core; 105 words | reference note and format | None | Keep |
+| CV-SIFT-004 | Confirmed; recalculated ratios | interpret the ratio test. | Finished core; 101 words | reference note and format | None | Keep |
+| CV-SIFT-005 | Confirmed: limits to oblique views | Distinguish between the limits of invariances. | Finished core; 106 words | reference note and format | None | Keep |
+| CV-SIFT-006 | Explicitly constructed scenario; consistent | Diagnose a misleading consensus. | Finished core; 105 words | reference note and format | None | Keep |
+| CV-SIFT-007 | Project protocol; specified references | Build a comparison under constraint. | Finished core; 102 words | reference note and format | Minor | Targeted sources of evaluation |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : DoG avec facteur d’échelle constant, 26 voisins, orientation et description, normalisation photométrique limitée, ratio et vue oblique. Calculs : 20/21≈0,95238 et 35/80=0,4375. Les cas de façade et le protocole industriel sont des raisonnements explicitement proposés. Complexité exhaustive déduite du nombre de comparaisons. Code inspecté face à la documentation, non exécuté.
+Confirmed: DoG with constant scale factor, 26 neighbors, orientation and description, limited photometric normalization, ratio and oblique view. Calculations: 20/21≈0,95238 and 35/80=0,4375. Facade cases and industrial protocol are explicitly proposed reasonings. Exhaustive complexity deduced from the number of comparisons. Code inspected in front of documentation, not executed.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 3 : une expérience future n’est plus nommée référence analytique. Carte 007 : sources précises. Les autres cartes sont conservées.
+reference note revision 3: a future experiment is no longer called an analytical reference. flashcard 007: accurate sources. The remaining flashcards are retained.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Expliquer le rejet d’une réponse DoG sur une arête | Une étape centrale de localisation encore non interrogée | Raisonnement ; une carte | 2 critères ; durée à mesurer | Lowe §4.1, Eliminating edge responses |
+| Explain the rejection of a DoG response on an edge | A central stage of localization still unexamined | Reasoning; a flashcard | 2 criteria; duration to be measured | Lowe §4.1, Eliminating edge responses |
 
 ## Sources
 
-- [Lowe 2004](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf), §§3–4, 5–6, 7.1 et 8 : PDF téléchargé, passages lus.
-- [Rublee et al. 2011, copie universitaire](https://sites.cc.gatech.edu/classes/AY2024/cs4475_summer/images/ORB_an_efficient_alternative_to_SIFT_or_SURF.pdf), §§4.4, 5.3 et 6.1.
+- [Lowe 2004](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf), §§3 – 4, 5 – 6, 7.1 and 8: PDF downloaded, passages read.
+- [Rublee et al. 2011, university copy](https://sites.cc.gatech.edu/classes/AY2024/cs4475_summer/images/ORB_an_efficient_alternative_to_SIFT_or_SURF.pdf), §§4.4, 5.3 and 6.1.
 - [OpenCV 4.13, matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), Brute-Force Matching with SIFT Descriptors and Ratio Test.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.
 
-Les réponses sont plus développées que dans les nouveaux sujets : conserver les détails facultatifs distincts du noyau et mesurer la charge en rappel réel.
+The answers are more developed than in the new topics: keep the optional details separate from the kernel and measure the actual recall load.

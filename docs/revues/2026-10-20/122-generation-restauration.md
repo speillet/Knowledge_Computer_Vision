@@ -1,51 +1,50 @@
-# Revue — VAE, GAN et diffusion pour génération/restauration — 2026-10-20
+# Review –  VAE, GAN and broadcast for generation/restoration –  2026-10-20
 
-## Synthèse
+## Overview
 
-3 cartes auditées. Une imprécision importante de la formule forward corrigée ; bibliographie complétée.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+3 flashcards audited. An important inaccuracy of the corrected forward formula; bibliography completed. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 3 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 3 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-DIFFUSION-001 | Confirmé, source ciblée | séparer apprentissage et sampling. | 63 mots à l’entrée ; Objectif unique conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-DIFFUSION-002 | Confirmé, source ciblée | situer la diffusion latente. | 48 mots à l’entrée ; Objectif unique conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-DIFFUSION-003 | Déduction du projet explicite | protéger une observation industrielle. | 50 mots à l’entrée ; Protocole fini, sans promesse de résultat | Fiche et format contrôlés | mineur | Attribuer le cas |
+| CV-DIFFUSION-001 | Confirmed, targeted source | separating learning and sampling. | 63 words at the entrance; Unique purpose retained | reference note and controlled format | Minor | Specify source |
+| CV-DIFFUSION-002 | Confirmed, targeted source | locate the latent diffusion. | 48 words at the entrance; Unique purpose retained | reference note and controlled format | Minor | Specify source |
+| CV-DIFFUSION-003 | Deduction from the explicit project | to protect an industrial observation. | 50 words at entry; finished protocol, no promise of result | reference note and controlled format | Minor | Assign the case |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé dans les résumés originaux : VAE modélise des variables latentes avec inférence approchée ; GAN oppose générateur et discriminateur.
-- Imprécis puis corrigé : la formule de bruit est un échantillon du marginal q(x_t|x_0), pas la transition depuis x_{t−1}. DDPM équation 4 et algorithmes 1/2 distinguent entraînement et échantillonnage.
-- Confirmé : LDM §3.1 entraîne un autoencodeur perceptuel, §3.2 opère la diffusion en latent ; fig. 1 compare des reconstructions à différents niveaux de compression.
-- Cas de fissure : déduction sur la différence entre fidélité de mesure et objectif perceptuel. Aucun défaut industriel effectivement effacé n'a été observé dans cette revue.
-- Niveau repérage respecté : aucune dérivation ELBO ou loss adversariale ajoutée aux cartes.
+- Confirmed in the original summaries: VAE models latent variables with approximate inference; GAN opposes generator and discriminator.
+- Imprecise and then corrected: the noise formula is a sample of the marginal q(x_t|x_0), not the transition from x_{t−1}. DDPM equation 4 and algorithms 1/2 distinguish drive and sampling.
+- Confirmed: LDM §3.1 causes a perceptual autoencoder, §3.2 performs latent diffusion; fig. 1 compares reconstructions at different compression levels.
+- Crack case: deduction on the difference between measurement fidelity and perceptual objective. No industrial defects were observed in this review.
+- Level of tracking respected: no derivation ELBO or adversarial loss added to the flashcards.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée avec marginal/alpha-bar explicites ; sources des trois cartes ciblées.
+reference note revised with explicit marginal/alpha-bar; sources of the three targeted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, conception, evaluation, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, design, evaluation, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [VAE, résumé](https://arxiv.org/abs/1312.6114).
-- [GAN, résumé](https://arxiv.org/abs/1406.2661).
-- [DDPM, équation 4 et algorithmes 1–2](https://arxiv.org/abs/2006.11239), PDF complet.
-- [LDM, §§3.1–3.2 et fig. 1](https://arxiv.org/abs/2112.10752).
+- [VAE, summary](https://arxiv.org/abs/1312.6114).
+- [GAN, summary](https://arxiv.org/abs/1406.2661).
+- [DDPM, equation 4 and algorithms 1 – 2](https://arxiv.org/abs/2006.11239), PDF complet.
+- [LDM, §§3.1 – 3.2 and fig. 1](https://arxiv.org/abs/2112.10752).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

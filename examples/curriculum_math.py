@@ -1,12 +1,12 @@
-"""Petits cas contrôlés, Python 3.9+ sans dépendance ; pas des pipelines CV complets."""
+"""Small controlled cases, Python 3.9+ without dependency; not full CV pipelines."""
 import json
 import math
 
 
 def otsu_threshold(values):
-    """Seuil Otsu d'intensités entières 0..255 ; premier maximum en cas d'égalité."""
+    """Otsu threshold of integer intensities 0..255; first maximum in case of equality."""
     if not values or any(type(x) is not int or not 0 <= x <= 255 for x in values):
-        raise ValueError("Il faut des intensités entières non vides entre 0 et 255.")
+        raise ValueError('We need non-empty integer intensities between 0 and 255.')
     histogram = [0] * 256
     for value in values:
         histogram[value] += 1
@@ -25,24 +25,24 @@ def otsu_threshold(values):
         if score > best_score:
             best_score, threshold = score, t
     if threshold is None:
-        raise ValueError("Le cas constant ne définit pas deux classes non vides.")
+        raise ValueError('The constant case does not define two non-empty classes.')
     return threshold
 
 
 def project(point, fx, fy, cx, cy):
-    """Pinhole idéal en repère caméra, sans distorsion ; point devant la caméra."""
+    """Pinhole ideal in coordinate frame camera, without distortion; point in front of the camera."""
     x, y, z = point
     if not all(math.isfinite(v) for v in (x, y, z, fx, fy, cx, cy)) or z <= 0:
-        raise ValueError("Coordonnées finies et profondeur positive attendues.")
+        raise ValueError('Finite coordinates and expected positive depth.')
     return fx * x / z + cx, fy * y / z + cy
 
 
 def nearest_indices_1d(source, target, translation=0):
-    """Association pédagogique 1D ; ne constitue pas un ICP complet."""
+    """Pedagogical Association 1D; does not constitute a complete ICP."""
     if not source or not target:
-        raise ValueError("Deux ensembles non vides sont nécessaires.")
+        raise ValueError('Two non-empty sets are required.')
     if not all(math.isfinite(x) for x in [*source, *target, translation]):
-        raise ValueError("Les coordonnées doivent être finies.")
+        raise ValueError('The coordinates must be finite.')
     return [min(range(len(target)), key=lambda j: abs(p + translation - target[j]))
             for p in source]
 
@@ -54,7 +54,7 @@ def main():
     shifted_threshold = otsu_threshold(shifted)
     point = (1, 2, 10)
     original = project(point, 500, 600, 320, 240)
-    # Resize x0.5 puis crop (20,30), exprimé dans le nouveau repère pixel.
+    # Resize x0.5 then crop (20,30), expressed in the new coordinate frame pixel.
     transformed = project(point, 250, 300, 140, 90)
     print(json.dumps({
         'otsu_threshold': threshold,

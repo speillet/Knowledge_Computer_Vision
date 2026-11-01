@@ -1,114 +1,124 @@
-# SLAM, VIO, préintégration IMU et bouclage — cartes
+# Flashcards — SLAM, VIO, IMU preintegration and loop closure
 
-Fiche : [[60-vision-3d/references/63-slam-vio|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[60-vision-3d/references/63-slam-vio|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::60-vision-3d
 
 ## CV-VIO-001
 
-Objectif : situer la préintégration. Famille : comprehension. Provenance : agent.
+Objective: situate the preintegration. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-VIO-001
-Question: La préintégration IMU constitue-t-elle à elle seule un système VIO ?
-Reponse: **Noyau attendu** : Non : elle résume des mesures entre keyframes en contraintes avec bruit et biais ; le système doit aussi associer la vision, initialiser et estimer les états.
+Question: Does IMU preintegration alone constitute a VIO system?
+Reponse: **Expected answer**: No: it summarizes measurements between keyframes in constraints with noise and bias; the system must also associate the vision, initialize and estimate the states.
 
-**Approfondissement** : L’accéléromètre n’est pas directement une accélération monde sans gravité.
+**Further explanation**: The accelerometer is not directly a gravity-free world acceleration.
 
-**Contrat de la préintégration** : entre deux keyframes, les nombreuses observations inertielles sont condensées dans des contraintes de mouvement avec leur incertitude et leur dépendance aux biais. Ces contraintes doivent être combinées aux observations visuelles, à un état initial et à la gravité dans des repères cohérents.
+**Pre-integration contract**: Between two keyframes, the many inertial observations are condensed into motion constraints with their uncertainty and dependence on biases. These constraints must be combined with visual observations, initial state and gravity in consistent coordinate frames.
 
-**Exemple de limite** : intégrer une accélération mesurée dans le repère IMU comme si elle était directement une accélération monde confond orientation, force spécifique et gravité. Une très bonne vision ne répare pas automatiquement cette incohérence de modèle. Un système complet doit aussi gérer horodatages, extrinsèques, biais, keyframes et pertes d'observation. La préintégration évite de reprendre naïvement toute la séquence brute à chaque calcul ; elle ne fournit pas une pose absolue ni une référence globale absente des capteurs. Valider le système demande donc trajectoire, incertitude, disponibilité et latence sur des mouvements représentatifs.
+**Example of limit**: integrate an acceleration measured in the coordinate frame IMU as if it were directly an acceleration world confuses orientation, specific force and gravity. A very good vision does not automatically repair this model inconsistency. A complete system must also handle timestamps, extrinsic, bias, keyframes and observation losses. Pre-integration avoids naïvely resuming the entire raw sequence at each calculation; it does not provide an absolute pose or a global reference absent from the sensors. Validating the system therefore requires trajectory, uncertainty, availability and latency on representative movements.
 
-**Erreurs bloquantes** : Décrire la préintégration comme une pose absolue prête à l’emploi.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster et al., §§V–VI, équations 31–34 et VI-C](https://dellaert.github.io/files/Forster16tro.pdf).
+**Constraints between states**: with $R_i$ body→world, $p_i,v_i$ in world coordinates, $g$ in gravity acceleration and $\Delta t=t_j-t_i$, the ideal increments check $\Delta v_{ij}=R_i^T(v_j-v_i-g\Delta t)$ and $\Delta p_{ij}=R_i^T(p_j-p_i-v_i\Delta t-\tfrac12g\Delta t^2)$. They are expressed in the starting coordinate frame and must be compared with the pre-integrated IMU increments, with covariance and bias correction. These relationships make the additional states visible: positions, speeds, orientations and biases. Pre-integration is therefore a factor in joint estimation, not a replacement for these unknowns or the visual observations that constrain them.
+
+**Blocking errors**: Describe pre-integration as a ready-made absolute pose.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see 2026-10-30.
 Tags: cv::pilote cv::d06 famille::comprehension cv_id::CV-VIO-001 provenance::agent pole::B pole::C
 END
 
 ## CV-VIO-002
 
-Objectif : distinguer odométrie et boucle. Famille : comparaison. Provenance : agent.
+Objective: distinguish odometry and loop. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-VIO-002
-Question: Que change une fermeture de boucle par rapport à l’odométrie locale ?
-Reponse: **Noyau attendu** : Elle ajoute une contrainte sur un lieu revisité et peut réduire la dérive accumulée en réestimant la carte/trajectoire.
+Question: What does loop closure change compared with local odometry?
+Reponse: **Expected answer**: It adds a constraint on a revisited location and can reduce the accumulated drift by re-estimating the map/trajectory.
 
-**Approfondissement** : Le candidat de lieu doit être vérifié ; une fausse boucle peut rendre le résultat pire malgré un coût faible.
+**Further explanation**: The place candidate must be checked; a false loop can make the result worse despite a low cost.
 
-**Exemple construit** : après un long trajet, reconnaître une zone déjà visitée fournit une relation entre états éloignés dans le temps. Cette relation peut redistribuer les corrections sur la trajectoire et la carte, alors qu'une odométrie locale ne revisite pas nécessairement toutes ces estimations passées.
+**Constructed example**: After a long journey, recognizing an area already visited provides a relationship between states far away in time. This relationship may redistribute the corrections to the trajectory and the map, while a local odometry does not necessarily revisit all of these past estimates.
 
-**Deux validations distinctes** : le front-end propose un lieu sur la base d'apparence ; une vérification géométrique doit établir que les observations soutiennent la même zone. Le back-end intègre ensuite une contrainte avec son poids et ses hypothèses. Des couloirs identiques peuvent tromper la première étape et produire une déformation globale si la contrainte fausse est acceptée. Examiner les résidus des autres facteurs et une référence réservée. Une boucle correcte peut réduire une dérive relative, mais elle ne crée pas automatiquement une position mondiale absolue, une échelle mieux observée ou une absence complète d'erreur.
+**Two separate validations**: The front-end proposes a place on the basis of appearance; a geometric check must establish that the observations support the same area. The back-end then integrates a constraint with its weight and assumptions. Identical corridors can deceive the first step and produce an overall deformation if the false stress is accepted. Review the residuals of other factors and a reserved reference. A correct loop can reduce relative drift, but it does not automatically create an absolute global position, a better-observed scale, or a complete absence of error.
 
-**Erreurs bloquantes** : Garantir une position globale exacte dès qu’une boucle est détectée.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [GTSAM, §4.1 Loop Closure Constraints, consulté le 2026-10-20](https://gtsam.org/tutorials/intro.html) ; fausse boucle : diagnostic du projet.
+**Relative constraint**: For poses $T_i,T_j$ sending local coordinate frames to the world, the predicted transformation from $j$ to $i$ is $T_i^{-1}T_j$. A loop provides a $Z_{ij}$ measurement of this relation; a possible residual is $\operatorname{Log}(Z_{ij}^{-1}T_i^{-1}T_j)$, depending on the conventions and the graph model. Its weighting reflects the accuracy of the verified measurement. Appearance detection alone does not provide this geometric accuracy. A graph can redistribute an inconsistency over many poses: a moderate final cost does not clear a false loop. Comparing before/after consistency and independent observations remains essential.
+
+**Blocking errors**: Guarantee an exact global position as soon as a loop is detected.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [GTSAM, §4.1 Loop Closure Constraints, Viewed on 2026-10-20](https://gtsam.org/tutorials/intro.html); false loop: diagnosis of the project; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-VIO-002 provenance::agent pole::B pole::C
 END
 
 ## CV-VIO-003
 
-Objectif : identifier les jauges VIO. Famille : raisonnement. Provenance : agent.
+Objective: Identify the VIO gauges. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-VIO-003
-Question: Pourquoi yaw global et erreur d’échelle d’un VIO ne doivent-ils pas être diagnostiqués comme la même ambiguïté ?
-Reponse: **Noyau attendu** : Sans référence externe, le yaw global peut rester une jauge, tandis que l’échelle métrique dépend d’une excitation et d’une calibration suffisantes et peut être estimée avec erreur.
+Question: Why should global yaw and VIO scale error not be diagnosed as the same ambiguity?
+Reponse: **Expected answer**: Without external reference, the global yaw can remain a gauge, while the metric scale depends on sufficient excitation and calibration and can be mistakenly estimated.
 
-**Approfondissement** : La translation globale reste aussi libre ; distinguer convention d’alignement et information physique réellement disponible.
+**Further explanation**: The global translation remains as free; distinguish alignment convention and physical information actually available.
 
-**Différence conceptuelle** : une jauge transforme ensemble toutes les estimations sans changer les observations relatives. Le choix d'un nord arbitraire dans une trajectoire sans référence de cap relève de cette convention. Une échelle métrique erronée, lorsqu'elle est censée être observable avec l'IMU, traduit au contraire une estimation ou un modèle insuffisamment contraint.
+**Conceptual difference**: a gauge transforms all estimates together without changing the relative observations. The choice of an arbitrary north in a trajectory without heading reference is a matter of this convention. An erroneous metric scale, when it is supposed to be observable with the IMU, instead reflects an estimate or model that is insufficiently constrained.
 
-**Diagnostic proposé** : annoncer les degrés d'alignement permis avant de comparer à la vérité terrain. Utiliser une transformation qui retire seulement les ambiguïtés légitimes ; laisser l'échelle libre masquerait précisément le défaut que l'on cherche à mesurer. Tester excitation, calibration et biais sur des séquences différentes aide à comprendre une mauvaise estimation d'échelle. Il faut aussi distinguer un décalage de lacet constant d'une dérive de lacet dans le temps. Le graphe final seul ne permet pas d'attribuer toutes ces différences à la même cause.
+**Proposed diagnosis**: announce the allowed degrees of alignment before comparing to the ground truth. Using a transformation that only removes legitimate ambiguities; leaving the scale free would mask precisely the defect that one seeks to measure. Testing excitation, calibration, and bias on different sequences helps to understand a wrong scale estimate. It is also necessary to distinguish a constant yaw offset from a yaw drift over time. The final graph alone does not allow all these differences to be attributed to the same cause.
 
-**Erreurs bloquantes** : Dire que tout VIO est toujours à une échelle arbitraire comme un monoculaire visuel.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Zhang–Scaramuzza 2018, §III et table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; condition d’excitation : hypothèse du modèle inertiel.
+**Invariance and metric**: applying the same translation and rotation around gravity to the entire trajectory and the map retains the relative observations of a VIO without global reference. Changing the scale uniformly, however, modifies the predicted metric accelerations; the IMU can therefore constrain this scale when the movement provides the necessary information. Degenerate movement or misjudged biases can make this strain weak. For evaluation, document the freedoms withdrawn and keep an explicit metric check. An alignment Sim(3), which also adjusts the scale, is suitable for some monocular comparisons but can hide a scale error of a VIO declared metric.
+
+**Blocking errors**: To say that any VIO is always on an arbitrary scale like a visual monocular.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); excitation condition: hypothesis of the inertial model; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-VIO-003 provenance::agent pole::B pole::C
 END
 
 ## CV-VIO-004
 
-Objectif : concevoir un VIO pour réalité augmentée. Famille : conception. Provenance : agent.
+Objective: design a VIO for augmented reality. Family: design. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-VIO-004
-Question: Cas B — conception : localiser un casque AR en intérieur avec caméras et IMU sous contrainte de latence. Quelle chaîne valider ?
-Reponse: **Noyau attendu** : Définir repères/temps, calibrer capteurs et délais, choisir estimation causale et gestion des pertes, puis mesurer précision, dérive et latence sur mouvements représentatifs.
+Question: Track B — design: localize an indoor AR headset with cameras and an IMU under a latency constraint. Which pipeline must be validated?
+Reponse: **Expected answer**: Define coordinate frames/time, calibrate sensors and delays, choose causal estimation and loss management, then measure precision, drift and latency on representative movements.
 
-**Approfondissement** : Prévoir faible texture, excitation, relocalisation et référence indépendante ; annoncer les jauges et un comportement en cas d’incertitude.
+**Further explanation**: Predict low texture, excitation, relocation and independent reference; announce gauges and behavior in case of uncertainty.
 
-**Chaîne proposée** : définir d'abord quand la pose doit être valable, dans quel repère et avec quelle ancienneté maximale. La latence d'une caméra, de son transfert et du traitement peut décaler l'observation utilisée, même si l'algorithme d'estimation est rapide. L'interface doit communiquer instant de validité et incertitude.
+**Proposed channel**: first define when the pose should be valid, in what coordinate frame and with what maximum seniority. The latency of a camera, its transfer and processing can shift the observation used, even if the estimation algorithm is fast. The interface must communicate moment of validity and uncertainty.
 
-**Essais de transfert** : comparer mouvements lents et rapides, zones texturées et murs uniformes, puis interruption et retour des observations. Mesurer disponibilité, dérive relative et récupération avec une référence indépendante, en conservant les mêmes règles d'alignement. Une trajectoire lissée a posteriori ne valide pas une pose causale disponible à temps pour l'affichage. Ces contrôles relient qualité géométrique et usage AR ; ils constituent un protocole de conception, sans démonstration exécutée sur un casque réel.
+**Transfer tests**: compare slow and fast movements, textured areas and uniform walls, then interruption and return of observations. Measure availability, relative drift and recovery with an independent reference, keeping the same alignment rules. An a posteriori smoothed path does not validate a causal pose available in time for display. These controls link geometric quality and AR usage; they constitute a design protocol, without demonstration performed on a real helmet.
 
-**Erreurs bloquantes** : Promettre une pose métrique fiable sans calibration temporelle ni protocole d’évaluation.
+**Seniority budget of pose**: distinguish capture instant $t_c$, estimation availability $t_e$ and display instant $t_a$. A correct pose for $t_c$ comes already old from $t_a-t_c$ on the screen. The IMU propagation can predict up to $t_a$ under a motion model, with increasing uncertainty; it does not transform a future measurement into available observation. Measure the error at the time actually requested and report the time frames step by step with their percentiles. In a test built at 100°/s, 20 ms represents 2° of uncompensated rotation. This calculation directly links synchronization, prediction and visual stabilization requirement of the helmet.
 
-**Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster et al., §§V–VI, équations 31–34 et VI-C](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza 2018, §III et table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; protocole du projet.
+**Blocking errors**: Promising a reliable metric pose without time calibration or evaluation protocol.
+
+**Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project protocol; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::conception cv_id::CV-VIO-004 provenance::agent pole::B pole::C cas_pole::B::conception
 END
 
 ## CV-VIO-005
 
-Objectif : diagnostiquer une dérive en couloir. Famille : diagnostic. Provenance : agent.
+Objective: Diagnose a drift in the corridor. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-VIO-005
-Question: Cas B — diagnostic : un VIO dérive en échelle et lacet dans un couloir peu texturé. Quels contrôles départagent les causes ?
-Reponse: **Noyau attendu** : Inspecter texture/parallaxe, excitation, biais et synchronisation ; vérifier fausses boucles et groupe d’alignement utilisé.
+Question: Track B — diagnosis: VIO drifts in scale and yaw in a poorly textured corridor. Which checks distinguish possible causes?
+Reponse: **Expected answer**: Inspect texture/parallax, excitation, bias and synchronization; check false loops and alignment group used.
 
-**Approfondissement** : Séparer yaw global non observable et dérive relative ; conserver une référence métrique qui ne masque pas l’erreur d’échelle. Une cause unique n’est pas identifiable au seul tracé final.
+**Further explanation**: Separate unobservable global yaw and relative drift; retain a metric reference that does not hide the scale error. A single cause is not identifiable to the final path alone.
 
-**Enquête par signatures** : une faible texture dégrade les contraintes visuelles ; une excitation insuffisante limite certaines estimations inertielles ; un retard ou un biais peut produire une erreur dépendant du mouvement. Comparer la chronologie des résidus et des pertes de suivi, plutôt que seulement la trajectoire finale.
+**Investigation by signatures**: A weak texture degrades visual constraints; insufficient excitation limits some inertial estimates; delay or bias can produce a motion-dependent error. Compare the timeline of residuals and tracking losses, rather than just the final trajectory.
 
-**Ablations proposées** : contrôler les timestamps sur des mouvements instrumentés, inspecter les features et la parallaxe, puis examiner les contraintes de boucle une par une. Réserver des séquences où un seul facteur change pour distinguer les hypothèses. Un alignement avec échelle libre peut rendre la superposition visuelle convaincante tout en cachant l'erreur métrique. Rapporter donc l'erreur avant et après l'alignement permis, avec sa justification. Aucun contrôle isolé ne prouve une cause unique lorsque plusieurs défauts de capteurs et d'estimation coexistent.
+**Proposed Ablations**: check timestamps on instrumented movements, inspect features and parallax, and then examine loop constraints one by one. Reserve sequences where a single factor changes to distinguish hypotheses. An alignment with free scale can make the visual overlay convincing while hiding the metric error. Report the error before and after the allowed alignment, with its justification. No single check proves a single cause when multiple sensor and estimation defects coexist.
 
-**Erreurs bloquantes** : Corriger en alignant librement l’échelle puis déclarer le VIO précis.
+**Drift due to bias, simplified case**: If a constant acceleration bias $b_a$ remains uncorrected in a fixed world direction, it produces approximately a speed error $b_at$ and position error $\tfrac12b_at^2$. A constant gyroscope bias produces an angular error of the order of $b_\omega t$; this error can also incorrectly orient gravity and contaminate translation. These constructed laws assume a simplified orientation and conditions, they do not predict a real trajectory. Looking for these time signatures in parallel with feature losses and loop corrections helps to propose discriminating essays rather than a single cause in view of the final plot.
 
-**Critères de correction du cas** : tâche et contraintes explicites, hypothèses annoncées, choix justifié, vérification discriminante, limite de la conclusion. Cas construit, sans observation terrain.
-Source: [[60-vision-3d/references/63-slam-vio|Fiche complète]] ; [Forster et al., §§V–VI, équations 31–34 et VI-C](https://dellaert.github.io/files/Forster16tro.pdf) ; [Zhang–Scaramuzza 2018, §III et table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf) ; diagnostic du projet.
+**Blocking errors**: Correct by freely aligning the scale and then declare the VIO accurate.
+
+**Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project diagnosis; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-VIO-005 provenance::agent pole::B pole::C cas_pole::B::diagnostic
 END

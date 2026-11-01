@@ -7,91 +7,132 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
 ---
-# SO(3), SE(3) et conventions de transformation
+# SO(3), SE(3) and transformation conventions
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Composer des poses sans mélanger sens des transformations, axes ou unités. Entrées : rotations et translations avec repères nommés ; sortie : coordonnées transformées ou pose composée. Une matrice homogène n'indique pas son sens sans une convention explicite.
+Compose poses without mixing transformations, axes or units. Inputs: rotations and translations with coordinate frames named; output: transformed coordinates or compound pose. A homogeneous matrix does not indicate its meaning without an explicit convention.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Une rotation conserve les normes et l’orientation de la base (déterminant +1), mais change généralement la direction d’un vecteur ; une pose rigide ajoute une translation. Composer dans l'ordre des repères, inverser algébriquement et tester un point connu. Une optimisation utilise une petite perturbation à trois paramètres pour la rotation.
+A rotation preserves norms and orientation of the base (determinant +1), but generally changes the direction of a vector; a rigid pose adds a translation. Compose in order of coordinate frames, invert algebraically and test a known point. An optimization uses a small three-parameter perturbation for rotation.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Définir $p_a=R_{ab}p_b+t_{ab}$ et $T_{ac}=T_{ab}T_{bc}$, soit $(R_{ab}R_{bc},\;t_{ab}+R_{ab}t_{bc})$ : $t_{bc}$, exprimée dans $b$, est tournée dans $a$ avant l'addition (Solà et al., équation 171). $R^TR=I$, $\det R=1$ ; $T^{-1}=(R^T,-R^Tt)$ (équation 170). Pour une pose relative entre deux caméras données dans le monde, $T_{c_1c_2}=T_{wc_1}^{-1}T_{wc_2}$. Les translations ont une unité de longueur ; les petites rotations sont en radians.
+Define $p_a=R_{ab}p_b+t_{ab}$ and $T_{ac}=T_{ab}T_{bc}$, i.e. $(R_{ab}R_{bc},\;t_{ab}+R_{ab}t_{bc})$: $t_{bc}$, expressed in $b$, is rotated in $a$ before addition (Solà et al., equation 171). $R^TR=I$, $\det R=1$; $T^{-1}=(R^T,-R^Tt)$ (equation 170). For a relative pose between two data cameras in the world, $T_{c_1c_2}=T_{wc_1}^{-1}T_{wc_2}$. Translations have a unit of length; small rotations are in radians.
 
-$R'=R\operatorname{Exp}(\delta\theta)$ et $R'=\operatorname{Exp}(\delta\theta)R$ sont des perturbations locale (à droite) et globale (à gauche) différentes (§II-E, équations 25–28). L'adjoint les relie : $\operatorname{Exp}(\mathrm{Ad}_R\,\delta\theta_L)R=R\operatorname{Exp}(\delta\theta_L)$, avec $\mathrm{Ad}_R=R$ pour SO(3) (§II-F, équations 29–32 ; annexe B-C, équation 139). Une jacobienne par rapport à l'incrément local vaut donc $J_L=J_GR$. `Exp` prend un vecteur de $\mathbb R^3$ ; `exp` prend la matrice antisymétrique $[\delta\theta]_\times$.
+$R'=R\operatorname{Exp}(\delta\theta)$ and $R'=\operatorname{Exp}(\delta\theta)R$ are different local (right) and global (left) perturbations (§II-E, equations 25 – 28). The adjoint connects them: $\operatorname{Exp}(\mathrm{Ad}_R\,\delta\theta_L)R=R\operatorname{Exp}(\delta\theta_L)$, with $\mathrm{Ad}_R=R$ for SO(3) (§II-F, equations 29 – 32; appendix B-C, equation 139). A Jacobian compared to the local increment is therefore $J_L=J_GR$. `Exp` takes a vector of $\mathbb R^3$; `exp` takes the antisymmetric matrix $[\delta\theta]_\times$.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Préciser ordre des composantes du quaternion, convention active/passive et normalisation. Solà (Quaternion kinematics, §3.1, équations 140–143) distingue quatre choix binaires : ordre des composantes, algèbre $ij=k$ ou $ij=-k$, fonction active ou passive, sens local→global ou l'inverse. Sa table 2 oppose Hamilton à JPL ; son §3.1.1 classe Eigen comme Hamilton malgré son stockage scalaire en dernier. Côté implémentation, le constructeur `Quaternion(w,x,y,z)` d'Eigen 5.0.1-dev prend le scalaire en premier mais stocke `[x,y,z,w]` ; `Rotation.from_quat` de SciPy 1.18.0 suppose le scalaire en dernier sauf `scalar_first=True`. Un quaternion a quatre composantes et trois degrés de liberté ; $q$ et $-q$ représentent la même rotation (micro Lie theory, annexe B). Les angles d'Euler ont des singularités de paramétrisation.
+Specify the order of the components of the quaternion, active/passive convention and standardization. Solà (Quaternion kinematics, §3.1, equations 140 – 143) distinguishes four binary choices: order of components, algebra $ij=k$ or $ij=-k$, active or passive function, local sense →global or inverse. His 2 table pitted Hamilton against JPL; his §3.1.1 classed Eigen as Hamilton despite its scalar storage last. On the implementation side, the manufacturer `Quaternion(w,x,y,z)` Eigen 's 5.0.1-dev takes the scalar first but stores `[x,y,z,w]` ; `Rotation.from_quat` SciPy 1.18.0 Suppose the scalar is last except `scalar_first=True`. A quaternion has four components and three degrees of freedom; $q$ and $-q$ represent the same rotation (micro Lie theory, Appendix B). Euler angles have parameterization singularities.
 
-## Coût et implémentation
+## Cost and implementation
 
-Les opérations élémentaires coûtent peu ; les erreurs de convention ont un effet sur tous les capteurs. Pseudocode illustratif : nommer les repères → composer → vérifier identité/inverse → tester un point ; aucune bibliothèque de groupes n'est exécutée.
+Basic operations cost little; convention errors have an effect on all sensors. Illustrative pseudocode: name the coordinate frames → dial → verify identity/inverse → test a point; no group library is executed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation analytique : inverser l'ordre de deux rotations non parallèles. Prédire une pose différente ; vérifier sur un axe connu. Tester ensuite qu'une transformation suivie de son inverse restitue le point, à tolérance numérique près.
+Analytical variation: reverse the order of two non-parallel rotations. Predict a different pose; check on a known axis. Then test that a transformation followed by its inverse returns the point, to numerical tolerance.
 
-Mesurer une erreur de rotation par l'angle de la rotation résiduelle : $\theta=\arccos\frac{\operatorname{tr}(R^T\hat R)-1}{2}$, l'angle de $\operatorname{Log}(R^T\hat R)$ (micro Lie theory, annexe B-A, équation 135). Depuis des quaternions unitaires, $\theta=2\arccos|\langle q_1,q_2\rangle|$ ; la valeur absolue absorbe la double couverture, formule dérivée par le projet. Borner l'argument de l'arccos dans $[-1,1]$ ; près de $\theta=0$, l'arccos de la trace perd de la précision, et le Log ou la formule par quaternion sont préférables.
+Measure a rotation error by the residual rotation angle: $\theta=\arccos\frac{\operatorname{tr}(R^T\hat R)-1}{2}$, the angle of $\operatorname{Log}(R^T\hat R)$ (micro Lie theory, appendix B-A, equation 135). Since unit quaternions, $\theta=2\arccos|\langle q_1,q_2\rangle|$; the absolute value absorbs the double coverage, formula derived by the project. Bound the arccos argument in $[-1,1]$; near $\theta=0$, the arccos of the trace loses precision, and the log or quaternion formula are preferred.
 
-Variation contrôlée, calculée le 2026-10-23 hors dépôt (NumPy 2.2.6, SciPy 1.13.1). Baseline : écart composante par composante d'angles d'Euler ZYX. Facteur varié : la mesure, à rotations identiques. Prédiction : divergence près du tangage de 90°. Résultat : $(30°;89{,}9°;0°)$ et $(0°;89{,}9°;-30°)$ diffèrent de 30° sur deux angles, contre 0,052° en angle géodésique ; $q$ et $-q$ sont à distance euclidienne 2 pour un angle nul. Cas construits, pas des mesures de système.
+Controlled variation, calculated the 2026-10-23 excluding deposit (NumPy 2.2.6, SciPy 1.13.1). Baseline: Euler ZYX angle component-by-component deviation. Varied factor: the measure, with identical rotations. Prediction: divergence near the pitch of 90°. Result: $(30°;89{,}9°;0°)$ and $(0°;89{,}9°;-30°)$ differ from 30° on two angles, against 0,052° in geodesic angle; $q$ and $-q$ are at Euclidean distance 2 for a zero angle. Constructed cases, not system measures.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Objets tournant dans le mauvais sens : vérifier axes, degrés/radians et inversion. Une pose visuellement plausible ne suffit pas ; contrôler points repères et composition des extrinsèques.
+Objects rotating in the wrong direction: check axes, degrees/radians and inversion. A visually plausible pose is not enough; check points coordinate frames and extrinsic composition.
 
-Conventions d'axes caméra. OpenCV projette $x'=X_c/Z_c$, $y'=Y_c/Z_c$ (`calib3d.hpp` 4.13.0, l. 94–118) : les points visibles ont $Z_c>0$, et avec $v=f_yy'+c_y$ et des lignes qui croissent vers le bas, $Y_c$ pointe vers le bas, déduction du projet. ROS (REP 103) fixe le corps en $x$ avant, $y$ gauche, $z$ haut ; son repère `_optical` place $z$ avant, $x$ droite, $y$ bas, comme OpenCV. En OpenGL, `gluLookAt` envoie le point visé sur l'axe $-z$ et la direction « haut » sur $+y$. Passer d'OpenCV à OpenGL revient donc à appliquer $M=\mathrm{diag}(1,-1,-1)$, rotation de 180° autour de $x$ et de déterminant $+1$. Pour les poses homogènes $4\times4$, employer $M_h=\mathrm{diag}(1,-1,-1,1)$ : $T^{gl}_{wc}=T^{cv}_{wc}M_h$ et $V^{gl}=M_h\,T^{cv}_{cw}$. $M$ agit sur des vecteurs 3D ; $M_h$ agit sur des coordonnées homogènes. Symptômes : scène derrière la caméra ou image retournée. Une seule inversion d'axe, de déterminant $-1$, est une réflexion. Test : un point connu devant la caméra doit le rester après conversion.
+Camera axis conventions. OpenCV projects $x'=X_c/Z_c$, $y'=Y_c/Z_c$ (`calib3d.hpp` 4.13.0, l. 94 – 118): Visible points have $Z_c>0$, and with $v=f_yy'+c_y$ and lines growing downwards, $Y_c$ points downwards, project deduction. ROS (REP 103) fixes the body in $x$ front, $y$ left, $z$ top; its coordinate frame `_optical` place $z$ front, $x$ right, $y$ bottom, as OpenCV. In OpenGL, `gluLookAt` sends the target point on the axis $-z$ and the direction "high" on $+y$. Switching from OpenCV to OpenGL is therefore equivalent to applying $M=\mathrm{diag}(1,-1,-1)$, rotation of 180° around $x$ and determinant $+1$. For homogeneous poses $4\times4$, use $M_h=\mathrm{diag}(1,-1,-1,1)$: $T^{gl}_{wc}=T^{cv}_{wc}M_h$ and $V^{gl}=M_h\,T^{cv}_{cw}$. $M$ acts on vectors 3D; $M_h$ acts on homogeneous coordinates. Symptoms: Scene behind the camera or image flipped. A single axis inversion, of determinant $-1$, is a reflection. Test: A known point in front of the camera must remain so after conversion.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Matrices pour composition, quaternions pour stockage/interpolation, coordonnées tangentielles pour optimisation ; ne pas mélanger leurs Jacobiennes sans transformation.
+Matrices for composition, quaternions for storage/interpolation, tangential coordinates for optimization; do not mix their Jacobians without transformation.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent composition des repères et perturbations gauche/droite. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop coordinate frames composition and left/right disturbances. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-SE3-001
+### Case linked to CV-SE3-001
 
-**Question de travail** : Un SLAM fournit pour deux images les poses $T_{wc_1}$ et $T_{wc_2}$, qui envoient les coordonnées caméra vers le monde : $p_w=T_{wc_i}\,p_{c_i}$. Quelle transformation exprime dans la caméra 1 un point connu dans la caméra 2 ?
+**Question of work**: For two images, a SLAM system provides poses $T_{wc_1}$ and $T_{wc_2}$ that map camera coordinates into the world frame: $p_w=T_{wc_i}\,p_{c_i}$. Which transformation expresses a point known in camera 2 coordinates in camera 1 coordinates?
 
-**Réponse de référence** : $T_{c_1c_2}=T_{wc_1}^{-1}T_{wc_2}=T_{c_1w}T_{wc_2}$ : remonter de $c_2$ vers le monde, puis du monde vers $c_1$. Les indices adjacents doivent coïncider ($c_1w$ puis $wc_2$) ; la composition n'est pas commutative.
+**Reference Response**: $T_{c_1c_2}=T_{wc_1}^{-1}T_{wc_2}=T_{c_1w}T_{wc_2}$: go back from $c_2$ to the world, then from the world to $c_1$. The adjacent indices must coincide ($c_1w$ then $wc_2$); the composition is not commutative.
 
-**Exemple construit** : avec deux orientations identiques et des centres décalés sur un axe monde, le point origine de la seconde caméra doit apparaître à ce même décalage dans la première. Faire ensuite tourner seulement la première caméra oblige à exprimer ce décalage dans ses axes. Ce test simple révèle une translation additionnée dans le mauvais repère, qu'une multiplication de matrices apparemment valide peut laisser passer.
+**Constructed example**: with two identical orientations and centers offset on a world axis, the origin point of the second camera must appear at the same offset in the first. Turning only the first camera then makes it necessary to express this shift in its axes. This simple test reveals a translation added in the wrong coordinate frame, which a seemingly valid multiplication of matrices can pass.
 
-### Cas lié à CV-SE3-005
+### Case linked to CV-SE3-005
 
-**Question de travail** : Pour évaluer une orientation estimée $\hat R$ contre une vérité terrain $R$, un rapport compare les angles d'Euler composante par composante, un autre les quaternions. Quelle mesure utiliser à la place, et pourquoi ces deux comparaisons peuvent-elles tromper ?
+**Question of work**: To evaluate an estimated orientation $\hat R$ against ground truth $R$, one report compares Euler angles component by component and another compares quaternions. Which measure should be used instead, and why can both direct comparisons mislead?
 
-**Réponse de référence** : mesurer l'angle de la rotation résiduelle $R^T\hat R$ : $\theta=\arccos\frac{\operatorname{tr}(R^T\hat R)-1}{2}$, indépendant de la paramétrisation. Les angles d'Euler dépendent de la convention et sont singuliers : près d'un tangage de 90°, de grands écarts de lacet et de roulis se compensent. $q$ et $-q$ représentent la même rotation : leurs composantes peuvent différer de 2 pour une erreur nulle ; depuis des quaternions unitaires, utiliser $\theta=2\arccos|\langle q_1,q_2\rangle|$.
+**Reference Response**: measure the angle of the residual rotation $R^T\hat R$: $\theta=\arccos\frac{\operatorname{tr}(R^T\hat R)-1}{2}$, independent of parameterization. Euler angles depend on convention and are singular: near a pitch of 90°, large yaw and roll gaps compensate. $q$ and $-q$ represent the same rotation: their components may differ from 2 for a zero error; since unit quaternions, use $\theta=2\arccos|\langle q_1,q_2\rangle|$.
 
-**Lecture du score** : l'erreur angulaire mesure la rotation relative nécessaire pour aligner les orientations, pas leur distance à une origine d'angles particulière. Garder radians et degrés explicites dans le calcul et le rapport, puis examiner la distribution des erreurs au lieu d'une seule moyenne.
+**Reading the score**: The angular error measures the relative rotation required to align the orientations, not their distance to a particular angle origin. Keep radians and degrees explicit in the calculation and report, and then examine the distribution of errors instead of a single average.
 
-**Repère documentaire de cette passe** : [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537v9), §II, perturbations et incertitudes ; annexe D, SE(3). Les autres développements figurent dans les [cartes associées](../12-rotations-se3.md).
+**Documentary reference for this pass**: [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537v9), §II, disturbances and uncertainties; Annex D, SE(3). The other developments are in the [flashcards](../12-rotations-se3.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Solà et al., A micro Lie theory, annexe D-A, équations 170–171](https://arxiv.org/html/1812.01537v9#A4.SS1).
-- [Solà et al., A micro Lie theory, §II-E, équations 25–28, §II-F, équations 29–32, annexe B et équation 139](https://arxiv.org/html/1812.01537v9#S2.SS5).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [Solà, Quaternion kinematics, §3.1, équations 140–143 et table 2](https://arxiv.org/abs/1711.02508).
-- [Eigen 5.0.1-dev, Quaternion (consulté le 2026-10-23)](https://libeigen.gitlab.io/eigen/docs-nightly/classEigen_1_1Quaternion.html) : ordre du constructeur et du stockage.
-- [SciPy 1.18.0, Rotation.from_quat (consulté le 2026-10-23)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.from_quat.html) : ordre scalaire en dernier par défaut.
-- [OpenCV 4.13.0, `calib3d.hpp`, modèle sténopé, l. 94–118, et `solvePnP`, l. 1031–1032](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp#L94-L118) : la page HTML de documentation refuse les accès automatisés, l'en-tête source au tag a été lu.
+### CV-SE3-001
+
+**Situation**: For two images, a SLAM system provides poses $T_{wc_1}$ and $T_{wc_2}$ that map camera coordinates into the world frame: $p_w=T_{wc_i}\,p_{c_i}$. Which transformation expresses a point known in camera 2 coordinates in camera 1 coordinates?
+
+**Calculation by blocks**: a homogeneous pose is written $T=\begin{bmatrix}R&t\\0&1\end{bmatrix}$, with $R\in SO(3)$, $t\in\mathbb R^3$ and homogeneous points $[p^T,1]^T$. Its reverse uses $R^T$ and $-R^Tt$. For the two poses on the front, the relative rotation is $R_{wc_1}^TR_{wc_2}$ and the translation is $R_{wc_1}^T(t_{wc_2}-t_{wc_1})$. The latter is the movement between centers re-expressed in the 1 camera, not just a difference in world coordinates. A homogeneous direction vector has a last zero coordinate and must not receive this translation. This check distinguishes the application of a pose at a point of its application to a direction.
+
+### CV-SE3-002
+
+**Situation**: Given $p_c=Rp_w+t$, how do you recover the camera center in world coordinates?
+
+**From Pixel to World Ray**: After removing the distortion, a homogeneous pixel $\tilde u$ defines a camera direction proportional to $K^{-1}\tilde u$, where $K$ is the intrinsic matrix. Worldwide, the radius is written as $p_w(\lambda)=C_w+\lambda R^TK^{-1}\tilde u$, with a scale convention for $\lambda$. The center is its origin, the inverse rotation orients its direction and the depth remains unknown on a single view. This calculation shows the distinct role of the three elements: $t$ participates in the localization of the camera, $R$ in the change of axes and $K$ in the geometry in pixels. None of these elements alone provide the depth of a point.
+
+### CV-SE3-003
+
+**Situation**: Two implementations of the same cost parameterize rotation increments with a small vector $\delta\theta$ and obtain different Jacobians, both verified by finite differences. Which convention can explain this, how are the two related, and which should you choose?
+
+**Complete extension to poses**: by ordering increment $\xi=(\rho,\phi)$, translation then rotation, the adjoint of $T=(R,t)$ is $\operatorname{Ad}_T=\begin{bmatrix}R&[t]_\times R\\0&R\end{bmatrix}$, where $[t]_\times a=t\times a$. Switching from a right disturbance to the equivalent left disturbance uses $\xi_G=\operatorname{Ad}_T\xi_L$. A covariance follows $P_G=\operatorname{Ad}_TP_L\operatorname{Ad}_T^T$ in this local approximation. The cross block reflects the fact that a small rotation around another origin also induces a displacement. A simple block-by-block rotation would forget this lever arm effect. The translation/rotation conventions must accompany the matrix to avoid swapping its blocks.
+
+### CV-SE3-004
+
+**Situation**: A camera–IMU extrinsic calibration is passed between libraries as a unit quaternion and translation. Reprojection becomes incorrect even though the quaternion norm is 1. Which conventions should be checked, and which test distinguishes them?
+
+**check of representation**: A unit quaternion describes a rotation, but its multiplication is noncommutative. In Hamilton convention, an angle $\theta$ around a unit axis $a$ is represented, scalar first, by $(\cos(\theta/2),a\sin(\theta/2))$. This writing makes it possible to build a verifiable quarter turn without converting ambiguous Euler angles. A convention conversion must address the order, signs and meaning of application in a consistent way: swapping the four numbers is not always enough. Test successively the three axes of the base and a translated point makes it possible to verify the entire transformation; normalization does not repair either an inversion of pose or an incompatible product convention.
+
+### CV-SE3-005
+
+**Situation**: To evaluate an estimated orientation $\hat R$ against ground truth $R$, one report compares Euler angles component by component and another compares quaternions. Which measure should be used instead, and why can both direct comparisons mislead?
+
+**More robust near-zero calculation**: From a unitary relative quaternion in convention announced, $q_{rel}=(w,v)$, the main angle can be written as $\theta=2\operatorname{atan2}(\|v\|_2,|w|)\in[0,\pi]$. This shape exploits the vector part when the arccos becomes sensitive to rounding near 1. The absolute value processes double coverage, without erasing a true rotation error. Check that the two orientations express the same coordinate frame and the same direction before forming the relative rotation. For aggregations, report also quantiles and extreme cases: a low average error can hide some completely reversed orientations. These expressions give radians; explicitly convert only for display to degrees.
+
+### CV-SE3-006
+
+**Situation**: A camera pose estimated with OpenCV is passed to an OpenGL renderer and a ROS node. The rendered scene appears upside down or behind the camera. Which axis conventions should be compared, and which transformation relates OpenCV and OpenGL?
+
+**Change of bases on both sides**: if $p'_c=B_c p_c$ and $p'_w=B_w p_w$, then a world matrix→camera becomes $T'_{cw}=B_cT_{cw}B_w^{-1}$, using homogeneous matrices $4\times4$. The kernel example changes only the camera base: $B_w=I$, hence the multiplication on the left. Changing the coordinate frame world also requires the second factor. This general rule avoids applying an "OpenGL conversion" without specifying which base changes. Camera coordinate conventions alone do not define clip space projection, depth buffer direction, or the origin of the framebuffer pixels: these additional contracts must be checked separately in the render.
+
+**Passages consulted for these developments**: [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537v9), §II-F, deputy; §II-H, covariances; appendices B and D; [Solà, Quaternion kinematics](https://arxiv.org/html/1711.02508v1), §§2.4 and 3.1, quaternion and conventions.
+
+## Sources and flashcards
+
+- [Solà et al., A micro Lie theory, appendix D-A, equations 170 – 171](https://arxiv.org/html/1812.01537v9#A4.SS1).
+- [Solà et al., A micro Lie theory, §II-E, equations 25 – 28, §II-F, equations 29 – 32, appendix B and equation 139](https://arxiv.org/html/1812.01537v9#S2.SS5).
+
+- [Solà, Quaternion kinematics, §3.1, equations 140 – 143 and table 2](https://arxiv.org/abs/1711.02508).
+- [Eigen 5.0.1-dev, Quaternion (accessed on 2026-10-23)](https://libeigen.gitlab.io/eigen/docs-nightly/classEigen_1_1Quaternion.html): constructor and storage order.
+- [SciPy 1.18.0, Rotation.from_quat (accessed on 2026-10-23)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.from_quat.html): Last scalar order by default.
+- [OpenCV 4.13.0, `calib3d.hpp`, pinhole model, l. 94 – 118, and `solvePnP`, l. 1031 – 1032](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp#L94-L118): Documentation HTML page denies automated access, source header to tag has been read.
 - [REP 103, commit 6fbda48](https://github.com/ros-infrastructure/rep/blob/6fbda48350825b28aec74609b29c7ee18c8e619a/rep-0103.rst) : Axis Orientation, Suffix Frames, Rotation Representation.
 - [Khronos, gluLookAt, Description](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml).
-- [Cartes associées](../12-rotations-se3.md) : CV-SE3-001 à 006.
+- [Related flashcards](../12-rotations-se3.md): CV-SE3-001 to 006.
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet. Révisions 3 et 4 : auto-revue `revue-cartes` par Agent Claude Code le 2026-10-23, corrections puis enrichissements acceptés par l'apprenant, sans validation indépendante.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project. Revisions 3 and 4: self-review `revue-cartes` by Agent Claude Code on 2026-10-23, corrections and enrichments accepted by the learner, without independent validation.

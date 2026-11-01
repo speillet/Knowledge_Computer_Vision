@@ -1,110 +1,120 @@
-# FAST et BRIEF — détecter un coin puis décrire son voisinage — cartes
+# Flashcards — FAST and BRIEF — detecting corners and describing their neighborhoods
 
-Fiche : [[40-features-matching/references/47-fast-brief|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[40-features-matching/references/47-fast-brief|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::40-features-matching
 
 ## CV-FAST-BRIEF-001
 
-Objectif : expliquer le test FAST. Famille : algorithme. Provenance : agent.
+Objective: Explain the FAST test. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FAST-BRIEF-001
-Question: Quel motif d’intensité fait accepter un candidat par le segment test FAST, et que produisent les étapes suivantes ?
-Reponse: **Noyau attendu** : Un arc contigu de voisins du cercle doit être entièrement plus clair que le centre plus un seuil, ou plus sombre que le centre moins ce seuil. La variante fixe longueur de l’arc et cercle ; la suppression des maxima sélectionne les réponses voisines.
+Question: Which intensity pattern passes the FAST segment test, and what do the subsequent steps produce?
+Reponse: **Expected answer**: A contiguous arc of circle neighbors must be entirely lighter than the center plus a threshold, or darker than the center minus that threshold. The variant sets arc length and circle; removing maxima selects neighboring responses.
 
-**Approfondissement** : L’arbre de décision réduit le nombre moyen de comparaisons. La sortie reste une position de keypoint : un descripteur et une vérification géométrique sont des étapes distinctes. Un nombre arbitraire de voisins dispersés ne satisfait pas le test d’arc.
+**Further explanation**: The decision tree reduces the average number of comparisons. The output remains a keypoint position: a descriptor and a geometric check are distinct steps. An arbitrary number of scattered neighbors does not satisfy the arc test.
 
-**Exemple logique** : dans une variante donnée, plusieurs voisins très clairs répartis sur tout le cercle ne remplacent pas un arc contigu assez long. Le motif accepté décrit une organisation spatiale du contraste autour du centre, et non un simple histogramme des valeurs voisines.
+**Logical example**: In a given variant, several very clear neighbors distributed throughout the circle do not replace a long contiguous arc. The accepted pattern describes a spatial organization of the contrast around the center, not a simple histogram of neighboring values.
 
-**Choix d'implémentation** : conserver seuil, variante et unité d'intensité dans le protocole. Un seuil plus faible augmente potentiellement les candidats, y compris les réponses instables sous bruit ; la suppression des maxima contrôle ensuite la redondance locale. Pour diagnostiquer une chute de matches, observer d'abord si les mêmes positions sont détectées. Une extraction rapide de candidats ne donne encore ni orientation stable, ni signature distinctive, ni transformation entre images. Ces responsabilités appartiennent aux composants suivants de la chaîne.
+**Choice of implementation**: keep threshold, variant and unit of intensity in the protocol. A lower threshold potentially increases candidates, including unstable responses under noise; deletion of maxima check then local redundancy. To diagnose a drop in matches, first observe if the same positions are detected. A rapid extraction of candidates does not yet give any stable orientation, distinctive signature, or transformation between images. These responsibilities belong to the following components of the chain.
 
-**Erreurs bloquantes** : Compter des voisins dispersés ; attribuer un descripteur binaire à FAST seul.
-Source: [[40-features-matching/references/47-fast-brief|Fiche complète]] ; [Rosten et Drummond 2006, §§2–3, segment test et apprentissage](https://www.edwardrosten.com/work/rosten_2006_machine.pdf).
+**Build an unambiguous test**: For a circle of 16 neighbors, code each position as light, dark or similar to the center depending on the threshold. Look for a fairly long contiguous sequence, taking into account the connection between the last and the first position of the circle; a naive implementation can double the sequence to verify this connection. This description is a logical pseudocode, not a benchmark program. Rapid tests of a subset of positions may reject some candidates before the full test, depending on the variant. A lower threshold makes more differences compatible with an arc, but also changes the noise sensitivity; choose the threshold in the effective intensity unit.
+
+**Blocking errors**: Count scattered neighbors; assign a binary descriptor to FAST alone.
+Source: [[40-features-matching/references/47-fast-brief|Full reference]]; [Rosten and Drummond 2006, §§2 – 3, test and learning segment](https://www.edwardrosten.com/work/rosten_2006_machine.pdf); [OpenCV 4.13, FAST, non-maxima testing and deletion segment; fallback after timeout of author PDF](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::algorithme cv_id::CV-FAST-BRIEF-001 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-FAST-BRIEF-002
 
-Objectif : calculer une distance binaire. Famille : raisonnement. Provenance : agent.
+Objective: Calculate a binary distance. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FAST-BRIEF-002
-Question: Deux descripteurs BRIEF jouets sont 101101 et 100001. Quelle distance utiliser et quelle valeur obtient-on ?
-Reponse: **Noyau attendu** : La distance de Hamming : XOR = 001100, donc deux bits différents et $d_H=2$. Ne pas soustraire les entiers représentés par ces chaînes.
+Question: Two toy BRIEF descriptors are 101101 and 100001. Which distance should be used, and what is its value?
+Reponse: **Expected answer**: The Hamming distance: XOR = 001100, so two different bits and $d_H=2$. Do not subtract integers represented by these strings.
 
-**Approfondissement** : Chaque bit code un test de différence d’intensité sur un patch lissé. Le motif doit être le même pour comparer les descripteurs. Convertir simplement les octets en flottants ne préserve pas leur géométrie de Hamming.
+**Further explanation**: Each bit codes a difference of intensity test on a smoothed patch. The pattern must be the same to compare descriptors. Simply converting bytes to floats does not preserve their Hamming geometry.
 
-**Sens de la mesure** : chaque position de la chaîne représente la réponse à un même test local dans les deux patches. Le XOR vaut un exactement lorsque les réponses diffèrent ; compter ces positions mesure donc le désaccord des tests. Le poids binaire utilisé pour stocker un bit dans un octet n'a aucun rôle géométrique dans ce comptage.
+**Sense of measurement**: Each position of the string represents the response to the same local test in both patches. The XOR is worth one exactly when the answers differ; counting these positions therefore measures the test’s disagreement. The binary weight used to store a bit in a byte has no geometric role in this count.
 
-**Exemple et limite** : déplacer ou faire tourner un patch sans adapter le motif peut changer les tests tout en conservant le même objet physique. Une petite distance favorise alors une ressemblance dans la représentation choisie ; elle ne garantit pas l'identité du point. Vérifier aussi que les patches ont utilisé le même motif, les mêmes conventions et un lissage compatible. Le matching et sa vérification géométrique sont deux contrôles complémentaires.
+**Example and Limit**: Moving or rotating a patch without adapting the pattern can change the tests while keeping the same physical object. A small distance then favors a resemblance in the chosen representation; it does not guarantee the identity of the point. Also check that the patches have used the same pattern, conventions and a compatible smoothing. The matching and its geometric verification are two complementary controls.
 
-**Erreurs bloquantes** : Utiliser une distance L2 entre entiers codant les chaînes.
-Source: [[40-features-matching/references/47-fast-brief|Fiche complète]] ; [Calonder et al. 2010, §2, tests BRIEF et lissage](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf).
+**Stability of one bit**: The $b_j=\mathbf1[I_s(x_j)<I_s(y_j)]$ test is particularly fragile if the $I_s(y_j)-I_s(x_j)$ difference is close to zero. A low noise can then return the bit, even if the patch represents the same point. Smoothing reduces some fluctuations but can remove the distinctive detail. Adding highly correlated bits does not provide as much information as complementary comparisons. Hamming's distance does not tell what disagreements arise from noise, rotation, or other object: it is the data and protocol that determine its interpretation. A threshold relating to the number of bits is not automatically a match probability.
+
+**Blocking errors**: Use a distance L2 between integers encoding strings.
+Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [Calonder et al. 2010, §3, BRIEF tests and smoothing](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf).
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-FAST-BRIEF-002 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-FAST-BRIEF-003
 
-Objectif : séparer FAST BRIEF et ORB. Famille : comparaison. Provenance : agent.
+Objective: separate FAST BRIEF and ORB. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FAST-BRIEF-003
-Question: Pourquoi « FAST + BRIEF » et ORB ne sont-ils pas des synonymes ?
-Reponse: **Noyau attendu** : FAST détecte les positions ; BRIEF décrit des patches par tests binaires ; ORB construit une chaîne comportant notamment pyramide, orientation et tests binaires orientés/sélectionnés. Ces ajouts changent les propriétés du pipeline.
+Question: Why are “FAST + BRIEF” and ORB not synonyms?
+Reponse: **Expected answer**: FAST detects positions; BRIEF describes patches by binary tests; ORB constructs a chain including pyramid, orientation and binary tests oriented / selected. These additions change the properties of the pipeline.
 
-**Approfondissement** : Un détecteur peut rester stable alors que son descripteur échoue sous rotation. Évaluer les étapes séparément évite d’attribuer une propriété de l’assemblage à chaque composant. Les variantes d’implémentation doivent être nommées.
+**Further explanation**: A detector can remain stable while its descriptor fails under rotation. Evaluating the steps separately avoids assigning a property of the assembly to each component. The implementation variants must be named.
 
-**Chaîne à reconstruire** : demander pour chaque étape ce qui entre, ce qui sort et quelle variation elle cherche à traiter. FAST répond à la localisation de candidats ; BRIEF à la description par relations binaires ; l'orientation et les échelles organisent le repère dans lequel ces relations sont comparées.
+**Chain to rebuild**: ask for each step what comes in, what comes out and what variation it tries to process. FAST responds to the location of candidates; BRIEF to the description by binary relations; orientation and scales organize the coordinate frame in which these relations are compared.
 
-**Ablation proposée** : sur la même scène transformée, conserver le détecteur et changer la normalisation d'orientation du descripteur, puis conserver la description et modifier la sélection de points. Cela permet d'attribuer une amélioration au composant réellement changé. Le nom d'un assemblage n'autorise pas à transférer toutes ses propriétés à chaque brique. Même un pipeline orienté et multiéchelle reste limité par les détails visibles, le flou et les déformations de perspective.
+**Proposed ablation**: on the same transformed scene, keep the detector and change the normalization of the descriptor orientation, then keep the description and change the selection of points. This makes it possible to attribute an improvement to the actually changed component. The name of an assembly does not allow all its properties to be transferred to each brick. Even an oriented, multi-scale pipeline remains limited by visible detail, blur, and perspective distortions.
 
-**Erreurs bloquantes** : Attribuer orientation ou invariance d’échelle universelle à FAST seul.
-Source: [[40-features-matching/references/47-fast-brief|Fiche complète]] ; [OpenCV 4.13, ORB, orientation et rBRIEF](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html).
+**Separate learned and calculated parameters**: in a ORB assembly, the selection of binary comparisons aims at informative and little redundant tests on learning data; at the extraction of a new image, the orientation and answers of these tests are calculated around each point. This is not an online trained network on the observed part. A BRIEF with a fixed pattern can share the same storage without sharing this selection or the orientation compensation. To compare two strings, record the pattern, support, smoothing and sampling coordinates; the name of the detector does not identify the descriptor that was produced.
+
+**Blocking errors**: Assign orientation or invariance of universal scale to FAST alone.
+Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [OpenCV 4.13, ORB, orientation and rBRIEF](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html).
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-FAST-BRIEF-003 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-FAST-BRIEF-004
 
-Objectif : isoler un échec sous rotation. Famille : diagnostic. Provenance : agent.
+Objective: Isolate a failure under rotation. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FAST-BRIEF-004
-Question: Après rotation de l’image, les points FAST restent bien localisés mais les matches BRIEF chutent. Quel mécanisme tester en premier ?
-Reponse: **Noyau attendu** : Le motif de tests BRIEF fixe ne suit pas nécessairement l’orientation locale : les paires comparent d’autres structures après rotation. Contrôler l’orientation/normalisation des patches à détecteur constant.
+Question: After image rotation, FAST points remain well localized but BRIEF matching deteriorates. Which mechanism should be tested first?
+Reponse: **Expected answer**: The fixed BRIEF test pattern does not necessarily follow the local orientation: pairs compare other structures after rotation. check the orientation/normalization of patches with constant detector.
 
-**Approfondissement** : Comparer des patches remis dans le même repère, puis un descripteur orienté comme ORB. Éliminer séparément les points non redétectés, les bords de patch et le flou d’interpolation. Ce protocole sert à isoler une cause, sans garantir un résultat sur toute scène.
+**Further explanation**: Compare patches put in the same coordinate frame, then a descriptor oriented like ORB. Separately remove undetected dots, patch edges, and interpolation blur. This protocol serves to isolate a cause, without guaranteeing a result on any stage.
 
-**Exemple de changement de repère** : un test qui compare un pixel à gauche du centre et un pixel au-dessus ne compare plus les mêmes structures physiques après rotation si les positions du test restent fixes dans l'image. Le résultat binaire peut changer alors que le keypoint central est toujours correct.
+**Example of coordinate frame transformation**: A test that compares a pixel to the left of the center and a pixel above it no longer compares the same physical structures after rotation if the test positions remain fixed in the image. The binary result can change while the central keypoint is still correct.
 
-**Vérification construite** : utiliser une transformation connue, comparer les mêmes patches avant et après remise dans un repère commun, puis examiner les distances avec et sans compensation d'orientation. Contrôler l'interpolation et exclure les voisinages sortis de l'image. Si le défaut persiste, tester contraste, lissage et stabilité de la localisation. La compensation d'orientation est une hypothèse utile pour isoler cette cause, pas une garantie d'invariance à toute déformation ni à la disparition de texture.
+**Verification built**: Use a known transformation, compare the same patches before and after delivery in a common coordinate frame, and then examine distances with and without orientation compensation. check the interpolation and exclude the neighborhoods out of the image. If the fault persists, test for contrast, smoothing and stability of the location. Orientation compensation is a useful hypothesis to isolate this cause, not a guarantee of invariance to any deformation or disappearance of texture.
 
-**Erreurs bloquantes** : Conclure que FAST est forcément en faute alors que ses points sont stables.
-Source: [[40-features-matching/references/47-fast-brief|Fiche complète]] ; [Calonder et al. 2010, §2, tests BRIEF et lissage](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf).
+**Compensation expected**: If a patch is rotated by $R_\theta$, the positions of the two readings of a test must undergo a consistent transformation, or the patch must be resampled in a canonical coordinate frame before comparison. The first strategy rotates the pattern, the second transforms the local image; their interpolations and edges may differ. With an exact known rotation, they give a discriminating experience to isolate the absence of orientation. With an estimated orientation, its noise becomes a new cause of binary disagreement. An improvement in this ablation does not demonstrate an invariance in perspective: anisotropic deformation is not compensated by a single angle.
+
+**Blocking errors**: Conclude that FAST is necessarily at fault while his points are stable.
+Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [Calonder et al. 2010, §3, BRIEF tests and smoothing](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf).
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-FAST-BRIEF-004 provenance::agent pole::B pole::C pole::E
 END
 
 ## CV-FAST-BRIEF-005
 
-Objectif : mesurer le compromis calcul répétabilité. Famille : evaluation. Provenance : agent.
+Objective: measure the compromis calculation repeatability. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FAST-BRIEF-005
-Question: Pour une caméra embarquée, quels résultats comparer avant de remplacer SIFT par FAST/BRIEF ?
-Reponse: **Noyau attendu** : Comparer répétabilité, qualité des matches validés, couverture, latence extraction+matching et mémoire, à résolution et budget de points comparables. Inclure rotations, échelles et bruit représentatifs.
+Question: For an embedded camera, which results should be compared before replacing SIFT with FAST/BRIEF?
+Reponse: **Expected answer**: Compare repeatability, quality of matches validated, coverage, latency extraction+matching and memory, with resolution and budget of comparable points. Include representative rotations, scales and noise.
 
-**Approfondissement** : Le coût d’un segment test ne suffit pas à prédire le coût complet. Une extraction rapide peut créer davantage de matches ambigus et augmenter la vérification géométrique. Les chiffres historiques d’un article ne donnent pas la latence du matériel cible.
+**Further explanation**: The cost of a test segment is not enough to predict the full cost. A quick extraction can create more ambiguous matches and increase geometric verification. The historical numbers of an article do not give the latency of the target hardware.
 
-**Comparer des systèmes complets** : un gain sur la détection peut être perdu si davantage de points peu distinctifs multiplient les comparaisons et les échantillons d'estimation robuste. Inversement, une description plus coûteuse peut réduire le nombre de mauvaises hypothèses à traiter. Le coût aval dépend donc aussi de la qualité et de la répartition des features.
+**Compare complete systems**: A gain on detection can be lost if more undistinguishable points multiply comparisons and robust estimation samples. Conversely, a more expensive description can reduce the number of bad assumptions to be addressed. The downstream cost therefore also depends on the quality and distribution of the features.
 
-**Critère proposé** : fixer une tolérance de recalage et mesurer les cas acceptés à tort, refusés et correctement localisés, avec les mêmes transformations de référence. Chronométrer construction éventuelle d'index, extraction, matching et géométrie sur le CPU cible. Conserver des cas de faible texture et de rotation forte. Ce protocole transforme une promesse de rapidité historique en une décision vérifiable pour la caméra et le produit actuels.
+**Proposed criterion**: set a tolerance of registration and measure cases that are wrongly accepted, refused and correctly located, with the same reference transformations. Time any index construction, extraction, matching and geometry on the target CPU. Keep cases of low texture and strong rotation. This protocol turns a promise of historic speed into a verifiable decision for the current camera and product.
 
-**Erreurs bloquantes** : Choisir sur un FPS publié sans protocole ; ignorer le coût après détection.
-Source: [[40-features-matching/references/47-fast-brief|Fiche complète]] ; [Rosten et Drummond 2006, §§2–3, segment test et apprentissage](https://www.edwardrosten.com/work/rosten_2006_machine.pdf).
+**Connecting precision and robust cost**: for a minimum solver of size $s$ and a rate of inliers $w$, the nominal number of prints RANSAC with confidence $p$ is $N\ge\log(1-p)/\log(1-w^s)$ under independent and non-degenerate prints. A cheaper extraction but producing a lower $w$ can therefore greatly increase the cost of geometry. This calculation is an analytical model, not an exact latency prediction: stop, degeneration and repetition variants change the actual behavior. Also measure the time and memory for failures, where the maximum budget can be consumed, instead of only timing the easy pairs correctly registered.
+
+**Blocking errors**: Choose on a published FPS without protocol; ignore cost after detection.
+Source: [[40-features-matching/references/47-fast-brief|Full reference]]; [Rosten and Drummond 2006, §§2 – 3, test and learning segment](https://www.edwardrosten.com/work/rosten_2006_machine.pdf); [Calonder et al. 2010, BRIEF, §3, tests, smoothing and patterns](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-FAST-BRIEF-005 provenance::agent pole::B pole::C pole::E
 END

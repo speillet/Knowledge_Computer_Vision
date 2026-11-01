@@ -7,80 +7,103 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: ["CV-SEGMENTATION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
 ---
-# SAM, SAM 2 et segmentation guidée en vidéo
+# SAM, SAM 2 and prompted video segmentation
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Produire des masques conditionnés par points, boîtes ou masques selon le modèle. SAM traite la segmentation promptable d'image ; SAM 2 ajoute mémoire/propagation vidéo. Ni classes sémantiques ni détection automatique de toutes identités ne sont garanties par ces sorties.
+Produce masks conditioned by dots, boxes or masks depending on the model. SAM processes prompt image segmentation; SAM 2 adds video memory/propagation. Neither semantic classes nor automatic detection of all identities are guaranteed by these outputs.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SEGMENTATION](93-semantique-instances-panoptique.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SEGMENTATION](93-semantique-instances-panoptique.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Un encodeur image et un encodeur de prompt conditionnent un décodeur de masque ; SAM peut représenter une ambiguïté par plusieurs propositions. SAM 2 exploite informations mémorisées pour propager des masklets avec prompts et corrections.
+An image encoder and a prompt encoder condition a mask decoder; SAM can represent ambiguity by several propositions. SAM 2 exploits stored information to propagate masks with prompts and corrections.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Une carte de masque et son score prédit restent conditionnés par le prompt et le modèle ; ils ne constituent pas une annotation de classe. Le temps d'un prompt inclut encodage, cache et décodage selon usage. En vidéo, le protocole doit dire si des frames futures ou corrections rétroactives sont autorisées.
+A mask and its predicted score remain conditioned by the prompt and the pattern; they do not constitute a class annotation. The time of a prompt includes encoding, cache and decoding according to use. In video, the protocol must tell if future frames or retroactive corrections are allowed.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Checkpoint, résolution, politique de prompts, sélection de masque et mémoire vidéo. Le prototype text-to-mask du papier SAM n'est pas le contrat automatique de son checkpoint/API standard.
+Checkpoint, resolution, prompt policy, mask selection and video memory. The text-to-mask prototype of the SAM paper is not the automatic contract of its standard checkpoint/API.
 
-## Coût et implémentation
+## Cost and implementation
 
-Cache de l'encodeur amortissable sur plusieurs prompts ; vidéo et mémoire ont un coût. Aucun modèle exécuté ni performance mobile annoncée.
+Cache of the depreciable encoder on several prompts; video and memory have a cost. No model executed or mobile performance announced.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : mêmes prompts/budget d'interaction puis propagation sur vidéo annotée. Varier occultation et mouvement ; mesurer qualité des masques, corrections et délai en protocole causal ou offline explicite.
+Baseline: same prompts/interaction budget then spread to annotated video. Varier occlusion and movement; measure mask quality, corrections and delay in explicit causal or offline protocol.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Un masque suit le mauvais objet après croisement : inspecter prompts, mémoire, visibilité et identité ; ne pas assimiler une bonne segmentation d'une frame au bon suivi temporel.
+A mask follows the wrong object after crossing: inspect prompts, memory, visibility and identity; do not assimilate good segmentation of a frame to good time tracking.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Segmentation supervisée fermée, annotation assistée ou modèle promptable selon labels et interaction disponibles. La classification/association peut nécessiter d'autres composants.
+Closed supervised segmentation, assisted annotation or promptable model according to available labels and interaction. Classification/association may require other components.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent prompts, ambiguïté de masque et mémoire temporelle. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop prompt, mask ambiguity and temporal memory. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-SAM-001
+### Case linked to CV-SAM-001
 
-**Question de travail** : SAM attribue-t-il automatiquement une classe sémantique à chaque pixel ?
+**Question of work**: Does SAM automatically assign a semantic class to every pixel?
 
-**Réponse de référence** : Non : son contrat central est le masque guidé par prompt, pas une taxonomie sémantique complète.
+**Reference Response**: No: its central contract is the prompt-guided mask, not a complete semantic taxonomy.
 
-**Lecture de la condition** : un point, une boîte ou un masque guide la région d'intérêt. La segmentation répond à ce conditionnement ; attribuer ensuite un nom de classe demande une autre information ou un autre composant. Un masque très précis peut donc être utile pour annoter sans fournir directement une taxonomie complète.
+**Reading the condition**: A dot, box or mask guides the region of interest. Segmentation responds to this conditioning; then assigning a class name requests another piece of information or component. A very precise mask can therefore be useful for annotating without directly providing a complete taxonomy.
 
-**Exemple construit** : un utilisateur désigne une pièce parmi plusieurs objets. Le masque produit délimite une région candidate, mais ne démontre pas qu'il s'agit du bon type de pièce ni qu'aucun autre objet n'a été oublié. Évaluer qualité de frontière, ambiguïtés et effort de correction avec des prompts comparables. Si une pipeline ajoute un texte ou un détecteur, préciser cette nouvelle chaîne au lieu d'attribuer ses sorties à SAM seul. Le contrat dépend du checkpoint et de l'interface réellement utilisés ; une possibilité explorée dans un papier n'est pas automatiquement une fonction disponible de chaque modèle distribué.
+**Constructed example**: A user designates a piece among several objects. The mask produced delineates a candidate region, but does not demonstrate that it is the right type of piece or that no other object has been forgotten. Evaluate border quality, ambiguities and correction effort with comparable prompts. If a pipeline adds text or a detector, specify this new string instead of assigning its outputs to SAM alone. The contract depends on the checkpoint and interface actually used; a possibility explored in a paper is not automatically an available function of each distributed model.
 
-### Cas lié à CV-SAM-003
+### Case linked to CV-SAM-003
 
-**Question de travail** : Pourquoi une annotation vidéo interactive avec corrections sur des frames futures ne se compare-t-elle pas directement à un tracker causal ?
+**Question of work**: Why is interactive video annotation using corrections on future frames not directly comparable with a causal tracker?
 
-**Réponse de référence** : Elle dispose d’informations différentes ; budget d’interaction et accès temporel modifient la tâche.
+**Reference Response**: It has different information; interaction budget and time access change the task.
 
-**Différence d'information** : corriger un masque après avoir vu la suite peut résoudre une ambiguïté qui était réelle à l'instant de la frame. L'annotation finale profite alors d'observations et d'interventions indisponibles pour une décision immédiate. La qualité finale et la disponibilité à temps sont deux propriétés distinctes.
+**Difference of information**: Correcting a mask after seeing the sequel can resolve an ambiguity that was real at the time of the frame. The final annotation then benefits from observations and unavailable interventions for an immediate decision. Final quality and on-time availability are two distinct properties.
 
-**Protocole proposé** : annoncer frames consultées, nombre de clics ou corrections, propagation autorisée et instant où chaque sortie devient disponible. Comparer soit à budget identique, soit comme un compromis explicitement différent. Conserver les pertes et ambiguïtés au lieu de les effacer par un reset non compté. Un outil interactif peut être excellent pour produire une vérité terrain sans être un tracker autonome déployable avec les mêmes performances. Cette distinction protège les conclusions du benchmark et relie le coût humain, le temps et la qualité au véritable usage du système.
+**Proposed Protocol**: Advertise frames viewed, number of clicks or corrections, authorized propagation and time when each output becomes available. Compare either with the same budget or as an explicitly different compromise. Keep losses and ambiguities instead of erasing them with an uncounted reset. An interactive tool can be great at producing ground truth without being a self-deployable tracker with the same performance. This distinction protects the conclusions of the benchmark and links human cost, time and quality to the actual use of the system.
 
-**Repère documentaire de cette passe** : [SAM 2](https://arxiv.org/html/2408.00714v2), architecture, masklets, prompts et mémoire. Les autres développements figurent dans les [cartes associées](../94-sam-sam2.md).
+**Documentary reference for this pass**: [SAM 2](https://arxiv.org/html/2408.00714v2), architecture, masklets, prompts and memory. The other developments are in the [flashcards](../94-sam-sam2.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [SAM, §3 et prototype texte §7.5](https://arxiv.org/abs/2304.02643).
-- [SAM 2, architecture et mémoire](https://arxiv.org/abs/2408.00714).
-- [Cartes associées](../94-sam-sam2.md).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+### CV-SAM-001
+
+**Situation**: Does SAM automatically assign a semantic class to every pixel?
+
+**Ambiguity of Prompt**: A point on a shirt may refer to the shirt, the person or a visible part of it. Multiple masks can be compatible with the same index; the choice depends on the contract of the task and additional information. The predicted quality score is used to rank proposals according to the model, without assigning a business category to the region. To compare two uses, freeze placement and number of prompts, policy of choice of mask and corrections allowed. Choosing a posteriori the best mask using the ground truth measures an oracle selection, different from the procedure actually available to the product.
+
+### CV-SAM-002
+
+**Situation**: What does SAM 2 add compared with independently segmenting each frame?
+
+**Temporal state**: A stored spread depends on the history, not just the current image. Two sequences arriving at the same frame with different initializations can therefore produce different outputs. To diagnose identity confusion, keep initialization frame, prompts, corrections, path order, and memory update instants. Comparing a recovery with reset memory and the original continuation is a proposed ablation, with announced information budget. A reset using the right target given by a human should not be counted as stand-alone recovery. The quality of an outline and the permanence of the identity remain two separate properties.
+
+### CV-SAM-003
+
+**Situation**: Why is interactive video annotation using corrections on future frames not directly comparable with a causal tracker?
+
+**Two curves to report**: for each frame, measure the quality of the first available output and that obtained after all the corrections allowed. Associate each release with a moment of availability and a number of interactions. The difference between the curves describes what the offline revision brought; it should not be erased in a final average presented as causal. A mask corrected to $t+2$ s may be excellent for annotating a video and too late for decision to $t$. A common protocol must therefore set the access to frames, the accepted deadlines and the rule of counting corrections.
+
+**Passages consulted for these developments**: [Kirillov et al., SAM](https://arxiv.org/html/2304.02643v1), §2, ambiguity and conditioned task; §3, model; time protocols built without SAM 2 execution.
+
+## Sources and flashcards
+
+- [SAM, §3 and prototype text §7.5](https://arxiv.org/abs/2304.02643).
+- [SAM 2, architecture and memory](https://arxiv.org/abs/2408.00714).
+- [Related flashcards](../94-sam-sam2.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

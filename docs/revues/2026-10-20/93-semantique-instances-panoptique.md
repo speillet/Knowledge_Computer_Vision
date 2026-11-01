@@ -1,53 +1,52 @@
-# Revue — Segmentation sémantique, instances et panoptique — 2026-10-20
+# Journal –  Semantic segmentation, instances and panoptic segmentation –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Définition panoptique et justification des métriques précisées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. Panopticon definition and justification of specified metrics. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 3 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 3 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SEGMENTATION-001 | Confirmé après précision | choisir la sortie de segmentation. | 44 mots à l’entrée ; Trois sorties distinctes | Fiche et format contrôlés | important | Préciser partition |
-| CV-SEGMENTATION-002 | Confirmé, référence précisée | détecter une mauvaise définition de tâche. | 47 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Cibler source |
-| CV-SEGMENTATION-003 | Déduction de labels discrets | propager une augmentation dense. | 54 mots à l’entrée ; Un seul objectif de cohérence | Fiche et format contrôlés | mineur | Attribuer le raisonnement |
-| CV-SEGMENTATION-004 | Confirmé, référence précisée | évaluer une segmentation médicale. | 51 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Cibler source |
+| CV-SEGMENTATION-001 | Confirmed after precision | Select the segmentation output. | 44 words at the entrance; Three separate exits | reference note and controlled format | important | Specify partition |
+| CV-SEGMENTATION-002 | Confirmed, reference specified | Detecting a bad job definition. | 47 words at the entrance; Goal retained | reference note and controlled format | Minor | Cibler source |
+| CV-SEGMENTATION-003 | Deduction of discrete labels | Propagating a dense increase. | 54 words at entry; One consistency goal | reference note and controlled format | Minor | Attributing Reasoning |
+| CV-SEGMENTATION-004 | Confirmed, reference specified | Evaluate medical segmentation. | 51 words at the entrance; Goal retained | reference note and controlled format | Minor | Cibler source |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : U-Net encodeur/décodeur avec concaténations (§2), DeepLabv3+ contexte atrous (résumé), Mask R-CNN branche de masque et détection (résumé), nnU-Net configuration de tout un pipeline (résumé Nature).
-- Imprécis puis corrigé : le noyau panoptique omettait l'absence de recouvrement ; §3 établit une affectation par pixel.
-- Confirmé : PQ sépare qualité de segmentation et reconnaissance (§4). Formules IoU/Dice cohérentes sous dénominateur non nul ; la fiche exige une convention des vides.
-- Discrétion des labels : déduction, pas prescription d'une API. Interpoler les nombres des classes comme des intensités peut créer une classe sans sens.
-- Sources complétées : Reinke P1/P2/P3 justifie les limites du recouvrement, les frontières, petites structures et agrégations. Les modalités de validation externe restent une proposition du projet.
+- Confirmed: U-Net encoder/decoder with concatenations (§2), DeepLabv3+ atrous context (summary), Mask R-CNN mask branch and detection (summary), nnU-Net configuration of an entire pipeline (Nature summary).
+- Imprecise and then corrected: the panoptic kernel omitted the lack of overlap; §3 sets an assignment per pixel.
+- Confirmed: PQ separates segmentation quality and recognition (§4). Formulas IoU/Dice consistent non-zero denominator; the reference note requires a vacuum convention.
+- Label Discretion: Deduction, not API prescription. Interpolating class numbers as intensities can create a meaningless class.
+- Completed sources: Reinke P1/P2/P3 justifies the limits of overlap, boundaries, small structures and aggregations. External validation remains a project proposal.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche et noyau 001 précisent la partition ; sources 002–004 adaptées.
+reference note and 001 kernel specify partition; sources 002 – 004 suitable.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Calculer PQ sur un mini-appariement | La fiche cite PQ sans rappel opératoire | evaluation | 1 carte ; TP/FP/FN et IoU moyenne | Panoptic Segmentation §4 |
+| Calculate PQ on a mini-matching | The reference note cites PQ without an operating recall | evaluation | 1 flashcard; TP/FP/FN and IoU medium | Panoptic Segmentation §4 |
 
-Familles absentes : algorithme, comprehension, conception, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [U-Net, §2 et overlap-tile](https://arxiv.org/abs/1505.04597).
-- [DeepLabv3+, résumé](https://arxiv.org/abs/1802.02611) ; [Mask R-CNN, résumé et introduction](https://arxiv.org/abs/1703.06870).
-- [Panoptic Segmentation, §§3–4](https://arxiv.org/abs/1801.00868).
-- [nnU-Net, résumé](https://doi.org/10.1038/s41592-020-01008-z).
-- [Reinke et al., P1, P2.1–P2.4, P3.2 et discussion](https://www.nature.com/articles/s41592-023-02150-0).
+- [U-Net, §2 and overlap-tile](https://arxiv.org/abs/1505.04597).
+- [DeepLabv3+, summary](https://arxiv.org/abs/1802.02611) ; [Mask R-CNN, summary and introduction](https://arxiv.org/abs/1703.06870).
+- [Panoptic Segmentation, §§3 – 4](https://arxiv.org/abs/1801.00868).
+- [nnU-Net, summary](https://doi.org/10.1038/s41592-020-01008-z).
+- [Reinke et al., P1, P2.1 – P2.4, P3.2 and discussion](https://www.nature.com/articles/s41592-023-02150-0).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

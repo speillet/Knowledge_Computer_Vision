@@ -1,13 +1,13 @@
-# Vision générative et multimodale
+# Generative and multimodal vision
 
-Diffusion, restauration, vision-langage et rendu neuronal.
+Dissemination, restoration, vision-language and neuronal rendering.
 
-| Sujet | Référence | Cartes | Pôles |
+| Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [VLM, grounding et frontière vision–action](121-vlm-grounding.md) | [Lire](references/121-vlm-grounding.md) | 4 | A, D |
-| [VAE, GAN et diffusion pour génération/restauration](122-generation-restauration.md) | [Lire](references/122-generation-restauration.md) | 3 | A, D, E |
-| [NeRF, 3D Gaussian Splatting et reconstruction](123-nerf-gaussian-splatting.md) | [Lire](references/123-nerf-gaussian-splatting.md) | 3 | B, D |
+| [VLMs, grounding and the vision–action boundary](121-vlm-grounding.md) | [Read](references/121-vlm-grounding.md) | 4 | A, D |
+| [VAEs, GANs and diffusion for generation and restoration](122-generation-restauration.md) | [Read](references/122-generation-restauration.md) | 3 | A, D, E |
+| [NeRF, 3D Gaussian Splatting and reconstruction](123-nerf-gaussian-splatting.md) | [Read](references/123-nerf-gaussian-splatting.md) | 3 | B, D |
 
-Sous-deck : `CV::Pilote::120-generatif-multimodal`. Statut : rédigé ; export et maîtrise non vérifiés.
+Subdeck: `CV::Pilote::120-generatif-multimodal`. Status: drafted; device import and mastery unverified.
 
-[Accueil](../00-Accueil.md) · [Inventaire](../01-Parcours/Inventaire.md) · [Pôles](../01-Parcours/Poles-metiers.md).
+[Home](../00-Accueil.md) · [Inventory](../01-Parcours/Inventaire.md) · [Career tracks](../01-Parcours/Poles-metiers.md).

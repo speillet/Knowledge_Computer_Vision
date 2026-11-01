@@ -7,82 +7,99 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 3
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
 ---
-# Reconnaissance biométrique, ArcFace et PAD
+# Biometric recognition, ArcFace and PAD
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Comparer des identités visuelles selon un protocole, sans confondre vérification 1:1, identification 1:N et détection de présentation. Entrées : acquisitions et embeddings ; sorties : scores/décisions conditionnées au seuil. Cette fiche n'établit aucune conformité réglementaire.
+Compare visual identities according to a protocol, without confusing verification 1:1, identification 1:N and presentation detection. Entries: acquisitions and embeddings; outputs: scores/decisions conditioned to the threshold. This reference note does not establish any regulatory compliance.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-ArcFace apprend une séparation angulaire de représentations d'identité. Une comparaison d'embeddings ne détecte pas automatiquement une photo, un écran ou autre attaque par présentation ; PAD est un autre problème avec son protocole.
+ArcFace learns an angular separation of identity representations. An embedding comparison does not automatically detect a photo, screen, or other attack by presentation; PAD is another problem with its protocol.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-FMR/FNMR décrivent des erreurs de comparaison sous un seuil ; FAR/FRR système dépendent aussi de la procédure et des échecs d'acquisition. Un EER est un point d'équilibre d'un protocole, pas le résultat à très faible taux de fausse acceptation. Les similarités restent dépendantes du domaine.
+FMR/FNMR describe comparison errors below a threshold; FAR/FRR system also depend on procedure and acquisition failures. An EER is a balancing point of a protocol, not the result of very low false acceptance rates. Similarities remain dependent on the domain.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Qualifier populations, qualité, enrolment, seuil et données ; évaluer sous-groupes et conditions d'acquisition. Une référence de standard PAD doit être versionnée lors d'une étude dédiée ; aucune certification n'est déduite d'un modèle.
+Qualify populations, quality, enrolment, threshold and data; evaluate subgroups and acquisition conditions. A PAD standard reference must be versioned in a dedicated study; no certification is inferred from a model.
 
-## Coût et implémentation
+## Cost and implementation
 
-Encoder, rechercher et maintenir la galerie ont des coûts différents entre 1:1 et 1:N. Aucun visage réel ni système biométrique exécuté.
+Encode, search, and maintain the gallery have different costs between 1:1 and 1:N. No real face or biometric system executed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : qualité/pose puis taille de galerie séparément. Mesurer au seuil métier et intervalles selon protocole, pas seulement une accuracy globale ou l'EER.
+Proposed variation: quality/pose then gallery size separately. Measure at business threshold and intervals according to protocol, not just a global accuracy or EER.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Bon score moyen mais échecs sur une condition : stratifier acquisition et comparaison, inspecter seuil et données. Une détection de visage correcte n'atteste ni identité ni liveness.
+Good average score but failures on a condition: stratify acquisition and comparison, inspect threshold and data. A correct face detection does not attest to identity or liveness.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Vérification, identification, qualité et PAD exigent sorties et références distinctes ; documenter les limites de généralisation.
+Verification, identification, quality and PAD require separate outputs and references; documenting generalization limits.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent vérification, identification et point d’exploitation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These built cases develop verification, identification and point of exploitation. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-BIOMETRIE-001
+### Case linked to CV-BIOMETRIE-001
 
-**Question de travail** : Un embedding ArcFace séparant bien les identités prouve-t-il qu’une présentation est authentique ?
+**Question of work**: Does an ArcFace embedding that separates identities well prove that a presentation is genuine?
 
-**Réponse de référence** : Non : la comparaison d’identité et PAD ont des cibles et données d’évaluation distinctes.
+**Reference Response**: No: the identity comparison and PAD have separate targets and evaluation data.
 
-**Différence des cibles** : la reconnaissance compare une acquisition à une identité de référence. La détection de présentation cherche à distinguer certains types d'acquisition ou d'attaque selon un autre protocole. Une reproduction peut conserver une apparence d'identité très proche sans être une présentation authentique.
+**Difference of Targets**: Recognition compares an acquisition to a reference identity. Presentation detection seeks to distinguish certain types of acquisition or attack according to another protocol. A reproduction can retain a very close appearance of identity without being an authentic presentation.
 
-**Exemple construit** : une photo nette peut produire un embedding proche de celui de la personne ; cette proximité répond à une question d'apparence, pas à la présence physique de cette personne au moment de l'acquisition. Définir et évaluer les deux sorties avec des données adaptées, puis leur intégration dans le système. Une détection de visage correcte ne résout pas non plus la vérification d'identité. Le propos reste un contrat technique de perception et d'évaluation ; aucune conformité, certification ou garantie de résistance à toute présentation n'est déduite du seul modèle d'embedding.
+**Constructed example**: A sharp photo can produce an embedding close to that of the person; this proximity answers a question of appearance, not the physical presence of that person at the time of acquisition. Define and evaluate the two outputs with adapted data, and then integrate them into the system. A correct face detection also does not resolve identity verification. The subject remains a technical contract of perception and evaluation; no conformity, certification or guarantee of resistance to any presentation is deduced from the embedding model alone.
 
-### Cas lié à CV-BIOMETRIE-002
+### Case linked to CV-BIOMETRIE-002
 
-**Question de travail** : Pourquoi l’EER ne suffit-il pas pour un système exploitant un seuil à très faible FMR ?
+**Question of work**: Why is EER insufficient for a system operating at a threshold with very low FMR?
 
-**Réponse de référence** : Il décrit un point d’équilibre qui peut différer fortement du seuil visé ; mesurer FNMR et autres erreurs au point requis.
+**Reference Response**: It describes a balance point that may differ significantly from the target threshold; measure FNMR and other errors at the required point.
 
-**Lecture de la courbe** : déplacer le seuil modifie simultanément comparaisons acceptées à tort et identités rejetées à tort. L'EER désigne une égalité de ces taux dans un protocole donné ; un produit visant un très faible taux de fausse correspondance fonctionne généralement ailleurs sur la courbe.
+**Reading the curve**: Moving the threshold simultaneously changes wrongly accepted comparisons and wrongly rejected identities. The EER refers to an equality of these rates in a given protocol; a product aimed at a very low rate of false correspondence generally works elsewhere on the curve.
 
-**Évaluation proposée** : fixer le seuil sur des données de réglage, puis mesurer le taux de faux non-matches au niveau de FMR visé sur un test indépendant. Consigner qualité d'acquisition, population, enrôlement et taille des ensembles ; examiner les sous-groupes et l'incertitude statistique lorsqu'elle est pertinente. Des échecs de capture ajoutent encore des événements au niveau système. Une bonne valeur moyenne ne prédit donc pas toutes les conditions d'exploitation. Le point de fonctionnement et les unités de comparaison doivent rester visibles pour que deux résultats de reconnaissance soient interprétables.
+**Proposed evaluation**: set the threshold on setting data, then measure the rate of false non-matches at the level of FMR targeted on an independent test. Record acquisition quality, population, enrollment, and set size; examine subgroups and statistical uncertainty when relevant. Capture failures still add events at the system level. A good average value does not predict all operating conditions. The operating point and the comparison units must remain visible for two recognition results to be interpretable.
 
-**Repère documentaire de cette passe** : [NIST, FRTE 1:1 Verification](https://pages.nist.gov/frvt/html/frvt11.html), présentation de l’évaluation vérification et erreurs. Les autres développements figurent dans les [cartes associées](../75-embeddings-biometrie.md).
+**Documentary reference for this pass**: [NIST, FRTE 1:1 Verification](https://pages.nist.gov/frvt/html/frvt11.html), presentation of the evaluation check and errors. The other developments are in the [flashcards](../75-embeddings-biometrie.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Ngan et al. 2023, NISTIR 8491, résumé PAD](https://www.nist.gov/publications/face-analysis-technology-evaluation-fate-part-10-performance-passive-software-based)
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [ArcFace, objectif et évaluation](https://arxiv.org/abs/1801.07698).
+### CV-BIOMETRIE-001
+
+**Situation**: Does an ArcFace embedding that separates identities well prove that a presentation is genuine?
+
+**What the Margin Learns**: In ArcFace, class weights and normalized features give logits proportional to $\cos\theta_j$; for the target class during learning, an angular margin uses $\cos(\theta_y+m)$. This constraint pushes the separation of identities in the learned space. It does not provide a label on the materiality of a photographic presentation or on screen. At the inference, the score between two embeddings and the decision PAD therefore remain different outputs. If combined, evaluate their dependence and acquisition failures on common trials: naively multiplying two scores does not give a validated system probability.
+
+### CV-BIOMETRIE-002
+
+**Situation**: Why is EER insufficient for a system operating at a threshold with very low FMR?
+
+**Amount of evidence**: Under a simplified model of $n$ independent non-matte comparisons with probability of false correspondence $p$, observing zero error has probability $(1-p)^n$. The unilateral upper limit of 95% is then $1-0,05^{1/n}$, approximately $3/n$ for large $n$. Zero error on 1 000 comparisons thus remains compatible with a rate of around 0,003, and does not demonstrate a target of $10^{-6}$. Comparisons sharing the same identities are not necessarily independent; the uncertainty must respect the protocol. This constructed analysis explains why an excellent EER and a small test do not characterize the distribution tails at the target threshold.
+
+**Passages consulted for these developments**: [Deng et al., ArcFace](https://arxiv.org/html/1801.07698v4), §III-A, angular margin; binomial bound and system reasoning constructed.
+
+## Sources and flashcards
+
+- [Ngan et al. 2023, NISTIR 8491, summary PAD](https://www.nist.gov/publications/face-analysis-technology-evaluation-fate-part-10-performance-passive-software-based)
+
+- [ArcFace, objective and evaluation](https://arxiv.org/abs/1801.07698).
 - [NIST FRTE 1:1, FMR/FNMR](https://pages.nist.gov/frvt/html/frvt11.html).
-- [Cartes associées](../75-embeddings-biometrie.md).
+- [Related flashcards](../75-embeddings-biometrie.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

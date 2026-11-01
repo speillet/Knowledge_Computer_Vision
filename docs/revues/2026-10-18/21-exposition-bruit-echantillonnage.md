@@ -1,43 +1,43 @@
-# Revue — Exposition, bruit, couleur et échantillonnage — 2026-10-18
+# Review –  Exposure, noise, colour and sampling –  2026-10-18
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 3 importante, 0 mineure, 1 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 3 large, 0 minor, 1 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-ACQUISITION-001 | Confirmé par calcul : 4 puis 8 px | calculer un flou simplifié. | Noyau fini ; 48 mots | Accord fiche et format | Important (attribution) | Déduction signalée |
-| CV-ACQUISITION-002 | Confirmé : gain et information photonique | distinguer gain et exposition. | Noyau fini ; 46 mots | Accord fiche et format | Aucune | Conserver le noyau |
-| CV-ACQUISITION-003 | Confirmé : filtrage avant décimation | reconnaître aliasing et prétraitement incohérent. | Noyau fini ; 55 mots | Accord fiche et format | Important (source) | Source pyramide |
-| CV-ACQUISITION-004 | Checklist pertinente ; transfert sRGB confirmé | contrôler une entrée image. | Noyau fini ; 46 mots | Accord fiche et format | Important (source) | Source photométrique |
+| CV-ACQUISITION-001 | Confirmed by calculation: 4 then 8 px | Calculate a simplified blur. | Finished core; 48 words | reference note and format | Important (attribution) | Deduction reported |
+| CV-ACQUISITION-002 | Confirmed: gain and photonic information | Distinguish between gain and exposure. | Finished core; 46 words | reference note and format | None | Keep the kernel |
+| CV-ACQUISITION-003 | Confirmed: filtering before decimation | recognize aliasing and inconsistent preprocessing. | Finished core; 55 words | reference note and format | Important (source) | Source pyramide |
+| CV-ACQUISITION-004 | Relevant checklist; sRGB transfer confirmed | check an image entry. | Finished core; 46 words | reference note and format | Important (source) | Photometric source |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : variance photonique égale à la moyenne dans le modèle idéal ; limites du gain ; Nyquist sous hypothèse de bande ; filtrage de pyramide ; non-linéarité sRGB. Calculs exécutés : 800×0,005=4 px ; exposition doublée : 8 px. Contrôles de contrats d’entrée et protocole sur défauts : décisions du projet.
+Confirmed: photonic variance equal to the average in the ideal model; limits of gain; Nyquist under band hypothesis; pyramid filtering; nonlinearity sRGB. Calculations executed: 800×0,005=4 px; exposure doubled: 8 px. Controls of entry contracts and protocol on defects: project decisions.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 et quatre champs Source corrigés ; réponses et IDs conservés.
+reference note revision 2 and four corrected Source fields; responses and IDs retained.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Budget exposition–bruit–flou | Choix d’acquisition sous cadence et contraste imposés | Conception ; une carte | 3 compromis ; durée à mesurer | EMVA1288 §§2.4–2.7 ; modèle cinématique explicite |
+| Budget exposure – noise – flou | Choice of acquisition under pace and contrast imposed | Design; a flashcard | 3 compromise; duration to be measured | EMVA1288 §§2.4 – 2.7; explicit kinematic model |
 
 ## Sources
 
-- [EMVA1288 Linear 4.0 (2021), §§2.1, 2.4, 2.6–2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf) : variance de Poisson Eq.13, SNR Eq.20–23, saturation §2.7.
-- [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html) : convolution puis décimation.
-- [sRGB, §§A.7–A.8 et B.1, conversion linéaire et fonction de transfert](https://www.w3.org/Graphics/Color/srgb) : transfert non linéaire.
-- [Edmund, Resolution §2.2](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/resolution/) : limite de Nyquist ; lu via navigateur documentaire, accès HTTP direct 403.
+- [EMVA1288 Linear 4.0 (2021), §§2.1, 2.4, 2.6 – 2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf): Poisson variance Eq.13, SNR Eq.20 – 23, saturation §2.7.
+- [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html): convolution and decimation.
+- [sRGB, §§A.7 – A.8 and B.1, linear conversion and transfer function](https://www.w3.org/Graphics/Color/srgb): non-linear transfer.
+- [Edmund, Resolution §2.2](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/resolution/): Nyquist limit; read via documentary browser, direct HTTP access 403.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

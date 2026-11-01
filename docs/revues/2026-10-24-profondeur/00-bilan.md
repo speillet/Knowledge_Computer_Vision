@@ -1,235 +1,138 @@
-# Revue de profondeur et cohérence — 2026-10-24
+# Review of depth and consistency –  2026-10-24
 
-## Résultat
+## Result
 
-Les 60 sujets et leurs 282 cartes ont été examinés sur l'objectif de rappel,
-la pertinence pour un ingénieur confirmé et le développement des explications.
-**274 réponses enrichies**, huit conservées car déjà développées ; aucun ajout
-ni retrait de carte. Les 60 fiches canoniques prennent une révision et relient
-leurs propriétés à deux cas guidés, avec question et réponse de référence.
+The 60 subjects and their 282 flashcards were examined on the recall objective, relevance to a confirmed engineer and the development of explanations. **274 enriched answers**, eight preserved because already developed; no additions or removals of flashcard. The canonical 60 reference notes take a revision and link their properties to two guided cases, with reference question and answer.
 
-| Mots lexicaux par réponse | Avant | Après |
+| Lexical words by answer | Before | After |
 | --- | ---: | ---: |
 | Minimum | 32 | 180 |
-| Médiane | 57 | 200,5 |
+| Median | 57 | 200,5 |
 | Maximum | 252 | 329 |
 
-Calcul : `len(re.findall(r'\w+', Reponse))`, sans compter question, Source ou
-tags. Le seuil de 180 est un choix éditorial propre à cette demande : il repère
-les réponses de quelques lignes, sans établir une longueur optimale ni garantir
-la qualité. La réponse reste notée sur un noyau fini ; les explications longues
-servent à comprendre et reconstruire, sans récitation intégrale.
+Calculation: `len(re.findall(r'\w+', Reponse))`, not including question, Source or tags. The threshold of 180 is an editorial choice specific to this request: it coordinate frame answers a few lines, without establishing an optimal length or guaranteeing quality. The answer remains noted on a finite core; long explanations serve to understand and reconstruct, without integral recitation.
 
-## Pertinence et corrections de conception
+## Relevance and design corrections
 
-Le lot est pertinent pour le profil : mécanismes classiques, contrats des
-méthodes modernes, géométrie, évaluation et décisions industrielles. La faiblesse
-récurrente était de donner une conclusion correcte sans assez expliquer comment
-la retrouver ou vérifier qu'elle s'applique. Les ajouts explicitent mécanisme,
-cas interprété, hypothèses et contrôle discriminant, plutôt qu'une définition
-isolée ou un résultat de benchmark sans contexte.
+The lot is relevant to the profile: classical mechanisms, contracts of modern methods, geometry, evaluation and industrial decisions. The recurring weakness was to give a correct conclusion without explaining enough how to find it or verify that it applies. The additions explicitly discriminate mechanism, interpreted case, assumptions, and check, rather than an isolated definition or benchmark result without context.
 
-Les cartes de synthèse et leurs approfondissements restent distincts : SIFT
-pipeline versus construction du descripteur ; flot apparent versus algorithme
-Farnebäck ; filtrage SORT versus choix d'association ; rang/identifiabilité
-versus covariance locale. Aucun retrait d'objectif n'est justifié dans cette
-passe. Les familles pertinentes dépendent du sujet : ajouter huit familles à
-chaque algorithme créerait des répétitions sans nouvel objectif utile.
+The synthesis flashcards and their further study remain distinct: SIFT pipeline versus descriptor construction; apparent flow versus Farnebäck algorithm; SORT filtering versus association choice; rank/identification versus local covariance. There is no reason to withdraw from this pass. Relevant families depend on the topic: adding eight families to each algorithm would create repetitions without any useful new purpose.
 
-Les nouveaux calculs sont des déductions sous hypothèses et les ablations sont
-proposées. Ils ne constituent pas des mesures publiées ni des expériences image,
-vidéo, capteur ou matériel exécutées. Les noyaux antérieurs restent conservés.
-Le lien TensorRT Quantization Workflows a été confirmé depuis la navigation
-primaire après un premier échec d'extraction ; la date de consultation de la
-fiche est actualisée, sans modifier les champs Source des cartes.
+The new calculations are deductions under assumptions and the ablations are proposed. They do not constitute published measurements or executed image, video, sensor or hardware experiments. The earlier nuclei remain preserved. The TensorRT Quantization Workflows link has been confirmed since primary navigation after a first extraction failure; the reference note lookup date is updated, without changing the flashcards Source fields.
 
-## Cohérence du parcours
+## Consistency of the course
 
-Le [parcours senior](../../../vault/01-Parcours/Parcours-senior.md) donne neuf
-étapes et un ordre explicite des 60 sujets, adapté aux acquis ML/DL/segmentation.
-Les numéros thématiques ne définissent plus implicitement la progression.
-L'IoU précède NMS/SORT ; le filtrage précède l'association ; repères et calibration
-précèdent fusion/reconstruction. Les prérequis sont des notions requises : toute
-l'AP COCO n'est pas exigée pour SORT, ni tout l'ESKF pour le Kalman linéaire.
+The [Senior Course](../../../vault/01-Parcours/Parcours-senior.md) gives nine steps and an explicit order of the 60 subjects, adapted to the ML/DL/segmentation achievements. Thematic numbers no longer implicitly define progress. The IoU precedes NMS/SORT; the filtering precedes the association; coordinate frames and calibration precedes fusion/reconstruction. Prerequisites are required: not all the AP COCO is required for SORT, nor all the ESKF for the linear Kalman.
 
-Chaque étape propose un critère de passage. Trois intégrations vérifient le
-transfert : recalage/métrologie, détection/suivi, perception spatiale. Ce sont
-des exercices proposés, sans résultat annoncé. L'ordre et la couverture sont
-contrôlés par script ; un prérequis inconnu, un cycle, un doublon ou un sujet
-absent font échouer le contrôle.
+Each step has a passing criterion. Three integrations verify the transfer: registration/metrology, detection/monitoring, spatial perception. These are proposed exercises, with no result announced. The order and coverage are script-controlled; an unknown prerequisite, cycle, duplicate, or absent subject causes the check to fail.
 
-Les 119 approfondissements APP restent ouverts. Ce travail améliore le lot
-courant et ne prétend couvrir tous les algorithmes de computer vision ni
-certifier une maîtrise senior.
+The 119 further study APP remains open. This work improves the current batch and does not claim to cover all computer vision algorithms or certify senior mastery.
 
-## Rapports par sujet
+## Reports by subject
 
-Chaque rapport indique les cartes, les sources réellement consultées et la
-portée de la confrontation. Les chiffres de longueur et la traçabilité sont
-automatiques ; les verdicts de pertinence sont une auto-revue par agent.
+Each report indicates the flashcards, the sources actually consulted and the scope of the confrontation. The length figures and traceability are automatic; the relevant verdicts are a self-review per agent.
 
-| Rapport | Cartes | Réponses enrichies | Point développé |
+| Rapport | Flashcards | Enriched answers | Point developed |
 | --- | ---: | ---: | --- |
-| [CV-SVD](11-moindres-carres-svd.md) | 9 | 5 | blanchiment, perte de rang et distinction ajustement–identifiabilité |
-| [CV-SE3](12-rotations-se3.md) | 6 | 5 | composition des repères et perturbations gauche/droite |
-| [CV-FUSION](13-kalman-ekf-eskf.md) | 6 | 5 | innovations, covariance et réinitialisation de l’ESKF |
-| [CV-FACTEURS](14-graphes-facteurs.md) | 5 | 4 | graphe, jauge et coût d’une élimination |
-| [CV-ACQUISITION](21-exposition-bruit-echantillonnage.md) | 4 | 4 | exposition, bruit et échantillonnage reliés à la tâche |
-| [CV-CAPTEURS](22-capteurs-horodatage.md) | 4 | 4 | séparer temps d’exposition, lecture et synchronisation |
-| [CV-IMAGERIES](23-imageries-specialisees.md) | 3 | 3 | géométrie physique, line-scan et unité de généralisation |
-| [CV-FILTRES](31-filtrage-gradients.md) | 4 | 4 | effet du support, unités du bilatéral et sous-échantillonnage |
-| [CV-CANNY-HOUGH](32-canny-hough.md) | 4 | 4 | relier contours, votes et validation géométrique |
-| [CV-MORPHO](33-morphologie-composantes.md) | 3 | 3 | support géométrique, topologie et convention de connectivité |
-| [CV-SIFT](41-sift.md) | 7 | 7 | normalisations, ambiguïté du ratio et couverture géométrique |
-| [CV-ORB](42-orb.md) | 6 | 6 | séparer détection, orientation, représentation et norme |
-| [CV-MATCHING](43-detecteurs-matchers.md) | 4 | 4 | contrats des étapes et diagnostic avant changement de méthode |
-| [CV-MATCH-APPRIS](44-superpoint-lightglue-loftr.md) | 5 | 5 | compatibilité features–matcher, résolution et validation |
-| [CV-ECC](45-recalage-ecc.md) | 3 | 3 | critère photométrique, bassin de convergence et masques |
-| [CV-CORNERS](46-harris-shi-tomasi.md) | 5 | 5 | tenseur de structure, directions observables et répétabilité |
-| [CV-FAST-BRIEF](47-fast-brief.md) | 5 | 5 | test de segment et signature binaire sous transformations |
-| [CV-FLANN](48-flann.md) | 4 | 4 | rappel des voisins, ratio et amortissement de l’index |
-| [CV-HOMOGRAPHIE](51-ransac-homographie.md) | 7 | 7 | succès d’échantillonnage, couverture et validité du modèle |
-| [CV-ZHANG](52-calibration-zhang.md) | 7 | 7 | contraintes des vues, resize et contrôle hors apprentissage |
-| [CV-EPIPOLAIRE](53-epipolaire-pnp-triangulation.md) | 5 | 5 | épipolarité, pose et profondeur distinguées par leur contrat |
-| [CV-BA](54-bundle-adjustment.md) | 4 | 4 | jauge, résidus robustes et blocs d’optimisation |
-| [CV-MULTICALIB](55-calibration-multicapteurs.md) | 3 | 3 | séparer transformations spatiales et désynchronisation |
-| [CV-FISHEYE](56-calibration-fisheye.md) | 5 | 5 | couverture angulaire et compatibilité du modèle de projection |
-| [CV-HANDEYE](57-calibration-hand-eye.md) | 5 | 5 | conventions AX=XB, excitation et validation indépendante |
-| [CV-STEREO](61-stereo-profondeur.md) | 4 | 4 | disparité, incertitude de profondeur et géométrie rectifiée |
-| [CV-ICP](62-recalage-global-icp.md) | 5 | 5 | initialisation, correspondances et directions peu contraintes |
-| [CV-VIO](63-slam-vio.md) | 5 | 5 | fusion inertielle, jauges et évaluation sans masquer les erreurs |
-| [CV-BEV](64-nuages-bev-occupation.md) | 5 | 5 | visibilité, inconnue et limites de la représentation spatiale |
-| [CV-REPRESENTATIONS](71-representations-transfert.md) | 5 | 5 | biais d’architecture, échelle et protocole de transfert |
-| [CV-CLIP](72-clip-siglip.md) | 4 | 4 | contraste image–texte, candidats et décalage de domaine |
-| [CV-ANOMALIES](73-patchcore-padim.md) | 4 | 4 | référence normale, voisinage de patches et décision métier |
-| [CV-OCR](74-ocr-documents.md) | 3 | 3 | chaîne OCR, normalisation et métrique adaptée au document |
-| [CV-BIOMETRIE](75-embeddings-biometrie.md) | 2 | 2 | vérification, identification et point d’exploitation |
-| [CV-NMS](81-nms.md) | 6 | 6 | suppression, seuil d’égalité et rappel des objets proches |
-| [CV-DETECTEURS](82-detection-fasterrcnn-yolo-detr.md) | 13 | 12 | contrats d’architecture, appariement et décomposition des erreurs |
-| [CV-OPENVOC](83-detection-open-vocabulary.md) | 3 | 3 | vocabulaire variable, protocole et sortie localisée |
-| [CV-POSE3D](84-detection-pose-3d.md) | 4 | 4 | contrat métrique et ambiguïtés de pose/symétrie |
-| [CV-WATERSHED](91-otsu-distance-watershed.md) | 5 | 5 | histogramme, distance et rôle des marqueurs |
-| [CV-GRABCUT](92-grabcut-regions.md) | 3 | 3 | optimisation conditionnelle et rôle des contraintes utilisateur |
-| [CV-SEGMENTATION](93-semantique-instances-panoptique.md) | 4 | 4 | unité de sortie et agrégation des erreurs de segmentation |
-| [CV-SAM](94-sam-sam2.md) | 3 | 3 | prompts, ambiguïté de masque et mémoire temporelle |
-| [CV-FLOT](101-flot-optique.md) | 4 | 4 | contrainte de luminance, ouverture et correspondance dense |
-| [CV-VIDEO](102-points-actions-video.md) | 4 | 4 | trajectoires de points, visibilité et horizon temporel |
-| [CV-FARNEBACK](103-farneback.md) | 5 | 5 | approximation quadratique et domaine de capture du déplacement |
-| [CV-SORT](111-sort.md) | 8 | 8 | filtrage, affectation et cycle de vie des pistes |
-| [CV-ASSOCIATION](112-deepsort-bytetrack.md) | 4 | 4 | gating, apparence et association des scores faibles |
-| [CV-SOT](113-tracking-monoobjet.md) | 2 | 2 | recherche locale, adaptation et identité après occultation |
-| [CV-CORRELATION](114-mosse-kcf.md) | 5 | 5 | circulant, fenêtre et risque de contamination du modèle |
-| [CV-MEANSHIFT](115-meanshift-camshift.md) | 4 | 4 | backprojection, mode local et adaptation de la fenêtre |
-| [CV-VLM](121-vlm-grounding.md) | 4 | 4 | connecteur, ancrage visuel et test de dépendance à l’image |
-| [CV-DIFFUSION](122-generation-restauration.md) | 3 | 3 | distribution conditionnelle et fidélité de la restauration |
-| [CV-RENDU3D](123-nerf-gaussian-splatting.md) | 3 | 3 | synthèse de vues, support d’observation et géométrie |
-| [CV-IOU-AP](131-iou-ap-coco.md) | 7 | 7 | appariement, classement et conventions COCO |
-| [CV-METRIQUES-TEMPS](132-tracking-trajectoires.md) | 5 | 5 | identité, agrégation HOTA et alignement de trajectoire |
-| [CV-FIABILITE](133-donnees-generalisation.md) | 5 | 5 | unité de split, sélection et calibration des probabilités |
-| [CV-METRIQUES-APPLIQUEES](134-metriques-applications.md) | 4 | 4 | topologie, surfaces physiques et références incertaines |
-| [CV-PIPELINE](141-contrats-profiling-video.md) | 5 | 5 | contrats, files et âge de l’information |
-| [CV-QUANT](142-quantification-runtimes.md) | 5 | 5 | échelle, saturation et exécution réelle du runtime |
-| [CV-DEPLOIEMENT](143-edge-reproductibilite.md) | 4 | 4 | goulot séquentiel, régime thermique et reproductibilité |
+| [CV-SVD](11-moindres-carres-svd.md) | 9 | 5 | whitening, loss of rank and distinction adjustment – identifiability |
+| [CV-SE3](12-rotations-se3.md) | 6 | 5 | coordinate frames composition and left/right disturbances |
+| [CV-FUSION](13-kalman-ekf-eskf.md) | 6 | 5 | innovations, covariance and reset of the ESKF |
+| [CV-FACTEURS](14-graphes-facteurs.md) | 5 | 4 | graph, gauge and cost of disposal |
+| [CV-ACQUISITION](21-exposition-bruit-echantillonnage.md) | 4 | 4 | exposure, noise and sampling related to the task |
+| [CV-CAPTEURS](22-capteurs-horodatage.md) | 4 | 4 | separate exposure time, reading and synchronization |
+| [CV-IMAGERIES](23-imageries-specialisees.md) | 3 | 3 | physical geometry, line-scan and generalization unit |
+| [CV-FILTRES](31-filtrage-gradients.md) | 4 | 4 | effect of support, bilateral units and sub-sampling |
+| [CV-CANNY-HOUGH](32-canny-hough.md) | 4 | 4 | linking contours, votes and geometric validation |
+| [CV-MORPHO](33-morphologie-composantes.md) | 3 | 3 | Geometric support, topology and connectivity convention |
+| [CV-SIFT](41-sift.md) | 7 | 7 | normalizations, ratio ambiguity and geometric coverage |
+| [CV-ORB](42-orb.md) | 6 | 6 | separate detection, orientation, representation and norm |
+| [CV-MATCHING](43-detecteurs-matchers.md) | 4 | 4 | contracts of steps and diagnosis before change of method |
+| [CV-MATCH-APPRIS](44-superpoint-lightglue-loftr.md) | 5 | 5 | compatibility features – matcher, resolution and validation |
+| [CV-ECC](45-recalage-ecc.md) | 3 | 3 | photometric criterion, convergence basin and masks |
+| [CV-CORNERS](46-harris-shi-tomasi.md) | 5 | 5 | structure tensor, observable directions and repeatability |
+| [CV-FAST-BRIEF](47-fast-brief.md) | 5 | 5 | Segment testing and binary signature under transformations |
+| [CV-FLANN](48-flann.md) | 4 | 4 | neighbor recall, index ratio and depreciation |
+| [CV-HOMOGRAPHIE](51-ransac-homographie.md) | 7 | 7 | sampling success, coverage and validity of the model |
+| [CV-ZHANG](52-calibration-zhang.md) | 7 | 7 | View constraints, resize and check out of learning |
+| [CV-EPIPOLAIRE](53-epipolaire-pnp-triangulation.md) | 5 | 5 | Epipolarity, pose and depth distinguished by their contract |
+| [CV-BA](54-bundle-adjustment.md) | 4 | 4 | gauge, robust residuals and optimization blocks |
+| [CV-MULTICALIB](55-calibration-multicapteurs.md) | 3 | 3 | separating spatial transformations and desynchronization |
+| [CV-FISHEYE](56-calibration-fisheye.md) | 5 | 5 | Angular coverage and projection model compatibility |
+| [CV-HANDEYE](57-calibration-hand-eye.md) | 5 | 5 | AX=XB conventions, excitation and independent validation |
+| [CV-STEREO](61-stereo-profondeur.md) | 4 | 4 | disparity, depth uncertainty and rectified geometry |
+| [CV-ICP](62-recalage-global-icp.md) | 5 | 5 | initialization, correspondences and directions with minimal constraints |
+| [CV-VIO](63-slam-vio.md) | 5 | 5 | inertial fusion, gauges and evaluation without masking errors |
+| [CV-BEV](64-nuages-bev-occupation.md) | 5 | 5 | visibility, unknown and limits of spatial representation |
+| [CV-REPRESENTATIONS](71-representations-transfert.md) | 5 | 5 | architecture bias, scale and transfer protocol |
+| [CV-CLIP](72-clip-siglip.md) | 4 | 4 | image – text contrast, candidates and domain offset |
+| [CV-ANOMALIES](73-patchcore-padim.md) | 4 | 4 | normal reference, near patches and business decision |
+| [CV-OCR](74-ocr-documents.md) | 3 | 3 | OCR string, standardization and document-specific metric |
+| [CV-BIOMETRIE](75-embeddings-biometrie.md) | 2 | 2 | verification, identification and point of operation |
+| [CV-NMS](81-nms.md) | 6 | 6 | removal, equality threshold and recall of nearby objects |
+| [CV-DETECTEURS](82-detection-fasterrcnn-yolo-detr.md) | 13 | 12 | Architecture contracts, matching and decomposition of errors |
+| [CV-OPENVOC](83-detection-open-vocabulary.md) | 3 | 3 | Variable vocabulary, protocol, and localized output |
+| [CV-POSE3D](84-detection-pose-3d.md) | 4 | 4 | metric contract and ambiguities of pose/symmetry |
+| [CV-WATERSHED](91-otsu-distance-watershed.md) | 5 | 5 | histogram, distance and role of markers |
+| [CV-GRABCUT](92-grabcut-regions.md) | 3 | 3 | Conditional optimization and the role of user constraints |
+| [CV-SEGMENTATION](93-semantique-instances-panoptique.md) | 4 | 4 | Output unit and aggregation of segmentation errors |
+| [CV-SAM](94-sam-sam2.md) | 3 | 3 | prompts, mask ambiguity, and time memory |
+| [CV-FLOT](101-flot-optique.md) | 4 | 4 | luminance stress, aperture and dense correspondence |
+| [CV-VIDEO](102-points-actions-video.md) | 4 | 4 | point trajectories, visibility and time horizon |
+| [CV-FARNEBACK](103-farneback.md) | 5 | 5 | quadratic approximation and displacement capture domain |
+| [CV-SORT](111-sort.md) | 8 | 8 | filtering, assignment and life cycle of tracks |
+| [CV-ASSOCIATION](112-deepsort-bytetrack.md) | 4 | 4 | gating, appearance and association of low scores |
+| [CV-SOT](113-tracking-monoobjet.md) | 2 | 2 | Local search, adaptation and identity after occlusion |
+| [CV-CORRELATION](114-mosse-kcf.md) | 5 | 5 | circulation, window and risk of contamination of the model |
+| [CV-MEANSHIFT](115-meanshift-camshift.md) | 4 | 4 | backprojection, local mode and window adaptation |
+| [CV-VLM](121-vlm-grounding.md) | 4 | 4 | connector, visual anchor and image dependency test |
+| [CV-DIFFUSION](122-generation-restauration.md) | 3 | 3 | Conditional distribution and restoration fidelity |
+| [CV-RENDU3D](123-nerf-gaussian-splatting.md) | 3 | 3 | synthesis of views, observation support and geometry |
+| [CV-IOU-AP](131-iou-ap-coco.md) | 7 | 7 | matching, classification and COCO conventions |
+| [CV-METRIQUES-TEMPS](132-tracking-trajectoires.md) | 5 | 5 | identity, HOTA aggregation and trajectory alignment |
+| [CV-FIABILITE](133-donnees-generalisation.md) | 5 | 5 | Split unit, selection and calibration of probabilities |
+| [CV-METRIQUES-APPLIQUEES](134-metriques-applications.md) | 4 | 4 | topology, physical surfaces and uncertain references |
+| [CV-PIPELINE](141-contrats-profiling-video.md) | 5 | 5 | Contracts, queues and information age |
+| [CV-QUANT](142-quantification-runtimes.md) | 5 | 5 | scale, saturation and real runtime execution |
+| [CV-DEPLOIEMENT](143-edge-reproductibilite.md) | 4 | 4 | sequential neck, thermal regime and reproducibility |
 
-## Contrôles exécutés
+## Controls carried out
 
-Référence de comparaison : `8c428b458753740737bbc79659eaa2fd797a6a17`.
-Préparation initiale sur `docs/deepen-cards-and-learning-path`. Les preuves
-ci-dessous décrivent les contrôles locaux avant publication ; les PR et leurs
-fusions se suivent dans l'historique GitHub du dépôt.
+Comparison reference: `8c428b458753740737bbc79659eaa2fd797a6a17`. Initial preparation on `docs/deepen-cards-and-learning-path`. The evidence below describes local controls before publication; PRs and their mergers follow in the repository's GitHub history.
 
-- `python3 scripts/check_vault.py` : **OK, 142 Markdown, 60 fiches, 282 cartes**.
-- `python3 scripts/learning_path.py` : **OK, 60 sujets ordonnés, 282 réponses,
-  minimum 180 mots lexicaux, aucune erreur**.
-- `python3 scripts/sync_catalog.py --check` : **19 documents, aucun périmé**.
-- `uv run --no-project --with genanki==0.13.1 python -m unittest discover -s tests` :
-  **55 tests réussis**, aucun ignoré. Cinq nouveaux tests couvrent ordre des
-  dépendances, cycle, prérequis inconnu, sujet absent/dupliqué/inconnu et le
-  parcours réel.
-- `python3 examples/pilot_math.py` : calculs du pilote exécutés, sans changement
-  de leurs attentes. Ce ne sont pas des expériences sur des images.
-- Inventaire du skill `revue-cartes`, comparaison au snapshot initial : **aucun
-  ID disparu, ajouté ni identité Anki modifiée**. Vérification complémentaire :
-  questions, objectifs, Source, tags, sous-decks, noyaux et erreurs bloquantes
-  inchangés.
-- `uv run --no-project --with genanki==0.13.1 python scripts/build_apkg.py`, puis
-  `python3 scripts/build_apkg.py --verifier dist/CV-Pilote.apkg` : **OK, 282 notes
-  et cartes, 14 sous-decks, un SVG embarqué**.
-- Comparaison au paquet local initial : **274 notes modifiées, zéro ajout,
-  zéro retrait ; les 282 GUID et le modèle 1153189853 sont conservés**. Il s'agit
-  d'un paquet de travail issu d'un arbre modifié, pas d'une release.
-- `uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1
-  python scripts/simulate_anki_import.py` : **OK**, import et réimport du même
-  paquet, trois cartes révisées, modification de réponse puis de réponse/style
-  dans une copie. Identités et historique conservés, mises à jour appliquées,
-  aucun doublon dans la collection jetable.
-- `git diff --check` : aucune erreur d'espace. Catalogue et liens du vault
-  contrôlés ; le paquet généré reste hors Git.
+- `python3 scripts/check_vault.py` : **OK, 142 Markdown, 60 reference notes, 282 flashcards**.
+- `python3 scripts/learning_path.py` : **OK, 60 ordered topics, 282 answers, minimum 180 lexical words, no errors**.
+- `python3 scripts/sync_catalog.py --check` : **19 documents, no expired**.
+- `uv run --no-project --with genanki==0.13.1 python -m unittest discover -s tests`: **55 successful tests**, none ignored. Five new tests cover dependency order, cycle, unknown prerequisite, absent/duplicated/unknown subject and the actual path.
+- `python3 examples/pilot_math.py`: Pilot calculations performed, without changing their expectations. These are not experiments on images.
+- `revue-cartes` skill inventory, compared to the initial snapshot: **no ID missing, added or identity changed Anki**. Complementary verification: questions, objectives, source, tags, subdecks, kernels and blocking errors unchanged.
+- `uv run --no-project --with genanki==0.13.1 python scripts/build_apkg.py`, then `python3 scripts/build_apkg.py --verifier dist/CV-Pilote.apkg`: **OK, 282 notes and flashcards, 14 subdecks, an embedded SVG**.
+- Comparison to the initial local package: **274 modified notes, zero addition, zero withdrawal; the 282 GUID and the 1153189853 model are retained**. This is a work package from a modified tree, not a release.
+- `uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1 python scripts/simulate_anki_import.py`: **OK**, import and reimport of the same package, three revised flashcards, response modification and then response/style in a copy. Preserved identities and history, applied updates, no duplicates in the disposable collection.
+- `git diff --check`: no space error. Catalog and links of the controlled vault; the generated packet remains out of Git.
 
-## Portée de la revue et limites
+## Scope of the review and limits
 
-Auto-revue pédagogique et confrontation documentaire **ciblée**, agent Codex,
-2026-10-24. Les sources centrales sont des articles ou documentations primaires ;
-Context7 a servi aux vérifications OpenCV. Les rapports distinguent les passages
-lus des résumés, des déductions et des accès échoués avec leur repli. Toutes les
-affirmations du contenu antérieur ne sont pas reconfirmées ligne à ligne dans
-cette passe. Aucun contenu n'est déclaré « relu » par une personne indépendante.
+Educational self-review and documentary confrontation **Targeted**, agent Codex, 2026-10-24. Central sources are primary articles or documentation; Context7 was used for OpenCV checks. The reports distinguish the passages read from the summaries, deductions and failed accesses with their fold. Not all statements in the previous content are reconfirmed line by line in this pass. No content is declared “re-read” by an independent person.
 
-Les tests vérifient la structure, les identités et l'import dans le moteur Anki,
-sans prouver le rendu Obsidian/AnkiDroid, l'import sur le téléphone ou l'efficacité
-du rappel. Les sessions d'apprentissage et essais applicatifs restent à réaliser.
-Les preuves datées antérieures du journal sont conservées.
+The tests verify the structure, identities and import in the Anki engine, without proving the Obsidian/AnkiDroid rendering, the import on the phone or the effectiveness of the recall. The learning sessions and application tests are still to be carried out. Previous dated evidence from the journal is retained.
 
 ## Standards
 
-Revue `code-review` séparée du diff `8c428b4…c729455` : aucune violation
-documentée établie. Les commits suivent Conventional Commits et séparent leurs
-intentions conformément à `CONTRIBUTING.md`. Les rapports distinguent auto-revue
-documentaire, calculs construits, tests moteur Anki et rendu Android encore non
-vérifié, comme demandé par `AGENTS.md` et les contrats pédagogiques/export.
-Aucun changement injustifié d'identité ou de format relevé dans les hunks examinés.
+Review `code-review` separate from diff `8c428b4…c729455`: no documented violation established. Commits follow Conventional Commits and separate their intentions in accordance with `CONTRIBUTING.md`. The reports distinguish documentary self-review, built calculations, engine tests Anki and made Android as yet unverified, as requested by `AGENTS.md` and educational/export contracts. No unwarranted changes in identity or format found in the Hunks examined.
 
-Un jugement de conception mineur a été retenu : possible **Shotgun Surgery**
-dans `scripts/learning_path.py`. Le générateur figeait « 60 sujets »,
-« 119 approfondissements » et « 180 mots », alors que ces valeurs existaient
-dans les données ou la constante. Une évolution pouvait laisser des comptes
-inexacts dans une page que `sync_catalog --check` considérait à jour.
+A minor design judgment was retained: possible **Shotgun Surgery** in `scripts/learning_path.py`. The generator froze “60 subjects”, “119 further study” and “180 words”, while these values existed in the data or constant. An evolution could leave inaccurate accounts in a page that `sync_catalog --check` considered up to date.
 
-Constat résolu dans `758f57d` : comptes calculés depuis les entrées et le
-catalogue, seuil partagé avec `MIN_ANSWER_WORDS`, sans duplication de la
-partition des cibles. La confirmation ciblée a relancé les six tests du parcours,
-dont la régression sur sujets, backlog et seuil ; les 19 documents générés sont
-inchangés. Les douze heuristiques du skill ont été examinées ; aucun autre
-smell suffisamment concret retenu. Aucune violation ni jugement restant sur le
-périmètre examiné.
+Resolved in `758f57d`: calculated accounts from entries and catalog, threshold shared with `MIN_ANSWER_WORDS`, without duplication of target partition. The targeted confirmation has relaunched the six tests of the course, including the regression on subjects, backlog and threshold; the 19 documents generated are unchanged. The twelve heuristics of the skill were examined; no other sufficiently concrete smell was retained. No violation or judgment remaining on the scope under review.
 
 ## Spec
 
-Aucun écart actionnable identifié entre `8c428b4` et `c729455` sur le périmètre
-contrôlé :
+No actionable deviation identified between `8c428b4` and `c729455` on the controlled perimeter:
 
-- **Profondeur et corrigibilité** : cadrage lignes 10–17, FR-015 ; 274 réponses
-  modifiées, 282 cartes conservées, minimum 180 mots lexicaux et médiane 200,5.
-  Les exemples inspectés développent mécanisme, hypothèses, diagnostic ou limites
-  liés à la question. Le seuil reste éditorial ; noyaux et erreurs bloquantes
-  restent inchangés.
-- **Cohérence** : cadrage lignes 18–21, T030 ; neuf étapes couvrant les 60 sujets
-  une seule fois, prérequis respectés, critères de passage et trois intégrations
-  proposés. Les dépendances portent sur les notions utiles, sans exiger toute
-  l'AP COCO pour SORT.
-- **Invariants** : cadrage ligne 10, FR-016/020 ; comparaison des 282 IDs,
-  questions, sources, noyaux et erreurs bloquantes sans écart. Les 60 fiches
-  prennent une seule révision et conservent statut, provenance et prérequis.
-- **Portée** : cadrage lignes 22–26, FR-037 ; bilan, rapports et journal
-  identifient l'auto-revue et ses limites. Exemples construits, tests exécutés,
-  rendu Android, rappel et 119 cibles ouvertes restent distingués.
+- **Depth and Correctibility**: framing lines 10 – 17, FR-015; 274 responses modified, 282 flashcards preserved, minimum 180 lexical words and median 200,5. Inspected examples develop mechanism, assumptions, diagnosis or limitations related to the issue. The threshold remains editorial; kernels and blocking errors remain unchanged.
+- **Consistency**: framing lines 18 – 21, T030; nine steps covering the 60 subjects only once, prerequisites met, passage criteria and three integrations proposed. Dependencies are about useful notions, without requiring all the AP COCO for SORT.
+- **Invariants**: line framing 10, FR-016/020; comparison of 282 IDs, questions, sources, kernels and blocking errors without deviation. The 60 reference notes takes a single revision and retains status, provenance and prerequisites.
+- **Scope**: framing lines 22 – 26, FR-037; balance sheet, reports and journal identify the self-review and its limits. Examples built, tests executed, Android rendering, recall and 119 open targets remain distinguished.
 
-Aucun élargissement injustifié relevé. Confirmation ciblée de `758f57d` : comptes
-issus de l'inventaire, seuil partagé et variations couvertes par un test ; aucun
-nouvel écart. Cette revue éditoriale et structurelle ne remplace ni validation
-scientifique exhaustive ni essais sur le téléphone.
+No unjustified enlargement noted. Targeted confirmation of `758f57d`: inventory accounts, shared threshold and variations covered by a test; no new deviations. This editorial and structural review does not replace any exhaustive scientific validation or tests on the phone.
 
-Constats : **Standards, zéro violation et un jugement mineur résolu ; Spec,
-zéro écart**. Après correction : **56 tests réussis**, aucun ignoré avec genanki
-0.13.1 ; parcours OK et 19 documents à jour. Ces résultats complètent les
-preuves initiales de 55 tests, sans les réécrire.
+Views: **Standards, zero violation and one minor judgment resolved; Spec, zero deviation**. After correction: **56 successful tests**, none ignored with genanki 0.13.1; OK scan and 19 up-to-date documents. These results complement the initial evidence of 55 tests, without rewriting them.

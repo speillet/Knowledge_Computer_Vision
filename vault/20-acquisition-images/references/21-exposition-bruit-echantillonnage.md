@@ -7,87 +7,116 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
 ---
-# Exposition, bruit, couleur et échantillonnage
+# Exposure, noise, color and sampling
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Obtenir une image dont les détails utiles sont mesurables. Entrées : scène, éclairage, optique, exposition et capteur ; sortie : intensités échantillonnées avec saturation, bruit et repères connus. Un réseau ne récupère pas automatiquement une information détruite par l'acquisition.
+Get an image whose useful details are measurable. Inputs: Stage, lighting, optics, exposure and sensor; Output: sampled intensities with known saturation, noise and coordinate frames. A network does not automatically retrieve information destroyed by the acquisition.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Les photons deviennent une mesure bruitée puis numérisée. Exposition, ouverture, éclairage et gain ont des effets différents. Filtrer avant décimation limite l'aliasing ; appliquer une opération photométrique en valeurs gamma n'est pas équivalent à l'appliquer en lumière linéaire.
+The photons become a noise measurement and then digitized. Exposure, aperture, lighting and gain have different effects. Filtering before decimation limits aliasing; applying a gamma photometric operation is not equivalent to applying it in linear light.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Modèle simplifié : flou $b_{px}\approx v_{px}t_e$, vitesse image en px/s et exposition en s. Le bruit photonique idéal a variance égale au nombre moyen de photoélectrons ; il ne résume pas tout le bruit du capteur. EMVA 1288 (§2.4, équations 13–14) ajoute une variance de bruit de lecture $\sigma_d^2$ en e⁻² (son écart-type $\sigma_d$ est en e⁻), et un bruit de quantification $\sigma_q^2=1/12$ DN². $\eta$ est le rendement quantique, $\mu_p$ le nombre moyen de photons reçus par pixel pendant l’exposition ; $\eta\mu_p$ est le nombre moyen de photoélectrons. $K$ est le gain système en DN/e⁻, et $\sigma_q^2$ la variance de quantification en DN². Le modèle suppose une réponse linéaire non saturée à un point de fonctionnement fixé. Le SNR s'écrit $\eta\mu_p/\sqrt{\sigma_d^2+\sigma_q^2/K^2+\eta\mu_p}$ (§2.6, équation 21). Hors quantification, le gain système $K$ s'y annule : augmenter le gain ne change pas le SNR, alors que doubler les photons le multiplie par $\sqrt2$ en régime photonique et jusqu'à 2 en régime de bruit de lecture (équation 22). Un gain plus fort atteint la valeur numérique maximale avec moins d'électrons, d'où une capacité de saturation réduite (§2.7). Exemple du projet, $\sigma_d=5$ e⁻ : SNR 8,9 à 100 e⁻, 13,3 à 200 e⁻, inchangé si l'on double $K$. Nyquist demande une fréquence inférieure à la moitié de l'échantillonnage pour un signal limité en bande, sans garantir la détection de tout défaut à deux pixels. Réduire une image sans préfiltre adapté au facteur de réduction replie les hautes fréquences dans le résultat. Parmar et al. (2022, §§2 et 3.2) le rappellent, et observent de l’aliasing dans les configurations OpenCV, TensorFlow et PyTorch étudiées en 2022, face aux filtres adaptatifs de PIL (§1, §6.3). Ce résultat n’est pas une propriété intemporelle d’une bibliothèque : vérifier API, version, interpolation et antialiasing. Par exemple, `torchvision.transforms.Resize` 0.24 active `antialias=True`, valeur par défaut introduite en 0.17.
+Simplified model: blur $b_{px}\approx v_{px}t_e$, image speed in px/s and exposure in s. The ideal photonic noise has variance equal to the average number of photoelectrons; it does not sum up all the noise of the sensor. EMVA 1288 (§2.4, equations 13 – 14) adds a reading noise variance $\sigma_d^2$ to e⁻² (its standard deviation $\sigma_d$ is in e⁻), and a quantization noise $\sigma_q^2=1/12$ DN². $\eta$ is the quantum efficiency, $\mu_p$ the average number of photons received per pixel during exposure; $\eta\mu_p$ is the average number of photoelectrons. $K$ is the system gain in DN/e⁻, and $\sigma_q^2$ is the quantification variance in DN². The model assumes an unsaturated linear response at a fixed operating point. The SNR is written $\eta\mu_p/\sqrt{\sigma_d^2+\sigma_q^2/K^2+\eta\mu_p}$ (§2.6, equation 21). Excluding quantification, the gain system $K$ cancels itself out: increasing the gain does not change the SNR, while doubling the photons multiplies it by $\sqrt2$ in photonic regime and up to 2 in read noise regime (equation 22). A stronger gain reaches the maximum numerical value with fewer electrons, hence a reduced saturation capacity (§2.7). Example of the project, $\sigma_d=5$ e⁻: SNR 8,9 to 100 e⁻, 13,3 to 200 e⁻, unchanged if we double $K$. Nyquist requires less than half the sampling for a band-limited signal, without guaranteeing detection of any two-pixel faults. Reducing an image without a prefilter adapted to the reduction factor folds the high frequencies in the result. Parmar et al. (2022, §§2 and 3.2) recall this, and observe aliasing in the OpenCV, TensorFlow and PyTorch configurations studied in 2022, opposite the adaptive filters of PIL (§1, §6.3). This result is not a timeless property of a library: check API, version, interpolation and antialiasing. For example, `torchvision.transforms.Resize` 0.24 enables `antialias=True`, the default value introduced in 0.17.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Vérifier plage, profondeur de bits, gamma, BGR/RGB, balance des blancs et saturation. Le gain numérique ne crée pas de photons. Rolling shutter et temps d'exposition sont deux dimensions temporelles distinctes. Pour éclaircir une image, doubler l’éclairage double le signal dans le modèle linéaire non saturé sans allonger le flou, au contraire d'une exposition plus longue.
+Check range, bit depth, gamma, BGR/RGB, white balance and saturation. Digital gain does not create photons. Rolling shutter and exposure time are two distinct temporal dimensions. To brighten an image, doubling the lighting doubles the signal in the unsaturated linear model without lengthening the blur, unlike a longer exposure.
 
-## Coût et implémentation
+## Cost and implementation
 
-Résolution et débit capteur imposent transferts et calcul ; mesurer le coût complet. Aucune capture matérielle exécutée ; les équations sont des modèles annoncés, pas des propriétés universelles de caméra.
+Resolution and sensor throughput require transfers and calculation; measure the full cost. No hardware capture executed; equations are announced models, not universal camera properties.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation analytique : doubler l'exposition à vitesse image constante double le flou prévu. Sur images réservées, comparer netteté et saturation avant/après, à éclairage contrôlé. Une meilleure moyenne d'intensité peut masquer une perte de résolution utile.
+Analytical variation: doubling the exposure at constant image speed doubles the expected blur. On reserved images, compare sharpness and saturation before/after, with controlled lighting. A better average intensity can mask a useful loss of resolution.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Échec sur pièces rapides : mesurer flou, saturation et contraste aux endroits critiques avant de réentraîner. Un motif changeant après resize peut indiquer aliasing et non dérive sémantique.
+Failure on fast parts: Measure blur, saturation and contrast at critical locations before retraining. A changing pattern after resize can indicate aliasing and not semantic drift.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Éclairage synchronisé, exposition plus courte, optique adaptée ou cadence différente : arbitrer signal, flou, chaleur, coût et contraintes de ligne.
+Synchronized lighting, shorter exposure, adapted optics or different cadence: arbitrate signal, blur, heat, cost and line constraints.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent exposition, bruit et échantillonnage reliés à la tâche. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop exposure, noise and sampling related to the task. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-ACQUISITION-001
+### Case linked to CV-ACQUISITION-001
 
-**Question de travail** : Un détail se déplace à 800 px/s et l’exposition est de 5 ms. Quel flou prévoir dans le modèle de mouvement uniforme ?
+**Question of work**: An image detail moves at 800 px/s during a 5 ms exposure. What motion blur is expected under a uniform-motion model?
 
-**Réponse de référence** : Environ 4 px : 800 × 0,005. Doubler l’exposition donnerait 8 px dans ce modèle.
+**Reference Response**: About 4 px: 800 × 0,005. Doubling the exposure would give 8 px in this model.
 
-**Lecture physique et exemple construit** : le pixel reçoit de la lumière pendant toute l'exposition ; il additionne donc les positions successives du détail. Le produit $v_{px}t_e$ est une longueur dans l'image, pas une distance dans le monde. Pour un défaut large de deux pixels, une traînée de quatre pixels peut mélanger son signal avec le fond, même si l'image conserve une luminosité convenable. Une compensation du déplacement entre frames ne restitue pas automatiquement ce mélange à l'intérieur d'une frame.
+**Physical reading and built example**: The pixel receives light throughout the exposure, so it adds up the successive positions of the detail. The product $v_{px}t_e$ is a length in the image, not a distance in the world. For a two-pixel wide defect, a four-pixel trail can mix its signal with the background, even if the image retains proper brightness. A compensation for moving between frames does not automatically return this mixture inside a frame.
 
-**Décision sous contrainte** : pour viser au plus un pixel de déplacement avec la même vitesse, le modèle donne $t_e\le1/800$ s, soit 1,25 ms. C'est un budget analytique, pas une garantie de détection. Réduire l'exposition oblige à reconsidérer l'éclairage et le bruit. Mesurer le mouvement dans la zone utile : une vitesse moyenne sur toute l'image peut masquer un détail plus rapide.
+**Decision under constraint**: to aim at the most one pixel of displacement with the same speed, the model gives $t_e\le1/800$ s, or 1,25 ms. It's an analytical budget, not a guarantee of detection. Reducing exposure requires reconsidering lighting and noise. Measure movement in the useful area: an average speed over the entire image can hide a faster detail.
 
-### Cas lié à CV-ACQUISITION-004
+### Case linked to CV-ACQUISITION-004
 
-**Question de travail** : Quels contrôles d’image faire lorsqu’un modèle transféré échoue sans changement apparent de scène ?
+**Question of work**: Which image checks are needed when a transferred model fails despite no apparent change in the scene?
 
-**Réponse de référence** : Vérifier ordre couleur, gamme/normalisation, gamma, bit depth, exposition et saturation dans la chaîne réellement reçue.
+**Reference Response**: Check color order, range/normalization, gamma, bit depth, exposure and saturation in the actual received string.
 
-**Pourquoi ces contrôles départagent les causes** : deux tableaux de même forme peuvent représenter des couleurs ou des quantités physiques différentes. Un canal rouge interprété comme bleu change les contrastes appris ; une division supplémentaire par 255 modifie l'échelle ; un passage en entier peut écrêter des valeurs. Une visualisation qui ajuste automatiquement son contraste peut rendre ces tableaux presque identiques à l'œil.
+**Why these checks separate the causes**: Two tables of the same shape can represent different colors or physical quantities. A red channel interpreted as blue changes the learned contrasts; an additional division by 255 changes the scale; an entire passage can clip values. A visualization that automatically adjusts its contrast can make these paintings almost identical to the eye.
 
-**Enquête reproductible proposée** : choisir une image témoin, conserver son fichier original et relever, à chaque étape, forme, type, minimum, maximum et valeurs de quelques pixels connus. Comparer ensuite le tenseur effectivement reçu par le modèle avec celui de la chaîne d'entraînement. Tester une seule correction à la fois. Une amélioration après remise en conformité soutient une cause de prétraitement ; elle ne dispense pas d'évaluer les autres images et les cas difficiles du nouveau capteur.
+**Proposed Reproducible Investigation**: choose a sample image, keep its original file and record, at each step, shape, type, minimum, maximum and values of a few known pixels. Then compare the tensor actually received by the model with that of the drive chain. Test only one correction at a time. An improvement after re-compliance supports a pre-processing cause; it does not exempt the evaluation of other images and difficult cases of the new sensor.
 
-**Repère documentaire de cette passe** : [EMVA 1288 Linear 4.0](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf), §§2.4, 2.6 et 2.7, modèle de bruit et signal. Les autres développements figurent dans les [cartes associées](../21-exposition-bruit-echantillonnage.md).
+**Documentary reference for this pass**: [EMVA 1288 Linear 4.0](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf), §§2.4, 2.6 and 2.7, noise and signal model. The other developments are in the [flashcards](../21-exposition-bruit-echantillonnage.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html). Le tutoriel décrit le flou gaussien avant décimation, pas l'aliasing.
-- [Parmar, Zhang et Zhu 2022, On Aliased Resizing and Surprising Subtleties in GAN Evaluation, CVPR, §§1–3.2 et 6.3](https://arxiv.org/abs/2104.11222) : critère de Nyquist, préfiltre et conventions de resize selon la bibliothèque.
-- [sRGB, §§A.7–A.8 et B.1, conversion linéaire et fonction de transfert](https://www.w3.org/Graphics/Color/srgb).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Le calcul $b_{px}=v_{px}t_e$ est une déduction cinématique du projet pour une vitesse image constante ; EMVA documente le capteur, pas cette formule de flou. Le contrôle de cohérence entraînement/inférence est une démarche du projet.
+### CV-ACQUISITION-001
 
-- [EMVA1288 Linear 4.0, 16 juin 2021, §2.4, équations 13–15, §2.6, équations 20–23, §2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf) : modèle de bruit, SNR et saturation.
-- [Edmund Optics, resolution](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/resolution/). Page inaccessible aux outils automatisés le 2026-10-23 : non revérifiée.
-- [torchvision 0.24, Resize, paramètre antialias et changement de défaut en 0.17 (consulté le 2026-10-24)](https://docs.pytorch.org/vision/0.24/generated/torchvision.transforms.Resize.html).
-- [Cartes associées](../21-exposition-bruit-echantillonnage.md).
+**Situation**: An image detail moves at 800 px/s during a 5 ms exposure. What motion blur is expected under a uniform-motion model?
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet. Révisions 3 et 4 : auto-revue `revue-cartes` par Agent Claude Code le 2026-10-23, correction puis enrichissement accepté par l'apprenant, sans validation indépendante.
+**Model that produces this calculation**: for a constant image translation, an ideal $I_0$ image gives a standardized observation $I_b(x)=t_e^{-1}\int_0^{t_e}I_0(x-v_{px}t)\,dt$, with $x$ in pixels, $t$ in seconds and a rectangular exposure of duration $t_e>0$. This is an average over a $|v_{px}|t_e$ length segment: it explains why blurring depends on speed during exposure, not just the number of frames per second. The formula here assumes a unique and neglectful optical direction, noise and saturation. In perspective, two depths can have different image speeds: a blur budget established on the background does not necessarily protect the part.
+
+### CV-ACQUISITION-002
+
+**Situation**: An inspection image is too dark. You can double camera gain or double the received light by increasing exposure time or illumination. How does each option affect SNR, motion blur and saturation?
+
+**Separate the regimes**: noting $N$ as the average of useful electrons, the simplified model becomes $SNR=N/\sqrt{N+\sigma_d^2}$ when the quantification is negligible. At low $N$, the denominator varies little and doubling the photons can almost double the SNR; at large $N$, it grows as $\sqrt N$ and the gain tends towards $\sqrt2$. For a defect, also examine the contrast between defect and background: illuminating more can saturate the background before obtaining the necessary contrast. An analog gain placed before certain noise sources can have a different real behavior than a simple digital scale change; the model and measurements must specify the stage concerned.
+
+### CV-ACQUISITION-003
+
+**Situation**: A fine pattern changes appearance abruptly after downsampling. What should be checked before blaming the model?
+
+**Example built frequency**: A sine wave of frequency 0,4 cycle per pixel of origin exceeds the limit of 0,25 for a reduction of a factor of two. After decimation, it corresponds to 0,8 cycle per final pixel, indistinguishable on this grid with a folded frequency of 0,2 cycle per final pixel. The observed pattern is therefore an ambiguity of sampling, not a real movement. The prefilter must attenuate beyond the new Nyquist frequency before discarding the samples. Its support depends on the reduction factor; keeping only the name "bilinear" does not fully describe this treatment. This reasoning is an analytic case on a sinusoid, not a result on the network.
+
+### CV-ACQUISITION-004
+
+**Situation**: Which image checks are needed when a transferred model fails despite no apparent change in the scene?
+
+**Distinguish normalization and linearization**: Divide a value sRGB by 255 places it in a numeric range; this does not remove its transfer curve. For a normalized sRGB component $c>0,04045$, its relative linear value is $c_{lin}=((c+0,055)/1,055)^{2,4}$. Thus, $c=0,5$ represents about 0,214 in linear, and not 0,5. Applying this conversion to an already linear input would be another mistake. Document successively decoding, channel order, photometric transfer, resize and then standardization of the tensor. An equality of form or of minimum/maximum does not demonstrate the equality of the intermediate values or their physical sense.
+
+**Passages consulted for these developments**: [EMVA 1288 Linear 4.0](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf), §§2.4, 2.6 – 2.7, signal, SNR and saturation; [sRGB, ICC interpretation](https://www.w3.org/Graphics/Color/srgb), §§A.8 and B.1, transfer function and reverse.
+
+## Sources and flashcards
+
+- [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html). The tutorial describes Gaussian blur before decimation, not aliasing.
+- [Parmar, Zhang and Zhu 2022, On Aliased Resizing and Surprising Subtleties in GAN Evaluation, CVPR, §§1 – 3.2 and 6.3](https://arxiv.org/abs/2104.11222): Nyquist criterion, prefilter and resize conventions depending on the library.
+- [sRGB, §§A.7 – A.8 and B.1, linear conversion and transfer function](https://www.w3.org/Graphics/Color/srgb).
+
+The $b_{px}=v_{px}t_e$ calculation is a kinematic deduction of the project for a constant image speed; EMVA documents the sensor, not this blur formula. The check training/inference coherence is a project approach.
+
+- [EMVA1288 Linear 4.0, 16 June 2021, §2.4, equations 13 – 15, §2.6, equations 20 – 23, §2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf): noise model, SNR and saturation.
+- [Edmund Optics, resolution](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/resolution/). Page inaccessible to automated tools the 2026-10-23: not reverified.
+- [torchvision 0.24, Resize, antialias parameter and fault change to 0.17 (accessed on 2026-10-24)](https://docs.pytorch.org/vision/0.24/generated/torchvision.transforms.Resize.html).
+- [Related flashcards](../21-exposition-bruit-echantillonnage.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project. Revisions 3 and 4: self-review `revue-cartes` by Agent Claude Code on 2026-10-23, correction and enrichment accepted by the learner, without independent validation.

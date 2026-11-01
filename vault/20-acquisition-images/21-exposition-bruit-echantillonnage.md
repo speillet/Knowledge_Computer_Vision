@@ -1,87 +1,95 @@
-# Exposition, bruit, couleur et échantillonnage — cartes
+# Flashcards — Exposure, noise, color and sampling
 
-Fiche : [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::20-acquisition-images
 
 ## CV-ACQUISITION-001
 
-Objectif : calculer un flou simplifié. Famille : raisonnement. Provenance : agent.
+Objective: Calculate a simplified blur. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ACQUISITION-001
-Question: Un détail se déplace à 800 px/s et l’exposition est de 5 ms. Quel flou prévoir dans le modèle de mouvement uniforme ?
-Reponse: **Noyau attendu** : Environ 4 px : 800 × 0,005. Doubler l’exposition donnerait 8 px dans ce modèle.
+Question: An image detail moves at 800 px/s during a 5 ms exposure. What motion blur is expected under a uniform-motion model?
+Reponse: **Expected answer**: About 4 px: 800 × 0,005. Doubling the exposure would give 8 px in this model.
 
-**Approfondissement** : Le calcul exclut accélération, rotation et vibrations ; il sert à concevoir un test, pas à certifier une caméra.
+**Further explanation**: The calculation excludes acceleration, rotation and vibration; it is used to design a test, not to certify a camera.
 
-**Lecture physique et exemple construit** : le pixel reçoit de la lumière pendant toute l'exposition ; il additionne donc les positions successives du détail. Le produit $v_{px}t_e$ est une longueur dans l'image, pas une distance dans le monde. Pour un défaut large de deux pixels, une traînée de quatre pixels peut mélanger son signal avec le fond, même si l'image conserve une luminosité convenable. Une compensation du déplacement entre frames ne restitue pas automatiquement ce mélange à l'intérieur d'une frame.
+**Physical reading and built example**: The pixel receives light throughout the exposure, so it adds up the successive positions of the detail. The product $v_{px}t_e$ is a length in the image, not a distance in the world. For a two-pixel wide defect, a four-pixel trail can mix its signal with the background, even if the image retains proper brightness. A compensation for moving between frames does not automatically return this mixture inside a frame.
 
-**Décision sous contrainte** : pour viser au plus un pixel de déplacement avec la même vitesse, le modèle donne $t_e\le1/800$ s, soit 1,25 ms. C'est un budget analytique, pas une garantie de détection. Réduire l'exposition oblige à reconsidérer l'éclairage et le bruit. Mesurer le mouvement dans la zone utile : une vitesse moyenne sur toute l'image peut masquer un détail plus rapide.
+**Decision under constraint**: to aim at the most one pixel of displacement with the same speed, the model gives $t_e\le1/800$ s, or 1,25 ms. It's an analytical budget, not a guarantee of detection. Reducing exposure requires reconsidering lighting and noise. Measure movement in the useful area: an average speed over the entire image can hide a faster detail.
 
-**Erreurs bloquantes** : Mélanger ms et s ou conclure à une PSF universelle.
-Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Fiche complète]] ; [EMVA1288 Linear 4.0 (2021), §§2.1, 2.4, 2.6–2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf) ; calcul cinématique du projet sous mouvement image uniforme.
+**Model that produces this calculation**: for a constant image translation, an ideal $I_0$ image gives a standardized observation $I_b(x)=t_e^{-1}\int_0^{t_e}I_0(x-v_{px}t)\,dt$, with $x$ in pixels, $t$ in seconds and a rectangular exposure of duration $t_e>0$. This is an average over a $|v_{px}|t_e$ length segment: it explains why blurring depends on speed during exposure, not just the number of frames per second. The formula here assumes a unique and neglectful optical direction, noise and saturation. In perspective, two depths can have different image speeds: a blur budget established on the background does not necessarily protect the part.
+
+**Blocking errors**: Mix ms and s or conclude to a universal PSF.
+Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Full reference]]; [EMVA1288 Linear 4.0 (2021), §§2.1, 2.4, 2.6 – 2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf); kinematic calculation of the project under uniform image movement.
 Tags: cv::pilote cv::d02 famille::raisonnement cv_id::CV-ACQUISITION-001 provenance::agent pole::A pole::B pole::C pole::E pole::F
 END
 
 ## CV-ACQUISITION-002
 
-Objectif : distinguer gain et exposition. Famille : comparaison. Provenance : agent.
+Objective: Distinguish between gain and exposure. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ACQUISITION-002
-Question: Une image de contrôle est trop sombre. On peut doubler le gain de la caméra, ou doubler la lumière reçue en allongeant l’exposition ou en renforçant l’éclairage. Que change chacun des deux réglages pour le SNR, le flou et la saturation ?
-Reponse: **Noyau attendu** : doubler la lumière double les photoélectrons et augmente le SNR : d’un facteur $\sqrt2$ quand le bruit photonique domine, jusqu’à 2 quand le bruit de lecture domine ; une exposition plus longue augmente aussi le flou de bougé. Doubler le gain multiplie signal et bruit déjà acquis : hors bruit de quantification, le SNR ne change pas, et la valeur numérique maximale est atteinte avec deux fois moins d’électrons, ce qui réduit la dynamique. Le gain ne crée pas d’information photonique et ne répare pas une saturation.
+Question: An inspection image is too dark. You can double camera gain or double the received light by increasing exposure time or illumination. How does each option affect SNR, motion blur and saturation?
+Reponse: **Expected answer**: doubling light doubles photoelectrons and increases SNR: by a factor of $\sqrt2$ when photonic noise dominates, up to 2 when reading noise dominates; longer exposure also increases motion blur. Double the gain multiplies signal and noise already acquired: excluding quantization noise, the SNR does not change, and the maximum numerical value is reached with half the electrons, which reduces the dynamics. The gain does not create photonic information and does not repair saturation.
 
-**Approfondissement** : selon EMVA 1288, $\mathrm{SNR}=\eta\mu_p/\sqrt{\sigma_d^2+\sigma_q^2/K^2+\eta\mu_p}$ : le gain système $K$ ne joue que par la quantification. $\eta$ est le rendement quantique, $\mu_p$ le nombre moyen de photons reçus par pixel pendant l’exposition ; $\eta\mu_p$ est le nombre moyen de photoélectrons. $K$ est le gain système en DN/e⁻, et $\sigma_q^2$ la variance de quantification en DN². Le modèle suppose une réponse linéaire non saturée à un point de fonctionnement fixé.  Exemple du projet avec un bruit de lecture $\sigma_d=5$ e⁻ : 100 e⁻ donnent un SNR de 8,9, 200 e⁻ un SNR de 13,3, et doubler $K$ laisse 8,9. Renforcer l’éclairage plutôt que l’exposition double le signal sans allonger le flou. Le modèle décrit un point de fonctionnement : mesurer le SNR à chaque réglage réellement utilisé.
+**Further explanation**: according to EMVA 1288, $\mathrm{SNR}=\eta\mu_p/\sqrt{\sigma_d^2+\sigma_q^2/K^2+\eta\mu_p}$: the system gain $K$ only plays by the quantification. $\eta$ is the quantum efficiency, $\mu_p$ the average number of photons received per pixel during exposure; $\eta\mu_p$ is the average number of photoelectrons. $K$ is the system gain in DN/e⁻, and $\sigma_q^2$ is the quantification variance in DN². The model assumes an unsaturated linear response at a fixed operating point. Example of the project with a reading noise $\sigma_d=5$ e⁻: 100 e⁻ give an SNR of 8,9, 200 e⁻ an SNR of 13,3, and double $K$ leaves 8,9. Reinforce lighting rather than exposure doubles the signal without lengthening the blur. The model describes an operating point: measure the SNR at each setting actually used.
 
-**Lien avec le choix d'acquisition** : commencer par vérifier si le défaut utile est limité par le manque de photons, par le mouvement ou par une zone saturée. Dans le premier cas, renforcer l'éclairage peut aider ; dans le second, allonger l'exposition peut détruire le détail ; dans le troisième, amplifier davantage aggrave l'écrêtage. Ce diagnostic conduit à comparer les réglages sur les pixels critiques, et pas seulement sur la moyenne de luminosité de l'image.
+**Link to the choice of acquisition**: Start by checking whether the useful defect is limited by the lack of photons, by movement or by a saturated area. In the first case, enhancing lighting can help; in the second, lengthening exposure can destroy detail; in the third, further amplifying aggravates clipping. This diagnosis leads to comparing the settings on the critical pixels, and not only on the average brightness of the image.
 
-**Erreurs bloquantes** : dire que tout gain améliore le SNR ; oublier qu’une exposition plus longue augmente le flou.
-Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Fiche complète]] ; [EMVA1288 Linear 4.0 (2021), §2.4, équations 13–14, §2.6, équations 21–22, et §2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf) ; exemple chiffré du projet.
+**Separate the regimes**: noting $N$ as the average of useful electrons, the simplified model becomes $SNR=N/\sqrt{N+\sigma_d^2}$ when the quantification is negligible. At low $N$, the denominator varies little and doubling the photons can almost double the SNR; at large $N$, it grows as $\sqrt N$ and the gain tends towards $\sqrt2$. For a defect, also examine the contrast between defect and background: illuminating more can saturate the background before obtaining the necessary contrast. An analog gain placed before certain noise sources can have a different real behavior than a simple digital scale change; the model and measurements must specify the stage concerned.
+
+**Blocking errors**: say that any gain improves SNR; forget that longer exposure increases blur.
+Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Full reference]]; [EMVA1288 Linear 4.0 (2021), §2.4, equations 13 – 14, §2.6, equations 21 – 22, and §2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf); numerical example of the project.
 Tags: cv::pilote cv::d02 famille::comparaison cv_id::CV-ACQUISITION-002 provenance::agent pole::A pole::B pole::C pole::E pole::F
 END
 
 ## CV-ACQUISITION-003
 
-Objectif : reconnaître aliasing et prétraitement incohérent. Famille : diagnostic. Provenance : agent.
+Objective: recognize aliasing and inconsistent preprocessing. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ACQUISITION-003
-Question: Un motif fin change brutalement d’apparence après réduction de taille. Que vérifier avant d’incriminer le modèle ?
-Reponse: **Noyau attendu** : Le filtrage avant décimation, l’échelle du motif et la convention de resize ; un sous-échantillonnage peut créer de fausses basses fréquences.
+Question: A fine pattern changes appearance abruptly after downsampling. What should be checked before blaming the model?
+Reponse: **Expected answer**: Filtering before decimation, pattern scale, and resize convention; subsampling can create false low frequencies.
 
-**Approfondissement** : sans préfiltre adapté au facteur de réduction, les hautes fréquences se replient dans l'image réduite. Parmar et al. observent de l’aliasing pour les configurations OpenCV, TensorFlow et PyTorch évaluées en 2022, face aux filtres adaptatifs de PIL. Ce constat dépend de l’API, de la version et des options ; `torchvision.transforms.Resize` 0.24 active par défaut l’antialiasing, contrairement à ses anciennes versions. Vérifier interpolation, facteur de réduction et antialiasing dans les deux chaînes. Comparer des réductions contrôlées sur mire et garder la même chaîne en train/test/inférence.
+**Further explanation**: without a prefilter adapted to the reduction factor, the high frequencies fold back into the reduced image. Parmar et al. observe aliasing for the OpenCV, TensorFlow and PyTorch configurations evaluated in 2022, against adaptive PIL filters. This depends on the API, version and options; `torchvision.transforms.Resize` 0.24 enables antialiasing by default, unlike its older versions. Check interpolation, reduction factor and antialiasing in both chains. Compare controlled discounts on calibration target and keep the same train/test/inference chain.
 
-**Exemple interprété** : un motif alternant des bandes claires et sombres peut devenir uniforme ou produire des bandes plus larges selon la phase d'échantillonnage. Le réseau voit alors un nouveau motif qui n'existait pas dans la scène. Un filtre préalable atténue les fréquences incompatibles avec la grille finale, au prix d'une perte de détail. Ajouter ensuite une interpolation plus sophistiquée ne reconstruit pas l'information déjà repliée.
+**Example interpreted**: A pattern alternating light and dark bands can become uniform or produce wider bands depending on the sampling phase. The network then sees a new pattern that did not exist in the scene. A pre-filter attenuates the frequencies incompatible with the final grid, at the cost of a loss of detail. Then adding a more sophisticated interpolation does not rebuild the already folded information.
 
-**Contrôle discriminant proposé** : comparer plusieurs phases du même motif et plusieurs facteurs de réduction, en gardant le réseau et les annotations fixes. Si les prédictions changent surtout avec la phase de resize, examiner la chaîne d'image avant d'ajouter des augmentations. L'objectif est de conserver un signal utile et cohérent, pas de rendre toute image visuellement plus lisse.
+**check proposed discriminant**: compare several phases of the same pattern and several reduction factors, keeping the network and annotations fixed. If predictions change mostly with the resize phase, examine the image string before adding increases. The goal is to keep a useful and consistent signal, not to make any image visually smoother.
 
-**Erreurs bloquantes** : Supposer que plus de pixels du capteur garantissent le détail après tout resize.
-Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Fiche complète]] ; [Parmar, Zhang et Zhu 2022, On Aliased Resizing and Surprising Subtleties in GAN Evaluation, CVPR, §§1, 2, 3.2 et 6.3](https://arxiv.org/abs/2104.11222) ; [torchvision 0.24, Resize, antialias](https://docs.pytorch.org/vision/0.24/generated/torchvision.transforms.Resize.html) ; [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
+**Example built frequency**: A sine wave of frequency 0,4 cycle per pixel of origin exceeds the limit of 0,25 for a reduction of a factor of two. After decimation, it corresponds to 0,8 cycle per final pixel, indistinguishable on this grid with a folded frequency of 0,2 cycle per final pixel. The observed pattern is therefore an ambiguity of sampling, not a real movement. The prefilter must attenuate beyond the new Nyquist frequency before discarding the samples. Its support depends on the reduction factor; keeping only the name "bilinear" does not fully describe this treatment. This reasoning is an analytic case on a sinusoid, not a result on the network.
+
+**Blocking errors**: Suppose that more pixels of the sensor guarantee the detail after all resize.
+Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Full reference]] ; [Parmar, Zhang and Zhu 2022, On Aliased Resizing and Surprising Subtleties in GAN Evaluation, CVPR, §§1, 2, 3.2 and 6.3](https://arxiv.org/abs/2104.11222) ; [torchvision 0.24, Resize, antialias](https://docs.pytorch.org/vision/0.24/generated/torchvision.transforms.Resize.html) ; [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
 Tags: cv::pilote cv::d02 famille::diagnostic cv_id::CV-ACQUISITION-003 provenance::agent pole::A pole::B pole::C pole::E pole::F
 END
 
 ## CV-ACQUISITION-004
 
-Objectif : contrôler une entrée image. Famille : pratique. Provenance : agent.
+Objective: check an image entry. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ACQUISITION-004
-Question: Quels contrôles d’image faire lorsqu’un modèle transféré échoue sans changement apparent de scène ?
-Reponse: **Noyau attendu** : Vérifier ordre couleur, gamme/normalisation, gamma, bit depth, exposition et saturation dans la chaîne réellement reçue.
+Question: Which image checks are needed when a transferred model fails despite no apparent change in the scene?
+Reponse: **Expected answer**: Check color order, range/normalization, gamma, bit depth, exposure and saturation in the actual received string.
 
-**Approfondissement** : Comparer numériquement une même image avant et après chaque étape, puis les contrats d’entraînement et d’exploitation.
+**Further explanation**: Digitally compare the same image before and after each step, then the training and operation contracts.
 
-**Pourquoi ces contrôles départagent les causes** : deux tableaux de même forme peuvent représenter des couleurs ou des quantités physiques différentes. Un canal rouge interprété comme bleu change les contrastes appris ; une division supplémentaire par 255 modifie l'échelle ; un passage en entier peut écrêter des valeurs. Une visualisation qui ajuste automatiquement son contraste peut rendre ces tableaux presque identiques à l'œil.
+**Why these checks separate the causes**: Two tables of the same shape can represent different colors or physical quantities. A red channel interpreted as blue changes the learned contrasts; an additional division by 255 changes the scale; an entire passage can clip values. A visualization that automatically adjusts its contrast can make these paintings almost identical to the eye.
 
-**Enquête reproductible proposée** : choisir une image témoin, conserver son fichier original et relever, à chaque étape, forme, type, minimum, maximum et valeurs de quelques pixels connus. Comparer ensuite le tenseur effectivement reçu par le modèle avec celui de la chaîne d'entraînement. Tester une seule correction à la fois. Une amélioration après remise en conformité soutient une cause de prétraitement ; elle ne dispense pas d'évaluer les autres images et les cas difficiles du nouveau capteur.
+**Proposed Reproducible Investigation**: choose a sample image, keep its original file and record, at each step, shape, type, minimum, maximum and values of a few known pixels. Then compare the tensor actually received by the model with that of the drive chain. Test only one correction at a time. An improvement after re-compliance supports a pre-processing cause; it does not exempt the evaluation of other images and difficult cases of the new sensor.
 
-**Erreurs bloquantes** : Se fier seulement à une visualisation autoscalée.
-Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Fiche complète]] ; [sRGB, §§A.7–A.8 et B.1, conversion linéaire et fonction de transfert](https://www.w3.org/Graphics/Color/srgb) ; [EMVA1288 Linear 4.0 (2021), §§2.1, 2.4, 2.6–2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf) ; checklist de diagnostic du projet.
+**Distinguish normalization and linearization**: Divide a value sRGB by 255 places it in a numeric range; this does not remove its transfer curve. For a normalized sRGB component $c>0,04045$, its relative linear value is $c_{lin}=((c+0,055)/1,055)^{2,4}$. Thus, $c=0,5$ represents about 0,214 in linear, and not 0,5. Applying this conversion to an already linear input would be another mistake. Document successively decoding, channel order, photometric transfer, resize and then standardization of the tensor. An equality of form or of minimum/maximum does not demonstrate the equality of the intermediate values or their physical sense.
+
+**Blocking errors**: Rely only on a self-scaling visualization.
+Source: [[20-acquisition-images/references/21-exposition-bruit-echantillonnage|Full reference]]; [sRGB, §§A.7 – A.8 and B.1, linear conversion and transfer function](https://www.w3.org/Graphics/Color/srgb); [EMVA1288 Linear 4.0 (2021), §§2.1, 2.4, 2.6 – 2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf); project diagnostic checklist.
 Tags: cv::pilote cv::d02 famille::pratique cv_id::CV-ACQUISITION-004 provenance::agent pole::A pole::B pole::C pole::E pole::F
 END

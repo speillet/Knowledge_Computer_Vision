@@ -1,453 +1,231 @@
-# Spécification : base de connaissances de computer vision senior
+# Specification: Computer Vision Senior Knowledge Base
 
-**Branche de travail** : `feat/obsidian-pilot`
-**Création** : 2026-10-18
-**Révision éditoriale** : 6, revue des pôles et couverture thématique le 2026-10-18
-**Statut** : cadrage en implémentation ; validation éditoriale et applicative suivie séparément
-**Périmètre Spec Kit** : `specs/001-cv-knowledge-base`
+**Branch of work**: `feat/obsidian-pilot` **Establishment**: 2026-10-18 **Editorial review**: 6, pole review and thematic coverage the 2026-10-18 **Status**: framing in implementation; editorial and application validation followed separately **Perimeter Spec Kit**: `specs/001-cv-knowledge-base`
 
-**Demande** : constituer un vault Obsidian et des flashcards exportables vers
-Anki, couvrant largement la computer vision classique et moderne, pour progresser
-vers un profil senior généraliste en industrie.
+**Request**: build a vault Obsidian and flashcards exportable to Anki, largely covering classical and modern computer vision, to progress towards a senior generalist profile in industry.
 
-**Public confirmé** : ingénieur CV depuis cinq ans, à l'aise en ML/DL,
-expérimenté en segmentation sémantique. Lacunes prioritaires : méthodes classiques,
-spécificités des techniques de vision, matching, calibration/recalage, tracking
-et détection.
+**Confirmed Public**: CV engineer for five years, comfortable in ML/DL, experienced in semantic segmentation. Priority gaps: classic methods, specific vision techniques, matching, calibration/registration, tracking and detection.
 
-**Choix confirmés** : fiches complètes reliées à plusieurs cartes détaillées ;
-prose en français, termes techniques anglais et noms originaux conservés ;
-équations expliquées, pseudocode, code et illustrations utiles à la compréhension.
-Les priorités détaillées et le pilote restent des propositions éditoriales.
+**Confirmed Choices**: reference notes complete related to several detailed flashcards; prose in English, English technical terms and preserved original names; explained equations, pseudocode, code and illustrations useful for understanding. The detailed priorities and the pilot remain editorial proposals.
 
-**Décisions de démarrage, 2026-10-18** : l'utilisateur demande de commencer
-l'implémentation. Le premier lot suit les sept sujets initiaux proposés ;
-le client de révision confirmé est **AnkiDroid sur Android**. Le format d'export
-reste expérimental pendant ce lot, sans validation technique ou pédagogique
-anticipée. Les cartes initiales sont rédigées par un agent, provenance affichée.
+**Start-up decisions, 2026-10-18**: The user requests to start the implementation. The first batch follows the seven initial topics proposed; the confirmed revision client is **AnkiDroid on Android**. The export format remains experimental during this batch, without early technical or pedagogical validation. The initial flashcards are written by an agent, provenance displayed.
 
-**Organisation confirmée** : un répertoire par thématique, inspiré du dépôt
-Knowledge_AI_Engineering indiqué par l'utilisateur. Les cartes et leurs fiches
-de référence sont regroupées dans ce thème ; la navigation et les sous-decks
-Anki suivent cette organisation.
+**Confirmed Organization**: a directory by theme, inspired by the Knowledge_AI_Engineering repository specified by the user. The flashcards and their reference reference notes are grouped in this theme; the navigation and the subdecks Anki follow this organization.
 
-**Pôles métiers, 2026-10-18** : l'utilisateur demande de couvrir six pôles
-liés à des familles de métiers, de A (Image Understanding) à F (Vision Systems
-& Deployment), décrits dans la [cartographie](curriculum.md). Décisions : les
-pôles forment une surcouche des domaines existants, qui restent l'organisation
-du vault ; la vague V0 reste consacrée aux lacunes exprimées (socle d'abord) ;
-les specs sont enrichies d'abord et le report dans le vault suit par tâches.
+**Business units, 2026-10-18**: The user requests to cover six clusters related to business families, from A (Image Understanding) to F (Vision Systems & Deployment), described in [cartographie](curriculum.md). Decisions: the poles form an overlay of the existing domains, which remain the organization of the vault; the V0 wave remains devoted to the shortcomings expressed (first); the specs are enriched first and the carry-over in the vault follows by tasks.
 
-La [revue de pertinence](review.md) décrit les lacunes de la première version,
-les corrections et les décisions encore ouvertes. La largeur du catalogue,
-la qualité des explications et le transfert en situation sont évalués séparément.
+The [Relevance Review](review.md) describes the shortcomings of the first version, the corrections and the decisions still open. The width of the catalogue, the quality of the explanations and the transfer in situation are evaluated separately.
 
-## Scénarios utilisateur et validation
+## User scenarios and validation
 
-### Parcours 1 — Comprendre une méthode (priorité P1)
+### Course 1 –  Understanding a method (P1)
 
-Je veux partir du problème résolu pour comprendre fonctionnement, hypothèses,
-paramètres et limites, puis retrouver les sources permettant d'approfondir.
+I want to start from the solved problem to understand how it works, assumptions, parameters and limits, and then find the sources to deepen.
 
-**Justification** : combler les lacunes propres à la vision, en s'appuyant
-sur les bases ML/DL acquises.
+**Justification**: fill the gaps in the vision, building on the ML/DL bases acquired.
 
-**Validation indépendante** : relire une fiche du pilote avec ses cartes selon
-le [contrat pédagogique](learning-design.md), sans attendre le catalogue complet.
+**Independent validation**: re-read a reference note of the driver with its flashcards according to the [Pedagogical Contract](learning-design.md), without waiting for the complete catalog.
 
-**Scénarios d'acceptation** :
+**Scenarios of acceptance** :
 
-1. En ouvrant une fiche, je retrouve problème, entrées/sorties, hypothèses,
-   étapes, paramètres, limites, alternatives et sources primaires.
-2. Pour chaque équation, les symboles, conventions et conditions de validité
-   sont définis, avec les dimensions et unités pertinentes.
-3. Pour un extrait de code, je sais s'il est illustratif ou exécuté et quelle
-   explication algorithmique il matérialise.
+1. By opening a reference note, I find problem, inputs/outputs, hypotheses, steps, parameters, limits, alternatives and primary sources.
+2. For each equation, the symbols, conventions and conditions of validity are defined, with the relevant dimensions and units.
+3. For a code snippet, I know if it is illustrative or executed and what algorithmic explanation it materializes.
 
-### Parcours 2 — Choisir et diagnostiquer (priorité P1)
+### Course 2 –  Choosing and diagnosing (P1)
 
-Je veux comparer les approches et raisonner sur les échecs d'un pipeline dans
-des conditions industrielles : données imparfaites, occlusions, mouvement,
-contraintes de ressources et exigences de mesure.
+I want to compare approaches and reason about the failures of a pipeline under industrial conditions: imperfect data, occlusions, movement, resource constraints and measurement requirements.
 
-**Justification** : développer un jugement technique applicable aux projets.
+**Justification**: develop a technical judgement applicable to projects.
 
-**Validation indépendante** : traiter un cas de comparaison et un cas de
-diagnostic, indépendamment de l'export Anki.
+**Independent validation**: treat a comparison case and a diagnostic case, regardless of the Anki export.
 
-**Scénarios d'acceptation** :
+**Scenarios of acceptance** :
 
-1. Pour deux méthodes répondant au même besoin, je retrouve hypothèses,
-   compromis, critères de choix et conditions d'évaluation.
-2. Face à un symptôme, la réponse distingue causes possibles, observations
-   à recueillir, vérifications discriminantes et limites du diagnostic.
-3. Une métrique est expliquée avec son protocole et les défauts qu'elle peut masquer.
-4. Face à un contexte différent des exemples corrigés, je peux proposer une
-   méthode ou un diagnostic à partir des hypothèses et d'observations pertinentes.
+1. For two methods meeting the same need, I find hypotheses, compromise, criteria of choice and conditions of evaluation.
+2. When faced with a symptom, the response distinguishes between possible causes, observations to be collected, discriminating checks and diagnostic limitations.
+3. A metric is explained with its protocol and the flaws it can mask.
+4. Faced with a different context from the corrected examples, I can propose a method or a diagnosis from the relevant hypotheses and observations.
 
-### Parcours 3 — Réviser dans Obsidian et Anki (priorité P1)
+### 3 –  Review in Obsidian and Anki (Priority P1)
 
-Je veux réviser des questions contextualisées aux réponses développées, puis
-revenir à la fiche de référence pour approfondir ou corriger le contenu.
+I want to revise contextualized questions to the developed answers, and then return to the reference reference note to deepen or correct the content.
 
-**Justification** : associer richesse pédagogique et pratique du rappel.
+**Justification**: combining pedagogical richness and recall practice.
 
-**Validation indépendante** : exporter un ensemble représentatif dans un deck
-d'essai, puis modifier et exporter à nouveau cet ensemble.
+**Independent validation**: Export a representative set to a trial deck, then edit and export that set again.
 
-**Scénarios d'acceptation** :
+**Scenarios of acceptance** :
 
-1. Dans Anki, la question est compréhensible sans ouvrir la fiche et les critères
-   de correction permettent d'évaluer ma réponse.
-2. Paragraphes, listes, formules, image et code restent lisibles après export,
-   sans disparition d'information essentielle.
-3. À modèle de note inchangé, modifier une réponse met à jour la note attendue,
-   sans doublon ni perte de l'historique de révision associé.
-4. Un export sans modification conserve les nombres de notes et cartes attendus.
-5. Le noyau attendu et les erreurs bloquantes permettent de corriger mon rappel,
-   même si le verso comporte des approfondissements facultatifs.
-6. La durée de révision et la charge quotidienne projetée sont connues avant
-   de généraliser le format des cartes.
+1. In Anki, the question is understandable without opening the reference note and the correction criteria allow to evaluate my answer.
+2. Paragraphs, lists, formulas, images and code remain readable after export, without missing essential information.
+3. To unchanged note template, edit a response updates the expected note, without duplicates or loss of the associated revision history.
+4. An unmodified export retains the expected number of notes and flashcards.
+5. The expected answer and blocking errors allow to correct my recall, even if the back has optional further study.
+6. The revision time and the projected daily load are known before generalizing the format of the flashcards.
 
-### Parcours 4 — Naviguer et suivre la couverture (priorité P2)
+### Track 4 –  Navigate and track coverage (P2)
 
-Je veux retrouver une notion par problème, méthode, domaine ou prérequis,
-et identifier les sujets absents ou incomplets.
+I want to find a notion by problem, method, domain or prerequisite, and identify absent or incomplete subjects.
 
-**Justification** : rendre visibles les lacunes et les compétences effectivement couvertes.
+**Justification**: make visible the gaps and skills actually covered.
 
-**Validation indépendante** : examiner la cartographie avant la rédaction
-de l'ensemble des fiches.
+**Independent validation**: review the mapping before writing all reference notes.
 
-**Scénarios d'acceptation** :
+**Scenarios of acceptance** :
 
-1. Chaque domaine présente un inventaire dont les états éditoriaux sont visibles.
-2. Une méthode transverse possède une fiche canonique reliée depuis les domaines concernés.
-3. Un prérequis ML/DL est lié ou rappelé lorsqu'il sert une spécificité de vision.
+1. Each domain has an inventory whose editorial states are visible.
+2. A transverse method has a canonical reference note connected from the domains concerned.
+3. An ML/DL prerequisite is bound or recalled when it serves a vision specificity.
 
-### Parcours 5 — Corriger et enrichir (priorité P2)
+### 5 –  Correct and enrich (P2 priority)
 
-Je veux ajouter une variante, corriger une formule et actualiser une source
-en conservant la cohérence des fiches et des cartes existantes.
+I want to add a variant, correct a formula and refresh a source while maintaining the consistency of existing reference notes and flashcards.
 
-**Justification** : éviter qu'une correction scientifique laisse des cartes contradictoires.
+**Justification**: avoid that a scientific correction leaves contradictory flashcards.
 
-**Validation indépendante** : simuler une correction sur un sujet du pilote.
+**Independent validation**: Simulate a fix on a driver topic.
 
-**Scénarios d'acceptation** :
+**Scenarios of acceptance** :
 
-1. Une correction permet d'identifier les cartes concernées.
-2. Les affirmations dépendant d'une expérience ou d'une version conservent leur contexte.
-3. Un changement de format ou d'export est vérifié sur le pilote avant généralisation.
+1. A correction makes it possible to identify the flashcards concerned.
+2. Affirmations that depend on an experiment or version retain their context.
+3. A change of format or export is checked on the driver before generalization.
 
-### Parcours 6 — Se préparer à un pôle métier (priorité P2)
+### Course 6 –  Preparing for a business unit (P2)
 
-Je veux voir, pour une famille de métiers visée, les domaines et sujets à
-travailler, leur profondeur cible et leur état, puis m'entraîner sur des cas
-propres à ce métier.
+I want to see, for a targeted family of trades, the areas and subjects to work, their target depth and condition, and then train myself on specific cases of this trade.
 
-**Justification** : relier la couverture générale aux attentes des postes
-visés, sans dupliquer les fiches.
+**Justification**: connect the general coverage to the expectations of the targeted positions, without duplicating the reference notes.
 
-**Validation indépendante** : examiner le cadrage d'un pôle dans la cartographie
-avant la rédaction de ses fiches.
+**Independent validation**: examine the framing of a pole in mapping before writing its reference notes.
 
-**Scénarios d'acceptation** :
+**Scenarios of acceptance** :
 
-1. Pour un pôle, je retrouve périmètre, métiers indicatifs, domaines mobilisés,
-   entrées clés et approfondissements, chacun avec son domaine d'accueil.
-2. Un sujet servant plusieurs pôles, comme CLIP pour A et D, n'a qu'une fiche
-   canonique, reliée depuis chacun d'eux.
-3. L'avancement d'un pôle distingue entrées inventoriées, rédigées et relues,
-   sans en déduire ma maîtrise ni mon aptitude à un poste.
-4. Chaque pôle propose un cas de conception et un cas de diagnostic propres à
-   ses métiers, corrigibles avec des critères explicites.
+1. For a cluster, I find perimeter, indicative professions, mobilized domains, key entries and further study, each with its host domain.
+2. A subject serving several poles, such as CLIP for A and D, has only one canonical reference note, connected from each of them.
+3. The advancement of a pole distinguishes entries inventoried, written and proofread, without inferring my mastery or my aptitude for a position.
+4. Each cluster offers a case of design and a case of diagnosis specific to its trades, correctable with explicit criteria.
 
 ### Cas limites
 
-- Repère, unité, transformation ou convention de coordonnées ambiguë.
-- Méthode valable dans un cas particulier ou soumise à une dégénérescence.
-- Score publié sans protocole ou variante clairement identifiés.
-- Sources contradictoires, indisponibles ou devenues obsolètes.
-- Carte mêlant plusieurs questions indépendantes et difficile à corriger.
-- Formule ou média fonctionnant dans le vault mais pas dans le deck exporté.
-- Modèle de note ou noms de champs différents selon l'installation d'Anki.
-- Copie d'une carte conservant accidentellement l'identifiant d'une autre note.
-- Note déplacée côté source ou supprimée côté destination.
-- Plugin pressenti indisponible dans le catalogue courant.
-- Suppression ou modification dans Anki non répercutée dans la source.
-- Connaissance récitée correctement mais non transférée à un problème nouveau.
-- Confusion entre calibration caméra et calibration des scores d'un modèle.
-- Transformation d'image non répercutée sur les boîtes, masques ou paramètres caméra.
-- Comparaison utilisant des données futures, des seuils réglés sur le test ou
-  des coûts de pré/posttraitement non comptés.
-- Fiche déclarée relue malgré une divergence centrale entre sources non résolue.
-- Source citée qui ne soutient pas réellement l'affirmation, notamment après
-  une rédaction assistée par un agent.
-- Rendu correct sur Anki Desktop mais dégradé sur le client utilisé pour réviser.
-- Sujet servant plusieurs pôles, rédigé deux fois de façon divergente.
-- Intitulé de métier dont le contenu varie selon l'entreprise ou le secteur.
-- Modèles et outils à évolution rapide (VLM, VLA, runtimes d'inférence) cités
-  sans date ni version.
+- coordinate frame, ambiguous unit, transformation or coordinate convention.
+- Method valid in a particular case or subject to degeneration.
+- Score published without clearly identified protocol or variant.
+- Conflicting sources, unavailable or obsolete.
+- flashcard mixing several independent issues and difficult to correct.
+- Formula or media operating in the vault but not in the exported deck.
+- Note template or different field names depending on the installation of Anki.
+- Copy of a flashcard accidentally keeping the identifier of another note.
+- Note moved source side or deleted destination side.
+- Plugin not available in the current catalog.
+- Deleted or modified in Anki not reflected in the source.
+- Knowledge recited correctly but not transferred to a new problem.
+- Confusion between camera calibration and calibration of a model's scores.
+- Image transformation not reflected on boxes, masks or camera settings.
+- Comparison using future data, test-set thresholds, or uncounted pre/post-processing costs.
+- reference note reported being replayed despite an unresolved central source discrepancy.
+- Cited source that does not really support the claim, especially after an agent-assisted writing.
+- Rendered correct on Anki Desktop but degraded on the client used to review.
+- Subject serving several poles, written twice divergently.
+- Business title whose content varies by company or sector.
+- Fast-moving models and tools (VLM, VLA, inference runtimes) quoted without date or version.
 
 ## Exigences
 
-### Exigences fonctionnelles
+### Functional requirements
 
-- **FR-001** : la base DOIT cibler le profil confirmé ; les connaissances
-  générales ML/DL servent de prérequis acquis et de rappels contextualisés.
-- **FR-002** : la prose pédagogique DOIT être en français ; termes techniques
-  anglais, acronymes et noms originaux sont conservés lorsqu'ils sont utiles.
-- **FR-003** : la couverture DOIT inclure tous les domaines de la
-  [cartographie](curriculum.md), avec des états explicites et un inventaire extensible.
-- **FR-004** : l'inventaire DOIT distinguer problème, famille, méthode,
-  variante et protocole d'évaluation.
-- **FR-005** : chaque sujet DOIT indiquer les prérequis et notions connexes
-  nécessaires, en distinguant dépendances obligatoires et liens thématiques,
-  avec des liens permettant de combler un manque.
-- **FR-006** : une fiche validée DOIT respecter le [contrat pédagogique](learning-design.md),
-  avec justification des rubriques non applicables.
-- **FR-007** : chaque équation DOIT expliquer symboles, conventions,
-  conditions d'application et dimensions/unités pertinentes.
-- **FR-008** : code et pseudocode DOIVENT servir une explication identifiée
-  et être distingués ; un appel de bibliothèque seul ne suffit pas à expliquer la méthode.
-- **FR-009** : tout exemple annoncé exécutable DOIT préciser dépendances,
-  entrées et résultat attendu, et avoir été exécuté dans l'environnement indiqué.
-  Un exemple non exécuté doit être signalé.
-- **FR-010** : les visuels DOIVENT avoir une fonction explicative, une légende
-  et une provenance ; les conditions de réutilisation doivent être conservées.
-- **FR-011** : les propriétés d'une méthode DOIVENT distinguer garantie,
-  approximation, hypothèse et résultat empirique, avec leurs limitations.
-- **FR-012** : chaque fiche validée DOIT citer au moins une source primaire
-  pertinente ; les affirmations centrales doivent être traçables jusqu'à leur source.
-- **FR-013** : scores et coûts dépendant d'un protocole, matériel ou variante
-  DOIVENT préciser ces conditions ; les informations susceptibles d'évoluer
-  doivent avoir une date de vérification et une version si pertinente.
-- **FR-014** : les cartes DOIVENT couvrir les familles pertinentes définies dans
-  la section « Familles de cartes » du [contrat pédagogique](learning-design.md).
-  Une famille non applicable doit être justifiée lors de la revue.
-- **FR-015** : chaque carte DOIT définir un objectif de rappel et des critères
-  de correction distinguant noyau attendu, approfondissement facultatif et
-  erreurs bloquantes ; sa réponse reste développée sans plafond de longueur.
-  Depuis la demande du 2026-10-24, tous les versos doivent être longs et
-  explicatifs : mécanisme, exemple ou raisonnement suivi et limites utiles.
-  Le seuil éditorial de repérage est décrit dans le contrat pédagogique ;
-  le noyau attendu reste la règle de correction du rappel.
-- **FR-016** : chaque carte DOIT être reliée à une fiche canonique et rester
-  compréhensible dans son contexte de révision autonome.
-- **FR-017** : fiche de référence et cartes DOIVENT avoir des rôles distincts ;
-  aucun nombre uniforme de cartes par méthode n'est imposé.
-- **FR-018** : les domaines prioritaires DOIVENT inclure des cas de choix ou
-  de diagnostic sous contraintes industrielles, avec une justification évaluable.
-- **FR-019** : les métriques DOIVENT être reliées à leur tâche et protocole ;
-  les comparaisons doivent expliquer leurs limites de comparabilité.
-- **FR-020** : les identifiants pédagogiques DOIVENT être stables et distincts
-  des identités de synchronisation ; les relations fiche/carte/export sont traçables.
-- **FR-021** : l'export DOIT préserver prose développée, formules, médias
-  utiles et extraits de code lisibles.
-- **FR-022** : création, mise à jour et export répété DOIVENT être vérifiés
-  sans doublon ni perte d'historique à modèle de note inchangé.
-- **FR-023** : suppression, déplacement, renommage et conflits source/destination
-  DOIVENT avoir un comportement documenté et testé avant généralisation.
-- **FR-024** : les fichiers source DOIVENT rester consultables et versionnables
-  indépendamment de l'export ; le vault est la source pédagogique canonique.
-- **FR-025** : la navigation DOIT permettre une recherche par domaine,
-  problème, méthode et prérequis, au-delà de l'organisation en decks.
-- **FR-026** : les états éditoriaux DOIVENT distinguer sujet inventorié, fiche
-  rédigée, fiche relue, cartes rédigées et export vérifié ; ils sont distincts
-  du niveau de maîtrise personnel de l'apprenant. Pour permettre ce suivi séparé,
-  les cartes exportées DOIVENT porter leur domaine et leur famille.
-- **FR-027** : les distinctions calibration/pose/recalage,
-  flot/tracking/réidentification et détecteur/descripteur/matcher/validation
-  géométrique DOIVENT être explicites dans les sujets concernés.
-- **FR-028** : la production à grande échelle DOIT être précédée d'un pilote
-  validant le contrat pédagogique, ses cas contrastés et les capacités d'export.
-  Les travaux éditoriaux préparatoires restent possibles pendant le choix du plugin.
-- **FR-029** : le catalogue DOIT rendre visibles périmètre, lacunes et procédure
-  d'enrichissement ; sa couverture ne peut pas être déclarée exhaustive par défaut.
-- **FR-030** : chaque méthode retenue DOIT avoir une entrée d'inventaire avec
-  profondeur cible, compétences visées, dépendances et artefacts associés.
-  Priorité, profondeur, état éditorial et maîtrise personnelle sont distincts.
-- **FR-031** : les sujets concernés DOIVENT préciser le contrat des données :
-  formes/types/plages, couleur, repères, unités, normalisation et propagation
-  des changements de résolution, crop, padding ou coordonnées.
-- **FR-032** : les fiches pertinentes DOIVENT relier hypothèses et échecs aux
-  conditions d'acquisition, de cadence, de causalité temporelle et aux contraintes
-  industrielles ; une hypothèse non applicable est explicitement écartée.
-- **FR-033** : chaque famille du pilote DOIT proposer une baseline ou référence
-  simple et une variation contrôlée, avec prédiction, résultat attendu ou observé
-  et analyse. Une expérience analytique ou non exécutée doit être identifiée.
-- **FR-034** : le pilote DOIT inclure deux cas distincts des exemples corrigés
-  pour chacune de ses six familles : matching, calibration/géométrie, tracking,
-  détection, segmentation classique et recalage 3D. Un cas porte sur le choix,
-  l'autre sur le diagnostic, avec des critères de correction explicites.
-- **FR-035** : l'essai pédagogique DOIT consigner une première tentative et
-  un rappel lors d'une autre session aux dates choisies par l'apprenant,
-  les ambiguïtés et corrections nécessaires, sans présupposer un taux de rétention.
-  L'échantillon doit couvrir les six familles du pilote et chaque type de carte
-  réellement produit ; sa sélection est consignée avant d'observer les résultats.
-  L'essai mesure aussi la durée de révision par carte et estime la charge
-  quotidienne du premier lot de production, sans plafond fixé a priori.
-- **FR-036** : les propriétés générales et les particularités d'implémentation
-  DOIVENT être sourcées séparément. Une divergence centrale non résolue empêche
-  de valider l'affirmation et la fiche concernées.
-- **FR-037** : une validation éditoriale DOIT conserver date, responsable,
-  preuves et limites. Une auto-revue doit être identifiée ; les erreurs
-  bloquantes ou ambiguïtés de correction doivent être résolues avant publication.
-- **FR-038** : chaque fiche et chaque carte DOIT indiquer sa provenance de
-  rédaction : apprenant, agent ou mixte. Une affirmation centrale rédigée par
-  un agent n'est validée qu'après confrontation au passage de la source citée ;
-  la présence d'une référence ne suffit pas.
-- **FR-039** : le vault DOIT être organisé par répertoire thématique numéroté,
-  avec index de section et sommaire central. Les cartes d'un thème et leurs
-  références canoniques DOIVENT être regroupées dans son répertoire ; le deck
-  cible suit la thématique. Le déplacement DOIT préserver les identifiants et
-  mettre à jour liens, médias et contrôles. Une section sans contenu rédigé
-  DOIT afficher son état, sans être comptée comme couverture acquise.
-- **FR-040** : la [cartographie](curriculum.md) DOIT définir six pôles métiers,
-  de A à F, chacun avec périmètre, métiers indicatifs, domaines mobilisés,
-  entrées clés et approfondissements. Les pôles ne remplacent pas les domaines :
-  chaque entrée propre à un pôle a un seul domaine d'accueil, et un sujet
-  partagé entre pôles garde une seule fiche canonique.
-- **FR-041** : chaque entrée d'inventaire DOIT indiquer les pôles qu'elle sert ;
-  fiches et cartes exportées portent ces pôles en étiquettes, afin de suivre
-  l'avancement par pôle séparément de la maîtrise personnelle.
-- **FR-042** : chaque pôle DOIT proposer au moins un cas de conception de
-  système et un cas de diagnostic propres à ses métiers, avec réponse de
-  référence et critères de correction selon le contrat pédagogique.
-- **FR-043** : les priorités DOIVENT suivre le principe « socle d'abord » :
-  la vague V0 reste consacrée aux lacunes exprimées ; les entrées clés d'un pôle
-  nouvellement introduites visent V1 et l'usage opérationnel, les autres V2.
-  Une entrée déjà priorisée V0 conserve cette priorité même si plusieurs pôles
-  la réutilisent. La couverture d'un pôle se
-  mesure par ses artefacts et NE DOIT PAS être présentée comme une aptitude
-  à un poste.
+- **FR-001**: the database MUST target the confirmed profile; general ML/DL knowledge serves as acquired prerequisites and contextualized reminders.
+- **FR-002**: All learning prose MUST be in English, following the learner’s request of 2026-10-31. Retain original method names, useful acronyms, equations and compatibility identifiers; use consistent computer vision terminology.
+- **FR-003**: Coverage MUST include all domains of the [cartographie](curriculum.md), with explicit states and expandable inventory.
+- **FR-004**: The inventory MUST distinguish problem, family, method, variant, and evaluation protocol.
+- **FR-005**: Each topic MUST indicate the necessary prerequisites and related notions, distinguishing mandatory dependencies and thematic links, with links to fill a gap.
+- **FR-006**: A validated reference note MUST comply with [Pedagogical Contract](learning-design.md), with justification for non-applicable entries.
+- **FR-007**: Each equation MUST explain symbols, conventions, conditions of application and relevant dimensions/units.
+- **FR-008**: code and pseudocode MUST serve an identified explanation and be distinguished; a library call alone is not sufficient to explain the method.
+- **FR-009**: Any executable example MUST specify dependencies, entries, and expected result, and be executed in the specified environment. An unexecuted example must be reported.
+- **FR-010**: the visuals MUST have an explanatory function, a legend and a provenance; the conditions of reuse must be kept.
+- **FR-011**: The properties of a method MUST distinguish between guarantee, approximation, hypothesis, and empirical result, with their limitations.
+- **FR-012**: Each validated reference note MUST cite at least one relevant primary source; central assertions must be traceable to their source.
+- **FR-013**: Scores and costs dependent on a protocol, hardware, or variant MUST specify these conditions; information that may evolve must have a verification date and a version if relevant.
+- **FR-014**: The flashcards MUST cover the relevant families defined in the “flashcards Families” section of [Pedagogical Contract](learning-design.md). A non-applicable family must be justified during the review.
+- **FR-015**: each flashcard MUST define a recall objective and correction criteria distinguishing expected answer, optional further explanation and blocking errors; its response remains developed without a ceiling of length. Since the request of the 2026-10-24, all the versoes must be long and explanatory: mechanism, example or reasoning followed and useful limits. The editorial threshold is described in the pedagogical contract; the expected answer remains the rule of correction of the recall.
+- **FR-016**: Each flashcard MUST be connected to a canonical reference note and remain understandable in its autonomous revision context.
+- **FR-017**: Reference reference note and flashcards MUST have separate roles; no uniform number of flashcards per method is imposed.
+- **FR-018**: Priority areas MUST include cases of choice or diagnosis under industrial constraints, with an evaluable justification.
+- **FR-019**: metrics MUST be related to their task and protocol; comparisons must explain their limits of comparability.
+- **FR-020**: Educational identifiers MUST be stable and separate from synchronization identities; reference note/flashcard/export relationships are traceable.
+- **FR-021**: export MUST preserve developed prose, useful formulas, media and readable code snippets.
+- **FR-022**: creation, update and repeated export MUST be checked without duplicate or loss of history to unchanged note template.
+- **FR-023**: Remove, move, rename, and source/destination conflicts MUST have documented and tested behavior before generalization.
+- **FR-024**: source files MUST remain searchable and versionable regardless of export; the vault is the canonical educational source.
+- **FR-025**: Navigation MUST allow search by domain, problem, method and prerequisites, beyond the deck organization.
+- **FR-026**: Editorial statements MUST distinguish inventoried subject, reference note written, reference note reread, flashcards written and verified export; they are separate from the personal level of mastery of the learner. To allow this separate tracking, the exported flashcards MUST carry their domain and their family.
+- **FR-027**: the distinctions calibration/pose/registration, flow/tracking/reidentification and detector/descriptor/matcher/geometric validation MUST be explicit in the subjects concerned.
+- **FR-028**: Large-scale production MUST be preceded by a driver validating the teaching contract, its contrasting cases and export capabilities. The preparatory editorial work remains possible during the choice of the plugin.
+- **FR-029**: The catalog MUST make visible scope, gaps and enrichment procedure; its coverage cannot be declared exhaustive by default.
+- **FR-030**: Each selected method MUST have an inventory entry with target depth, intended skills, dependencies, and associated artifacts. Priority, depth, editorial status and personal mastery are distinct.
+- **FR-031**: Subjects concerned MUST specify the data contract: shapes/types/value ranges, color, coordinate frames, units, normalization and propagation of resolution changes, crop, padding or coordinates.
+- **FR-032**: Relevant reference notes MUST relate assumptions and failures to acquisition, cadence, temporal causality and industrial constraints; an unapplicable assumption is explicitly ruled out.
+- **FR-033**: Each family of the driver MUST offer a simple baseline or reference and a controlled variation, with prediction, expected or observed result and analysis. An analytical or non-executed experiment must be identified.
+- **FR-034**: The pilot MUST include two separate cases of the corrected examples for each of its six families: matching, calibration/geometry, tracking, detection, classical segmentation and registration 3D. One case is about choice, the other is about diagnosis, with explicit correction criteria.
+- **FR-035**: The instructional essay MUST record a first attempt and a recall at another session on the dates chosen by the learner, the necessary ambiguities and corrections, without assuming a retention rate. The sample shall cover the six pilot families and each type of flashcard actually produced; its selection shall be recorded before observing the results. The test also measures the duration of revision by flashcard and estimates the daily load of the first production batch, without a ceiling fixed a priori.
+- **FR-036**: General properties and implementation features MUST be sourced separately. An unresolved central discrepancy prevents validating the claim and the reference note concerned.
+- **FR-037**: Editorial validation MUST retain date, responsibility, evidence and limitations. An auto-review must be identified; blocking errors or correction ambiguities must be resolved before publication.
+- **FR-038**: each reference note and each flashcard MUST indicate its writing source: learner, agent or mixed. A central statement written by an agent is only validated after confrontation with the passage of the cited source; the presence of a reference is not enough.
+- **FR-039**: The vault MUST be organized by numbered thematic directory, with section index and central summary. The flashcards of a theme and their canonical references MUST be grouped in its directory; the target deck follows the theme. Displacement MUST preserve identifiers and update links, media, and controls. A section without written content MUST display its status, without being counted as acquired coverage.
+- **FR-040**: The [cartographie](curriculum.md) MUST define six business units, from A to F, each with perimeter, indicative business units, mobilized domains, key inputs and further study. Poles do not replace domains: each entry specific to a pole has a single host domain, and a subject shared between poles keeps a single canonical reference note.
+- **FR-041**: Each inventory entry MUST indicate the poles it serves; reference notes and flashcards exported carry these poles as labels, in order to track progress by pole separately from personal mastery.
+- **FR-042**: each cluster MUST propose at least one system design case and one diagnostic case specific to its business, with reference response and correction criteria according to the pedagogical contract.
+- **FR-043**: The priorities MUST follow the principle of "base first": the wave V0 remains devoted to the shortcomings expressed; the key inputs of a newly introduced pole are aimed at V1 and operational use, the other V2. An already prioritized entry V0 retains this priority even if several poles reuse it. The coverage of a pole is measured by its artifacts and MUST NOT be presented as an aptitude for a position.
 
-### Entités principales
+### Principal entities
 
-- **Domaine / problème** : besoin visuel, entrées/sorties, contraintes,
-  familles de méthodes et protocoles associés.
-- **Méthode / variante** : approche identifiée, hypothèses, paramètres,
-  prérequis, propriétés et références.
-- **Fiche** : explication canonique d'un sujet, cartes liées, état éditorial
-  et provenance de rédaction.
-- **Carte pédagogique** : identifiant, question, objectif, réponse,
-  critères de correction, références, fiche parente, domaine, famille,
-  pôles et provenance de rédaction.
-- **Note / carte Anki** : objets de destination ; une note peut générer
-  plusieurs cartes selon le modèle. Leurs identités et nombres sont distincts.
-- **Source** : référence primaire, localisation et contexte de version si nécessaire.
-- **Cas industriel** : scénario, contraintes, hypothèses, alternatives,
-  observations et critères d'une réponse satisfaisante.
-- **Entrée de couverture** : sujet, domaine d'accueil, pôles servis, priorité,
-  prérequis, états éditoriaux et lacunes.
-- **Pôle métier** : périmètre, métiers indicatifs, domaines mobilisés, entrées
-  clés et approfondissements avec leur domaine d'accueil, cas propres et
-  avancement éditorial.
-- **Compétence / profondeur cible** : résultat observable attendu pour un sujet,
-  relié à ses artefacts et distinct de sa priorité ou de sa maîtrise personnelle.
-- **Preuve de revue ou d'essai** : version de contenu, date, responsable,
-  critères appliqués, résultat, limites et corrections éventuelles.
+- **Domain/problem**: visual need, input/output, constraints, families of methods and associated protocols.
+- **Method/variant**: identified approach, assumptions, parameters, prerequisites, properties and references.
+- **Reference note**: canonical explanation of a topic, flashcards related, editorial status and editorial provenance.
+- **flashcard Educational**: ID, question, objective, answer, correction criteria, references, reference note parent, domain, family, poles and writing source.
+- **Note / flashcard Anki**: Destination objects; a note can generate multiple flashcards depending on the model. Their identities and numbers are distinct.
+- **Source**: primary reference, localization and version context if necessary.
+- **Cas industriel**: scenario, constraints, hypotheses, alternatives, observations and criteria for a satisfactory response.
+- **Entry of cover**: Subject, host domain, served poles, priority, prerequisites, editorial states and gaps.
+- **Business Unit**: scope, indicative professions, mobilized domains, key entries and further study with their host domain, own cases and editorial advancement.
+- **Target Skill/Deepness**: an observable result expected for a subject, related to his artifacts and distinct from his priority or his personal mastery.
+- **Proof of review or trial**: version of content, date, responsible, criteria applied, result, limits and possible corrections.
 
-Une fiche « validée » a fait l'objet d'une revue argumentée selon le contrat
-pédagogique, sans erreur bloquante ni divergence centrale non résolue.
-Ce statut ne signifie ni export validé, ni maîtrise personnelle acquise.
+A "validated" reference note was reviewed in accordance with the teaching contract, without blocking errors or unresolved central divergences. This status means neither validated export nor acquired personal mastery.
 
-## Critères de réussite
+## Criteria for success
 
-### Résultats mesurables
+### Measurable results
 
-- **SC-001** : tous les domaines de la cartographie ont un inventaire initial ; chaque entrée
-  de méthode retenue affiche profondeur, compétences, prérequis, états et liens
-  vers ses artefacts existants. Une ligne générale de domaine ne suffit pas.
-- **SC-002** : 100 % des fiches déclarées validées respectent le contrat
-  pédagogique et possèdent une source primaire ; toute rubrique non applicable est justifiée.
-- **SC-003** : 100 % des cartes publiées possèdent un identifiant distinct,
-  une fiche parente, un objectif et un noyau de correction sans ambiguïté,
-  avec approfondissements et erreurs bloquantes identifiés.
-- **SC-004** : le pilote proposé couvre les sujets initiaux puis les extensions
-  de `curriculum.md`, dont au moins une fiche de type métrique/protocole, et
-  tous les contenus attendus : prose, liste, formule inline/en bloc, image,
-  pseudocode et code.
-- **SC-005** : tous les scénarios du [pilote d'export](research.md) ont un résultat
-  consigné ; création, mise à jour et répétition passent sans doublon ni perte
-  d'historique. Un échec de rendu essentiel empêche la validation de la solution.
-- **SC-006** : les six familles définies dans FR-034 ont chacune un cas de choix
-  et un cas de diagnostic inédits, soit douze cas. Leur correction précise
-  adéquation à la tâche, hypothèses/conventions, justification, vérification
-  discriminante et limites ; tous les critères applicables doivent être satisfaits
-  pour déclarer un cas réussi. Les échecs de l'apprenant restent consignés.
-- **SC-007** : une correction de fiche du pilote permet d'identifier et de
-  mettre à jour les cartes concernées ; aucune carte ne reste orpheline.
-- **SC-008** : les cartes retenues pour l'essai pédagogique ont un compte rendu
-  de première tentative et de rappel différé, avec résultats, limites et
-  corrections ; leur couverture des familles et types est explicitée, sans
-  exclusion a posteriori des échecs. Aucune carte publiée ne conserve un défaut bloquant identifié.
-  La durée de révision par carte et la charge quotidienne projetée sont
-  consignées, avec la décision de conserver ou d'ajuster le format des cartes.
-- **SC-009** : chaque famille du pilote dispose d'une référence et d'une
-  variation contrôlée documentées ; les preuves distinguent prédiction,
-  résultat observé, résultat analytique et exemple non exécuté.
-- **SC-010** : 100 % des fiches et cartes publiées indiquent leur provenance
-  de rédaction ; pour un contenu rédigé par un agent, la revue consigne les
-  affirmations centrales confrontées à leur source.
-- **SC-011** : chacun des six pôles a, dans la cartographie, son périmètre,
-  ses métiers indicatifs, ses domaines mobilisés, ses entrées clés et
-  approfondissements avec un domaine d'accueil unique, ainsi qu'un cas de
-  conception et un cas de diagnostic avec réponses de référence, hypothèses,
-  vérifications discriminantes et critères de correction ; les seuls énoncés
-  ne suffisent pas à satisfaire ce critère.
-- **SC-012** : aucun sujet partagé entre pôles n'a deux fiches canoniques ;
-  l'avancement éditorial de chaque pôle est consultable dans le vault,
-  distinct de la maîtrise personnelle.
-- **SC-013** : chacun des quatorze domaines comporte des fiches et cartes
-  effectives pour les entrées retenues dans le lot de couverture. La matrice
-  distingue cette couverture thématique, le traitement détaillé de chaque
-  algorithme, les variantes seulement introduites et les sujets restant à rédiger.
-  Aucun de ces états ne vaut validation d'export ou compétence professionnelle.
+- **SC-001**: All mapping domains have an initial inventory; each selected method entry displays depth, skills, prerequisites, states, and links to its existing artifacts. A general domain line is not enough.
+- **SC-002**: 100% of the reference notes declared validated comply with the pedagogical contract and have a primary source; any heading that is not applicable is justified.
+- **SC-003**: 100% of the published flashcards have a separate identifier, a parent reference note, an objective and an unambiguous correction kernel, with further study and blocking errors identified.
+- **SC-004**: The proposed driver covers the initial topics and then the extensions of `curriculum.md`, including at least one reference note of metric/protocol type, and all the expected contents: prose, list, inline/block formula, image, pseudocode and code.
+- **SC-005**: all [Export Pilot](research.md) scenarios have a logged result; creation, update and repetition pass without duplicates or loss of history. An essential rendering failure prevents the solution from being validated.
+- **SC-006**: The six families defined in FR-034 each have a case of choice and a case of diagnosis unpublished, that is to say twelve cases. Their precise correction is appropriate to the task, assumptions/conventions, justification, discriminant verification and limits; all applicable criteria must be met to declare a successful case. The failures of the learner remain recorded.
+- **SC-007**: A correction of reference note of the driver makes it possible to identify and update the flashcards concerned; no flashcard remains orphan.
+- **SC-008**: The flashcards selected for the pedagogical essay have a report of first attempt and delayed recall, with results, limits and corrections; their coverage of families and types is explained, without exclusion of failures. No published flashcard retains an identified blocking defect. The revision time by flashcard and the projected daily load are logged, with the decision to retain or adjust the format of the flashcards.
+- **SC-009**: Each pilot family has a documented reference and controlled variation; the evidence distinguishes prediction, observed result, analytical result, and unexecuted example.
+- **SC-010**: 100% of the published reference notes and flashcards indicate their source of writing; for content written by an agent, the journal records the central statements faced with their source.
+- **SC-011**: each of the six divisions has, in the cartography, its perimeter, its indicative professions, its mobilized domains, its key entries and further study with a unique host domain, as well as a design case and a diagnostic case with reference answers, hypotheses, discriminating verifications and correction criteria; the only statements are not enough to satisfy this criterion.
+- **SC-012**: No subject shared between poles has two canonical reference notes; the editorial advancement of each pole is available in vault, distinct from personal mastery.
+- **SC-013**: each of the fourteen domains has effective reference notes and flashcards for the entries retained in the cover lot. The matrix distinguishes this thematic coverage, the detailed processing of each algorithm, the variants only introduced and the subjects remaining to be written. None of these states are equivalent to export validation or professional competence.
 
-## Hypothèses et décisions ouvertes
+## Assumptions and Open Decisions
 
-- Les domaines de la cartographie traduisent l'ambition de couverture large ; les
-  spécialisations et variantes seront enrichies par inventaire.
-- Les six pôles et leurs intitulés de métiers proviennent de la demande de
-  l'utilisateur du 2026-10-18. Les intitulés sont indicatifs : leur contenu
-  varie selon les entreprises.
-- Pour le pôle C, la planification de trajectoire et le contrôle sont hors
-  périmètre ; seule la perception qui les alimente est couverte.
-- Le pilote technique reste un échantillon de validation. La demande actuelle
-  autorise la préparation éditoriale des quatorze domaines et des six pôles
-  avant son achèvement ; les contenus gardent leur statut rédigé et leur format
-  d'export provisoire. L'adoption et la diffusion automatisée à grande échelle
-  restent conditionnées aux essais, notamment à l'historique et au rendu mobile.
-- Priorités, niveaux de profondeur, pilote en deux étages et protocole de
-  transfert sont proposés à partir des lacunes exprimées ; ils ne réduisent
-  pas la couverture finale et restent ajustables après relecture.
-- Aucun volume total de cartes, calendrier ou temps quotidien de révision
-  n'a été imposé par l'utilisateur. Le pilote mesure la charge au lieu de la borner.
-- La répartition de la rédaction entre l'apprenant et un agent n'est pas fixée.
-  Proposition : l'agent rédige, l'apprenant confronte les affirmations centrales
-  aux sources et reformule au moins l'objectif et le noyau de chaque carte.
-  FR-038 impose seulement la traçabilité de ce choix.
-- Proposition de périmètre : 001 couvre le cadre, le contrat et le pilote.
-  La production du catalogue se ferait ensuite par lots, avec leur propre spec
-  ou un suivi de couverture dans le vault ; ce découpage reste à décider.
-- Le nom du plugin oublié reste incertain. Le candidat et ses limites sont
-  décrits dans [la recherche d'interopérabilité](research.md).
-- Plugin, syntaxe finale, modèles de notes et politique de suppression
-  seront fixés pendant la conception après un pilote dans un deck d'essai.
-- La constitution Spec Kit est encore un modèle non ratifié ; ses exemples
-  ne deviennent pas des règles du projet par ce brouillon. Principes candidats
-  à y déplacer après ratification : langue (FR-002), statut des propriétés et
-  traçabilité des sources (FR-011, FR-012, FR-036), vault canonique (FR-024),
-  séparation des états éditoriaux et de la maîtrise (FR-026).
-- La destination de `to-spec` n'est pas choisie. Ce brouillon local utilise
-  Spec Kit et ne publie aucune issue.
-- Cette phase inclut la rédaction des contenus manquants par thème, à la demande
-  de l'utilisateur. Elle exclut l'installation dans les applications personnelles,
-  un synchroniseur sur mesure et un nouveau cursus général ML/DL.
-  Le plan B `.apkg` est implémenté dans le lot du 2026-10-24 pour l'import direct
-  sur Android, conformément au [contrat d'export](../../docs/export-apkg.md).
-  Les preuves du moteur Anki restent distinctes de la validation mobile.
-- Les cartes soutiennent les compétences visées ; un nombre de cartes ou leur
-  mémorisation ne peut pas certifier à lui seul le statut de senior.
+- The areas of cartography reflect the ambition of broad coverage; specializations and variants will be enriched by inventory.
+- The six poles and their trade titles come from the request of the user of the 2026-10-18. The titles are indicative: their content varies between companies.
+- For pole C, the trajectory planning and the check are out of scope; only the perception that feeds them is covered.
+- The technical pilot remains a validation sample. The current application authorizes the editorial preparation of the fourteen domains and six poles before its completion; the contents keep their written status and their temporary export format. Large-scale automated adoption and dissemination remains subject to testing, including history and mobile rendering.
+- Priorities, depth levels, two-stage driver and transfer protocol are offered from the expressed gaps; they do not reduce the final coverage and remain adjustable after proofreading.
+- No total volume of flashcards, schedule or daily revision time has been imposed by the user. The driver measures the load instead of limiting it.
+- The distribution of the wording between the learner and an agent is not fixed. Proposal: the agent writes, the learner confronts the central statements to the sources and at least rephrases the objective and the core of each flashcard. FR-038 only requires the traceability of this choice.
+- Scope proposal: 001 covers the framework, the contract and the pilot. The production of the catalog will then be done in batches, with their own spec or a cover follow-up in the vault; this cutting remains to be decided.
+- The name of the forgotten plugin remains uncertain. The candidate and its limitations are described in [The search for interoperability](research.md).
+- Plugin, final syntax, note templates, and deletion policy will be set during design after a driver in a test deck.
+- The Spec Kit constitution is still an unratified model; its examples do not become rules of the project by this draft. Candidate principles to be moved after ratification: language (FR-002), status of properties and traceability of sources (FR-011, FR-012, FR-036), canonical vault (FR-024), separation of editorial states and mastery (FR-026).
+- The destination of `to-spec` is not chosen. This local draft uses Spec Kit and does not publish any issue.
+- This phase includes the writing of missing content by theme, at the request of the user. It excludes installation in personal applications, a custom synchronizer and a new ML/DL general curriculum. Plan B `.apkg` is implemented in the 2026-10-24 batch for direct import on Android, in accordance with [Export Contract](../../docs/export-apkg.md). The evidence for the Anki engine remains distinct from mobile validation.
+- The flashcards support the skills referred to; a number of flashcards or their memorization cannot alone certify senior status.

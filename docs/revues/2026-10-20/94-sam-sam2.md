@@ -1,48 +1,47 @@
-# Revue — SAM, SAM 2 et segmentation guidée en vidéo — 2026-10-20
+# Review –  SAM, SAM 2 and video guided segmentation –  2026-10-20
 
-## Synthèse
+## Overview
 
-3 cartes auditées. Noyaux confirmés ; sources et attribution du protocole précisées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+3 flashcards audited. Confirmed cores; sources and protocol assignment specified. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 3 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 3 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SAM-001 | Confirmé, référence précisée | définir la sortie SAM. | 51 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Cibler source |
-| CV-SAM-002 | Confirmé, référence précisée | situer SAM 2 en vidéo. | 47 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Cibler source |
-| CV-SAM-003 | Déduction de protocole explicite | contrôler le futur dans l’évaluation. | 42 mots à l’entrée ; Information disponible et budget finis | Fiche et format contrôlés | mineur | Attribuer au projet |
+| CV-SAM-001 | Confirmed, reference specified | Set the output to SAM. | 51 words at the entrance; Goal retained | reference note and controlled format | Minor | Cibler source |
+| CV-SAM-002 | Confirmed, reference specified | Find SAM 2 on video. | 47 words at the entrance; Goal retained | reference note and controlled format | Minor | Cibler source |
+| CV-SAM-003 | Deduction of explicit protocol | check the future in evaluation. | 42 words at the entrance; information available and budget finished | reference note and controlled format | Minor | Attribute to the project |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : SAM fournit des masques conditionnés par prompts ; plusieurs masques peuvent représenter l'ambiguïté. §7.5 est explicitement une preuve de concept text-to-mask, distincte du modèle des expériences précédentes.
-- Confirmé : SAM 2 §4 ajoute une mémoire et conditionne les frames courantes sur les mémoires/prompts pour produire des masklets ; une sortie par objet guidé ne définit pas un MOT autonome à taxonomie complète.
-- Confirmé : encodage image réutilisable et décodeur conditionné dans SAM §3 ; aucun temps d'exécution n'est transféré aux machines du projet.
-- L'objection à la comparaison offline/causale est une déduction sur l'information disponible, pas un résultat chiffré du papier.
+- Confirmed: SAM provides prompt-conditioned masks; several masks may represent ambiguity. §7.5 is explicitly a proof of concept text-to-mask, distinct from the model of previous experiments.
+- Confirmed: SAM 2 §4 adds memory and conditions common frames on memory/prompts to produce masklets; one output per guided object does not define a fully taxonomic stand-alone MOT.
+- Confirmed: Reusable image encoding and decoder conditioned in SAM §3; no run time is transferred to the project machines.
+- The objection to the offline/cause comparison is a deduction from the available information, not a quantified result of the paper.
 
-## Corrections appliquées
+## Corrections applied
 
-Sources des trois cartes ciblées, fiche révisée.
+Sources of the three targeted flashcards, revised reference note.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, conception, diagnostic, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, design, diagnosis, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
 - [SAM, §3, §7.5](https://arxiv.org/abs/2304.02643).
-- [SAM 2 v2, §§3–4, Memory attention et memory bank](https://arxiv.org/abs/2408.00714).
+- [SAM 2 v2, §§3 – 4, Memory attention and memory bank](https://arxiv.org/abs/2408.00714).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.
