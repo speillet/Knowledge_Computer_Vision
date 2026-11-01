@@ -7,80 +7,109 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-REPRESENTATIONS", "CV-ACQUISITION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
 ---
-# Inspection : golden template, PatchCore et PaDiM
+# Inspection: golden templates, PatchCore and PaDiM
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Détecter des écarts au nominal lorsque les défauts sont rares. Entrées : images nominales de référence et acquisition ; sorties : score image et/ou carte de localisation. L'anomalie dépend de la distribution de référence : changement d'éclairage et défaut produit ne sont pas équivalents.
+Detect nominal deviations when defects are rare. Inputs: nominal images of reference and acquisition; outputs: image score and/or localization map. The anomaly depends on the reference distribution: lighting change and fault produced are not equivalent.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-REPRESENTATIONS](71-representations-transfert.md) ; [CV-ACQUISITION](../../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-REPRESENTATIONS](71-representations-transfert.md); [CV-ACQUISITION](../../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Dans la baseline proposée par le projet, golden template signifie comparer à une référence après recalage. PatchCore garde une banque de features de patches nominaux, réduite par coreset, et score par proximité. PaDiM modélise des distributions gaussiennes de features par position et utilise leurs corrélations.
+In the baseline proposed by the project, golden template means compare to a reference after registration. PatchCore keeps a database of features of nominal patches, reduced by coreset, and score by proximity. PaDiM models Gaussian distributions of features by position and uses their correlations.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Un score de proximité simple est $a(p)=\min_{m\in M}\|f(p)-m\|_2$ pour feature f et banque M ; le papier PatchCore inclut une agrégation/repondération à distinguer de ce résumé. PaDiM utilise $\sqrt{(f-\mu)^T\Sigma^{-1}(f-\mu)}$ avec covariance estimée/régularisée. Ces scores ne sont pas des probabilités de défaut calibrées.
+A simple proximity score is $a(p)=\min_{m\in M}\|f(p)-m\|_2$ for feature f and bank M; the PatchCore paper includes an aggregation/weighting to be distinguished from this summary. PaDiM uses $\sqrt{(f-\mu)^T\Sigma^{-1}(f-\mu)}$ with estimated/regularized covariance. These scores are not calibrated fault probabilities.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Sélection nominale, couches, échelle, coreset/covariance, alignement et seuil. Une contamination du nominal ou une variabilité non couverte change le résultat. La détection de tous défauts futurs n'est pas garantie.
+Nominal selection, layers, scale, coreset/covariance, alignment and threshold. Contamination of the nominal or uncovered variability changes the result. The detection of any future defects is not guaranteed.
 
-## Coût et implémentation
+## Cost and implementation
 
-Banque et recherche de voisins consomment mémoire/calcul ; covariance et carte ont un autre coût. Aucun modèle ni jeu industriel exécuté.
+Banking and finding neighbors consume memory/calculation; covariance and map have another cost. No model or industrial game executed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Comparer une baseline template et les méthodes avec mêmes splits par pièce/lot. Varier éclairage ou orientation séparément ; mesurer taux de faux rejets, défauts manqués et localisation, pas seulement AUROC image.
+Compare a baseline template and methods with the same splits per piece/lot. Vary lighting or orientation separately; measure false rejection rate, missed defects and location, not just AUROC image.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Scores élevés sur toutes les pièces d'une nouvelle caméra : vérifier acquisition, domaine nominal et recalage avant de réétiqueter tout comme défaut. Un fond dominant peut masquer une petite anomalie dans une métrique pixel globale.
+High scores on all parts of a new camera: check acquisition, nominal domain and registration before relabeling everything as defect. A dominant background can hide a small anomaly in a global pixel metric.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Détection supervisée si défauts connus annotables ; hybride classique/appris selon variation et tolérance métier. Conserver procédure d'analyse des faux positifs.
+Supervised detection if known defects annotable; classic hybrid / learned according to variation and business tolerance. Keep procedure for analyzing false positives.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent référence normale, voisinage de patches et décision métier. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop normal reference, neighborhood patches and business decision. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-ANOMALIES-001
+### Case linked to CV-ANOMALIES-001
 
-**Question de travail** : Quel compromis distingue golden template, PatchCore et PaDiM pour inspection ?
+**Question of work**: Which tradeoffs distinguish golden-template inspection, PatchCore and PaDiM?
 
-**Réponse de référence** : Template compare à une référence alignée ; PatchCore utilise une banque de features ; PaDiM estime des distributions avec covariance par position.
+**Reference Response**: Template compares to an aligned reference; PatchCore uses a feature bank; PaDiM estimates covariance distributions by position.
 
-**Lecture des hypothèses** : une comparaison directe au template exige que les écarts géométriques et photométriques légitimes soient suffisamment maîtrisés. Une banque de patches nominaux cherche des voisins représentatifs ; un modèle de distribution par position représente autrement la variabilité et les corrélations. Le mot anomalie désigne ici un écart à cette référence, pas une définition universelle du défaut métier.
+**Reading the assumptions**: A direct comparison to the template requires that legitimate geometric and photometric deviations are sufficiently controlled. A nominal patch bank looks for representative neighbors; a position distribution model otherwise represents variability and correlations. The word anomaly here designates a deviation from this reference, not a universal definition of the business defect.
 
-**Exemple construit** : un éclairage nouveau peut déplacer toutes les features et augmenter les scores sans pièce physiquement défectueuse. Un défaut absent de l'apprentissage peut au contraire être peu visible dans la représentation. Comparer les méthodes sur lots indépendants, défauts critiques et variations nominales, avec coût complet et seuil de décision. Une bonne localisation de score doit encore être reliée à une tolérance métier. Le choix dépend de ce qui est stable dans l'acquisition et de ce qui doit être considéré comme acceptable.
+**Constructed example**: New lighting can move all features and increase scores without physically defective parts. On the contrary, a defect that is absent from the learning process may not be very visible in the representation. Compare methods on independent batches, critical defects and nominal variations, with full cost and decision threshold. A good score location still needs to be linked to a business tolerance. The choice depends on what is stable in the acquisition and what should be considered acceptable.
 
-### Cas lié à CV-ANOMALIES-004
+### Case linked to CV-ANOMALIES-004
 
-**Question de travail** : Cas E — conception : très peu d’images défectueuses, ligne cadencée. Quelle baseline et quelle validation proposer ?
+**Question of work**: Track E — design: only a few defective images are available for a production line with a fixed cycle time. Which baseline and validation should be proposed?
 
-**Réponse de référence** : Stabiliser acquisition, définir défauts critiques et tolérances, comparer template/anomalie nominale puis mesurer rejets et défauts manqués sur lots indépendants et variations réalistes.
+**Reference Response**: Stabilize acquisition, define critical defects and tolerances, compare template/nominal anomaly then measure rejections and defects missed on independent batches and realistic variations.
 
-**Conception proposée** : distinguer une pièce rejetée à tort, un défaut manqué et un cas soumis à vérification. Leur coût n'est pas identique. Stabiliser d'abord l'image et le recalage rend la baseline interprétable ; choisir ensuite si une référence unique ou une distribution nominale représente suffisamment la variabilité acceptable.
+**Proposed design**: distinguish a wrongly rejected part, a missed defect and a case subject to verification. Their cost is not the same. Stabilizing the image first and the registration makes the baseline interpretable; then choosing whether a single reference or a nominal distribution sufficiently represents acceptable variability.
 
-**Validation** : séparer pièces et lots entre réglage et test, couvrir les défauts critiques même rares et les perturbations nominales réalistes. Mesurer le point de décision retenu, le taux de vérification et la latence complète sur la ligne visée. Une AUROC résume une courbe de classement ; elle ne donne pas directement le nombre de défauts manqués au seuil exploité. Prévoir collecte et revue de nouveaux cas avant de modifier la référence, afin de ne pas intégrer silencieusement une dérive produit au nominal.
+**Validation**: separate parts and batches between adjustment and test, cover even rare critical defects and realistic nominal disturbances. Measure the decision point, verification rate and full latency on the target line. A AUROC summarizes a ranking curve; it does not directly give the number of defects missed at the threshold exploited. Provide for the collection and review of new cases before modifying the reference, so as not to silently integrate a drift produced at the nominal.
 
-**Repère documentaire de cette passe** : [PatchCore](https://arxiv.org/html/2106.08265v2), §3, banque de caractéristiques et scoring. Les autres développements figurent dans les [cartes associées](../73-patchcore-padim.md).
+**Documentary reference for this pass**: [PatchCore](https://arxiv.org/html/2106.08265v2), §3, feature bank and scoring. The other developments are in the [flashcards](../73-patchcore-padim.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [PatchCore, §§3.1–3.3](https://arxiv.org/abs/2106.08265).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-ANOMALIES-001
+
+**Situation**: Which tradeoffs distinguish golden-template inspection, PatchCore and PaDiM?
+
+**Geometry of distance**: In PaDiM, a direction of high nominal variance is less penalized by the Mahalanobis distance than a direction of low variance. Covariance is therefore not only used to change the global scale; it also represents correlations between features. When there are few observations relative to their size, regularizing $\Sigma$ for example with a diagonal term is necessary to avoid an unstable inversion, under a documented choice. A pixel template can be more interpretable but very sensitive to registration. Comparing the three approaches thus imposes of check both the spatial coordinate frame and the representation of the acceptable variations.
+
+### CV-ANOMALIES-002
+
+**Situation**: What is the purpose of a coreset of nominal features in PatchCore?
+
+**Gluttony Selection**: After a defined initialization, a hedging policy chooses the nominal point currently furthest from its neighbor in the subset already selected. It thus seeks to cover the space of features rather than to keep only the frequent examples. The paper uses a projection to speed up the selection; the approximation must remain distinguished from a perfect cover. With $m$ features of dimension $d$ stored on $b$ bytes, the bank alone costs about $mdb$ bytes, excluding indexes. Reducing $m$ acts directly on this storage, but searching, extracting, and transferring memory can limit full latency differently.
+
+### CV-ANOMALIES-003
+
+**Situation**: Anomaly scores rise for every part after an illumination change. What should be tested?
+
+**Paired experience**: Pick up the same compliant parts before and after the light change and compare their scores by region. Then do the same for known defects. This makes it possible to study the displacement of the nominal and the separation between conformity and defect, instead of arbitrarily moving an overall threshold. If the two populations get closer, restoring the rate of false releases by increasing the threshold can greatly degrade the recall of defects. Documenting also exposure, saturation and white balance: a normalization of features does not recover visual information lost in saturated pixels. The result must be checked on other parts and lots.
+
+### CV-ANOMALIES-004
+
+**Situation**: Track E — design: only a few defective images are available for a production line with a fixed cycle time. Which baseline and validation should be proposed?
+
+**Translation in industrial load**: at a rate of $\lambda$ pieces/s and average processing time $T$ s/piece, a service capacity of less than $\lambda$ accumulates a queue even with a good detection score. For the point of operation, report false discharges among the conformants, missed defects among the defectives and number of batch checks. Zero defects missed on a small sample does not prove a zero rate: the size of the test and the diversity of defects limit the conclusion. Defining set-aside sets and critical cases before threshold setting connects the learning metrics to the actual process being evaluated.
+
+**Passages consulted for these developments**: [Defard et al., PaDiM](https://arxiv.org/html/2011.08785v1), §III-B, equation 1, covariance and regularization; geometric interpretation deduced; [Roth et al., PatchCore](https://arxiv.org/html/2106.08265v2), §3.2, Algorithm 1, gluton selection; scenarios and cost calculations of the project.
+
+## Sources and flashcards
+
+- [PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265).
 - [PaDiM, §III](https://arxiv.org/abs/2011.08785).
-- [Cartes associées](../73-patchcore-padim.md).
+- [Related flashcards](../73-patchcore-padim.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

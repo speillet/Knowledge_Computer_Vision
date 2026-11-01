@@ -7,81 +7,116 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-SE3", "CV-FUSION", "CV-FACTEURS", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
 ---
-# SLAM, VIO, préintégration IMU et bouclage
+# SLAM, VIO, IMU preintegration and loop closure
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Estimer une trajectoire et éventuellement une carte en exploitant vision, IMU et contraintes de lieux. Sorties : poses, état/biais et incertitudes dans un repère défini. Odométrie locale, relocalisation et SLAM avec boucle ne répondent pas exactement au même contrat.
+Estimate a trajectory and possibly a map by exploiting vision, IMU and place constraints. Outputs: poses, state/bias and uncertainties in a defined coordinate frame. Local odometry, relocation and SLAM with loop do not meet exactly the same contract.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md) ; [CV-FUSION](../../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) ; [CV-FACTEURS](../../10-mathematiques-estimation/references/14-graphes-facteurs.md) ; [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md); [CV-FUSION](../../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md); [CV-FACTEURS](../../10-mathematiques-estimation/references/14-graphes-facteurs.md); [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Suivre/associer observations, estimer mouvement, gérer keyframes, optimiser ou filtrer, détecter puis vérifier les boucles. La préintégration condense les mesures IMU entre keyframes avec covariance et correction de biais. MSCKF, VINS-Mono et OKVIS sont des conceptions différentes ; une mention n'implémente pas leurs variantes.
+Track/associate observations, estimate movement, manage keyframes, optimize or filter, detect and then check loops. Preintegration condenses IMU measurements between keyframes with covariance and bias correction. MSCKF, VINS-Mono and OKVIS are different designs; one mention does not implement their variants.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Avec $R_i$ corps→monde, $p_i,v_i$ position et vitesse dans le monde, $g$ gravité dans ce même repère et $\Delta t=t_j-t_i$ en secondes, $\Delta v_{ij}=R_i^T(v_j-v_i-g\Delta t)$ et $\Delta p_{ij}=R_i^T(p_j-p_i-v_i\Delta t-\tfrac12g\Delta t^2)$, en m/s et m. L'accéléromètre mesure une force spécifique dans son repère. Un VIO sans références globales conserve translation et yaw globaux non observables ; l'échelle métrique demande excitation et calibration suffisantes.
+With $R_i$ body→world, $p_i,v_i$ position and speed in the world, $g$ gravity in the same coordinate frame and $\Delta t=t_j-t_i$ in seconds, $\Delta v_{ij}=R_i^T(v_j-v_i-g\Delta t)$ and $\Delta p_{ij}=R_i^T(p_j-p_i-v_i\Delta t-\tfrac12g\Delta t^2)$, in m/s and m. The accelerometer measures a specific force in its coordinate frame. A VIO without global references keeps global translation and yaw unobservable; the metric scale requires sufficient excitation and calibration.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Intrinsèques/extrinsèques, timestamps, biais, initialisation, fenêtre et politique de boucle. DBoW2/NetVLAD proposent des candidats de lieu ; une vérification géométrique reste nécessaire.
+Intrinsic/extrinsic, timestamps, bias, initialization, window and loop policy. DBoW2/NetVLAD offer location candidates; geometric verification is still required.
 
-## Coût et implémentation
+## Cost and implementation
 
-Nombre d'états/landmarks, taille de fenêtre, suivi et boucle pèsent sur mémoire/latence. Aucun système VIO exécuté ; aucune dérive chiffrée ni temps réel garanti.
+Number of states/landmarks, window size, tracking, and loop weigh on memory/latency. No VIO system executed; no encrypted drift or real time guaranteed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : supprimer la texture puis réduire l'excitation inertielle séparément. Analyser pertes de suivi, échelle et biais ; ne pas assimiler échec d'observation locale et jauge globale. Évaluer avec timestamps et groupe d'alignement annoncés.
+Proposed Variation: Remove the texture and then reduce the inertial excitation separately. Analyze tracking losses, scale and bias; do not equate local observation failure and global gauge. Evaluate with announced timestamps and alignment group.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Couloir répétitif : vérifier parallaxe, gradients, timing, biais et fausses boucles. Un alignement Sim(3) peut masquer une mauvaise échelle d'un système censé être métrique.
+Repetitive corridor: check parallax, gradients, timing, bias and false loops. A Sim(3) alignment can hide a bad scale from a system that is supposed to be metric.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Vision seule, stéréo/RGB-D, VIO, LiDAR-odométrie ou fusion selon texture, excitation et référence. Le contrôle de trajectoire reste hors périmètre.
+Single vision, stereo/RGB-D, VIO, LiDAR-odometry or fusion according to texture, excitation and reference. The check trajectory remains out of scope.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent fusion inertielle, jauges et évaluation sans masquer les erreurs. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop inertial fusion, gauges and evaluation without masking the errors. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-VIO-001
+### Case linked to CV-VIO-001
 
-**Question de travail** : La préintégration IMU constitue-t-elle à elle seule un système VIO ?
+**Question of work**: Does IMU preintegration alone constitute a VIO system?
 
-**Réponse de référence** : Non : elle résume des mesures entre keyframes en contraintes avec bruit et biais ; le système doit aussi associer la vision, initialiser et estimer les états.
+**Reference Response**: No: it summarizes measurements between keyframes in constraints with noise and bias; the system must also associate the vision, initialize and estimate the states.
 
-**Contrat de la préintégration** : entre deux keyframes, les nombreuses observations inertielles sont condensées dans des contraintes de mouvement avec leur incertitude et leur dépendance aux biais. Ces contraintes doivent être combinées aux observations visuelles, à un état initial et à la gravité dans des repères cohérents.
+**Pre-integration contract**: Between two keyframes, the many inertial observations are condensed into motion constraints with their uncertainty and dependence on biases. These constraints must be combined with visual observations, initial state and gravity in consistent coordinate framess.
 
-**Exemple de limite** : intégrer une accélération mesurée dans le repère IMU comme si elle était directement une accélération monde confond orientation, force spécifique et gravité. Une très bonne vision ne répare pas automatiquement cette incohérence de modèle. Un système complet doit aussi gérer horodatages, extrinsèques, biais, keyframes et pertes d'observation. La préintégration évite de reprendre naïvement toute la séquence brute à chaque calcul ; elle ne fournit pas une pose absolue ni une référence globale absente des capteurs. Valider le système demande donc trajectoire, incertitude, disponibilité et latence sur des mouvements représentatifs.
+**Example of limit**: integrate an acceleration measured in the coordinate frame IMU as if it were directly an acceleration world confuses orientation, specific force and gravity. A very good vision does not automatically repair this model inconsistency. A complete system must also handle timestamps, extrinsic, bias, keyframes and observation losses. Pre-integration avoids naïvely resuming the entire raw sequence at each calculation; it does not provide an absolute pose or a global reference absent from the sensors. Validating the system therefore requires trajectory, uncertainty, availability and latency on representative movements.
 
-### Cas lié à CV-VIO-005
+### Case linked to CV-VIO-005
 
-**Question de travail** : Cas B — diagnostic : un VIO dérive en échelle et lacet dans un couloir peu texturé. Quels contrôles départagent les causes ?
+**Question of work**: Track B — diagnosis: VIO drifts in scale and yaw in a poorly textured corridor. Which checks distinguish possible causes?
 
-**Réponse de référence** : Inspecter texture/parallaxe, excitation, biais et synchronisation ; vérifier fausses boucles et groupe d’alignement utilisé.
+**Reference Response**: Inspect texture/parallax, excitation, bias and synchronization; check false loops and alignment group used.
 
-**Enquête par signatures** : une faible texture dégrade les contraintes visuelles ; une excitation insuffisante limite certaines estimations inertielles ; un retard ou un biais peut produire une erreur dépendant du mouvement. Comparer la chronologie des résidus et des pertes de suivi, plutôt que seulement la trajectoire finale.
+**Investigation by signatures**: A weak texture degrades visual constraints; insufficient excitation limits some inertial estimates; delay or bias can produce a motion-dependent error. Compare the timeline of residuals and tracking losses, rather than just the final trajectory.
 
-**Ablations proposées** : contrôler les timestamps sur des mouvements instrumentés, inspecter les features et la parallaxe, puis examiner les contraintes de boucle une par une. Réserver des séquences où un seul facteur change pour distinguer les hypothèses. Un alignement avec échelle libre peut rendre la superposition visuelle convaincante tout en cachant l'erreur métrique. Rapporter donc l'erreur avant et après l'alignement permis, avec sa justification. Aucun contrôle isolé ne prouve une cause unique lorsque plusieurs défauts de capteurs et d'estimation coexistent.
+**Proposed Ablations**: check timestamps on instrumented movements, inspect features and parallax, and then examine loop constraints one by one. Reserve sequences where a single factor changes to distinguish hypotheses. An alignment with free scale can make the visual overlay convincing while hiding the metric error. Report the error before and after the allowed alignment, with its justification. No single check proves a single cause when multiple sensor and estimation defects coexist.
 
-**Repère documentaire de cette passe** : [Forster et al. 2016](https://dellaert.github.io/files/Forster16tro.pdf), §§IV–VI, préintégration et estimation. Les autres développements figurent dans les [cartes associées](../63-slam-vio.md).
+**Documentary reference for this pass**: [Forster et al. 2016](https://dellaert.github.io/files/Forster16tro.pdf), §§IV – VI, pre-integration and estimation. The other developments are in the [flashcards](../63-slam-vio.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Forster, préintégration §§IV–VI](https://dellaert.github.io/files/Forster16tro.pdf).
-- [Zhang–Scaramuzza, alignement §III et Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
-- [GTSAM, SLAM et facteurs](https://gtsam.org/tutorials/intro.html).
-- [Cartes associées](../63-slam-vio.md).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+### CV-VIO-001
+
+**Situation**: Does IMU preintegration alone constitute a VIO system?
+
+**Constraints between states**: with $R_i$ body→world, $p_i,v_i$ in world coordinates, $g$ in gravity acceleration and $\Delta t=t_j-t_i$, the ideal increments check $\Delta v_{ij}=R_i^T(v_j-v_i-g\Delta t)$ and $\Delta p_{ij}=R_i^T(p_j-p_i-v_i\Delta t-\tfrac12g\Delta t^2)$. They are expressed in the starting coordinate frame and must be compared with the pre-integrated IMU increments, with covariance and bias correction. These relationships make the additional states visible: positions, speeds, orientations and biases. Pre-integration is therefore a factor in joint estimation, not a replacement for these unknowns or the visual observations that constrain them.
+
+### CV-VIO-002
+
+**Situation**: What does loop closure change compared with local odometry?
+
+**Relative constraint**: For poses $T_i,T_j$ sending local coordinate framess to the world, the predicted transformation from $j$ to $i$ is $T_i^{-1}T_j$. A loop provides a $Z_{ij}$ measurement of this relation; a possible residual is $\operatorname{Log}(Z_{ij}^{-1}T_i^{-1}T_j)$, depending on the conventions and the graph model. Its weighting reflects the accuracy of the verified measurement. Appearance detection alone does not provide this geometric accuracy. A graph can redistribute an inconsistency over many poses: a moderate final cost does not clear a false loop. Comparing before/after consistency and independent observations remains essential.
+
+### CV-VIO-003
+
+**Situation**: Why should global yaw and VIO scale error not be diagnosed as the same ambiguity?
+
+**Invariance and metric**: applying the same translation and rotation around gravity to the entire trajectory and the map retains the relative observations of a VIO without global reference. Changing the scale uniformly, however, modifies the predicted metric accelerations; the IMU can therefore constrain this scale when the movement provides the necessary information. Degenerate movement or misjudged biases can make this strain weak. For evaluation, document the freedoms withdrawn and keep an explicit metric check. An alignment Sim(3), which also adjusts the scale, is suitable for some monocular comparisons but can hide a scale error of a VIO declared metric.
+
+### CV-VIO-004
+
+**Situation**: Track B — design: localize an indoor AR headset with cameras and an IMU under a latency constraint. Which pipeline must be validated?
+
+**Seniority budget of pose**: distinguish capture instant $t_c$, estimation availability $t_e$ and display instant $t_a$. A correct pose for $t_c$ comes already old from $t_a-t_c$ on the screen. The IMU propagation can predict up to $t_a$ under a motion model, with increasing uncertainty; it does not transform a future measurement into available observation. Measure the error at the time actually requested and report the time frames step by step with their percentiles. In a test built at 100°/s, 20 ms represents 2° of uncompensated rotation. This calculation directly links synchronization, prediction and visual stabilization requirement of the helmet.
+
+### CV-VIO-005
+
+**Situation**: Track B — diagnosis: VIO drifts in scale and yaw in a poorly textured corridor. Which checks distinguish possible causes?
+
+**Drift due to bias, simplified case**: If a constant acceleration bias $b_a$ remains uncorrected in a fixed world direction, it produces approximately a speed error $b_at$ and position error $\tfrac12b_at^2$. A constant gyroscope bias produces an angular error of the order of $b_\omega t$; this error can also incorrectly orient gravity and contaminate translation. These constructed laws assume a simplified orientation and conditions, they do not predict a real trajectory. Looking for these time signatures in parallel with feature losses and loop corrections helps to propose discriminating essays rather than a single cause in view of the final plot.
+
+**Passages consulted for these developments**: [Qin et al., VINS-Mono](https://arxiv.org/html/1708.03852v1), §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios.
+
+## Sources and flashcards
+
+- [Forster, pre-integration §§IV – VI](https://dellaert.github.io/files/Forster16tro.pdf).
+- [Zhang – Scaramuzza, alignment §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
+- [GTSAM, SLAM and factors](https://gtsam.org/tutorials/intro.html).
+- [Related flashcards](../63-slam-vio.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

@@ -7,82 +7,111 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
 ---
-# Canny et Hough : contours, droites et segments
+# Canny and Hough: edges, lines and segments
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Localiser des contours puis rechercher une structure géométrique. Canny sort une carte de contours ; Hough accumule des votes pour une famille de primitives. Une frontière photométrique n'est pas automatiquement un bord d'objet, et une droite n'est pas un segment.
+Locate contours and then search for a geometric structure. Canny produces an edge map; Hough accumulates votes for a family of primitives. A photometric boundary is not automatically an object edge, and a straight line is not a segment.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Canny exploite gradients, suppression locale des non-maxima et hystérésis entre deux seuils. Un lissage est une étape de conception à expliciter. Hough transforme chaque point de contour en votes dans un espace de paramètres, puis recherche des maxima.
+Canny exploits gradients, local suppression of non-maxima and hysteresis between two thresholds. Smoothing is a design step to be explained. Hough turns each contour point into votes in a parameter space, and then searches for maxima.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Pour une droite, $\rho=x\cos\theta+y\sin\theta$, avec x,y et $\rho$ en pixels et $\theta$ en radians dans la convention choisie. La discrétisation de l'accumulateur détermine sa résolution. Le gradient combine dérivées spatiales ; sa norme L1 ou L2 n'est pas le même score.
+For a straight line, $\rho=x\cos\theta+y\sin\theta$, with x,y and $\rho$ in pixels and $\theta$ in radians in the chosen convention. The discretization of the accumulator determines its resolution. The gradient combines spatial derivatives; its standard L1 or L2 is not the same score.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Deux seuils Canny, échelle de gradient, pas rho/theta, votes, longueur minimale et écart maximal pour une variante segment. Ne pas promettre un lissage gaussien 5×5 interne à chaque API Canny.
+Two Canny thresholds, gradient scale, rho/theta pitch, votes, minimum length and maximum deviation for a segment variant. Do not promise a Gaussian smoothing 5×5 internal to each Canny API.
 
-## Coût et implémentation
+## Cost and implementation
 
-Le nombre de points actifs et de bins domine le coût de Hough naïf ; une variante probabiliste réduit le travail sous ses hypothèses. Aucun appel de bibliothèque ni image réelle exécuté.
+The number of active points and bins dominates the cost of naïve Hough; a probabilistic variant reduces labor under his assumptions. No library calls or real images executed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : ajouter texture et flou séparément à une pièce à arêtes connues. Prédire contours parasites ou perdus ; mesurer répétabilité et erreur de ligne, pas seulement densité de contours.
+Proposed variation: add texture and blur separately to a room with known edges. Predict stray or lost contours; measure repeatability and line error, not just contour density.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Trop de lignes sur texture : contrôler d'abord les contours, la région utile et les bins. Contour interrompu : vérifier contraste et hystérésis avant de baisser tous les seuils.
+Too many lines on texture: check first outlines, useful region and bins. Interrupted contour: check contrast and hysteresis before lowering all thresholds.
 
-## Alternatives et usages
+## Alternatives and applications
 
-LSD, ajustement robuste et modèles appris selon continuité, bruit et besoin de segment. Une contrainte géométrique métier peut limiter les faux positifs.
+LSD, robust fit and models learned according to continuity, noise and segment need. A business geometric constraint can limit false positives.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent relier contours, votes et validation géométrique. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop connecting contours, votes and geometric validation. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-CANNY-HOUGH-001
+### Case linked to CV-CANNY-HOUGH-001
 
-**Question de travail** : Pourquoi Canny utilise-t-il deux seuils plutôt qu’un simple seuil de gradient ?
+**Question of work**: Why does Canny use two thresholds instead of a single gradient threshold?
 
-**Réponse de référence** : Les contours forts amorcent des structures ; des réponses plus faibles peuvent être retenues lorsqu’elles sont reliées aux fortes selon l’hystérésis.
+**Reference Response**: Strong contours initiate structures; weaker responses can be retained when they are related to strong ones according to hysteresis.
 
-**Déroulement interprété** : le gradient mesure une variation locale d'intensité. La suppression des non-maxima conserve les crêtes dans la direction du gradient afin d'éviter des bandes épaisses. L'hystérésis décide ensuite quelles crêtes faibles prolongent une structure suffisamment forte. Le seuil bas permet une continuité conditionnelle ; il ne rend pas toutes les réponses faibles admissibles.
+**Interpreted procedure**: The gradient measures a local variation in intensity. The removal of non-maxima keeps the ridges in the direction of the gradient in order to avoid thick bands. The hysteresis then decides which weak ridges extend a sufficiently strong structure. The low threshold allows for conditional continuity; it does not make all weak responses admissible.
 
-**Exemple construit** : une arête éclairée de façon inégale comporte une portion contrastée et une portion faible. Un seuil unique élevé fragmente l'arête ; un seuil unique bas retient aussi beaucoup de texture. Les deux seuils permettent de conserver certaines portions faibles reliées à la portion forte. Si tout le contour est faible et sans amorce forte, il peut rester absent. Le réglage dépend de l'échelle de lissage, du contraste et de la définition du gradient ; aucune de ces étapes ne distingue à elle seule arête de pièce et texture du fond.
+**Constructed example**: An unevenly lit edge has a contrasting portion and a weak portion. A high single threshold fragments the edge; a low single threshold also retains a lot of texture. The two thresholds make it possible to keep certain small portions connected to the strong portion. If the entire contour is weak and without a strong primer, it may remain absent. The setting depends on the smoothing scale, contrast, and gradient definition; none of these steps single-handedly distinguishes part edges and background texture.
 
-### Cas lié à CV-CANNY-HOUGH-004
+### Case linked to CV-CANNY-HOUGH-004
 
-**Question de travail** : Hough produit beaucoup de droites sur une surface texturée. Quel contrôle évite un réglage aveugle du seuil de vote ?
+**Question of work**: Hough detects many lines on a textured surface. Which check avoids blindly tuning the voting threshold?
 
-**Réponse de référence** : Inspecter carte Canny, distribution angulaire, région utile et support spatial des candidats.
+**Reference Response**: Inspect Canny edge map, angular distribution, useful region and spatial support of candidates.
 
-**Enquête proposée** : superposer les droites et leurs points de support à l'image. Si les votes proviennent de stries répétées, le détecteur répond peut-être correctement à des contours qui ne sont simplement pas ceux de la pièce. Examiner ensuite la distribution des angles et le nombre de fragments : cela distingue une texture structurée d'un bruit dispersé.
+**Proposed investigation**: Overlapping the lines and their support points to the image. If the votes come from repeated streaks, the detector may respond correctly to contours that are simply not those of the room. Then examine the distribution of angles and the number of fragments: this distinguishes a structured texture from a dispersed noise.
 
-**Ablation construite** : fixer les bins et seuils, restreindre une région d'intérêt, puis modifier séparément le lissage et la contrainte d'orientation attendue. Mesurer lignes métier trouvées, faux candidats et erreur de position. Augmenter seulement le seuil de vote peut éliminer une arête utile peu contrastée tout en conservant une texture longue et répétitive. Une contrainte géométrique aide uniquement si elle reste valable pour les orientations réellement rencontrées. L'accumulateur compte un support photométrique ; la validation du modèle de pièce est une décision supplémentaire du pipeline.
+**Ablation construite**: Set the bins and thresholds, restrict a region of interest, and then separately change the smoothing and the expected orientation constraint. Measure business lines found, false candidates and position error. Increasing only the voting threshold can eliminate a useful edge that is not very contrasting while retaining a long and repetitive texture. A geometric constraint helps only if it remains valid for the orientations actually encountered. The accumulator has a photometric support; the validation of the part model is an additional decision of the pipeline.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html), paramétrisation polaire et votes. Les autres développements figurent dans les [cartes associées](../32-canny-hough.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html), polar parametrization and votes. The other developments are in the [flashcards](../32-canny-hough.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-Le tutoriel décrit une chaîne avec lissage ; ses explications ne constituent pas une preuve d’un lissage interne à chaque surcharge API. La carte de contours et les contraintes métier du cas de texture sont un diagnostic construit.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-CANNY-HOUGH-001
+
+**Situation**: Why does Canny use two thresholds instead of a single gradient threshold?
+
+**Describe hysteresis as a journey**: after calculating the gradient and removing non-maxima, initialize a queue with pixels above the high threshold. Browse their neighbors and recursively keep those above the low threshold; discard other unrelated answers. This diagram explains how a long, small portion can be retained without a single pixel exceeding the high threshold. The direction of the gradient is a normal to the contour, calculated with a convention such as $\operatorname{atan2}(G_y,G_x)$; the suppression compares the amplitudes along this normal. Changing norm L1/L2, smoothing or digital depth changes the scale of scores and therefore the direction of the thresholds.
+
+### CV-CANNY-HOUGH-002
+
+**Situation**: What do $\rho$ and $\theta$ represent in $\rho=x\cos\theta+y\sin\theta$?
+
+**Angular accuracy and position**: A small $\delta\theta$ error causes $\rho$ to vary by about $(-x\sin\theta+y\cos\theta)\delta\theta$, with $\delta\theta$ in radians. The effect grows with distance at the origin: an angular bin does not represent a uniform tolerance in pixels everywhere. At a leverage of 500 px, a degree corresponds to an order of magnitude of 8,7 px. This derivation does not give the final error of a detector, but helps to choose a reasonable discretization and to understand an extrapolation. Couples $(\rho,\theta)$ and $(-\rho,\theta+\pi)$ represent the same straight line; the angle interval and the allowed sign of $\rho$ must be processed together.
+
+### CV-CANNY-HOUGH-003
+
+**Situation**: Why does HoughLines not directly return the endpoints of a real line segment?
+
+**Find a Finished Support**: from the normal $n=(\cos\theta,\sin\theta)$, take a point $p_0=\rho n$ and the unit direction $d=(-\sin\theta,\cos\theta)$. For each $p$ contour point, test its normal $|n^Tp-\rho|$ distance, then project the points compatible with $s=d^T(p-p_0)$. Contiguous groups in $s$ offer segments, whose ends are equal to $p_0+s_{min}d$ and $p_0+s_{max}d$. This process distinguishes perpendicular tolerance and longitudinal holes. The choice of support, the presence of occlusions and a possible re-estimation of the line on its points condition the ends. It is not enough to take the minimum and maximum of all the collinear points of the image.
+
+### CV-CANNY-HOUGH-004
+
+**Situation**: Hough detects many lines on a textured surface. Which check avoids blindly tuning the voting threshold?
+
+**Differentiating Vote and Adjustment Error**: a long texture provides a lot of points and therefore votes, even if it is not the desired structure. For a candidate, calculate in addition the normal distances $r_i=x_i\cos\theta+y_i\sin\theta-\rho$ on her support points, their longitudinal extent and the fraction of the positions actually covered. A very precise short line and a long discontinuous line do not have the same use. Also compare its relationship to other expected edges: parallelism, intersections or distances, if these properties are legitimate for the room. These validations are choices of the proposed pipeline; the accumulator score is not a calibrated probability of the presence of a business edge.
+
+**Passages consulted for these developments**: [OpenCV 4.13, Canny](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html), gradient, Non-maximum Suppression and Hysteresis Thresholding; [OpenCV 4.13, Hough](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html), How does it work; Standard and Probabilistic Hough.
+
+## Sources and flashcards
+
+The tutorial describes a string with smoothing; its explanations do not constitute proof of an internal smoothing with each overload API. The edge map and the business constraints of the texture case are a constructed diagnosis.
 
 - [OpenCV Canny, Theory](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html).
 - [OpenCV Hough, Theory](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
-- [Cartes associées](../32-canny-hough.md).
+- [Related flashcards](../32-canny-hough.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

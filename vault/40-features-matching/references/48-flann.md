@@ -7,69 +7,97 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 4
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
 ---
-# FLANN — recherche approchée et contrat de distance
+# FLANN — approximate nearest-neighbor search and distance conventions
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-MATCHING](43-detecteurs-matchers.md).
-**Compétences visées** : choisir recherche approchée ou exhaustive; préserver la métrique des descripteurs; évaluer une approximation de voisins; mesurer la courbe temps rappel.
-Les notions connexes restent des alternatives, pas des dépendances implicites.
+**Required prerequisites**: [CV-MATCHING](43-detecteurs-matchers.md). **Target competencies**: choose approximate or exhaustive search; preserve the metric of descriptors; evaluate an approximation of neighbors; measure the recall time curve. Related notions remain alternatives, not implicit dependencies.
 
-## Problème et contrat des données
+## Problem and data contract
 
-Rechercher rapidement des voisins parmi de nombreux descripteurs. L’entrée comprend base, requêtes, métrique et budget de recherche ; la sortie contient des candidats avec leurs distances, sans garantie générale de voisin exact. Un index pour vecteurs flottants en L2 n’est pas interchangeable avec un index pour chaînes binaires en Hamming.
+Quickly search for neighbors among many descriptors. The entry includes base, queries, metric and research budget; the exit contains candidates with their distances, with no general guarantee of exact neighbor. An index for floating vectors in L2 is not interchangeable with an index for binary strings in Hamming.
 
-## Mécanisme, paramètres et coût
+## Mechanism, parameters and cost
 
-FLANN regroupe plusieurs structures de recherche et des choix de configuration, pas un seul algorithme de matching. Muja et Lowe étudient notamment forêts de kd-trees aléatoires et arbres de k-means hiérarchiques. L’index construit une organisation de la base ; la requête explore une fraction des candidats. Arbres et budget de visite échangent mémoire, construction, temps de requête et rappel. OpenCV 4.13 montre un kd-tree pour SIFT et un index LSH pour des descripteurs ORB binaires usuels. Ces configurations ne rendent pas toute métrique compatible.
+FLANN includes several search structures and configuration choices, not a single matching algorithm. Muja and Lowe study random kd-tree forests and hierarchical k-mean trees. The index builds an organization of the database; the query explores a fraction of the candidates. Trees and visiting budget exchange memory, construction, request time and reminder. OpenCV 4.13 shows a kd-tree for SIFT and an LSH index for common binary ORB descriptors. These configurations do not make any metric compatible.
 
-## Mathématiques et conventions
+## Mathematics and conventions
 
-Sur un échantillon, comparer le voisin approché $\hat n(q)$ au voisin exact $n^*(q)$ calculé avec la même distance. Le recall@1 est la fraction de requêtes dont le voisin exact est retrouvé ; traiter les ex æquo selon un protocole annoncé. Le coût amorti est $T_{construction}+N_qT_{requête}$ pour $N_q$ requêtes. La distance de chaque match conserve le sens de la métrique utilisée ; vérifier aussi distance ou distance au carré dans l’API avant tout ratio. La recherche des deux voisins doit être assez fiable pour un ratio test pertinent.
+On a sample, compare the approximate neighbor $\hat n(q)$ to the exact neighbor $n^*(q)$ calculated with the same distance. The call@1 is the fraction of requests whose exact neighbor is found; treat the ex æquo according to an announced protocol. The amortized cost is $T_{construction}+N_qT_{requête}$ for $N_q$ queries. The distance of each match retains the sense of the metric used; also check distance or squared distance in the API before any ratio. The search of the two neighbors must be reliable enough for a relevant ratio test.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline proposée : recherche exhaustive sur un sous-ensemble représentatif. Faire varier le budget de recherche, en conservant base, requêtes et métrique ; mesurer recall@1/2, durée de construction, latence par lot, mémoire et inliers géométriques. Exemple construit : 2 s de construction plus 100 requêtes à 1 ms coûtent 2,1 s ; une brute force à 3 ms coûte 0,3 s. Avec 10 000 requêtes, les coûts deviennent 12 s contre 30 s. L’index ne gagne donc pas pour tout usage.
+Proposed baseline: comprehensive research on a representative subset. Change the search budget, keeping base, queries and metrics; measure call@1/2, build time, batch latency, memory and geometric inliers. Constructed example: 2 s build plus 100 queries at 1 ms cost 2,1 s; brute force at 3 ms costs 0,3 s. With 10 000 queries, costs become 12 s versus 30 s. The index does not win for any use.
 
-## Diagnostic et alternatives
+## Diagnosis and alternatives
 
-Une erreur de type avec ORB n’autorise pas à convertir aveuglément les octets en float pour L2 : conserver la métrique de Hamming ou choisir un index adapté. Une baisse d’inliers après accélération peut venir du rappel des deux voisins, pas du détecteur. Une petite base peut favoriser la recherche exhaustive. Une base évolutive impose aussi de mesurer reconstruction et invalidation de l’index. Aucun benchmark FLANN exécuté ; les coûts ci-dessus sont hypothétiques.
+A type error with ORB does not allow blindly converting bytes to float for L2: keep the Hamming metric or choose a suitable index. A drop in the inliers after acceleration may come from the recall of the two neighbors, not the detector. A small base can support comprehensive research. An evolutionary basis also requires measuring reconstruction and invalidation of the index. No FLANN benchmark executed; the above costs are hypothetical.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent rappel des voisins, ratio et amortissement de l’index. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop neighbor recall, index ratio and damping. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-FLANN-001
+### Case linked to CV-FLANN-001
 
-**Question de travail** : Pourquoi un index FLANN peut-il être moins intéressant qu’une recherche exhaustive sur une petite base utilisée une seule fois ?
+**Question of work**: Why can a FLANN index be less attractive than exhaustive search for a small database used only once?
 
-**Réponse de référence** : Le coût de construction et la mémoire peuvent dépasser le gain sur les requêtes. Comparer $T_{construction}+N_qT_{requête}$ au coût exhaustif pour le nombre réel de requêtes, avec le même objectif de rappel.
+**Reference Response**: The build cost and memory can exceed the gain on queries. Compare $T_{construction}+N_qT_{requête}$ to the full cost for the actual number of queries, with the same recall goal.
 
-**Exemple de coût amorti** : avec 2 s de construction et 1 ms par requête, cent requêtes coûtent environ 2,1 s, tandis qu'une recherche exhaustive à 3 ms chacune coûte 0,3 s. Pour dix mille requêtes sur la même base, les coûts hypothétiques deviennent 12 s et 30 s. Les valeurs illustrent un calcul, sans constituer un benchmark FLANN.
+**Example of amortized cost**: With 2 s of construction and 1 ms per query, a hundred queries cost about 2,1 s, while an exhaustive search at 3 ms each costs 0,3 s. For ten thousand queries on the same basis, the hypothetical costs become 12 s and 30 s. The values illustrate a calculation, without constituting a benchmark FLANN.
 
-**Interprétation** : le nombre réel de réutilisations de l'index et sa durée de validité décident de l'amortissement. Une base reconstruite à chaque image peut perdre cet avantage. Comparer également la qualité des voisins : diminuer le temps en acceptant un rappel insuffisant n'est pas un gain à objectif constant. Le choix dépend du volume, du matériel, des lots et du protocole.
+**Interpretation**: The actual number of re-uses of the index and its period of validity decide the depreciation. A reconstructed base with each image can lose this advantage. Also compare the quality of the neighbors: reducing the time by accepting an insufficient reminder is not a gain to constant objective. The choice depends on volume, material, batches and protocol.
 
-### Cas lié à CV-FLANN-004
+### Case linked to CV-FLANN-004
 
-**Question de travail** : Quelles mesures permettent de régler le budget d’une recherche approchée sans masquer une dégradation du pipeline ?
+**Question of work**: Which measurements help tune approximate-search effort without hiding degradation of the overall pipeline?
 
-**Réponse de référence** : Mesurer rappel des voisins par rapport à une baseline exacte, latence, mémoire, construction et nombre/qualité des inliers finaux. Faire varier un budget à la fois sur des données réservées.
+**Reference Response**: Measure recall of neighbors against an exact baseline, latency, memory, build, and number/quality of final inlays. Change one budget at a time on reserved data.
 
-**Séparer trois mesures** : le rappel de voisins compare l'index à une recherche exacte dans un espace de descripteurs ; la précision des matches compare les paires à une vérité de correspondance ; le succès géométrique juge la transformation obtenue. Ces niveaux peuvent diverger sur des textures répétitives ou des régions mal réparties.
+**Separate three measures**: Neighbor recall compares the index to an exact search in a descriptor space; match accuracy compares pairs to a matching truth; geometric success judges the resulting transformation. These levels can diverge on repetitive textures or poorly distributed regions.
 
-**Courbe de décision proposée** : pour plusieurs budgets, conserver base et requêtes puis reporter temps complet, mémoire, rappel des deux premiers voisins et erreurs du recalage final. Ajouter le coût d'entretien si la base évolue. Choisir une région de fonctionnement qui respecte les contraintes du produit, puis la vérifier sur un lot réservé. Ce résultat ne se résume pas à maximiser le rappel : une recherche exhaustive peut être inutilement chère, mais une approximation très rapide peut être insuffisante.
+**Proposed Decision Curve**: for several budgets, keep base and queries then report full time, memory, reminder of the first two neighbors and errors of the final registration. Add the maintenance cost if the base changes. Choose an operating region that meets the constraints of the product, and then check it on a reserved lot. This result is not limited to maximising recall: exhaustive research can be unnecessarily expensive, but a very fast approximation can be insufficient.
 
-**Repère documentaire de cette passe** : [Muja et Lowe 2009](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), §§2–3, index et compromis de recherche. Les autres développements figurent dans les [cartes associées](../48-flann.md).
+**Documentary reference for this pass**: [Muja and Lowe 2009](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), §§2 – 3, index and search compromise. The other developments are in the [flashcards](../48-flann.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Muja et Lowe 2009, §§2–3, recherche approchée et configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf).
-- [OpenCV 4.13, Feature Matching, BF et FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
-- [Cartes associées](../48-flann.md) : CV-FLANN-001 à 004.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Rédaction : Agent Codex, 2026-10-24. Sources primaires consultées et API OpenCV 4.13 vérifiées avec Context7. Calculs analytiques et protocoles proposés sont distingués des expériences ; aucun export réel, benchmark vidéo ni validation scientifique indépendante annoncé.
+### CV-FLANN-001
+
+**Situation**: Why can a FLANN index be less attractive than exhaustive search for a small database used only once?
+
+**What does the index cost?**: a forest of kd-trees divides vectors by coordinates; a search follows promising regions and then explores other branches according to a budget. A hierarchical k-mean tree partitions rather by group centers. Stopping early explains both the labor economy and the lack of an accurate general neighbor guarantee. In the time model already built, the damping threshold checks $2+0,001N_q<0,003N_q$, so $N_q>1000$; at a thousand queries the costs are equal. This threshold depends entirely on the assumed costs. Any reconstruction, additional transfer or change in the budget must be reinstated before concluding that the index is of interest.
+
+### CV-FLANN-002
+
+**Situation**: A FLANN matcher configured for SIFT vectors rejects ORB descriptors. Is converting them to floats sufficient for correct matching?
+
+**Standardization and metric form a contract**: for real unit vectors $a,b$, $\|a-b\|_2^2=2-2a^Tb$ connects L2 and cosine similarity. This equivalence requires normalization and does not extend to bytes encoding ORB bits. Even for real vectors, changing their normalization after index construction can change neighbors and invalidate the setting. Keeping the extractor, its version/configuration, the dimension and the expected metric with the base makes it possible to detect these incompatibilities before the matching. A type conversion is sometimes necessary for an API; it must preserve the desired mathematical representation, and is not used to bypass an incompatible distance contract.
+
+### CV-FLANN-003
+
+**Situation**: The ratio of two matching distances becomes more favorable when the FLANN search budget is reduced. Does this prove the matches are better?
+
+**Inverse case not to be forgotten**: Missing the best neighbor can also make the ratio less favorable or make another candidate accept; the search error does not have a single direction on the final decision. The call@1 measures only if the first exact neighbor is found. For a filter using two neighbors, also measure the recall of the set of the two best and the agreement of the filtering decision. Ex-æquo require a convention: several clues can have the same distance and make an identity comparison too severe. An exhaustive reference must therefore announce metric, numerical precision and equality rule, and then remain the same for all budgets evaluated.
+
+### CV-FLANN-004
+
+**Situation**: Which measurements help tune approximate-search effort without hiding degradation of the overall pipeline?
+
+**Read a quality – cost curve**: an operating point dominates another if it retains at least the useful quality by costing less depending on the resources considered. Between undominated points, the choice depends on the budget and tolerance produced, not on a single universal score. Separating build time, query latency, memory, and update frequency from the base avoids masking a misplaced extra cost. Testing queries without a real match is also essential: a neighbor search will usually return someone even if the correct answer is "absent". The rejection of pairs and the geometric verification define this possibility of refusal, which the only reminder of the neighbors does not measure.
+
+**Passages consulted for these developments**: [Muja and Lowe 2009](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), §§3.1 – 3.3, structures, budget and configuration.
+
+## Sources and flashcards
+
+- [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf).
+- [OpenCV 4.13, Feature Matching, BF and FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+- [Related flashcards](../48-flann.md): CV-FLANN-001 to 004.
+
+Editor: Agent Codex, 2026-10-24. Primary sources consulted and API OpenCV 4.13 verified with Context7. Analytical calculations and proposed protocols are distinguished from experiments; no actual export, video benchmark or independent scientific validation announced.

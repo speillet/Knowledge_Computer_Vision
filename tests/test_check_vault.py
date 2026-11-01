@@ -17,27 +17,27 @@ provenance: agent
 revision: 1
 tags: [cv/d04]
 ---
-# Fiche témoin
-Source : https://example.org/primary
+# Fixture reference note
+Source: https://example.org/primary
 """
-CARD = """# Cartes témoin
+CARD = """# Fixture flashcards
 
 TARGET DECK: CV::Pilote::40-features-matching
 
 ## CV-TEST-001
 
-Objectif : tester le contrat. Famille : comprehension. Provenance : agent.
+Objective: Test the contract. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-TEST-001
-Question: Question autonome ?
-Reponse: **Noyau attendu** : réponse.
+Question: Autonomous question?
+Reponse: **Expected answer**: answer.
 
-**Approfondissement** : détail.
+**Further explanation**: detail.
 
-**Erreurs bloquantes** : contresens.
-Source: [[40-features-matching/references/41-test|Fiche]] ; [source](https://example.org/primary).
+**Blocking errors**: This is nonsense.
+Source: [[40-features-matching/references/41-test|Reference note]] ; [source](https://example.org/primary).
 Tags: cv::pilote cv::d04 famille::comprehension cv_id::CV-TEST-001 provenance::agent pole::B
 END
 """
@@ -63,50 +63,62 @@ class VaultContract(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(counts, {"markdown": 2, "fiches": 1, "cartes": 1})
 
+    def test_english_format_rejects_legacy_language_headers_and_rubrics(self):
+        legacy_header = CARD.replace("Objective:", "Objectif :").replace("Family:", "Famille :")
+        self.card.write_text(legacy_header, encoding="utf-8")
+        self.assert_error("missing Objective/Family/Provenance")
+        legacy_rubric = CARD.replace("Further explanation", "Approfondissement")
+        self.card.write_text(legacy_rubric, encoding="utf-8")
+        self.assert_error("missing rubric: Further explanation")
+
+    def test_english_family_label_matches_stable_tag(self):
+        self.card.write_text(CARD.replace("Family: understanding", "Family: diagnosis"), encoding="utf-8")
+        self.assert_error("header family/provenance differs from tags")
+
     def test_duplicate_pedagogical_identity(self):
         (self.card.parent / "Copy.md").write_text(CARD, encoding="utf-8")
-        self.assert_error("identifiant de carte dupliqué")
+        self.assert_error('duplicate card ID')
 
     def test_orphan_card_and_broken_media(self):
         self.card.write_text(CARD.replace("40-features-matching/references/41-test", "40-features-matching/references/41-missing")
-                             + "\n![schéma](missing.svg)\n", encoding="utf-8")
-        self.assert_error("fiche parente absente")
-        self.assert_error("lien local absent")
+                             + '\n![Schema](missing.svg)\n', encoding="utf-8")
+        self.assert_error('missing or ambiguous parent reference')
+        self.assert_error('missing local link')
 
     def test_missing_end_marker(self):
         self.card.write_text(CARD.replace("\nEND", ""), encoding="utf-8")
-        self.assert_error("START/END non équilibrés")
+        self.assert_error('unbalanced START/END')
 
     def test_model_fields_and_rubric(self):
         self.card.write_text(CARD.replace("Reponse:", "Back:"), encoding="utf-8")
-        self.assert_error("champs absents")
-        self.card.write_text(CARD.replace("**Erreurs bloquantes**", "**Détails**"), encoding="utf-8")
-        self.assert_error("rubrique absente")
+        self.assert_error("fields missing")
+        self.card.write_text(CARD.replace('**Blocking errors**', '**Details**'), encoding="utf-8")
+        self.assert_error('missing rubric')
 
     def test_domain_disagrees_with_parent(self):
         self.card.write_text(CARD.replace("cv::d04", "cv::d11"), encoding="utf-8")
-        self.assert_error("domaine différent")
+        self.assert_error('domain differs')
 
     def test_poles_must_be_known_unique_and_present(self):
         for value in ["[]", "[G]", "[B, B]", "B", "[AB]"]:
             with self.subTest(value=value):
                 self.note.write_text(NOTE.replace("[B]", value), encoding="utf-8")
-                self.assert_error("pôles de fiche attendus")
+                self.assert_error('reference career tracks must be unique')
 
     def test_card_poles_must_match_parent(self):
         for replacement in ["", "pole::A", "pole::B pole::B", "pole::B pole::G"]:
             with self.subTest(replacement=replacement):
                 self.card.write_text(CARD.replace(" pole::B", " " + replacement).replace(" \n", "\n"), encoding="utf-8")
-                self.assert_error("étiquettes de pôle différentes")
+                self.assert_error('career-track tags differ')
 
     def test_case_pole_requires_matching_family_and_pole(self):
         self.card.write_text(CARD.replace("pole::B\n", "pole::B cas_pole::A::diagnostic\n"), encoding="utf-8")
-        self.assert_error("cas métier invalide")
+        self.assert_error('invalid career case')
 
     def test_deck_must_match_topic_folder(self):
         self.card.write_text(CARD.replace("CV::Pilote::40-features-matching",
                                          "CV::Pilote::50-calibration-geometrie"), encoding="utf-8")
-        self.assert_error("deck cible CV::Pilote::40-features-matching")
+        self.assert_error("target deck CV::Pilote::40-features-matching")
 
     def test_card_and_reference_must_share_topic(self):
         folder = self.root / "50-calibration-geometrie"
@@ -115,15 +127,15 @@ class VaultContract(unittest.TestCase):
         (folder / "51-test.md").write_text(
             CARD.replace("TARGET DECK: CV::Pilote::40-features-matching",
                          "TARGET DECK: CV::Pilote::50-calibration-geometrie"), encoding="utf-8")
-        self.assert_error("autre thématique que sa fiche")
+        self.assert_error('card topic differs')
 
     def test_reference_domain_must_match_topic(self):
         self.note.write_text(NOTE.replace("domaine: d04", "domaine: d05"), encoding="utf-8")
-        self.assert_error("domaine de fiche différent")
+        self.assert_error('reference domain differs')
 
     def test_root_scan_rejects_start_examples_in_guides(self):
         (self.root / "Guide.md").write_text("```text\nSTART\nCV-Pilote\nEND\n```\n", encoding="utf-8")
-        self.assert_error("bloc START hors")
+        self.assert_error("START block outside")
 
     def test_sync_identity_is_preserved_but_must_be_unique(self):
         synced = CARD.replace("\nEND", "\n<!--ID: 1234567890-->\nEND")
@@ -131,29 +143,29 @@ class VaultContract(unittest.TestCase):
         self.assertEqual(check_vault(self.root)[0], [])
         (self.card.parent / "Copy.md").write_text(
             synced.replace("CV-TEST-001", "CV-TEST-002"), encoding="utf-8")
-        self.assert_error("identité Anki dupliquée")
+        self.assert_error('duplicate Anki identity')
 
     def test_no_vault_escape(self):
-        self.card.write_text(CARD + "\n[externe local](../../../private.md)\n", encoding="utf-8")
-        self.assert_error("hors vault")
+        self.card.write_text(CARD + '\n[External Local](../../../private.md)\n', encoding="utf-8")
+        self.assert_error("outside vault")
 
     def test_multiple_sync_comments_in_one_card_are_invalid(self):
         self.card.write_text(CARD.replace("\nEND", "\n<!--ID: 123-->\n<!--ID: 456-->\nEND"), encoding="utf-8")
-        self.assert_error("une seule identité Anki")
+        self.assert_error('a single Anki identity')
 
     def test_unique_media_basename(self):
         for folder in ["a", "b"]:
             target = self.root / "99-Ressources" / folder
             target.mkdir(parents=True)
             (target / "schema.svg").write_text("<svg/>", encoding="utf-8")
-        self.assert_error("basename de média dupliqué")
+        self.assert_error('duplicate media basename')
 
     def test_media_collision_outside_attachment_folder(self):
         for folder in ["99-Ressources", "40-features-matching"]:
             target = self.root / folder
             target.mkdir(exist_ok=True)
             (target / "schema.svg").write_text("<svg/>", encoding="utf-8")
-        self.assert_error("basename de média dupliqué")
+        self.assert_error('duplicate media basename')
 
 
 if __name__ == "__main__":

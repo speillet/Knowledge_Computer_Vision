@@ -7,86 +7,115 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 6
 prerequis: ["CV-PIPELINE", "CV-QUANT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
 ---
-# Déploiement edge, compression et surveillance
+# Edge deployment, compression and monitoring
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Livrer un système de vision reproductible et observable, avec mise à jour maîtrisée. Entrées : artefacts, contrats, versions et cible ; sortie : service testé avec politique de panne/retour. Déploiement implique plus que copier les poids.
+Deliver a reproducible and observable vision system, with update mastered. Inputs: Artifacts, Contracts, Versions and Target; Output: Service Tested with Fault/Return Policy. Deploying involves more than copying weights.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-PIPELINE](141-contrats-profiling-video.md) ; [CV-QUANT](142-quantification-runtimes.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-PIPELINE](141-contrats-profiling-video.md); [CV-QUANT](142-quantification-runtimes.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Versionner prétraitements, modèle, posttraitements et taxonomie ; tester sur entrées de référence puis charge réelle. Distillation transfère une supervision/structure de sorties ; pruning retire des composantes selon schéma. Serving, température et file vidéo font partie du système.
+Version pre-processing, model, post-processing and taxonomy; test on reference inputs and then actual load. Distillation transfers supervision/output structure; pruning removes components according to scheme. Serving, temperature and video file are part of the system.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Dans le modèle séquentiel additif, la loi d'Amdahl simplifiée borne un gain global à $1/((1-f)+f/s)$ si une fraction f du temps est accélérée d'un facteur s, sans nouveaux surcoûts. Accélérer un étage de 10 % du temps par 2 donne seulement environ 1,053× global dans ce modèle. Ne pas confondre moyenne et p99.
+In the additive sequential model, Amdahl's simplified law limits an overall gain to $1/((1-f)+f/s)$ if a fraction f of the time is accelerated by a factor s, without new additional costs. Accelerating a stage of 10% of the time by 2 yields only about 1,053× overall in this model. Not to be confused with P99.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Artefacts/runtime, formes, seuils, démarrage à froid, thermique, consommation, observabilité et rollback. OTA et gestion de versions doivent conserver compatibilité des sorties et possibilité de retour, sans modifier ici un appareil personnel.
+Artifacts/runtime, shapes, thresholds, cold start, thermal, consumption, observability and rollback. OTA and version management must maintain output compatibility and return capability, without modifying a personal device here.
 
-## Coût et implémentation
+## Cost and implementation
 
-Un pruning non structuré n'accélère que si kernels/matériel exploitent sa sparsité ; distiller peut demander un entraînement mais ne change pas automatiquement les transferts. Aucun appareil/serveur modifié ni consommation mesurée.
+Unstructured pluming only accelerates if kernels/hardware exploit its sparsity; distilling may require training but does not automatically change transfers. No equipment/server modified or consumption measured.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline complète figée ; varier charge, durée et température ambiante sous protocole. Mesurer stabilité, qualité et files, y compris démarrage, déconnexion et restauration. Une exécution courte ne prouve pas un régime thermique stable.
+Full fixed baseline; vary load, duration and ambient temperature under protocol. Measure stability, quality, and queues, including boot, disconnect, and restore. A short run does not prove a stable thermal regime.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Une régression après mise à jour peut venir de normalisation ou classes, pas seulement poids ; utiliser entrées de référence et traces pour comparer versions. Conserver erreurs terrain anonymisées sans données privées.
+A regression after update may come from normalization or classes, not just weight; use reference entries and traces to compare versions. Keep anonymized field errors without private data.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Serving central, edge ou hybride selon contraintes ; la surveillance de scores doit être liée à des retours étiquetés pour démontrer une dérive de qualité.
+Central, edge or hybrid serving depending on constraints; score monitoring must be linked to labelled feedback to demonstrate quality drift.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent goulot séquentiel, régime thermique et reproductibilité. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop sequential bottleneck, thermal regime and reproducibility. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-DEPLOIEMENT-001
+### Case linked to CV-DEPLOIEMENT-001
 
-**Question de travail** : Si l’inférence représente 10 % du temps moyen et devient deux fois plus rapide sans autre coût, quel gain global idéal prévoir ?
+**Question of work**: Inference accounts for 10% of mean processing time and becomes twice as fast with no other cost. What is the ideal overall speedup?
 
-**Réponse de référence** : Environ 1/0,95 = 1,053×, selon le modèle d’Amdahl annoncé.
+**Reference Response**: Approximately 1/0,95 = 1,053×, depending on Amdahl model announced.
 
-**Calcul interprété** : normaliser le temps initial à un. La part non accélérée vaut 0,9 ; l'inférence passe de 0,1 à 0,05. Le temps total devient 0,95, soit une réduction de 5 %, et le facteur de vitesse est son inverse. L'étage accéléré n'occupait qu'une petite part du travail total.
+**Calculation interpreted**: normalize the initial time to one. The non-accelerated share is 0,9; the inference goes from 0,1 to 0,05. The total time becomes 0,95, a reduction of 5%, and the speed factor is its inverse. The accelerated floor occupied only a small part of the total work.
 
-**Conséquence produit** : profiler avant de compresser évite d'investir dans une optimisation dont le gain global est limité dans ce modèle. De nouveaux surcoûts de conversion peuvent même annuler le bénéfice. À l'inverse, réduire une ressource critique dans un système concurrent peut modifier les files d'une façon que ce calcul additif ne décrit pas. Il s'agit donc d'une borne de raisonnement sous hypothèses explicites, pas d'une prédiction de toute la distribution de latence. Confirmer le gain sur la même charge et le même contrat de qualité.
+**Product consequence**: profiling before compressing avoids investing in optimization whose overall gain is limited in this model. New additional conversion costs can even nullify the profit. Conversely, reducing a critical resource in a competing system can modify queues in a way that this additive calculation does not describe. It is therefore a line of reasoning under explicit assumptions, not a prediction of the entire latency distribution. Confirm the gain on the same load and quality contract.
 
-### Cas lié à CV-DEPLOIEMENT-004
+### Case linked to CV-DEPLOIEMENT-004
 
-**Question de travail** : Un benchmark bref passe mais le débit chute après une heure sur edge. Quelles traces recueillir ?
+**Question of work**: A short benchmark passes, but throughput drops after an hour on an edge device. Which traces should be collected?
 
-**Réponse de référence** : Température/fréquences, charge/mémoire, transferts et files, avec qualité et timestamps de bout en bout.
+**Reference Response**: Temperature/frequency, load/memory, transfers and queues, with quality and end-to-end timestamps.
 
-**Pourquoi la durée compte** : l'état thermique, l'occupation mémoire et les files peuvent évoluer après le démarrage. Une mesure courte sur un appareil froid ne décrit donc pas nécessairement son régime soutenable. Une baisse de fréquence, une fuite ou une accumulation d'attente produisent des signatures différentes.
+**Why Duration Matters**: Thermal state, memory occupation and queues can change after boot. A short measurement on a cold device does not necessarily describe its sustainable diet. A drop in frequency, a leak, or a build-up of waiting time produce different signatures.
 
-**Enquête proposée** : tracer simultanément température, fréquences, mémoire, débits par étape et âge des frames, sur une charge et une durée représentatives. Repérer quel changement précède la dégradation, puis modifier une hypothèse à la fois. Comparer par exemple une file bornée à la politique initiale sans changer le modèle, ou vérifier le régime thermique selon le dispositif. Confirmer ensuite qualité et délai complets. Une cause de calcul n'exclut pas une cause de données ; le système doit conserver entrées et configuration pour expliquer les échecs, sans annoncer un diagnostic unique depuis le seul FPS final.
+**Proposed investigation**: simultaneously plotting temperature, frequencies, memory, step rates and frame age, over a representative load and duration. Identify which change precedes the degradation, and then modify one hypothesis at a time. For example, compare a limited queue to the initial policy without changing the model, or check the thermal regime according to the device. Then confirm full quality and time. A computational cause does not rule out a data cause; the system must retain inputs and configuration to explain failures, without announcing a single diagnosis from the final FPS alone.
 
-**Repère documentaire de cette passe** : [Amdahl 1967](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf), p. 483, fraction non accélérée. Les autres développements figurent dans les [cartes associées](../143-edge-reproductibilite.md).
+**Documentary reference for this pass**: [Amdahl 1967](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf), p. 1. 483, unaccelerated fraction. The other developments are in the [flashcards](../143-edge-reproductibilite.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Amdahl (1967), p. 483 : limite due à la fraction non accélérée](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf). Le calcul numérique ci-dessus est une dérivation du projet.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [TensorRT 8.6.1, §6.10 Sparsity](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-861/developer-guide/index.html#structured-sparsity) : exemple versionné de motifs supportés et tactiques parfois moins rapides.
-- [Hinton et al., Distilling the Knowledge in a Neural Network, introduction](https://arxiv.org/abs/1503.02531) : supervision par sorties du modèle enseignant.
-- [Jetson Linux r36.4, Thermal Management](https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html) : exemple versionné de réduction des fréquences sous contrainte thermique.
+### CV-DEPLOIEMENT-001
+
+**Situation**: Inference accounts for 10% of mean processing time and becomes twice as fast with no other cost. What is the ideal overall speedup?
+
+**Boundary and additional cost**: in the same sequential model, even an infinite acceleration of the fraction $f=0,1$ limits the global factor to $1/(1-f)=1/0,9\simeq1,111$. If the optimization adds a standardized cost $c$, the time becomes $(1-f)+f/s+c$; for $s=2$, all $c\ge0,05$ cancels the gain of this example. These calculations guide the choice of work to be optimized. They do not predict a competing queue: near saturation, a small reduction in service can greatly change the wait. Then measuring sustained regime, time and quality confirms the practical scope of this analytical marker.
+
+### CV-DEPLOIEMENT-002
+
+**Situation**: Why does reducing the number of weights through pruning not guarantee faster inference?
+
+**Dimensions and zeros**: Removing entire channels can reduce the dimensions of tensors and the work of dense kernels, if all dependent layers are adapted. Setting isolated weights to zero often retains the same dimensions and the same number of operations performed by a dense kernel. A sparse representation can avoid calculations but add less regular clues and memory access. Compare the actually supported pattern and run trace, not just the number of non-zero parameters. Distillation can help a smaller model regain quality, but it is another learning intervention to be evaluated separately from pruning.
+
+### CV-DEPLOIEMENT-003
+
+**Situation**: Beyond model weights, what must be versioned to reproduce a vision system's output?
+
+**Manifeste reproductible**: Link a version to weight and configuration footprints, input/output contracts, taxonomy, postprocessing parameters, and execution environment. Keeping a sample entry with the relevant intermediate results helps locate the first divergence between versions. Define numerical tolerance and decision tolerance; they are not equivalent near a threshold. The rollback must restore the compatible set, as returning to old weights alone with new class indices can retain a regression. A back-test on a test line verifies this contract without assuming that it will work properly in production.
+
+### CV-DEPLOIEMENT-004
+
+**Situation**: A short benchmark passes, but throughput drops after an hour on an edge device. Which traces should be collected?
+
+**Signatures temporelles**: A frequency drop correlated with a thermal rise supports a hypothesis of power or temperature limitation; continuous memory growth suggests another investigation; stable memory with increasing frame age may signal a queue overload. These correlations guide the trials without establishing a single cause. Replaying the same load over a sufficient period of time and changing one factor at a time makes it possible to compare start and steady speed. Also keep accurate, drops and outputs, because holding the rate by abandoning more images changes the service rendered. Validation is about complete sustainable behavior, not just about the time of the first network pass.
+
+**Passages consulted for these developments**: [NVIDIA TensorRT, benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), measurements and perimeter, consulted on the 2026-10-30; Amdahl, manifesto and signatures built by the project.
+
+## Sources and flashcards
+
+- [Amdahl (1967), p. 483: limit due to non-accelerated fraction](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf). The numerical calculation above is a derivation of the project.
+
+- [TensorRT 8.6.1, §6.10 Sparsity](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-861/developer-guide/index.html#structured-sparsity): versioned example of supported patterns and sometimes less fast tactics.
+- [Hinton et al., Distilling the Knowledge in a Neural Network, introduction](https://arxiv.org/abs/1503.02531): supervision by output of the teaching model.
+- [Jetson Linux r36.4, Thermal Management](https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html): versioned example of frequency reduction under thermal stress.
 
 - [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/).
-- [TensorRT, support et portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
-- [Cartes associées](../143-edge-reproductibilite.md).
+- [TensorRT, support and portability](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
+- [Related flashcards](../143-edge-reproductibilite.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

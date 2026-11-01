@@ -7,83 +7,118 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-VIO", "CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
 ---
-# Évaluer identités, trajectoires et localisation 3D
+# Evaluating identities, trajectories and 3D localization
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Évaluer le livrable temporel ou métrique plutôt qu'une seule détection. Entrées : séquences/pistes ou poses horodatées et vérité terrain ; sorties : scores sous règles d'association et alignement annoncés. Les trajectoires absentes et échecs font partie du protocole.
+Evaluate the time or metric deliverable rather than a single detection. Inputs: sequences/tracks or poses timestamped and ground truth; outputs: scores under association rules and alignment announced. Absent trajectories and failures are part of the protocol.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-VIO](../../60-vision-3d/references/63-slam-vio.md) ; [CV-SORT](../../110-tracking-association/references/111-sort.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-VIO](../../60-vision-3d/references/63-slam-vio.md); [CV-SORT](../../110-tracking-association/references/111-sort.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-MOTA agrège certains faux positifs, manques et échanges d'identité ; IDF1 cible une association d'identités ; HOTA équilibre détection et association selon ses seuils. ATE compare une trajectoire alignée ; RPE compare des déplacements relatifs. Ne pas substituer une métrique à une autre sans définir la tâche.
+MOTA aggregates some false positives, lacks and identity exchanges; IDF1 targets an identity association; HOTA balances detection and association according to its thresholds. ATE compares an aligned trajectory; RPE compares relative displacements. Do not substitute one metric for another without defining the task.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-À un seuil $\alpha$, $HOTA_\alpha=\sqrt{DetA_\alpha AssA_\alpha}$ puis le score moyenne les seuils ; ce n'est pas la racine du produit des moyennes. Pour des poses corps→monde, $T_i$ désignant la vérité terrain et $\hat T_i$ l’estimation, $E_{ij}=(T_i^{-1}T_j)^{-1}(\hat T_i^{-1}\hat T_j)$ définit une erreur relative. La translation est en mètres et la rotation exige angle/unité précisés.
+At a threshold $\alpha$, $HOTA_\alpha=\sqrt{DetA_\alpha AssA_\alpha}$ then the average score the thresholds; this is not the product root of the averages. For poses bodies→world, $T_i$ designating the ground truth and $\hat T_i$ estimating it, $E_{ij}=(T_i^{-1}T_j)^{-1}(\hat T_i^{-1}\hat T_j)$ defines a relative error. The translation is in meters and the rotation requires specified angle/unit.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Association, classes, ignore, timestamps, interpolation, intervalle de RPE et alignement. Monoculaire visuel : Sim(3) peut être justifié ; VIO métrique avec gravité fixée : translation/yaw selon protocole. Un alignement libre peut masquer les erreurs que l'on cherche à mesurer.
+Association, classes, ignores, timestamps, interpolation, interval of RPE and alignment. Visual monocular: Sim(3) can be justified; VIO metric with fixed gravity: translation/yaw according to protocol. A free alignment can mask the errors that one seeks to measure.
 
-## Coût et implémentation
+## Cost and implementation
 
-Les évaluateurs ont des conventions spécifiques ; versionner fichiers de sortie et paramètres. Aucun benchmark réel n'est exécuté ; aucun score calculé sur jouet n'est appelé HOTA complet.
+Evaluators have specific conventions; versioning output files and settings. No real benchmark is executed; no toy score is called a full HOTA.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation analytique : conserver boîtes mais permuter IDs au croisement ; AP par frame peut rester identique alors que l'association change. Pour trajectoire, injecter une échelle fausse et comparer alignements autorisés ; une Sim(3) peut la cacher.
+Analytical variation: keep boxes but swap IDs at crossing; AP per frame can remain the same while the association changes. For trajectory, inject a false scale and compare allowed alignments; a Sim(3) can hide it.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Score global bon mais trajectoire rare perdue : analyser longueurs, segments et sous-groupes. Écart entre outils : aligner protocole avant de conclure à un bug.
+Overall score good but rare trajectory lost: analyze lengths, segments and subgroups. Tool gap: Align protocol before concluding a bug.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Choisir une batterie liée au produit : détection, identité, localisation et coût. NDS/mAP nuScenes constituent encore un autre protocole de sortie 3D.
+Choose a battery related to the product: detection, identity, location and cost. NDS/mAP nuScenes are yet another 3D output protocol.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent identité, agrégation HOTA et alignement de trajectoire. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop identity, HOTA aggregation and trajectory alignment. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-METRIQUES-TEMPS-001
+### Case linked to CV-METRIQUES-TEMPS-001
 
-**Question de travail** : Comment deux systèmes peuvent-ils avoir la même AP frame par frame et des qualités de tracking différentes ?
+**Question of work**: How can two systems have identical frame-by-frame AP but different tracking quality?
 
-**Réponse de référence** : Les boîtes/classes peuvent être identiques tandis que les IDs sont échangés ou fragmentés ; AP ne mesure pas cette continuité.
+**Reference Response**: Boxes/classes can be identical while IDs are exchanged or fragmented; AP does not measure this continuity.
 
-**Exemple construit** : conserver exactement les boîtes et les classes de deux piétons, mais échanger leurs IDs au milieu de la vidéo. Les associations spatiales à la GT peuvent rester identiques à chaque frame pour l'évaluation de détection. La continuité temporelle, elle, devient fausse.
+**Constructed example**: Keep the boxes and classes of two pedestrians exactly, but exchange their IDs in the middle of the video. Spatial associations to the GT can remain identical to each frame for detection evaluation. Temporal continuity becomes false.
 
-**Choix de mesures** : examiner détection, association, fragments et cas de disparition dans un protocole de séquence annoncé. Une métrique d'identité demande ses propres règles d'association et d'agrégation ; un nombre de changements d'ID ne remplace pas forcément tous les autres aspects du suivi. Comparer les mêmes séquences, périodes ignorées et détections lorsqu'on cherche l'apport de l'association. Le résultat produit peut aussi dépendre des sorties émises pendant les pertes. Cette distinction explique pourquoi le parcours introduit l'IoU avant SORT, puis revient aux métriques temporelles après avoir défini les responsabilités du tracker.
+**Choice of measures**: Examine detection, association, fragments, and disappearance in an announced sequence protocol. An identity metric requires its own association and aggregation rules; a number of ID changes may not replace all other aspects of tracking. Compare the same sequences, ignored periods and detections when looking for the contribution of the association. The result produced may also depend on the outputs issued during losses. This distinction explains why the path introduces the IoU before SORT, and then returns to the time metrics after defining the responsibilities of the tracker.
 
-### Cas lié à CV-METRIQUES-TEMPS-005
+### Case linked to CV-METRIQUES-TEMPS-005
 
-**Question de travail** : Deux outils donnent des erreurs de trajectoire différentes pour les mêmes poses. Que contrôler ?
+**Question of work**: Two tools report different trajectory errors for the same poses. What should be checked?
 
-**Réponse de référence** : Appariement temporel, interpolation, conventions de pose, alignement, intervalles et traitement des pertes.
+**Reference Response**: matching time, interpolation, conventions of pose, alignment, intervals and loss processing.
 
-**Enquête reproductible** : vérifier d'abord les timestamps et combien de poses ont effectivement été appariées. Contrôler ensuite sens caméra→monde ou monde→caméra, unités des translations et convention de rotation. Rejouer une trajectoire synthétique connue avec une translation globale puis une erreur d'échelle pour observer ce que chaque outil retire.
+**Reproducible investigation**: First check the timestamps and how many poses have actually been matched. check then sense camera→world or world→camera, units of translations and convention of rotation. Replay a known synthetic path with global translation and then a scale error to observe what each tool removes.
 
-**Comparaison équitable** : conserver fichiers et versions, groupe d'alignement, interpolation et intervalle de RPE, ainsi que traitement des absences. Deux outils peuvent afficher ATE tout en différant dans ces choix. Une différence de protocole ne constitue pas immédiatement une erreur de l'estimateur. Une fois les conventions alignées, les écarts restants justifient une inspection plus précise du calcul. La trace doit permettre à un autre ingénieur de reproduire le même ensemble de poses comparées et la même grandeur, et pas seulement une image de trajectoires superposées.
+**Fair comparison**: Retain files and versions, alignment group, interpolation and RPE interval, as well as processing absences. Two tools can display ATE while differing in these choices. A protocol difference does not immediately constitute an estimator error. Once the conventions are aligned, the remaining deviations warrant a more accurate inspection of the calculation. The trace must allow another engineer to reproduce the same set of poses compared and the same size, and not just an image of superimposed trajectories.
 
-**Repère documentaire de cette passe** : [Luiten et al., HOTA](https://arxiv.org/pdf/2009.07736), définition HOTA, DetA, AssA et agrégation. Les autres développements figurent dans les [cartes associées](../132-tracking-trajectoires.md).
+**Documentary reference for this pass**: [Luiten et al., HOTA](https://arxiv.org/pdf/2009.07736), definition HOTA, DetA, AssA and aggregation. The other developments are in the [flashcards](../132-tracking-trajectoires.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Sturm et al., 2012, §VII-A/B, équations 1–4](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf) : RPE et ATE ; distinction avec l’erreur relative par sous-trajectoires de Zhang–Scaramuzza.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [HOTA, §§5–6](https://arxiv.org/abs/2009.07736).
-- [Zhang–Scaramuzza, §III/TableI et évaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
-- [nuScenes, métriques de détection](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
-- [Cartes associées](../132-tracking-trajectoires.md).
+### CV-METRIQUES-TEMPS-001
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+**Situation**: How can two systems have identical frame-by-frame AP but different tracking quality?
+
+**Decomposition of monitoring**: An absence of a box on the right target is a detection error, while a correct box with a bad ID is the association according to the protocol. Fragmentation divides a real identity into several predicted trackss; merging identities links several objects to a track. A simple number of switches does not necessarily describe their duration or all these relationships. Building the same boxes with multiple ID schemes allows you to check what each metric penalizes. Presenting components and temporal examples helps explain the gain of a tracker instead of classifying two systems on a single scalar.
+
+### CV-METRIQUES-TEMPS-002
+
+**Situation**: Why does calculating sqrt(mean DetA × mean AssA) not necessarily reproduce HOTA?
+
+**Average and covariance of components**: for positive $D_k,A_k$, Cauchy – Schwarz gives $\frac1n\sum_k\sqrt{D_kA_k}\le\sqrt{(\frac1n\sum_kD_k)(\frac1n\sum_kA_k)}$. Reconstructing the score from the average components can therefore overestimate the average of the combinations per threshold. Equality requires a compatible ratio between sequences, with zeros being processed. This algebraic property applies to the level of aggregation considered; the other means between classes or sequences have their own conventions. The numerical counter-example of the flashcard demonstrates this order of operations, without claiming to represent feasible components of a particular benchmark.
+
+### CV-METRIQUES-TEMPS-003
+
+**Situation**: Why can Sim(3) alignment be inappropriate when evaluating VIO that is supposed to recover metric scale?
+
+**Permitted processing**: a similarity written $p'=sRp+t$ and has a freedom of scale $s$ absent from a rigid transformation. If a metric estimate is everywhere $\hat p=2p$, choose $s=1/2$ removes this error entirely in an ideal case. For a system with only one global origin and one global yaw, the alignment must preserve the other physical information that you want to test. Document the adjusted parameters and report, if useful, the estimated scale factor as a separate diagnosis. Do not confuse correction of coordinate frame and correction of a property that the system was precisely supposed to provide correctly.
+
+### CV-METRIQUES-TEMPS-004
+
+**Situation**: Do ATE and RPE answer exactly the same question?
+
+**Explicit relative error**: for poses bodies→world $T_i$ real and $\hat T_i$ estimated, form $E_{ij}=(T_i^{-1}T_j)^{-1}(\hat T_i^{-1}\hat T_j)$. The ideal is identity. Report norm translation and angle of rotation with the chosen interval $i,j$. A common global coordinate frame transformation cancels out in relative displacements, while a drift between moments persists. An interval set in frames is not a fixed interval in seconds if the cadence varies. This formula and its conventions must accompany the name RPE for a result to be interpretable and reproducible.
+
+### CV-METRIQUES-TEMPS-005
+
+**Situation**: Two tools report different trajectory errors for the same poses. What should be checked?
+
+**Interpolation and Time**: A trajectory sampled at different times of the reference requires a matching or announced interpolation. Interpolating a translation is different from directly interpolating the components of a rotation matrix, which can then leave $SO(3)$. A constant time shift produces a speed-dependent error and can be mistaken for a wrong trajectory. Testing a synthetic movement at known speed with an imposed offset allows to verify this signature. Also keep the number of poses excluded by time tolerance: a drop in error obtained by removing difficult segments does not measure the same coverage.
+
+**Passages consulted for these developments**: [Luiten et al., HOTA](https://arxiv.org/html/2009.07736v2), §5, threshold combination; inferred aggregation inequality; [Zhang–Scaramuzza](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf), §IV, ATE and relative error; RPE formula and time controls explained by the project.
+
+## Sources and flashcards
+
+- [Sturm et al., 2012, §VII-A/B, equations 1 – 4](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf): RPE and ATE; distinction with Zhang – Scaramuzza’s relative error by subtrajectories.
+
+- [HOTA, §§5 – 6](https://arxiv.org/abs/2009.07736).
+- [Zhang – Scaramuzza, §III/TableI and evaluation](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
+- [nuScenes, detection metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md).
+- [Related flashcards](../132-tracking-trajectoires.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

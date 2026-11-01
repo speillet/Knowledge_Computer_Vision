@@ -1,68 +1,74 @@
-# SAM, SAM 2 et segmentation guidée en vidéo — cartes
+# Flashcards — SAM, SAM 2 and prompted video segmentation
 
-Fiche : [[90-segmentation/references/94-sam-sam2|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[90-segmentation/references/94-sam-sam2|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::90-segmentation
 
 ## CV-SAM-001
 
-Objectif : définir la sortie SAM. Famille : comprehension. Provenance : agent.
+Objective: Set the output to SAM. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SAM-001
-Question: SAM attribue-t-il automatiquement une classe sémantique à chaque pixel ?
-Reponse: **Noyau attendu** : Non : son contrat central est le masque guidé par prompt, pas une taxonomie sémantique complète.
+Question: Does SAM automatically assign a semantic class to every pixel?
+Reponse: **Expected answer**: No: its central contract is the prompt-guided mask, not a complete semantic taxonomy.
 
-**Approfondissement** : Une classe peut venir d’un autre composant ou d’une annotation ; ne pas attribuer le prototype texte du papier à tout checkpoint standard.
+**Further explanation**: A class may come from another component or an annotation; do not assign the text prototype of the paper to any standard checkpoint.
 
-**Lecture de la condition** : un point, une boîte ou un masque guide la région d'intérêt. La segmentation répond à ce conditionnement ; attribuer ensuite un nom de classe demande une autre information ou un autre composant. Un masque très précis peut donc être utile pour annoter sans fournir directement une taxonomie complète.
+**Reading the condition**: A dot, box or mask guides the region of interest. Segmentation responds to this conditioning; then assigning a class name requests another piece of information or component. A very precise mask can therefore be useful for annotating without directly providing a complete taxonomy.
 
-**Exemple construit** : un utilisateur désigne une pièce parmi plusieurs objets. Le masque produit délimite une région candidate, mais ne démontre pas qu'il s'agit du bon type de pièce ni qu'aucun autre objet n'a été oublié. Évaluer qualité de frontière, ambiguïtés et effort de correction avec des prompts comparables. Si une pipeline ajoute un texte ou un détecteur, préciser cette nouvelle chaîne au lieu d'attribuer ses sorties à SAM seul. Le contrat dépend du checkpoint et de l'interface réellement utilisés ; une possibilité explorée dans un papier n'est pas automatiquement une fonction disponible de chaque modèle distribué.
+**Constructed example**: A user designates a piece among several objects. The mask produced delineates a candidate region, but does not demonstrate that it is the right type of piece or that no other object has been forgotten. Evaluate border quality, ambiguities and correction effort with comparable prompts. If a pipeline adds text or a detector, specify this new string instead of assigning its outputs to SAM alone. The contract depends on the checkpoint and interface actually used; a possibility explored in a paper is not automatically an available function of each distributed model.
 
-**Erreurs bloquantes** : Confondre masque d’objet et classe métier.
-Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; [SAM, §3 et preuve de concept text-to-mask §7.5](https://arxiv.org/abs/2304.02643).
+**Ambiguity of Prompt**: A point on a shirt may refer to the shirt, the person or a visible part of it. Multiple masks can be compatible with the same index; the choice depends on the contract of the task and additional information. The predicted quality score is used to rank proposals according to the model, without assigning a business category to the region. To compare two uses, freeze placement and number of prompts, policy of choice of mask and corrections allowed. Choosing a posteriori the best mask using the ground truth measures an oracle selection, different from the procedure actually available to the product.
+
+**Blocking errors**: Confound object mask and business class.
+Source: [[90-segmentation/references/94-sam-sam2|Full reference]]; [SAM, §3 and proof of concept text-to-mask §7.5](https://arxiv.org/abs/2304.02643); [Kirillov et al., SAM, §2, ambiguity and conditioned task; §3, model; time protocols built without execution SAM 2](https://arxiv.org/html/2304.02643v1), see 2026-10-30.
 Tags: cv::pilote cv::d09 famille::comprehension cv_id::CV-SAM-001 provenance::agent pole::A pole::D
 END
 
 ## CV-SAM-002
 
-Objectif : situer SAM 2 en vidéo. Famille : comparaison. Provenance : agent.
+Objective: Find SAM 2 on video. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SAM-002
-Question: Que rajoute SAM 2 par rapport à une segmentation indépendante de chaque frame ?
-Reponse: **Noyau attendu** : Mémoire et propagation de masques guidées dans le temps selon le protocole.
+Question: What does SAM 2 add compared with independently segmenting each frame?
+Reponse: **Expected answer**: Memory and propagation of time-guided masks according to the protocol.
 
-**Approfondissement** : Préciser prompts, corrections, causalité et version ; cela ne fournit pas seul un MOT autonome et classifié de tous objets.
+**Further explanation**: Specify prompts, corrections, causation, and version; this does not alone provide a self-contained and classified MOT of all objects.
 
-**Rôle de la mémoire** : traiter chaque frame isolément oblige à réinterpréter la cible à partir des seules informations de cette frame et de son prompt. Une mémoire temporelle peut transporter des observations et interactions précédentes pour produire une séquence de masques cohérente. Cette information peut aider, mais peut aussi conserver une confusion.
+**The role of memory**: Treating each frame in isolation requires reinterpreting the target from only the information of this frame and its prompt. A time memory can carry previous observations and interactions to produce a coherent mask sequence. This information can help, but can also keep confusion.
 
-**Exemple de diagnostic** : après croisement de deux objets semblables, un masque peut rester bien dessiné sur le mauvais objet. Il faut alors examiner identité, visibilité, prompts et contenu mémorisé plutôt que seulement la qualité de contour. Comparer propagation et segmentation indépendante avec le même budget de données et de correction. Le système ne crée pas automatiquement toutes les classes et toutes les naissances de pistes. Définir ce que l'utilisateur initialise et ce que le modèle doit découvrir est indispensable pour comparer à un tracker multiobjet autonome ou à un annotateur interactif.
+**Example of diagnosis**: After crossing two similar objects, a mask can remain well-drawn on the wrong object. It is then necessary to examine identity, visibility, prompt and memorized content rather than just the quality of contour. Compare independent propagation and segmentation with the same data and correction budget. The system does not automatically create all classes and births of tracks. Defining what the user initializes and what the model must discover is essential to compare to a stand-alone multiobject tracker or an interactive annotator.
 
-**Erreurs bloquantes** : Assimiler propagation de masklets et système complet de suivi d’objets.
-Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; [SAM 2, §4 : mémoire, prompts et masklets](https://arxiv.org/abs/2408.00714).
+**Temporal state**: A stored spread depends on the history, not just the current image. Two sequences arriving at the same frame with different initializations can therefore produce different outputs. To diagnose identity confusion, keep initialization frame, prompts, corrections, path order, and memory update instants. Comparing a recovery with reset memory and the original continuation is a proposed ablation, with announced information budget. A reset using the right target given by a human should not be counted as stand-alone recovery. The quality of an outline and the permanence of the identity remain two separate properties.
+
+**Blocking errors**: Assimilate spread of masklets and complete object tracking system.
+Source: [[90-segmentation/references/94-sam-sam2|Full reference]]; [SAM 2, §4: memory, prompts and masklets](https://arxiv.org/abs/2408.00714); [Kirillov et al., SAM, §2, ambiguity and conditioned task; §3, model; time protocols built without execution SAM 2](https://arxiv.org/html/2304.02643v1), see 2026-10-30.
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-SAM-002 provenance::agent pole::A pole::D
 END
 
 ## CV-SAM-003
 
-Objectif : contrôler le futur dans l’évaluation. Famille : evaluation. Provenance : agent.
+Objective: check the future in evaluation. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SAM-003
-Question: Pourquoi une annotation vidéo interactive avec corrections sur des frames futures ne se compare-t-elle pas directement à un tracker causal ?
-Reponse: **Noyau attendu** : Elle dispose d’informations différentes ; budget d’interaction et accès temporel modifient la tâche.
+Question: Why is interactive video annotation using corrections on future frames not directly comparable with a causal tracker?
+Reponse: **Expected answer**: It has different information; interaction budget and time access change the task.
 
-**Approfondissement** : Rapporter délai, frames consultées et qualité finale sous même contrat avant de comparer.
+**Further explanation**: Report delay, frames viewed and final quality under the same contract before comparing.
 
-**Différence d'information** : corriger un masque après avoir vu la suite peut résoudre une ambiguïté qui était réelle à l'instant de la frame. L'annotation finale profite alors d'observations et d'interventions indisponibles pour une décision immédiate. La qualité finale et la disponibilité à temps sont deux propriétés distinctes.
+**Difference of information**: Correcting a mask after seeing the sequel can resolve an ambiguity that was real at the time of the frame. The final annotation then benefits from observations and unavailable interventions for an immediate decision. Final quality and on-time availability are two distinct properties.
 
-**Protocole proposé** : annoncer frames consultées, nombre de clics ou corrections, propagation autorisée et instant où chaque sortie devient disponible. Comparer soit à budget identique, soit comme un compromis explicitement différent. Conserver les pertes et ambiguïtés au lieu de les effacer par un reset non compté. Un outil interactif peut être excellent pour produire une vérité terrain sans être un tracker autonome déployable avec les mêmes performances. Cette distinction protège les conclusions du benchmark et relie le coût humain, le temps et la qualité au véritable usage du système.
+**Proposed Protocol**: Advertise frames viewed, number of clicks or corrections, authorized propagation and time when each output becomes available. Compare either with the same budget or as an explicitly different compromise. Keep losses and ambiguities instead of erasing them with an uncounted reset. An interactive tool can be great at producing ground truth without being a self-deployable tracker with the same performance. This distinction protects the conclusions of the benchmark and links human cost, time and quality to the actual use of the system.
 
-**Erreurs bloquantes** : Présenter une évaluation offline comme performance temps réel sans latence.
-Source: [[90-segmentation/references/94-sam-sam2|Fiche complète]] ; Conséquence du protocole temporel et d’interaction proposé par le projet ; [SAM 2, §§3–4 : tâche et modèle](https://arxiv.org/abs/2408.00714).
+**Two curves to report**: for each frame, measure the quality of the first available output and that obtained after all the corrections allowed. Associate each release with a moment of availability and a number of interactions. The difference between the curves describes what the offline revision brought; it should not be erased in a final average presented as causal. A mask corrected to $t+2$ s may be excellent for annotating a video and too late for decision to $t$. A common protocol must therefore set the access to frames, the accepted deadlines and the rule of counting corrections.
+
+**Blocking errors**: Present an offline evaluation as real-time performance without latency.
+Source: [[90-segmentation/references/94-sam-sam2|Full reference]]; Consequences of the time and interaction protocol proposed by the project; [SAM 2, §§3 – 4: task and model](https://arxiv.org/abs/2408.00714); [Kirillov et al., SAM, §2, ambiguity and conditioned task; §3, model; time protocols built without execution SAM 2](https://arxiv.org/html/2304.02643v1), Consulted the 2026-10-30.
 Tags: cv::pilote cv::d09 famille::evaluation cv_id::CV-SAM-003 provenance::agent pole::A pole::D
 END

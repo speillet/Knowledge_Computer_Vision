@@ -7,83 +7,118 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-PIPELINE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
 ---
-# PTQ, QAT, INT8/FP8 et runtimes
+# PTQ, QAT, INT8/FP8 and runtimes
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Réduire coût d'inférence tout en préservant l'erreur utile au produit. Entrées : modèle, données de calibration/validation, backend et matériel ; sortie : modèle/moteur compatible et mesures qualité–performance. Un format de fichier n'est pas une garantie d'accélération.
+Reduce the cost of inference while preserving the error useful to the product. Inputs: model, calibration/validation data, backend and hardware; output: compatible model/engine and quality – performance measures. A file format is not a guarantee of acceleration.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-PIPELINE](141-contrats-profiling-video.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-PIPELINE](141-contrats-profiling-video.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-PTQ choisit des paramètres après entraînement ; QAT expose l'apprentissage à une simulation de quantification. Q/DQ explicites, granularité, couverture des opérateurs et kernels définissent l'exécution réelle. TensorRT, ONNX Runtime, OpenVINO et LiteRT ont des matrices de support distinctes.
+PTQ selects parameters after training; QAT exposes learning to quantification simulation. Explicit Q/DQ, granularity, operator coverage, and kernels define the actual execution. TensorRT, ONNX Runtime, OpenVINO and LiteRT have separate support matrices.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Quantification affine entière schématique : $q=clip(round(x/s)+z, q_{min}, q_{max})$ et $\hat x=s(q-z)$, échelle $s>0$, zero-point entier $z$ et bornes du type $q_{min},q_{max}$. La règle d’arrondi dépend du contrat ; ce schéma entier ne définit pas la représentation FP8. Plages, saturation et granularité per-tensor/per-channel comptent. INT8 entier et FP8 flottant ont des représentations/contraintes différentes ; ils ne sont pas interchangeables par une simple étiquette.
+Schematic whole affine quantification: $q=clip(round(x/s)+z, q_{min}, q_{max})$ and $\hat x=s(q-z)$, scale $s>0$, whole zero-point $z$ and terminals of type $q_{min},q_{max}$. The rounding rule depends on the contract; this entire scheme does not define the FP8 representation. Ranges, saturation and per-tensor/per-channel granularity count. INT8 integer and FP8 floating have different representations/constraints; they are not interchangeable by a simple label.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Distribution de calibration, couches sensibles, précision mixte, formes dynamiques et opérateurs. Vérifier runtime/version/GPU ou NPU avant d'annoncer support PTQ/QAT ou gain ; un moteur sérialisé n'est pas universellement portable.
+Calibration distribution, sensitive layers, mixed precision, dynamic shapes and operators. Check runtime/version/GPU or NPU before announcing support for PTQ/QAT or gain; a serialized motor is not universally portable.
 
-## Coût et implémentation
+## Cost and implementation
 
-Conversions, fallbacks, transferts et goulots non réseau peuvent annuler le gain. Aucun moteur construit ni accélération mesurée ; documentation runtime `latest` consultée de nouveau le 2026-10-20, pas de commande universelle figée.
+Conversions, fallbacks, transfers, and non-network bottlenecks can undo the gain. No engine built or acceleration measured; `latest` runtime documentation accessed again the 2026-10-20, no fixed universal control.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline float puis même test, acquisition et point d'exploitation après quantification. Varier représentativité de calibration et précision ; mesurer petits objets, sous-groupes, latence/mémoire et coût complet.
+Baseline float and then even test, acquisition and operating point after quantification. Calibration representativeness and accuracy; measure small objects, subgroups, latency/memory, and full cost.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Pas de gain après INT8 : inspecter opérateurs réellement quantifiés, fallback CPU, copies et prétraitement. Perte de rappel : inspecter saturation/distributions et couches critiques avant de changer le seuil métier.
+No gain after INT8: inspect truly quantified operators, CPU fallback, copies and preprocessing. Recall loss: inspect saturation/distributions and critical layers before changing the business threshold.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Précision mixte, distillation, compression structurée et optimisation du pipeline selon le goulot ; la taille du fichier ne prédit pas le temps de traitement.
+Mixed accuracy, distillation, structured compression and pipeline optimization depending on the bottleneck; file size does not predict processing time.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent échelle, saturation et exécution réelle du runtime. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop scale, saturation, and real runtime execution. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-QUANT-001
+### Case linked to CV-QUANT-001
 
-**Question de travail** : Qu’est-ce qui distingue PTQ de QAT, au-delà du format numérique final ?
+**Question of work**: Beyond the final numerical format, what distinguishes PTQ from QAT?
 
-**Réponse de référence** : PTQ intervient après entraînement ; QAT adapte l’apprentissage à un modèle de quantification.
+**Reference Response**: PTQ comes after training; QAT adapts learning to a quantification model.
 
-**Lecture de la différence** : une PTQ estime des paramètres de quantification à partir du modèle déjà appris et d'une procédure adaptée. Une QAT simule certains effets numériques pendant l'apprentissage pour permettre une adaptation. Le format final ne révèle donc pas à lui seul comment les paramètres ont été obtenus.
+**Reading the difference**: a PTQ estimates quantization parameters from the model already learned and a suitable procedure. A QAT simulates certain digital effects during learning to allow for adaptation. The final format therefore does not alone reveal how the parameters were obtained.
 
-**Choix proposé** : comparer d'abord une baseline flottante et une PTQ sur les mêmes données réservées, puis envisager la QAT si la perte de qualité et le budget le justifient. Vérifier représentation, granularité et support du backend réellement utilisé. Une simulation d'entraînement doit correspondre assez bien au contrat d'inférence pour être interprétable. Le gain dépend aussi des opérateurs exécutés et du matériel. Une meilleure robustesse à la quantification ne garantit ni accélération de toute la chaîne ni conservation des petits défauts : mesurer ces sorties au point de fonctionnement fixé fait partie de la décision.
+**Proposed choice**: First compare a floating baseline and a PTQ on the same reserved data, then consider the QAT if the quality loss and the budget justify it. Check the representation, granularity and support of the backend actually used. A training simulation must match the inference contract well enough to be interpretable. The gain also depends on the operators executed and the equipment. Better robustness at quantification does not guarantee acceleration of the entire chain or preservation of small defects: measuring these outputs at the fixed operating point is part of the decision.
 
-### Cas lié à CV-QUANT-005
+### Case linked to CV-QUANT-005
 
-**Question de travail** : Quelles mesures associer à une réduction de mémoire après quantification d’un détecteur ?
+**Question of work**: Which measurements should accompany a detector's memory reduction after quantization?
 
-**Réponse de référence** : Qualité sur données réservées et cas critiques, plus latence/débit/mémoire du système complet au point d’exploitation fixé.
+**Reference Response**: Quality on reserved data and critical cases, plus full system latency/flow/memory at the set operating point.
 
-**Différentes mémoires** : la taille des poids sur disque n'est pas toute la mémoire utilisée : activations, buffers, contexte du runtime et copies peuvent compter. Une compression des poids peut donc produire un gain de stockage sans réduire proportionnellement le pic mémoire en exploitation.
+**Different memories**: The size of the disk weights is not all the memory used: activations, buffers, runtime context and copies can count. A weight compression can therefore produce a gain in storage without proportionally reducing the peak memory in operation.
 
-**Protocole proposé** : conserver données et seuils de décision, mesurer AP ou métriques utiles, cas critiques, mémoire maximale, latence et débit sur la même cible. Contrôler les défauts petits ou peu contrastés, car une variation numérique limitée peut changer une décision près du seuil. Rapporter conversions et éventuels opérateurs restant en autre précision. Le point de fonctionnement doit être comparable avant de décider que la compression améliore le produit. Un fichier plus petit est un résultat de ressource ; il ne démontre ni accélération, ni qualité suffisante, ni robustesse aux acquisitions que la calibration numérique n'a pas représentées.
+**Proposed Protocol**: Keep data and decision thresholds, measure AP or useful metrics, critical cases, maximum memory, latency and throughput on the same target. check small or low contrast defects, as a limited numerical variation can change a decision near the threshold. Report conversions and possible operators remaining in other precision. The operating point must be comparable before deciding that compression improves the product. A smaller file is a resource result; it demonstrates neither acceleration, nor sufficient quality, nor robustness to acquisitions that digital calibration has not represented.
 
-**Repère documentaire de cette passe** : [ONNX, QuantizeLinear-21](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21), Summary, échelle, zero-point et arrondi. Les autres développements figurent dans les [cartes associées](../142-quantification-runtimes.md).
+**Documentary reference for this pass**: [ONNX, QuantizeLinear-21](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21), Summary, scale, zero-point and rounded. The other developments are in the [flashcards](../142-quantification-runtimes.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [ONNX QuantizeLinear, version d’opérateur 21, Summary](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21) : échelle, zero-point, saturation et arrondi.
-- [ONNX Runtime, Execution Providers](https://onnxruntime.ai/docs/execution-providers/), consulté le 2026-10-20 : affectation d’opérateurs/sous-graphes selon les capacités.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [TensorRT, Quantization Workflows, consulté le 2026-10-24](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html).
+### CV-QUANT-001
+
+**Situation**: Beyond the final numerical format, what distinguishes PTQ from QAT?
+
+**Simulation and gradients**: The rounding of quantification is constant in pieces and does not directly provide a useful gradient almost everywhere. A QAT therefore uses a suitable learning approximation, often a substitution gradient in the variants concerned, while simulating rounding and forward saturation. The simulated schema must match the scales, granularities and bounds expected at the inference. A static PTQ estimates these parameters without this weight adjustment. Comparing the two requires freezing the final digital contract: training with a simulation and then exporting another schema can cancel the expected interest. No better quality or universal acceleration comes from the name QAT alone.
+
+### CV-QUANT-002
+
+**Situation**: What risk arises when the quantization scale is estimated from data that do not represent deployment images?
+
+**Rounding and clipping error**: with a uniform quantification of steps $s$ and rounded to the nearest, the reconstruction error out of saturation is at most $s/2$, under the announced convention. In saturation, this limit no longer applies: an activation far beyond the range can be strongly clipped. Expanding the range reduces this risk but increases $s$ for a set number of levels. A granularity per channel allows different scales when the amplitudes differ strongly between channels, at the price of the constraints of the backend. Measuring the actual distributions and output errors makes it possible to choose this compromise without assuming that the maximum range observed is always optimal.
+
+### CV-QUANT-003
+
+**Situation**: Why does exporting an ONNX model not guarantee identical accuracy and faster execution on every runtime?
+
+**Declared graph and executed graph**: A Q/DQ representation can materialize conversions between quantized and reconstructed values; the runtime then decides which sequences to merge and which kernels to use according to its target. Their presence in a file does not prove that each operation is accelerated in its entirety. A partition between multiple resources can add copies, synchronizations, and conversions. First compare digital outputs on control inputs, then decision quality on reserved data and finally performance under load. Set appropriate tolerances for output, as a small logit difference can change a detection or deletion close to a threshold.
+
+### CV-QUANT-004
+
+**Situation**: Track F — diagnosis: INT8 does not reduce total vision-pipeline latency. How can the possible causes be distinguished?
+
+**Net engine gain**: If a floating calculation takes $T_f$, a quantified $T_q$ calculation and additional $T_c$ conversions, the local gain already requires $T_q+T_c<T_f$, before other system costs. Small layers can be dominated by launch or conversion rather than multiplication. Comparing the actual trace reveals whether the lack of gain comes from an unchanged engine, a new extra cost or a dominant outdoor stage. The dynamic shapes and the batch must remain comparable. A theoretical measurement of file size or number of operations does not replace this decomposition of the time actually observed.
+
+### CV-QUANT-005
+
+**Situation**: Which measurements should accompany a detector's memory reduction after quantization?
+
+**Memory and discontinuous thresholds**: For a tensor of $n$ values on $b$ bytes, raw storage is $nb$, but multiple copies, activations, and workspaces can coexist. Quantifying only the weights does not divide the whole memory peak by the same factor. On the quality side, a score that goes from 0,501 to 0,499 around a threshold 0,5 can remove a box despite a small numerical error. A change in rank can also change a NMS. Comparing both tensor errors, output after postprocessing and business metrics by size reveals these effects as the numerical error average masks.
+
+**Passages consulted for these developments**: [Jacob et al., quantification](https://arxiv.org/html/1712.05877v1), §3.1, quantification simulation and Algorithm 1; general comment on the substitution gradient without backend guarantee; [ONNX Runtime, quantization](https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html), Quantization Overview, Q/DQ and Quantization Debugging; numerical terminals and project scenarios, page consulted on the 2026-10-30.
+
+## Sources and flashcards
+
+- [ONNX QuantizeLinear, operator version 21, Summary](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21): scale, zero-point, saturation and rounding.
+- [ONNX Runtime, Execution Providers](https://onnxruntime.ai/docs/execution-providers/), accessed on 2026-10-20: assignment of operators/subgraphs according to capabilities.
+
+- [TensorRT, Quantization Workflows, Viewed on 2026-10-24](https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-workflows.html).
 - [TensorRT, support matrix](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html).
-- [Cartes associées](../142-quantification-runtimes.md).
+- [Related flashcards](../142-quantification-runtimes.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

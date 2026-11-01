@@ -7,80 +7,115 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
 ---
-# Épipolaire, PnP et triangulation
+# Epipolar geometry, PnP and triangulation
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Distinguer contraintes entre deux vues, pose depuis points 3D connus et reconstruction de points. Les coordonnées doivent être corrigées de distorsion ou traitées par un modèle cohérent ; préciser repère et échelle des points.
+Distinguish constraints between two views, pose from known points 3D and reconstruction of points. Coordinates must be distortion corrected or processed by a consistent model; specify coordinate frame and point scale.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md) ; [CV-ZHANG](52-calibration-zhang.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md); [CV-ZHANG](52-calibration-zhang.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-La fondamentale relie points pixels ; l'essentielle exploite les intrinsèques. PnP estime la pose objet→caméra à partir de 3D–2D. La triangulation cherche un point 3D expliquant plusieurs rayons ; faible parallaxe et bruit peuvent rendre sa profondeur très incertaine.
+The fundamental connects pixel points; the essential exploits the intrinsics. PnP estimates the pose object→camera from 3D – 2D. Triangulation looks for a point 3D explaining several rays; low parallax and noise can make its depth very uncertain.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Pour $X_2=RX_1+t$, $E=[t]_\times R$ et $x_2^TEx_1=0$ en coordonnées normalisées. En pixels idéaux $F=K_2^{-T}EK_1^{-1}$. La direction t issue de deux vues monoculaires n'a pas d'échelle métrique. PnP renvoie t dans l'unité des points 3D ; la caméra a centre $-R^Tt$.
+For $X_2=RX_1+t$, $E=[t]_\times R$ and $x_2^TEx_1=0$ in normalized coordinates. In ideal pixels $F=K_2^{-T}EK_1^{-1}$. The direction t from two monocular views does not have a metric scale. PnP returns t in the unit of points 3D; the camera has center $-R^Tt$.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Minimum, ambiguïtés et raffinement dépendent de la variante. P3P peut donner plusieurs solutions ; dans OpenCV 4.13.0, `solvePnP(..., SOLVEPNP_P3P)` exige quatre points, tandis que `solveP3P` accepte trois correspondances et retourne les solutions candidates. Vérifier chiralité, parallaxe et résidus, pas le seul nombre de points.
+Minimum, ambiguities and refinement depend on the variant. P3P can give several solutions; in OpenCV 4.13.0, `solvePnP(..., SOLVEPNP_P3P)` requires four points, while `solveP3P` accepts three matches and returns the candidate solutions. Check cheirality, parallax and residuals, not the only number of points.
 
-## Coût et implémentation
+## Cost and implementation
 
-RANSAC, solveur et optimisation aval ont des coûts différents. Aucun appel OpenCV exécuté ; les conventions `solvePnP` ont été vérifiées dans la documentation 4.13.
+RANSAC, solver and downstream optimization have different costs. No OpenCV calls executed; `solvePnP` conventions have been verified in the 4.13 documentation.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Cas analytique : deux rayons presque parallèles donnent une profondeur sensible à une petite erreur angulaire. Variation proposée : modifier baseline ou distance en conservant bruit image ; rapporter incertitude et erreur 3D sur référence.
+Analytical case: two almost parallel rays give a sensitive depth to a small angular error. Proposed variation: modify baseline or distance while retaining image noise; report uncertainty and error 3D on reference.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Profondeur immense avec petit résidu : examiner parallaxe, échelle, chiralité et mauvaise association. Pose inversée : contrôler monde→caméra et axes.
+Huge depth with small residual: examine parallax, scale, cheirality and bad association. pose reversed: check world→camera and axes.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Homographie pour un plan ; PnP si carte 3D connue ; deux vues puis reconstruction si carte inconnue. Ne pas interpréter toute translation comme métrique.
+Homography for a shot; PnP if a 3D map is known; two views then reconstruction if the map is unknown. Do not interpret any translation as metric.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent épipolarité, pose et profondeur distinguées par leur contrat. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop epipolarity, pose and depth distinguished by their contract. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-EPIPOLAIRE-001
+### Case linked to CV-EPIPOLAIRE-001
 
-**Question de travail** : Quelles coordonnées distinguent matrice essentielle et fondamentale ?
+**Question of work**: Which coordinate conventions distinguish the essential and fundamental matrices?
 
-**Réponse de référence** : E agit sur coordonnées caméra normalisées idéales ; F sur pixels idéaux avec intrinsèques absorbés.
+**Reference Response**: E acts on ideal normalized camera coordinates; F on ideal pixels with absorbed intrinsics.
 
-**Écriture cohérente** : pour $X_2=RX_1+t$, l'essentielle vaut $E=[t]_\times R$. La contrainte $x_2^TEx_1=0$ s'écrit avec des coordonnées normalisées idéales ; en pixels idéaux, $F=K_2^{-T}EK_1^{-1}$ absorbe les deux matrices intrinsèques. Le symbole homogène implique aussi une convention de normalisation.
+**Consistent writing**: for $X_2=RX_1+t$, the essential is $E=[t]_\times R$. The $x_2^TEx_1=0$ constraint is written with ideal normalized coordinates; in ideal pixels, $F=K_2^{-T}EK_1^{-1}$ absorbs both intrinsic matrices. The homogeneous symbol also implies a standardization convention.
 
-**Exemple de contrôle** : si les points ont été undistordus vers des coordonnées normalisées, les réinjecter dans une fondamentale associée à d'autres matrices pixel mélange deux contrats. Vérifier un point connu et son lieu épipolaire avant d'interpréter le score. Un produit scalaire algébrique proche de zéro n'est pas directement une erreur euclidienne en pixels : le choix du résidu et de son seuil doit être explicité. La matrice choisie décrit la relation entre vues ; elle ne corrige pas implicitement toutes les distorsions ni les transformations de prétraitement appliquées ensuite.
+**Example of check**: If the dots have been undistorted to normalized coordinates, re-inject them into a fundamental associated with other pixel matrices mixes two contracts. Check a known point and its epipolar location before interpreting the score. An algebraic scalar product close to zero is not directly a Euclidean error in pixels: the choice of the residual and its threshold must be explained. The chosen matrix describes the relationship between views; it does not implicitly correct all distortions or preprocessing transformations applied afterwards.
 
-### Cas lié à CV-EPIPOLAIRE-005
+### Case linked to CV-EPIPOLAIRE-005
 
-**Question de travail** : Pourquoi le slogan « P3P = appeler solvePnP avec trois points quelconques » est-il trompeur ?
+**Question of work**: Why is the slogan “P3P means calling solvePnP with any three points” misleading?
 
-**Réponse de référence** : Le problème peut avoir plusieurs solutions, les configurations peuvent être dégénérées et l’API sélectionnée peut demander un quatrième point.
+**Reference Response**: The problem may have several solutions, configurations may be degenerated, and the selected API may request a fourth point.
 
-**Différence entre problème et fonction** : une formulation minimale indique combien de correspondances peuvent suffire sous des hypothèses géométriques. Une fonction peut ajouter une observation pour sélectionner une solution, retourner plusieurs hypothèses ou imposer d'autres contraintes de données. Son nom ne remplace donc pas la lecture du contrat de la variante utilisée.
+**Difference Between Problem and Function**: A minimal formulation indicates how many matches can be sufficient under geometric assumptions. A function can add an observation to select a solution, return multiple assumptions, or impose other data constraints. Its name therefore does not replace the reading of the contract of the variant used.
 
-**Protocole proposé** : consigner méthode et version, vérifier nombre et configuration des points, puis examiner les poses candidates avec des observations supplémentaires. Contrôler résidus, visibilité et plausibilité du mouvement dans les repères annoncés. Des points dégénérés ou presque dégénérés peuvent rester peu informatifs même si le nombre demandé est satisfait. Dans une application critique pour la précision, utiliser aussi des points réservés et un raffinement approprié. Ce raisonnement évite de confondre minimum algébrique, appel d'API réussi et pose effectivement validée dans la scène réelle.
+**Proposed Protocol**: Record method and version, check number and configuration of points, and then review the poses candidates with additional observations. check residuals, visibility and plausibility of the movement in the announced coordinate frames. Degenerate or nearly degenerate points may remain uninformative even if the requested number is satisfied. In a critical application for accuracy, also use reserved points and appropriate refinement. This reasoning avoids confusing algebraic minimum, successful API call and pose actually validated in the real scene.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Camera Calibration and 3D Reconstruction](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), modèle pinhole, matrices essentielles, solvePnP et triangulation. Les autres développements figurent dans les [cartes associées](../53-epipolaire-pnp-triangulation.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Camera Calibration and 3D Reconstruction](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), pinhole model, essential matrices, solvePnP and triangulation. The other developments are in the [flashcards](../53-epipolaire-pnp-triangulation.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
+
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-EPIPOLAIRE-001
+
+**Situation**: Which coordinate conventions distinguish the essential and fundamental matrices?
+
+**Constraint at a distance**: A point $\tilde p_1$ defines a line $l_2=F\tilde p_1$ in the 2 image. If $l_2=(a,b,c)$, the distance of $(u,v)$ to this line is $|au+bv+c|/\sqrt{a^2+b^2}$ when the denominator is non-zero. This normalization removes the arbitrary scale from the right, unlike the only product $\tilde p_2^TF\tilde p_1$. A Sampson residual or a symmetric error responds to other approximations and conventions. In the presence of distortion not removed, the corresponding places are generally no longer the lines of this ideal model; applying a pixel threshold to the wrong geometry can reject physically correct matches.
+
+### CV-EPIPOLAIRE-002
+
+**Situation**: Does a pose recovered from a monocular essential matrix directly provide the distance between cameras in meters?
+
+**pose and cheirality**: The decomposition of an allowable essential provides several combinations of rotation and translation sign. Triangulating and then imposing positive depths in both cameras helps to choose a compatible solution, when noise levels and scene geometry permit. This selects a meaning, without measuring the norm of translation. In pure rotation, $t=0$ and $E=[t]_\times R$ cancels: the translation and the depths do not become observable by normalizing a vector from the noise. A very low parallax can produce a similar difficulty in practice. Always connect the scale to the measure that sets it and separate this problem from the selection of a pose among the candidates.
+
+### CV-EPIPOLAIRE-003
+
+**Situation**: Do PnP and triangulation solve for the same unknown?
+
+**Write Linear Triangulation**: for a projection matrix $P$ whose rows are $P_1,P_2,P_3$ and an observation $(u,v)$, equations $(uP_3-P_1)X_h=0$ and $(vP_3-P_2)X_h=0$ constrain the homogeneous point $X_h\in\mathbb R^4$. Stacking them on multiple views produces a linear estimate, to be divided by its fourth component when it is valid. Observations and $P$ must both use ideal pixels, or both have compatible normalized coordinates. A nearly zero homogeneous component can indicate a point at a very great distance. A refinement of reprojection and controls of depth, parallax and visibility remain necessary; the linear solution does not certify the correspondence.
+
+### CV-EPIPOLAIRE-004
+
+**Situation**: Why can a triangulated point have low reprojection error but highly uncertain depth?
+
+**Why reverse depth helps**: for a depth of $Z>0$, posing $\rho=1/Z$ places the far points near zero instead of an immense value. In an ideal stereo, $\rho=d/(fB)$ depends linearly on the disparity $d$, while $Z=fB/d$ becomes very sensitive near zero. A small uncertainty of $\rho$ can therefore correspond to a huge uncertainty of $Z$. This reparameterization facilitates certain representations without creating parallax or making the distance known. It should not be used to present a point almost infinitely as a precise metric depth. If the errors are large, the linear propagation and a symmetrical interval on $Z$ may themselves become inadequate.
+
+### CV-EPIPOLAIRE-005
+
+**Situation**: Why is the slogan “P3P means calling solvePnP with any three points” misleading?
+
+**Origin of multiple solutions**: With three known 3D points and three unit sighting directions, P3P looks for their positive $\lambda_i$ distances to the camera. The cosine law imposes $\|X_i-X_j\|^2=\lambda_i^2+\lambda_j^2-2\lambda_i\lambda_j\cos\alpha_{ij}$, where $\alpha_{ij}$ is the angle between the rays. This nonlinear system can admit several triangles of compatible rays. An additional observation then serves to separate them, according to the function chosen. This geometric derivation explains why “minimum three” and “pose unique” are not equivalent. Almost collinear points, their uncertainties and the solutions behind the camera must be controlled before refinement on more matches.
+
+**Passages consulted for these developments**: [OpenCV 4.13, calib3d](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), E/F, recoverPose and triangulatePoints; linear geometry deduced; [OpenCV 4.13, PnP](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html), pose computation methods and P3P; verified contract with Context7.
+
+## Sources and flashcards
 
 - [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
-- [OpenCV solvePnP, conventions et variantes](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html).
-- [Cartes associées](../53-epipolaire-pnp-triangulation.md).
+- [OpenCV solvePnP, conventions and variants](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html).
+- [Related flashcards](../53-epipolaire-pnp-triangulation.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

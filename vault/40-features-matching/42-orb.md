@@ -1,138 +1,150 @@
-# Cartes pilotes — ORB
+# Flashcards — ORB — detection and oriented binary descriptors
 
-Fiche : [[40-features-matching/references/42-orb|ORB]]. Provenance de rédaction : agent.
+reference note: [[40-features-matching/references/42-orb|ORB]]. Source of writing: Agent.
 
 TARGET DECK: CV::Pilote::40-features-matching
 
 ## CV-ORB-001
 
-Objectif : reconstruire le mécanisme d'ORB. Famille : algorithme. Provenance : agent.
+Objective: rebuild the ORB mechanism. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ORB-001
-Question: Comment ORB passe-t-il d'une image à un descripteur binaire orienté, et quel est le rôle de chaque composant ?
-Reponse: **Noyau attendu** : FAST détecte les candidats dans une pyramide ; un classement, Harris dans l'article, sélectionne les points ; le centre de masse des intensités fournit une orientation ; des tests BRIEF orientés forment le descripteur binaire.
+Question: How does ORB turn an image into an oriented binary descriptor, and what is each component's role?
+Reponse: **Expected answer**: FAST detects candidates in a pyramid; a ranking, Harris in the article, selects points; the center of mass of intensities provides orientation; oriented BRIEF tests form the binary descriptor.
 
-**Approfondissement** : rBRIEF choisit hors ligne des tests à variance élevée et faible corrélation. La pyramide donne des niveaux d'échelle discrets ; la rotation du motif compense une orientation locale. Le matching et la vérification géométrique sont des étapes ultérieures, pas des sorties garanties d'ORB.
+**Further explanation**: rBRIEF selects high-variance, low-correlation tests offline. The pyramid gives discrete scale levels; the rotation of the pattern compensates for a local orientation. Matching and geometric verification are later steps, not guaranteed outputs of ORB.
 
-**Mécanisme interprété** : détecter une position ne suffit pas pour comparer deux voisinages tournés. L'orientation établit un repère local dans lequel le motif de tests est déplacé ; les réponses binaires décrivent ensuite des relations d'intensité dans ce repère. La pyramide fournit plusieurs tailles d'observation, sans rendre identiques tous les détails aux différentes résolutions.
+**Interpreted mechanism**: Detecting a position is not enough to compare two turned neighborhoods. The orientation establishes a local coordinate frame in which the test pattern is moved; the binary responses then describe intensity relationships in this coordinate frame. The pyramid provides several sizes of observation, without making all the details identical to the different resolutions.
 
-**Diagnostic construit** : si les keypoints sont redétectés mais les matches disparaissent sous rotation, inspecter stabilité de l'orientation et contenu des patches avant de changer le nombre de points. Si les keypoints disparaissent eux-mêmes, examiner seuils, flou et niveaux de pyramide. Cette séparation des étapes permet d'attribuer un échec à un mécanisme précis au lieu de traiter ORB comme une boîte noire.
+**Diagnostic construit**: If keypoints are detected but matches disappear under rotation, inspect orientation stability and patch content before changing the number of points. If the keypoints disappear themselves, examine thresholds, blur and pyramid levels. This separation of steps makes it possible to attribute a failure to a specific mechanism instead of treating ORB as a black box.
 
-**Erreurs bloquantes** : présenter ORB comme seulement FAST, ou dire qu'il fournit directement une transformation entre images.
-Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [Rublee et al., §§3–4](https://doi.org/10.1109/ICCV.2011.6126544).
+**Calculate the orientation**: In a keypoint-centric patch, set the $m_{pq}=\sum_{x,y}x^py^qI(x,y)$ moments. The direction to the centroid is obtained by $\theta=\operatorname{atan2}(m_{01},m_{10})$ when these moments give an actionable direction. The pattern of comparisons is then rotated according to $\theta$ before the intensity readings. If the patch is almost symmetrical or noisy, a small disturbance can strongly change this orientation: the position can remain repeatable without the tests describing the same oriented neighborhood. The edges of the patch and the actual presence of the required pixels must also be managed, not silently supplemented by unrelated content.
+
+**Blocking errors**: Present ORB as only FAST, or say it directly provides a transformation between images.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [Rublee et al., §§3 – 4](https://doi.org/10.1109/ICCV.2011.6126544); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::algorithme cv_id::CV-ORB-001 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-ORB-002
 
-Objectif : relier représentation et distance. Famille : raisonnement. Provenance : agent.
+Objective: Linking representation and distance. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ORB-002
-Question: Pourquoi une distance L2 entre les octets d'un descripteur ORB à tests binaires n'est-elle pas équivalente à la distance de Hamming ?
-Reponse: **Noyau attendu** : les octets stockent des résultats de tests bit par bit. Hamming compte les bits différents ; L2 traite les octets comme des nombres dont la valeur dépend du poids des positions binaires.
+Question: Why is L2 distance between bytes of a binary-test ORB descriptor different from Hamming distance?
+Reponse: **Expected answer**: Bytes store test results bit by bit. Hamming counts different bits; L2 treats bytes as numbers whose value depends on the weight of binary positions.
 
-**Approfondissement** : entre `00000000` et `10000000`, Hamming vaut 1 et la différence numérique vaut 128 ; un bit de poids faible aurait une autre différence numérique malgré un seul test changé. Le type `uint8` décrit le stockage, pas la sémantique de la distance. Ce raisonnement concerne `WTA_K=2`.
+**Further explanation**: between `00000000` and `10000000`, Hamming is 1 and the numerical difference is 128; a low bit would have another numerical difference despite a single test changed. The `uint8` type describes storage, not the semantics of distance. This reasoning concerns `WTA_K=2`.
 
-**Contre-exemple analytique** : comparer `00000000` à `00000011` donne deux bits différents, mais une différence numérique de trois. Comparer le même premier octet à `10000000` donne un seul bit différent, mais une différence numérique de 128. Les deux distances peuvent donc inverser le classement des candidats.
+**Analytical counter-example**: Comparing `00000000` to `00000011` gives two different bits, but a numerical difference of three. Comparing the same first byte to `10000000` gives a single different bit, but a numerical difference of 128. The two distances can therefore reverse the ranking of candidates.
 
-**Conséquence pour une implémentation** : convertir les octets en flottants conserve ces valeurs numériques et ne transforme pas la comparaison en Hamming. Il faut comparer les symboles qui portent les tests, avec une variante compatible avec leur construction. Une distance correcte conserve le sens du descripteur ; elle ne démontre toujours pas que les deux patches appartiennent au même point physique. Le filtrage des ambiguïtés et la géométrie restent nécessaires.
+**Consequences for an implementation**: Convert bytes to floats retains these numeric values and does not transform the comparison into Hamming. We must compare the symbols that carry the tests, with a variant compatible with their construction. A correct distance retains the sense of the descriptor; it still does not demonstrate that the two patches belong to the same physical point. Ambiguity filtering and geometry are still required.
 
-**Erreurs bloquantes** : justifier L2 seulement par la présence d'un tableau d'octets, ou prétendre que les deux distances classent toujours les voisins de la même façon.
-Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [OpenCV 4.13, matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+**Computable version of Hamming**: for two binary suites $a,b$, $d_H(a,b)=\operatorname{popcount}(a\oplus b)$ adds the disagreements between tests. The operations are machine words or bytes, but the result does not depend on the numerical weight of the bits. A change in the placement of the same tests in the bytes therefore retains Hamming if applied to both descriptors; it can completely change L2 on the byte values. This reasoning gives a simple implementation check, without an image: build two patterns of which a single test differs in several positions. The expected distance remains one, which separates metric storage and metric representation.
+
+**Blocking errors**: justify L2 only by the presence of an array of bytes, or pretend that the two distances always rank neighbors in the same way.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [OpenCV 4.13, matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-ORB-002 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-ORB-003
 
-Objectif : choisir la norme après changement de variante. Famille : pratique. Provenance : agent.
+Objective: select the standard after changing the variant. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ORB-003
-Question: Dans OpenCV 4.13, tu passes ORB de `WTA_K=2` à `WTA_K=4`. Que faut-il vérifier dans le matcher et pourquoi ?
-Reponse: **Noyau attendu** : passer de `NORM_HAMMING` à `NORM_HAMMING2`, ou utiliser `orb.defaultNorm()`. Avec trois ou quatre candidats, chaque résultat représente un symbole sur deux bits ; Hamming2 compare les symboles.
+Question: In OpenCV 4.13, ORB changes from `WTA_K=2` to `WTA_K=4`. What must be checked in the matcher, and why?
+Reponse: **Expected answer**: Switch from `NORM_HAMMING` to `NORM_HAMMING2`, or use `orb.defaultNorm()`. With three or four candidates, each result represents a symbol on two bits; Hamming2 compares the symbols.
 
-**Approfondissement** : Hamming2 ne signifie pas Hamming au carré. Conserver les descripteurs et le matcher compatibles dans tout l'index, sans mélanger silencieusement variantes ou paramètres. Réévaluer ensuite précision des matches et succès géométrique avant d'attribuer une dégradation aux images.
+**Further explanation**: Hamming2 does not mean Hamming squared. Keep the compatible descriptors and matcher throughout the index, without silently mixing variants or parameters. Then re-evaluate match accuracy and geometric success before assigning degradation to the images.
 
-Extrait illustratif non exécuté, OpenCV 4.13 :
+Illustrative excerpt not executed, OpenCV 4.13:
 
 ```python
 orb = cv.ORB_create(WTA_K=4)
 matcher = cv.BFMatcher(orb.defaultNorm(), crossCheck=True)
 ```
 
-**Exemple sur les symboles** : deux valeurs gagnantes codées `00` et `11` constituent un seul symbole différent. Compter les bits différents donnerait deux, alors qu'une comparaison des symboles doit compter un désaccord. C'est la raison sémantique du changement de norme ; le nom Hamming2 ne décrit pas une simple opération arithmétique sur le résultat précédent.
+**Example of Symbols**: Two `00` and `11` win values are a single different symbol. Counting the different bits would yield two, while a comparison of the symbols must count a disagreement. This is the semantic reason for the change of norm; the name Hamming2 does not describe a simple arithmetic operation on the previous result.
 
-**Migration contrôlée proposée** : régénérer les descripteurs de la base avec la même configuration que les requêtes, puis vérifier matcher et index. Ne pas comparer des vecteurs provenant silencieusement de constructions différentes. Une bonne compatibilité d'API évite une erreur de mesure, mais le choix final de la variante se juge encore sur les matches et le succès du recalage.
+**Proposed controlled migration**: Regenerate database descriptors with the same configuration as queries, then check matcher and index. Do not compare vectors from different constructs. A good API compatibility avoids a measurement error, but the final choice of the variant is still judged on the matches and the success of the registration.
 
-**Erreurs bloquantes** : conserver automatiquement Hamming simple ou décrire Hamming2 comme le carré d'une distance.
-Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [OpenCV ORB, WTA_K](https://docs.opencv.org/4.13.0/db/d95/classcv_1_1ORB.html).
+**What the Winner Codes**: for each group of $K$ positions, the result indicates the index of the position of maximum intensity. With three or four candidates, the two bits are a categorical symbol, not two independent binary questions. The `00→01` and `00→11` disagreements must therefore count each for a different symbol. This logic explains why the change also requires reconstructing a persistent descriptor base: the same table length does not guarantee the same semantics. Also check that the approximate search index supports this metric; a correct norm in an exhaustive matcher does not automatically validate all binary indexes.
+
+**Blocking errors**: Automatically keep Hamming simple or describe Hamming2 as the square of a distance.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [OpenCV ORB, WTA_K](https://docs.opencv.org/4.13.0/db/d95/classcv_1_1ORB.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-ORB-003 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-ORB-004
 
-Objectif : distinguer deux filtres de correspondances. Famille : comparaison. Provenance : agent.
+Objective: distinguish between two matching filters. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ORB-004
-Question: Pour des descripteurs ORB, quelle différence de logique sépare le cross-check d'un ratio test, et qu'est-ce qu'aucun des deux ne garantit ?
-Reponse: **Noyau attendu** : le cross-check exige des plus proches voisins mutuels ; le ratio test exige que le meilleur voisin soit suffisamment meilleur que le deuxième. Aucun ne garantit une correspondance physique correcte ou un modèle géométrique valable.
+Question: For ORB descriptors, how do cross-checking and a ratio test differ, and what does neither guarantee?
+Reponse: **Expected answer**: Cross-checking requires mutual neighbors; the ratio test requires the best neighbor to be better enough than the second. No one guarantees a correct physical match or a valid geometric pattern.
 
-**Approfondissement** : un match mutuel peut rester ambigu dans un motif répétitif ; un voisin distinct peut être faux. Dans BFMatcher OpenCV, le cross-check correspond à la réciprocité avec un seul voisin, pas à un remplacement transparent de `knnMatch(k=2)`. Consigner le filtrage avant la vérification géométrique.
+**Further explanation**: A mutual match may remain ambiguous in a repetitive pattern; a separate neighbor may be false. In BFMatcher OpenCV, the cross-check corresponds to reciprocity with a single neighbor, not to a transparent replacement of `knnMatch(k=2)`. Record the filtering before the geometric check.
 
-**Exemples pour séparer les logiques** : un voisin peut être le meilleur choix dans les deux sens tout en étant presque ex æquo avec un autre motif. Le cross-check peut alors l'accepter alors qu'un ratio strict le refuse. Inversement, un voisin bien séparé pour une requête peut préférer une autre requête dans l'autre image et échouer au contrôle mutuel.
+**Examples of separating logics**: a neighbor can be the best choice in both directions while being almost ex æquo with another pattern. The cross-check can then accept it while a strict ratio refuses it. Conversely, a well-separated neighbor for one query may prefer another query in the other image and fail at the mutual check.
 
-**Interprétation pratique** : ces tests filtrent des relations dans l'espace des descripteurs ; ils ne connaissent ni la profondeur ni les contraintes de projection. Garder trace des candidats rejetés et de leur couverture aide à régler le compromis entre ambiguïté et nombre de contraintes géométriques. Le protocole doit annoncer quel test est appliqué, dans quel ordre et avec quel nombre de voisins disponibles.
+**Practical interpretation**: These tests filter relationships in the descriptor space; they do not know the depth or the projection constraints. Keeping track of rejected candidates and their coverage helps to settle the trade-off between ambiguity and number of geometric constraints. The protocol must announce which test is applied, in what order and with what number of neighbors available.
 
-**Erreurs bloquantes** : présenter les tests comme identiques ou comme une validation géométrique.
-Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [OpenCV BFMatcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+**Example of non-equivalent filter**: In a built-up distance matrix, request A can have candidates with distances 10 and 11; the former also prefers it to all other requests. The cross-check accepts it, while a ratio of 0,8 rejects it. A request B may have 10 and 30, but its best candidate prefers A: the ratio accepts it and reciprocity rejects it. These cases show that the two rules pose different questions. One can design an explicit combination, at the cost of additional calculations and reminders; it must define what to do with ex æquo and absent candidates, and then be geometrically validated.
+
+**Blocking errors**: Present the tests as identical or as a geometric validation.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [OpenCV BFMatcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-ORB-004 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-ORB-005
 
-Objectif : diagnostiquer une perte de répétabilité. Famille : diagnostic. Provenance : agent.
+Objective: Diagnose a loss of repeatability. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ORB-005
-Question: ORB fonctionne à distance fixe mais échoue quand la caméra s'éloigne. Quelles hypothèses examiner avant de simplement augmenter le nombre de features ?
-Reponse: **Noyau attendu** : vérifier la plage et l'espacement des échelles de la pyramide, la résolution effective des détails et la répétabilité des keypoints. Le nombre demandé ne rétablit pas une information disparue ou une échelle non couverte.
+Question: ORB works at a fixed distance but fails when the camera moves away. Which assumptions should be examined before simply increasing the feature count?
+Reponse: **Expected answer**: check the range and spacing of the pyramid scales, the effective resolution of details and the repeatability of keypoints. The number requested does not restore a missing information or an uncovered scale.
 
-**Approfondissement** : visualiser les niveaux et les points détectés, garder lumière et focus contrôlés, puis comparer une variation de pyramide au protocole initial. Ajouter séparément la perspective et le flou. ORB n'a pas une invariance parfaite à l'échelle ; une autre méthode peut être nécessaire après mesure.
+**Further explanation**: View levels and points detected, keep light and focus controlled, and then compare a pyramid variation to the initial protocol. Add perspective and blur separately. ORB does not have a perfect scale invariance; another method may be required after measurement.
 
-**Exemple physique** : un petit marquage bien résolu près de la caméra peut ne couvrir que quelques pixels après éloignement. Modifier la densité de la pyramide peut aider si une taille pertinente était mal échantillonnée, mais pas si l'acquisition a déjà détruit le contraste du marquage. Augmenter le quota ne fait alors qu'ajouter des points ailleurs.
+**Physical example**: A small well-solved marking near the camera may only cover a few pixels after remoteness. Changing the density of the pyramid can help if a relevant size was sampled incorrectly, but not if the acquisition has already destroyed the contrast of the marking. Increasing the quota only adds points elsewhere.
 
-**Enquête proposée** : suivre les mêmes structures visibles entre distances, observer leurs niveaux de détection et vérifier le nombre de pixels réellement consacrés au motif. Tester séparément résolution, mise au point et pyramide. Mesurer ensuite une erreur sur la région utile, car davantage de points sur le fond ne rétablit pas la localisation de la pièce. Ce raisonnement relie acquisition et features plutôt que de tout attribuer au matcher.
+**Proposed investigation**: track the same visible structures between distances, observe their detection levels and check the number of pixels actually devoted to the pattern. Test separately resolution, focus and pyramid. Then measure an error on the useful region, because more points on the bottom does not restore the location of the room. This reasoning links acquisition and features rather than assigning everything to the matcher.
 
-**Erreurs bloquantes** : annoncer que la pyramide résout tout changement d'échelle ou régler uniquement le matcher sans regarder la détection.
-Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [Rublee et al., conclusion](https://doi.org/10.1109/ICCV.2011.6126544) ; [OpenCV ORB](https://docs.opencv.org/4.13.0/db/d95/classcv_1_1ORB.html).
+**Scales and cost coverage**: with a pyramid factor $s>1$, a detail of size $r$ pixels at the initial level covers about $r/s^\ell$ pixels at the $\ell$ level. Increasing the number of levels extends the scales examined; reducing $s$ samples them more finely but increases the work for the same range. No level restores an already undersampled detail in the input image. In a constructed case, a three-pixel-wide tag reduced to one pixel no longer offers the same intensity tests, even if its overall position remains known. The detection thresholds and quotas distributed between levels must therefore be analysed with the resolution actually available on the target.
+
+**Blocking errors**: announce that the pyramid solves any scale change or adjust only the matcher without looking at the detection.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [Rublee et al., conclusion](https://doi.org/10.1109/ICCV.2011.6126544); [OpenCV ORB](https://docs.opencv.org/4.13.0/db/d95/classcv_1_1ORB.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see the 2026-10-30.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-ORB-005 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-ORB-006
 
-Objectif : articuler contrainte de calcul et réussite de tâche. Famille : conception. Provenance : agent.
+Objective: articulating computational constraint and task success. Family: design. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-ORB-006
-Question: Tu dois localiser un marquage sur un CPU embarqué avec peu de mémoire. Comment construire une baseline avec ORB sans préjuger de son adéquation finale ?
-Reponse: **Noyau attendu** : fixer les variations et la tolérance de localisation, extraire ORB avec paramètres consignés, apparier avec sa norme puis valider géométriquement. Mesurer coût complet et échecs sur des données représentatives, puis comparer une alternative si le besoin n'est pas atteint.
+Question: You must localize a marking on an embedded CPU with limited memory. How can an ORB baseline be built without assuming its final suitability?
+Reponse: **Expected answer**: set variations and location tolerance, extract ORB with recorded parameters, match with its norm and then validate geometrically. Measure full cost and failures on representative data, and then compare an alternative if the need is not met.
 
-**Approfondissement** : les descripteurs binaires sont compacts mais le nombre de points, le matching et les cas difficiles comptent aussi. Prévoir un comportement lorsque le recalage est incertain et ne pas transformer un fort consensus en certitude. C'est une proposition de système, sans résultat terrain annoncé.
+**Further explanation**: Binary descriptors are compact but the number of points, matching and difficult cases also count. Predicting behavior when the registration is uncertain and not turning a strong consensus into certainty. This is a system proposal, with no field results announced.
 
-**Baseline exploitable** : prévoir explicitement trois issues : transformation acceptée, résultat incertain et absence de résultat. Définir l'acceptation à partir des résidus, de la couverture et de la plausibilité du mouvement, puis évaluer les erreurs d'acceptation sur des pièces réservées. Un refus contrôlé peut être préférable à une région d'inspection mal placée.
+**Usable baseline**: Explicitly predict three outcomes: accepted transformation, uncertain outcome, and no outcome. Set the acceptance from the residuals, cover and plausibility of the movement, and then evaluate the acceptance errors on reserved parts. A controlled refusal may be preferable to a poorly placed inspection region.
 
-**Comparaison proposée** : garder les mêmes entrées et tolérances pour une alternative SIFT, en incluant les étapes qui changent réellement dans le coût. Mesurer mémoire maximale et latence en conditions représentatives, pas seulement le temps d'un appel isolé. La représentation compacte d'ORB motive l'essai ; c'est le bilan de précision, robustesse, coût et comportement en échec qui décide de son adéquation.
+**Proposed comparison**: Keep the same inputs and tolerances for a SIFT alternative, including steps that actually change in cost. Measure maximum memory and latency in representative conditions, not just the time of an isolated call. The compact representation of ORB motivates the test; it is the balance of precision, robustness, cost and behavior in failure that decides its suitability.
 
-**Erreurs bloquantes** : promettre une latence à partir du seul article ou ignorer le taux d'échec pour choisir la méthode la plus rapide.
-Source: [[40-features-matching/references/42-orb|Fiche ORB]] ; [Rublee et al., §§4–6](https://doi.org/10.1109/ICCV.2011.6126544).
+**Establishing a concrete memory budget**: In the current OpenCV variant at 256 bits, a descriptor occupies 32 bytes; 2000 descriptors represent about 64 kB of raw data. This excludes keypoints, pyramid images, buffers, indexes, allocations, and program structures: this calculation is not a measure of memory peak. An exhaustive search between two sets of $n$ and $m$ points processes $nm$ pairs, even with a fast binary distance. Preparing behavior when there are no descriptors or too few pairs for the model prevents a speed optimization from turning a normal observation failure into an arbitrary result or execution error.
+
+**Blocking errors**: Promise latency from the single article or ignore the failure rate to choose the fastest method.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [Rublee et al., §§4 – 6](https://doi.org/10.1109/ICCV.2011.6126544); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::conception cv_id::CV-ORB-006 provenance::agent pole::B pole::E pole::F
 END

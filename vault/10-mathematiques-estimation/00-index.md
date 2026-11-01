@@ -1,14 +1,14 @@
-# Mathématiques et estimation
+# Mathematics and estimation
 
-Conditionnement, moindres carrés, estimation robuste et incertitude.
+Packaging, least squares, robust estimation and uncertainty.
 
-| Sujet | Référence | Cartes | Pôles |
+| Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [Moindres carrés, SVD et conditionnement](11-moindres-carres-svd.md) | [Lire](references/11-moindres-carres-svd.md) | 9 | B, C |
-| [SO(3), SE(3) et conventions de transformation](12-rotations-se3.md) | [Lire](references/12-rotations-se3.md) | 6 | B, C |
-| [Kalman, EKF, UKF et ESKF pour la fusion](13-kalman-ekf-eskf.md) | [Lire](references/13-kalman-ekf-eskf.md) | 6 | B, C |
-| [Graphes de facteurs et optimisation incrémentale](14-graphes-facteurs.md) | [Lire](references/14-graphes-facteurs.md) | 5 | B, C |
+| [Least squares, SVD and conditioning](11-moindres-carres-svd.md) | [Read](references/11-moindres-carres-svd.md) | 9 | B, C |
+| [SO(3), SE(3) and transformation conventions](12-rotations-se3.md) | [Read](references/12-rotations-se3.md) | 6 | B, C |
+| [Kalman, EKF, UKF and ESKF for sensor fusion](13-kalman-ekf-eskf.md) | [Read](references/13-kalman-ekf-eskf.md) | 6 | B, C |
+| [Factor graphs and incremental optimization](14-graphes-facteurs.md) | [Read](references/14-graphes-facteurs.md) | 5 | B, C |
 
-Sous-deck : `CV::Pilote::10-mathematiques-estimation`. Statut : rédigé ; export et maîtrise non vérifiés.
+Subdeck: `CV::Pilote::10-mathematiques-estimation`. Status: drafted; device import and mastery unverified.
 
-[Accueil](../00-Accueil.md) · [Inventaire](../01-Parcours/Inventaire.md) · [Pôles](../01-Parcours/Poles-metiers.md).
+[Home](../00-Accueil.md) · [Inventory](../01-Parcours/Inventaire.md) · [Career tracks](../01-Parcours/Poles-metiers.md).

@@ -1,131 +1,143 @@
-# Cartes pilotes — NMS
+# Flashcards — NMS — suppressing redundant detections
 
-Fiche : [[80-detection-pose/references/81-nms|NMS]]. Provenance : agent.
+reference note: [[80-detection-pose/references/81-nms|NMS]]. Source: Agent.
 
 TARGET DECK: CV::Pilote::80-detection-pose
 
 ## CV-NMS-001
 
-Objectif : dérouler hard NMS. Famille : algorithme. Provenance : agent.
+Objective: unroll hard NMS. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-NMS-001
-Question: Trois boîtes continues $A=(0,0,10,10)$, $B=(2,0,12,10)$ et $C=(20,0,30,10)$ ont les scores $0,9;0,8;0,7$. Quelles boîtes garde une hard NMS qui supprime pour IoU supérieure à 0,5 ?
-Reponse: **Noyau attendu** : sélectionner $A$, supprimer $B$ car leur intersection vaut 80, l'union 120 et l'IoU $2/3>0,5$ ; conserver ensuite $C$, disjointe. La sortie est donc $A,C$.
+Question: Three continuous boxes $A=(0,0,10,10)$, $B=(2,0,12,10)$ and $C=(20,0,30,10)$ have scores $0,9;0,8;0,7$. Which boxes are retained by hard NMS that suppresses candidates with IoU greater than 0.5?
+Reponse: **Expected answer**: select $A$, delete $B$ because their intersection is 80, union 120 and IoU $2/3>0,5$; then keep $C$, disjoint. The output is $A,C$.
 
-**Approfondissement** : le calcul utilise `xyxy` continu sans `+1`. La sélection est gloutonne et suit les scores, sans fusion des boîtes. À seuil 0,7, cet exemple garderait les trois : le seuil contrôle la redondance, pas directement la justesse sémantique. Résultat exécuté dans l'exemple arithmétique du dépôt.
+**Further explanation**: calculation uses `xyxy` continuous without `+1`. The selection is gluttonous and follows the scores, without merging the boxes. At threshold 0,7, this example would keep all three: threshold check redundancy, not directly semantic accuracy. Result executed in the arithmetic example of the repository.
 
-**Raisonnement sur les instances** : le recouvrement est utilisé comme indice de redondance entre prédictions, sans connaître l'identité réelle des objets. Si A et B représentent deux personnes proches, supprimer B peut retirer une vraie instance ; si elles représentent la même pièce, la suppression peut au contraire être utile.
+**Reasoning on instances**: Overlay is used as an index of redundancy between predictions, without knowing the real identity of the objects. If A and B represent two close people, deleting B can remove a real instance; if they represent the same room, the deletion can instead be useful.
 
-**Contrôle proposé** : conserver les sorties avant et après l'opération et vérifier quelles annotations restent couvertes. Le seuil règle donc un compromis dépendant de la scène. Une boîte éloignée reste candidate même avec un score plus faible, tant qu'elle passe les autres filtres du pipeline. Cette lecture évite de transformer la sélection gloutonne en règle « une boîte par image » ou « une boîte par classe ».
+**check**: keep the outputs before and after the operation and check which annotations remain covered. The threshold therefore settles a compromise depending on the scene. A remote box remains candidate even with a lower score, as long as it passes the other filters in the pipeline. This reading avoids turning the gluton selection into a "one box per image" or "one box per class" rule.
 
-**Erreurs bloquantes** : supprimer $C$ au seul motif de son score inférieur, ou traiter la sortie comme une moyenne de $A$ et $B$.
-Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [Soft-NMS, §4](https://arxiv.org/abs/1704.04503) ; [convention hard NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html).
+**Selection is not transitive**: build three boxes of the same size with $A=(0,0,10,10)$, $B=(3,0,13,10)$ and $C=(6,0,16,10)$. The IoU $A/B$ and $B/C$ are worth $7/13>0,5$, but $A/C=4/16=0,25$. With decreasing scores A, B, C, NMS keeps A, deletes B then keeps C: B deleted does not in turn delete its neighbors. This distinguishes the gluttony algorithm from a grouping into related components of the overlap graph. The result depends on the ranking and does not automatically look for the set of maximum score sum boxes.
+
+**Blocking errors**: delete $C$ for the sole reason of its lower score, or treat the output as an average of $A$ and $B$.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Soft-NMS, §4](https://arxiv.org/abs/1704.04503); [convention hard NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
 Tags: cv::pilote cv::d08 famille::algorithme cv_id::CV-NMS-001 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-NMS-002
 
-Objectif : distinguer trois seuils. Famille : comprehension. Provenance : agent.
+Objective: There are three thresholds. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-NMS-002
-Question: En détection, quelle différence sépare seuil de score, seuil IoU de NMS et seuil IoU d'évaluation ?
-Reponse: **Noyau attendu** : le seuil de score filtre les prédictions selon leur confiance ; le seuil NMS compare deux prédictions pour réduire les doublons ; le seuil IoU d'évaluation compare une prédiction à une annotation selon le protocole.
+Question: In object detection, how do the score threshold, NMS IoU threshold and evaluation IoU threshold differ?
+Reponse: **Expected answer**: the score threshold filters predictions according to their confidence; the NMS threshold compares two predictions to reduce duplicates; the evaluation threshold IoU compares a prediction to an annotation according to the protocol.
 
-**Approfondissement** : un même nombre numérique ne leur donne pas le même sens. La NMS ne consulte pas la GT au moment de l'inférence. Modifier un seuil de score peut changer rappel et coût avant NMS ; modifier NMS affecte les doublons et les voisins conservés ; modifier le seuil d'évaluation change l'exigence de localisation. Consigner les trois séparément.
+**Further explanation**: The same number does not give the same meaning. The NMS does not consult the GT at the time of inference. Changing a score threshold can change recall and cost before NMS; changing NMS affects duplicates and retained neighbors; changing the rating threshold changes the location requirement. Record all three separately.
 
-**Exemple de distinction** : une prédiction peut passer le seuil de score, être supprimée pour son recouvrement avec une autre prédiction et ne jamais atteindre l'évaluation. À l'inverse, deux boîtes conservées peuvent correspondre à un seul objet et l'une devenir un doublon dans le protocole de mesure.
+**Example of distinction**: A prediction can pass the score threshold, be removed for its recovery with another prediction, and never reach evaluation. Conversely, two preserved boxes can correspond to a single object and one can become a duplicate in the measurement protocol.
 
-**Enquête proposée** : journaliser les étapes et leurs paramètres séparément, puis calculer la couverture des mêmes annotations à chaque stade. Modifier l'exigence IoU de l'évaluation ne change pas les boîtes que le système a produites ; modifier le seuil NMS peut les changer. Régler les paramètres sur validation, puis figer le protocole. Une valeur numérique identique, par exemple 0,5, ne rapproche pas les responsabilités de ces trois décisions.
+**Proposed investigation**: Log the steps and their parameters separately, then calculate the coverage of the same annotations at each stage. Changing the evaluation requirement IoU does not change the boxes that the system has produced; changing the threshold NMS may change them. Set the parameters to validation, then freeze the protocol. An identical numerical value, for example 0,5, does not bring the responsibilities of these three decisions closer together.
 
-**Erreurs bloquantes** : utiliser le seuil AP50 pour décider directement quelles prédictions se suppriment entre elles, ou dire que NMS requiert la GT.
-Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html) ; [COCO](https://cocodataset.org/#detection-eval).
+**Separate setting and measurement**: take a candidate with a score of 0,4, from IoU 0,8 with another prediction, but from IoU 0,6 with a score of GT. A score threshold at 0,5 discards it before any measurement; at an allowable score, a NMS at 0,7 can remove it; if it survives, it satisfies a localization requirement at 0,5 but not at 0,75, under the other rules of matching. These three comparisons relate to different objects. To assign a recall drop, keep counters after each step with constant evaluation protocol, rather than simultaneously changing the three thresholds.
+
+**Blocking errors**: Use the AP50 threshold to decide directly which predictions are suppressed between them, or say that NMS requires the GT.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html); [COCO](https://cocodataset.org/#detection-eval); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-NMS-002 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-NMS-003
 
-Objectif : choisir le périmètre d'une suppression. Famille : comparaison. Provenance : agent.
+Objective: Choose the scope of a deletion. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-NMS-003
-Question: Deux candidates de classes différentes, de scores $0{,}9$ et $0{,}8$, ont une IoU de $0{,}8$. Avec un seuil NMS de $0{,}5$, quel compromis distingue suppression globale et suppression par classe ?
-Reponse: **Noyau attendu** : La NMS globale conserve seulement la candidate de score $0{,}9$ ; la NMS par classe conserve les deux. Cela protège deux objets de classes différentes, mais laisse aussi deux labels concurrents sur une même instance. Choisir selon que les annotations autorisent ces deux détections ou imposent une classe exclusive.
+Question: Two candidates from different classes have scores $0{,}9$ and $0{,}8$ and IoU $0{,}8$. With NMS threshold $0{,}5$, what tradeoff distinguishes global suppression from per-class suppression?
+Reponse: **Expected answer**: The global NMS retains only the score candidate $0{,}9$; the class NMS retains both. This protects two objects of different classes, but also leaves two competing labels on the same instance. Choose whether the annotations allow these two detections or impose an exclusive class.
 
-**Approfondissement** : Personne et vélo peuvent être deux objets légitimes qui se recouvrent. Deux catégories exclusives d'une même pièce demandent une décision de classe ; prendre le score maximal ne garantit pas le bon label. Une NMS par classe conserve aussi plusieurs instances disjointes de cette classe : elle n'impose pas une boîte par catégorie. Les scores, repères et règles de sortie doivent être comparables.
+**Further explanation**: Person and bicycle can be two legitimate objects that overlap. Two exclusive categories of the same piece require a class decision; taking the maximum score does not guarantee the right label. A NMS per class also retains several disjoint instances of this class: it does not impose one box per category. Scores, coordinate frames and exit rules must be comparable.
 
-**Cas construit** : une personne et son vélo peuvent fournir deux catégories valides qui se recouvrent. Deux types de pièce exclusifs sur la même instance posent une autre question : il faut décider du label, pas seulement empêcher des boîtes de se supprimer.
+**Cas construit**: A person and their bike can provide two valid categories that overlap. Two types of exclusive pieces on the same instance pose another question: you have to decide the label, not just prevent boxes from being deleted.
 
-**Validation proposée** : annoter clairement instances et taxonomie, puis examiner les conflits interclasses et les voisins de même classe. Une NMS par classe protège les catégories différentes mais pas deux personnes très proches l'une de l'autre. Le bon choix se mesure sur les erreurs utiles au produit, avec scores et seuils consignés, sans déduire une identité physique du seul recouvrement.
+**Proposed Validation**: Clearly annotate instances and taxonomy, then examine interclass conflicts and neighbors of the same class. One NMS per class protects different categories but not two people very close to each other. The right choice is measured on errors useful to the product, with scores and thresholds recorded, without inferring a physical identity from the recovery alone.
 
-**Erreurs bloquantes** : Croire que NMS par classe résout les confusions interclasses, ou que NMS globale connaît l'identité réelle des objets.
-Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [Torchvision 0.29, batched_nms : description et seuil](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html), consulté le 2026-10-21 ; cas construit du projet.
+**Conflict of taxonomy built**: If the same instance receives the scores 0,8 for "vehicle" and 0,75 for "car", the two labels can be consistent in a hierarchical taxonomy but redundant in a single category contract. Set this policy before choosing deletion. With the same geometry, a person holding a bike and a room receiving two exclusive classes ask for different decisions. Separately testing interclass conflicts and neighbors of the same class helps to measure what class separation actually protects. The highest score does not indicate, by construction, whether two hypotheses share a physical identity.
+
+**Blocking errors**: Believe that NMS per class solves interclass confusions, or that NMS global knows the real identity of objects.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Torchvision 0.29, batched_nms: description and threshold](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html), Consult the 2026-10-21; built case of the project; [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), Consult the 2026-10-30.
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-NMS-003 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-NMS-004
 
-Objectif : expliquer l'effet de Soft-NMS. Famille : raisonnement. Provenance : agent.
+Objective: Explain the effect of Soft-NMS. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-NMS-004
-Question: Que change Soft-NMS gaussienne par rapport à hard NMS, et pourquoi faut-il revoir l'ordre des candidats après une pénalisation ?
-Reponse: **Noyau attendu** : au lieu d'une suppression immédiate au-delà d'un recouvrement, elle réduit le score de chaque candidate selon son recouvrement avec la boîte retenue $M$ : $s_i\leftarrow s_i\exp(-\operatorname{IoU}(M,b_i)^2/\sigma)$, avec $\sigma>0$. Les scores modifiés changent le prochain maximum, donc l'ordre doit être recalculé.
+Question: How does Gaussian Soft-NMS differ from hard NMS, and why must candidates be reordered after a score penalty?
+Reponse: **Expected answer**: instead of an immediate deletion beyond a recovery, it reduces the score of each candidate according to its recovery with the retained box $M$: $s_i\leftarrow s_i\exp(-\operatorname{IoU}(M,b_i)^2/\sigma)$, with $\sigma>0$. The modified scores change the next maximum, so the order must be recalculated.
 
-**Approfondissement** : la pénalité gaussienne agit sur les recouvrements sans même seuil discontinu que hard NMS. Un seuil de score final peut éliminer les boîtes devenues trop faibles : Soft-NMS ne garantit pas de tout conserver ni de résoudre toutes les occultations. Préciser variante et convention d'aire avant une comparaison.
+**Further explanation**: The Gaussian penalty acts on recoveries without the same discontinuous threshold as hard NMS. A final score threshold can eliminate boxes that have become too low: Soft-NMS does not guarantee to keep everything or resolve all occlusionss. Specify variant and area convention before a comparison.
 
-**Interprétation de l'ordre** : après pénalisation, une candidate initialement deuxième peut devenir moins prioritaire qu'une autre candidate peu recouvrante. Reprendre le maximum actuel fait partie de la logique gloutonne. Parcourir une fois l'ancien classement correspondrait à une autre procédure.
+**Interpretation of the order**: After penalization, a candidate initially second may become less priority than another candidate with little coverage. Resuming the current maximum is part of the gluttonous logic. Navigating once the old ranking would correspond to another procedure.
 
-**Exemple de contrôle** : enregistrer à chaque étape boîte retenue et scores restants sur un petit ensemble connu. Comparer ensuite hard et soft à seuils de score annoncés, en comptant doublons et vrais voisins supprimés. La modification des scores n'ajoute aucune observation à la scène et ne résout pas nécessairement des instances très superposées. Une amélioration doit être mesurée sur validation avant d'être attribuée à la méthode.
+**Example of check**: Record at each step box retained and remaining scores on a small known set. Then compare hard and soft to announced score thresholds, counting duplicates and real neighbors removed. Changing the scores does not add any observations to the scene and does not necessarily resolve very superimposed instances. An improvement must be measured on validation before being attributed to the method.
 
-**Erreurs bloquantes** : garder l'ancien ordre malgré les nouveaux scores ou dire que Soft-NMS ne peut jamais retirer de boîte.
-Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [Bodla et al., §4 pénalités, §5 seuil final](https://arxiv.org/abs/1704.04503) ; [code original](https://github.com/bharatsingh430/soft-nms/blob/b8e69bdf8df2ad53025c9d198ded909b50471d4f/lib/nms/cpu_nms.pyx).
+**Calculated change in rank**: after selection of A, a box B with a score of 0,8 and IoU 0,8 becomes $0,8e^{-0,8^2/0,5}\simeq0,222$ for $\sigma=0,5$. A disjointed box C of score 0,5 remains at 0,5 and thus passes before B. With a final threshold of 0,25, B can be removed. This constructed case makes explicit the roles of the decay parameter and the score threshold. Reusing a selected threshold for initial scores without further validation can change the recall, since the values have been transformed by postprocessing.
+
+**Blocking errors**: Keep the old order despite the new scores or say that Soft-NMS can never remove from the box.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Bodla et al., §4 penalties, §5 final threshold](https://arxiv.org/abs/1704.04503); [code original](https://github.com/bharatsingh430/soft-nms/blob/b8e69bdf8df2ad53025c9d198ded909b50471d4f/lib/nms/cpu_nms.pyx); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
 Tags: cv::pilote cv::d08 famille::raisonnement cv_id::CV-NMS-004 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-NMS-005
 
-Objectif : localiser la cause d'une disparition. Famille : diagnostic. Provenance : agent.
+Objective: Find the cause of a disappearance. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-NMS-005
-Question: Un objet disparaît des sorties finales dans une zone dense. Comment déterminer si la NMS est en cause et choisir une intervention vérifiable ?
-Reponse: **Noyau attendu** : comparer boîtes, scores et classes avant/après NMS avec l'annotation ; vérifier quelle GT cesse d'être couverte, si une proposition correcte existait et par quelle boîte elle a été supprimée. Si elle n'existait pas, changer NMS ne la recréera pas.
+Question: An object disappears from final outputs in a dense region. How can NMS be identified as the cause and a verifiable intervention chosen?
+Reponse: **Expected answer**: compare boxes, scores and classes before/after NMS with the annotation; check which GT ceases to be covered, if a correct proposal existed and by which box it was deleted. If it didn't exist, changing NMS won't recreate it.
 
-**Approfondissement** : deux personnes distinctes restent en concurrence dans une NMS par classe : partager le label ne signifie pas partager l'identité. Si une vraie voisine est supprimée, tester seuil ou Soft-NMS sur validation et mesurer rappel, doublons, AP et effets sur le tracker. Vérifier les coordonnées et le top-k amont ; une suppression de doublon qui laisse la GT couverte ne diminue pas son rappel. Le résultat attendu est une cause étayée et un compromis mesuré.
+**Further explanation**: Two distinct people compete in one NMS per class: sharing the label does not mean sharing the identity. If a real neighbor is removed, test threshold or Soft-NMS on validation and measure recall, duplicates, AP and effects on the tracker. Check the coordinates and the top-k upstream; a duplicate deletion that leaves the GT covered does not decrease its recall. The expected result is a substantiated cause and a measured compromise.
 
-**Pourquoi l'amont doit être conservé** : si une vraie boîte est absente dès les prédictions décodées, NMS n'a jamais eu l'occasion de la garder. Si elle existe puis disparaît, retrouver sa concurrente et le calcul de recouvrement permet de tester une cause de sélection concrète.
+**Why the upstream should be preserved**: If a real box is missing from the decoded predictions, NMS has never had the opportunity to keep it. If it exists and then disappears, finding its competitor and the recovery calculation makes it possible to test a concrete selection cause.
 
-**Ablation proposée** : faire varier uniquement le posttraitement sur les mêmes sorties de réseau, avec mêmes annotations et limites de détections. Mesurer objets manqués et doublons ensemble, puis observer les pistes temporelles affectées. Une amélioration locale dans une foule peut introduire davantage de doublons ailleurs. La correction doit donc répondre au diagnostic et rester vérifiée sur un ensemble réservé, pas seulement faire réapparaître une boîte dans une image choisie.
+**Proposed deletion**: only vary the postprocessing on the same network outputs, with the same annotations and detection limits. Measure missed objects and duplicates together, then observe the affected time trackss. A local improvement in a crowd can introduce more duplicates elsewhere. The correction must therefore respond to the diagnosis and remain verified on a reserved set, not just make a box reappear in a chosen image.
 
-**Erreurs bloquantes** : modifier directement le seuil sur le jeu de test ou confondre erreur de proposition et suppression.
-Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [Soft-NMS, §§1 et 4](https://arxiv.org/abs/1704.04503).
+**Deletion log**: For each candidate removed, keep their ID, the one in the box that deleted it, the classes, scores and the IoU calculated in the common coordinate frame. Then replaying the selection on the same predictions makes it possible to isolate the postprocessing without retraining the network. Measure the coverage of the GT with a defined matching, because two candidates on a GT are not two objects recalled. If a top-k precedes NMS, consider also the candidates lost there: increasing the threshold NMS does not recover a box eliminated by this upstream filter.
+
+**Blocking errors**: Change the threshold directly on the test set or confuse proposal error and deletion.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Soft-NMS, §§1 and 4](https://arxiv.org/abs/1704.04503); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-NMS-005 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-NMS-006
 
-Objectif : interpréter l'inclusion de boîtes dans une suppression par IoU. Famille : raisonnement. Provenance : agent.
+Objective: interpret the inclusion of boxes in a deletion by IoU. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-NMS-006
-Question: Deux boîtes continues de même classe, $A=(0,0,100,100)$ et $B=(40,40,60,60)$, ont les scores $0{,}9$ et $0{,}8$. L'inclusion de B dans A entraîne-t-elle sa suppression par une hard NMS à IoU $>0{,}5$ ? Justifier.
-Reponse: **Noyau attendu** : Non. L'intersection a l'aire de B, 400, et l'union celle de A, 10000 : IoU $=0{,}04$. A est sélectionnée, puis B reste puisque le seuil n'est pas dépassé.
+Question: Two continuous boxes of the same class, $A=(0,0,100,100)$ and $B=(40,40,60,60)$, have scores $0{,}9$ and $0{,}8$. Does B being contained in A imply suppression by hard NMS at IoU threshold $>0{,}5$? Justify the answer.
+Reponse: **Expected answer**: No. The intersection has the area of B, 400, and the union that of A, 10000: IoU $=0{,}04$. A is selected, then B remains since the threshold is not exceeded.
 
-**Approfondissement** : Pour $B\subset A$, IoU $=|B|/|A|$, et non intersection divisée par aire de B. Ce dernier rapport vaudrait 1. La géométrie seule ne tranche pas entre objet imbriqué, partie d'objet et deux localisations d'une même instance. Exemple analytique du projet.
+**Further explanation**: For $B\subset A$, IoU $=|B|/|A|$, and not intersection divided by area of B. This last report would be worth 1. Geometry alone does not slice between nested object, part of object and two locations of the same instance. An analytical example of the project.
 
-**Lecture géométrique** : une petite boîte entièrement contenue dans une grande a une intersection égale à sa propre aire, mais une union égale à la grande aire. Le recouvrement relatif à la petite boîte et l'IoU répondent donc à deux questions différentes. Remplacer l'un par l'autre changerait la règle de suppression.
+**Geometric reading**: A small box entirely contained in a large one has an intersection equal to its own area, but a union equal to the large area. The cover for the small box and the IoU therefore answer two different questions. Replacing one with the other would change the deletion rule.
 
-**Conséquence de diagnostic** : deux boîtes survivantes ne prouvent pas deux instances : elles peuvent être deux localisations très différentes de la même pièce. À l'inverse, objet et partie d'objet peuvent être tous deux légitimes si la taxonomie le prévoit. Vérifier les annotations, les scores et le contrat de sortie avant de modifier la mesure de recouvrement. Ce cas analytique montre une limite du slogan « les grandes boîtes éliminent les petites ».
+**Consequences of diagnosis**: Two surviving boxes do not prove two instances: they can be two very different locations of the same room. Conversely, both object and part of object can be legitimate if the taxonomy so provides. Check annotations, scores, and the exit contract before changing the collection action. This analytical case shows a limit to the slogan “big boxes eliminate small ones”.
 
-**Erreurs bloquantes** : Donner une IoU de 1 dès qu'il y a inclusion, ou supprimer automatiquement toute boîte plus petite.
-Source: [[80-detection-pose/references/81-nms|Fiche NMS]] ; [GIoU, version 2, §3, équation 1](https://arxiv.org/html/1902.09630v2) ; [Soft-NMS, §4 : hard NMS](https://arxiv.org/html/1704.04503) ; calcul du projet.
+**Condition of inclusion**: for $B\subset A$ and a strict deletion at threshold $\tau$, B can only be deleted by A if $|B|>\tau|A|$, provided that A is actually selected before it. At $\tau=0,5$, a contained box covering 4% of the large area therefore remains very far from the condition. Reversing the scores does not change the IoU, but changes the first box retained; with more candidates, it can change the whole gluttonous suite. This reasoning distinguishes the symmetry of the overlap measure and the algorithm's dependence on ranking.
+
+**Blocking errors**: Give a IoU of 1 as soon as there is inclusion, or automatically remove any smaller box.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [GIoU, version 2, §3, equation 1](https://arxiv.org/html/1902.09630v2); [Soft-NMS, §4 : hard NMS](https://arxiv.org/html/1704.04503); calculation of the project; [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), consult the 2026-10-30.
 Tags: cv::pilote cv::d08 famille::raisonnement cv_id::CV-NMS-006 provenance::agent pole::A pole::C pole::E
 END

@@ -1,89 +1,97 @@
-# Bundle adjustment et complément de Schur — cartes
+# Flashcards — Bundle adjustment and the Schur complement
 
-Fiche : [[50-calibration-geometrie/references/54-bundle-adjustment|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[50-calibration-geometrie/references/54-bundle-adjustment|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::50-calibration-geometrie
 
 ## CV-BA-001
 
-Objectif : identifier les inconnues d’un BA. Famille : comprehension. Provenance : agent.
+Objective: Identify the unknowns of a BA. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-BA-001
-Question: Qu’optimise un bundle adjustment et pourquoi le distinguer d’un pose graph ?
-Reponse: **Noyau attendu** : Le BA optimise poses et points, éventuellement intrinsics, à partir de reprojections ; un pose graph repose sur des contraintes entre poses.
+Question: What does bundle adjustment optimize, and how does it differ from a pose graph?
+Reponse: **Expected answer**: The BA optimizes poses and points, possibly intrinsic, from reprojections; a pose graph is based on constraints between poses.
 
-**Approfondissement** : Le niveau d’information et la sparsité diffèrent. Une reprojection faible peut encore cacher une jauge ou un biais.
+**Further explanation**: The level of information and the sparsity differ. A weak reprojection can still hide a gauge or bias.
 
-**Mécanisme** : chaque observation image lie une caméra et un landmark par un modèle de projection. Modifier un point influence ses observations dans plusieurs vues ; modifier une caméra influence les points qu'elle observe. Le BA recherche conjointement des valeurs qui expliquent ces observations, avec pondération et éventuellement robustification.
+**Mechanism**: Each image observation links a camera and a landmark with a projection model. Changing a point influences its observations in several views; changing a camera influences the points it observes. The BA jointly searches for values that explain these observations, with weighting and possibly robustness.
 
-**Exemple construit** : une dérive de trajectoire et des positions de points erronées peuvent se compenser partiellement dans une vue, mais être incompatibles dans les autres. L'optimisation conjointe exploite ces liens. Un pose graph utilise déjà des contraintes résumées entre poses et ne conserve pas nécessairement chaque reprojection. Les coûts, les biais possibles et la structure des inconnues diffèrent donc. Vérifier jauge, initialisation, associations et résidus par observation : une diminution du coût global ne prouve ni l'échelle métrique ni la validité physique de tous les landmarks optimisés.
+**Constructed example**: A trajectory drift and erroneous point positions may partially compensate in one view, but be incompatible in the others. The joint optimization exploits these links. A pose graph already uses constraints summarized between poses and does not necessarily retain each reprojection. The costs, possible biases and structure of the unknowns therefore differ. Check gauge, initialization, associations and residuals per observation: a decrease in the overall cost proves neither the metric scale nor the physical validity of all optimized landmarks.
 
-**Erreurs bloquantes** : Présenter BA comme un simple lissage des positions caméra.
-Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Schur solvers et équations blocs](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
+**Complete objective to be explained**: On the $\mathcal O$ set of observations actually present, a BA can minimize $\sum_{(i,j)\in\mathcal O}\rho(\|L_{ij}^{-1}[\pi(K_i,T_i,X_j)-z_{ij}]\|_2^2)$, with $z_{ij}$ in pixels, $X_j$ a world point, $T_i$ a pose and $L_{ij}L_{ij}^T$ its measurement covariance. The projection function includes the expected distortion. The poses must be updated to its appropriate parameterization; the parameters set are not unknown to the solver. Points seen in a single image may lack depth constraint. Thus, the total number of observations alone does not describe the connectivity and observability of the reconstruction.
+
+**Blocking errors**: Present BA as a simple smoothing of camera positions.
+Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Full reference]]; [Ceres, Schur solvers and block equations](https://ceres-solver.readthedocs.io/latest/nnls_solving.html); [Ceres, Covariance Estimation, Gauge Invariance and Rank of the Jacobian](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), see 2026-10-30.
 Tags: cv::pilote cv::d05 famille::comprehension cv_id::CV-BA-001 provenance::agent pole::B pole::C
 END
 
 ## CV-BA-002
 
-Objectif : expliquer l’élimination de Schur. Famille : raisonnement. Provenance : agent.
+Objective: Explain the elimination of Schur. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-BA-002
-Question: Éliminer les points avec Schur signifie-t-il les ignorer dans le BA ?
-Reponse: **Noyau attendu** : Non : leur effet est transmis au système réduit des caméras, puis leurs incréments sont récupérés par substitution.
+Question: Does eliminating points with the Schur complement mean ignoring them in bundle adjustment?
+Reponse: **Expected answer**: No: their effect is transmitted to the reduced system of the cameras, then their increments are recovered by substitution.
 
-**Approfondissement** : La structure des observations rend le bloc points exploitable ; cela ne supprime ni non-linéarité ni minima locaux.
+**Further explanation**: The structure of the observations makes the points block exploitable; this does not remove non-linearity or local minima.
 
-**Lecture du système en blocs** : les incréments caméra et points sont couplés. Résoudre algébriquement le bloc des points puis le remplacer dans les équations caméra donne le complément de Schur. Le système réduit conserve l'effet des points sur les caméras ; après résolution, une substitution récupère les incréments de points.
+**Reading the system in blocks**: Camera and dot increments are coupled. Algebraically solve the block of points and then replace it in the camera equations gives the complement of Schur. The reduced system retains the effect of the points on the cameras; after resolution, a substitution recovers the increments of points.
 
-**Conséquence de sparsité** : plusieurs caméras qui voient un même landmark peuvent devenir couplées dans le système réduit. Le coût dépend donc des connexions et pas seulement du nombre total de points. Dans un exemple construit, deux jeux de même taille mais de visibilité différente peuvent présenter des coûts mémoire différents. Les inverses figurant dans la dérivation désignent des opérations algébriques ; une implémentation emploie des factorisations ou résolutions adaptées. L'élimination concerne le problème linéarisé courant et ne supprime ni le besoin de relinéariser ni la dépendance à l'initialisation.
+**Consequence of sparsity**: Multiple cameras that see the same landmark can be paired in the reduced system. The cost therefore depends on the connections and not only on the total number of points. In a constructed example, two games of the same size but different visibility may have different memory costs. The inverses in derivation refer to algebraic operations; an implementation uses appropriate factorizations or resolutions. Elimination refers to the current linearized problem and does not remove the need to relinearize or the initialization dependency.
 
-**Erreurs bloquantes** : Dire que Schur retire les observations 3D du problème.
-Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Schur solvers et équations blocs](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
+**Reduced system derivation**: Linearized problem gives $B\delta_c+E\delta_p=v$ and $E^T\delta_c+C\delta_p=w$. If $C$ is invertible, the second equation provides $\delta_p=C^{-1}(w-E^T\delta_c)$; its substitution in the first $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$ product. In a classic BA where each residual connects a camera and a point, the points do not interact directly with each other in this block: $C$ is diagonal block per point. A point seen by many cameras, on the other hand, creates couplings in the reduced system. Point – point constraints or other factors can change this structure; the factorization of the problem should be checked instead of assuming Schur to be always the same.
+
+**Blocking errors**: Say that Schur removes the 3D observations from the problem.
+Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Full reference]]; [Ceres, Schur solvers and block equations](https://ceres-solver.readthedocs.io/latest/nnls_solving.html); [Ceres, Covariance Estimation, Gauge Invariance and Rank of the Jacobian](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), see 2026-10-30.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-BA-002 provenance::agent pole::B pole::C
 END
 
 ## CV-BA-003
 
-Objectif : ne pas masquer une jauge. Famille : diagnostic. Provenance : agent.
+Objective: Do not hide a gauge. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-BA-003
-Question: Un BA converge à plusieurs échelles avec le même coût sur une reconstruction monoculaire. Quel contrôle manque ?
-Reponse: **Noyau attendu** : Vérifier la jauge d’échelle et la présence d’une référence métrique ; fixer une convention n’est pas mesurer cette échelle.
+Question: Bundle adjustment converges at different scales with the same cost in a monocular reconstruction. Which check is missing?
+Reponse: **Expected answer**: Check the scale gauge and the presence of a metric reference; setting a convention is not measuring this scale.
 
-**Approfondissement** : Évaluer les paramètres avec un alignement autorisé par la tâche ; un coût pixel peut rester invariant à une transformation globale.
+**Further explanation**: Evaluate parameters with an alignment allowed by the task; a pixel cost can remain invariant to an overall transformation.
 
-**Exemple d'invariance** : si toutes les positions des caméras et des points sont multipliées par un même facteur, les directions de projection d'une reconstruction monoculaire peuvent rester identiques. L'image ne fournit donc pas automatiquement la longueur correspondant à une unité du modèle. La convergence à des échelles différentes est compatible avec cette jauge.
+**Example of Invariance**: If all camera positions and points are multiplied by the same factor, the projection directions of a monocular reconstruction may remain the same. The image does not automatically provide the length corresponding to a unit of the model. Convergence at different scales is compatible with this gauge.
 
-**Validation proposée** : identifier la contrainte qui fournit réellement l'échelle, si le produit en a besoin, et vérifier son unité. Pour comparer des reconstructions, autoriser uniquement l'alignement justifié par la tâche. Une similitude peut être appropriée pour une reconstruction monoculaire à échelle libre, mais masquer un défaut d'échelle dans un système censé être métrique. Fixer un point ou une baseline pour rendre le calcul unique est une convention tant que sa valeur ne provient pas d'une mesure. La précision métrique exige donc une référence indépendante.
+**Proposed Validation**: identify the constraint that actually provides the scale, if the product needs it, and check its unit. To compare reconstructions, allow only the alignment justified by the task. A similarity may be appropriate for free-scale monocular reconstruction, but mask a scale defect in a system that is supposed to be metric. Setting a point or baseline to make the calculation unique is a convention as long as its value does not come from a measurement. Metric accuracy therefore requires an independent reference.
 
-**Erreurs bloquantes** : Attribuer automatiquement la multiplicité à une panne du solveur.
-Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Covariance Estimation, Gauge Invariance, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html).
+**Proof of free scale**: with an ideal projection of $RX+t$, replace $X$ with $aX$ and $t$ with $at$, $a>0$, multiplies the three camera coordinates by $a$; the homogeneous division removes this factor. Monocular observations therefore do not distinguish these scales. A very strong digital prior on a translation can make the system invertible without this value being measured. If the system is to be metric, use a known length or source of motion and announce its uncertainty. A visual-inertial optimization can resolve scale ambiguity under the conditions of its model; it can also become ill-conditioned if the movements do not sufficiently excite the necessary variables.
+
+**Blocking errors**: Automatically assign multiplicity to a solver failure.
+Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Full reference]]; [Ceres, Covariance Estimation, Gauge Invariance, consulted on 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); [Ceres, Solving Non-linear Least Squares, Schur complement trick and block systems](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), see 2026-10-30.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-BA-003 provenance::agent pole::B pole::C
 END
 
 ## CV-BA-004
 
-Objectif : contrôler un modèle trop libre. Famille : evaluation. Provenance : agent.
+Objective: check a model too free. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-BA-004
-Question: Pourquoi libérer davantage de coefficients de caméra peut-il réduire le coût tout en dégradant la calibration ?
-Reponse: **Noyau attendu** : Des paramètres supplémentaires peuvent surajuster un jeu peu informatif ou être corrélés.
+Question: Why can freeing additional camera coefficients reduce the optimization cost while degrading calibration?
+Reponse: **Expected answer**: Additional settings may over-adjust an uninformative game or be correlated.
 
-**Approfondissement** : Mesurer stabilité par sous-ensembles et erreur sur observations indépendantes ; choisir les contraintes du modèle physiquement.
+**Further explanation**: Measure stability by subsets and error on independent observations; choose the constraints of the model physically.
 
-**Pourquoi le coût baisse** : un espace de paramètres plus grand peut contenir une solution qui ajuste davantage les observations d'entraînement. Cela ne dit pas si les paramètres supplémentaires représentent la caméra ou absorbent bruit, déformation de mire et erreurs de correspondance. Plusieurs paramètres peuvent aussi produire des effets proches sur une capture peu informative.
+**Why the cost goes down**: A larger parameter space can contain a solution that further adjusts training observations. This does not say if the additional parameters represent the camera or absorb noise, deformation of calibration target and mismatches. Several parameters can also produce similar effects on an uninformative capture.
 
-**Ablation construite** : conserver les observations et libérer un groupe de paramètres à la fois. Examiner leur dispersion par sous-ensembles, les corrélations et les résidus sur des vues réservées couvrant notamment les bords. Un meilleur coût d'ajustement accompagné d'une dégradation hors échantillon suggère un compromis défavorable. À l'inverse, un modèle trop contraint peut conserver un biais réel. Le choix doit s'appuyer sur l'optique, la diversité des données et l'usage, sans faire de la seule baisse du coût un critère de calibration.
+**Ablation construite**: Keep observations and release a group of parameters at once. Examine their dispersion in subsets, correlations and residualss on reserved views including edges. A better adjustment cost with out-of-sample degradation suggests an unfavorable trade-off. Conversely, a model that is too constrained can retain a real bias. The choice must be based on optics, diversity of data and usage, without making the mere reduction in cost a calibration criterion.
 
-**Erreurs bloquantes** : Comparer uniquement les coûts d’ajustement.
-Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Fiche complète]] ; [Ceres, Covariance Estimation, Gauge Invariance, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) ; effet de paramètres libres et protocole de validation : déductions du projet.
+**Example of missing information**: In a polynomial radial model, the effects of high-order coefficients grow with normalized radius powers. Observations near the center can hardly constrain these terms; different values then produce almost the same pixels observed but diverge at the edge. Unleashing these coefficients increases flexibility without adding informative data. The damping of LM limits the current resolution pitch: it is not automatically a physical priority on the final parameters. Justify the free parameters, check the directions with little stress and test the geometry where it will be used. A reserved validation must keep poses and really different areas, not just neighboring points of the same catches.
+
+**Blocking errors**: Compare only adjustment costs.
+Source: [[50-calibration-geometrie/references/54-bundle-adjustment|Full reference]]; [Ceres, Covariance Estimation, Gauge Invariance, consulted on 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html); effect of free parameters and validation protocol: deductions from the project; [Ceres, Solving Non-linear Least Squares, Schur complement trick and block systems](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d05 famille::evaluation cv_id::CV-BA-004 provenance::agent pole::B pole::C
 END

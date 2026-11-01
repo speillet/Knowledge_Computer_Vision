@@ -1,89 +1,97 @@
-# CLIP, SigLIP et reconnaissance par texte — cartes
+# Flashcards — CLIP, SigLIP and text-based recognition
 
-Fiche : [[70-reconnaissance-representations/references/72-clip-siglip|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[70-reconnaissance-representations/references/72-clip-siglip|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::70-reconnaissance-representations
 
 ## CV-CLIP-001
 
-Objectif : interpréter le zero-shot CLIP. Famille : comprehension. Provenance : agent.
+Objective: interpret the zero-shot CLIP. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CLIP-001
-Question: Comment CLIP peut-il classer une image avec des classes qu’on décrit par texte ?
-Reponse: **Noyau attendu** : Encoder image et descriptions, comparer dans un espace aligné puis appliquer une règle de décision sur ces candidats.
+Question: How can CLIP classify an image using classes described in text?
+Reponse: **Expected answer**: Encode image and descriptions, compare in an aligned space and then apply a decision rule on these candidates.
 
-**Approfondissement** : La qualité dépend des prompts, du vocabulaire et du domaine ; l’absence d’entraînement d’une nouvelle tête n’implique pas l’absence d’hypothèses.
+**Further explanation**: Quality depends on prompts, vocabulary and field; the absence of training of a new head does not imply the absence of hypotheses.
 
-**Mécanisme de décision** : chaque description de classe définit un candidat textuel dans l'espace partagé. L'image est comparée à ces candidats, puis une règle choisit ou rejette une proposition. Le vocabulaire constitue donc une partie de la définition du classifieur, même sans entraînement d'une tête supplémentaire.
+**Decision-making mechanism**: Each class description defines a textual candidate in the shared space. The image is compared to these candidates, and then a rule chooses or rejects a proposal. Vocabulary is therefore a part of the definition of the classifier, even without training an additional head.
 
-**Exemple construit** : proposer seulement « pièce correcte » et « pièce rayée » force une comparaison entre ces formulations, même si l'image montre une autre pièce ou un fond vide. Le meilleur candidat peut être le moins mauvais. Tester des descriptions alternatives sur validation, conserver des négatifs et définir une politique de rejet mesurée. La similarité image–texte peut servir à la recherche ou à une classification par descriptions ; elle ne fournit pas à elle seule une explication générée ni la localisation précise d'une rayure. L'interface et la métrique doivent correspondre à la sortie demandée.
+**Constructed example**: proposing only "correct piece" and "striped piece" forces a comparison between these formulations, even if the image shows another piece or an empty background. The best candidate can be the least bad. Test alternative descriptions on validation, keep negatives and define a measured rejection policy. Image-text similarity can be used for research or classification by description; it does not by itself provide a generated explanation or the precise location of a scratch. The interface and metric must match the requested output.
 
-**Erreurs bloquantes** : Présenter CLIP comme un générateur de légende autonome.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §6](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
+**Decision and cost**: For standard embeddings $v$ and $t_j$, calculate $s_j=\tau v^Tt_j$ and then choose a candidate according to the fixed rule. A set of prompts of the same class can be encoded and then combined in text space, with explicit normalization; averaging embeddings and averaging probabilities are two different operations. Fixed texts can be pre-encoded, while each image still has to pass through the encoder. The number of candidates is then included in the comparisons. Keeping the version of this vocabulary with the model makes the results reproducible, because changing the formulations actually changes the classifier used.
+
+**Blocking errors**: Present CLIP as a standalone legend generator.
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Full reference]]; [CLIP, §§2.3,3 and limits §6](https://arxiv.org/abs/2103.00020); [SigLIP, §3 and Algorithm1](https://arxiv.org/abs/2303.15343); [Radford et al., CLIP, §2.3, symmetrical loss; §3.1, text classification; algebraic project counterexamples](https://arxiv.org/html/2103.00020v1); [Zhai et al., SigLIP, summary, objective per pair; HTML v4 version inaccessible, use of PDF](https://arxiv.org/pdf/2303.15343), see the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::comprehension cv_id::CV-CLIP-001 provenance::agent pole::A pole::D
 END
 
 ## CV-CLIP-002
 
-Objectif : refuser une probabilité trompeuse. Famille : raisonnement. Provenance : agent.
+Objective: Reject a misleading probability. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CLIP-002
-Question: Pourquoi un softmax CLIP de 0,95 sur deux labels ne prouve-t-il pas que l’objet annoncé est présent ?
-Reponse: **Noyau attendu** : Il normalise des scores entre ces candidats ; l’ensemble peut ne contenir aucune bonne description et le modèle peut être hors domaine.
+Question: Why does a CLIP softmax score of 0.95 over two labels not prove that the predicted object is present?
+Reponse: **Expected answer**: It normalizes scores between these candidates; the set may not contain any good descriptions and the model may be out of domain.
 
-**Approfondissement** : Tester rejets, nouveaux candidats et calibration sur données représentatives.
+**Further explanation**: Test rejections, new candidates and calibration on representative data.
 
-**Lecture du softmax** : la normalisation partage une masse entre les candidats fournis. Retirer un concurrent ou changer la température modifie les valeurs sans ajouter de preuve dans l'image. Un score très élevé peut donc seulement indiquer que les autres formulations reçoivent des scores encore plus faibles.
+**Reading the softmax**: Normalization shares a mass between the candidates provided. Removing a competitor or changing the temperature changes the values without adding any evidence in the image. A very high score can therefore only indicate that other formulations receive even lower scores.
 
-**Exemple de test construit** : conserver l'image et ajouter une description plausible jusque-là absente. Observer comment le classement et les valeurs changent, puis comparer à une référence annotée. Inclure aussi des images sans bonne classe et des scènes hors domaine. Une politique de rejet doit être validée sur ces cas, au point de fonctionnement du produit. La calibration concerne l'accord entre scores et fréquences d'erreurs dans un protocole donné ; elle ne découle pas de la somme égale à un. L'interprétation doit donc rester relative à l'ensemble des candidats et à la distribution observée.
+**Example of test built**: preserve the image and add a previously absent plausible description. Observe how the ranking and values change, then compare to an annotated reference. Also include images without good class and out-of-domain scenes. A rejection policy must be validated on these cases, at the point of operation of the product. Calibration refers to the agreement between scores and error frequencies in a given protocol; it does not derive from the sum equal to one. The interpretation must therefore remain relative to all the candidates and to the distribution observed.
 
-**Erreurs bloquantes** : Interpréter tout score normalisé comme une probabilité de vérité.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §6](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
+**Algebraic counter-example**: for two logs $a,b$, $p_1=1/(1+e^{b-a})$. A difference $a-b=\log19\simeq2,94$ is enough to give $p_1=0,95$, regardless of the absolute value of the two logs. Adding the same constant to the two does not change anything. If a third candidate receives a logit equal to $a$, the probability of the first becomes $19/(19+1+19)=19/39$, approximately 0,487, without any change in the image. This built case isolates the effect of the candidate set; it does not predict the values of a checkpoint. A robust rejection therefore requires a protocol including the absences and distributions actually encountered.
+
+**Blocking errors**: Interpret any normalized score as a probability of truth.
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Full reference]]; [CLIP, §§2.3,3 and limits §6](https://arxiv.org/abs/2103.00020); [SigLIP, §3 and Algorithm1](https://arxiv.org/abs/2303.15343); [Radford et al., CLIP, §2.3, symmetrical loss; §3.1, text classification; algebraic project counterexamples](https://arxiv.org/html/2103.00020v1); [Zhai et al., SigLIP, summary, objective per pair; HTML v4 version inaccessible, use of PDF](https://arxiv.org/pdf/2303.15343), see the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-CLIP-002 provenance::agent pole::A pole::D
 END
 
 ## CV-CLIP-003
 
-Objectif : distinguer objectifs contrastifs. Famille : comparaison. Provenance : agent.
+Objective: distinguer objectifs contrastifs. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CLIP-003
-Question: Quelle différence centrale sépare l’objectif CLIP softmax de l’objectif SigLIP ?
-Reponse: **Noyau attendu** : SigLIP utilise une loss sigmoid sur des paires plutôt qu’une normalisation softmax globale du lot comme CLIP.
+Question: What is the central difference between CLIP's softmax objective and the SigLIP objective?
+Reponse: **Expected answer**: SigLIP uses a loss sigmoid on pairs rather than a global softmax normalization of the batch like CLIP.
 
-**Approfondissement** : Ce changement d’objectif n’accorde pas automatiquement une calibration en exploitation ; les détails de température, biais et données comptent.
+**Further explanation**: This lens change does not automatically grant operational calibration; temperature, bias and data details count.
 
-**Raisonnement sur l'objectif** : une normalisation softmax de lot met les candidats en compétition dans le dénominateur. Un objectif sigmoid par paire traite les compatibilités selon une autre construction d'apprentissage, avec ses paramètres et ses positifs/négatifs. Cela modifie ce que les scores sont entraînés à représenter, sans supprimer le rôle des données.
+**Reasoning about the objective**: a softmax lot normalization puts candidates in competition in the denominator. A sigmoid lens per pair treats compatibility according to another learning construct, with its parameters and positives/negatives. This changes what the scores are trained to represent, without removing the role of the data.
 
-**Conséquence d'évaluation** : comparer les modèles sur les mêmes images, textes, classes absentes et critères de rejet, en consignant checkpoint et prétraitement. Un changement d'objectif ne signifie pas qu'une valeur de sortie soit automatiquement une probabilité fiable sur une ligne industrielle. Une fonction bornée entre zéro et un peut encore être mal calibrée hors distribution. La carte demande de distinguer les mécanismes d'apprentissage ; un classement empirique des variantes réclamerait un protocole et des mesures supplémentaires, plutôt qu'une conclusion tirée du seul nom de la loss.
+**Impact of evaluation**: compare models on the same images, texts, absent classes and rejection criteria, by logging checkpoint and preprocessing. A change in objective does not mean that an output value is automatically a reliable probability on an industrial line. A function bounded between zero and one can still be miscalibrated out of distribution. The flashcard asks to distinguish between learning mechanisms; an empirical ranking of variants would require a protocol and additional measures, rather than a conclusion drawn from the name of the loss alone.
 
-**Erreurs bloquantes** : Déduire une probabilité fiable du seul mot sigmoid.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [CLIP, §§2.3,3 et limites §6](https://arxiv.org/abs/2103.00020) ; [SigLIP, §3 et Algorithm1](https://arxiv.org/abs/2303.15343).
+**Loss formulas**: with positive pairs on the diagonal of a lot, a direction of CLIP uses $-\frac1n\sum_i\log[\exp(s_{ii})/\sum_j\exp(s_{ij})]$, supplemented by the direction text→image. A sigmoid form per pair writes $\log(1+\exp(-y_{ij}s_{ij}))$ with $y_{ij}\in\{-1,+1\}$, then an aggregation according to the method. Temperature and bias participate in the definition of logits; normalization conventions count for the comparison of gradients and loss values. The central difference is the coupling of candidates in the denominator, not a probabilistic certification of scores after transfer.
+
+**Blocking errors**: Deducing a reliable probability of the single word sigmoid.
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Full reference]]; [CLIP, §§2.3,3 and limits §6](https://arxiv.org/abs/2103.00020); [SigLIP, §3 and Algorithm1](https://arxiv.org/abs/2303.15343); [Radford et al., CLIP, §2.3, symmetrical loss; §3.1, text classification; algebraic project counterexamples](https://arxiv.org/html/2103.00020v1); [Zhai et al., SigLIP, summary, objective per pair; HTML v4 version inaccessible, use of PDF](https://arxiv.org/pdf/2303.15343), see the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-CLIP-003 provenance::agent pole::A pole::D
 END
 
 ## CV-CLIP-004
 
-Objectif : tester la sensibilité au texte. Famille : evaluation. Provenance : agent.
+Objective: test the sensitivity to the text. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CLIP-004
-Question: Comment tester un classifieur image–texte sans régler les prompts sur le test final ?
-Reponse: **Noyau attendu** : Créer des variantes sur validation, figer prompts et vocabulaire, puis mesurer erreurs et rejets sur test séparé par scène/domaine.
+Question: How can an image–text classifier be tested without tuning prompts on the final test set?
+Reponse: **Expected answer**: Create validation variants, freeze prompts and vocabulary, and then measure errors and rejections on separate test by scene/domain.
 
-**Approfondissement** : Conserver négatifs et cas sans bonne classe ; mesurer la sensibilité aux formulations sans sélectionner a posteriori le meilleur score test.
+**Further explanation**: Keep negatives and cases without good class; measure sensitivity to formulations without subsequently selecting the best test score.
 
-**Pourquoi les prompts sont des paramètres** : choisir une formulation en fonction de son score sur le test utilise indirectement ses labels pour régler le système. Même sans gradient, cette sélection peut suradapter la décision aux exemples censés fournir une mesure indépendante.
+**Why prompts are parameters**: choosing a formulation based on its score on the test indirectly uses its labels to set the system. Even without a gradient, this selection can over-adapt the decision to the examples that are supposed to provide an independent measure.
 
-**Protocole proposé** : définir un ensemble de formulations et une règle de combinaison sur validation, conserver le vocabulaire et les seuils, puis ouvrir le test final une fois les choix figés. Séparer scènes ou domaines selon le futur usage et documenter les catégories absentes. Rapporter les erreurs et la sensibilité aux formulations sans ne garder que les cas favorables. Pour une nouvelle itération après analyse d'échecs, préparer une autre évaluation indépendante. Une bonne pratique de transfert conserve ainsi une distinction entre exploration du modèle et estimation de sa généralisation, même lorsque l'outil est qualifié de zero-shot.
+**Proposed Protocol**: define a set of formulations and a combination rule on validation, keep the vocabulary and thresholds, and then open the final test once the choices are frozen. Separate scenes or domains according to future use and document missing categories. Report errors and sensitivity to formulations without keeping only favorable cases. For a new iteration after failure analysis, prepare another independent assessment. A good transfer practice thus retains a distinction between exploring the model and estimating its generalization, even when the tool is qualified as zero-shot.
 
-**Erreurs bloquantes** : Choisir les prompts d’après les résultats du test final.
-Source: [[70-reconnaissance-representations/references/72-clip-siglip|Fiche complète]] ; [Radford et al., CLIP, §§2.3, 3.1 et limites §6](https://arxiv.org/abs/2103.00020) ; protocole de validation proposé par le projet.
+**Measurable sensitivity**: For each reserved image, keep the winning label, its margin with the second candidate and the decision changes between predefined formulations. Report the rate of disagreement by class and field, in addition to the final accuracy. An average of several prompts must be set before the test and its costs incorporated into the protocol. Separate also the images of the same object or sequence between games: several very similar views can make the validation too favorable. These measures transform an impression of robustness to words into observable property, without selecting only the formulation that succeeds on each example after the fact.
+
+**Blocking errors**: Choose the prompts based on the final test results.
+Source: [[70-reconnaissance-representations/references/72-clip-siglip|Full reference]]; [Radford et al., CLIP, §§2.3, 3.1 and limits §6](https://arxiv.org/abs/2103.00020); validation protocol proposed by the project; [Radford et al., CLIP, §2.3, symmetrical loss; §3.1, text classification; algebraic project counterexamples](https://arxiv.org/html/2103.00020v1); [Zhai et al., SigLIP, summary, objective per pair; HTML v4 version inaccessible, use of PDF](https://arxiv.org/pdf/2303.15343), consult the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::evaluation cv_id::CV-CLIP-004 provenance::agent pole::A pole::D
 END

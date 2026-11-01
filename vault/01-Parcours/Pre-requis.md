@@ -1,83 +1,35 @@
-# Conventions et rappels utiles
+# Conventions and useful reminders
 
-**Provenance** : agent. Ces rappels donnent les conventions locales ; les fiches
-canoniques d'estimation et de géométrie développent leurs mécanismes. Le
-[parcours senior](Parcours-senior.md) ordonne les sujets et leurs prérequis.
+**Provenance**: agent. These reminders give local conventions; the canonical reference notes of estimation and geometry develop their mechanisms. The [Senior Course](Parcours-senior.md) commands the subjects and their prerequisites.
 
-## Lire une carte
+## Read a flashcard
 
-Masquer le verso, produire une réponse, puis comparer au **noyau attendu**.
-Une réponse est satisfaisante si elle couvre ce noyau sans **erreur bloquante**.
-L'approfondissement explique davantage sans imposer une récitation intégrale.
-Rédaction, export et maîtrise personnelle sont suivis séparément.
+Hide the back, produce a response, and then compare to the **expected answer**. An answer is satisfactory if it covers this kernel without **Error Blocker**. The further explanation explains more without imposing an integral recitation. Writing, exporting and personal mastery are followed separately.
 
-## Images et coordonnées
+## Images and coordinates
 
-Une image en niveaux de gris se note $I[y,x]$, avec hauteur $H$ et largeur $W$.
-Les coordonnées géométriques sont $(x,y)$ ; l'indexation d'un tableau est
-habituellement `[y, x]`. L'origine est en haut à gauche et $y$ descend dans
-les exemples du pilote. Une image couleur n'est pas automatiquement RGB :
-les tableaux chargés par OpenCV sont généralement BGR.
+A grayscale image is marked $I[y,x]$, with height $H$ and width $W$. Geometric coordinates are $(x,y)$; indexing an array is usually `[y, x]`. The origin is at the top left and $y$ descends into the driver examples. A color image is not automatically RGB: the tables loaded by OpenCV are usually BGR.
 
-Les boîtes sont continues, en pixels, sous la forme
-$(x_1,y_1,x_2,y_2)$, avec $x_2>x_1$ et $y_2>y_1$. Leur aire vaut
-$(x_2-x_1)(y_2-y_1)$, sans `+1`. Une annotation COCO `xywh` fournit au contraire
-$(x,y,w,h)$. Une boîte normalisée doit être remise dans le même repère avant IoU.
-Après resize/crop/padding, transformer aussi les points, boîtes et intrinsèques
-concernés. Une mesure dans une autre résolution ne garde pas automatiquement
-le même seuil en pixels.
+The boxes are continuous, in pixels, in the form $(x_1,y_1,x_2,y_2)$, with $x_2>x_1$ and $y_2>y_1$. Their area is worth $(x_2-x_1)(y_2-y_1)$, without `+1`. A COCO `xywh` annotation instead provides $(x,y,w,h)$. A standardized box must be put back in the same coordinate frame before IoU. After resize/crop/padding, also transform the points, boxes and intrinsics concerned. A measurement in another resolution does not automatically keep the same threshold in pixels.
 
-## Points homogènes et projection
+## Homogeneous points and projection
 
-Un point image $(x,y)$ peut être représenté par
-$\tilde x=[x,y,1]^T$. Deux vecteurs homogènes qui ne diffèrent que par un
-facteur non nul représentent le même point. Pour $c\ne0$,
-$\pi([a,b,c]^T)=[a/c,b/c]^T$. Le symbole $\sim$ signifie cette égalité à
-un facteur près ; il ne signifie pas une égalité de coordonnées euclidiennes.
+An image point $(x,y)$ can be represented by $\tilde x=[x,y,1]^T$. Two homogeneous vectors that differ only by a non-zero factor represent the same point. For $c\ne0$, $\pi([a,b,c]^T)=[a/c,b/c]^T$. The symbol $\sim$ means this equality to one factor; it does not mean an equality of Euclidean coordinates.
 
-Une projection perspective idéale s'écrit
-$s\tilde x=K[R\mid t]\tilde X_w$, avec $X_c=RX_w+t$.
-$R$ va du monde à la caméra, $t$ est exprimé dans le repère caméra et dans
-l'unité choisie pour la scène. $K$ transforme les coordonnées caméra
-normalisées en pixels ; la distorsion est une étape supplémentaire.
-Référence : [Zhang, §2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
+An ideal perspective projection is written $s\tilde x=K[R\mid t]\tilde X_w$, with $X_c=RX_w+t$. $R$ goes from the world to the camera, $t$ is expressed in the coordinate frame camera and in the unit chosen for the scene. $K$ turns normalized camera coordinates into pixels; distortion is an additional step. Reference: [Zhang, §2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf).
 
-## Distance, correspondance et estimation
+## Distance, correspondence and estimation
 
-Un détecteur localise des points ; un descripteur représente leur voisinage ;
-un matcher propose des paires ; une vérification géométrique teste leur cohérence.
-Un plus proche voisin n'est pas nécessairement la même structure physique.
-La distance doit correspondre à la représentation : euclidienne pour le SIFT
-classique, Hamming pour ORB avec tests binaires à deux points.
-Voir [SIFT](../40-features-matching/references/41-sift.md), [ORB](../40-features-matching/references/42-orb.md).
+A detector locates points; a descriptor represents their vicinity; a matcher proposes pairs; a geometric check tests their consistency. A nearest neighbor is not necessarily the same physical structure. The distance must correspond to the representation: Euclidean for the classic SIFT, Hamming for ORB with two-point binary tests. See [SIFT](../40-features-matching/references/41-sift.md), [ORB](../40-features-matching/references/42-orb.md).
 
-Un estimateur minimise un résidu choisi. Une estimation robuste tolère une
-partie d'observations incompatibles ; elle ne répare pas un modèle physique faux.
-Voir [RANSAC](../50-calibration-geometrie/references/51-ransac-homographie.md).
+An estimator minimizes a chosen residual. A robust estimate tolerates a portion of incompatible observations; it does not repair a false physical model. See [RANSAC](../50-calibration-geometrie/references/51-ransac-homographie.md).
 
-## Kalman et affectation
+## Kalman and assignment
 
-Un filtre de Kalman linéaire représente l'état estimé et sa covariance. Il
-prédit avec un modèle de mouvement, puis corrige avec une mesure et son bruit.
-Le gain traduit leur incertitude relative ; il ne choisit pas l'identité de
-l'objet mesuré. L'affectation est le problème séparé qui associe mesures et
-pistes, avec des observations non associées possibles.
+A linear Kalman filter represents the estimated state and its covariance. It predicts with a motion model, then corrects with a measurement and its noise. The gain reflects their relative uncertainty; it does not choose the identity of the measured object. Assignment is the separate problem that associates measures and tracks, with possible unassociated observations.
 
-Dans le cas scalaire, $K=P^-/(P^-+R)$,
-$u^+=u^-+K(z-u^-)$ et $P^+=(1-K)P^-$.
-$u^-,z,u^+$ sont ici des positions en pixels ; $P^-,R,P^+$ sont des variances
-en pixels carrés ; $K$ est sans unité. Ces relations supposent un modèle
-linéaire et les hypothèses de bruit appropriées. Elles illustrent la correction,
-pas tout le tracker [SORT](../110-tracking-association/references/111-sort.md).
-Référence : [SORT, §3.2](https://arxiv.org/abs/1602.00763).
+In the scalar case, $K=P^-/(P^-+R)$, $u^+=u^-+K(z-u^-)$ and $P^+=(1-K)P^-$. $u^-,z,u^+$ are here positions in pixels; $P^-,R,P^+$ are variances in square pixels; $K$ is without unit. These relationships assume a linear model and appropriate noise assumptions. They illustrate the correction, not the entire [SORT](../110-tracking-association/references/111-sort.md) tracker. Reference: [SORT, §3.2](https://arxiv.org/abs/1602.00763).
 
-## Prérequis et liens thématiques
+## Prerequisites and thematic links
 
-Un prérequis est nécessaire pour comprendre le raisonnement principal.
-Un lien thématique donne une connexion utile sans imposer un ordre de lecture.
-Le [parcours senior](Parcours-senior.md) donne un ordre complet, contrôlé sur les
-60 fiches, avec des critères de passage et trois intégrations. Les notions d'IoU
-précèdent NMS et SORT ; les bases du filtrage précèdent l'association. Cela
-n'exige pas de maîtriser toute l'AP pour comprendre Kalman ni tout l'ESKF pour
-commencer SORT. Les numéros des dossiers classent les thèmes, sans imposer cet
-ordre d'apprentissage.
+A prerequisite is necessary to understand the main reasoning. A thematic link gives a useful connection without imposing a reading order. The [Senior Course](Parcours-senior.md) gives a complete order, controlled on the 60 reference notes, with passing criteria and three integrations. The concepts of IoU precede NMS and SORT; the basics of filtering precede association. This does not require mastering all the AP to understand Kalman or all the ESKF to start SORT. The numbers of the files rank the themes, without imposing this learning order.

@@ -1,14 +1,14 @@
-# Détection et pose
+# Detection and pose
 
-Boîtes, affectation, posttraitement et points clés.
+Boxes, assignment, postprocessing and key points.
 
-| Sujet | Référence | Cartes | Pôles |
+| Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [NMS — supprimer des détections redondantes](81-nms.md) | [Lire](references/81-nms.md) | 6 | A, C, E |
-| [Détection : Faster R-CNN, familles YOLO et DETR](82-detection-fasterrcnn-yolo-detr.md) | [Lire](references/82-detection-fasterrcnn-yolo-detr.md) | 13 | A, C, E |
-| [Détection open-vocabulary et grounding](83-detection-open-vocabulary.md) | [Lire](references/83-detection-open-vocabulary.md) | 3 | A, D |
-| [Détection 3D, pose d’objet et pose articulée](84-detection-pose-3d.md) | [Lire](references/84-detection-pose-3d.md) | 4 | A, C |
+| [NMS — suppressing redundant detections](81-nms.md) | [Read](references/81-nms.md) | 6 | A, C, E |
+| [Detection: Faster R-CNN, YOLO families and DETR](82-detection-fasterrcnn-yolo-detr.md) | [Read](references/82-detection-fasterrcnn-yolo-detr.md) | 13 | A, C, E |
+| [Open-vocabulary detection and grounding](83-detection-open-vocabulary.md) | [Read](references/83-detection-open-vocabulary.md) | 3 | A, D |
+| [3D detection, object pose and articulated pose](84-detection-pose-3d.md) | [Read](references/84-detection-pose-3d.md) | 4 | A, C |
 
-Sous-deck : `CV::Pilote::80-detection-pose`. Statut : rédigé ; export et maîtrise non vérifiés.
+Subdeck: `CV::Pilote::80-detection-pose`. Status: drafted; device import and mastery unverified.
 
-[Accueil](../00-Accueil.md) · [Inventaire](../01-Parcours/Inventaire.md) · [Pôles](../01-Parcours/Poles-metiers.md).
+[Home](../00-Accueil.md) · [Inventory](../01-Parcours/Inventaire.md) · [Career tracks](../01-Parcours/Poles-metiers.md).

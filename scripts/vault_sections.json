@@ -1,16 +1,86 @@
 [
-  {"domaine": "d01", "dossier": "10-mathematiques-estimation", "titre": "Mathématiques et estimation", "description": "Conditionnement, moindres carrés, estimation robuste et incertitude."},
-  {"domaine": "d02", "dossier": "20-acquisition-images", "titre": "Formation et acquisition des images", "description": "Optique, projection, bruit, couleur, échantillonnage et synchronisation."},
-  {"domaine": "d03", "dossier": "30-traitement-image", "titre": "Traitement d'image classique", "description": "Filtres, gradients, morphologie, contours et transformations."},
-  {"domaine": "d04", "dossier": "40-features-matching", "titre": "Features, matching et recalage", "description": "Détection locale, descripteurs, correspondances et validation géométrique."},
-  {"domaine": "d05", "dossier": "50-calibration-geometrie", "titre": "Calibration et géométrie multivue", "description": "Intrinsèques, repères, distorsion, homographies, pose et reconstruction."},
-  {"domaine": "d06", "dossier": "60-vision-3d", "titre": "Vision 3D", "description": "Stéréo, profondeur, SfM, SLAM et recalage de nuages."},
-  {"domaine": "d07", "dossier": "70-reconnaissance-representations", "titre": "Reconnaissance et représentations", "description": "Descripteurs globaux, classification, retrieval et anomalies."},
-  {"domaine": "d08", "dossier": "80-detection-pose", "titre": "Détection et pose", "description": "Boîtes, affectation, posttraitement et points clés."},
-  {"domaine": "d09", "dossier": "90-segmentation", "titre": "Segmentation", "description": "Méthodes classiques, sémantique, instances et panoptique."},
-  {"domaine": "d10", "dossier": "100-mouvement-video", "titre": "Mouvement et vidéo", "description": "Flot optique, suivi de points, visibilité et compréhension temporelle."},
-  {"domaine": "d11", "dossier": "110-tracking-association", "titre": "Tracking et association", "description": "Mouvement, apparence, affectation et cycle de vie des pistes."},
-  {"domaine": "d12", "dossier": "120-generatif-multimodal", "titre": "Vision générative et multimodale", "description": "Diffusion, restauration, vision-langage et rendu neuronal."},
-  {"domaine": "d13", "dossier": "130-evaluation-fiabilite", "titre": "Données, évaluation et fiabilité", "description": "Protocoles, métriques, splits, incertitude et dérive."},
-  {"domaine": "d14", "dossier": "140-ingenierie-systemes", "titre": "Ingénierie des systèmes de vision", "description": "Contrats de données, profiling, déploiement et surveillance."}
+  {
+    "domaine": "d01",
+    "dossier": "10-mathematiques-estimation",
+    "titre": "Mathematics and estimation",
+    "description": "Packaging, least squares, robust estimation and uncertainty."
+  },
+  {
+    "domaine": "d02",
+    "dossier": "20-acquisition-images",
+    "titre": "Image formation and acquisition",
+    "description": "Optics, projection, noise, color, sampling and synchronization."
+  },
+  {
+    "domaine": "d03",
+    "dossier": "30-traitement-image",
+    "titre": "Classical image processing",
+    "description": "Filters, gradients, morphology, contours and transformations."
+  },
+  {
+    "domaine": "d04",
+    "dossier": "40-features-matching",
+    "titre": "Features, matching and registration",
+    "description": "Local detection, descriptors, matches and geometric validation."
+  },
+  {
+    "domaine": "d05",
+    "dossier": "50-calibration-geometrie",
+    "titre": "Calibration and multiview geometry",
+    "description": "Intrinsic, coordinate frames, distortion, homography, pose and reconstruction."
+  },
+  {
+    "domaine": "d06",
+    "dossier": "60-vision-3d",
+    "titre": "3D vision",
+    "description": "Stereo, depth, SfM, SLAM and registration of clouds."
+  },
+  {
+    "domaine": "d07",
+    "dossier": "70-reconnaissance-representations",
+    "titre": "Recognition and representations",
+    "description": "Global descriptors, classification, retrieval and anomalies."
+  },
+  {
+    "domaine": "d08",
+    "dossier": "80-detection-pose",
+    "titre": "Detection and pose",
+    "description": "Boxes, assignment, postprocessing and key points."
+  },
+  {
+    "domaine": "d09",
+    "dossier": "90-segmentation",
+    "titre": "Segmentation",
+    "description": "Classical, semantic, instances and panoptical methods."
+  },
+  {
+    "domaine": "d10",
+    "dossier": "100-mouvement-video",
+    "titre": "Motion and video",
+    "description": "optical flow, point tracking, visibility and temporal understanding."
+  },
+  {
+    "domaine": "d11",
+    "dossier": "110-tracking-association",
+    "titre": "Tracking and association",
+    "description": "Movement, appearance, assignment and life cycle of the tracks."
+  },
+  {
+    "domaine": "d12",
+    "dossier": "120-generatif-multimodal",
+    "titre": "Generative and multimodal vision",
+    "description": "Dissemination, restoration, vision-language and neuronal rendering."
+  },
+  {
+    "domaine": "d13",
+    "dossier": "130-evaluation-fiabilite",
+    "titre": "Data, evaluation and reliability",
+    "description": "Protocols, metrics, splits, uncertainty and drift."
+  },
+  {
+    "domaine": "d14",
+    "dossier": "140-ingenierie-systemes",
+    "titre": "Vision systems engineering",
+    "description": "Data contracts, profiling, deployment and monitoring."
+  }
 ]

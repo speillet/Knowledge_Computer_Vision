@@ -1,57 +1,61 @@
 # Knowledge Computer Vision
 
-Construire un vault Obsidian de connaissances et de flashcards pour progresser
-vers un niveau de Computer Vision Engineer senior.
+An Obsidian knowledge vault and detailed flashcards for progression toward
+senior computer vision engineering proficiency.
 
-Les fiches de référence et cartes détaillées couvrent le socle classique et
-moderne, en français, avec termes techniques originaux, équations expliquées,
-comparaisons et diagnostics. Les totaux actuels figurent dans le catalogue ci-dessous.
+The reference notes and flashcards cover classical and modern foundations in
+English, with original technical terms, explained equations, comparisons and
+diagnostic reasoning. Current totals appear in the catalogue below.
 
-Ouvrir le dossier [`vault/`](vault/00-Accueil.md) comme vault dans Obsidian,
-puis commencer par son accueil. Le [guide d'export](vault/01-Parcours/Guide-Anki.md)
-explique la construction d'un paquet `.apkg` pour **AnkiDroid**. La création
-et les mises à jour sont testées dans une collection Anki jetable ; le rendu
-sur Android reste à vérifier. La chaîne Obsidian_to_Anki reste documentée
-comme essai historique, avec des identités distinctes.
+Open [`vault/`](vault/00-Accueil.md) as a vault in Obsidian and start from its
+home page. The [export guide](vault/01-Parcours/Guide-Anki.md) explains how to
+build an `.apkg` package for **AnkiDroid**. Creation and updates are tested in a
+disposable Anki collection; rendering on Android still needs verification.
+The Obsidian_to_Anki route remains documented as a historical experiment with
+separate identities.
 
-Le vault suit l'organisation par thématique de
-[Knowledge_AI_Engineering](https://github.com/speillet/Knowledge_AI_Engineering) :
-14 dossiers numérotés avec index, cartes à la racine de chaque thème et fiches
-complètes dans `references/`. Chaque thème a son sous-deck Anki et ses états
-éditoriaux ; les variantes à approfondir restent visibles dans l’inventaire.
-Voir les [conventions de classement](docs/vault-layout.md).
+The vault follows the topic-based organization of
+[Knowledge_AI_Engineering](https://github.com/speillet/Knowledge_AI_Engineering):
+14 numbered folders with indexes, flashcards at the root of each topic, and
+complete reference notes in `references/`. Each topic has its own Anki subdeck
+and editorial status; variants requiring further study remain visible in the
+inventory. See the [layout conventions](docs/vault-layout.md).
 
-Le [parcours senior](vault/01-Parcours/Parcours-senior.md) ordonne les 60 sujets
-en neuf étapes, avec prérequis, critères de passage et cas d'intégration. Toutes
-les cartes ont un verso développé ; le noyau attendu permet de corriger le
-rappel sans réciter l'approfondissement entier.
+The [senior curriculum](vault/01-Parcours/Parcours-senior.md) orders the 60
+subjects into nine stages, with prerequisites, progression criteria and
+integration cases. Every flashcard has a detailed answer; the expected answer
+provides a grading rule without requiring recitation of every explanation.
 
-## Couverture actuelle
+The [English migration record](docs/english-translation.md) describes the scope
+and validation. Historical filenames, metadata keys, tags, deck names and Anki
+fields retain their spelling to preserve links and review history.
+
+## Current coverage
 
 <!-- cv-catalog:start -->
-**60 fiches et 282 cartes**, réparties dans 14 des 14 thématiques. Rédaction par agent ; export réel, rappel et maîtrise personnelle non validés.
+**60 reference notes and 282 flashcards**, spanning 14 of 14 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
 
-| Thématique | Fiches | Cartes |
+| Topic | Reference notes | Flashcards |
 | --- | ---: | ---: |
-| [Mathématiques et estimation](vault/10-mathematiques-estimation/00-index.md) | 4 | 26 |
-| [Formation et acquisition des images](vault/20-acquisition-images/00-index.md) | 3 | 11 |
-| [Traitement d'image classique](vault/30-traitement-image/00-index.md) | 3 | 11 |
-| [Features, matching et recalage](vault/40-features-matching/00-index.md) | 8 | 39 |
-| [Calibration et géométrie multivue](vault/50-calibration-geometrie/00-index.md) | 7 | 36 |
-| [Vision 3D](vault/60-vision-3d/00-index.md) | 4 | 19 |
-| [Reconnaissance et représentations](vault/70-reconnaissance-representations/00-index.md) | 5 | 18 |
-| [Détection et pose](vault/80-detection-pose/00-index.md) | 4 | 26 |
+| [Mathematics and estimation](vault/10-mathematiques-estimation/00-index.md) | 4 | 26 |
+| [Image formation and acquisition](vault/20-acquisition-images/00-index.md) | 3 | 11 |
+| [Classical image processing](vault/30-traitement-image/00-index.md) | 3 | 11 |
+| [Features, matching and registration](vault/40-features-matching/00-index.md) | 8 | 39 |
+| [Calibration and multiview geometry](vault/50-calibration-geometrie/00-index.md) | 7 | 36 |
+| [3D vision](vault/60-vision-3d/00-index.md) | 4 | 19 |
+| [Recognition and representations](vault/70-reconnaissance-representations/00-index.md) | 5 | 18 |
+| [Detection and pose](vault/80-detection-pose/00-index.md) | 4 | 26 |
 | [Segmentation](vault/90-segmentation/00-index.md) | 4 | 15 |
-| [Mouvement et vidéo](vault/100-mouvement-video/00-index.md) | 3 | 13 |
-| [Tracking et association](vault/110-tracking-association/00-index.md) | 5 | 23 |
-| [Vision générative et multimodale](vault/120-generatif-multimodal/00-index.md) | 3 | 10 |
-| [Données, évaluation et fiabilité](vault/130-evaluation-fiabilite/00-index.md) | 4 | 21 |
-| [Ingénierie des systèmes de vision](vault/140-ingenierie-systemes/00-index.md) | 3 | 14 |
+| [Motion and video](vault/100-mouvement-video/00-index.md) | 3 | 13 |
+| [Tracking and association](vault/110-tracking-association/00-index.md) | 5 | 23 |
+| [Generative and multimodal vision](vault/120-generatif-multimodal/00-index.md) | 3 | 10 |
+| [Data, evaluation and reliability](vault/130-evaluation-fiabilite/00-index.md) | 4 | 21 |
+| [Vision systems engineering](vault/140-ingenierie-systemes/00-index.md) | 3 | 14 |
 <!-- cv-catalog:end -->
 
-## Vérification locale
+## Local validation
 
-Python 3.9+, sans dépendance supplémentaire :
+Python 3.9+, with no additional dependencies:
 
 ```sh
 python3 scripts/check_vault.py
@@ -61,71 +65,71 @@ python3 -m unittest discover -s tests -v
 python3 examples/pilot_math.py
 ```
 
-Les [preuves et essais restants](vault/01-Parcours/Suivi-pilote.md) distinguent
-contrôles locaux, auto-revue, tests applicatifs et maîtrise personnelle.
+The [evidence and remaining trials](vault/01-Parcours/Suivi-pilote.md)
+distinguish local checks, agent self-review, application tests and personal mastery.
 
-Pour générer le paquet avec [uv](https://docs.astral.sh/uv/), sans modifier
-les dépendances de l'environnement courant :
+To generate the package with [uv](https://docs.astral.sh/uv/) without changing
+the dependencies of the current environment:
 
 ```sh
 uv run --no-project --with genanki==0.13.1 python scripts/build_apkg.py
-python3 scripts/build_apkg.py --verifier dist/CV-Pilote.apkg
+python3 scripts/build_apkg.py --verify dist/CV-Pilote.apkg
 ```
 
-Le fichier `dist/CV-Pilote.apkg` s'importe dans AnkiDroid ; les fichiers générés
-restent hors Git. Voir le [contrat et les vérifications](docs/export-apkg.md).
+Import `dist/CV-Pilote.apkg` into AnkiDroid. Generated files remain outside Git.
+See the [export contract and checks](docs/export-apkg.md).
 
-## Outils de travail
+## Working tools
 
-- [Conventions de contribution](CONTRIBUTING.md) : branches, commits et PR.
-- [Instructions pour les agents](AGENTS.md) : objectifs et règles du dépôt.
-- [Audit des outils](docs/tooling-audit.md) : skills installés, versions,
-  vérifications et configuration restante.
-- [Skill de revue des cartes](.agents/skills/revue-cartes/SKILL.md) :
-  `$revue-cartes` (Codex) ou `/revue-cartes` (Claude Code) audite, corrige
-  et propose d'enrichir une fiche et ses cartes.
-- [Skill du paquet Anki](.agents/skills/paquet-anki/SKILL.md) :
-  `$paquet-anki` construit, vérifie et compare les paquets ; une release
-  se publie sur demande.
+- [Contribution conventions](CONTRIBUTING.md): branches, commits and PRs.
+- [Agent instructions](AGENTS.md): repository objectives and rules.
+- [Tooling audit](docs/tooling-audit.md): installed skills, versions, checks and
+  remaining configuration.
+- [Flashcard review skill](.agents/skills/revue-cartes/SKILL.md):
+  `$revue-cartes` (Codex) or `/revue-cartes` (Claude Code) audits and corrects
+  a reference note and its flashcards, and proposes enrichments.
+- [Anki package skill](.agents/skills/paquet-anki/SKILL.md):
+  `$paquet-anki` builds, verifies and compares packages; releases are published
+  on request.
 
-## Spécification en cours
+## Current specification
 
-Le [brouillon de spécification](specs/001-cv-knowledge-base/spec.md) reprend
-le profil expérimenté, les objectifs et les choix pédagogiques confirmés.
-Il est accompagné de :
+The [draft specification](specs/001-cv-knowledge-base/spec.md) records the
+experienced learner profile, objectives and confirmed educational choices.
+Supporting documents include:
 
-- La [cartographie de couverture](specs/001-cv-knowledge-base/curriculum.md).
-- Le [contrat des fiches et cartes](specs/001-cv-knowledge-base/learning-design.md).
-- La [recherche sur l'export Obsidian–Anki](specs/001-cv-knowledge-base/research.md).
-- La [revue de pertinence et ses corrections](specs/001-cv-knowledge-base/review.md).
+- The [coverage map](specs/001-cv-knowledge-base/curriculum.md).
+- The [reference and flashcard contract](specs/001-cv-knowledge-base/learning-design.md).
+- The [Obsidian–Anki export research](specs/001-cv-knowledge-base/research.md).
+- The [relevance review and corrections](specs/001-cv-knowledge-base/review.md).
 
-Le [plan d'implémentation](specs/001-cv-knowledge-base/plan.md) et ses
-[tâches](specs/001-cv-knowledge-base/tasks.md) suivent le premier lot et la
-suite du pilote. Le catalogue complet, les extensions et la validation
-pédagogique restent à développer ; le contenu n'est pas déclaré exhaustif.
+The [implementation plan](specs/001-cv-knowledge-base/plan.md) and its
+[tasks](specs/001-cv-knowledge-base/tasks.md) describe the initial batch and pilot
+follow-up. The complete catalogue, extensions and educational validation still
+need work; the content is not declared exhaustive.
 
-GitHub Spec Kit 1.2.1 est initialisé pour Codex. Ses skills sont versionnables
-dans `.agents/skills/` ; ses modèles et scripts se trouvent dans `.specify/`.
-Leur [provenance et leur licence](.specify/NOTICE.md) sont conservées dans le dépôt.
-La constitution générée est encore un modèle à remplir avec
-`$speckit-constitution`, après clarification des principes du projet.
+GitHub Spec Kit 1.2.1 is initialized for Codex. Its skills are versioned in
+`.agents/skills/`; templates and scripts are in `.specify/`. Their
+[origin and license](.specify/NOTICE.md) are retained in this repository.
+The generated constitution remains a template to complete with
+`$speckit-constitution` after clarifying the project's principles.
 
-Les skills complémentaires de Matt Pocock, de commits et de PR sont installés
-au niveau utilisateur. Ils ne sont pas inclus dans un clone du dépôt ; leurs
-sources et révisions sont consignées dans l'audit.
+Matt Pocock's complementary skills and the commit and PR skills are installed
+at user level. They are not included in a repository clone; their sources and
+revisions are recorded in the audit.
 
-## Poursuivre le cadrage
+## Continue scoping
 
-1. Relire le brouillon et sa cartographie ; utiliser `$grill-me` pour les
-   décisions ouvertes, notamment le pilote et l'export.
-2. Définir les principes avec `$speckit-constitution` et affiner le brouillon
-   avec `$speckit-clarify`. Les étapes suivantes sont
-   `$speckit-plan`, `$speckit-tasks` et `$speckit-analyze` selon le besoin.
-3. Pour utiliser également `$to-spec`, configurer d'abord sa destination avec
-   `$setup-matt-pocock-skills`. Relier les artefacts plutôt que maintenir deux
-   spécifications contradictoires.
+1. Read the draft and coverage map; use `$grill-me` for open decisions,
+   including the pilot and export workflow.
+2. Define principles with `$speckit-constitution` and refine the draft with
+   `$speckit-clarify`. Subsequent steps are `$speckit-plan`, `$speckit-tasks`
+   and `$speckit-analyze` as needed.
+3. To also use `$to-spec`, configure its destination first with
+   `$setup-matt-pocock-skills`. Link artifacts instead of maintaining
+   conflicting specifications.
 
-Sur la machine auditée, Context7 est configuré comme serveur MCP distant dans Codex.
-Cette configuration utilisateur n'est pas embarquée dans un clone. Context7 sert à vérifier
-la documentation des outils et bibliothèques utilisés. Les notions scientifiques
-doivent s'appuyer sur des articles et autres sources primaires.
+On the audited machine, Context7 is configured as a remote MCP server in Codex.
+This user configuration is not included in a clone. Use Context7 to verify
+the documentation of tools and libraries; base scientific concepts on papers
+and other primary sources.

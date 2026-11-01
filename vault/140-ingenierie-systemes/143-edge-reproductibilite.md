@@ -1,89 +1,97 @@
-# Déploiement edge, compression et surveillance — cartes
+# Flashcards — Edge deployment, compression and monitoring
 
-Fiche : [[140-ingenierie-systemes/references/143-edge-reproductibilite|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::140-ingenierie-systemes
 
 ## CV-DEPLOIEMENT-001
 
-Objectif : borner un gain de système. Famille : raisonnement. Provenance : agent.
+Objective: Limiting a system gain. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DEPLOIEMENT-001
-Question: Si l’inférence représente 10 % du temps moyen et devient deux fois plus rapide sans autre coût, quel gain global idéal prévoir ?
-Reponse: **Noyau attendu** : Environ 1/0,95 = 1,053×, selon le modèle d’Amdahl annoncé.
+Question: Inference accounts for 10% of mean processing time and becomes twice as fast with no other cost. What is the ideal overall speedup?
+Reponse: **Expected answer**: Approximately 1/0,95 = 1,053×, depending on Amdahl model announced.
 
-**Approfondissement** : Le p99 et les files peuvent réagir autrement ; vérifier par mesure complète plutôt qu’extrapoler le gain d’un kernel.
+**Further explanation**: The p99 and the queues can react differently; check by full measurement rather than extrapolate the gain of a kernel.
 
-**Calcul interprété** : normaliser le temps initial à un. La part non accélérée vaut 0,9 ; l'inférence passe de 0,1 à 0,05. Le temps total devient 0,95, soit une réduction de 5 %, et le facteur de vitesse est son inverse. L'étage accéléré n'occupait qu'une petite part du travail total.
+**Calculation interpreted**: normalize the initial time to one. The non-accelerated share is 0,9; the inference goes from 0,1 to 0,05. The total time becomes 0,95, a reduction of 5%, and the speed factor is its inverse. The accelerated floor occupied only a small part of the total work.
 
-**Conséquence produit** : profiler avant de compresser évite d'investir dans une optimisation dont le gain global est limité dans ce modèle. De nouveaux surcoûts de conversion peuvent même annuler le bénéfice. À l'inverse, réduire une ressource critique dans un système concurrent peut modifier les files d'une façon que ce calcul additif ne décrit pas. Il s'agit donc d'une borne de raisonnement sous hypothèses explicites, pas d'une prédiction de toute la distribution de latence. Confirmer le gain sur la même charge et le même contrat de qualité.
+**Product consequence**: profiling before compressing avoids investing in optimization whose overall gain is limited in this model. New additional conversion costs can even nullify the profit. Conversely, reducing a critical resource in a competing system can modify queues in a way that this additive calculation does not describe. It is therefore a line of reasoning under explicit assumptions, not a prediction of the entire latency distribution. Confirm the gain on the same load and quality contract.
 
-**Erreurs bloquantes** : Annoncer un pipeline deux fois plus rapide.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; Dérivation algébrique du projet pour le modèle séquentiel de la fiche : temps normalisé après changement $(1-f)+f/s$, soit $0,9+0,1/2=0,95$ ; [Amdahl (1967), p. 483](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf) pour la limite imposée par la partie non accélérée.
+**Boundary and additional cost**: in the same sequential model, even an infinite acceleration of the fraction $f=0,1$ limits the global factor to $1/(1-f)=1/0,9\simeq1,111$. If the optimization adds a standardized cost $c$, the time becomes $(1-f)+f/s+c$; for $s=2$, all $c\ge0,05$ cancels the gain of this example. These calculations guide the choice of work to be optimized. They do not predict a competing queue: near saturation, a small reduction in service can greatly change the wait. Then measuring sustained regime, time and quality confirms the practical scope of this analytical marker.
+
+**Blocking errors**: Announce a pipeline twice as fast.
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Full reference]]; derivation project algebraic for the sequential model of the reference note: normalized time after change $(1-f)+f/s$, i.e. $0,9+0,1/2=0,95$; [Amdahl (1967), p. 483](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf) for the limit imposed by the non-accelerated part; [NVIDIA TensorRT, benchmarking, measurements and perimeter, consulted on 2026-10-30; Amdahl, manifesto and signatures built by the project](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d14 famille::raisonnement cv_id::CV-DEPLOIEMENT-001 provenance::agent pole::A pole::C pole::E pole::F
 END
 
 ## CV-DEPLOIEMENT-002
 
-Objectif : relier compression et accélération. Famille : comparaison. Provenance : agent.
+Objective: Linking compression and acceleration. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DEPLOIEMENT-002
-Question: Pourquoi moins de poids après pruning ne garantit-il pas une inférence plus rapide ?
-Reponse: **Noyau attendu** : Le backend doit exploiter la structure de sparsité et les kernels disponibles ; conversions ou accès mémoire peuvent dominer.
+Question: Why does reducing the number of weights through pruning not guarantee faster inference?
+Reponse: **Expected answer**: The backend must exploit the sparsity structure and available kernels; conversions or memory access may dominate.
 
-**Approfondissement** : Mesurer graphe réel et matériel cible, qualité comprise ; taille disque et temps sont des grandeurs différentes.
+**Further explanation**: Measure real graph and target hardware, including quality; disk size and time are different sizes.
 
-**Pourquoi le comptage ne suffit pas** : un poids nul n'est pas automatiquement une multiplication évitée par le kernel. Le motif de sparsité, la forme des tenseurs et les opérations disponibles déterminent si le matériel peut exploiter ce retrait. Une représentation creuse peut aussi ajouter indexation et transferts.
+**Why counting is not enough**: A zero weight is not automatically a multiplication avoided by the kernel. The pattern of sparsity, the shape of the tensors and the operations available determine whether the equipment can exploit this removal. A sparse representation can also add indexing and transfers.
 
-**Comparaison proposée** : inspecter le graphe réellement exécuté et mesurer la même tâche sur le matériel cible, avec qualité et mémoire. Distinguer pruning structuré, qui peut changer les dimensions du calcul, et sparsité non structurée, dont l'exploitation exige un support approprié. Vérifier les couches qui dominent réellement le temps. Une réduction du nombre de paramètres peut rester utile pour stockage ou distribution sans accélérer l'inférence. Les affirmations de vitesse doivent donc être accompagnées du schéma, du backend et du protocole, plutôt que déduites d'un pourcentage de zéros indépendant de l'implémentation.
+**Proposed comparison**: inspect the graph actually executed and measure the same task on the target hardware, with quality and memory. Distinguish structured pruning, which can change the dimensions of the calculation, and unstructured sparsity, which operation requires appropriate support. Check the layers that really dominate time. A reduction in the number of parameters can remain useful for storage or distribution without speeding up inference. Speed statements should therefore be accompanied by the schema, backend, and protocol, rather than inferred from an implementation-independent zero percentage.
 
-**Erreurs bloquantes** : Déduire automatiquement vitesse et énergie du taux de poids nuls.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [TensorRT 8.6.1, §6.10 Sparsity](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-861/developer-guide/index.html#structured-sparsity) : les tactiques creuses ne sont pas systématiquement sélectionnées car elles peuvent être plus lentes.
+**Dimensions and zeros**: Removing entire channels can reduce the dimensions of tensors and the work of dense kernels, if all dependent layers are adapted. Setting isolated weights to zero often retains the same dimensions and the same number of operations performed by a dense kernel. A sparse representation can avoid calculations but add less regular clues and memory access. Compare the actually supported pattern and run trace, not just the number of non-zero parameters. Distillation can help a smaller model regain quality, but it is another learning intervention to be evaluated separately from pruning.
+
+**Blocking errors**: Automatically deducts speed and energy from the zero weight ratio.
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Full reference]]; [TensorRT 8.6.1, §6.10 Sparsity](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-861/developer-guide/index.html#structured-sparsity): Hollow tactics are not systematically selected because they can be slower; [NVIDIA TensorRT, benchmarking, measurements and perimeter, consulted on 2026-10-30; Amdahl, manifesto and signatures built by the project](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d14 famille::comparaison cv_id::CV-DEPLOIEMENT-002 provenance::agent pole::A pole::C pole::E pole::F
 END
 
 ## CV-DEPLOIEMENT-003
 
-Objectif : versionner un système complet. Famille : pratique. Provenance : agent.
+Objective: version a complete system. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DEPLOIEMENT-003
-Question: Que faut-il versionner pour reproduire une sortie de vision au-delà des poids ?
-Reponse: **Noyau attendu** : Prétraitements/repères, architecture, taxonomie, posttraitements/seuils, runtime et dépendances pertinentes, ainsi qu’une entrée de référence.
+Question: Beyond model weights, what must be versioned to reproduce a vision system's output?
+Reponse: **Expected answer**: Pre-processing/coordinate frames, architecture, taxonomy, post-processing/thresholds, runtime and relevant dependencies, as well as a reference entry.
 
-**Approfondissement** : Tester compatibilité et rollback avant déploiement ; une différence de resize ou BGR/RGB peut changer la décision.
+**Further explanation**: Test compatibility and rollback before deployment; a difference in resize or BGR/RGB may change the decision.
 
-**Exemple de régression** : des poids identiques peuvent produire une autre décision si l'entrée passe de RGB à BGR, si les boîtes sont décodées dans un autre repère ou si les indices de classes changent. Le modèle exploité est donc un ensemble de contrats et d'artefacts autour du réseau.
+**Example of regression**: Identical weights may produce another decision if the input changes from RGB to BGR, if the boxes are decoded in another coordinate frame, or if the class indices change. The model used is therefore a set of contracts and artifacts around the network.
 
-**Procédure proposée** : conserver une entrée témoin et des sorties de référence à plusieurs étapes, puis comparer une nouvelle version avant de la déployer. Versionner paramètres et dépendances qui changent ces sorties, avec le format attendu par le consommateur. Prévoir compatibilité et retour arrière de toute la chaîne, et pas seulement des poids. Une égalité exacte peut ne pas être réaliste entre toutes les cibles numériques ; définir une tolérance liée à l'usage et examiner les décisions proches du seuil. Ce contrôle facilite l'attribution d'une régression et la reproduction par un autre ingénieur.
+**Proposed procedure**: Keep a multi-step reference input and outputs, then compare a new version before deploying it. Version parameters and dependencies that change these outputs, with the format expected by the consumer. Provide compatibility and backtracking of the entire chain, not just weights. An exact equality may not be realistic between all numerical targets; define usage-related tolerance and review decisions close to the threshold. This check facilitates the assignment of a regression and reproduction by another engineer.
 
-**Erreurs bloquantes** : Considérer les poids comme l’unique artefact du modèle exploité.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; [The ML Test Score, Model/Infra tests et rollback](https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf) ; liste de contrats adaptée par le projet.
+**Manifeste reproductible**: Link a version to weight and configuration footprints, input/output contracts, taxonomy, postprocessing parameters, and execution environment. Keeping a sample entry with the relevant intermediate results helps locate the first divergence between versions. Define numerical tolerance and decision tolerance; they are not equivalent near a threshold. The rollback must restore the compatible set, as returning to old weights alone with new class indices can retain a regression. A back-test on a test line verifies this contract without assuming that it will work properly in production.
+
+**Blocking errors**: Consider the weights as the only artifact of the model exploited.
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Full reference]]; [The ML Test Score, Model/Infra tests and rollback](https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf); list of contracts adapted by the project; [NVIDIA TensorRT, benchmarking, measurements and perimeter, consulted on 2026-10-30; Amdahl, manifesto and signatures built by the project](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d14 famille::pratique cv_id::CV-DEPLOIEMENT-003 provenance::agent pole::A pole::C pole::E pole::F
 END
 
 ## CV-DEPLOIEMENT-004
 
-Objectif : tester le régime edge. Famille : diagnostic. Provenance : agent.
+Objective: Test the edge. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-DEPLOIEMENT-004
-Question: Un benchmark bref passe mais le débit chute après une heure sur edge. Quelles traces recueillir ?
-Reponse: **Noyau attendu** : Température/fréquences, charge/mémoire, transferts et files, avec qualité et timestamps de bout en bout.
+Question: A short benchmark passes, but throughput drops after an hour on an edge device. Which traces should be collected?
+Reponse: **Expected answer**: Temperature/frequency, load/memory, transfers and queues, with quality and end-to-end timestamps.
 
-**Approfondissement** : Distinguer throttling, fuite ou accumulation de retard ; répéter le scénario représentatif après correction.
+**Further explanation**: Distinguish throttling, leakage or accumulation of delay; repeat the representative scenario after correction.
 
-**Pourquoi la durée compte** : l'état thermique, l'occupation mémoire et les files peuvent évoluer après le démarrage. Une mesure courte sur un appareil froid ne décrit donc pas nécessairement son régime soutenable. Une baisse de fréquence, une fuite ou une accumulation d'attente produisent des signatures différentes.
+**Why Duration Matters**: Thermal state, memory occupation and queues can change after boot. A short measurement on a cold device does not necessarily describe its sustainable diet. A drop in frequency, a leak, or a build-up of waiting time produce different signatures.
 
-**Enquête proposée** : tracer simultanément température, fréquences, mémoire, débits par étape et âge des frames, sur une charge et une durée représentatives. Repérer quel changement précède la dégradation, puis modifier une hypothèse à la fois. Comparer par exemple une file bornée à la politique initiale sans changer le modèle, ou vérifier le régime thermique selon le dispositif. Confirmer ensuite qualité et délai complets. Une cause de calcul n'exclut pas une cause de données ; le système doit conserver entrées et configuration pour expliquer les échecs, sans annoncer un diagnostic unique depuis le seul FPS final.
+**Proposed investigation**: simultaneously plotting temperature, frequencies, memory, step rates and frame age, over a representative load and duration. Identify which change precedes the degradation, and then modify one hypothesis at a time. For example, compare a limited queue to the initial policy without changing the model, or check the thermal regime according to the device. Then confirm full quality and time. A computational cause does not rule out a data cause; the system must retain inputs and configuration to explain failures, without announcing a single diagnosis from the final FPS alone.
 
-**Erreurs bloquantes** : Déclarer le matériel suffisant sur un test froid isolé.
-Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Fiche complète]] ; Diagnostic proposé par le projet ; [Jetson Linux r36.4, Thermal Management](https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html) pour le mécanisme thermique, sans supposer cette plateforme dans tous les déploiements.
+**Signatures temporelles**: A frequency drop correlated with a thermal rise supports a hypothesis of power or temperature limitation; continuous memory growth suggests another investigation; stable memory with increasing frame age may signal a queue overload. These correlations guide the trials without establishing a single cause. Replaying the same load over a sufficient period of time and changing one factor at a time makes it possible to compare start and steady speed. Also keep accurate, drops and outputs, because holding the rate by abandoning more images changes the service rendered. Validation is about complete sustainable behavior, not just about the time of the first network pass.
+
+**Blocking errors**: Declare sufficient material on an isolated cold test.
+Source: [[140-ingenierie-systemes/references/143-edge-reproductibilite|Full reference]]; Diagnosis proposed by the project; [Jetson Linux r36.4, Thermal Management](https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html) for the thermal mechanism, without assuming this platform in all deployments; [NVIDIA TensorRT, benchmarking, measurements and perimeter, consulted on 2026-10-30; Amdahl, manifesto and signatures built by the project](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), consulted the 2026-10-30.
 Tags: cv::pilote cv::d14 famille::diagnostic cv_id::CV-DEPLOIEMENT-004 provenance::agent pole::A pole::C pole::E pole::F
 END

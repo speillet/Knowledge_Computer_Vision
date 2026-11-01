@@ -1,89 +1,97 @@
-# Détecteurs locaux, descripteurs et matchers — cartes
+# Flashcards — Local detectors, descriptors and matchers
 
-Fiche : [[40-features-matching/references/43-detecteurs-matchers|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[40-features-matching/references/43-detecteurs-matchers|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::40-features-matching
 
 ## CV-MATCHING-001
 
-Objectif : interpréter la matrice de structure. Famille : raisonnement. Provenance : agent.
+Objective: interpret the structure matrix. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MATCHING-001
-Question: Pourquoi un coin localise-t-il mieux un déplacement 2D qu’une arête seule dans un modèle par gradients ?
-Reponse: **Noyau attendu** : Deux directions de variation contraignent le mouvement ; sur une arête, le déplacement tangent est peu observable.
+Question: In a gradient-based model, why does a corner constrain 2D displacement better than an isolated edge?
+Reponse: **Expected answer**: Two directions of variation constrain the movement; on an edge, the tangent displacement is hardly observable.
 
-**Approfondissement** : Inspecter les valeurs propres de la matrice locale, pas seulement le nombre de points détectés.
+**Further explanation**: Inspect the eigenvalues of the local matrix, not just the number of points detected.
 
-**Modèle local** : pour un petit déplacement $d$, la variation photométrique se rapproche d'une forme quadratique $d^TMd$. La matrice $M$ rassemble les produits des gradients dans le voisinage. Ses directions propres indiquent les directions de déplacement qui changent beaucoup ou peu l'apparence.
+**Local model**: for a small displacement $d$, the photometric variation is close to a quadratic form $d^TMd$. The matrix $M$ gathers the products of the gradients in the vicinity. Its own directions indicate the directions of movement that change the appearance much or little.
 
-**Exemple construit** : sur un bord vertical uniforme, déplacer le patch horizontalement change son contenu ; le déplacer le long du bord peut presque le laisser identique. Un coin visible présente au contraire des changements dans deux directions, ce qui aide à localiser un déplacement. Cela n'implique pas qu'il soit unique dans l'image : les coins d'une grille peuvent tous se ressembler. Distinguer donc information locale de localisation et ambiguïté d'association entre images. Une fenêtre mal éclairée, occultée ou trop grande peut également invalider le petit modèle photométrique malgré des valeurs propres favorables.
+**Constructed example**: On a uniform vertical edge, moving the patch horizontally changes its contents; moving it along the edge can almost leave it the same. A visible corner shows changes in two directions, which helps locate a move. This does not imply that it is unique in the image: the corners of a grid can all look the same. So distinguish local location information and ambiguity of association between images. A poorly lit, obscured or too large window can also invalidate the small photometric model despite favorable eigenvalues.
 
-**Erreurs bloquantes** : Confondre un fort gradient unique et deux contraintes indépendantes.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV Harris, théorie](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html) ; [OpenCV Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html) ; [OpenCV matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+**Link to the aperture problem**: The linearized luminance constant gives $I_xu+I_yv+I_t=0$, an equation for two displacement components. On an edge, the neighboring gradients are almost parallel, so stacking their equations does not add a second independent direction. A corner brings different gradient orientations and can make the local system invertible. This reasoning assumes a movement common to the patch and small variations between images. A window through two objects can have a well-conditioned tensor but no longer respect the single movement. The corner score should be read with this model, and not as a universal utility score for all estimators.
+
+**Blocking errors**: Confound a strong single gradient and two independent stresses.
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]] ; [OpenCV Harris, theory](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html) ; [OpenCV Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html) ; [OpenCV matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-MATCHING-001 provenance::agent pole::B pole::E
 END
 
 ## CV-MATCHING-002
 
-Objectif : séparer détecteur et descripteur. Famille : comparaison. Provenance : agent.
+Objective: separate detector and descriptor. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MATCHING-002
-Question: Pourquoi FAST et BRIEF ne sont-ils pas deux alternatives remplissant exactement le même rôle ?
-Reponse: **Noyau attendu** : FAST localise des points ; BRIEF décrit un patch en tests binaires.
+Question: Why are FAST and BRIEF not alternatives that perform exactly the same role?
+Reponse: **Expected answer**: FAST locates points; BRIEF describes a patch in binary tests.
 
-**Approfondissement** : Un pipeline peut les combiner, avec orientation et échelle selon la méthode ; un matcher reste ensuite nécessaire.
+**Further explanation**: A pipeline can combine them, with orientation and scale depending on the method; then a matcher remains necessary.
 
-**Décomposition des entrées et sorties** : FAST prend une image et repère des positions candidates à partir de comparaisons locales. BRIEF prend des voisinages autour de positions choisies et produit des chaînes de tests binaires. Un matcher compare ensuite ces chaînes, puis une étape géométrique examine si les paires expliquent une transformation plausible.
+**Breakdown of Inputs and Outputs**: FAST takes an image and coordinate frame candidate positions from local comparisons. BRIEF takes neighborhoods around selected positions and produces binary test strings. A matcher then compares these strings, and then a geometric step examines whether the pairs explain a plausible transformation.
 
-**Exemple de diagnostic construit** : si aucune position n'est détectée sur une pièce floue, changer la distance du matcher ne peut pas créer les keypoints manquants. Si les points sont stables mais les descripteurs tournent mal avec la pièce, le défaut peut être dans la description ou son repère. Décrire chaque étape par son contrat évite de remplacer un composant qui ne traite pas la cause observée. Une chaîne complète comme ORB ajoute des choix de pyramide et d'orientation ; elle ne rend pas FAST et BRIEF synonymes.
+**Example of a built diagnosis**: If no position is detected on a fuzzy piece, changing the distance of the matcher cannot create the missing keypoints. If the points are stable but the descriptors go wrong with the part, the defect may be in the description or its coordinate frame. Describing each step by its contract avoids replacing a component that does not address the observed cause. A complete string like ORB adds pyramid and orientation choices; it does not make FAST and BRIEF synonymous.
 
-**Erreurs bloquantes** : Attribuer des correspondances géométriquement vérifiées à un détecteur seul.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV 4.13.0, FAST, Feature Detection](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html) ; [OpenCV 4.13.0, BRIEF, Theory](https://docs.opencv.org/4.13.0/dc/d7d/tutorial_py_brief.html).
+**Expected equivariance and invariance**: If an image is geometrically transformed by $T$, a repeatable detector should find the transformed positions $T(p)$; it should therefore not produce the same numerical coordinates. On the contrary, the descriptor aims at a comparable representation of the corresponding neighborhoods after the planned standardizations. Confusing these two properties misconstrues a rotation test: the coordinates should change, while the description should stay close enough. Too much invariance can also remove distinctive information and make several patches similar. The aim is not to make all descriptors identical under any transformation, but to keep discrimination in the field of variations useful.
+
+**Blocking errors**: Assign geometrically verified matches to a detector alone.
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, FAST, Feature Detection](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html); [OpenCV 4.13.0, BRIEF, Theory](https://docs.opencv.org/4.13.0/dc/d7d/tutorial_py_brief.html); [OpenCV 4.13, Feature Matching, BF/FLANN, metrics and filters; Context7 check](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-MATCHING-002 provenance::agent pole::B pole::E
 END
 
 ## CV-MATCHING-003
 
-Objectif : mesurer une recherche approximative. Famille : evaluation. Provenance : agent.
+Objective: Measure an approximate search. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MATCHING-003
-Question: Que vérifier si FLANN accélère le matching mais dégrade le recalage ?
-Reponse: **Noyau attendu** : Compatibilité de l’index et de la distance, rappel des voisins, filtre de correspondances et succès géométrique final.
+Question: What should be checked if FLANN accelerates matching but degrades registration?
+Reponse: **Expected answer**: Index and distance compatibility, neighbor recall, match filter and final geometric success.
 
-**Approfondissement** : Comparer temps de construction et requêtes, mémoire et coût total ; une recherche plus rapide peut changer le ratio entre voisins.
+**Further explanation**: Compare build time and queries, memory, and total cost; faster search can change the neighbor ratio.
 
-**Pourquoi l'approximation intervient** : un index rapide explore moins de candidats qu'une recherche exhaustive. Il peut manquer le meilleur voisin ou le concurrent utilisé pour estimer l'ambiguïté. Un ratio apparemment meilleur peut ainsi résulter d'un deuxième voisin trop éloigné, et non d'une correspondance plus fiable.
+**Why the approximation is taking place**: A fast index explores fewer candidates than a comprehensive search. He may miss the best neighbor or competitor used to estimate ambiguity. A seemingly better ratio can thus result from a second neighbor that is too far away, and not from a more reliable match.
 
-**Ablation proposée** : conserver descripteurs et images, recalculer les deux voisins par recherche exacte sur un échantillon, puis comparer les paires avant et après filtrage. Examiner enfin les inliers et l'erreur sur la région utile. Faire varier le budget de recherche sans changer simultanément le détecteur. Inclure construction de l'index et éventuelles reconstructions dans le temps total. Un recul du succès géométrique peut venir de l'approximation, d'une mauvaise métrique ou de données ambiguës ; la comparaison contrôlée sert à les départager plutôt qu'à déclarer FLANN incorrect en général.
+**Proposed deletion**: preserve descriptors and images, recalculate the two neighbors by exact search on a sample, and then compare the pairs before and after filtering. Finally examine the inliers and the error on the useful region. Change the search budget without changing the detector simultaneously. Include index construction and possible reconstructions in total time. A setback in geometric success may come from approximation, poor metrics, or ambiguous data; the controlled comparison serves to separate them rather than declaring FLANN incorrect in general.
 
-**Erreurs bloquantes** : Évaluer seulement le temps de requête ou le nombre de matches.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html) ; protocole aval et effet sur le ratio : raisonnements du projet.
+**Measuring the Cascade Effect**: on the same requests, keep successively the identity of the two neighbors, the decision of the ratio filter, the insider status and the reserved geometric error. This track allows you to locate where a search difference becomes a product error. If the index finds the exact neighbors but the registration changes, consider order of matches, separation of the ex æquo and randomness of the robust estimate. If neighbors differ, only increasing the budget or redoing the exact distances on additional candidates is a more targeted ablation. An identical recall average may still mask the loss of rare distinguishing points that are decisive for lifting a symmetry.
+
+**Blocking errors**: Evaluate only the request time or the number of matches.
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); downstream protocol and effect on ratio: project reasonings.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-MATCHING-003 provenance::agent pole::B pole::E
 END
 
 ## CV-MATCHING-004
 
-Objectif : choisir un contrôle géométrique. Famille : diagnostic. Provenance : agent.
+Objective: choose a geometric check. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-MATCHING-004
-Question: Deux logos répétés produisent des descripteurs proches. Quel composant permet de tester le modèle physique des correspondances ?
-Reponse: **Noyau attendu** : Une vérification géométrique adaptée à la scène, avec résidus, seuils et couverture ; le matcher seul ne le garantit pas.
+Question: Two repeated logos produce similar descriptors. Which component can test a physical model of the correspondences?
+Reponse: **Expected answer**: A geometric check adapted to the scene, with residuals, thresholds and cover; the matcher alone does not guarantee it.
 
-**Approfondissement** : Une symétrie peut rester cohérente ; chercher une observation distinctive ou une contrainte indépendante.
+**Further explanation**: A symmetry can remain consistent; look for a distinctive observation or independent constraint.
 
-**Ce que teste la géométrie** : une homographie pour un plan, ou une contrainte multivue appropriée, relie les positions des candidats dans les images. Le résidu exprime leur désaccord avec ce modèle dans une unité définie. Un matcher choisit des voisins dans une représentation d'apparence ; ces deux problèmes sont différents.
+**What the Geometry Tests**: A homography for a plane, or an appropriate multiview constraint, links candidate positions in images. The residual expresses their disagreement with this model in a defined unit. A matcher chooses neighbors in an appearance representation; these two problems are different.
 
-**Limite construite** : deux logos identiques sur un même support peuvent produire un groupe de matches et une transformation cohérents mais correspondant au mauvais logo. Un modèle géométrique ne résout pas nécessairement une symétrie de la scène. Chercher une marque unique, une position attendue ou une observation supplémentaire qui distingue les hypothèses. Contrôler aussi le support spatial des points et des observations réservées. Cette étape fournit des raisons d'accepter une transformation pour un usage précis, sans transformer automatiquement le consensus en preuve d'identité de l'objet.
+**Limite construite**: Two identical logos on the same medium can produce a coherent group of matches and a transformation that matches the wrong logo. A geometric model does not necessarily resolve a symmetry of the scene. Look for a single brand, an expected position, or an additional observation that distinguishes assumptions. check also supports spatial points and reserved observations. This step provides reasons for accepting a transformation for a specific purpose, without automatically transforming the consensus into proof of the object's identity.
 
-**Erreurs bloquantes** : Déduire la validité physique de la réciprocité des plus proches voisins.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Fiche complète]] ; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html) ; scénario de symétrie et vérification indépendante : raisonnements du projet.
+**Choosing the right residual**: for a $H$ homography sending the image A to B, $e_i=\|\pi(H\tilde p_i)-q_i\|_2$ is a transfer error in B pixels, with $\pi$ the homogeneous division. An epipolar geometry imposes another constraint, and PnP combines points 3D and calibrated projection. Reusing a threshold without announcing the residual changes what “inlier” means. The geometric test checks for compatibility conditional to the model; one symmetry can provide another set equally compatible. Adding an independent constraint is then a change in available information, while tightening the threshold only changes the tolerance of the same test.
+
+**Blocking errors**: Deduct the physical validity of the reciprocity of the nearest neighbors.
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); symmetry scenario and independent verification: project reasoning.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-MATCHING-004 provenance::agent pole::B pole::E
 END

@@ -1,9 +1,6 @@
-"""Contrôles du contrat documentaire du pilote, sans dépendance externe.
+"""Check the pilot document contract without external dependencies.
 
-Le sous-ensemble pris en charge : répertoires thématiques de vault_sections.json,
-front matter plat, liens Markdown simples, wikilinks depuis la racine et blocs
-START/END du modèle CV-Pilote.
-Ce contrôleur n'est ni un parseur Markdown général ni un synchroniseur Anki.
+The supported subset: vault_sections.json thematic directories, flat front matter, simple Markdown links, wikilinks from the root, and START/END blocks of the CV-Pilote model. This controller is neither a general Markdown parser nor an Anki synchronizer.
 """
 
 import argparse
@@ -20,13 +17,19 @@ SECTION_BY_FOLDER = {section["dossier"]: section for section in SECTIONS}
 FIELDS = ["ID", "Question", "Reponse", "Source"]
 FAMILIES = {"comprehension", "raisonnement", "algorithme", "comparaison",
             "diagnostic", "pratique", "evaluation", "conception"}
-RUBRICS = ["Noyau attendu", "Approfondissement", "Erreurs bloquantes"]
+FAMILY_TAGS = {
+    "understanding": "comprehension", "reasoning": "raisonnement",
+    "algorithm": "algorithme", "comparison": "comparaison", "diagnosis": "diagnostic",
+    "practice": "pratique", "evaluation": "evaluation", "design": "conception",
+}
+HEADER = re.compile(r"^Objective: (.+?) Family: ([a-z]+)\. Provenance: (\S+?)\.$", re.M)
+RUBRICS = ["Expected answer", "Further explanation", "Blocking errors"]
 META_FIELDS = {"id", "type", "domaine", "priorite", "profondeur", "statut",
                "provenance", "revision", "tags", "poles"}
 
 
 def parse_poles(value):
-    """Liste YAML simple de lettres, avec guillemets facultatifs ; pas du YAML général."""
+    """Simple YAML list of letters, with optional quotation marks; not the general YAML."""
     if not value.startswith("[") or not value.endswith("]"):
         return None
     values = [item.strip().strip("\"'") for item in value[1:-1].split(",")]
@@ -44,7 +47,7 @@ def wiki_target(link):
 
 
 def check_vault(root):
-    """Retourne erreurs et compteurs ; les échecs scientifiques sont hors portée."""
+    """Return errors and counts; scientific accuracy is outside this check."""
     root = Path(root).resolve()
     errors = []
     files = sorted(root.rglob("*.md"))
@@ -65,7 +68,7 @@ def check_vault(root):
         if wiki and not candidate.suffix:
             candidate = candidate.with_suffix(".md")
         if not candidate.is_relative_to(root) or not candidate.is_file():
-            fail(path, f"lien local absent ou hors vault : {target}")
+            fail(path, f"missing local link or outside vault: {target}")
 
     for path in files:
         text = path.read_text(encoding="utf-8")
@@ -73,13 +76,13 @@ def check_vault(root):
         is_card_file = (path.parent.parent == root and path.parent.name in SECTION_BY_FOLDER
                         and path.name != "00-index.md")
         if not is_card_file and re.search(r"^START$", text, re.M):
-            fail(path, "bloc START hors d'un fichier de cartes thématique")
+            fail(path, 'START block outside a thematic card file')
         if any(line.rstrip() != line for line in text.splitlines()):
-            fail(path, "espaces en fin de ligne")
+            fail(path, 'trailing whitespace')
         if len(re.findall(r"^```", text, re.M)) % 2:
-            fail(path, "bloc de code non fermé")
+            fail(path, 'unclosed code block')
         if clean.count("$$") % 2:
-            fail(path, "formule display non fermée")
+            fail(path, 'unclosed display equation')
         for match in re.finditer(r"!?\[[^\]\n]*\]\(([^\s)]+)\)", clean):
             check_target(path, match[1])
         for match in re.finditer(r"^\[[^\]]+\]:\s*(\S+)", clean, re.M):
@@ -90,7 +93,7 @@ def check_vault(root):
                        re.finditer(r"^\[([^\]]+)\]:", clean, re.M)}
         for match in re.finditer(r"\[[^\]]+\]\[([^\]]+)\]", clean):
             if match[1].casefold() not in definitions:
-                fail(path, f"référence Markdown absente : {match[1]}")
+                fail(path, f"missing Markdown reference: {match[1]}")
         if (path.parent.name != "references" or path.parent.parent.name not in SECTION_BY_FOLDER
                 or path.parent.parent.parent != root):
             continue
@@ -98,21 +101,21 @@ def check_vault(root):
         front = re.match(r"\A---\n(.*?)\n---\n", text, re.S)
         meta = dict(re.findall(r"^(\w+):\s*(.+)$", front[1], re.M)) if front else {}
         if not META_FIELDS <= meta.keys():
-            fail(path, "métadonnées de fiche incomplètes")
+            fail(path, 'incomplete reference metadata')
         if parse_poles(meta.get("poles", "")) is None:
-            fail(path, "pôles de fiche attendus : lettres uniques A à F dans une liste non vide")
+            fail(path, 'reference career tracks must be unique letters A–F in a nonempty list')
         if not re.fullmatch(r"d(?:0[1-9]|1[0-4])", meta.get("domaine", "")):
-            fail(path, "domaine attendu entre d01 et d14")
+            fail(path, 'domain must be between d01 and d14')
         if meta.get("domaine") != SECTION_BY_FOLDER[path.parent.parent.name]["domaine"]:
-            fail(path, "domaine de fiche différent de son répertoire thématique")
+            fail(path, 'reference domain differs from topic directory')
         if meta.get("provenance") not in {"agent", "apprenant", "mixte"}:
-            fail(path, "provenance de rédaction absente ou invalide")
+            fail(path, 'missing or invalid author provenance')
         if meta.get("id") in pedagogical_ids:
-            fail(path, "identifiant de fiche dupliqué")
+            fail(path, 'Duplicate reference note ID')
         pedagogical_ids.add(meta.get("id"))
         notes[path] = meta
         if not re.search(r"https://", text):
-            fail(path, "source HTTPS absente")
+            fail(path, "missing HTTPS source")
 
     media_names = set()
     media_suffixes = {".svg", ".png", ".jpg", ".jpeg", ".webp", ".gif"}
@@ -120,7 +123,7 @@ def check_vault(root):
         if media.is_file() and media.suffix.lower() in media_suffixes and ".obsidian" not in media.relative_to(root).parts:
             name = media.name.casefold()
             if name in media_names:
-                fail(media, "basename de média dupliqué")
+                fail(media, 'duplicate media basename')
             media_names.add(name)
 
     card_ids = set()
@@ -132,10 +135,10 @@ def check_vault(root):
         section = SECTION_BY_FOLDER[path.parent.name]
         expected_deck = f"{DECK_ROOT}::{section['dossier']}"
         if decks != [expected_deck]:
-            fail(path, f"un seul deck cible {expected_deck} est attendu pour cette thématique")
+            fail(path, f"a single target deck {expected_deck} is expected for this topic")
         blocks = list(re.finditer(r"^START\n(.*?)\nEND$", text, re.M | re.S))
         if len(blocks) != len(re.findall(r"^START$", text, re.M)) or len(blocks) != len(re.findall(r"^END$", text, re.M)):
-            fail(path, "marqueurs START/END non équilibrés")
+            fail(path, 'unbalanced START/END markers')
         previous_end = 0
         for block in blocks:
             counts["cartes"] += 1
@@ -143,14 +146,14 @@ def check_vault(root):
             previous_end = block.end()
             lines = block[1].splitlines()
             if not lines or lines[0] != MODEL:
-                fail(path, f"modèle attendu : {MODEL}")
+                fail(path, f"Expected model: {MODEL}")
                 continue
             fields, current, tags = {}, None, None
             block_sync_count = 0
             for line in lines[1:]:
                 if line.startswith("Tags: "):
                     if tags is not None:
-                        fail(path, "Tags répété")
+                        fail(path, 'Repeated Tags')
                     tags = line[6:].split()
                     continue
                 sync = re.fullmatch(r"<!--ID: (\d+)-->", line)
@@ -158,69 +161,72 @@ def check_vault(root):
                     if sync:
                         block_sync_count += 1
                         if block_sync_count > 1 or line != lines[-1]:
-                            fail(path, "une seule identité Anki, immédiatement avant END")
+                            fail(path, 'a single Anki identity is required immediately before END')
                         if sync[1] in sync_ids:
-                            fail(path, "identité Anki dupliquée")
+                            fail(path, 'duplicate Anki identity')
                         sync_ids.add(sync[1])
                     else:
-                        fail(path, "seule l'identité Anki est permise après Tags")
+                        fail(path, 'only Anki identity is allowed after Tags')
                     continue
                 field = re.match(r"^(ID|Question|Reponse|Source): (.*)$", line)
                 if field:
                     current = field[1]
                     if current in fields:
-                        fail(path, f"champ répété : {current}")
+                        fail(path, f"Repeated field: {current}")
                     fields[current] = field[2]
                 elif current:
                     fields[current] += "\n" + line
                 else:
-                    fail(path, "texte avant le premier champ")
+                    fail(path, 'text before the first field')
             if list(fields) != FIELDS or any(not v.strip() for v in fields.values()):
-                fail(path, "champs absents, vides ou dans le mauvais ordre")
+                fail(path, 'fields missing, empty or out of order')
             identity = fields.get("ID", "")
             if not re.fullmatch(r"CV-[A-Z0-9-]+-\d{3}", identity):
-                fail(path, "identifiant pédagogique invalide")
+                fail(path, 'Invalid educational identifier')
             if identity in card_ids:
-                fail(path, f"identifiant de carte dupliqué : {identity}")
+                fail(path, f"duplicate card ID: {identity}")
             card_ids.add(identity)
-            if f"## {identity}\n" not in header or not all(word in header for word in ("Objectif :", "Famille :", "Provenance :")):
-                fail(path, f"{identity} : objectif/famille/provenance hors bloc absent")
+            head = HEADER.search(header)
+            if f"## {identity}\n" not in header or not head:
+                fail(path, f"{identity} : missing Objective/Family/Provenance header outside block")
             tags = tags or []
             families = [t.removeprefix("famille::") for t in tags if t.startswith("famille::")]
             if len(families) != 1 or families[0] not in FAMILIES:
-                fail(path, f"{identity} : famille absente ou inconnue")
+                fail(path, f"{identity} missing or unknown card family")
+            if head and (FAMILY_TAGS.get(head[2]) not in families or head[3] != "agent"):
+                fail(path, f"{identity}: header family/provenance differs from tags")
             required_tags = {"cv::pilote", f"cv_id::{identity}", "provenance::agent"}
             if not required_tags <= set(tags):
-                fail(path, f"{identity} : tags d'identité/provenance incomplets")
+                fail(path, f"{identity} incomplete identity/provenance tags")
             for rubric in RUBRICS:
                 if f"**{rubric}**" not in fields.get("Reponse", ""):
-                    fail(path, f"{identity} : rubrique absente : {rubric}")
+                    fail(path, f"{identity} missing rubric: {rubric}")
             source = fields.get("Source", "")
             parents = re.findall(r"\[\[([^\]]+)\]\]", source)
             parent = root / (wiki_target(parents[0]) + ".md") if len(parents) == 1 else None
             if parent not in notes:
-                fail(path, f"{identity} : fiche parente absente ou ambiguë")
+                fail(path, f"{identity} : missing or ambiguous parent reference")
             elif f"cv::{notes[parent].get('domaine')}" not in tags:
-                fail(path, f"{identity} : domaine différent de sa fiche")
+                fail(path, f"{identity} : domain differs from parent reference")
             elif notes[parent].get("domaine") != section["domaine"]:
-                fail(path, f"{identity} : carte rangée dans une autre thématique que sa fiche")
+                fail(path, f"{identity} : card topic differs from parent reference")
             if parent in notes:
                 expected_poles = parse_poles(notes[parent].get("poles", ""))
                 actual_poles = [tag.removeprefix("pole::") for tag in tags if tag.startswith("pole::")]
                 if (expected_poles is None or set(actual_poles) != set(expected_poles)
                         or len(actual_poles) != len(set(actual_poles))):
-                    fail(path, f"{identity} : étiquettes de pôle différentes de la fiche")
+                    fail(path, f"{identity} : career-track tags differ from parent reference")
                 for tag in tags:
                     if tag.startswith("cas_pole::"):
                         parts = tag.split("::")
                         if (len(parts) != 3 or parts[1] not in actual_poles
                                 or parts[2] not in {"conception", "diagnostic"}
                                 or parts[2] not in families):
-                            fail(path, f"{identity} : étiquette de cas métier invalide")
+                            fail(path, f"{identity} : invalid career case tag")
             if "https://" not in source:
-                fail(path, f"{identity} : source externe absente")
+                fail(path, f"{identity} missing external source")
     if not counts["fiches"] or not counts["cartes"]:
-        errors.append("Le vault doit contenir des fiches et des cartes.")
+        errors.append('The vault must contain reference notes and flashcards.')
     return errors, counts
 
 
@@ -234,7 +240,7 @@ def main():
     model = json.loads(model_path.read_text(encoding="utf-8"))
     if (model["name"] != MODEL or model["fields"] != FIELDS
             or len(model["templates"]) != 1 or model["deckRoot"] != DECK_ROOT):
-        errors.append("Le manifeste Anki ne correspond pas au contrat du contrôleur.")
+        errors.append('The manifest Anki does not correspond to the contract of the controller.')
     for error in errors:
         print(error, file=sys.stderr)
     print(json.dumps({"resultat": "ECHEC" if errors else "OK", **counts}, ensure_ascii=False))

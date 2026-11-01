@@ -2,7 +2,7 @@
   "etapes": [
     {
       "id": "socle",
-      "titre": "Mesurer les données et poser les conventions",
+      "titre": "Measuring data and setting conventions",
       "sujets": [
         "CV-ACQUISITION",
         "CV-FIABILITE",
@@ -10,12 +10,12 @@
         "CV-SVD",
         "CV-SE3"
       ],
-      "objectif": "Relier qualité image, repères, bruit et critère produit avant de choisir une méthode.",
-      "preuve": "Sur un cas de flou et un cas de résidu faible mais paramètres instables, proposer deux contrôles discriminants avec leurs unités."
+      "objectif": "Link image quality, coordinate frames, noise and criteria produced before choosing a method.",
+      "preuve": "On a case of blurring and a case of weak residual but unstable parameters, propose two discriminating controls with their units."
     },
     {
       "id": "image",
-      "titre": "Comprendre le signal et les structures locales",
+      "titre": "Understanding the signal and local structures",
       "sujets": [
         "CV-CAPTEURS",
         "CV-IMAGERIES",
@@ -23,12 +23,12 @@
         "CV-CANNY-HOUGH",
         "CV-MORPHO"
       ],
-      "objectif": "Maîtriser acquisition temporelle, filtres, contours et géométrie des masques.",
-      "preuve": "Expliquer pourquoi un débruitage ou une fermeture peut améliorer une image tout en dégradant le rappel ou le comptage ; prévoir une ablation."
+      "objectif": "Master time acquisition, filters, contours and geometry of masks.",
+      "preuve": "Explain why a denoising or closing can improve an image while degrading the recall or counting; provide for an ablation."
     },
     {
       "id": "matching",
-      "titre": "Construire et vérifier des correspondances",
+      "titre": "Build and verify matches",
       "sujets": [
         "CV-MATCHING",
         "CV-CORNERS",
@@ -40,12 +40,12 @@
         "CV-MATCH-APPRIS",
         "CV-ECC"
       ],
-      "objectif": "Relier détecteur, descripteur, métrique, matcher et modèle géométrique.",
-      "preuve": "Recaler un plan avec une baseline et un protocole proposé : couverture, erreurs sur points réservés, coût complet et cas de répétition."
+      "objectif": "Connect detector, descriptor, metric, matcher and geometric model.",
+      "preuve": "register a plan with a baseline and a proposed protocol: coverage, errors on reserved points, full cost and repeat case."
     },
     {
       "id": "geometrie",
-      "titre": "Calibrer et reconstruire la géométrie",
+      "titre": "Calibrate and rebuild geometry",
       "sujets": [
         "CV-ZHANG",
         "CV-EPIPOLAIRE",
@@ -57,12 +57,12 @@
         "CV-STEREO",
         "CV-ICP"
       ],
-      "objectif": "Distinguer intrinsèques, pose, profondeur, extrinsèques et optimisation conjointe.",
-      "preuve": "Départager erreur de repère, mauvaise échelle, manque de parallaxe et surajustement, puis choisir une observation indépendante utile."
+      "objectif": "Distinguish intrinsic, pose, depth, extrinsic and joint optimization.",
+      "preuve": "Separate error from coordinate frame, wrong scale, lack of parallax and overadjustment, and then choose a useful independent observation."
     },
     {
       "id": "perception",
-      "titre": "Relier représentations, tâches et métriques",
+      "titre": "Linking representations, tasks and metrics",
       "sujets": [
         "CV-REPRESENTATIONS",
         "CV-CLIP",
@@ -79,12 +79,12 @@
         "CV-SAM",
         "CV-METRIQUES-APPLIQUEES"
       ],
-      "objectif": "Comparer les contrats des tâches et leurs erreurs, sans reprendre tout le cursus général ML/DL.",
-      "preuve": "Diagnostiquer un petit objet manqué et une frontière incorrecte en séparant acquisition, annotation, apprentissage, posttraitement et évaluation."
+      "objectif": "Comparing task contracts and their errors, without taking up the entire ML/DL general curriculum.",
+      "preuve": "Diagnose a small missed object and an incorrect boundary by separating acquisition, annotation, learning, postprocessing, and evaluation."
     },
     {
       "id": "temps",
-      "titre": "Suivre le mouvement et les identités",
+      "titre": "Track movement and identities",
       "sujets": [
         "CV-FUSION",
         "CV-FLOT",
@@ -96,41 +96,41 @@
         "CV-SORT",
         "CV-ASSOCIATION"
       ],
-      "objectif": "Distinguer déplacement apparent, état filtré, visibilité, association et identité.",
-      "preuve": "Reconstruire la chronologie d'une perte de piste après occultation et proposer une ablation qui départage détecteur, expiration et association."
+      "objectif": "Distinguish between apparent displacement, filtered state, visibility, association and identity.",
+      "preuve": "Reconstruct the chronology of a loss of track after occlusion and propose an ablation that separates detector, expiration and association."
     },
     {
       "id": "spatial",
-      "titre": "Intégrer temps et espace en 3D",
+      "titre": "Integrate time and space in 3D",
       "sujets": [
         "CV-VIO",
         "CV-BEV",
         "CV-POSE3D",
         "CV-METRIQUES-TEMPS"
       ],
-      "objectif": "Composer calibration, mouvement, représentations spatiales et validation temporelle.",
-      "preuve": "Définir un groupe d'alignement qui ne masque pas une erreur métrique, puis contrôler un décalage de fusion apparaissant en rotation."
+      "objectif": "Compose calibration, movement, spatial representations and temporal validation.",
+      "preuve": "Set an alignment group that does not hide a metric error, and then check a merge offset appearing in rotation."
     },
     {
       "id": "multimodal",
-      "titre": "Interpréter les modèles génératifs et multimodaux",
+      "titre": "Interpreting generative and multimodal models",
       "sujets": [
         "CV-VLM",
         "CV-DIFFUSION",
         "CV-RENDU3D"
       ],
-      "objectif": "Distinguer ressemblance, génération, localisation, reconstruction et fidélité des observations.",
-      "preuve": "Expliquer pourquoi une sortie plausible peut être fausse, puis définir une référence et une évaluation adaptées au besoin."
+      "objectif": "Distinguish between likeness, generation, localization, reconstruction and fidelity of observations.",
+      "preuve": "Explain why a plausible exit may be wrong, and then define an appropriate reference and assessment as needed."
     },
     {
       "id": "production",
-      "titre": "Déployer et surveiller la chaîne complète",
+      "titre": "Deploy and monitor the entire chain",
       "sujets": [
         "CV-QUANT",
         "CV-DEPLOIEMENT"
       ],
-      "objectif": "Évaluer les compromis qualité, mémoire, débit, latence et reproductibilité du système.",
-      "preuve": "Comparer deux versions sur la même cible matérielle avec données réservées, p99 de bout en bout, cas difficiles et procédure de retour arrière."
+      "objectif": "Evaluate system quality, memory, throughput, latency, and reproducibility compromises.",
+      "preuve": "Compare two versions on the same hardware target with reserved data, end-to-end p99, difficult cases and back-up procedure."
     }
   ]
 }

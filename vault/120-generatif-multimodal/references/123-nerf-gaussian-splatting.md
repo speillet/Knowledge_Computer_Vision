@@ -7,83 +7,106 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
 ---
-# NeRF, 3D Gaussian Splatting et reconstruction
+# NeRF, 3D Gaussian Splatting and reconstruction
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Synthétiser des vues d'une scène et distinguer qualité de rendu et précision géométrique. Entrées : images et poses/calibration selon méthode ; sorties : représentation et nouvelles vues. Les méthodes de profondeur monoculaire ou DUSt3R/MASt3R relèvent d'autres contrats de reconstruction, à approfondir séparément.
+Synthesize views of a scene and distinguish quality of rendering and geometric accuracy. Inputs: images and poses/calibration according to method; outputs: representation and new views. The monocular depth methods or DUSt3R/MASt3R fall under other reconstruction contracts, to be deepened separately.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Dans NeRF original, la densité dépend de la position 3D seule ; la couleur/radiance dépend aussi de la direction de vue. Le rendu utilise une intégration volumique. 3D Gaussian Splatting optimise des primitives anisotropes explicites, leur apparence et densification, puis effectue un rendu par splatting.
+In the original NeRF, the density depends on the 3D position alone; the color/radiance also depends on the direction of view. The rendering uses a volume integration. 3D Gaussian Splatting optimizes explicit anisotropic primitives, their appearance and densification, and then renders by splatting.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-L'intégration volumique pondère une couleur par densité et transmittance le long du rayon ; les coordonnées, unités et poses doivent être cohérentes. Une PSNR élevée sur vues voisines n'établit ni surface métrique exacte ni qualité sur angles non observés.
+The volume integration weights a color by density and transmittance along the radius; the coordinates, units and poses must be consistent. A high PSNR on neighboring views does not establish any exact metric area or quality on angles not observed.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Couverture des vues, poses, fond, exposition et scène statique supposée ; nombre de primitives, régularisation et protocole d'entraînement. Les ambiguïtés de régions jamais observées restent réelles.
+Coverage of views, poses, background, exposure and supposed static scene; number of primitives, regularization and training protocol. The ambiguities of regions never observed remain real.
 
-## Coût et implémentation
+## Cost and implementation
 
-Entraînement/optimisation, stockage et rendu coûtent différemment. Les FPS des auteurs dépendent du matériel et des scènes. Aucun rendu ou entraînement exécuté.
+Training/optimization, storage and rendering cost differently. Authors’ SPFs depend on the material and scenes. No rendering or training performed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : vues et poses connues avec split d'angles réservé ; varier couverture et bruit de pose séparément. Mesurer synthèse de vues et référence géométrique distinctement si la géométrie importe.
+Baseline: Views and poses known with split angles reserved; vary coverage and noise from pose separately. Measure synthesis of views and geometric reference distinctly if geometry matters.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Rendu bon mais surface flottante : vérifier vues réservées, poses, régions non contraintes et objectif. Un optimiseur peut expliquer les images avec une géométrie inadéquate à la mesure.
+Good rendering but floating surface: check reserved views, poses, unconstrained regions and objective. An optimizer can explain the images with a geometry inadequate to the measurement.
 
-## Alternatives et usages
+## Alternatives and applications
 
-MVS/TSDF pour d'autres hypothèses et sorties ; reconstruction apprise pour une autre supervision. Aucun de ces noms ne garantit une échelle absolue sans contrat adapté.
+MVS/TSDF for other hypotheses and outputs; reconstruction learned for another supervision. None of these names guarantees an absolute scale without a suitable contract.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent synthèse de vues, support d’observation et géométrie. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop a synthesis of views, observation support and geometry. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-RENDU3D-001
+### Case linked to CV-RENDU3D-001
 
-**Question de travail** : Quelle différence centrale sépare NeRF et 3D Gaussian Splatting ?
+**Question of work**: What is the central difference between NeRF and 3D Gaussian Splatting?
 
-**Réponse de référence** : NeRF utilise un champ de densité/radiance avec rendu volumique ; 3DGS une représentation explicite de gaussiennes optimisées et un rendu par splatting.
+**Reference Response**: NeRF uses a density/radiance field with volume rendering; 3DGS an explicit representation of optimized Gaussians and a splatting rendering.
 
-**Représentation et opération** : un champ implicite est interrogé le long de rayons pour calculer une image selon son modèle volumique. Des primitives explicites portent positions, étendues et apparence, puis sont projetées par un autre mécanisme de rendu. Ces choix déplacent les coûts d'optimisation, de stockage et de synthèse.
+**Representation and operation**: An implicit field is interrogated along rays to calculate an image according to its volume model. Explicit primitives carry positions, extents, and appearances, and are then projected by another rendering mechanism. These choices shift optimization, storage, and synthesis costs.
 
-**Comparaison construite** : utiliser les mêmes vues et poses, réserver des angles puis mesurer qualité visuelle, mémoire et temps sur le même matériel. Si la géométrie importe, ajouter une référence de surface ou de dimension indépendante. Une représentation peut expliquer des images avec des structures qui ne conviennent pas à la métrologie ; un rendu rapide ne prouve pas une surface exacte. Dans NeRF original, distinguer aussi densité dépendant de la position et radiance dépendant de la vue. Le nom d'une famille ne décrit pas toutes les variantes ni une performance universelle.
+**Comparison built**: use the same views and poses, reserve angles and then measure visual quality, memory and time on the same hardware. If geometry matters, add a surface or independent dimension reference. A representation can explain images with structures that are not suitable for metrology; a quick rendering does not prove an exact surface. In NeRF original, distinguish also density dependent on position and radiance dependent on view. The name of a family does not describe all variants or a universal performance.
 
-### Cas lié à CV-RENDU3D-003
+### Case linked to CV-RENDU3D-003
 
-**Question de travail** : Des vues d’entraînement sont plausibles mais une rotation de caméra révèle des artefacts. Que tester ?
+**Question of work**: Training views look plausible, but camera rotation reveals artifacts. What should be tested?
 
-**Réponse de référence** : Couverture angulaire, poses et hypothèse de scène statique, puis régions insuffisamment contraintes.
+**Reference Response**: Angular coverage, poses and static scene hypothesis, then insufficiently constrained regions.
 
-**Origines possibles** : les vues d'apprentissage peuvent peu contraindre certaines faces, contenir des poses biaisées ou mélanger une scène qui change dans le temps. Une représentation flexible peut expliquer ces images sans reconstruire une scène cohérente depuis toutes les directions.
+**Possible origins**: Learning views can constrain some faces, contain biased poses, or mix up a scene that changes over time. A flexible representation can explain these images without reconstructing a coherent scene from all directions.
 
-**Enquête construite** : cartographier couverture des rayons et erreurs selon angle, inspecter calibration et poses, puis comparer des vues réservées à distance angulaire annoncée. Faire varier séparément nombre de vues et qualité des poses, en gardant l'autre facteur contrôlé. Une amélioration sur les vues déjà utilisées peut n'être qu'un meilleur ajustement à ces données. Si une région n'a jamais été observée, davantage d'itérations n'apporte pas son apparence vraie. Le diagnostic doit donc distinguer manque d'information, modèle de scène faux et problème d'optimisation, plutôt que considérer toute synthèse plausible à l'entraînement comme une validation complète.
+**Survey built**: map coverage of radii and errors at angle, inspect calibration and poses, and then compare reserved views at announced angular distance. Separately vary the number of views and quality of the poses, keeping the other factor controlled. An improvement on the views already in use may just be a better fit to this data. If a region has never been observed, more iterations do not bring its true appearance. The diagnosis must therefore distinguish between lack of information, false scene pattern and optimization problem, rather than considering any plausible synthesis in training as a complete validation.
 
-**Repère documentaire de cette passe** : [NeRF](https://arxiv.org/html/2003.08934v2), §3, champ et rendu volumétrique. Les autres développements figurent dans les [cartes associées](../123-nerf-gaussian-splatting.md).
+**Documentary reference for this pass**: [NeRF](https://arxiv.org/html/2003.08934v2), §3, field and volumetric rendering. The other developments are in the [flashcards](../123-nerf-gaussian-splatting.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [NeRF, §§3–4](https://arxiv.org/abs/2003.08934) : dépendances du champ et rendu volumique.
-- [3D Gaussian Splatting, §§4–6](https://arxiv.org/abs/2308.04079) : primitives anisotropes, optimisation/densification et rendu.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [NeRF, page et papier des auteurs](https://www.matthewtancik.com/nerf).
-- [3D Gaussian Splatting, auteurs](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/).
-- [Cartes associées](../123-nerf-gaussian-splatting.md).
+### CV-RENDU3D-001
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+**Situation**: What is the central difference between NeRF and 3D Gaussian Splatting?
+
+**Weight along the radius**: for a radius $r(t)=o+td$, the ideal volume rendering uses $C(r)=\int T(t)\sigma(r(t))c(r(t),d)\,dt$, with $T(t)=\exp[-\int_{t_n}^t\sigma(r(s))ds]$. If $t$ is a length and $d$ unit, $\sigma$ has an inverse length unit; $T$ is without unit. The density depends on the position, while the radiance may depend on the direction in the original NeRF. This integration differs from a single opaque mesh and explains how multiple density/appearance distributions can contribute to the same pixels. The useful geometry does not automatically read as a certified metric surface.
+
+### CV-RENDU3D-002
+
+**Situation**: Why does excellent PSNR on novel views fail to validate a reconstruction for metrology?
+
+**Scale gauge built**: Multiplying camera positions and scene coordinates by a single factor can retain projection directions and similar images, if the representation and rendering are transformed consistently. Therefore, a view synthesis measurement does not set an absolute length on its own. A metric calibration, a known baseline, or a dimension reference must anchor this scale if necessary. Even fixed scale, surface errors can remain compensated by appearance. Compare geometric errors, cover and reserved images thus measures complementary properties, instead of improperly converting a PSNR into millimeter accuracy.
+
+### CV-RENDU3D-003
+
+**Situation**: Training views look plausible, but camera rotation reveals artifacts. What should be tested?
+
+**Coverage and causality of the defect**: Reserve views close to those of training mainly tests local interpolation, while more distant angles can reveal less constrained regions. Announce this angular distance and the visibility of the surfaces before talking about generalization. A controlled perturbation of the input poses makes it possible to distinguish sensitivity to calibration and coverage inadequacy, at still images. If the scene moves or the exhibition changes, a representation can absorb the inconsistency in artificial structures. Examine these factors separately before increasing the iterations; a better adjustment of the same rays does not constitute a new observation of the hidden faces.
+
+**Passages consulted for these developments**: [Mildenhall et al., NeRF](https://arxiv.org/html/2003.08934v2), §4, rendering and transmittance; dimensional calculation, gauge and project protocol.
+
+## Sources and flashcards
+
+- [NeRF, §§3 – 4](https://arxiv.org/abs/2003.08934): Dependencies of the field and volume rendering.
+- [3D Gaussian Splatting, §§4 – 6](https://arxiv.org/abs/2308.04079): Anisotropic primitives, optimization/densification and rendering.
+
+- [NeRF, author's page and paper](https://www.matthewtancik.com/nerf).
+- [3D Gaussian Splatting, authors](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/).
+- [Related flashcards](../123-nerf-gaussian-splatting.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

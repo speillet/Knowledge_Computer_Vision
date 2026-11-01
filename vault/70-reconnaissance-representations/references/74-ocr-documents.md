@@ -7,83 +7,106 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
 ---
-# OCR et compréhension documentaire
+# OCR and document understanding
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Extraire texte, ordre de lecture et structure selon des sorties distinctes. Entrées : pages/images avec résolution et langue ; sorties : caractères, mots, boîtes, champs ou structure. Un texte exact dans le mauvais ordre peut être inutilisable.
+Extract text, read order and structure according to separate outputs. Entries: pages/images with resolution and language; outputs: characters, words, boxes, fields or structure. An exact text in the wrong order may be unusable.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Détecter régions/lignes puis reconnaître : CRNN/CTC est une référence séquentielle, TrOCR une approche transformer. LayoutLM combine texte et layout ; Donut étudie une extraction sans moteur OCR séparé. Ces noms ne désignent pas la même interface.
+Detect regions/lines then recognize: CRNN/CTC is a sequential reference, TrOCR a transformative approach. LayoutLM combines text and layout; Donut studies extraction without a separate OCR engine. These names do not refer to the same interface.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-La CER classique vaut $(S+D+I)/N$ pour $N>0$ caractères de référence, avec substitutions, suppressions et insertions d'édition. La WER classique applique la même logique aux mots. OCR-D décrit aussi une variante normalisée $(S+D+I)/(S+D+I+C)$, où $C$ compte les caractères corrects, et utilise cette variante bornée dans ses benchmarks ; ne pas assimiler leurs scores à la convention classique adoptée ici. Normalisation unicode, casse, espaces et segmentation changent le protocole ; le score peut dépasser 1 si les insertions sont nombreuses.
+The classic CER is $(S+D+I)/N$ for $N>0$ reference characters, with substitutions, deletions, and edit inserts. The classic WER applies the same logic to words. OCR-D also describes a standardized variant $(S+D+I)/(S+D+I+C)$, where $C$ counts the correct characters, and uses this bounded variant in its benchmarks; do not assimilate their scores to the classic convention adopted here. Unicode normalization, case, spaces and segmentation change the protocol; the score can exceed 1 if the insertions are numerous.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-DPI, rotation, langues, découpe, lexique, tokenisation et ordre de lecture. Distinguer erreur de détection de ligne, reconnaissance, assemblage et extraction d'un champ.
+DPI, rotation, languages, cutting, lexicon, tokenization and reading order. Distinguish line detection error, recognition, assembly and extraction of a field.
 
-## Coût et implémentation
+## Cost and implementation
 
-Coût du rendu, détection, crops et génération ; grands documents demandent pagination et limites. Aucun OCR exécuté et aucune performance linguistique revendiquée.
+Cost of rendering, detection, crops and generation; large documents require pagination and limits. No OCR performed and no linguistic performance claimed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : page nette et texte de référence, puis flou/rotation contrôlés. Mesurer CER/WER et exactitude des champs/structure ; un score caractère global peut masquer un montant critique faux.
+Baseline: clean page and reference text, then blur/rotate controlled. Measure CER/WER and field/structure accuracy; an overall character score can hide a false critical amount.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Texte lisible mais colonnes mélangées : vérifier détection et ordre de lecture. Erreurs sur chiffres : analyser coût métier et données de résolution, sans prétendre qu'une génération fluide est correcte.
+Readable text but mixed columns: check detection and read order. Numerical errors: analyze business cost and resolution data, without claiming that a fluid generation is correct.
 
-## Alternatives et usages
+## Alternatives and applications
 
-OCR spécialisé ou pipeline multimodal selon sortie, données et contraintes ; conserver preuves visuelles et protocole des champs essentiels.
+Specialized OCR or multimodal pipeline depending on output, data and constraints; retain visual evidence and protocol of essential fields.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent chaîne OCR, normalisation et métrique adaptée au document. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop OCR chain, standardization and metric adapted to the document. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-OCR-001
+### Case linked to CV-OCR-001
 
-**Question de travail** : Pourquoi une bonne CER ne suffit-elle pas à valider l’extraction d’une facture ?
+**Question of work**: Why is a good CER insufficient to validate invoice extraction?
 
-**Réponse de référence** : CER mesure l’édition de caractères selon un protocole ; ordre de lecture, association des champs et exactitude des montants sont d’autres sorties.
+**Reference Response**: CER measures the editing of characters according to a protocol; order of reading, association of fields and accuracy of amounts are other outputs.
 
-**Exemple de différence métier** : une facture peut contenir presque tous les caractères corrects tout en associant le montant d'une ligne à la mauvaise référence, ou en inversant deux colonnes. Une petite erreur sur un chiffre critique peut aussi compter peu dans la CER globale d'un long document.
+**Example of Business Difference**: An invoice can contain almost all the correct characters while associating the amount of a row with the wrong reference, or by reversing two columns. A small error on a critical figure can also count little in the overall CER of a long document.
 
-**Contrat proposé** : définir séparément transcription, ordre de lecture, boîtes, clés et valeurs attendues, avec une référence adaptée pour chacun. Conserver les règles de normalisation des espaces, de casse et de nombres dans l'évaluation. Mesurer exactitude des champs critiques, documents entièrement corrects et taux de vérification humaine au seuil retenu. Une génération linguistiquement plausible doit encore correspondre à l'image source. La validation du produit porte donc sur les informations effectivement utilisées par le processus aval ; elle ne se déduit pas du seul score de reconnaissance caractère ni de l'aspect lisible du texte reconstruit.
+**Proposed contract**: set separately transcription, reading order, boxes, keys and expected values, with a reference suitable for each. Keep normalization rules for spaces, cases, and numbers in the assessment. Measure accuracy of critical fields, fully correct documents, and human verification rate at the selected threshold. A linguistically plausible generation must still match the source image. The validation of the product therefore concerns the information actually used by the downstream process; it is not deduced from the single character recognition score or the legible aspect of the reconstructed text.
 
-### Cas lié à CV-OCR-003
+### Case linked to CV-OCR-003
 
-**Question de travail** : Des lignes sont reconnues correctement mais le texte entrelace les colonnes. Quel composant examiner ?
+**Question of work**: Individual lines are recognized correctly, but the output interleaves columns. Which component should be examined?
 
-**Réponse de référence** : Détection/layout et assemblage de l’ordre de lecture, avant le reconnaisseur de caractères.
+**Reference Response**: Detection/layout and assembly of the reading order, before the character recognizer.
 
-**Décomposition du pipeline** : les boîtes ou régions déterminent quelles lignes sont envoyées à la reconnaissance ; leur structure détermine ensuite comment les textes sont assemblés. Un reconnaisseur peut être exact sur chaque crop et le document final être faux parce que ces crops sont parcourus dans le mauvais ordre.
+**Breakdown of the pipeline**: Boxes or regions determine which lines are sent for recognition; their structure then determines how texts are assembled. A recognizer can be exact on each crop and the final document can be fake because these crops are traversed in the wrong order.
 
-**Test construit** : conserver les transcriptions des lignes et remplacer uniquement l'ordre ou l'assemblage à l'aide d'une annotation de référence. Si le document redevient correct, le diagnostic porte sur layout ou lecture plutôt que sur les caractères. Tester colonnes, tableaux, encarts et lignes inclinées avec les mêmes règles de normalisation. Vérifier les liens entre champs et valeurs, car un ordre plausible ne suffit pas toujours à extraire la structure métier. Cette approche localise une responsabilité avant de choisir des annotations ou un entraînement supplémentaires pour un composant qui ne traite pas la cause.
+**Test construit**: Retain line transcripts and replace only the order or assembly with a reference annotation. If the document becomes correct again, the diagnosis is about layout or reading rather than characters. Test columns, tables, inserts and inclined lines with the same normalization rules. Check the links between fields and values, because a plausible order is not always enough to extract the business structure. This approach locates responsibility before choosing additional annotations or training for a component that does not address the cause.
 
-**Repère documentaire de cette passe** : [OCR-D, Evaluation](https://ocr-d.de/en/spec/ocrd_eval.html), définitions, alignement et normalisation des erreurs. Les autres développements figurent dans les [cartes associées](../74-ocr-documents.md).
+**Documentary reference for this pass**: [OCR-D, Evaluation](https://ocr-d.de/en/spec/ocrd_eval.html), definitions, alignment and normalization of errors. The other developments are in the [flashcards](../74-ocr-documents.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [CRNN, méthode](https://arxiv.org/abs/1507.05717).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-OCR-001
+
+**Situation**: Why is a good CER insufficient to validate invoice extraction?
+
+**Example of weighting**: A document of 2 000 characters with a substitution on the total amount may have a CER of 0,05% and remain unusable for accounting processing. A field metric can compare the numerical value after a predicted normalization of separators, currencies, and decimals; a document metric can require all the correct critical fields. Also keep the raw string and image region allows to distinguish recognition error, field association and normalization. Arithmetic checks between lines, taxes and totals provide additional consistency, without proving that a plausible value actually corresponds to that printed.
+
+### CV-OCR-002
+
+**Situation**: Can CER exceed 100%, and under which conditions?
+
+**Calculation of distance**: Dynamic programming uses $D_{i,j}=\min(D_{i-1,j}+1,D_{i,j-1}+1,D_{i-1,j-1}+\mathbf1[a_i\ne b_j])$, with $D_{i,0}=i$ and $D_{0,j}=j$ edges. It looks for the minimum editing cost, not a simple count of different fixed-position characters. To aggregate several pages, the ratio $\sum_k(S_k+D_k+I_k)/\sum_kN_k$ weights by reference length, while the average of CER per page weights the pages as well. Both answer different questions. Defining Unicode units and processing empty references before this calculation avoids incompatible score comparisons.
+
+### CV-OCR-003
+
+**Situation**: Individual lines are recognized correctly, but the output interleaves columns. Which component should be examined?
+
+**Model of order**: represent regions as nodes and relationships "must be read before" as edges allows to explain a partial order. Topological sorting produces a compatible order if these constraints are cycle-free; column rules, arrays, and inserts determine edges, not the confidence of the recognizer. A simple global sorting by height can intertwine two well-detected columns. To locate the fault, successively compare reference regions, reference transcriptions and reference order by replacing only one output at a time. This ablation identifies what each component brings to the final document error.
+
+**Passages consulted for these developments**: [OCR-D](https://ocr-d.de/en/spec/ocrd_eval.html), Text Evaluation, distance from Levenshtein, CER/WER; examples and built order model.
+
+## Sources and flashcards
+
+- [CRNN, method](https://arxiv.org/abs/1507.05717).
 - [TrOCR](https://arxiv.org/abs/2109.10282).
 - [LayoutLM](https://arxiv.org/abs/1912.13318).
 - [Donut](https://arxiv.org/abs/2111.15664).
-- [OCR-D, évaluation](https://ocr-d.de/en/spec/ocrd_eval.html).
-- [Cartes associées](../74-ocr-documents.md).
+- [OCR-D, evaluation](https://ocr-d.de/en/spec/ocrd_eval.html).
+- [Related flashcards](../74-ocr-documents.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

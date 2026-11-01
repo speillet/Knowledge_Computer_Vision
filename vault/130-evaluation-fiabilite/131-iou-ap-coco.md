@@ -1,152 +1,166 @@
-# Cartes pilotes — IoU et AP COCO
+# Flashcards — IoU and AP — the COCO detection protocol
 
-Fiche : [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP]]. Provenance : agent.
+reference note: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP]]. Source: Agent.
 
 TARGET DECK: CV::Pilote::130-evaluation-fiabilite
 
 ## CV-IOU-AP-001
 
-Objectif : calculer un recouvrement dans le bon contrat. Famille : pratique. Provenance : agent.
+Objective: calculate a recovery in the right contract. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-IOU-AP-001
-Question: Que faut-il fixer avant de calculer l'IoU de deux boîtes, et pourquoi un mélange `xyxy`/`xywh` peut-il rendre le résultat trompeur ?
-Reponse: **Noyau attendu** : fixer format, repère, unité, validité et convention continue/inclusive. En `xyxy`, les deux derniers nombres sont un coin ; en `xywh`, ce sont largeur et hauteur. Convertir explicitement avant intersection et union.
+Question: Which conventions must be fixed before calculating the IoU of two boxes, and why can mixing `xyxy` and `xywh` make the result misleading?
+Reponse: **Expected answer**: fix format, coordinate frame, unity, validity and continuous/inclusive agreement. In `xyxy`, the last two numbers are a corner; in `xywh`, they are width and height. Convert explicitly before intersection and union.
 
-**Approfondissement** : l'IoU vaut $|A\cap B|/(|A|+|B|-|A\cap B|)$, sans unité. Pour les boîtes continues du pilote, aire $(x_2-x_1)(y_2-y_1)$ sans `+1`. Ramener aussi boîtes normalisées, crop et padding dans le même repère. Une boîte dégénérée est une erreur de contrat à traiter, pas une raison d'ajouter silencieusement un epsilon.
+**Further explanation**: The IoU is $|A\cap B|/(|A|+|B|-|A\cap B|)$, without unit. For the driver's continuous boxes, area $(x_2-x_1)(y_2-y_1)$ without `+1`. Bring also standardized boxes, crop and padding in the same coordinate frame. A degenerate box is a contract error to deal with, not a reason to silently add an epsilon.
 
-**Exemple de contrat** : les nombres `(10,20,30,40)` décrivent soit deux coins, soit une origine et deux dimensions. Les régions obtenues ont alors des aires et positions différentes. Une formule d'intersection correcte ne peut pas compenser cette ambiguïté d'entrée.
+**Example of contract**: The numbers `(10,20,30,40)` describe either two corners, or one origin and two dimensions. The regions obtained then have different areas and positions. A correct intersection formula cannot compensate for this input ambiguity.
 
-**Contrôle proposé** : convertir une boîte connue vers le format de l'évaluateur, revenir au format initial et comparer ses coins. Répéter après resize et padding. Si prédiction et annotation subissent la même mise à l'échelle géométrique cohérente, leur IoU reste identique dans le cas idéal ; si une seule chaîne est convertie, le score change artificiellement. L'absence d'unité du ratio ne signifie donc pas absence de convention sur ses entrées.
+**check**: Convert a known box to the evaluator format, return to the original format and compare its corners. Repeat after resize and padding. If prediction and annotation undergo the same consistent geometric scaling, their IoU remains the same in the ideal case; if a single string is converted, the score changes artificially. The lack of unity of the ratio does not mean the absence of convention on its inputs.
 
-**Erreurs bloquantes** : calculer directement entre conventions ou repères différents.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|Fiche IoU/AP]] ; [COCO, format des résultats](https://cocodataset.org/#format-results).
+**Calculation of sides**: in continuous coordinates, the intersection width is $\max(0,\min(x_{2A},x_{2B})-\max(x_{1A},x_{1B}))$, and the height follows the same formula in $y$. Their product gives the intersected area. An invertible affine transformation applied to both regions multiplies their areas by the same absolute determinant and retains their geometric IoU. Warning: if a rotation is followed by the replacement of the regions by their encompassing rectangles aligned on the axes, the regions have been changed and this invariance no longer applies automatically. The form contract is as important as the contact information.
+
+**Blocking errors**: Calculate directly between different conventions or coordinate frames.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, format of results](https://cocodataset.org/#format-results); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::pratique cv_id::CV-IOU-AP-001 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-IOU-AP-002
 
-Objectif : distinguer mesure locale et protocole agrégé. Famille : comprehension. Provenance : agent.
+Objective: Distinguish between local measurement and aggregated protocol. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-IOU-AP-002
-Question: Quelle différence sépare l'IoU d'une paire, AP50, AP75 et l'AP principale COCO ?
-Reponse: **Noyau attendu** : l'IoU mesure un recouvrement de régions. AP50 et AP75 évaluent le classement précision/rappel avec un seuil de recouvrement fixé à 0,50 ou 0,75. L'AP principale COCO moyenne dix seuils de 0,50 à 0,95 par pas de 0,05, ainsi que les catégories valides et les niveaux de rappel du protocole.
+Question: How do a pair's IoU, AP50, AP75 and the main COCO AP metric differ?
+Reponse: **Expected answer**: The IoU measures a region overlap. AP50 and AP75 evaluate the accuracy/recall ranking with a threshold set at 0,50 or 0,75. The main COCO AP averages ten thresholds from 0,50 to 0,95 per step of 0,05, as well as valid categories and protocol recall levels.
 
-**Approfondissement** : un score AP n'est pas une moyenne des IoU ni une précision à un seuil de score unique. Toujours préciser bbox/segm, sous-ensemble de tailles et nombre maximal de prédictions. AP75 demande une localisation plus stricte qu'AP50, sans isoler à elle seule toutes les causes d'erreur.
+**Further explanation**: A AP score is not an average of the IoU nor an accuracy at a single score threshold. Always specify bbox/segm, subset of sizes and maximum number of predictions. AP75 requests a location stricter than AP50, without isolating all the causes of error.
 
-**Lecture d'un résultat** : AP50 peut rester élevée lorsque les boîtes sont suffisamment proches pour un critère permissif mais manquent la précision exigée à 0,75. Cette différence est informative pour la localisation, sans prouver que le réseau soit la cause : repères ou annotations peuvent aussi intervenir.
+**Reading a result**: AP50 can remain high when the boxes are close enough for a permissive criterion but lack the accuracy required at 0,75. This difference is informative for the location, without proving that the network is the cause: coordinate frames or annotations can also intervene.
 
-**Décision proposée** : consulter les courbes et erreurs par classe et taille, puis choisir le point d'exploitation sur validation. Un seuil de score utilisé en production sélectionne un sous-ensemble de la liste ; l'AP résume un protocole de classement plus large. Une même AP peut donc accompagner des compromis métier différents. Conserver les conventions de l'évaluateur et le nombre de prédictions retenues avant de comparer des versions.
+**Proposed action**: View curves and errors by class and size, then choose the operating point on validation. A score threshold used in production selects a subset of the list; the AP summarizes a broader ranking protocol. The same AP can therefore accompany different business compromises. Keep the evaluator's conventions and the number of predictions retained before comparing versions.
 
-**Erreurs bloquantes** : interpréter AP50 comme 50 % de précision ou comme la moyenne des recouvrements.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|Fiche IoU/AP]] ; [protocole officiel COCO](https://cocodataset.org/#detection-eval).
+**Ranking and confidence**: a set of fixed predictions, without filtering depending on the score and with the same tie-breaking, a strictly increasing common transformation of the scores retains their order and therefore the AP of ranking. However, it can change the number of outputs at the digital production threshold. This shows why AP and calibration of scores are distinct. Conversely, a differently applied transformation between images can change the overall classification of a category and its AP. Keep the scope of the postprocessing and any prediction limits in this analysis: the upstream rules may invalidate the set hypothesis.
+
+**Blocking errors**: interpret AP50 as 50% accuracy or as the average of recoveries.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [protocole officiel COCO](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::comprehension cv_id::CV-IOU-AP-002 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-IOU-AP-003
 
-Objectif : expliquer la pénalité d'un doublon. Famille : algorithme. Provenance : agent.
+Objective: Explain the penalty for a duplicate. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-IOU-AP-003
-Question: Deux prédictions bien localisées couvrent la même GT ordinaire. Pourquoi peuvent-elles donner un TP puis un FP dans une évaluation de détection ?
-Reponse: **Noyau attendu** : l'appariement suit le protocole et l'ordre des scores ; une GT ordinaire ne peut justifier qu'un seul TP. La seconde prédiction est un doublon même si son recouvrement est élevé.
+Question: Two well-localized predictions cover the same ordinary ground-truth instance. Why can detection evaluation count one as a TP and the other as an FP?
+Reponse: **Expected answer**: the matching follows the protocol and the order of the scores; an ordinary GT can only justify a single TP. The second prediction is a duplicate even if its recovery is high.
 
-**Approfondissement** : une NMS vise notamment cette redondance mais peut supprimer de vrais voisins. Les crowds et GT ignorées ont des règles spécifiques : ne pas généraliser la règle ordinaire à toutes les annotations COCO. Le classement des doublons influence la courbe précision/rappel et donc l'AP.
+**Further explanation**: A NMS is aimed at this redundancy but can remove real neighbors. The ignored crowd and GT have specific rules: do not generalize the ordinary rule to all COCO annotations. The classification of duplicates influences the precision/recall curve and therefore the AP.
 
-**Pourquoi le doublon coûte** : après le premier TP, la seconde boîte augmente le nombre de prédictions positives sans ajouter d'objet retrouvé. La précision peut donc baisser alors que le rappel ne progresse pas. Son influence sur l'AP dépend notamment de son rang par rapport aux détections suivantes.
+**Why does the duplicate cost**: After the first TP, the second box increases the number of positive predictions without adding a found object. The accuracy may therefore decrease while the recall is not progressing. Its influence on the AP depends in particular on its rank with respect to the following detections.
 
-**Contrôle construit** : garder les boîtes et permuter seulement les scores du doublon et d'une autre détection. Observer la courbe de précision/rappel sous le même protocole. Ne pas conclure qu'un faux positif tardif est sans coût dans le produit : il peut encore être émis au seuil d'exploitation. L'évaluation et le posttraitement ont donc des rôles complémentaires, avec une exception explicite pour les annotations auxquelles s'appliquent des règles crowd ou ignore.
+**check**: Keep boxes and swap only duplicate and other detection scores. Observe the precision/recall curve under the same protocol. Do not conclude that a late false positive is costless in the product: it can still be issued at the operating threshold. Evaluation and postprocessing therefore have complementary roles, with an explicit exception for annotations to which crowd or ignore rules apply.
 
-**Erreurs bloquantes** : compter chaque prédiction recouvrant suffisamment la même GT comme un nouveau TP.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|Fiche IoU/AP]] ; [cocoeval.py, evaluateImg L235](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L235).
+**Effect of a late duplicate**: for a single GT and a list TP then FP, the recall reaches 1 from the first detection and the interpolated accuracy can remain perfect on all levels of recall of this simple case. Duplicate is still a false positive if the operating threshold retains it. For TP, FP, TP on two GT, the duplicate appears before the recovery of the second object and can degrade part of the envelope. The position of the FP therefore explains its effect on the AP; it does not change its concrete cost in a counting or rejection system.
+
+**Blocking errors**: count each prediction sufficiently covering the same GT as a new TP.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py, evaluateImg L235](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L235); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::algorithme cv_id::CV-IOU-AP-003 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-IOU-AP-004
 
-Objectif : reconstruire une AP interpolée simple. Famille : raisonnement. Provenance : agent.
+Objective: rebuild a simple interpolated AP. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-IOU-AP-004
-Question: Pour deux GT valides, une seule catégorie, un seuil IoU fixé et aucune crowd/ignore, les prédictions ordonnées sont TP, FP doublon, TP. Comment obtenir l'AP interpolée aux 101 rappels ?
-Reponse: **Noyau attendu** : rappels $0,5;0,5;1$, précisions $1;0,5;2/3$. L'enveloppe maximale vers la droite vaut 1 jusqu'au rappel 0,5 inclus, puis $2/3$. Donc $AP=(51+50\times2/3)/101\approx0,834983$.
+Question: For two valid GT instances, one category, a fixed IoU threshold and no crowd/ignore annotations, ranked predictions are TP, duplicate FP, TP. How is AP interpolated over 101 recall levels calculated?
+Reponse: **Expected answer**: reminders $0,5;0,5;1$, details $1;0,5;2/3$. The maximum envelope to the right is 1 up to and including the 0,5 reminder, then $2/3$. So $AP=(51+50\times2/3)/101\approx0,834983$.
 
-**Approfondissement** : les 101 niveaux sont $0;0,01;\ldots;1$, donc 51 niveaux sont au plus 0,5. Les rappels inatteignables reçoivent zéro ; une seule GT détectée sur deux donnerait $51/101$, malgré une précision de 1 pour la seule détection. Exemple exécuté ; ce calcul simplifié n'implémente pas tout COCO.
+**Further explanation**: The 101 levels are $0;0,01;\ldots;1$, so 51 levels are at most 0,5. Unreachable reminders receive zero; only one GT detected out of two would give $51/101$, despite an accuracy of 1 for detection alone. Example executed; this simplified calculation does not implement all COCO.
 
-**Raisonnement de classement** : la deuxième prédiction ne retrouve aucune nouvelle GT et fait passer la précision courante à un demi. La troisième atteint le rappel maximal avec une précision de deux tiers ; l'enveloppe reprend ce meilleur niveau pour les rappels intermédiaires accessibles.
+**Reasoning for classification**: The second prediction does not find any new GT and raises the current accuracy to half. The third reaches the maximum recall with two-thirds accuracy; the envelope resumes this best level for accessible intermediate recalls.
 
-**Variation interprétée** : placer le doublon après les deux TP peut conserver une enveloppe d'AP parfaite dans ce petit cas, alors que le système produit toujours un doublon. Le score résume donc un classement sous une convention précise et pas toutes les conséquences métier de la liste. Examiner aussi les sorties au seuil d'exploitation, puis ne généraliser ce calcul jouet ni aux crowds ni aux autres détails de l'évaluateur complet.
+**Variation interpreted**: placing the duplicate after the two TPs can keep a perfect envelope of AP in this small case, while the system always produces a duplicate. The score therefore summarizes a ranking under a specific convention and not all business consequences of the list. Also review the exits at the operating threshold, and then do not generalize this toy calculation to the crowd or other details of the full appraiser.
 
-**Erreurs bloquantes** : moyenner seulement les trois précisions brutes ou remplacer les 101 rappels par un unique point d'exploitation.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|Fiche IoU/AP]] ; [cocoeval.py, accumulate L353](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L353).
+**Algorithm of the envelope**: After stacking TP and FP, go through the accuracy from right to left and replace each value with the maximum between it and the next. For each reminder requested, then take the first level reached to its right according to the rules of the evaluator, or zero if it is not reached. This procedure explains the 51 levels included up to 0,50 in the case built. It differs from an arbitrary trapezoidal integration of three points. Categories without valid GT and ignored annotations follow other rules, so a ranking example is not a complete COCO re-implementation.
+
+**Blocking errors**: average only the three raw precisions or replace the 101 reminders with a single operating point.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py, accumulate L353](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L353); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::raisonnement cv_id::CV-IOU-AP-004 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-IOU-AP-005
 
-Objectif : comparer des évaluateurs avec prudence. Famille : evaluation. Provenance : agent.
+Objective: Compare evaluators with caution. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-IOU-AP-005
-Question: Deux outils annoncent une AP COCO différente pour les mêmes sorties. Quels éléments faut-il aligner avant de conclure à une erreur du modèle ?
-Reponse: **Noyau attendu** : aligner split/GT, catégories, bbox ou masque, conversions de coordonnées, filtres de score/NMS/top-k, maxDets, ignore/crowd, tailles, version de l'évaluateur et interpolation. Comparer le même fichier de résultats et les paramètres effectifs.
+Question: Two tools report different COCO AP values for the same outputs. What must be aligned before concluding that the model is wrong?
+Reponse: **Expected answer**: align split/GT, categories, bbox or mask, coordinate conversions, score/NMS/top-k filters, maxDets, ignore/crowd, sizes, reviewer version and interpolation. Compare the same result file and the actual parameters.
 
-**Approfondissement** : dans le code pycocotools épinglé avec `useCats=1`, maxDets est appliqué par image et catégorie ; la page descriptive évoque un top-100 global et certains wrappers peuvent le faire en amont. Décrire la chaîne réellement exécutée plutôt qu'une règle universelle. Les catégories sans GT valide sont exclues, pas comptées comme AP zéro.
+**Further explanation**: in the pycocotools code pinned with `useCats=1`, maxDets is applied by image and category; the descriptive page evokes a global top-100 and some wrappers can do it upstream. Describe the string actually executed rather than a universal rule. Categories without valid GT are excluded, not counted as AP zero.
 
-**Reproduction proposée** : archiver un seul fichier de prédictions et une seule version de GT, puis faire varier uniquement l'évaluateur ou son paramètre suspect. Comparer d'abord le nombre d'images, de catégories, de GT valides et de détections effectivement retenues avant le score final.
+**Proposed reproduction**: archive a single prediction file and a single version of GT, and then vary only the evaluator or its suspicious parameter. First compare the number of valid images, categories, GTs and detections actually retained before the final score.
 
-**Pourquoi ces contrôles précèdent le modèle** : une différence de maxDets ou de catégorie ignorée change les objets admis dans le calcul sans modifier les poids ni les boîtes du détecteur. Chercher une régression d'inférence alors que l'écart vient du protocole ferait perdre du temps. Une attribution correcte exige la trace de la chaîne complète et les règles réellement exécutées par le wrapper, pas seulement le nom COCO affiché.
+**Why these controls precede the model**: A difference of maxDets or ignored category changes the objects admitted in the calculation without changing the weights or the boxes of the detector. Looking for an inference regression when the deviation comes from the protocol would waste time. Proper attribution requires the complete string trace and the rules actually executed by the wrapper, not just the COCO name displayed.
 
-**Erreurs bloquantes** : appeler tout calcul maison « COCO » sans règles d'appariement, ou comparer des ensembles de catégories différents sans le signaler.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|Fiche IoU/AP]] ; [cocoeval.py épinglé](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py).
+**The First Observable Disagreement**: compare first the sets of images and categories, then the ordered lists retained by image, then the statuses TP/FP/ignore at each threshold. If these elements are identical, then look for accumulation, interpolation and averages. This progress avoids debugging a final average when the tools have not evaluated the same objects. Keep fingerprints of GT files and results, parameters, and code version in the report. Two outputs displayed with the same AP label can come from different wrapper filters; only the trace of the actual inputs and the matches can accurately assign the deviation.
+
+**Blocking errors**: Call any house calculation “COCO” without matching rules, or compare sets of different categories without reporting it.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py pinned](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-IOU-AP-005 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-IOU-AP-006
 
-Objectif : diagnostiquer un écart selon l'exigence de localisation. Famille : diagnostic. Provenance : agent.
+Objective: diagnose a deviation according to the location requirement. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-IOU-AP-006
-Question: AP50 reste élevée alors qu'AP75 baisse fortement après un nouveau prétraitement. Que vérifier sans attribuer immédiatement le problème au réseau ?
-Reponse: **Noyau attendu** : vérifier la précision de localisation et la propagation des coordonnées à travers resize/crop/padding. Comparer prédictions et GT dans le même repère, puis analyser les résultats par taille et classe.
+Question: AP50 remains high while AP75 falls sharply after new preprocessing. What should be checked before blaming the network?
+Reponse: **Expected answer**: Check location accuracy and coordinate propagation through resize/crop/padding. Compare predictions and GT in the same coordinate frame, then analyze the results by size and class.
 
-**Approfondissement** : une petite translation peut laisser l'IoU au-dessus de 0,50 et sous 0,75, surtout sur de petits objets. Vérifier aussi arrondis, format de boîte et posttraitement. L'écart suggère une sensibilité au critère de recouvrement, mais ne démontre pas à lui seul une cause unique.
+**Further explanation**: A small translation can leave the IoU above 0,50 and under 0,75, especially on small objects. Also check rounded, box format and postprocessing. The discrepancy suggests a sensitivity to the recovery criterion, but does not alone demonstrate a single cause.
 
-**Exemple de signature** : une translation de deux pixels peut être faible pour une grande boîte et représenter une fraction importante d'un petit défaut. Une erreur constante de padding ou d'arrondi peut donc affecter différemment les tailles et les seuils de recouvrement.
+**Example of signature**: A translation of two pixels can be small for a large box and represent a large fraction of a small defect. A constant padding or rounding error can therefore affect sizes and thresholds differently.
 
-**Enquête proposée** : tester quelques boîtes connues à travers le nouveau prétraitement et son inverse, puis comparer les prédictions avant et après posttraitement sur les mêmes images. Examiner les vecteurs d'erreur et non uniquement les moyennes d'AP. Si le contrat de coordonnées est correct, poursuivre vers acquisition, résolution effective ou qualité de régression. Cette démarche transforme une signature de métriques en hypothèses testables, sans attribuer automatiquement la baisse à un bug précis.
+**Proposed investigation**: test some known boxes through the new preprocessing and its inverse, and then compare the predictions before and after postprocessing on the same images. Examine the error vectors and not just the averages of AP. If the coordinate contract is correct, continue towards acquisition, effective resolution or regression quality. This approach transforms a metric signature into testable hypotheses, without automatically assigning the drop to a specific bug.
 
-**Erreurs bloquantes** : prendre AP75 pour une métrique de classification indépendante de la géométrie, ou conclure à un bug précis sans inspection.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|Fiche IoU/AP]] ; [COCO, définition des métriques](https://cocodataset.org/#detection-eval).
+**Sensitivity to translation**: for two side squares $a$ horizontally offset from $\delta$ with $0\le\delta<a$, the IoU is $(a-\delta)/(a+\delta)$. To stay above a threshold $\tau$, you need $\delta<a(1-\tau)/(1+\tau)$ if the comparison is strict. At $\tau=0,75$, this represents about $0,143a$; an error of 2 px therefore strongly penalizes a box of 10 px side. This constructed calculation does not point to the cause, but justifies the analysis by size and the check of the pretreatment curves and offsets before a new drive.
+
+**Blocking errors**: Take AP75 for a geometry-independent classification metric, or conclude a specific bug without inspection.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, metric definition](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::diagnostic cv_id::CV-IOU-AP-006 provenance::agent pole::A pole::C pole::E
 END
 
 ## CV-IOU-AP-007
 
-Objectif : relier moyenne benchmark et décision métier. Famille : evaluation. Provenance : agent.
+Objective: link average benchmark and business decision. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-IOU-AP-007
-Question: Un détecteur a une bonne AP moyenne mais rate les défauts les plus coûteux sur de petites pièces. Comment compléter l'évaluation pour décider de sa mise en service ?
-Reponse: **Noyau attendu** : examiner rappel et faux positifs au seuil d'exploitation, les classes/tailles critiques et les conditions d'acquisition réelles, avec les coûts métier. Une moyenne sur classes et seuils peut masquer une erreur rare mais grave.
+Question: A detector has good mean AP but misses the most costly defects on small parts. How should evaluation be extended to decide whether it is ready for use?
+Reponse: **Expected answer**: Review recall and false positives at operating threshold, critical classes/sizes and actual acquisition conditions, with business costs. An average on classes and thresholds can hide a rare but serious error.
 
-**Approfondissement** : fixer les seuils sur validation, conserver un test représentatif, analyser incertitude et cas hors distribution selon le besoin. Mesurer aussi latence et comportement aval. L'AP reste utile pour comparer le classement et la localisation sous protocole fixé, sans certifier la fiabilité du produit.
+**Further explanation**: set thresholds on validation, maintain a representative test, analyze uncertainty and out-of-distribution cases as required. Also measure latency and downstream behavior. The AP remains useful for comparing the classification and the location under fixed protocol, without certifying the reliability of the product.
 
-**Contrat de décision** : définir les défauts dont l'absence de détection est coûteuse, la charge acceptable de faux rejets et le comportement des cas incertains. Une AP moyenne pondère des catégories selon son protocole ; elle ne connaît pas automatiquement cette hiérarchie des conséquences.
+**Decision contract**: Define the defects for which the lack of detection is costly, the acceptable load of false rejections and the behavior of uncertain cases. An average AP weighs categories according to its protocol; it does not automatically know this hierarchy of consequences.
 
-**Validation proposée** : conserver des lots indépendants incluant petites tailles et conditions difficiles, puis mesurer les erreurs au seuil figé et les performances des sous-groupes critiques. Examiner aussi le délai utile et les erreurs introduites par les étapes aval. Un gain d'AP peut être intéressant sans suffire à autoriser la mise en service. La conclusion doit dire quel usage a été validé, sur quelles données et avec quelles limites, plutôt que convertir un score agrégé en garantie de fiabilité.
+**Proposed Validation**: maintain independent batches including small sizes and harsh conditions, then measure fixed threshold errors and performance of critical subgroups. Also consider the timeliness and errors introduced by the downstream steps. A gain of AP may be interesting without sufficient to allow commissioning. The conclusion must say what use has been validated, on what data and with what limits, rather than converting an aggregate score into a guarantee of reliability.
 
-**Erreurs bloquantes** : accepter le système sur sa seule moyenne ou régler le seuil après observation des résultats du test final.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|Fiche IoU/AP]] ; [COCO, agrégations par catégorie et taille](https://cocodataset.org/#detection-eval).
+**Prevalence and burden of false releases**: In a binary model, if the defects have a prevalence of $\pi$, a recall of $r$ and a false positive rate of $f$ among the conformants, the accuracy of the alerts is $r\pi/[r\pi+f(1-\pi)]$. For $\pi=0,001$, $r=0,99$ and $f=0,01$, it is about 9%. This constructed case explains why a small proportion of false positives can saturate the review when defects are rare. The benchmark AP does not directly provide this load: it requires the operating threshold, the actual frequencies and the costs of the errors useful to the product.
+
+**Blocking errors**: Accept the system on its average or set the threshold after observing the results of the final test.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, aggregations by category and size](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-IOU-AP-007 provenance::agent pole::A pole::C pole::E
 END

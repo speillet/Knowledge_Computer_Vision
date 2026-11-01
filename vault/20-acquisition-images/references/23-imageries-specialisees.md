@@ -7,86 +7,109 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
 ---
-# Line-scan, télédétection et volumes médicaux
+# Line-scan imaging, remote sensing and medical volumes
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Comprendre des contrats d'acquisition spécialisés avant d'appliquer un réseau 2D. Comparaison d'entrées : lignes synchronisées au mouvement, bandes multispectrales/SAR, volumes avec espacement/orientation physique. La fiche introduit ces familles ; elle ne constitue pas une maîtrise de chaque modalité.
+Understand specialized procurement contracts before applying a 2D network. Input comparison: lines synchronized to motion, multispectral/SAR bands, volumes with physical spacing/orientation. The reference note introduces these families; it does not constitute a mastery of each modality.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Line-scan reconstruit une image au fil du déplacement ; une optique télécentrique vise à limiter certains changements de grandissement sur sa plage conçue. Une image géoréférencée porte une transformation vers des coordonnées terrestres. Un volume médical possède axes, espacement et orientation ; l'ordre du tableau n'est pas le repère patient.
+Line-scan reconstructs an image as it moves; a telecentric lens aims to limit certain magnification changes on its designed range. A georeferenced image carries a transformation to terrestrial coordinates. A medical volume has axes, spacing, and orientation; the order of the chart is not the coordinate frame patient.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Un espacement voxel $(s_x,s_y,s_z)$ en mm transforme un déplacement d'indices en longueur physique. Des pixels ou voxels anisotropes rendent des distances en indices trompeuses. Un affine géospatial ou volumique doit conserver axe, unité et convention ; une coordonnée latitude/longitude n'est pas une distance euclidienne en mètres.
+A voxel $(s_x,s_y,s_z)$ spacing in mm transforms a displacement of indices into physical length. Anisotropic pixels or voxels make distances in indices misleading. A geospatial or volume affine must retain axis, unity, and convention; a latitude/longitude coordinate is not a Euclidean distance in meters.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Préciser calibration line-scan/encodeur, bandes et normalisation, résolution au sol, no-data, axes et espacement. DICOM/NIfTI sont des formats avec métadonnées, pas des garanties d'annotations cohérentes ou d'utilité clinique.
+Specify line-scan/encoder calibration, bands and normalization, ground resolution, no-data, axes and spacing. DICOM/NifTI are formats with metadata, not guarantees of consistent annotations or clinical utility.
 
-## Coût et implémentation
+## Cost and implementation
 
-Grandes mosaïques et volumes nécessitent tuilage avec recouvrement et restitution des coordonnées. Aucun fichier patient ou géospatial réel n'est chargé ici ; aucun résultat clinique n'est revendiqué.
+Large mosaics and volumes require tile with overlapping and restitution of coordinates. No real patient or geospatial files are loaded here; no clinical results are claimed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : rééchantillonner un volume anisotrope ou modifier la vitesse du convoyeur. Prédire les erreurs si la transformation n'est pas propagée ; vérifier une longueur connue et les raccords de tuiles.
+Proposed variation: resample an anisotropic volume or change the conveyor speed. Predict errors if transformation is not propagated; check a known length and tile fittings.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Distances de contour incohérentes : vérifier espacement et orientation. Artefacts aux raccords : contrôler padding, recouvrement et fusion. Dégradation saisonnière : distinguer acquisition et distribution des labels.
+Incoherent contour distances: check spacing and orientation. Artifacts with fittings: check padding, coating and fusion. Seasonal degradation: distinguish between acquisition and distribution of labels.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Choisir une représentation selon la tâche et les unités ; une bonne segmentation ne prouve ni géoréférencement exact ni précision de métrologie.
+Choose a representation according to the task and units; good segmentation does not prove accurate georeferencing or metrology accuracy.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent géométrie physique, line-scan et unité de généralisation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop physical geometry, line-scan and generalization unit. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-IMAGERIES-001
+### Case linked to CV-IMAGERIES-001
 
-**Question de travail** : Pourquoi HD95 ne doit-il pas être calculé aveuglément en indices de voxels sur une IRM anisotrope ?
+**Question of work**: Why should HD95 not be calculated blindly in voxel-index units for anisotropic MRI?
 
-**Réponse de référence** : Les axes peuvent avoir des espacements physiques différents ; convertir les distances dans le repère et l’unité annoncés.
+**Reference Response**: The axes can have different physical spacings; convert the distances in the announced coordinate frame and unit.
 
-**Exemple analytique** : avec un espacement de 0,5 mm, 0,5 mm et 3 mm, un déplacement d'un indice vaut 0,5 mm sur les deux premiers axes, mais 3 mm sur le troisième. Pour des axes orthogonaux, une différence d'indices $\Delta i$ se convertit en distance par $\sqrt{\sum_k(s_k\Delta i_k)^2}$, où $s_k$ est l'espacement de l'axe. Les conventions d'orientation et de position déterminent ensuite le repère commun.
+**Analytical example**: with a spacing of 0,5 mm, 0,5 mm and 3 mm, a displacement of an index is 0,5 mm on the first two axes, but 3 mm on the third. For orthogonal axes, a difference of indices $\Delta i$ is converted into distance by $\sqrt{\sum_k(s_k\Delta i_k)^2}$, where $s_k$ is the spacing of the axis. The orientation and position conventions then determine the common coordinate frame.
 
-**Conséquence pour l'évaluation** : un calcul de distance entre surfaces doit utiliser une géométrie physique cohérente pour les deux masques. Une permutation d'axes ou un rééchantillonnage oublié peut modifier le résultat sans changement de segmentation. Vérifier une distance connue et annoncer l'unité dans le rapport. Le percentile choisi et le traitement des masques vides appartiennent au protocole ; aucune valeur isolée ne constitue ici une conclusion clinique.
+**Consequences for the evaluation**: A surface distance calculation must use a consistent physical geometry for both masks. A forgotten axis permutation or resampling can change the result without changing segmentation. Check a known distance and announce the unit in the report. The percentile chosen and the treatment of empty masks belong to the protocol; no isolated value constitutes here a clinical conclusion.
 
-### Cas lié à CV-IMAGERIES-003
+### Case linked to CV-IMAGERIES-003
 
-**Question de travail** : Pourquoi des tuiles voisines réparties aléatoirement entre entraînement et test peuvent-elles surestimer la généralisation en télédétection ?
+**Question of work**: Why can randomly splitting neighboring tiles between training and test overestimate generalization in remote sensing?
 
-**Réponse de référence** : Elles partagent scène, texture et contexte ; le test peut ressembler à l’entraînement au-delà du scénario futur visé.
+**Reference Response**: They share scene, texture and context; the test can look like training beyond the intended future scenario.
 
-**Pourquoi le split peut tromper** : des tuiles distinctes peuvent contenir les mêmes bâtiments, le même fond ou une partie d'une image commune. Même sans recouvrement exact, un site partage acquisition, saison et matériaux. Le modèle peut donc réussir en reconnaissant un environnement déjà rencontré, alors que le produit doit fonctionner dans une autre région.
+**Why splits can fool**: Separate tiles can contain the same buildings, the same background or part of a common image. Even without exact recovery, a site shares acquisition, season and materials. The model can therefore succeed by recognizing an environment already encountered, while the product must work in another region.
 
-**Protocole proposé** : définir d'abord la généralisation recherchée : nouvelles positions du même site, nouvelle date ou nouveau territoire. Regrouper les données selon cette unité avant le tuilage, contrôler les empreintes géographiques et réserver un test qui représente cet usage. Comparer les résultats par site et saison plutôt que seulement la moyenne globale. Un split géographique plus difficile n'est pas automatiquement plus représentatif : il doit correspondre au besoin annoncé. Le risque décrit est un raisonnement méthodologique, pas une mesure de fuite établie sur tous les jeux de télédétection.
+**Proposed Protocol**: first define the generalization sought: new positions of the same site, new date or new territory. Group the data according to this unit before the tile, check the geographical footprints and reserve a test that represents this use. Compare results by site and season rather than just the overall average. A more difficult geographic split is not automatically more representative: it must correspond to the announced need. The risk described is methodological reasoning, not a measure of leakage established on all remote sensing sets.
 
-**Repère documentaire de cette passe** : [DICOM, Image Plane Module](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), §C.7.6.2.1.1, position, orientation et pixel spacing. Les autres développements figurent dans les [cartes associées](../23-imageries-specialisees.md).
+**Documentary reference for this pass**: [DICOM, Image Plane Module](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), §C.7.6.2.1.1, position, orientation and pixel spacing. The other developments are in the [flashcards](../23-imageries-specialisees.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
+
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-IMAGERIES-001
+
+**Situation**: Why should HD95 not be calculated blindly in voxel-index units for anisotropic MRI?
+
+**Complete Geometry**: A physical position is written $p=o+A i$, with index $i$, physical origin $o$ and columns of $A$ describing directions and spacings. The distance between indices follows $\|A\Delta i\|_2$; the formula with only spacings assumes orthogonal axes. DICOM distinguishes the nominal cutting thickness from the distance between centers: systematically using the thickness as spacing can be wrong. For a stack, check the positions and orientations of the cuts, regularity and order before making a single affine. The calculation of HD95 then requires a precise definition of the surfaces, directed distances and percentiles, with explicit policy if one of the surfaces is empty.
+
+### CV-IMAGERIES-002
+
+**Situation**: A part appears stretched in a line-scan image when conveyor speed changes. What should be tested?
+
+**Sizing Built**: for a desired longitudinal resolution of 0,1 mm/line and a speed of 500 mm/s, it is necessary $f_l=v/s=5000$ lines/s in the slip-free model. A long piece of 20 mm then occupies about 200 lines. If an encoder imposes a line per displacement of 0,1 mm, the frequency must follow the speed variations within the range allowed by the sensor. A maximum speed exceeded or a lost impulse breaks this contract. It is also necessary to limit the displacement during the exposure of a line: correct spatial triggering and low blur are two distinct constraints. The above calculations are analytical sizing, without conveyor testing.
+
+### CV-IMAGERIES-003
+
+**Situation**: Why can randomly splitting neighboring tiles between training and test overestimate generalization in remote sensing?
+
+**Define the unit of the test**: Ten thousand tiles from ten scenes do not represent ten thousand independent contexts. Build a table linking each tile to the scene, site, date, and footprint; assign groups to scores before any increase or extraction of patches. The normalization statistics learned and the choice of thresholds must follow the same separation. A geographical margin can help remove recoveries, without guaranteeing the independence of all acquisition factors. To compare two methods, also aggregate their deviations by representative group of the deployment: a result dominated by a very cut site can tell a story other than the average sites. This is a proposed protocol, not an audit of SpaceNet.
+
+**Passages consulted for these developments**: [DICOM PS3.3 2026d](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), C.7.6.2, position, orientation and spacings; [Basler, GigE Line Scan](https://docs.baslerweb.com/line-scan-gige-use-cases), Case 1 b, trigger encoder; [SpaceNet7](https://www.spacenet.ai/sn7-challenge/), The Problem and The Data; geographical separation deduced by the project.
+
+## Sources and flashcards
 
 - [Basler, GigE Line Scan Use Cases, Use Case 1 b (v136, 2026-10-01)](https://docs.baslerweb.com/line-scan-gige-use-cases).
 - [Edmund Optics, The Advantages of Telecentricity](https://www.edmundoptics.com/knowledge-center/application-notes/imaging/advantages-of-telecentricity/).
 
-La fuite entre tuiles voisines est un risque déduit par le projet, à évaluer selon le scénario de généralisation ; la description SpaceNet contextualise les séries géographiques sans prouver à elle seule ce biais pour tout split.
+The leak between neighboring tiles is a risk deduced by the project, to be evaluated according to the generalization scenario; the description SpaceNet contextualizes the geographical series without alone proving this bias for any split.
 
-- [NIfTI, standard et transformations](https://nifti.nimh.nih.gov/nifti-1/).
+- [NIfTI, standard and transformations](https://nifti.nimh.nih.gov/nifti-1/).
 - [DICOM, standard courant](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html).
-- [SpaceNet7, données multi-temporelles](https://www.spacenet.ai/sn7-challenge/).
-- [Cartes associées](../23-imageries-specialisees.md).
+- [SpaceNet7, multi-temporal data](https://www.spacenet.ai/sn7-challenge/).
+- [Related flashcards](../23-imageries-specialisees.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

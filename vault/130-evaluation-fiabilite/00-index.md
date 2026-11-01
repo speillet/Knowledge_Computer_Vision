@@ -1,14 +1,14 @@
-# Données, évaluation et fiabilité
+# Data, evaluation and reliability
 
-Protocoles, métriques, splits, incertitude et dérive.
+Protocols, metrics, splits, uncertainty and drift.
 
-| Sujet | Référence | Cartes | Pôles |
+| Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [IoU et AP — protocole COCO de détection](131-iou-ap-coco.md) | [Lire](references/131-iou-ap-coco.md) | 7 | A, C, E |
-| [Évaluer identités, trajectoires et localisation 3D](132-tracking-trajectoires.md) | [Lire](references/132-tracking-trajectoires.md) | 5 | B, C, D |
-| [Splits, annotations, calibration des scores et dérive](133-donnees-generalisation.md) | [Lire](references/133-donnees-generalisation.md) | 5 | A, C, D, E, F |
-| [Métriques de segmentation, inspection et applications](134-metriques-applications.md) | [Lire](references/134-metriques-applications.md) | 4 | A, E |
+| [IoU and AP — the COCO detection protocol](131-iou-ap-coco.md) | [Read](references/131-iou-ap-coco.md) | 7 | A, C, E |
+| [Evaluating identities, trajectories and 3D localization](132-tracking-trajectoires.md) | [Read](references/132-tracking-trajectoires.md) | 5 | B, C, D |
+| [Data splits, annotations, score calibration and drift](133-donnees-generalisation.md) | [Read](references/133-donnees-generalisation.md) | 5 | A, C, D, E, F |
+| [Metrics for segmentation, inspection and applications](134-metriques-applications.md) | [Read](references/134-metriques-applications.md) | 4 | A, E |
 
-Sous-deck : `CV::Pilote::130-evaluation-fiabilite`. Statut : rédigé ; export et maîtrise non vérifiés.
+Subdeck: `CV::Pilote::130-evaluation-fiabilite`. Status: drafted; device import and mastery unverified.
 
-[Accueil](../00-Accueil.md) · [Inventaire](../01-Parcours/Inventaire.md) · [Pôles](../01-Parcours/Poles-metiers.md).
+[Home](../00-Accueil.md) · [Inventory](../01-Parcours/Inventaire.md) · [Career tracks](../01-Parcours/Poles-metiers.md).

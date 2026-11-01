@@ -7,82 +7,111 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-SVD", "CV-EPIPOLAIRE", "CV-FACTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
 ---
-# Bundle adjustment et complément de Schur
+# Bundle adjustment and the Schur complement
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Affiner poses et landmarks par leurs observations image communes. Entrées : associations 2D–3D, paramètres initiaux, intrinsèques et bruit ; sorties : états optimisés et diagnostic de résidus. Une mauvaise association ou jauge ne disparaît pas avec plus d'itérations.
+Refine poses and Landmarks by their common image observations. Inputs: 2D – 3D combinations, initial, intrinsic and noise parameters; outputs: optimized states and diagnostics of residuals. A bad association or gauge doesn’t go away with more iterations.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-SVD](../../10-mathematiques-estimation/references/11-moindres-carres-svd.md) ; [CV-EPIPOLAIRE](53-epipolaire-pnp-triangulation.md) ; [CV-FACTEURS](../../10-mathematiques-estimation/references/14-graphes-facteurs.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-SVD](../../10-mathematiques-estimation/references/11-moindres-carres-svd.md); [CV-EPIPOLAIRE](53-epipolaire-pnp-triangulation.md); [CV-FACTEURS](../../10-mathematiques-estimation/references/14-graphes-facteurs.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Linéariser les projections, résoudre un incrément creux, accepter un pas puis réitérer. Les observations relient chacune une caméra et un point ; cette structure permet d'éliminer efficacement les incréments de points avec Schur, puis de les retrouver.
+Linearize projections, solve a sparse increment, accept a step and then repeat. The observations each link a camera and a point; this structure makes it possible to effectively eliminate the increments of points with Schur, and then to find them.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Minimiser $\sum_{ij}\rho(r_{ij}^T\Sigma_{ij}^{-1}r_{ij})$, où $r_{ij}$ est un résidu pixel, $\Sigma_{ij}$ sa covariance définie positive et $\rho$ une perte robuste appliquée à sa norme blanchie au carré. Pour les blocs caméra/points B,E,C et seconds membres v,w, résoudre $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$, puis récupérer $\delta_p=C^{-1}(w-E^T\delta_c)$. Cette écriture suppose les blocs de $C$ inversibles ; contraintes et/ou amortissement doivent traiter les directions singulières. Les inverses notées décrivent l'algèbre ; l'implémentation utilise des résolutions adaptées.
+Minimize $\sum_{ij}\rho(r_{ij}^T\Sigma_{ij}^{-1}r_{ij})$, where $r_{ij}$ is a residual pixel, $\Sigma_{ij}$ its positive definite covariance and $\rho$ a robust loss applied to its squared whitened standard. For camera blocks/points B,E,C and right-hand sides v,w, solve $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$, and then recover $\delta_p=C^{-1}(w-E^T\delta_c)$. This writing assumes the blocks of $C$ invertibles; constraints and/or damping must process the singular directions. Noted inverses describe algebra; the implementation uses appropriate resolutions.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Fixer jauge, paramètres intrinsics libres, perte robuste et critères d'arrêt. Des captures pauvres ou paramètres corrélés peuvent rester mal identifiés. La robustification atténue certains grands résidus sans prouver les associations.
+Attach gauge, free intrinsic parameters, robust loss and stop criteria. Poor catch or correlated parameters may remain poorly identified. Robustification attenuates some large residuals without proving associations.
 
-## Coût et implémentation
+## Cost and implementation
 
-Sparsité, nombre d'observations et ordre d'élimination dominent ; Schur peut générer des interactions entre caméras. Aucun solveur Ceres n'est exécuté ici.
+Sparsity, number of observations and order of elimination dominate; Schur can generate interactions between cameras. No Ceres solver is executed here.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : conserver les observations et libérer progressivement des paramètres intrinsèques. Prédire une possible baisse du coût avec une stabilité moindre ; mesurer sur vues réservées et contrôler les unités.
+Proposed variation: retain observations and gradually release intrinsic parameters. Predict a possible decrease in cost with less stability; measure on reserved views and check units.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Coût faible mais échelle incorrecte : vérifier référence métrique et jauge. Caméra qui s'écroule après ajout d'une piste : inspecter l'association et les résidus par observation.
+Low cost but incorrect scale: check metric reference and gauge. Camera that collapses after adding a track: inspect the association and the residuals by observation.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Pose graph optimise principalement poses/contraintes relatives ; BA conserve les observations des landmarks. Le choix dépend des inconnues et de l'information à garder.
+pose graph mainly optimizes poses/relative constraints; BA retains the observations of the marks. The choice depends on the unknowns and the information to be kept.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent jauge, résidus robustes et blocs d’optimisation. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These built cases develop gauge, robust residuals and optimization blocks. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-BA-001
+### Case linked to CV-BA-001
 
-**Question de travail** : Qu’optimise un bundle adjustment et pourquoi le distinguer d’un pose graph ?
+**Question of work**: What does bundle adjustment optimize, and how does it differ from a pose graph?
 
-**Réponse de référence** : Le BA optimise poses et points, éventuellement intrinsics, à partir de reprojections ; un pose graph repose sur des contraintes entre poses.
+**Reference Response**: The BA optimizes poses and points, possibly intrinsic, from reprojections; a pose graph is based on constraints between poses.
 
-**Mécanisme** : chaque observation image lie une caméra et un landmark par un modèle de projection. Modifier un point influence ses observations dans plusieurs vues ; modifier une caméra influence les points qu'elle observe. Le BA recherche conjointement des valeurs qui expliquent ces observations, avec pondération et éventuellement robustification.
+**Mechanism**: Each image observation links a camera and a landmark with a projection model. Changing a point influences its observations in several views; changing a camera influences the points it observes. The BA jointly searches for values that explain these observations, with weighting and possibly robustness.
 
-**Exemple construit** : une dérive de trajectoire et des positions de points erronées peuvent se compenser partiellement dans une vue, mais être incompatibles dans les autres. L'optimisation conjointe exploite ces liens. Un pose graph utilise déjà des contraintes résumées entre poses et ne conserve pas nécessairement chaque reprojection. Les coûts, les biais possibles et la structure des inconnues diffèrent donc. Vérifier jauge, initialisation, associations et résidus par observation : une diminution du coût global ne prouve ni l'échelle métrique ni la validité physique de tous les landmarks optimisés.
+**Constructed example**: A trajectory drift and erroneous point positions may partially compensate in one view, but be incompatible in the others. The joint optimization exploits these links. A pose graph already uses constraints summarized between poses and does not necessarily retain each reprojection. The costs, possible biases and structure of the unknowns therefore differ. Check gauge, initialization, associations and residuals per observation: a decrease in the overall cost proves neither the metric scale nor the physical validity of all optimized landmarks.
 
-### Cas lié à CV-BA-004
+### Case linked to CV-BA-004
 
-**Question de travail** : Pourquoi libérer davantage de coefficients de caméra peut-il réduire le coût tout en dégradant la calibration ?
+**Question of work**: Why can freeing additional camera coefficients reduce the optimization cost while degrading calibration?
 
-**Réponse de référence** : Des paramètres supplémentaires peuvent surajuster un jeu peu informatif ou être corrélés.
+**Reference Response**: Additional settings may over-adjust an uninformative game or be correlated.
 
-**Pourquoi le coût baisse** : un espace de paramètres plus grand peut contenir une solution qui ajuste davantage les observations d'entraînement. Cela ne dit pas si les paramètres supplémentaires représentent la caméra ou absorbent bruit, déformation de mire et erreurs de correspondance. Plusieurs paramètres peuvent aussi produire des effets proches sur une capture peu informative.
+**Why the cost goes down**: A larger parameter space can contain a solution that further adjusts training observations. This does not say if the additional parameters represent the camera or absorb noise, deformation of calibration target and mismatches. Several parameters can also produce similar effects on an uninformative capture.
 
-**Ablation construite** : conserver les observations et libérer un groupe de paramètres à la fois. Examiner leur dispersion par sous-ensembles, les corrélations et les résidus sur des vues réservées couvrant notamment les bords. Un meilleur coût d'ajustement accompagné d'une dégradation hors échantillon suggère un compromis défavorable. À l'inverse, un modèle trop contraint peut conserver un biais réel. Le choix doit s'appuyer sur l'optique, la diversité des données et l'usage, sans faire de la seule baisse du coût un critère de calibration.
+**Ablation construite**: Keep observations and release a group of parameters at once. Examine their dispersion in subsets, correlations and residualss on reserved views including edges. A better adjustment cost with out-of-sample degradation suggests an unfavorable trade-off. Conversely, a model that is too constrained can retain a real bias. The choice must be based on optics, diversity of data and usage, without making the mere reduction in cost a calibration criterion.
 
-**Repère documentaire de cette passe** : [Ceres, Non-linear Least Squares Solving](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), Schur solvers et bundle adjustment. Les autres développements figurent dans les [cartes associées](../54-bundle-adjustment.md).
+**Documentary reference for this pass**: [Ceres, Non-linear Least Squares Solving](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), Schur solvers and bundle adjustment. The other developments are in the [flashcards](../54-bundle-adjustment.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Ceres, Covariance Estimation, Gauge Invariance, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html)
-- [Ceres, LossFunction, motivation et équation du coût, consulté le 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html)
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [Ceres, Schur solvers et équations blocs](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
-- [Cartes associées](../54-bundle-adjustment.md).
+### CV-BA-001
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+**Situation**: What does bundle adjustment optimize, and how does it differ from a pose graph?
+
+**Complete objective to be explained**: On the $\mathcal O$ set of observations actually present, a BA can minimize $\sum_{(i,j)\in\mathcal O}\rho(\|L_{ij}^{-1}[\pi(K_i,T_i,X_j)-z_{ij}]\|_2^2)$, with $z_{ij}$ in pixels, $X_j$ a world point, $T_i$ a pose and $L_{ij}L_{ij}^T$ its measurement covariance. The projection function includes the expected distortion. The poses must be updated to its appropriate parameterization; the parameters set are not unknown to the solver. Points seen in a single image may lack depth constraint. Thus, the total number of observations alone does not describe the connectivity and observability of the reconstruction.
+
+### CV-BA-002
+
+**Situation**: Does eliminating points with the Schur complement mean ignoring them in bundle adjustment?
+
+**Reduced system derivation**: Linearized problem gives $B\delta_c+E\delta_p=v$ and $E^T\delta_c+C\delta_p=w$. If $C$ is invertible, the second equation provides $\delta_p=C^{-1}(w-E^T\delta_c)$; its substitution in the first $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$ product. In a classic BA where each residual connects a camera and a point, the points do not interact directly with each other in this block: $C$ is diagonal block per point. A point seen by many cameras, on the other hand, creates couplings in the reduced system. Point – point constraints or other factors can change this structure; the factorization of the problem should be checked instead of assuming Schur to be always the same.
+
+### CV-BA-003
+
+**Situation**: Bundle adjustment converges at different scales with the same cost in a monocular reconstruction. Which check is missing?
+
+**Proof of free scale**: with an ideal projection of $RX+t$, replace $X$ with $aX$ and $t$ with $at$, $a>0$, multiplies the three camera coordinates by $a$; the homogeneous division removes this factor. Monocular observations therefore do not distinguish these scales. A very strong digital prior on a translation can make the system invertible without this value being measured. If the system is to be metric, use a known length or source of motion and announce its uncertainty. A visual-inertial optimization can resolve scale ambiguity under the conditions of its model; it can also become ill-conditioned if the movements do not sufficiently excite the necessary variables.
+
+### CV-BA-004
+
+**Situation**: Why can freeing additional camera coefficients reduce the optimization cost while degrading calibration?
+
+**Example of missing information**: In a polynomial radial model, the effects of high-order coefficients grow with normalized radius powers. Observations near the center can hardly constrain these terms; different values then produce almost the same pixels observed but diverge at the edge. Unleashing these coefficients increases flexibility without adding informative data. The damping of LM limits the current resolution pitch: it is not automatically a physical priority on the final parameters. Justify the free parameters, check the directions with little stress and test the geometry where it will be used. A reserved validation must keep poses and really different areas, not just neighboring points of the same catches.
+
+**Passages consulted for these developments**: [Ceres, Solving Non-linear Least Squares](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), Schur complement trick and block systems; [Ceres, Covariance Estimation](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), Gauge Invariance and rank of Jacobian.
+
+## Sources and flashcards
+
+- [Ceres, Covariance Estimation, Gauge Invariance, consulted on 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html)
+- [Ceres, LossFunction, motivation and cost equation, consulted on 2026-10-20](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html)
+
+- [Ceres, Schur solvers and block equations](https://ceres-solver.readthedocs.io/latest/nnls_solving.html).
+- [Related flashcards](../54-bundle-adjustment.md).
+
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

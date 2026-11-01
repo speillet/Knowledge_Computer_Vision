@@ -28,11 +28,11 @@ class CatalogCases(unittest.TestCase):
         self.assertEqual(drafted, [completed])
 
     def test_unknown_reference_cannot_close_a_coverage_target(self):
-        with self.assertRaisesRegex(ValueError, 'Fiche de couverture absente'):
+        with self.assertRaisesRegex(ValueError, 'Missing coverage reference note'):
             partition_targets([{'id': 'APP-001', 'fiche': 'CV-MISSING'}], set())
 
     def test_duplicate_coverage_id_cannot_silently_disappear(self):
-        with self.assertRaisesRegex(ValueError, 'dupliquée'):
+        with self.assertRaisesRegex(ValueError, 'Duplicate coverage target'):
             partition_targets([{'id': 'APP-001'}, {'id': 'APP-001'}], set())
 
 

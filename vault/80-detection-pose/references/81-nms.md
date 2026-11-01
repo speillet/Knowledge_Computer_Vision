@@ -8,201 +8,170 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 5
+revision: 7
 tags: [cv/d08, detection, nms]
 ---
-# NMS — supprimer des détections redondantes
+# NMS — suppressing redundant detections
 
-## Problème et données
+## Problem and data
 
-Plusieurs hypothèses d'un détecteur peuvent désigner le même objet. La greedy
-hard NMS (*Non-Maximum Suppression*) conserve successivement la boîte de meilleur
-score et retire des candidates qui la recouvrent trop. Elle suppose que score
-et recouvrement permettent de distinguer doublons et vrais voisins ; cette
-hypothèse peut échouer dans une foule. [Soft-NMS, §4][paper]
+Several hypotheses of a detector can designate the same object. The greyy hard NMS (*Non-Maximum Suppression*) successively retains the best score box and removes candidates who overwhelm it. It assumes that score and recovery make it possible to distinguish duplicates from true neighbors; this hypothesis may fail in a crowd. [Soft-NMS, §4][paper]
 
-Entrées : boîtes valides `xyxy` dans un repère commun, scores scalaires, classes
-si l'on sépare les catégories. Sorties : indices conservés, pas boîtes fusionnées.
-Les scores servent au classement ; leur calibration probabiliste n'est pas
-une condition nécessaire au calcul. Les coordonnées normalisées ou pixels
-peuvent convenir si toutes les boîtes partagent la même convention.
+Entries: `xyxy` valid boxes in a common coordinate frame, scalar scores, classes if we separate the categories. Outputs: preserved clues, not merged boxes. Scores are used for ranking; their probabilistic calibration is not a necessary condition for calculation. Standardized coordinates or pixels may be appropriate if all boxes share the same convention.
 
-**Prérequis obligatoires** : [IoU](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md).
-**Connexions** : [SORT](../../110-tracking-association/references/111-sort.md), AP, détection dense et détecteurs par ensembles.
-**Compétences** : dérouler l'algorithme et régler les seuils sans les confondre.
+**Required prerequisites**: [IoU](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md). **Connexions**: [SORT](../../110-tracking-association/references/111-sort.md), AP, dense detection and detector sets. **Competences**: unroll the algorithm and set the thresholds without confusing them.
 
-## Déroulement et paramètres
+## Procedure and parameters
 
-Pseudocode **pédagogique**, matérialisé par l'exemple Python du dépôt :
+Pseudocode **Pedagogy**, materialized by the Python example of the repository:
 
 ```text
-trier les indices par score décroissant
-tant que des candidats restent :
-    conserver le premier
-    retirer les autres si leur IoU avec lui dépasse le seuil
+sort indices by decreasing score as long as candidates remain: keep the first remove others if their IoU with him exceeds the threshold
 ```
 
-La variante du pilote supprime pour $\operatorname{IoU}>\tau_{nms}$.
-L'égalité est conservée. En cas de scores égaux, elle utilise l'indice d'entrée
-comme départage déterministe. Une autre implémentation peut ne pas garantir
-le même choix CPU/GPU ; consigner le backend. [Torchvision NMS][api]
+The driver variant deletes for $\operatorname{IoU}>\tau_{nms}$. Equality is preserved. In the case of equal scores, it uses the input index as deterministic ranking. Another implementation may not guarantee the same CPU/GPU choice; record the backend. [Torchvision NMS][api]
 
-Les sources ne traitent pas l'égalité de la même façon : l'article écrit la
-suppression pour $\operatorname{IoU}(M,b_i)\ge N_t$ [§4][paper], alors que
-Torchvision et le code original suppriment pour une IoU strictement
-supérieure. [Torchvision NMS][api] ; [code original][softcode] Le cas d'une
-IoU exactement égale au seuil dépend donc de l'implémentation : le préciser
-dans un test de frontière.
+The sources do not treat equality the same way: the article writes the deletion for $\operatorname{IoU}(M,b_i)\ge N_t$ [§4][paper], while Torchvision and the original code delete for a strictly superior IoU. [Torchvision NMS][api]; [code original][softcode] The case of a IoU exactly equal to the threshold therefore depends on the implementation: specify it in a boundary test.
 
-- Seuil de score : filtre la confiance avant/après le posttraitement choisi.
-- Seuil NMS : décide la redondance entre deux prédictions.
-- Seuil IoU d'évaluation : compare une prédiction à la vérité terrain.
+- Score Threshold: Filters confidence before/after the chosen post-processing.
+- Threshold NMS: decides the redundancy between two predictions.
+- Evaluation threshold IoU: compares a prediction to the ground truth.
 
-Ces trois seuils n'ont ni la même paire d'objets ni le même rôle.
-Une NMS séparée par classe évite une suppression interclasse, mais peut laisser
-plusieurs labels incompatibles sur le même objet. La NMS globale a le compromis
-inverse. Choisir selon la sémantique des annotations. [Batched NMS][batched]
+These three thresholds have neither the same pair of objects nor the same role. A class-separated NMS avoids interclass deletion, but can leave multiple incompatible labels on the same object. The global NMS has the opposite compromise. Choose according to the semantics of the annotations. [Batched NMS][batched]
 
-## Exemple exécuté et variation
+## Executed example and variation
 
-Boîtes continues $A=(0,0,10,10)$, $B=(2,0,12,10)$, $C=(20,0,30,10)$,
-scores respectifs $0,9;0,8;0,7$. Intersection $A\cap B=80$ px², union 120 px²,
-IoU $=2/3$. À $\tau_{nms}=0,5$, garder $A,C$ ; à 0,7, garder $A,B,C$.
-Ce résultat est exécuté dans `examples/pilot_math.py`, sans reproduire un détecteur.
+Continuous boxes $A=(0,0,10,10)$, $B=(2,0,12,10)$, $C=(20,0,30,10)$, respective scores $0,9;0,8;0,7$. Intersection $A\cap B=80$ px², union 120 px², IoU $=2/3$. At $\tau_{nms}=0,5$, keep $A,C$; at 0,7, keep $A,B,C$. This result is executed in `examples/pilot_math.py`, without reproducing a detector.
 
-**Interprétation de la variation contrôlée** : augmenter le seuil conserve ici
-davantage de boîtes ; cela peut sauver un vrai voisin ou conserver un doublon.
-Les boîtes seules ne disent pas lequel : il faut les annotations de la tâche.
-Une AP mesurée sur un vrai jeu reste nécessaire pour régler le compromis.
+**Interpretation of controlled variation**: increasing the threshold here keeps more boxes; this can save a real neighbor or keep a duplicate. The boxes alone do not say which one: it takes the annotations of the task. A AP measured on a real game remains necessary to settle the compromise.
 
-## Détections multiples, classes et tailles de boîtes
+## Multiple detections, classes and sizes of boxes
 
-Une image peut contenir plusieurs instances d'une même classe. Il faut conserver
-leurs détections distinctes ; NMS ne sélectionne pas « un seul objet par classe ».
-Inversement, plusieurs candidates peuvent désigner une seule instance. La
-suppression utilise le recouvrement comme indice de redondance, sans connaître
-l'identité réelle des objets. Une foule met précisément cette hypothèse en défaut.
-[Soft-NMS, §§1 et 3–4][paper]
+An image can contain multiple instances of the same class. Their detections must be kept separate; NMS does not select "only one object per class". Conversely, several candidates may designate a single instance. The deletion uses recovery as an indication of redundancy, without knowing the real identity of the objects. A crowd is precisely putting this hypothesis in default. [Soft-NMS, §§1 and 3 – 4][paper]
 
-### Même géométrie, décisions sémantiques différentes
+### Same geometry, different semantic decisions
 
-Les scénarios suivants sont construits pour le raisonnement ; la bonne sortie
-métier dépend des annotations et ne se déduit pas de l'IoU seule.
+The following scenarios are built for reasoning; the correct business output depends on the annotations and is not deduced from the IoU alone.
 
-| Situation | Effet possible de NMS | Contrôle nécessaire |
+| Situation | Possible effect of NMS | check required |
 | --- | --- | --- |
-| Plusieurs candidates de même classe autour d'un seul objet | Réduction des doublons si le recouvrement dépasse le seuil | Vérifier la GT associée et la localisation de la boîte retenue |
-| Deux personnes distinctes dont les boîtes se chevauchent fortement | Suppression possible d'une vraie voisine, même avec NMS par classe | Couverture de chacune des deux GT avant/après NMS |
-| Deux objets de classes différentes, par exemple personne et vélo | Une NMS globale peut faire supprimer l'un par l'autre si l'IoU dépasse le seuil | Contrat des objets à détecter ; NMS par classe si les deux doivent être conservés |
-| Une instance reçoit deux classes exclusives, par exemple deux types de pièce | NMS par classe peut conserver les deux hypothèses | Résoudre la décision de classe selon le contrat ; le score maximal n'est pas une preuve de justesse |
-| Une petite boîte est entièrement dans une grande | L'inclusion ne suffit pas à provoquer une suppression | Calculer l'IoU, puis distinguer objet/partie, deux instances ou mauvaise localisation |
+| Several candidates of the same class around a single object | Reduction of duplicates if the recovery exceeds the threshold | Check the associated GT and the location of the holding box |
+| Two distinct people whose boxes overlap strongly | Possible deletion of a real neighbor, even with NMS per class | Coverage of each of the two GT before/after NMS |
+| Two objects of different classes, for example person and bicycle | A global NMS can have one removed by the other if the IoU exceeds the threshold | Contract of the objects to be detected; NMS per class if both are to be kept |
+| An instance receives two exclusive classes, for example two room types. | NMS per class can keep both assumptions | Resolve class decision according to contract; maximum score is not proof of accuracy |
+| A small box is entirely in a large | Inclusion is not enough to cause deletion | Calculate the IoU, then distinguish object/part, two instances, or wrong location |
 
-Pour deux candidates seulement, d'IoU $0{,}8$, de scores $0{,}9$ et $0{,}8$
-et de classes différentes, hard NMS globale à $0{,}5$ conserve uniquement la
-première. Une NMS par classe conserve les deux. Si elles ont la même classe,
-la séparation par classe ne les protège pas l'une de l'autre. Elle ne fusionne
-pas non plus leurs étiquettes et n'impose pas leur exclusivité.
-[Batched NMS, description et paramètres][batched]
+For only two candidates, from IoU $0{,}8$, scores $0{,}9$ and $0{,}8$ and different classes, hard NMS overall to $0{,}5$ retains only the first. One NMS per class retains both. If they have the same class, class separation does not protect them from each other. Nor does it merge their labels and impose their exclusivity. [Batched NMS, description and parameters][batched]
 
-### Inclusion et boîtes de tailles très différentes
+### Inclusion and boxes of very different sizes
 
-Pour des rectangles continus valides, si $B\subset A$, l'intersection est $B$
-et l'union est $A$ : $\operatorname{IoU}(A,B)=|B|/|A|$. Ainsi,
-$A=(0,0,100,100)$ et $B=(40,40,60,60)$ donnent $400/10000=0{,}04$.
-Avec scores $0{,}9$ et $0{,}8$, même classe et hard NMS à $0{,}5$, les deux
-restent. Une grande boîte ne supprime donc pas automatiquement toutes les
-petites boîtes qu'elle contient. Calcul analytique du projet, dérivé de la
-définition d'IoU [GIoU, §3, équation 1][giou].
+For valid continuous rectangles, if $B\subset A$, the intersection is $B$ and the union is $A$: $\operatorname{IoU}(A,B)=|B|/|A|$. Thus, $A=(0,0,100,100)$ and $B=(40,40,60,60)$ give $400/10000=0{,}04$. With scores $0{,}9$ and $0{,}8$, same class and hard NMS to $0{,}5$, both remain. A large box does not automatically delete all the small boxes it contains. Project analytical calculation, derived from the definition of IoU [GIoU, §3, equation 1][giou].
 
-Le rapport « intersection / aire de la petite boîte » vaut ici 1 : ce n'est
-pas l'IoU. Le substituer à l'IoU changerait la règle de suppression et pourrait
-éliminer des détections légitimes d'objets imbriqués ou de parties. À l'inverse,
-une grande boîte mal localisée et une petite boîte sur le même objet peuvent
-rester toutes les deux ; leur survie ne prouve pas deux instances.
-Voir aussi les [cas de tailles et rapports d'aspect](82-detection-fasterrcnn-yolo-detr.md#tailles-rapports-daspect-et-précision-des-boîtes).
+The ratio "intersection / area of the small box" here is 1: it is not the IoU. Replacing it with the IoU would change the deletion rule and could eliminate legitimate detections of nested objects or parts. Conversely, a large mislocalized box and a small box on the same object can both remain; their survival does not prove two instances. See also [size cases and aspect ratios](82-detection-fasterrcnn-yolo-detr.md#box-sizes-aspect-ratios-and-accuracy).
 
-## Soft-NMS : alternative et limites
+## Soft-NMS: alternative and limits
 
-Soft-NMS diminue les scores au lieu d'éliminer immédiatement tout recouvrement
-fort. Par exemple, la variante gaussienne utilise
+Soft-NMS lowers scores instead of immediately eliminating any strong overlay. For example, the Gaussian variant uses
 
 $$
 s_i\leftarrow s_i\exp\left(-\frac{\operatorname{IoU}(M,b_i)^2}{\sigma}\right).
 $$
 
-$M$ est la boîte sélectionnée, $b_i$ une candidate, $s_i$ son score et
-$\sigma>0$ un paramètre sans unité. La pénalité gaussienne s'applique à toutes
-les candidates restantes, sans seuil $N_t$. [Article, §4][paper] Rechercher à
-nouveau le maximum parmi les scores pénalisés, comme le fait le code original.
-Après chaque itération, les détections passées sous un seuil de score sont
-écartées : « Soft-NMS ne supprime jamais » est faux. [Article, §5][paper] ;
-[code original][softcode]
+$M$ is the selected box, $b_i$ a candidate, $s_i$ its score and $\sigma>0$ a parameter without a unit. The Gaussian penalty applies to all remaining candidates, with no $N_t$ threshold. [Article, §4][paper] Look again for the maximum among the penalized scores, as the original code does. After each iteration, the detections passed below a score threshold are discarded: "Soft-NMS never deletes" is false. [Article, §5][paper]; [code original][softcode]
 
-Le code original utilise des coordonnées inclusives avec `+1`, tandis que le
-pilote utilise des coordonnées continues. Une comparaison numérique exige la
-même convention. Le score d'une boîte ne devient pas une probabilité calibrée
-par ce seul posttraitement. [Implémentation officielle][softcode]
+The original code uses inclusive coordinates with `+1`, while the driver uses continuous coordinates. A numerical comparison requires the same convention. The score of a box does not become a probability calibrated by this postprocessing alone. [Official implementation][softcode]
 
-## Coût, évaluation et diagnostic
+## Cost, evaluation and diagnosis
 
-Le tri coûte $O(n\log n)$ et la suppression naïve jusqu'à $O(n^2)$ comparaisons.
-Un top-k amont réduit le coût mais peut perdre des objets ; consigner ce filtrage
-dans le protocole AP. Aucun extrait Torchvision n'est exécuté dans ce lot.
+Sorting costs $O(n\log n)$ and naive removal up to $O(n^2)$ comparisons. An upstream top-k reduces the cost but can lose objects; log this filtering in the AP protocol. No Torchvision extract is executed in this batch.
 
-Régler les seuils sur validation, figer avant test, analyser par classe, taille
-et densité. Observer aussi l'effet sur le tracker aval : des boîtes supprimées
-peuvent provoquer des pistes manquées.
+Set thresholds on validation, freeze before testing, analyze by class, size and density. Also observe the effect on the downstream tracker: deleted boxes can cause missed tracks.
 
-| Symptôme | Causes à départager | Vérification |
+| Symptom | Causes to be distinguished | Validation |
 | --- | --- | --- |
-| Un piéton disparaît dans une foule | NMS trop agressive, détecteur n'ayant jamais proposé la boîte | Comparer sorties avant et après NMS avec GT |
-| Plusieurs boîtes autour d'une pièce | Seuil trop permissif, classes différentes, convention fausse | Journal scores/classes/IoU et contrat de coordonnées |
-| Résultats différents à scores égaux | Ordre ou backend non déterministe | Départage explicite, test ciblé sans conclure à un écart du réseau |
+| A pedestrian disappears in a crowd | NMS too aggressive, detector never proposing the box | Compare outputs before and after NMS with GT |
+| Several boxes around a room | Overly permissive threshold, different classes, false convention | Journal scores/classes/IoU and contact information contract |
+| Different results with equal scores | Non-deterministic order or backend | Explicit separation, targeted testing without concluding a gap in the network |
 
-Un détecteur entraîné à produire un ensemble non redondant, comme DETR, peut
-se passer de NMS : ne pas l'appliquer comme une obligation universelle.
-[DETR, résumé][detr]
+A detector trained to produce a non-redundant set, such as DETR, can do without NMS: do not apply it as a universal obligation. [DETR, summary][detr]
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent suppression, seuil d’égalité et rappel des objets proches. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop suppression, equality threshold and recall of nearby objects. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-NMS-001
+### Case linked to CV-NMS-001
 
-**Question de travail** : Trois boîtes continues $A=(0,0,10,10)$, $B=(2,0,12,10)$ et $C=(20,0,30,10)$ ont les scores $0,9;0,8;0,7$. Quelles boîtes garde une hard NMS qui supprime pour IoU supérieure à 0,5 ?
+**Question of work**: Three continuous boxes $A=(0,0,10,10)$, $B=(2,0,12,10)$ and $C=(20,0,30,10)$ have scores $0,9;0,8;0,7$. Which boxes are retained by hard NMS that suppresses candidates with IoU greater than 0.5?
 
-**Réponse de référence** : sélectionner $A$, supprimer $B$ car leur intersection vaut 80, l'union 120 et l'IoU $2/3>0,5$ ; conserver ensuite $C$, disjointe. La sortie est donc $A,C$.
+**Reference Response**: select $A$, delete $B$ because their intersection is 80, union 120 and IoU $2/3>0,5$; then keep $C$, disjoint. The output is $A,C$.
 
-**Raisonnement sur les instances** : le recouvrement est utilisé comme indice de redondance entre prédictions, sans connaître l'identité réelle des objets. Si A et B représentent deux personnes proches, supprimer B peut retirer une vraie instance ; si elles représentent la même pièce, la suppression peut au contraire être utile.
+**Reasoning on instances**: Overlay is used as an index of redundancy between predictions, without knowing the real identity of the objects. If A and B represent two close people, deleting B can remove a real instance; if they represent the same room, the deletion can instead be useful.
 
-**Contrôle proposé** : conserver les sorties avant et après l'opération et vérifier quelles annotations restent couvertes. Le seuil règle donc un compromis dépendant de la scène. Une boîte éloignée reste candidate même avec un score plus faible, tant qu'elle passe les autres filtres du pipeline. Cette lecture évite de transformer la sélection gloutonne en règle « une boîte par image » ou « une boîte par classe ».
+**check**: keep the outputs before and after the operation and check which annotations remain covered. The threshold therefore settles a compromise depending on the scene. A remote box remains candidate even with a lower score, as long as it passes the other filters in the pipeline. This reading avoids turning the gluton selection into a "one box per image" or "one box per class" rule.
 
-### Cas lié à CV-NMS-006
+### Case linked to CV-NMS-006
 
-**Question de travail** : Deux boîtes continues de même classe, $A=(0,0,100,100)$ et $B=(40,40,60,60)$, ont les scores $0{,}9$ et $0{,}8$. L'inclusion de B dans A entraîne-t-elle sa suppression par une hard NMS à IoU $>0{,}5$ ? Justifier.
+**Question of work**: Two continuous boxes of the same class, $A=(0,0,100,100)$ and $B=(40,40,60,60)$, have scores $0{,}9$ and $0{,}8$. Does B being contained in A imply suppression by hard NMS at IoU threshold $>0{,}5$? Justify the answer.
 
-**Réponse de référence** : Non. L'intersection a l'aire de B, 400, et l'union celle de A, 10000 : IoU $=0{,}04$. A est sélectionnée, puis B reste puisque le seuil n'est pas dépassé.
+**Reference Response**: No. The intersection has the area of B, 400, and the union that of A, 10000: IoU $=0{,}04$. A is selected, then B remains since the threshold is not exceeded.
 
-**Lecture géométrique** : une petite boîte entièrement contenue dans une grande a une intersection égale à sa propre aire, mais une union égale à la grande aire. Le recouvrement relatif à la petite boîte et l'IoU répondent donc à deux questions différentes. Remplacer l'un par l'autre changerait la règle de suppression.
+**Geometric reading**: A small box entirely contained in a large one has an intersection equal to its own area, but a union equal to the large area. The cover for the small box and the IoU therefore answer two different questions. Replacing one with the other would change the deletion rule.
 
-**Conséquence de diagnostic** : deux boîtes survivantes ne prouvent pas deux instances : elles peuvent être deux localisations très différentes de la même pièce. À l'inverse, objet et partie d'objet peuvent être tous deux légitimes si la taxonomie le prévoit. Vérifier les annotations, les scores et le contrat de sortie avant de modifier la mesure de recouvrement. Ce cas analytique montre une limite du slogan « les grandes boîtes éliminent les petites ».
+**Consequences of diagnosis**: Two surviving boxes do not prove two instances: they can be two very different locations of the same room. Conversely, both object and part of object can be legitimate if the taxonomy so provides. Check annotations, scores, and the exit contract before changing the collection action. This analytical case shows a limit to the slogan “big boxes eliminate small ones”.
 
-**Repère documentaire de cette passe** : [Soft-NMS](https://arxiv.org/html/1704.04503v2), méthode et décroissance des scores. Les autres développements figurent dans les [cartes associées](../81-nms.md).
+**Documentary reference for this pass**: [Soft-NMS](https://arxiv.org/html/1704.04503v2), method and decrease of scores. The other developments are in the [flashcards](../81-nms.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Bodla et al., Soft-NMS 2017][paper] : §1 limites de la NMS, §4 hard/soft
-  et fonctions de pénalité, §5 seuil de score après chaque itération.
-- [Torchvision `nms`][api] : convention d'API consultée
-  le 2026-10-18 ; aucun benchmark logiciel revendiqué.
-- [Code original Soft-NMS, commit b8e69bd][softcode] : coordonnées, recherche
-  du maximum et seuil final.
-- [Carion et al., DETR 2020][detr] : détection ensembliste sans NMS.
-- [Torchvision 0.29 `batched_nms`][batched] : séparation par catégorie et seuil,
-  consultation complémentaire le 2026-10-21 ; Context7 indisponible, documentation
-  officielle consultée directement. Aucun appel logiciel exécuté.
-- [GIoU, §3, équation 1][giou] : définition utilisée pour le calcul d’inclusion.
-- [Cartes NMS](../81-nms.md).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-NMS-001
+
+**Situation**: Three continuous boxes $A=(0,0,10,10)$, $B=(2,0,12,10)$ and $C=(20,0,30,10)$ have scores $0,9;0,8;0,7$. Which boxes are retained by hard NMS that suppresses candidates with IoU greater than 0.5?
+
+**Selection is not transitive**: build three boxes of the same size with $A=(0,0,10,10)$, $B=(3,0,13,10)$ and $C=(6,0,16,10)$. The IoU $A/B$ and $B/C$ are worth $7/13>0,5$, but $A/C=4/16=0,25$. With decreasing scores A, B, C, NMS keeps A, deletes B then keeps C: B deleted does not in turn delete its neighbors. This distinguishes the gluttony algorithm from a grouping into related components of the overlap graph. The result depends on the ranking and does not automatically look for the set of maximum score sum boxes.
+
+### CV-NMS-002
+
+**Situation**: In object detection, how do the score threshold, NMS IoU threshold and evaluation IoU threshold differ?
+
+**Separate setting and measurement**: take a candidate with a score of 0,4, from IoU 0,8 with another prediction, but from IoU 0,6 with a score of GT. A score threshold at 0,5 discards it before any measurement; at an allowable score, a NMS at 0,7 can remove it; if it survives, it satisfies a localization requirement at 0,5 but not at 0,75, under the other rules of matching. These three comparisons relate to different objects. To assign a recall drop, keep counters after each step with constant evaluation protocol, rather than simultaneously changing the three thresholds.
+
+### CV-NMS-003
+
+**Situation**: Two candidates from different classes have scores $0{,}9$ and $0{,}8$ and IoU $0{,}8$. With NMS threshold $0{,}5$, what tradeoff distinguishes global suppression from per-class suppression?
+
+**Conflict of taxonomy built**: If the same instance receives the scores 0,8 for "vehicle" and 0,75 for "car", the two labels can be consistent in a hierarchical taxonomy but redundant in a single category contract. Set this policy before choosing deletion. With the same geometry, a person holding a bike and a room receiving two exclusive classes ask for different decisions. Separately testing interclass conflicts and neighbors of the same class helps to measure what class separation actually protects. The highest score does not indicate, by construction, whether two hypotheses share a physical identity.
+
+### CV-NMS-004
+
+**Situation**: How does Gaussian Soft-NMS differ from hard NMS, and why must candidates be reordered after a score penalty?
+
+**Calculated change in rank**: after selection of A, a box B with a score of 0,8 and IoU 0,8 becomes $0,8e^{-0,8^2/0,5}\simeq0,222$ for $\sigma=0,5$. A disjointed box C of score 0,5 remains at 0,5 and thus passes before B. With a final threshold of 0,25, B can be removed. This constructed case makes explicit the roles of the decay parameter and the score threshold. Reusing a selected threshold for initial scores without further validation can change the recall, since the values have been transformed by postprocessing.
+
+### CV-NMS-005
+
+**Situation**: An object disappears from final outputs in a dense region. How can NMS be identified as the cause and a verifiable intervention chosen?
+
+**Deletion log**: For each candidate removed, keep their ID, the one in the box that deleted it, the classes, scores and the IoU calculated in the common coordinate frame. Then replaying the selection on the same predictions makes it possible to isolate the postprocessing without retraining the network. Measure the coverage of the GT with a defined matching, because two candidates on a GT are not two objects recalled. If a top-k precedes NMS, consider also the candidates lost there: increasing the threshold NMS does not recover a box eliminated by this upstream filter.
+
+### CV-NMS-006
+
+**Situation**: Two continuous boxes of the same class, $A=(0,0,100,100)$ and $B=(40,40,60,60)$, have scores $0{,}9$ and $0{,}8$. Does B being contained in A imply suppression by hard NMS at IoU threshold $>0{,}5$? Justify the answer.
+
+**Condition of inclusion**: for $B\subset A$ and a strict deletion at threshold $\tau$, B can only be deleted by A if $|B|>\tau|A|$, provided that A is actually selected before it. At $\tau=0,5$, a contained box covering 4% of the large area therefore remains very far from the condition. Reversing the scores does not change the IoU, but changes the first box retained; with more candidates, it can change the whole gluttonous suite. This reasoning distinguishes the symmetry of the overlap measure and the algorithm's dependence on ranking.
+
+**Passages consulted for these developments**: [Bodla et al., Soft-NMS](https://arxiv.org/html/1704.04503v2), §4, selection and decay; geometric counterexamples constructed.
+
+## Sources and flashcards
+
+- [Bodla et al., Soft-NMS 2017][paper]: §1 limits of the NMS, §4 hard/soft and penalty functions, §5 score threshold after each iteration.
+- [Torchvision `nms`][api]: API agreement accessed on 2026-10-18; no software benchmark claimed.
+- [Code original Soft-NMS, commit b8e69bd][softcode]: coordinates, maximum search and final threshold.
+- [Carion et al., DETR 2020][detr]: assembly detection without NMS.
+- [Torchvision 0.29 `batched_nms`][batched]: separation by category and threshold, additional consultation on 2026-10-21; Context7 unavailable, official documentation consulted directly. No software calls executed.
+- [GIoU, §3, equation 1][giou]: Definition used for inclusion calculation.
+- [flashcards NMS](../81-nms.md).
 
 [paper]: https://arxiv.org/abs/1704.04503
 [api]: https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html

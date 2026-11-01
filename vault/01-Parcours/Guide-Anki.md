@@ -1,169 +1,83 @@
-# Export du pilote vers AnkiDroid
+# Exporting the driver to AnkiDroid
 
-**Cible confirmée** : AnkiDroid sur Android. **Statut au 2026-10-24** : paquet
-construit, import et mises à jour simulés avec le moteur Anki 26.9.3 ; rendu
-sur le téléphone et synchronisation personnelle non vérifiés.
+**Target confirmed**: AnkiDroid on Android. **Status at 2026-10-24**: Package built, imported and simulated updates with Anki engine 26.9.3; rendered on phone and personal sync not verified.
 
-## Import direct du paquet — chemin du pilote actuel
+## Direct import of the package –  current driver path
 
-Depuis la racine du dépôt, construire puis vérifier :
+From the root of the repository, build and then check:
 
 ```sh
 uv run --no-project --with genanki==0.13.1 python scripts/build_apkg.py
 python3 scripts/build_apkg.py --verifier dist/CV-Pilote.apkg
 ```
 
-Copier `dist/CV-Pilote.apkg` sur le téléphone puis ouvrir le fichier avec
-AnkiDroid, ou le sélectionner depuis son menu **Importer**. Le paquet contient
-282 notes, une carte par note, 14 sous-decks et l'image SVG. Le manifeste
-`dist/CV-Pilote-manifest.json` permet de comparer deux constructions.
-La création d'une release publique est une opération distincte de la fusion
-d'une PR : aucun lien de téléchargement de release n'est garanti avant publication.
+Copy `dist/CV-Pilote.apkg` to the phone and then open the file with AnkiDroid, or select it from its **Importer** menu. The package contains 282 notes, one flashcard per note, 14 subdecks and the SVG image. The manifest `dist/CV-Pilote-manifest.json` allows to compare two constructions. Creating a public release is a separate operation from merging a PR: no release download links are guaranteed before publication.
 
-Réimporter un paquet plus récent avec la mise à jour des notes et types de notes
-si plus récents, sans importer de progression d'apprentissage. Les identités
-proviennent des IDs pédagogiques : conserver ces IDs, `modelId` et la structure
-du modèle. Les essais en collection jetable conservent l'historique après une
-correction de réponse et un changement de CSS. Ils ne prouvent pas le comportement
-de la version d'AnkiDroid installée : essayer d'abord sur un deck de test.
+Reimport a newer package with the update of notes and note types if newer, without importing any learning progress. Identities come from educational IDs: keep these IDs, `modelId` and the structure of the model. Disposable collection trials retain the history after a response correction and a CSS change. They do not prove the behavior of the installed version of AnkiDroid: try first on a test deck.
 
-Le vault est la source du contenu. Une édition plus récente sur le téléphone
-peut empêcher une mise à jour conditionnelle ; résoudre le conflit manuellement
-dans la source, puis reconstruire. Retirer une carte du vault ne la supprime pas
-de la collection : retrouver `tag:cv_id::<ID>` et supprimer manuellement la note.
-Ne pas alimenter la même collection avec le plugin et le paquet : leurs identités
-Anki diffèrent et des doublons peuvent apparaître.
+The vault is the source of the content. A newer edition on the phone can prevent a conditional update; resolve the conflict manually in the source, and then rebuild. Removing a flashcard from the vault does not remove it from the collection: find `tag:cv_id::<ID>` and manually delete the note. Do not feed the same collection with the plugin and package: their Anki identities differ and duplicates may appear.
 
-Le convertisseur utilise du HTML et du CSS locaux, les délimiteurs MathJax
-d'Anki et les médias embarqués. Les liens « Fiche » ouvrent les références sur
-GitHub et demandent Internet ; les réponses sont complètes sans ces liens.
-Vérifier sur Android les formules, listes, code, SVG, mode sombre et lecture
-hors connexion, puis réimporter après une révision.
+The converter uses local HTML and CSS, MathJax delimiters from Anki and embedded media. The "reference note" links open the references on GitHub and request the Internet; the answers are complete without these links. Check Android for formulas, lists, code, SVG, dark mode, and offline playback, and then re-import after a review.
 
-Sources : [paquets et mises à jour Anki](https://docs.ankiweb.net/manual/importing/packaged-decks),
-[import AnkiDroid](https://docs.ankidroid.org/#_importing_anki_files),
-[identités genanki](https://github.com/kerrickstaley/genanki#note-guids).
+Sources : [Packages and Updates Anki](https://docs.ankiweb.net/manual/importing/packaged-decks), [import AnkiDroid](https://docs.ankidroid.org/#_importing_anki_files), [Genanki Identities](https://github.com/kerrickstaley/genanki#note-guids).
 
-## Chaîne historique du plugin — protocole encore non exécuté
+## Plugin history string –  protocol still not executed
 
-Les sections suivantes conservent le protocole du candidat initial. Elles
-concernent une collection de test séparée de celle alimentée par le paquet.
+The following sections retain the original candidate's protocol. They concern a separate test collection from the one fed by the package.
 
-Obsidian sur ordinateur → Obsidian_to_Anki → AnkiConnect dans Anki Desktop
-→ AnkiWeb → AnkiDroid. Le plugin 3.6.0 est desktop uniquement ; il ne tourne
-pas dans AnkiDroid. Les formules et réponses doivent rester utilisables sans
-accéder à la fiche ou à Internet pendant le rappel.
+Obsidian on computer → Obsidian_to_Anki → AnkiConnect in Anki Desktop → AnkiWeb → AnkiDroid. The 3.6.0 plugin is desktop only; it does not run in AnkiDroid. Formulas and answers must remain usable without access to the reference note or the Internet during the reminder.
 
-Sources : [plugin officiel](https://github.com/ObsidianToAnki/Obsidian_to_Anki),
-[synchronisation Anki](https://docs.ankiweb.net/manual/syncing),
-[manuel AnkiDroid](https://docs.ankidroid.org/#_using_anki_desktop_with_ankidroid).
+Sources : [plugin officiel](https://github.com/ObsidianToAnki/Obsidian_to_Anki), [synchronisation Anki](https://docs.ankiweb.net/manual/syncing), [Manual AnkiDroid](https://docs.ankidroid.org/#_using_anki_desktop_with_ankidroid).
 
-## Préparer un essai isolé
+## Prepare an isolated test
 
-1. Ouvrir le dossier `vault/` comme vault Obsidian.
-2. Préparer Anki Desktop et [AnkiConnect](https://ankiweb.net/shared/info/2055492159).
-   Dans la configuration AnkiConnect, conserver les réglages nécessaires et
-   autoriser `app://obsidian.md` dans `webCorsOriginList`, puis redémarrer Anki.
-   Garder l'accès local : aucun port réseau n'est à ouvrir pour ce pilote.
-3. Dans Anki, créer le deck parent `CV::Pilote` et un type de note **CV-Pilote**.
-   Les directives des fichiers répartissent les cartes dans des sous-decks
-   thématiques tels que `CV::Pilote::40-features-matching`.
-   Partir d'un type simple à une seule carte. Créer/renommer et ordonner exactement
-   les quatre champs **ID**, **Question**, **Reponse**, **Source**.
-4. Garder un seul gabarit « Rappel ». Copier le contenu de `anki/front.html`,
-   `anki/back.html` et `anki/style.css` du dépôt dans recto, verso et style.
-   `anki/model.json` décrit ces correspondances ; ce fichier n'est pas un paquet
-   importable dans Anki. Pour cette chaîne, le modèle est créé manuellement ;
-   le générateur `.apkg` le fournit automatiquement dans son propre paquet.
+1. Open the `vault/` folder as vault Obsidian.
+2. Prepare Anki Desktop and [AnkiConnect](https://ankiweb.net/shared/info/2055492159). In the AnkiConnect configuration, keep the necessary settings and allow `app://obsidian.md` in `webCorsOriginList`, then restart Anki. Keep access local: There is no network port to open for this driver.
+3. In Anki, create the `CV::Pilote` parent deck and a **CV-Pilote** note type. File directives distribute the flashcards into thematic subdecks such as `CV::Pilote::40-features-matching`. From a simple type to a single flashcard. Create/rename and order exactly the four fields **ID**, **Question**, **Reponse**, **Source**.
+4. Keep a single "Reminder" template. Copy the contents of `anki/front.html`, `anki/back.html` and `anki/style.css` from the repository in front, back and style. `anki/model.json` describes these matches; this file is not an importable package in Anki. For this string, the model is created manually; the `.apkg` generator automatically provides it in its own package.
 
-Les comptes et la collection Anki restent ceux de l'apprenant. Pour un premier
-AnkiWeb déjà rempli, suivre le manuel de synchronisation avant de choisir un
-sens de transfert ; une collection locale vide ne doit pas écraser l'existante.
+The accounts and the Anki collection remain those of the learner. For a first AnkiWeb already filled in, follow the sync manual before choosing a forwarding direction; an empty local collection should not overwrite the existing one.
 
-## Installer le candidat et limiter le scan
+## Install the candidate and limit the scan
 
-Le registre officiel consulté le 2026-10-18 ne liste pas ce plugin. Si cette
-situation persiste dans l'application, l'installation manuelle documentée
-utilise les assets `main.js`, `manifest.json`, `styles.css` de la
-[release officielle 3.6.0](https://github.com/ObsidianToAnki/Obsidian_to_Anki/releases/tag/3.6.0),
-dans `.obsidian/plugins/obsidian-to-anki-plugin/` du vault, puis l'activation
-dans les plugins communautaires. Ces fichiers locaux ne sont pas versionnés ici.
-Ne pas installer une copie de provenance inconnue pour contourner le catalogue.
+The official registry consulted on 2026-10-18 does not list this plugin. If this situation persists in the application, the documented manual installation uses the assets `main.js`, `manifest.json`, `styles.css` of the [release officielle 3.6.0](https://github.com/ObsidianToAnki/Obsidian_to_Anki/releases/tag/3.6.0), in `.obsidian/plugins/obsidian-to-anki-plugin/` of the vault, and then activation in the community plugins. These local files are not versioned here. Do not install an unknown copy to bypass the catalog.
 
-Réglages du plugin, à confirmer dans la version réellement utilisée :
+Plugin settings, to be confirmed in the version actually used:
 
-| Réglage | Valeur pour le pilote |
+| Setting | Value for the pilot |
 | --- | --- |
-| Scan Directory | Vide pour scanner la racine du vault et ses sous-dossiers ; un seul dossier thématique pour un essai restreint |
+| Scan Directory | Empty to scan the root of the vault and its subfolders; a single thematic folder for a restricted trial |
 | Scheduling Interval | `0`, lancement manuel |
-| ID Comments | Activé |
-| Regex personnalisée pour CV-Pilote | Vide ; blocs START/END ordinaires |
-| Add Context / CurlyCloze / Add Obsidian Tags | Désactivés |
-| Add File Link | Facultatif, champ **Source** si activé |
+| ID Comments | Activated |
+| Custom Regex for CV-Pilot | Empty; ordinary START/END blocks |
+| Add Context / CurlyCloze / Add Obsidian Tags | Disabled |
+| Add File Link | Optional, field **Source** if enabled |
 
-Seuls les fichiers de cartes thématiques contiennent des blocs de notes.
-Les marqueurs présents dans des exemples Markdown peuvent aussi être reconnus
-par le parseur : garder ces exemples et les gabarits hors du vault. Le contrôleur
-refuse tout marqueur de début de bloc isolé dans un guide, index ou référence.
-Sources : [format des notes](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Note-formatting),
-[champs](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Field-formatting).
+Only thematic flashcards files contain blocks of notes. Markers present in Markdown examples can also be recognized by the parser: keep these examples and templates out of the vault. The controller rejects any isolated block start markers in a guide, index, or reference. Sources: [format of notes](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Note-formatting), [champs](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Field-formatting).
 
-## Premier export et contrôle sur Android
+## First export and check on Android
 
-1. Avec Anki Desktop ouvert, lancer manuellement le scan du vault pilote.
-   Le nombre courant est donné par le catalogue et le contrôleur ; chaque note
-   doit produire une carte. Le lot actuel comporte **282 notes et 282 cartes**,
-   réparties dans les 14 sous-decks thématiques.
-   Vérifier ces deux nombres dans le navigateur,
-   pas le compteur quotidien du deck, qui dépend des limites de révision.
-2. Vérifier que les commentaires d'identité ajoutés par le plugin sont uniques,
-   puis relancer sans modification : les deux nombres doivent rester identiques.
-3. Réviser une carte, noter son identité et son historique, modifier son verso
-   dans le vault, puis relancer. La même note et le même historique doivent rester.
-4. Synchroniser Desktop avec AnkiWeb, puis AnkiDroid avec le même compte.
-   Attendre aussi la synchronisation des médias. Vérifier les cartes de
-   [l'échantillon fixé](Suivi-pilote.md), puis leur lecture hors connexion.
+1. With Anki Desktop open, manually run the scan of the vault driver. The current number is given by the catalog and the controller; each note must produce a flashcard. The current batch includes **282 notes and 282 flashcards**, distributed in the 14 thematic subdecks. Check these two numbers in the browser, not the daily deck counter, which depends on the revision limits.
+2. Verify that the identity comments added by the plugin are unique, then restart without modification: the two numbers must remain the same.
+3. Review a flashcard, write down its identity and history, change its back in the vault, and then restart. The same note and the same history must remain.
+4. Synchronize Desktop with AnkiWeb, then AnkiDroid with the same account. Also wait for the media to sync. Check the flashcards of [the fixed sample](Suivi-pilote.md), and then play them offline.
 
-Vérifier textes développés, listes, formules inline/en bloc et matrice,
-indentation du code, image SORT, mode sombre et défilement des équations longues.
-Le modèle fournit un style local de base ; le convertisseur 3.6.0 peut ajouter
-une feuille CSS distante pour la coloration. La lisibilité hors connexion
-doit donc être testée même si la coloration semble correcte en ligne.
+Check developed texts, lists, inline/block and matrix formulas, code indentation, SORT image, dark mode and long equation scrolling. The template provides a basic local style; the 3.6.0 converter can add a remote CSS sheet for coloring. Offline readability should therefore be tested even if the coloring looks correct online.
 
-Les wikilinks de fiche sont convertis en liens Obsidian. Ils n'ouvrent une fiche
-sur Android que si le vault et le nom attendu y existent. Tester ce lien
-séparément ; les cartes contiennent leur réponse complète et des sources HTTPS.
-La mise en place d'une synchronisation du vault lui-même n'est pas comprise ici.
+reference note wikilinks are converted to Obsidian links. They only open a reference note on Android if the vault and the expected name exist there. Test this link separately; the flashcards contain their full response and HTTPS sources. Setting up a synchronization of the vault itself is not included here.
 
-## Identités, médias et corrections
+## Identities, media and corrections
 
-L'ID pédagogique `CV-…-…` est stable, présent dans un champ et un tag. Le
-commentaire numérique du plugin identifie une note Anki ; ne pas le recopier
-dans une nouvelle carte. Pour une copie pédagogique, changer l'ID et son tag,
-puis retirer uniquement l'identité Anki de la nouvelle note.
+The educational ID `CV-…-…` is stable, present in a field and a tag. The digital comment of the plugin identifies a note Anki; do not copy it into a new flashcard. For an instructional copy, change the ID and tag, and then remove only the Anki identity from the new note.
 
-Les médias sont exportés par **nom de fichier** : ne pas réutiliser le même
-basename pour deux images différentes. Si une image modifiée sous le même nom
-n'est pas transférée, vérifier le cache média du plugin avant de conclure à un
-problème AnkiWeb ; consigner la manipulation dans le journal.
+Media is exported by **file name**: do not reuse the same basename for two different images. If a modified image with the same name is not transferred, check the media cache of the plugin before concluding an AnkiWeb problem; log the manipulation in the log.
 
-Une correction scientifique commence dans la fiche et toutes ses cartes,
-retrouvables par ID, liens et recherche. Préserver les identités lors d'une
-simple correction ; refaire les contrôles et remettre le contenu à relire.
+A scientific correction begins in the reference note and all its flashcards, which can be found by ID, links and research. Preserve identities during a simple correction; redo the controls and return the content to be reread.
 
-Sources : [mises à jour](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Updating-existing-notes),
-[images](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Image-formatting),
-[MathJax AnkiDroid](https://docs.ankidroid.org/#_mathjax_support).
+Sources : [Updates](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Updating-existing-notes), [images](https://github.com/ObsidianToAnki/Obsidian_to_Anki/wiki/Image-formatting), [MathJax AnkiDroid](https://docs.ankidroid.org/#_mathjax_support).
 
-## Suppressions et conflits : test obligatoire avant extension
+## Deletions and conflicts: mandatory test before extension
 
-Sur une **note de test distincte**, essayer séparément déplacement/renommage
-du fichier en conservant l'identité, suppression côté source, suppression côté
-Anki et modifications concurrentes. Relever nombres, identité et contenu après
-chaque opération ; ne pas supposer qu'effacer le Markdown efface la note Anki.
+On a **separate test note**, try separately moving/renaming the file while keeping the identity, deleting on the source side, deleting on the Anki side and concurrent changes. Record numbers, identity, and content after each operation; do not assume that erasing the Markdown erases the note Anki.
 
-La règle de travail proposée est : contenu pédagogique canonique dans le vault,
-résolution manuelle des conflits dans le deck d'essai. Le comportement réel
-de suppression reste à observer. Arrêter l'extension du format si doublons,
-historique perdu ou rendu essentiel illisible ; corriger le pilote ou réévaluer
-le candidat avant de produire davantage de cartes.
+The proposed working rule is: canonical pedagogical content in the vault, manual conflict resolution in the trial deck. The actual removal behavior remains to be observed. Stop format extension if duplicates, history lost or made essential unreadable; fix the driver or re-evaluate the candidate before producing more flashcards.

@@ -7,79 +7,102 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
 ---
-# Recalage par intensités et ECC
+# Intensity-based registration and ECC
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Aligner des images en optimisant un critère photométrique sous un modèle de mouvement. Entrées : images compatibles, masque éventuel et initialisation ; sortie : paramètres de warp. Ce n'est pas un matcher de descripteurs locaux.
+Align images by optimizing a photometric criterion under a motion model. Inputs: compatible images, possible mask and initialization; output: parameters of warp. This is not a matcher of local descriptors.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-HOMOGRAPHIE](../../50-calibration-geometrie/references/51-ransac-homographie.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-HOMOGRAPHIE](../../50-calibration-geometrie/references/51-ransac-homographie.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-L'optimiseur déforme une image pour améliorer la corrélation avec l'autre. Le centrage et la normalisation rendent la corrélation inchangée sous un gain positif et un offset globaux sur un support fixé, de variance non nulle (déduction algébrique). Cela ne garantit pas une convergence du recalage ECC. Une pyramide peut améliorer l'initialisation sans garantir un optimum global.
+The optimizer distorts one image to improve correlation with the other. Centering and normalization render the correlation unchanged under a positive gain and an overall offset on a fixed medium, of non-zero variance (algebraic deduction). This does not guarantee convergence of the registration ECC. A pyramid can improve initialization without guaranteeing a global optimum.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Un warp $W(x;\theta)$ transforme les coordonnées selon le modèle choisi. Une corrélation normalisée compare des intensités centrées/normées sur la zone commune ; $\theta$ n'a pas les mêmes dimensions pour translation, affine et homographie. Préciser le sens du warp et l'usage de sa réciproque à l'affichage.
+A warp $W(x;\theta)$ transforms the coordinates according to the chosen model. A standardized correlation compares centered/standardized intensities over the common area; $\theta$ does not have the same dimensions for translation, affine, and homography. Specify the meaning of the warp and the use of its reciprocal to the display.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Modèle, critère d'arrêt, masque et échelle doivent correspondre au mouvement. Texture, recouvrement et initialisation sont essentiels. Robustesse à un gain simple ne couvre pas ombres, occultations ou géométrie 3D arbitraire.
+Model, stop criterion, mask and scale must match the movement. Texture, overlay and initialization are essential. Simple gain robustness does not cover shadows, occlusions or arbitrary 3D geometry.
 
-## Coût et implémentation
+## Cost and implementation
 
-Chaque itération évalue et dérive le critère sur des pixels ; résolution et pyramide comptent. Aucun appel `findTransformECC` exécuté ; ne pas transformer convergence en garantie de recalage.
+Each iteration evaluates and derives the criterion on pixels; resolution and pyramid count. No `findTransformECC` calls executed; do not turn convergence into registration guarantee.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation proposée : translation connue puis initialisation de plus en plus éloignée. Mesurer erreur de warp sur points réservés et taux de convergence ; un score photométrique seul peut favoriser un motif répétitif.
+Proposed variation: known translation then more and more remote initialization. Measure warp error on reserved points and convergence rate; a photometric score alone can favor a repetitive pattern.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Échec malgré des images proches : vérifier plage/type, sens de transformation, recouvrement et perturbation photométrique réelle.
+Failed despite close images: check range/type, direction of transformation, overlap and actual photometric disturbance.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Features + RANSAC pour grandes transformations avec points distinctifs ; recalage par intensités pour raffinement approprié. Comparer sur précision et bassin utile.
+Features + RANSAC for large transformations with distinctive points; registration by intensities for appropriate refinement. Compare on accuracy and useful basin.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent critère photométrique, bassin de convergence et masques. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop photometric criteria, convergence basin and masks. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-ECC-001
+### Case linked to CV-ECC-001
 
-**Question de travail** : Quel contrat distingue ECC d’un pipeline SIFT + RANSAC ?
+**Question of work**: Which input/output contract distinguishes ECC from a SIFT + RANSAC pipeline?
 
-**Réponse de référence** : ECC optimise un critère d’intensité sur un warp initialisé ; SIFT propose des paires puis une géométrie robuste.
+**Reference Response**: ECC optimizes an intensity criterion on an initialized warp; SIFT offers pairs and then a robust geometry.
 
-**Mécanisme interprété** : ECC cherche des paramètres de transformation en comparant directement les intensités sur une zone commune. Les correspondances ne sont pas d'abord exprimées comme une liste de patches détectés. SIFT et RANSAC peuvent proposer une transformation à partir de points distinctifs ; un raffinement photométrique peut ensuite être essayé si le modèle et le recouvrement s'y prêtent.
+**Interpreted mechanism**: ECC looks for transformation parameters by directly comparing intensities on a common area. Matches are not first expressed as a list of detected patches. SIFT and RANSAC can offer transformation from distinctive points; photometric refinement can then be tried if the model and the cover are suitable.
 
-**Exemple construit** : pour deux vues proches d'une étiquette, une initialisation convenable peut rendre utile l'optimisation des intensités. Pour un grand déplacement avec faible recouvrement, la même procédure peut atteindre un mauvais optimum ou échouer. Vérifier séparément initialisation, masque, variations photométriques et modèle de mouvement. Une corrélation normalisée peut tolérer un gain positif et un offset globaux sur un support fixé non constant ; cette propriété algébrique ne couvre pas une ombre locale, une occultation ou une convergence globale du recalage.
+**Constructed example**: For two views close to a label, a suitable initialization can make it useful to optimize intensities. For a large move with low overlap, the same procedure can reach a bad optimum or fail. Check initialization, mask, photometric variations and motion pattern separately. A normalized correlation can tolerate a positive gain and a global offset on a fixed non-constant medium; this algebraic property does not cover a local shadow, a occlusion, or a global convergence of the registration.
 
-### Cas lié à CV-ECC-003
+### Case linked to CV-ECC-003
 
-**Question de travail** : Pourquoi ne pas choisir systématiquement une homographie dans un recalage ECC ?
+**Question of work**: Why should a homography not always be chosen for ECC registration?
 
-**Réponse de référence** : Plus de paramètres peuvent surajuster ou réduire la stabilité alors qu’une translation ou un affine suffit au besoin.
+**Reference Response**: More parameters can over-adjust or reduce stability while translation or affine is sufficient as needed.
 
-**Raisonnement sur les degrés de liberté** : un modèle de translation impose que tous les points partagent deux déplacements ; une homographie autorise une déformation projective plus générale. Cette souplesse peut expliquer de vraies variations de vue sur un plan, mais aussi absorber du bruit ou une perturbation photométrique lorsque les données contraignent mal ses paramètres.
+**Reasoning about degrees of freedom**: a translation model requires that all points share two displacements; a homography allows a more general projective deformation. This flexibility can explain real variations of view on a plane, but also absorb noise or a photometric disturbance when the data does not constrain its parameters.
 
-**Comparaison construite** : sur une installation où le mouvement prévu est une petite translation, ajuster d'abord ce modèle, puis un modèle plus riche avec les mêmes images et zone utile. Comparer erreurs sur des points réservés, stabilité des paramètres et extrapolation près des bords. Un meilleur score sur les pixels d'ajustement ne suffit pas. Inversement, conserver une translation si la perspective change réellement introduit un biais. Le choix relie donc la géométrie de capture, la richesse des observations et l'erreur admise, plutôt qu'un principe de simplicité ou de flexibilité appliqué aveuglément.
+**Comparison built**: on an installation where the planned movement is a small translation, first adjust this model, then a richer model with the same images and useful area. Compare errors on reserved points, stability of parameters and extrapolation near edges. A better score on the adjustment pixels is not enough. Conversely, keeping a translation if the perspective really changes introduces a bias. The choice therefore links capture geometry, the richness of observations and the admitted error, rather than a principle of simplicity or flexibility applied blindly.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Video Tracking](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html), findTransformECC et paramètres du warp. Les autres développements figurent dans les [cartes associées](../45-recalage-ecc.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Video Tracking](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html), findTransformECC and warp parameters. The other developments are in the [flashcards](../45-recalage-ecc.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
+
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-ECC-001
+
+**Situation**: Which input/output contract distinguishes ECC from a SIFT + RANSAC pipeline?
+
+**Understanding the Standardized Criteria**: on a fixed support, center the intensities $a_i$ and $b_i(\theta)$ gives $\bar a_i=a_i-\mu_a$ and $\bar b_i=b_i(\theta)-\mu_b$. The correlation is $\rho(\theta)=\sum_i\bar a_i\bar b_i/(\sqrt{\sum_i\bar a_i^2}\sqrt{\sum_i\bar b_i^2})$ if the norms are non-zero. Multiply an image by a positive gain and add a global offset retains this ideal value; a negative gain reverses its sign. Optimization modifies the warp, thus the interpolated intensities and their gradient with respect to the parameters. Valid media and hidden pixels must remain explicitly controlled: changing the overlap can change the compared criterion.
+
+### CV-ECC-002
+
+**Situation**: ECC converges with high correlation on a repetitive grid, but the displacement is wrong. How should it be validated?
+
+**Decouple score and plausibility**: A correlation close to 1 describes the standardized similarity of the actually compared content. It does not directly indicate the number of valid pixels, the uniqueness of the maximum, or the displacement error. A very small common area can therefore produce a high score with little geometric information. Report media size and error on reserved points, then test separate initializations of a period of the pattern. If several solutions keep scores close and physical constraints allowable, keep ambiguity in the decision. Turning the score into acceptance confidence requires calibration on representative cases, including false but visually plausible alignments.
+
+### CV-ECC-003
+
+**Situation**: Why should a homography not always be chosen for ECC registration?
+
+**Dimension and identifiability of the warp**: translation: two parameters; plane Euclidean movement: rotation and two translations; affine: six parameters; homography: eight independent parameters after choice of scale. A homography acts by projective division: small changes in the denominator can strongly change the edges of the extrapolated region. With little overlap or texture, some parameters compensate and the local information matrix can become poorly conditioned. Compare models with reserved geometry rather than with the only optimized score. If a simpler model is sufficient, it can limit these compensations; if the capture violates its assumptions, this simplicity imposes on the contrary an irreducible bias.
+
+**Passages consulted for these developments**: [OpenCV 4.13, computeECC/findTransformECC](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html), criterion, motionType, initialization and reverse warping.
+
+## Sources and flashcards
 
 - [OpenCV findTransformECC, motion and criteria](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html).
-- [Cartes associées](../45-recalage-ecc.md).
+- [Related flashcards](../45-recalage-ecc.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

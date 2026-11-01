@@ -7,87 +7,122 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
 ---
-# Représentations visuelles, ViT, Swin, ConvNeXt et DINOv2
+# Visual representations, ViT, Swin, ConvNeXt and DINOv2
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Choisir une représentation pour classification, retrieval ou tâche dense. Entrées : images prétraitées et éventuelle supervision ; sorties : features, pas nécessairement des classes adaptées au produit. La fiche compare les familles ; elle n'approfondit pas chaque architecture citée.
+Choose a representation for classification, retrieval or dense task. Inputs: pre-processed images and possible supervision; outputs: features, not necessarily classes adapted to the product. The reference note compares families; it does not deepen each cited architecture.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-HOG encode des gradients ; CNN/ResNet/ConvNeXt exploitent une structure convolutionnelle. ViT traite des tokens de patches ; Swin organise attention locale et hiérarchie. DINOv2 apprend des features transférables par autosupervision ; une tête et un protocole adaptés restent nécessaires.
+HOG encodes gradients; CNN/ResNet/ConvNeXt exploits a convolutional structure. ViT deals with patch tokens; Swin organizes local attention and hierarchy. DINOv2 learns features that can be transferred by self-supervision; a suitable head and protocol remain necessary.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Pour H,W multiples du côté de patch P, un ViT a $N=HW/P^2$ tokens image. L'attention globale dense a un terme quadratique en N ; à P fixe, doubler les deux dimensions multiplie N par quatre et ce terme par seize. Une similarité cosinus compare des vecteurs normalisés ; ce n'est pas automatiquement une probabilité.
+For multiple H,W side of patch P, a ViT has $N=HW/P^2$ image tokens. The dense global attention has a quadratic term in N; at fixed P, doubling the two dimensions multiplies N by four and this term by sixteen. A cosine similarity compares normalized vectors; this is not automatically a probability.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Résolution, prétraitement, tokens globaux/denses, couche choisie, normalisation et stratégie d'adaptation. Linear probing, fine-tuning complet et LoRA/adapters changent les paramètres appris et les besoins de données. MAE préentraîne par reconstruction masquée, pas par une tête de segmentation finale.
+Resolution, preprocessing, global tokens/denses, selected layer, normalization and adaptation strategy. Linear probing, complete fine-tuning and LoRA/adapters change the learned parameters and data needs. MAE is pretrained by masked reconstruction, not by a final segmentation head.
 
-## Coût et implémentation
+## Cost and implementation
 
-Comparer mémoire, pré/posttraitements et coût de la tête ; un backbone gelé peut rester coûteux en inférence. Aucun entraînement/checkpoint exécuté ni classement universel CNN/transformer annoncé.
+Compare memory, pre/postprocessing, and head cost; a frozen backbone can remain expensive in inference. No drive/checkpoint executed or CNN/transformer universal rating announced.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : features gelées et petite tête, puis adaptation contrôlée. Utiliser mêmes splits, labels et budget ; mesurer par classe, taille et domaine. Varier résolution séparément de la recette d'entraînement.
+Baseline: features frozen and small head, then controlled adaptation. Use the same splits, labels and budget; measure by class, size and domain. Vary resolution separately from the training recipe.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Bons résultats sur validation aléatoire mais mauvais nouveau site : inspecter fuite de scène, prétraitement et domaine. DINOv2 et DINO détecteur ne sont pas la même méthode.
+Good results on random validation but bad new site: inspect scene leak, pre-processing and domain. DINOv2 and DINO detector are not the same method.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Choisir robustesse et coût utiles au produit, pas seulement popularité du backbone. Les features autosupervisées peuvent être réutilisées par segmentation ou anomalies.
+Choose robustness and cost useful to the product, not just popularity of the backbone. Self-supervised features can be reused by segmentation or anomalies.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent biais d’architecture, échelle et protocole de transfert. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop architecture bias, scale and transfer protocol. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-REPRESENTATIONS-001
+### Case linked to CV-REPRESENTATIONS-001
 
-**Question de travail** : Dans un ViT à patch fixe et attention globale dense, doubler largeur et hauteur change comment le nombre de tokens image (hors token de classe) et le terme quadratique associé ?
+**Question of work**: In a ViT with fixed patch size and dense global attention, how does doubling image width and height change the number of image tokens, excluding the class token, and the associated quadratic term?
 
-**Réponse de référence** : Tokens ×4 ; terme quadratique ×16, dans ce modèle de coût.
+**Reference Response**: Tokens ×4; quadratic term ×16, in this cost model.
 
-**Dérivation du coût** : avec des patches de côté $P$ fixé et des dimensions compatibles, $N=HW/P^2$. Doubler $H$ et $W$ multiplie le nombre de patches par quatre. Une matrice d'interactions globale entre tokens a alors seize fois plus de couples. Ce comptage concerne le terme d'attention considéré, pas toutes les opérations du réseau.
+**derivation of cost**: with fixed $P$ side patches and compatible dimensions, $N=HW/P^2$. Double $H$ and $W$ multiplies the number of patches by four. A global matrix of interactions between tokens then has sixteen times as many pairs. This count concerns the term of attention considered, not all operations of the network.
 
-**Conséquence pratique proposée** : avant d'augmenter la résolution pour de petits défauts, estimer mémoire des activations et tester la latence complète. Les projections, convolutions éventuelles, kernels et contraintes de bande passante ne suivent pas nécessairement ce même facteur. Une réduction de batch ou une autre représentation peut modifier le compromis. Vérifier aussi si l'information du défaut existe dans l'acquisition initiale : agrandir une image sans détail supplémentaire n'apporte pas les mêmes observations qu'une capture réellement mieux résolue. Les mesures sur le matériel cible complètent donc le modèle de coût.
+**Proposed practical consequence**: Before increasing resolution for small faults, estimate activation memory and test full latency. Projections, convolutions, kernels and bandwidth constraints do not necessarily follow this same factor. A batch reduction or other representation can change the compromise. Also check if the information of the defect exists in the initial acquisition: enlarging an image without additional detail does not bring the same observations as a capture actually better resolved. Measures on the target material therefore complement the cost model.
 
-### Cas lié à CV-REPRESENTATIONS-005
+### Case linked to CV-REPRESENTATIONS-005
 
-**Question de travail** : Un backbone préentraîné se dégrade après remplacement du chargeur d’images. Que vérifier avant un nouveau fine-tuning ?
+**Question of work**: A pretrained backbone degrades after the image loader is replaced. What should be checked before another fine-tuning run?
 
-**Réponse de référence** : Ordre couleur, normalisation, plage, interpolation, crop et résolution réellement reçus.
+**Reference Response**: Color order, normalization, range, interpolation, crop and resolution actually received.
 
-**Piège d'interface** : deux chargeurs peuvent produire des images visuellement semblables tout en différant dans l'ordre des canaux ou le traitement des centres de pixels. Une normalisation répétée ou omise peut également modifier fortement le tenseur reçu. Le backbone ne voit que ces valeurs, pas l'intention du pipeline.
+**Interface Trap**: Two chargers can produce visually similar images while differing in channel order or pixel center processing. Repeated or omitted normalization can also strongly alter the received tensor. The backbone sees only these values, not the pipeline intent.
 
-**Enquête reproductible proposée** : utiliser un fichier témoin identique, enregistrer formes, types, plages et pixels connus après chaque étape, puis comparer les tenseurs d'entrée. Refaire l'extraction avec les mêmes poids et paramètres. Si les features changent avant toute variation de scène, rechercher d'abord cette différence déterministe. Une fois le contrat restauré, évaluer le nouveau domaine sur un ensemble réservé. Un fine-tuning lancé trop tôt peut absorber partiellement un bug de prétraitement, rendre la régression moins visible et compliquer la reproductibilité sans avoir traité sa cause.
+**Proposed Reproducible Investigation**: use an identical cookie file, save known shapes, types, ranges and pixels after each step, and then compare the input tensors. Repeat the extraction with the same weights and parameters. If the features change before any scene variation, first look for this deterministic difference. Once the contract is restored, evaluate the new domain on a reserved set. A fine-tuning launched too early can partially absorb a pre-processing bug, make regression less visible and complicate reproducibility without having addressed its cause.
 
-**Repère documentaire de cette passe** : [ViT](https://arxiv.org/html/2010.11929v2), §3, représentation par patches. Les autres développements figurent dans les [cartes associées](../71-representations-transfert.md).
+**Documentary reference for this pass**: [ViT](https://arxiv.org/html/2010.11929v2), §3, representation by patches. The other developments are in the [flashcards](../71-representations-transfert.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Hu et al., LoRA, résumé et principe des paramètres gelés](https://arxiv.org/abs/2106.09685)
-- [Houlsby et al., adapters, résumé](https://arxiv.org/abs/1902.00751)
-- [He et al., MAE, résumé](https://arxiv.org/abs/2111.06377)
-- [Dalal–Triggs, HOG, résumé](https://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-- [ViT, §§3–4](https://arxiv.org/abs/2010.11929).
+### CV-REPRESENTATIONS-001
+
+**Situation**: In a ViT with fixed patch size and dense global attention, how does doubling image width and height change the number of image tokens, excluding the class token, and the associated quadratic term?
+
+**Example of dimensions**: a $224\times224$ image with $16\times16$ patches gives 196 image tokens; at $448\times448$, it gives 784. One attention per head typically calculates $QK^T$ of size $N\times N$, then a combination of values. The interaction term is of order $N^2d$, while the projections and the MLP introduce order terms $Nd^2$ for a width $d$. Depending on the plan, these contributions and memory access do not dominate in the same way. Memory-saving implementations can avoid storing the entire matrix without necessarily removing quadratic counting from calculated interactions.
+
+### CV-REPRESENTATIONS-002
+
+**Situation**: Do Swin and ConvNeXt replace CNNs with the same global attention mechanism?
+
+**Counting by windows**: If a window contains $M^2$ tokens and the image contains $N$ tokens, the internal interactions total about $(N/M^2)(M^2)^2=NM^2$, instead of $N^2$ for global attention, fixed width. This simplification assumes a fixed window size and ignores projections, MLP, padding, and hierarchical merge. The staggered windows allow successive blocks to communicate previously separated regions. The information field is therefore built over layers; a local layer does not instantly access the entire image. Comparing this organization to convolutions requires also examining resolution, number of channels and dense task head.
+
+### CV-REPRESENTATIONS-003
+
+**Situation**: What is missing between DINOv2 features and an industrial defect detector ready for evaluation?
+
+**From the token to the default zone**: Selecting local features retains a grid of patches, while a global vector aggregates the image. Interpolation of the grid to the original resolution increases the number of pixels of the score, without creating in itself a location accuracy absent from the features. Define how a patch covers the room and what defect size it should distinguish. A constructed baseline can freeze the extractor, index the nominal patches and use their distance as a score, before comparing to a supervised head. Keeping room masks, alignment, and aggregation policy allows errors to be attributed to the representation choice rather than to an implicit interface.
+
+### CV-REPRESENTATIONS-004
+
+**Situation**: Which tradeoffs distinguish linear probing, full fine-tuning and LoRA/adapters for visual transfer learning?
+
+**Parametrisation LoRA**: For a layer $W\in\mathbb R^{d\times k}$, replace the complete update with $\Delta W=BA$, with $B\in\mathbb R^{d\times r}$ and $A\in\mathbb R^{r\times k}$, causes $r(d+k)$ parameters instead of $dk$, out of bias and other modules. Rank $r$ constrains the space of updates and is a compromise to validate. When the adaptation is linear and compatible with weight representation, one can form $W'=W+BA$ for inference; this differs from a non-linear adaptation kept in the computation path. The small number of parameters learned does not therefore, by itself, describe the graph actually deployed.
+
+### CV-REPRESENTATIONS-005
+
+**Situation**: A pretrained backbone degrades after the image loader is replaced. What should be checked before another fine-tuning run?
+
+**Pretreatment Invariant**: If the model waits for $z_c=(x_c/255-\mu_c)/\sigma_c$, giving it $x_c\in[0,255]$ directly before subtraction changes the scale by a factor close to 255, without being a variation of physical domain. Testing an artificial image with each channel is constant and different makes it possible to detect permutation RGB/BGR and repeated normalization. For a dense task, also check the transformation of labels and coordinates by crop, resize and padding. An identical input image is only a sufficient witness if all stochastic steps are neutralized and if weight, mode of evaluation and numerical precision are also fixed.
+
+**Passages consulted for these developments** : [ViT](https://arxiv.org/html/2010.11929v2), §3.1, patch sequence; project counts and tests; [Liu et al., Swin](https://arxiv.org/html/2103.14030v2), §3.2, equations 1–2, windows and offset; counting explained by the project; [Oquab et al., DINOv2](https://arxiv.org/html/2304.07193v2), §7.4, patch tokens, flashcard low resolution and interpolation; proposed inspection baseline; [Hu et al., LoRA](https://arxiv.org/html/2106.09685v2), §4.1, parameterization W+BA and linear fusion.
+
+## Sources and flashcards
+
+- [Hu et al., LoRA, summary and principle of frozen parameters](https://arxiv.org/abs/2106.09685)
+- [Houlsby et al., adaptors, summary](https://arxiv.org/abs/1902.00751)
+- [He et al., MAE, summary](https://arxiv.org/abs/2111.06377)
+- [Dalal – Triggs, HOG, summary](https://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
+
+- [ViT, §§3 – 4](https://arxiv.org/abs/2010.11929).
 - [Swin, §3](https://arxiv.org/abs/2103.14030).
 - [ConvNeXt, §2](https://arxiv.org/abs/2201.03545).
-- [DINOv2, méthode et transfert](https://arxiv.org/abs/2304.07193).
-- [Cartes associées](../71-representations-transfert.md).
+- [DINOv2, method and transfer](https://arxiv.org/abs/2304.07193).
+- [Related flashcards](../71-representations-transfert.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

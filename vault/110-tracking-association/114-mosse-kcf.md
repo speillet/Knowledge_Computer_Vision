@@ -1,110 +1,120 @@
-# MOSSE et KCF — tracking par filtres de corrélation — cartes
+# Flashcards — MOSSE and KCF — tracking with correlation filters
 
-Fiche : [[110-tracking-association/references/114-mosse-kcf|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[110-tracking-association/references/114-mosse-kcf|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::110-tracking-association
 
 ## CV-CORRELATION-001
 
-Objectif : expliquer la boucle d’un filtre de tracking. Famille : algorithme. Provenance : agent.
+Objective: Explain the loop of a tracking filter. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORRELATION-001
-Question: Comment un filtre de corrélation initialisé par une boîte suit-il la cible à la frame suivante ?
-Reponse: **Noyau attendu** : Extraire une région de recherche et ses features, corréler avec le modèle, localiser le pic, contrôler la fiabilité puis adapter le modèle seulement selon la politique retenue. La réponse vise un pic de localisation, pas une classe sémantique.
+Question: How does a correlation filter initialized from a box track the target in the next frame?
+Reponse: **Expected answer**: Extract a search region and its features, correlate with the model, locate the peak, check reliability and then adapt the model only according to the chosen policy. The answer is a location peak, not a semantic class.
 
-**Approfondissement** : L’initialisation fournit la cible et des réponses synthétiques autour d’elle. La recherche est locale ; une cible sortie de cette région ne réapparaît pas par la seule adaptation du filtre. Ne pas confondre tracking mono-objet et détection de tous les objets.
+**Further explanation**: Initialization provides the target and synthetic responses around it. The search is local; a target exited from this region does not reappear by adapting the filter alone. Do not confuse mono-object tracking and detection of all objects.
 
-**Interprétation de la réponse** : chaque déplacement candidat dans la région de recherche reçoit un score de ressemblance au modèle. Le pic localise l'hypothèse préférée, mais son contraste et la présence de concurrents doivent être examinés avant une mise à jour. La zone de recherche exprime déjà une hypothèse sur le mouvement possible.
+**Interpretation of the answer**: Each candidate move in the search region receives a model-like score. The peak locates the preferred hypothesis, but its contrast and the presence of competitors must be examined before an update. The search area already expresses a hypothesis about possible movement.
 
-**Exemple construit** : une cible qui se déplace au-delà de cette zone peut laisser au fond le meilleur pic disponible. Apprendre alors ce fond transforme une perte de localisation en dérive persistante du modèle. Définir une politique de perte et de récupération, puis la tester sur grands déplacements et occultations. La vitesse de corrélation est utile seulement si les hypothèses de recherche et de mise à jour conviennent au besoin.
+**Constructed example**: A target moving beyond this area can leave the background with the best available peak. Learning then this background transforms a loss of location into a persistent drift of the model. Define a loss and recovery policy, then test it on big moves and occlusions. Correlation speed is useful only if the research and update assumptions are suitable as needed.
 
-**Erreurs bloquantes** : Mettre à jour sans contrôle sur toute boîte prédite ; promettre une détection globale.
-Source: [[110-tracking-association/references/114-mosse-kcf|Fiche complète]] ; [Bolme et al. 2010, §§3.2–3.5, MOSSE, mise à jour et PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf).
+**From the pic to the image**: The answer is calculated in the coordinates of the patch or its features. Converting the maximum offset to the image requires the origin of the crop, its resizing, and any stride. A circular correlation convention also requires interpreting near-edge indices as appropriate signed offsets. An error here can produce a jump despite a correctly calculated peak. Check a known synthetic translation and return to the coordinate frame image before setting the trust. The possible subpixel location refines the peak estimation; it does not guarantee equivalent physical accuracy on real images.
+
+**Blocking errors**: Update without check on any predicted box; promise global detection.
+Source: [[110-tracking-association/references/114-mosse-kcf|Full reference]]; [Bolme et al. 2010, §§3.2 – 3.5, MOSSE, update and PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf); [Henriques et al., KCF, §IV, regression and circulant structure; project deductions](https://arxiv.org/html/1404.7584v1), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::algorithme cv_id::CV-CORRELATION-001 provenance::agent pole::C pole::D pole::E pole::F
 END
 
 ## CV-CORRELATION-002
 
-Objectif : distinguer MOSSE et KCF. Famille : comparaison. Provenance : agent.
+Objective: distinguish MOSSE and KCF. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORRELATION-002
-Question: Que gagne KCF avec les décalages cycliques et les noyaux, par rapport à un filtre linéaire comme MOSSE ?
-Reponse: **Noyau attendu** : KCF structure les exemples comme des décalages cycliques du patch ; la matrice circulante permet des calculs efficaces en Fourier, y compris pour des noyaux compatibles. MOSSE apprend un filtre de corrélation linéaire adapté en ligne.
+Question: What do cyclic shifts and kernels give KCF compared with a linear filter such as MOSSE?
+Reponse: **Expected answer**: KCF structures the examples as cyclic offsets of the patch; the circulating matrix allows efficient Fourier calculations, including for compatible kernels. MOSSE learns a linear correlation filter adapted online.
 
-**Approfondissement** : Le gain de calcul dépend de cette structure et des features. Les décalages cycliques créent des exemples artificiels aux bords : la rapidité ne supprime pas les biais. Aucun FPS de papier ne prédit celui du matériel cible.
+**Further explanation**: The calculation gain depends on this structure and features. Cyclical shifts create artificial examples at the edges: speed does not remove biases. No paper SPF predicts that of the target material.
 
-**Pourquoi la structure aide** : des décalages d'un même patch sont fortement liés ; les traiter comme une famille structurée évite de construire une procédure générale coûteuse pour chacun. Le domaine de Fourier exploite cette organisation dans la formulation choisie. Le gain n'est pas une preuve de diversité réaliste des exemples.
+**Why Structure Helps**: offsets from the same patch are strongly related; treating them as a structured family avoids building a general procedure that is expensive for everyone. The Fourier domain exploits this organization in the chosen formulation. The gain is not a proof of realistic diversity of examples.
 
-**Limite concrète** : un décalage cyclique fait réapparaître un bord de l'autre côté du patch. Cet exemple artificiel peut différer du déplacement réel d'une cible devant un fond. Contrôler taille de région, features, bord et politique d'adaptation dans une comparaison à MOSSE. Mesurer qualité et coût sur le même protocole ; l'utilisation d'un noyau ne transforme ni la recherche locale en redétection globale ni un score de pic en identité certaine.
+**Concrete limit**: A cyclic shift causes an edge on the other side of the patch to reappear. This artificial example may differ from the actual movement of a target in front of a background. check region size, features, edge and adaptation policy in a comparison to MOSSE. Measure quality and cost on the same protocol; using a kernel does not turn local search into global redetection or a peak score into a certain identity.
 
-**Erreurs bloquantes** : Présenter KCF comme un détecteur profond ; dire qu’un noyau supprime les limites de recherche locale.
-Source: [[110-tracking-association/references/114-mosse-kcf|Fiche complète]] ; [Henriques et al., KCF, §§4–5, structure circulante et noyaux](https://arxiv.org/pdf/1404.7584).
+**Structured regression**: a regularized linear regression solves $\min_w\|Xw-y\|^2+\lambda\|w\|^2$. If the lines of $X$ are the cyclic shifts of the same signal, the circulant structure makes it possible to diagonalize the corresponding operations by Fourier transform. In a kernel regression, we work on a matrix of similarities whose structure must remain compatible. This explains the efficiency without assimilating a core to a deep network. The regularization parameter stabilizes learning according to the feature scale; it does not compensate for a target missing from the patch or an artificial edge hypothesis ill-suited to the scene.
+
+**Blocking errors**: Present KCF as a deep detector; say that a kernel removes local search limits.
+Source: [[110-tracking-association/references/114-mosse-kcf|Full reference]]; [Henriques et al., KCF, §§4 – 5, circulant structure and kernels](https://arxiv.org/pdf/1404.7584); [Bolme et al., MOSSE, §3.1 – 3.2, edges and learning; mathematical complements and built protocols](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf); [Henriques et al., KCF, §IV, regression and circulant structure; project deductions](https://arxiv.org/html/1404.7584v1), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::comparaison cv_id::CV-CORRELATION-002 provenance::agent pole::C pole::D pole::E pole::F
 END
 
 ## CV-CORRELATION-003
 
-Objectif : interpréter un PSR. Famille : raisonnement. Provenance : agent.
+Objective: interpret a PSR. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORRELATION-003
-Question: Une réponse a un pic à 0,8, une moyenne hors pic à 0,2 et un écart-type hors pic à 0,1. Que vaut le PSR et que signifie-t-il ?
-Reponse: **Noyau attendu** : PSR=$(0,8-0,2)/0,1=6$. Le pic dépasse la moyenne du fond de six écarts-types selon la région hors pic choisie. Il mesure un contraste de réponse, sans probabilité calibrée de bonne cible.
+Question: A response has a peak of 0.8, an off-peak mean of 0.2 and an off-peak standard deviation of 0.1. What is the PSR, and what does it mean?
+Reponse: **Expected answer**: PSR=$(0,8-0,2)/0,1=6$. The peak exceeds the bottom average by six standard deviations depending on the region outside the selected peak. It measures a response contrast, with no calibrated probability of a good target.
 
-**Approfondissement** : Définir la zone exclue et le traitement d’un écart-type nul. Le seuil dépend du tracker, du patch et du protocole. Des distracteurs peuvent produire un pic net pour le mauvais objet.
+**Further explanation**: Define the excluded area and the treatment of a zero standard deviation. The threshold depends on the tracker, patch, and protocol. Distractors can produce a sharp spike for the wrong object.
 
-**Calcul interprété** : soustraire la moyenne hors pic mesure l'écart à la réponse de fond ; diviser par son écart-type exprime cet écart dans l'échelle de variation du fond. Une multiplication commune de la réponse par une constante positive ne change pas ce rapport idéal, si la région et le calcul restent identiques.
+**Calculation interpreted**: subtracting the off-peak mean measures the deviation from the background response; dividing by its standard deviation expresses this deviation in the background variation scale. A common multiplication of the response by a positive constant does not change this ideal ratio, if the region and the calculation remain the same.
 
-**Diagnostic proposé** : visualiser la carte de réponse et les pics concurrents, définir précisément la zone exclue et traiter une dispersion nulle ou presque nulle. Sur une répétition, le mauvais objet peut produire un pic étroit et élevé. Le PSR décrit alors correctement un contraste de réponse, sans connaître la vérité d'identité. Son seuil s'évalue donc avec vrais succès, pertes et distracteurs, plutôt que comme un niveau universel de confiance.
+**Proposed diagnosis**: View the response map and competing peaks, precisely define the excluded area and process a zero or near zero dispersion. On a repeat, the wrong object can produce a narrow, high peak. The PSR then correctly describes a contrast of response, without knowing the truth of identity. Its threshold is therefore assessed with real success, loss and distractors, rather than as a universal level of trust.
 
-**Erreurs bloquantes** : Interpréter PSR=6 comme 60 % de confiance ; appliquer un seuil historique à toute méthode.
-Source: [[110-tracking-association/references/114-mosse-kcf|Fiche complète]] ; [Bolme et al. 2010, §§3.2–3.5, MOSSE, mise à jour et PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf).
+**Effect of a distractor**: If a second peak enters the area used to calculate average and standard deviation off peak, it can change the PSR of the first, even if its height remains the same. The size of the excluded area and the edges of the patch therefore participate in the definition of the score. A positive affine transformation $r'=ar+b$, with the same support and $a>0$, ideally retains the PSR, because numerator and standard deviation are multiplied by $a$. On the other hand, clipping, quantifying or changing the medium can break this invariance. The score is therefore comparable only with an identical calculation procedure and a threshold validated in its context.
+
+**Blocking errors**: Interpret PSR=6 as 60 % confidence; apply a historical threshold to any method.
+Source: [[110-tracking-association/references/114-mosse-kcf|Full reference]]; [Bolme et al. 2010, §§3.2 – 3.5, MOSSE, update and PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf); [Henriques et al., KCF, §IV, regression and circulant structure; project deductions](https://arxiv.org/html/1404.7584v1), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::raisonnement cv_id::CV-CORRELATION-003 provenance::agent pole::C pole::D pole::E pole::F
 END
 
 ## CV-CORRELATION-004
 
-Objectif : rechercher une contamination du modèle. Famille : diagnostic. Provenance : agent.
+Objective: Look for contamination of the model. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORRELATION-004
-Question: Un tracker à filtre de corrélation reste correct avant une occultation, puis suit durablement le fond. Quelle erreur de mise à jour tester ?
-Reponse: **Noyau attendu** : Il peut avoir appris le fond pendant les frames où la cible était cachée. Comparer le modèle avant/après occultation, geler les mises à jour en faible confiance et contrôler les pics concurrents et la région de recherche.
+Question: A correlation-filter tracker works before an occlusion, then persistently tracks the background. Which update error should be tested?
+Reponse: **Expected answer**: It may have learned the background during frames where the target was hidden. Compare the model before/after occlusion, freeze low confidence updates and check competitor peaks and search region.
 
-**Approfondissement** : Une adaptation rapide suit les changements d’apparence mais apprend aussi les erreurs de localisation. Un détecteur ou une réinitialisation explicite peut être requis ; geler seul ne garantit pas la récupération.
+**Further explanation**: A quick adaptation tracks changes in appearance but also learns location errors. A detector or explicit reset may be required; freezing alone does not guarantee recovery.
 
-**Chaîne d'échec** : une première erreur place la fenêtre sur le fond ; une mise à jour non contrôlée l'intègre ; le modèle adapté répond ensuite mieux à ce fond. Observer seulement la dernière boîte ne dit pas à quel instant cette boucle a commencé.
+**Chain of Failure**: a first error places the window on the background; an uncontrolled update integrates it; the adapted model then responds better to this background. Watching only the last box doesn’t say when this loop started.
 
-**Ablation construite** : conserver la même initialisation et les mêmes frames, puis geler uniquement pendant une période d'incertitude. Comparer les crops appris, le contraste de réponse, les pertes et le retour éventuel de la cible. Si la région de recherche ne contient plus la cible, le gel ne suffit pas : une relance ou une autre observation est nécessaire. Évaluer aussi les changements d'apparence légitimes que le gel peut mal suivre, afin de choisir un compromis adaptation/protection sur le besoin réel.
+**Ablation construite**: Keep the same initialization and frames, then freeze only during a period of uncertainty. Compare the crops learned, the response contrast, the losses and the eventual return of the target. If the search region no longer contains the target, freezing is not enough: a relaunch or other observation is necessary. Also assess the legitimate appearance changes that the gel may misfollow, in order to choose an adaptation/protection compromise on the actual need.
 
-**Erreurs bloquantes** : Augmenter systématiquement le taux d’apprentissage pour corriger la dérive.
-Source: [[110-tracking-association/references/114-mosse-kcf|Fiche complète]] ; [Bolme et al. 2010, §§3.2–3.5, MOSSE, mise à jour et PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf).
+**Separate research and learning**: Freeze updates retains a target model, but does not automatically change the region being crawled. After a long occlusion or a large shift, the target may return elsewhere and remain untraceable despite an intact model. Compare two separate interventions: freezing the model with unchanged search, then expanded search policy or detection with the same model. Measure false returns on distractors and recovery times, without using the true position to silently reset. This ablation distinguishes contamination, loss of spatial coverage and appearance ambiguity, which can produce a similar final box on the bottom.
+
+**Blocking errors**: Systematically increase the learning rate to correct drift.
+Source: [[110-tracking-association/references/114-mosse-kcf|Full reference]]; [Bolme et al. 2010, §§3.2 – 3.5, MOSSE, update and PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf); [Henriques et al., KCF, §IV, regression and circulant structure; project deductions](https://arxiv.org/html/1404.7584v1), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-CORRELATION-004 provenance::agent pole::C pole::D pole::E pole::F
 END
 
 ## CV-CORRELATION-005
 
-Objectif : définir une comparaison honnête de trackers. Famille : evaluation. Provenance : agent.
+Objective: Define an honest comparison of trackers. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CORRELATION-005
-Question: Deux trackers donnent des scores proches, mais l’un est réinitialisé après chaque perte. Que faut-il préciser pour comparer ?
-Reponse: **Noyau attendu** : Le protocole d’initialisation et de réinitialisation, les séquences, les pertes, l’overlap et l’erreur de centre, ainsi que la latence complète. Un redémarrage après erreur change la tâche évaluée.
+Question: Two trackers obtain similar scores, but one is reinitialized after each failure. What must be specified for a fair comparison?
+Reponse: **Expected answer**: Initialization and reset protocol, sequences, losses, overlap and center error, as well as full latency. A restart after error changes the evaluated task.
 
-**Approfondissement** : Conserver les mêmes frames et conditions d’occultation. Distinguer un protocole one-pass sans redémarrage d’un protocole avec resets. Une moyenne sur les seules frames réussies masque les échecs les plus coûteux.
+**Further explanation**: Keep the same frames and conditions of occlusion. Distinguish a one-pass protocol without restarting a protocol with resets. An average on only successful frames hides the most expensive failures.
 
-**Pourquoi les resets changent la tâche** : une réinitialisation fournit au tracker une nouvelle localisation après un échec. Un système sans cette aide doit retrouver la cible ou rester en perte. Les deux protocoles n'exposent donc pas le modèle à la même accumulation d'erreurs ni à la même quantité d'information externe.
+**Why Resets Change the Task**: A reset provides the tracker with a new location after a failure. A system without this help must find the target or remain lost. The two protocols therefore do not expose the model to the same accumulation of errors or the same amount of external information.
 
-**Comparaison proposée** : conserver séquences, initialisation, règle de présence et critère de perte. Rapporter les échecs et les périodes de récupération en plus des mesures de localisation. Une moyenne calculée uniquement sur les frames réussies peut favoriser une méthode qui abandonne les cas difficiles. Pour un produit, inclure le coût et le délai de la procédure réelle de relance, qu'elle soit automatique ou humaine. Les scores restent interprétables uniquement avec ce contrat d'évaluation.
+**Proposed comparison**: keep sequences, initialization, presence rule and loss criterion. Report failures and recovery periods in addition to location measurements. An average calculated only on successful frames can favor a method that abandons difficult cases. For a product, include the cost and time of the actual recovery procedure, whether automatic or human. Scores remain interpretable only with this evaluation contract.
 
-**Erreurs bloquantes** : Comparer des scores obtenus avec des règles de reset différentes sans le signaler.
-Source: [[110-tracking-association/references/114-mosse-kcf|Fiche complète]] ; [Bolme et al. 2010, §§3.2–3.5, MOSSE, mise à jour et PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf).
+**Measure of success**: A curve can report, for each $\tau$ threshold, the proportion of frames where the IoU of the target exceeds $\tau$, under an announced presence policy. The area under this curve describes something other than the accuracy of the center at a fixed pixel threshold. Two boxes of the same center but of very different sizes can have a good center error and a bad IoU. The resets still change which periods are evaluated and what information is provided. Publishing the rules with the curve and the losses allows to compare the compromises without retaining only the frames where the tracker has succeeded.
+
+**Blocking errors**: Compare scores obtained with different reset rules without reporting it.
+Source: [[110-tracking-association/references/114-mosse-kcf|Full reference]]; [Bolme et al. 2010, §§3.2 – 3.5, MOSSE, update and PSR](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf); [Henriques et al., KCF, §IV, regression and circulant structure; project deductions](https://arxiv.org/html/1404.7584v1), see 2026-10-30.
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-CORRELATION-005 provenance::agent pole::C pole::D pole::E pole::F
 END

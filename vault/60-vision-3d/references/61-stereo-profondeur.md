@@ -7,80 +7,109 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
 ---
-# Stéréo rectifiée, SGM et profondeur
+# Rectified stereo, SGM and depth
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Estimer la profondeur à partir de deux images calibrées. Entrées : vues gauche/droite synchronisées, rectification et baseline ; sortie : disparité puis profondeur avec masque de validité. La texture, l'occultation et la précision des correspondances limitent la reconstruction.
+Estimate the depth from two calibrated images. Inputs: synchronized left/right views, rectification and baseline; output: disparity and depth with validity mask. The texture, the occlusion and the accuracy of the matches limit the reconstruction.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-La rectification organise les recherches selon les lignes épipolaires. Un coût de matching compare candidats ; SGM agrège des chemins avec pénalités de variation. SGBM d'OpenCV est une variante à documenter, pas tous les détails de l'article original.
+Rectification organizes research along epipolar lines. A matching cost compares candidates; SGM aggregates paths with variation penalties. SGBM from OpenCV is a variant to document, not all the details of the original article.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Cas rectifié horizontal idéal avec points principaux de même abscisse et $d=x_g-x_d>0$ : $Z=fB/d$, f et d en pixels, baseline B en mètres et Z en mètres. Pour petite incertitude, $\sigma_Z\approx fB\sigma_d/d^2$. Utiliser la matrice Q pour la géométrie rectifiée générale. Une disparité entière fixe SGBM OpenCV peut être stockée multipliée par 16 : convertir selon le contrat avant reprojection.
+Ideal horizontal rectified case with main points of the same abscissa and $d=x_g-x_d>0$: $Z=fB/d$, f and d in pixels, baseline B in meters and Z in meters. For small uncertainty, $\sigma_Z\approx fB\sigma_d/d^2$. Use the Q matrix for general rectified geometry. A fixed integer disparity SGBM OpenCV can be stored multiplied by 16: convert according to the contract before reprojection.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Plage de disparités, bloc, pénalités, cohérence gauche/droite et masque invalides. Dans ce cas simplifié, $d\le0$ ne donne pas une profondeur avant finie valide. Dans le cas général, utiliser Q et le masque du matcher : le signe de la disparité seul ne définit pas la validité, notamment si la rectification décale les points principaux. Texture répétée et surfaces brillantes peuvent produire un minimum de coût faux.
+Disparities range, block, penalties, left/right consistency and mask invalids. In this simplified case, $d\le0$ does not give a valid finite depth before. In the general case, use Q and matcher mask: the sign of disparity alone does not define validity, especially if the rectification shifts the main points. Repeated texture and glossy surfaces can produce a minimum of false cost.
 
-## Coût et implémentation
+## Cost and implementation
 
-Résolution × plage de recherche × agrégation dominent temps/mémoire. Aucun StereoSGBM exécuté ; les paramètres et formats ont été confrontés à OpenCV 4.13.
+Resolution × search range × aggregation dominate time/memory. No StereoSGBM executed; parameters and formats were confronted with OpenCV 4.13.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Exemple analytique : f=1000 px, B=0,2 m, d=20 px donne 10 m ; d=10 px donne 20 m. À erreur de disparité identique, la profondeur lointaine est plus sensible. Mesurer sur distances connues et régions invalides.
+Analytical example: f=1000 px, B=0,2 m, d=20 px gives 10 m; d=10 px gives 20 m. At the same disparity error, the far depth is more sensitive. Measure over known distances and invalid regions.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Profondeurs globalement ×16 : inspecter format de disparité. Erreurs aux bords d'objet : distinguer occlusion et défaut de rectification. Mauvais résultat loin ne prouve pas un manque de capacité réseau.
+Overall Depths ×16: inspect disparity format. Object edge errors: distinguish occlusion from non-rectification. Bad result far does not prove a lack of network capacity.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Stéréo apprise, capteur actif ou profondeur monoculaire selon précision, coût et conditions ; une prédiction monoculaire n'a pas automatiquement une échelle métrique fiable.
+Learned stereo, active sensor or monocular depth depending on accuracy, cost and conditions; a monocular prediction does not automatically have a reliable metric scale.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent disparité, incertitude de profondeur et géométrie rectifiée. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop disparity, depth uncertainty and rectified geometry. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-STEREO-001
+### Case linked to CV-STEREO-001
 
-**Question de travail** : En stéréo rectifiée horizontale avec points principaux de même abscisse, pour f=1000 px, baseline 0,2 m et disparité gauche−droite 20 px, quelle profondeur ?
+**Question of work**: For horizontally rectified stereo with equal principal-point x-coordinates, f=1000 px, a 0.2 m baseline and left-minus-right disparity of 20 px, what depth is obtained?
 
-**Réponse de référence** : 10 m par $Z=fB/d$.
+**Reference Response**: 10 m by $Z=fB/d$.
 
-**Dérivation d'unités** : le quotient $f/d$ est sans unité si les deux grandeurs utilisent les pixels de la même grille rectifiée ; le résultat conserve donc l'unité de la baseline. La différence de coordonnées traduit la séparation des deux rayons pour un point donné. Une faible disparité correspond ici à une grande profondeur.
+**derivation of units**: the quotient $f/d$ is without a unit if the two quantities use the pixels of the same rectified grid; the result therefore retains the unit of the baseline. The difference in coordinates reflects the separation of the two rays for a given point. A small disparity here corresponds to a great depth.
 
-**Exemple de contrôle** : vérifier une cible à distance connue, puis doubler artificiellement la valeur de la baseline dans le calcul : la profondeur calculée doublerait aussi. Cela aide à localiser une erreur d'échelle sans modifier le matcher. La formule simplifiée suppose les points principaux alignés comme annoncé et une disparité physique valide. Une région occultée ou un mauvais match peut produire un nombre positif sans profondeur correcte. En géométrie rectifiée plus générale, utiliser la transformation de reprojection et ses conventions plutôt qu'appliquer cette formule à toute sortie appelée disparité.
+**Example of check**: check a known remote target, then artificially double the value of the baseline in the calculation: the calculated depth would also double. This helps locate a scale error without changing the matcher. The simplified formula assumes the main points aligned as advertised and a valid physical disparity. A hidden region or a bad match can produce a positive number without proper depth. In more general rectified geometry, use the reprojection transformation and its conventions rather than applying this formula to any output called disparity.
 
-### Cas lié à CV-STEREO-004
+### Case linked to CV-STEREO-004
 
-**Question de travail** : La rectification garantit-elle une correspondance correcte à chaque pixel ?
+**Question of work**: Does rectification guarantee a correct correspondence at every pixel?
 
-**Réponse de référence** : Non : elle simplifie la géométrie de recherche ; texture, répétition et occlusion peuvent encore rendre le matching ambigu.
+**Reference Response**: No: it simplifies search geometry; texture, repetition and occlusion can still make matching ambiguous.
 
-**Ce que la rectification change** : elle réorganise les images pour simplifier les lieux de recherche compatibles avec la géométrie. Elle ne crée pas de texture et ne rend pas visible une surface cachée dans l'une des caméras. La recherche le long d'une ligne peut donc encore contenir plusieurs candidats ou aucun correspondant réel.
+**What the correction changes**: reorganizes images to simplify geometry-enabled search locations. It does not create texture and does not make visible a hidden surface in one of the cameras. The search along a line can therefore still contain several candidates or no real match.
 
-**Exemple construit** : une surface uniforme offre des coûts proches pour beaucoup de disparités ; une texture périodique peut favoriser la mauvaise période ; au bord d'un objet, un point peut n'être vu que d'un côté. Une régularisation peut sélectionner une valeur dans ces régions, mais cette valeur n'est pas une nouvelle observation. Conserver une information de validité et tester les cohérences disponibles, puis évaluer sur une référence indépendante. Distinguer densité de la carte produite et quantité de profondeur réellement fiable évite d'interpréter tout pixel rempli comme une mesure.
+**Constructed example**: a uniform surface offers close costs for many disparities; a periodic texture can favor the bad period; at the edge of an object, a point can only be seen on one side. A regularization may select a value in these regions, but this value is not a new observation. Maintain validity information and test available consistency, and then evaluate on an independent reference. Distinguishing the density of the produced map and the amount of really reliable depth avoids interpreting any filled pixel as a measurement.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Depth Map from Stereo Images](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), relation profondeur–disparité et correspondance. Les autres développements figurent dans les [cartes associées](../61-stereo-profondeur.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Depth Map from Stereo Images](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), relationship depth – disparity and correspondence. The other developments are in the [flashcards](../61-stereo-profondeur.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [OpenCV StereoSGBM, description et compute](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html).
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-STEREO-001
+
+**Situation**: For horizontally rectified stereo with equal principal-point x-coordinates, f=1000 px, a 0.2 m baseline and left-minus-right disparity of 20 px, what depth is obtained?
+
+**Construction of triangles**: With horizontally separated centers of $B$, even focal length and even main abscissa $c_x$, the ideal projections are $x_g=fX/Z+c_x$ and $x_d=f(X-B)/Z+c_x$. The subtraction eliminates $X$ and gives $d=fB/Z$. If the main abscissas differ, it is $d-(c_{x,g}-c_{x,d})$ that enters into this simplified geometry. This derivation explains why using the corresponding rectified image/reprojection matrix torque is essential. The result $Z$ is the depth along the rectified optical axis; the Euclidean distance to the camera center is $\sqrt{X^2+Y^2+Z^2}$ and can be greater for an off-axis point.
+
+### CV-STEREO-002
+
+**Situation**: Why does stereo depth accuracy often deteriorate at long range?
+
+**Propagation of several uncertainties**: for $Z=fB/d$ and small disturbances, $\delta Z/Z\simeq\delta f/f+\delta B/B-\delta d/d$. If these errors are independent and centered, the relative variances add up; otherwise their covariances count. A baseline bias thus produces a relative error of scale, while a fixed disparity bias further penalizes long distances. Almost $d=0$, linearization becomes fragile and a symmetrical distribution in disparity gives a very asymmetrical distribution in depth. Also evaluate the intervals in depth or use a depth inverse representation according to the estimator, instead of assuming constant Gaussian metric uncertainty.
+
+### CV-STEREO-003
+
+**Situation**: An SGBM reconstruction has the wrong scale despite good calibration. Which numerical convention should be checked?
+
+**Order of operations**: Conceptually, retain the mask provided by the matcher's contract, convert the fixed disparity to real, then apply $[X_h,Y_h,Z_h,W_h]^T=Q[x,y,d,1]^T$ and divide by $W_h$ when the projection is valid. These are homogeneous coordinates, not yet meters before this division and the interpretation of the units of $Q$. Do not build the mask only after filling the holes: an interpolation can replace a sentinel with a plausible value. Keep the original measurement, its validity and any depth completed separate. Testing a known pixel makes it possible to distinguish storage factor, disparity convention, and baseline unit.
+
+### CV-STEREO-004
+
+**Situation**: Does rectification guarantee a correct correspondence at every pixel?
+
+**Bidirectional verification built**: Set $d_g(x)=x_g-x_d$ and a positive straight disparity $d_d(x_d)=x_g-x_d$ for the same point. A consistent pair must check $|d_g(x)-d_d(x-d_g(x))|<\tau$, subject to interpolation and visibility. If the right field uses the opposite sign, the equation changes in sum: the conventions must be explicit. This test rejects some inconsistencies, but two false matches on a repetitive texture can remain mutually compatible. Geometric validation, the distinction between holes and regularized values, and an independent reference remain necessary. The threshold $\tau$ is in pixels of disparity of the grid considered.
+
+**Passages consulted for these developments**: [OpenCV 4.13.0, stereo](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), Basics, triangles and disparity; built-in uncertainty derivations and bidirectional testing.
+
+## Sources and flashcards
+
+- [OpenCV StereoSGBM, description and compute](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html).
 - [OpenCV reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
-- [Cartes associées](../61-stereo-profondeur.md).
+- [Related flashcards](../61-stereo-profondeur.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

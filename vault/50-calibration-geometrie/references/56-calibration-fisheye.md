@@ -7,73 +7,107 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 2
+revision: 4
 prerequis: ["CV-ZHANG", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
 ---
-# Calibration fisheye — projection angulaire et validation hors centre
+# Fisheye calibration — angular projection and off-center validation
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-ZHANG](52-calibration-zhang.md), [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md).
-**Compétences visées** : distinguer projection fisheye et pinhole; concevoir des vues de calibration grand angle; localiser un défaut de modèle de caméra; propager le contrat après rectification; interpréter le paramètre de champ rectifié.
-Les notions connexes restent des alternatives, pas des dépendances implicites.
+**Required prerequisites**: [CV-ZHANG](52-calibration-zhang.md), [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md). **Target competencies**: distinguish fisheye and pinhole projection; design wide-angle calibration views; locate a camera model defect; propagate the contract after rectification; interpret the rectified field parameter. Related notions remain alternatives, not implicit dependencies.
 
-## Problème et contrat des données
+## Problem and data contract
 
-Calibrer une caméra grand angle lorsque le modèle de projection retenu doit représenter une forte déformation périphérique. Entrées : correspondances 3D/2D de mire, dimensions physiques, résolution et modèle optique ; sorties : intrinsics, coefficients de distorsion et poses. Conserver la distinction entre image brute fisheye et image rectifiée. Un grand angle n’impose pas automatiquement un modèle particulier : comparer les modèles sur observations réservées.
+Calibrate a wide-angle camera when the selected projection model must represent a strong peripheral deformation. Inputs: 3D/2D matches of calibration target, physical dimensions, resolution and optical model; outputs: intrinsics, distortion coefficients and poses. Keep the distinction between raw fisheye image and rectified image. A wide angle does not automatically impose a particular model: compare models on reserved observations.
 
-## Mécanisme et mathématiques
+## Mechanism and mathematics
 
-Dans le modèle OpenCV fisheye 4.13, pour un point caméra $(X,Y,Z)$ avec $Z>0$, poser $a=X/Z$, $b=Y/Z$, $r=\sqrt{a^2+b^2}$ et $\theta=\arctan r$. L’angle distordu est $\theta_d=\theta(1+k_1\theta^2+k_2\theta^4+k_3\theta^6+k_4\theta^8)$. Les coordonnées normalisées sont $x_d=(\theta_d/r)a$, $y_d=(\theta_d/r)b$, avec limite continue au centre. Les angles sont en radians, les coordonnées normalisées et coefficients sans unité ; $u=f_x(x_d+\alpha y_d)+c_x$, $v=f_yy_d+c_y$, avec focales et centre en pixels et skew $\alpha$ sans unité. Même si les $k_i$ sont nuls, la projection reste angulaire : $r_d=\theta$, pas $r_d=\tan\theta$.
+In the model OpenCV fisheye 4.13, for a camera point $(X,Y,Z)$ with $Z>0$, pose $a=X/Z$, $b=Y/Z$, $r=\sqrt{a^2+b^2}$ and $\theta=\arctan r$. The distorted angle is $\theta_d=\theta(1+k_1\theta^2+k_2\theta^4+k_3\theta^6+k_4\theta^8)$. The normalized coordinates are $x_d=(\theta_d/r)a$, $y_d=(\theta_d/r)b$, with continuous limit in the center. The angles are in radians, the normalized coordinates and coefficients without unit; $u=f_x(x_d+\alpha y_d)+c_x$, $v=f_yy_d+c_y$, with focal lengths and center in pixels and skew $\alpha$ without unit. Even if the $k_i$ are zero, the projection remains angular: $r_d=\theta$, not $r_d=\tan\theta$.
 
-## Acquisition, paramètres et limites
+## Acquisition, parameters and limitations
 
-Calibrer en variant inclinaison, distance et couverture du champ, notamment les bords. Des vues proches du centre contraignent mal la distorsion périphérique. Fixer ou estimer certains paramètres n’est pas anodin : un coefficient libre peut absorber un défaut de mire, un flou ou une pose peu contrainte. Les quatre coefficients fisheye ne sont pas les quatre premiers coefficients Brown–Conrady du modèle pinhole. Conserver unités de mire, sens des poses, résolution et stabilité mécanique.
+Calibrate by varying the inclination, distance and coverage of the field, especially the edges. Views close to the center do not constrain the peripheral distortion. Setting or estimating certain parameters is not trivial: a free coefficient can absorb a defect of calibration target, a blur or a pose little constraint. The four fisheye coefficients are not the first four Brown – Conrady coefficients of the pinhole model. Keep units of calibration target, direction of poses, resolution and mechanical stability.
 
-## Coût et rectification
+## Cost and rectification
 
-L’optimisation dépend des vues, points et paramètres. Pour la vidéo, on peut calculer une map de rectification puis l’appliquer aux frames ; elle doit être recalculée si la géométrie ou la résolution change. Le paramètre `balance` de la nouvelle matrice OpenCV échange champ conservé et bordures, sans améliorer les paramètres physiques déjà estimés. Utiliser la matrice de projection de l’image rectifiée pour les calculs qui suivent, et tenir compte des pixels invalides et de l’interpolation. API vérifiée avec Context7 ; pas de calibration de caméra réelle exécutée.
+Optimization depends on views, points and parameters. For video, you can calculate a rectification map and then apply it to frames; it must be recalculated if the geometry or resolution changes. The `balance` parameter of the new OpenCV matrix exchanges conserved field and borders, without improving the already estimated physical parameters. Use the corrected image projection matrix for the calculations that follow, and take into account invalid pixels and interpolation. API checked with Context7; no real camera calibration executed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline proposée : modèle pinhole avec distorsion et même jeu d’apprentissage. Variation : modèle fisheye, à contraintes comparables. Évaluer résidus par rayon et pose sur des vues tenues à l’écart ; vérifier une mesure géométrique utile, pas seulement un RMS global. Exemple analytique, sans distorsion supplémentaire : à $\theta=60°$, une focale de 300 px donne un rayon angulaire de 314,16 px contre 519,62 px en pinhole. Ce calcul explique pourquoi annuler les coefficients ne convertit pas l’un en l’autre.
+Proposed baseline: Pinhole model with distortion and even learning game. Variation: fisheye model, with comparable constraints. Evaluate residuals per radius and pose on out-of-the-way views; check a useful geometric measurement, not just a global RMS. Analytical example, without additional distortion: at $\theta=60°$, a focal length of 300 px gives an angular radius of 314,16 px against 519,62 px in pinhole. This calculation explains why undoing the coefficients does not convert to each other.
 
-## Diagnostic et alternatives
+## Diagnosis and alternatives
 
-Un RMS moyen faible avec de grands résidus aux bords appelle une carte spatiale des erreurs, une inspection des corners et de nouvelles vues périphériques. Une image « redressée » visuellement ne prouve pas la justesse métrique. Pour un dispositif omnidirectionnel ou non central, comparer un autre modèle de caméra plutôt que multiplier arbitrairement les coefficients. Le contrat de projection et la région observée limitent les conclusions.
+A low medium RMS with large residuals edges calls for a spatial map of errors, inspection of corners and new peripheral views. A visually “straightened” image does not prove metric accuracy. For an omnidirectional or non-central device, compare another camera model rather than arbitrarily multiplying the coefficients. The projection contract and the observed region limit the conclusions.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent couverture angulaire et compatibilité du modèle de projection. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop angular coverage and projection model compatibility. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-FISHEYE-001
+### Case linked to CV-FISHEYE-001
 
-**Question de travail** : Dans OpenCV fisheye, mettre les quatre coefficients de distorsion à zéro redonne-t-il la projection pinhole ? Expliquer avec un rayon hors axe.
+**Question of work**: In OpenCV fisheye, does setting all four distortion coefficients to zero recover pinhole projection? Explain using an off-axis ray.
 
-**Réponse de référence** : Non : le rayon normalisé vaut alors $r_d=\theta$, tandis que le pinhole donne $r=\tan\theta$, avec $\theta$ l’angle au centre optique en radians. Les projections ne coïncident qu’approximativement près de l’axe.
+**Reference Response**: No: the normalized radius is then $r_d=\theta$, while the pinhole gives $r=\tan\theta$, with $\theta$ the angle at the optical center in radians. The projections coincide only approximately near the axis.
 
-**Pourquoi le centre trompe** : près de zéro, $\tan\theta$ est proche de $\theta$. Les deux modèles peuvent donc sembler semblables sur une petite région centrale. L'écart grandit hors axe ; des coefficients nuls ne signifient pas « aucune différence avec le pinhole », mais aucune correction supplémentaire au modèle angulaire choisi.
+**Why the center is cheating**: near zero, $\tan\theta$ is close to $\theta$. The two models may therefore appear similar on a small central region. The deviation grows off-axis; zero coefficients do not mean "no difference with the pinhole", but no further correction to the chosen angular model.
 
-**Contrôle proposé** : projeter quelques rayons connus, dont un suffisamment oblique, avec les deux modèles dans les mêmes conventions et unités. Comparer ensuite aux observations réservées de la caméra réelle. Une image visuellement plausible ne départage pas les modèles sur leur précision périphérique. Les coefficients et la matrice de chaque modèle doivent rester associés à l'image et à la fonction de projection qui les interprètent.
+**check**: project some known rays, including a sufficiently oblique one, with the two models in the same conventions and units. Then compare to the reserved observations of the real camera. A visually plausible image does not separate models on their peripheral accuracy. The coefficients and matrix of each model must remain associated with the image and projection function that interprets them.
 
-### Cas lié à CV-FISHEYE-005
+### Case linked to CV-FISHEYE-005
 
-**Question de travail** : Une modification du paramètre balance d’OpenCV montre davantage de scène mais ajoute des bordures. La caméra est-elle mieux calibrée ?
+**Question of work**: Changing OpenCV's balance parameter reveals more of the scene but adds borders. Is the camera better calibrated?
 
-**Réponse de référence** : Non : `balance` modifie le choix de la projection de sortie et le compromis de champ, pas les paramètres physiques déjà estimés. Comparer champ utile, résolution locale et pixels valides avec la même calibration.
+**Reference Response**: No: `balance` changes the choice of output projection and field compromise, not the physical parameters already estimated. Compare useful field, local resolution and valid pixels with the same calibration.
 
-**Interprétation du compromis** : une projection de sortie peut privilégier un cadrage qui remplit le rectangle ou un champ plus large avec des zones invalides. Ces choix changent la quantité d'information disponible et sa résolution locale, sans modifier les observations ayant servi à estimer la caméra.
+**Interpretation of Compromise**: An output projection may favor a framing that fills the rectangle or a wider field with invalid areas. These choices change the amount of information available and its local resolution, without changing the observations used to estimate the camera.
 
-**Évaluation proposée** : comparer les sorties sur la même calibration en reportant masque valide, champ utile et erreur de la tâche. Pour une mesure près d'une bordure, l'interpolation et la faible densité d'observations peuvent compter davantage que le nombre total de pixels affichés. La géométrie de sortie doit être propagée aux algorithmes suivants. Un changement de présentation peut donc aider un produit sans constituer une amélioration de calibration physique.
+**Proposed evaluation**: Compare outputs on the same calibration by reporting valid mask, useful field and task error. For a measurement near a border, the interpolation and low density of observations can count more than the total number of pixels displayed. The output geometry must be propagated to the following algorithms. A change in presentation can therefore help a product without constituting an improvement in physical calibration.
 
-**Repère documentaire de cette passe** : [OpenCV 4.13, Fisheye camera model](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html), équations en theta, coefficients et fonctions de calibration. Les autres développements figurent dans les [cartes associées](../56-calibration-fisheye.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Fisheye camera model](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html), equations in theta, coefficients and calibration functions. The other developments are in the [flashcards](../56-calibration-fisheye.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [OpenCV 4.13, fisheye, Detailed Description et estimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
-- [OpenCV 4.13, calibration, modèle pinhole et distorsion](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
-- [Cartes associées](../56-calibration-fisheye.md) : CV-FISHEYE-001 à 005.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
 
-Rédaction : Agent Codex, 2026-10-24. Sources primaires consultées et API OpenCV 4.13 vérifiées avec Context7. Calculs analytiques et protocoles proposés sont distingués des expériences ; aucun export réel, benchmark vidéo ni validation scientifique indépendante annoncé.
+### CV-FISHEYE-001
+
+**Situation**: In OpenCV fisheye, does setting all four distortion coefficients to zero recover pinhole projection? Explain using an off-axis ray.
+
+**Local development**: $\tan\theta=\theta+\theta^3/3+O(\theta^5)$. The apparent equality near the axis comes from the first common order; the relative deviation grows approximately as $\theta^2/3$ for small angles. This development is not a reliable approximation to use without check near 90°. To reverse a calibrated fisheye projection, you need to find the angle from the polynomial $\theta_d(\theta)$, then form a radius; we do not simply replace $r_d$ with a pinhole coordinate. Check that this function remains invertible in the exploited domain: parameters adjusted over a small region can produce undesirable behavior in extrapolation.
+
+### CV-FISHEYE-002
+
+**Situation**: Which acquisitions should be added when a wide-angle calibration uses many views concentrated near the image center?
+
+**Sensitivity of coefficients**: in $\theta_d=\theta+\sum_{j=1}^4 k_j\theta^{2j+1}$, the derivative with respect to $k_j$ is $\theta^{2j+1}$. High-order terms therefore become very insensitive when all angles are small; thousands of center points can remain uninformative for $k_4$. This reading of the Jacobian explains the peripheral collection without prescribing a universal angle threshold. The high sensitivity at the edges is also not enough: the corners must be localizable and cover several directions and poses, in order to separate distortion, main center and orientation of the calibration target. The reserved residuals controls the generalization of the adjusted model.
+
+### CV-FISHEYE-003
+
+**Situation**: A fisheye calibration has low overall reprojection RMS, but measurements near the edges are wrong. What should be checked?
+
+**Pixel Error and Angular Error**: breaking down the residual image $e$ in a unitary radial direction $n_r$ and a tangent $n_t$ gives $e_r=n_r^Te$ and $e_t=n_t^Te$. Analyzing these components by crown, with headcount and distributions, reveals biases that the average norm mixes. In a single radial cut, $\delta r\simeq f\,(d\theta_d/d\theta)\delta\theta$: a pixel does not represent everywhere the same angular error if the derivative varies. Metric conversion still depends on the scene and its depth. This analysis is a diagnosis, not a certain identification of the optical or localization cause.
+
+### CV-FISHEYE-004
+
+**Situation**: After remapping a fisheye image into a rectified image, which calibration should be used to reconstruct rays or estimate pose?
+
+**Radius of exit**: for rectification to a pinhole model, a homogeneous pixel $\tilde u'$ gives a radius $q'=K_{\mathrm{new}}^{-1}\tilde u'$ in the rectified coordinate frame. If $R_{\mathrm{rect}}$ sends the raw camera rays to this coordinate frame, the corresponding raw ray is proportional to $R_{\mathrm{rect}}^Tq'$. The fisheye projection of this ray provides the position to be sampled in the source image: it is a reverse map construction. This transformation is usually unrefined. After an output crop, also adapt the main center; after a resize, adapt focal lengths and coordinates according to the pixel convention chosen. Pixels without a valid source do not create any geometric measurements.
+
+### CV-FISHEYE-005
+
+**Situation**: Changing OpenCV's balance parameter reveals more of the scene but adds borders. Is the camera better calibrated?
+
+**Density of information**: Keeping more field in a set number of pixels can reduce sampling of certain directions. The map derivative, a Jacobian $2\times2$ between output and source coordinates, locally describes stretching and anisotropy. When many output pixels interpolate almost the same source samples, their number does not measure an optical resolution gain. To compare two values of `balance`, keep the same calibrated parameters and measure the task on the common valid region, and then separately report the additional field. This protocol prevents a change in pixel population from being taken for an improvement in accuracy.
+
+**Passages consulted for these developments**: [OpenCV 4.13.0, fisheye](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html), Detailed Description, angular polynomial and rectification; sensitivities and protocols deduced by the project.
+
+## Sources and flashcards
+
+- [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
+- [OpenCV 4.13, calibration, pinhole model and distortion](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+- [Related flashcards](../56-calibration-fisheye.md): CV-FISHEYE-001 to 005.
+
+Editor: Agent Codex, 2026-10-24. Primary sources consulted and API OpenCV 4.13 verified with Context7. Analytical calculations and proposed protocols are distinguished from experiments; no actual export, video benchmark or independent scientific validation announced.

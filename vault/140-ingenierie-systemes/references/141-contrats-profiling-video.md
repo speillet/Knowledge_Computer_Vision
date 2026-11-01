@@ -7,80 +7,115 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
 ---
-# Contrats de données, profiling et pipelines vidéo
+# Data contracts, profiling and video pipelines
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Tenir une exigence de décision de bout en bout sous flux. Entrées : frames avec timestamps, métadonnées et contrats ; sortie : résultat dans le bon repère avant le délai utile. Latence, débit et fraîcheur ne sont pas la même quantité.
+Keep an end-to-end decision requirement under flow. Inputs: frames with timestamps, metadata and contracts; output: result in the correct coordinate frame before the required time. Latency, flow and freshness are not the same amount.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Décomposer acquisition, décodage, prétraitement, transferts, inférence, posttraitement et émission. Profiler CPU/GPU/queues avec horodatage cohérent. Batching et recouvrement peuvent augmenter le débit sans améliorer la latence individuelle ; une file accumule du retard si le service est insuffisant.
+Decompose acquisition, decoding, preprocessing, transfers, inference, postprocessing and transmission. CPU/GPU profiler/tails with consistent timestamp. Batching and overlaying can increase throughput without improving individual latency; a queue accumulates delay if the service is insufficient.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Pour huit flux à 30 images/s, le débit entrant est 240 images/s. Cette moyenne ne donne pas un p99. Une file avec taux d'arrivée $\lambda$ supérieur au service soutenable $\mu$ croît sans borne dans un modèle sans abandon. Un budget p99 somme de p99 d'étapes n'est pas une identité statistique générale.
+For eight streams at 30 frames/s, the inflow rate is 240 frames/s. This average does not give a P99. A line with $\lambda$ arrival rate higher than the sustainable service $\mu$ grows without limit in a model without abandonment. A budget p99 sum of p99 steps is not a general statistical identity.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Batch, concurrence, cadence, politique de drop, buffers et point de mesure. Zero-copy décrit certains transferts évités, pas une absence universelle de copie. Décodage matériel et conversion couleur peuvent encore être des goulots.
+Batch, competition, cadence, drop policy, buffers and measuring point. Zero-copy describes some avoided transfers, not a universal lack of copy. Hardware decoding and color conversion can still be bottlenecks.
 
-## Coût et implémentation
+## Cost and implementation
 
-Mesurer temps moteur et transferts séparément, puis système complet ; Nsight peut aider selon matériel. Aucun benchmark exécuté. Les commandes et valeurs par défaut de `trtexec` évoluent : consulter la version avant de supposer ce qui est inclus. Documentation `latest` consultée le 2026-10-20 ; aucune commande ni valeur par défaut universelle n’est fixée ici.
+Measure engine time and transfers separately, then complete system; Nsight can help depending on hardware. No benchmark executed. `trtexec`'s commands and defaults evolve: check the version before assuming what's included. Documentation `latest` accessed the 2026-10-20; no universal default command or value is set here.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : un flux puis charge croissante à modèle figé ; mesurer p50/p99, âge de frame, drops, débit et mémoire. La variation de charge teste files et concurrence, pas uniquement le kernel moyen.
+Baseline: a stream and then increasing load to fixed model; measure p50/p99, frame age, drops, throughput and memory. The load variation tests files and competition, not just the average kernel.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-FPS stables mais frames vieilles : inspecter files/backpressure et timestamps. GPU peu occupé : profiler CPU/décodage/transferts. Ne pas conclure que le modèle est trop petit ou trop grand sans trace.
+Stable but old frames: inspect files/backpressure and timestamps. Low-busy GPU: Profile CPU/decoding/transfers. Do not conclude that the model is too small or too large without a trace.
 
-## Alternatives et usages
+## Alternatives and applications
 
-GStreamer/DeepStream/NVDEC selon environnement ; ROS 2 pour interfaces robot avec contrat QoS/horloges. Une politique de fraîcheur peut abandonner de vieilles frames mais doit être cohérente avec tracking et temporalité.
+GStreamer/DeepStream/NVDEC depending on the environment; ROS 2 for robot interfaces with QoS/clocks contract. A freshness policy may abandon old frames but must be consistent with tracking and temporality.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent contrats, files et âge de l’information. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop contracts, queues and information age. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-PIPELINE-001
+### Case linked to CV-PIPELINE-001
 
-**Question de travail** : Un pipeline tient 240 images/s mais décide sur des frames vieilles. A-t-il forcément respecté son besoin temps réel ?
+**Question of work**: A pipeline sustains 240 images/s but makes decisions on old frames. Does it necessarily meet its real-time requirement?
 
-**Réponse de référence** : Non : le débit ne garantit ni l’âge de l’observation ni le délai par décision.
+**Reference Response**: No: the debit does not guarantee the age of the observation or the deadline by decision.
 
-**Deux quantités distinctes** : un débit compte les sorties par seconde ; l'âge d'une frame compare son instant de capture à celui où sa décision est disponible. Un système peut traiter beaucoup d'images tout en accumulant une attente importante avant le calcul. Le terme temps réel doit donc être lié à un délai utile défini.
+**Two distinct quantities**: A bitrate counts outputs per second; the age of a frame compares its capture time to when its decision is available. A system can process a lot of images while accumulating a significant expectation before the calculation. The real-time term must therefore be linked to a defined useful time.
 
-**Exemple construit** : une file contient déjà plusieurs secondes d'images lorsque le moteur atteint son débit nominal. Les sorties arrivent régulièrement, mais décrivent un passé trop ancien pour l'action aval. Mesurer attente et fraîcheur, puis choisir une politique de charge cohérente avec le besoin. Abandonner de vieilles frames peut réduire l'ancienneté, mais affecte tracking et événements courts ; traiter toutes les frames peut préserver la complétude en violant le délai. Le bon compromis ne se déduit pas du FPS seul : il appartient au contrat produit et doit être testé sous charge.
+**Constructed example**: A queue already contains several seconds of images when the engine reaches its rated speed. The exits arrive regularly, but describe a past too old for downstream action. Measure wait and freshness, then choose a charging policy consistent with the need. Abandoning old frames can reduce seniority, but affects tracking and short events; processing all frames can preserve completeness by violating delay. The right compromise cannot be deduced from the FPS alone: it belongs to the product contract and must be tested under load.
 
-### Cas lié à CV-PIPELINE-005
+### Case linked to CV-PIPELINE-005
 
-**Question de travail** : GPU peu occupé et latence élevée : quelles mesures peuvent distinguer décodage CPU, transferts et files ?
+**Question of work**: GPU utilization is low while latency is high. Which measurements distinguish CPU decoding, transfers and queues?
 
-**Réponse de référence** : Tracer temps CPU/GPU, H2D/D2H, attentes et âge des frames avec charge représentative.
+**Reference Response**: Trace CPU/GPU time, H2D/D2H, expectations and age of frames with representative load.
 
-**Interprétation des traces** : un GPU peu occupé peut attendre des images décodées, des copies ou une dépendance entre étapes. Une moyenne d'utilisation masque les alternances de calcul et d'attente ; elle ne dit pas directement quel composant doit être accéléré.
+**Interpretation of traces**: A low-busy GPU can wait for decoded images, copies, or a step-by-step dependency. A usage average masks the computational and waiting alternations; it does not directly say which component should be accelerated.
 
-**Ablation proposée** : instrumenter la chronologie, puis remplacer temporairement le décodage par des entrées préparées ou comparer un transfert isolé, avec un objectif de mesure explicite. Réintroduire ensuite la chaîne complète pour vérifier le gain produit. Contrôler aussi taille des lots et files, car réduire un coût peut déplacer le goulet. La qualité des entrées et des sorties doit rester identique. Cette démarche relie une hypothèse à une mesure discriminante et évite de modifier architecture ou précision alors que le modèle ne constitue qu'une fraction du délai observé. Les essais décrits sont proposés, sans trace matérielle exécutée ici.
+**Proposed deletion**: Instrument the timeline, then temporarily replace the decoding with prepared inputs or compare an isolated transfer, with an explicit measurement objective. Then reintroduce the complete chain to check the product gain. check also batch and file size, as reducing a cost can move the drop. The quality of the inputs and outputs must remain the same. This approach relates a hypothesis to a discriminating measurement and avoids modifying architecture or precision when the model constitutes only a fraction of the observed delay. The tests described are proposed, without any physical trace executed here.
 
-**Repère documentaire de cette passe** : [GStreamer, queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), limites, blocage, leaky et niveaux courants. Les autres développements figurent dans les [cartes associées](../141-contrats-profiling-video.md).
+**Documentary reference for this pass**: [GStreamer, tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), limits, blocking, leaky and current levels. The other developments are in the [flashcards](../141-contrats-profiling-video.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
+
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-PIPELINE-001
+
+**Situation**: A pipeline sustains 240 images/s but makes decisions on old frames. Does it necessarily meet its real-time requirement?
+
+**Age and waiting**: For a frame, note $t_c$ capture, $t_s$ start processing and $t_o$ output. The capture→exit delay is $(t_s-t_c)+(t_o-t_s)$: speeding up the calculation does not cancel an already accumulated wait. A receiving timestamp replaces only part of this contract if the transport or camera adds a delay. Check that the compared clocks are consistent and that the units are identical. Also measure the share of outputs exceeding the useful time; two systems with the same throughput can serve the product very differently depending on their queue and abandonment policy.
+
+### CV-PIPELINE-002
+
+**Situation**: What happens if sustained input at 240 images/s exceeds processing capacity at 200 images/s and no frames are dropped?
+
+**Growth of queue**: at constant rates and without blocking or abandonment, $Q(t)=Q(0)+(\lambda-\mu)t$ as long as the model remains applicable. An additional capacity buffer $C$ frames therefore absorbs approximately $C/(\lambda-\mu)$ seconds of overload before saturation. With a deficit of 40 frames/s, 400 places only give 10 s of margin. If the queue becomes bounded and blocks the producer, the delay can move upstream; if it drops, it is necessary to define which events and which frames are lost. This arithmetic distinguishes absorption from a temporary peak and insufficient capacity under sustained regime.
+
+### CV-PIPELINE-003
+
+**Situation**: Why is GPU time reported by an inference engine insufficient to validate camera-to-decision latency?
+
+**Critical Path and Asynchronous**: covered steps do not contribute to the delay as a simple sum of their isolated durations. Tracing dependencies, launches, and real endings helps identify the path that determines the availability of the decision. A CPU stopwatch around an asynchronous GPU launch can measure above all the submission; a global synchronization added everywhere can, conversely, destroy the overlap that one wants to study. Choose the instrumentation according to the question, then confirm the end-to-end latency without artificially altering the pipeline. The component measurements and the product measurement complement each other, with an explicitly announced perimeter.
+
+### CV-PIPELINE-004
+
+**Situation**: Track F — design: process eight 1080p streams at 30 frames/s on an embedded module with a defined p99 latency budget. Which process makes the hardware choice verifiable?
+
+**Rafals and equity**: Eight cameras with the same average frame rate can deliver their frames simultaneously or in a staggered manner. The average bitrate remains 240 images/s, but queue peaks and delay per stream may change. Testing these two configurations, and then a momentarily more charged flow, reveals the effects of scheduling. An overall average can hide a rarely served stream or losses concentrated on a single camera. Report latency, seniority, drops and quality per stream, as well as aggregate. The p99 budget must be measured on the full path and a defined load, without mechanically adding the percentiles of the floors.
+
+### CV-PIPELINE-005
+
+**Situation**: GPU utilization is low while latency is high. Which measurements distinguish CPU decoding, transfers and queues?
+
+**Locate a drop by substitution**: Replacing decoding with prepared frames approximately retains the downstream work and tests a hypothesis of data provision. Replacing the network temporarily with a saved result tests another limit, provided you keep the cost of postprocessing and the number of candidates. These tests are not product performance: they isolate contributions. If the drop moves after correction, re-trace the entire track rather than adding the isolated gains. check also includes copy dependencies and involuntary serialization; low GPU usage may come from repeated short waits and not from a lack of network capacity.
+
+**Passages consulted for these developments**: [GStreamer, tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), limits and blocking; built flow calculations and protocols; [NVIDIA TensorRT, benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), scope of measurement; page lastest accessed the 2026-10-30, no new API command imposed.
+
+## Sources and flashcards
 
 - [TensorRT, performance benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html).
-- [GStreamer queue, limites et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html).
-- [Cartes associées](../141-contrats-profiling-video.md).
+- [GStreamer tail, limits and leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html).
+- [Related flashcards](../141-contrats-profiling-video.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

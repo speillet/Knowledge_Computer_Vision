@@ -1,15 +1,15 @@
-# Reconnaissance et représentations
+# Recognition and representations
 
-Descripteurs globaux, classification, retrieval et anomalies.
+Global descriptors, classification, retrieval and anomalies.
 
-| Sujet | Référence | Cartes | Pôles |
+| Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [Représentations visuelles, ViT, Swin, ConvNeXt et DINOv2](71-representations-transfert.md) | [Lire](references/71-representations-transfert.md) | 5 | A, D, E |
-| [CLIP, SigLIP et reconnaissance par texte](72-clip-siglip.md) | [Lire](references/72-clip-siglip.md) | 4 | A, D |
-| [Inspection : golden template, PatchCore et PaDiM](73-patchcore-padim.md) | [Lire](references/73-patchcore-padim.md) | 4 | A, E |
-| [OCR et compréhension documentaire](74-ocr-documents.md) | [Lire](references/74-ocr-documents.md) | 3 | E |
-| [Reconnaissance biométrique, ArcFace et PAD](75-embeddings-biometrie.md) | [Lire](references/75-embeddings-biometrie.md) | 2 | E |
+| [Visual representations, ViT, Swin, ConvNeXt and DINOv2](71-representations-transfert.md) | [Read](references/71-representations-transfert.md) | 5 | A, D, E |
+| [CLIP, SigLIP and text-based recognition](72-clip-siglip.md) | [Read](references/72-clip-siglip.md) | 4 | A, D |
+| [Inspection: golden templates, PatchCore and PaDiM](73-patchcore-padim.md) | [Read](references/73-patchcore-padim.md) | 4 | A, E |
+| [OCR and document understanding](74-ocr-documents.md) | [Read](references/74-ocr-documents.md) | 3 | E |
+| [Biometric recognition, ArcFace and PAD](75-embeddings-biometrie.md) | [Read](references/75-embeddings-biometrie.md) | 2 | E |
 
-Sous-deck : `CV::Pilote::70-reconnaissance-representations`. Statut : rédigé ; export et maîtrise non vérifiés.
+Subdeck: `CV::Pilote::70-reconnaissance-representations`. Status: drafted; device import and mastery unverified.
 
-[Accueil](../00-Accueil.md) · [Inventaire](../01-Parcours/Inventaire.md) · [Pôles](../01-Parcours/Poles-metiers.md).
+[Home](../00-Accueil.md) · [Inventory](../01-Parcours/Inventaire.md) · [Career tracks](../01-Parcours/Poles-metiers.md).

@@ -1,89 +1,97 @@
-# Stéréo rectifiée, SGM et profondeur — cartes
+# Flashcards — Rectified stereo, SGM and depth
 
-Fiche : [[60-vision-3d/references/61-stereo-profondeur|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[60-vision-3d/references/61-stereo-profondeur|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::60-vision-3d
 
 ## CV-STEREO-001
 
-Objectif : calculer une profondeur rectifiée. Famille : raisonnement. Provenance : agent.
+Objective: Calculate a rectified depth. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-STEREO-001
-Question: En stéréo rectifiée horizontale avec points principaux de même abscisse, pour f=1000 px, baseline 0,2 m et disparité gauche−droite 20 px, quelle profondeur ?
-Reponse: **Noyau attendu** : 10 m par $Z=fB/d$.
+Question: For horizontally rectified stereo with equal principal-point x-coordinates, f=1000 px, a 0.2 m baseline and left-minus-right disparity of 20 px, what depth is obtained?
+Reponse: **Expected answer**: 10 m by $Z=fB/d$.
 
-**Approfondissement** : À 10 px de disparité, on obtiendrait 20 m. La formule suppose une géométrie rectifiée compatible et une disparité valide ; f et d doivent être dans la même unité pixel.
+**Further explanation**: At 10 px of disparity, one would obtain 20 m. The formula assumes a compatible rectified geometry and a valid disparity; f and d must be in the same pixel unit.
 
-**Dérivation d'unités** : le quotient $f/d$ est sans unité si les deux grandeurs utilisent les pixels de la même grille rectifiée ; le résultat conserve donc l'unité de la baseline. La différence de coordonnées traduit la séparation des deux rayons pour un point donné. Une faible disparité correspond ici à une grande profondeur.
+**derivation of units**: the quotient $f/d$ is without a unit if the two quantities use the pixels of the same rectified grid; the result therefore retains the unit of the baseline. The difference in coordinates reflects the separation of the two rays for a given point. A small disparity here corresponds to a great depth.
 
-**Exemple de contrôle** : vérifier une cible à distance connue, puis doubler artificiellement la valeur de la baseline dans le calcul : la profondeur calculée doublerait aussi. Cela aide à localiser une erreur d'échelle sans modifier le matcher. La formule simplifiée suppose les points principaux alignés comme annoncé et une disparité physique valide. Une région occultée ou un mauvais match peut produire un nombre positif sans profondeur correcte. En géométrie rectifiée plus générale, utiliser la transformation de reprojection et ses conventions plutôt qu'appliquer cette formule à toute sortie appelée disparité.
+**Example of check**: check a known remote target, then artificially double the value of the baseline in the calculation: the calculated depth would also double. This helps locate a scale error without changing the matcher. The simplified formula assumes the main points aligned as advertised and a valid physical disparity. A hidden region or a bad match can produce a positive number without proper depth. In more general rectified geometry, use the reprojection transformation and its conventions rather than applying this formula to any output called disparity.
 
-**Erreurs bloquantes** : Utiliser une baseline en millimètres et annoncer directement des mètres.
-Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV 4.13.0, stereoRectify et reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; calcul analytique du projet.
+**Construction of triangles**: With horizontally separated centers of $B$, even focal length and even main abscissa $c_x$, the ideal projections are $x_g=fX/Z+c_x$ and $x_d=f(X-B)/Z+c_x$. The subtraction eliminates $X$ and gives $d=fB/Z$. If the main abscissas differ, it is $d-(c_{x,g}-c_{x,d})$ that enters into this simplified geometry. This derivation explains why using the corresponding rectified image/reprojection matrix torque is essential. The result $Z$ is the depth along the rectified optical axis; the Euclidean distance to the camera center is $\sqrt{X^2+Y^2+Z^2}$ and can be greater for an off-axis point.
+
+**Blocking errors**: Use a baseline in millimeters and announce directly meters.
+Source: [[60-vision-3d/references/61-stereo-profondeur|Full reference]]; [OpenCV 4.13.0, stereoRectify and reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); analytical calculation of the project; [OpenCV 4.13.0, Stereo, Basics, Triangles and Disparity; Uncertainty Diversions and Bidirectional Test Constructed](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-STEREO-001 provenance::agent pole::B pole::C
 END
 
 ## CV-STEREO-002
 
-Objectif : interpréter l’incertitude de profondeur. Famille : raisonnement. Provenance : agent.
+Objective: Interpreting the uncertainty of depth. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-STEREO-002
-Question: Pourquoi la précision de profondeur stéréo se dégrade-t-elle souvent à longue distance ?
-Reponse: **Noyau attendu** : La sensibilité à la disparité croît comme $fB/d^2$ ; de petites erreurs de d deviennent de grandes erreurs de Z quand d est faible.
+Question: Why does stereo depth accuracy often deteriorate at long range?
+Reponse: **Expected answer**: The sensitivity to disparity grows like $fB/d^2$; small d errors become large Z errors when d is low.
 
-**Approfondissement** : Comparer une erreur de reprojection et une erreur métrique sur distances connues.
+**Further explanation**: Compare a reprojection error and a metric error over known distances.
 
-**Sensibilité analytique** : dériver $Z=fB/d$ donne $\partial Z/\partial d=-fB/d^2$. À petite erreur, la valeur absolue de cette dérivée convertit l'incertitude de disparité en incertitude de profondeur. Quand la distance double dans ce modèle, la disparité est divisée par deux et cette sensibilité est multipliée par quatre.
+**Analytical Sensitivity**: drifting $Z=fB/d$ gives $\partial Z/\partial d=-fB/d^2$. With little error, the absolute value of this derivative converts the uncertainty of disparity into uncertainty of depth. When the distance doubles in this model, the disparity is halved and this sensitivity is multiplied by four.
 
-**Exemple construit** : avec $fB=200$ px·m et une erreur de disparité de 0,5 px, l'approximation donne environ 0,25 m à $d=20$ px et 1 m à $d=10$ px. Ces chiffres supposent un petit bruit et des correspondances correctes ; ils ne décrivent pas les outliers d'occultation. Comparer séparément biais, dispersion et taux de pixels invalides. Augmenter la baseline peut aider la géométrie, mais peut aussi rendre le matching et le recouvrement plus difficiles : la décision relie précision, visibilité et tâche.
+**Constructed example**: with $fB=200$ px·m and a disparity error of 0,5 px, the approximation gives about 0,25 m at $d=20$ px and 1 m at $d=10$ px. These figures assume a small noise and correct matches; they do not describe the outliers of occlusion. Compare separately bias, scatter and invalid pixel rate. Increasing the baseline can help geometry, but can also make matching and overlaying more difficult: the decision connects precision, visibility and task.
 
-**Erreurs bloquantes** : Supposer un bruit de profondeur constant pour toute distance.
-Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV 4.13.0, stereoRectify et reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; dérivation de Z=fB/d, à f et B fixés.
+**Propagation of several uncertainties**: for $Z=fB/d$ and small disturbances, $\delta Z/Z\simeq\delta f/f+\delta B/B-\delta d/d$. If these errors are independent and centered, the relative variances add up; otherwise their covariances count. A baseline bias thus produces a relative error of scale, while a fixed disparity bias further penalizes long distances. Almost $d=0$, linearization becomes fragile and a symmetrical distribution in disparity gives a very asymmetrical distribution in depth. Also evaluate the intervals in depth or use a depth inverse representation according to the estimator, instead of assuming constant Gaussian metric uncertainty.
+
+**Blocking errors**: Assume constant depth noise for any distance.
+Source: [[60-vision-3d/references/61-stereo-profondeur|Full reference]]; [OpenCV 4.13.0, stereoRectify and reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); derivation of Z=fB/d, at f and B fixed; [OpenCV 4.13.0, Stereo, Basics, Triangles and Disparity; Uncertainty Diversions and Bidirectional Test Constructed](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-STEREO-002 provenance::agent pole::B pole::C
 END
 
 ## CV-STEREO-003
 
-Objectif : décoder une disparité fixe. Famille : diagnostic. Provenance : agent.
+Objective: decode a fixed disparity. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-STEREO-003
-Question: Une reconstruction SGBM a une échelle fausse malgré une bonne calibration. Quel contrat numérique vérifier ?
-Reponse: **Noyau attendu** : Le stockage de la disparité et son facteur d’échelle, notamment les quatre bits fractionnaires des sorties concernées ; convertir et masquer les invalides.
+Question: An SGBM reconstruction has the wrong scale despite good calibration. Which numerical convention should be checked?
+Reponse: **Expected answer**: The storage of the disparity and its scaling factor, including the four fractional bits of the concerned outputs; convert and hide invalids.
 
-**Approfondissement** : Vérifier aussi baseline et Q avant de corriger arbitrairement les coordonnées finales.
+**Further explanation**: Check also baseline and Q before arbitrarily correcting the final coordinates.
 
-**Piège de représentation** : un entier peut coder une valeur réelle avec des bits fractionnaires. Si la sortie concernée stocke seize fois la disparité, une valeur 320 représente 20 pixels et non 320 pixels. Comme la profondeur est inversement proportionnelle à la disparité dans le cas simple, interpréter 320 comme des pixels réduirait la profondeur d'un facteur seize.
+**Representation Trap**: An integer can encode a real value with fractional bits. If the relevant output stores sixteen times the disparity, a value 320 represents 20 pixels and not 320 pixels. Since depth is inversely proportional to disparity in the simple case, interpreting 320 as pixels would reduce depth by a factor of sixteen.
 
-**Enquête proposée** : inspecter type, valeurs valides, sentinelle d'invalidité et documentation de la fonction exacte. Reprojeter ensuite un point connu en vérifiant la matrice associée à la rectification et les unités de baseline. Ne pas multiplier simplement le nuage final pour cacher un défaut de contrat : cela pourrait laisser incohérents masques et autres grandeurs aval. Une bonne calibration géométrique ne protège pas d'une mauvaise conversion numérique de la sortie du matcher.
+**Proposed investigation**: inspect type, valid values, disability watch and exact function documentation. Then reproject a known point by checking the matrix associated with the rectification and the basic units. Do not simply multiply the final cloud to hide a contract defect: this could leave inconsistent masks and other downstream quantities. A good geometric calibration does not protect from a bad digital conversion of the matcher output.
 
-**Erreurs bloquantes** : Reprojeter des entiers fixes comme des pixels de disparité ordinaires.
-Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV 4.13.0, StereoSGBM, Detailed Description et create](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html) ; [OpenCV 4.13.0, stereoRectify et reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+**Order of operations**: Conceptually, retain the mask provided by the matcher's contract, convert the fixed disparity to real, then apply $[X_h,Y_h,Z_h,W_h]^T=Q[x,y,d,1]^T$ and divide by $W_h$ when the projection is valid. These are homogeneous coordinates, not yet meters before this division and the interpretation of the units of $Q$. Do not build the mask only after filling the holes: an interpolation can replace a sentinel with a plausible value. Keep the original measurement, its validity and any depth completed separate. Testing a known pixel makes it possible to distinguish storage factor, disparity convention, and baseline unit.
+
+**Blocking errors**: Reproject fixed integers as ordinary pixels of disparity.
+Source: [[60-vision-3d/references/61-stereo-profondeur|Full reference]]; [OpenCV 4.13.0, StereoSGBM, Detailed Description and create](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html); [OpenCV 4.13.0, stereoRectify and reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [OpenCV 4.13.0, Stereo, Basics, Triangles and Disparity; Uncertainty Diversions and Bidirectional Test Constructed](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), see 2026-10-30.
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-STEREO-003 provenance::agent pole::B pole::C
 END
 
 ## CV-STEREO-004
 
-Objectif : séparer rectification et matching. Famille : comparaison. Provenance : agent.
+Objective: Separate rectification and matching. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-STEREO-004
-Question: La rectification garantit-elle une correspondance correcte à chaque pixel ?
-Reponse: **Noyau attendu** : Non : elle simplifie la géométrie de recherche ; texture, répétition et occlusion peuvent encore rendre le matching ambigu.
+Question: Does rectification guarantee a correct correspondence at every pixel?
+Reponse: **Expected answer**: No: it simplifies search geometry; texture, repetition and occlusion can still make matching ambiguous.
 
-**Approfondissement** : La confiance et les masques invalides doivent être évalués, pas remplis par une profondeur fictive.
+**Further explanation**: Confidence and invalid masks must be evaluated, not filled by a fictitious depth.
 
-**Ce que la rectification change** : elle réorganise les images pour simplifier les lieux de recherche compatibles avec la géométrie. Elle ne crée pas de texture et ne rend pas visible une surface cachée dans l'une des caméras. La recherche le long d'une ligne peut donc encore contenir plusieurs candidats ou aucun correspondant réel.
+**What the correction changes**: reorganizes images to simplify geometry-enabled search locations. It does not create texture and does not make visible a hidden surface in one of the cameras. The search along a line can therefore still contain several candidates or no real match.
 
-**Exemple construit** : une surface uniforme offre des coûts proches pour beaucoup de disparités ; une texture périodique peut favoriser la mauvaise période ; au bord d'un objet, un point peut n'être vu que d'un côté. Une régularisation peut sélectionner une valeur dans ces régions, mais cette valeur n'est pas une nouvelle observation. Conserver une information de validité et tester les cohérences disponibles, puis évaluer sur une référence indépendante. Distinguer densité de la carte produite et quantité de profondeur réellement fiable évite d'interpréter tout pixel rempli comme une mesure.
+**Constructed example**: a uniform surface offers close costs for many disparities; a periodic texture can favor the bad period; at the edge of an object, a point can only be seen on one side. A regularization may select a value in these regions, but this value is not a new observation. Maintain validity information and test available consistency, and then evaluate on an independent reference. Distinguishing the density of the produced map and the amount of really reliable depth avoids interpreting any filled pixel as a measurement.
 
-**Erreurs bloquantes** : Déduire une profondeur fiable de la seule horizontalité des lignes épipolaires.
-Source: [[60-vision-3d/references/61-stereo-profondeur|Fiche complète]] ; [OpenCV StereoSGBM, description et compute](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html) ; [OpenCV reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+**Bidirectional verification built**: Set $d_g(x)=x_g-x_d$ and a positive straight disparity $d_d(x_d)=x_g-x_d$ for the same point. A consistent pair must check $|d_g(x)-d_d(x-d_g(x))|<\tau$, subject to interpolation and visibility. If the right field uses the opposite sign, the equation changes in sum: the conventions must be explicit. This test rejects some inconsistencies, but two false matches on a repetitive texture can remain mutually compatible. Geometric validation, the distinction between holes and regularized values, and an independent reference remain necessary. The threshold $\tau$ is in pixels of disparity of the grid considered.
+
+**Blocking errors**: Deduct a reliable depth from the only horizontality of the epipolar lines.
+Source: [[60-vision-3d/references/61-stereo-profondeur|Full reference]]; [OpenCV StereoSGBM, description and compute](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html); [OpenCV reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [OpenCV 4.13.0, Stereo, Basics, Triangles and Disparity; Uncertainty Diversions and Bidirectional Test Constructed](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), see 2026-10-30.
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-STEREO-004 provenance::agent pole::B pole::C
 END

@@ -1,89 +1,97 @@
-# Canny et Hough : contours, droites et segments — cartes
+# Flashcards — Canny and Hough: edges, lines and segments
 
-Fiche : [[30-traitement-image/references/32-canny-hough|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[30-traitement-image/references/32-canny-hough|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::30-traitement-image
 
 ## CV-CANNY-HOUGH-001
 
-Objectif : expliquer l’hystérésis. Famille : algorithme. Provenance : agent.
+Objective: Explain the hysteresis. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CANNY-HOUGH-001
-Question: Pourquoi Canny utilise-t-il deux seuils plutôt qu’un simple seuil de gradient ?
-Reponse: **Noyau attendu** : Les contours forts amorcent des structures ; des réponses plus faibles peuvent être retenues lorsqu’elles sont reliées aux fortes selon l’hystérésis.
+Question: Why does Canny use two thresholds instead of a single gradient threshold?
+Reponse: **Expected answer**: Strong contours initiate structures; weaker responses can be retained when they are related to strong ones according to hysteresis.
 
-**Approfondissement** : La suppression des non-maxima amincit d’abord les réponses. Les seuils ne donnent aucune classe sémantique.
+**Further explanation**: Removing non-maxima thins the answers first. Thresholds do not give any semantic class.
 
-**Déroulement interprété** : le gradient mesure une variation locale d'intensité. La suppression des non-maxima conserve les crêtes dans la direction du gradient afin d'éviter des bandes épaisses. L'hystérésis décide ensuite quelles crêtes faibles prolongent une structure suffisamment forte. Le seuil bas permet une continuité conditionnelle ; il ne rend pas toutes les réponses faibles admissibles.
+**Interpreted procedure**: The gradient measures a local variation in intensity. The removal of non-maxima keeps the ridges in the direction of the gradient in order to avoid thick bands. The hysteresis then decides which weak ridges extend a sufficiently strong structure. The low threshold allows for conditional continuity; it does not make all weak responses admissible.
 
-**Exemple construit** : une arête éclairée de façon inégale comporte une portion contrastée et une portion faible. Un seuil unique élevé fragmente l'arête ; un seuil unique bas retient aussi beaucoup de texture. Les deux seuils permettent de conserver certaines portions faibles reliées à la portion forte. Si tout le contour est faible et sans amorce forte, il peut rester absent. Le réglage dépend de l'échelle de lissage, du contraste et de la définition du gradient ; aucune de ces étapes ne distingue à elle seule arête de pièce et texture du fond.
+**Constructed example**: An unevenly lit edge has a contrasting portion and a weak portion. A high single threshold fragments the edge; a low single threshold also retains a lot of texture. The two thresholds make it possible to keep certain small portions connected to the strong portion. If the entire contour is weak and without a strong primer, it may remain absent. The setting depends on the smoothing scale, contrast, and gradient definition; none of these steps single-handedly distinguishes part edges and background texture.
 
-**Erreurs bloquantes** : Décrire le seuil bas comme une seconde segmentation indépendante.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Canny, Non-maximum Suppression et Hysteresis Thresholding](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html).
+**Describe hysteresis as a journey**: after calculating the gradient and removing non-maxima, initialize a queue with pixels above the high threshold. Browse their neighbors and recursively keep those above the low threshold; discard other unrelated answers. This diagram explains how a long, small portion can be retained without a single pixel exceeding the high threshold. The direction of the gradient is a normal to the contour, calculated with a convention such as $\operatorname{atan2}(G_y,G_x)$; the suppression compares the amplitudes along this normal. Changing norm L1/L2, smoothing or digital depth changes the scale of scores and therefore the direction of the thresholds.
+
+**Blocking errors**: Describe the low threshold as a second independent segmentation.
+Source: [[30-traitement-image/references/32-canny-hough|Full reference]] ; [OpenCV 4.13.0, Canny, Non-maximum Removal and Hysteresis Thresholding](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html).
 Tags: cv::pilote cv::d03 famille::algorithme cv_id::CV-CANNY-HOUGH-001 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-CANNY-HOUGH-002
 
-Objectif : interpréter un vote de Hough. Famille : raisonnement. Provenance : agent.
+Objective: interpret a Hough vote. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CANNY-HOUGH-002
-Question: Que représentent $\rho$ et $\theta$ dans $\rho=x\cos\theta+y\sin\theta$ ?
-Reponse: **Noyau attendu** : Pour des coordonnées image $x,y$ en pixels, $\rho$ est la distance orientée à l’origine en pixels ; $\theta$ est l’angle de la normale en radians, selon la convention annoncée. Chaque point vote pour les droites qui le traversent.
+Question: What do $\rho$ and $\theta$ represent in $\rho=x\cos\theta+y\sin\theta$?
+Reponse: **Expected answer**: For image coordinates $x,y$ in pixels, $\rho$ is the distance originally oriented in pixels; $\theta$ is the angle of normal in radians, according to the convention announced. Each point votes for the right-wingers who cross it.
 
-**Approfondissement** : Les bins imposent une résolution ; un maximum peut regrouper plusieurs structures voisines.
+**Further explanation**: Bins impose a resolution; a maximum can group several neighboring structures.
 
-**Lecture géométrique** : le vecteur $(\cos\theta,\sin\theta)$ est une normale unitaire. Le produit scalaire avec $(x,y)$ donne la projection du point sur cette normale ; tous les points d'une même droite partagent cette projection. Ainsi, pour $\theta=0$, l'équation devient $x=\rho$ : une droite verticale. Pour $\theta=\pi/2$, elle devient $y=\rho$ : une droite horizontale, dans les axes annoncés.
+**Geometric reading**: vector $(\cos\theta,\sin\theta)$ is a unit normal. The scalar product with $(x,y)$ gives the projection of the point on this normal; all the points on the same line share this projection. Thus, for $\theta=0$, the equation becomes $x=\rho$: a vertical line. For $\theta=\pi/2$, it becomes $y=\rho$: a horizontal line, in the announced axes.
 
-**Construction des votes** : chaque point de contour peut appartenir à plusieurs droites et vote donc pour plusieurs couples. Une accumulation élevée signifie qu'un ensemble de points soutient une hypothèse, sans certifier leur appartenance au même objet. Des bins trop larges mélangent des droites proches ; des bins trop fins dispersent les votes bruités. Si l'origine change après un crop, la valeur de $\rho$ change aussi : remettre les paramètres dans le repère original avant toute mesure physique.
+**Construction of votes**: each contour point can belong to several lines and therefore vote for several couples. A high accumulation means that a set of points supports a hypothesis, without certifying their belonging to the same object. Too wide bins mix up close lines; too thin bins disperse the noisy votes. If the origin changes after a crop, the value of $\rho$ also changes: return the parameters in the original coordinate frame before any physical measurement.
 
-**Erreurs bloquantes** : Confondre normale et direction de segment ou oublier l’unité pixel.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Hough, How does it work? et Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
+**Angular accuracy and position**: A small $\delta\theta$ error causes $\rho$ to vary by about $(-x\sin\theta+y\cos\theta)\delta\theta$, with $\delta\theta$ in radians. The effect grows with distance at the origin: an angular bin does not represent a uniform tolerance in pixels everywhere. At a leverage of 500 px, a degree corresponds to an order of magnitude of 8,7 px. This derivation does not give the final error of a detector, but helps to choose a reasonable discretization and to understand an extrapolation. Couples $(\rho,\theta)$ and $(-\rho,\theta+\pi)$ represent the same straight line; the angle interval and the allowed sign of $\rho$ must be processed together.
+
+**Blocking errors**: Confound normal and segment direction or forget the pixel unit.
+Source: [[30-traitement-image/references/32-canny-hough|Full reference]] ; [OpenCV 4.13.0, Hough, How does it work? and Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
 Tags: cv::pilote cv::d03 famille::raisonnement cv_id::CV-CANNY-HOUGH-002 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-CANNY-HOUGH-003
 
-Objectif : distinguer droite et segment. Famille : comparaison. Provenance : agent.
+Objective: Distinguish between right and segment. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CANNY-HOUGH-003
-Question: Pourquoi une sortie de HoughLines ne donne-t-elle pas directement les extrémités d’un segment réel ?
-Reponse: **Noyau attendu** : Elle paramètre une droite ; les limites de support doivent être estimées séparément ou avec une variante segment comme HoughLinesP.
+Question: Why does HoughLines not directly return the endpoints of a real line segment?
+Reponse: **Expected answer**: Sets a straight line; support limits must be estimated separately or with a segment variant like HoughLinesP.
 
-**Approfondissement** : Vérifier longueur minimale, trous et région observée ; prolonger une droite hors support n’est pas une mesure.
+**Further explanation**: Check minimum length, holes and region observed; extending a straight out of support is not a measurement.
 
-**Différence entre modèle et support** : une droite est un ensemble infini de points satisfaisant une équation ; un segment ajoute deux extrémités et un support observé. Un maximum de votes indique une orientation et une position soutenues par des contours, mais des points éloignés ou plusieurs objets peuvent contribuer à ce même maximum.
+**Difference Between Model and Support**: A line is an infinite set of points satisfying an equation; a segment adds two ends and an observed support. A maximum of votes indicates an orientation and a position supported by contours, but distant points or several objects can contribute to the same maximum.
 
-**Exemple construit** : deux petits bords colinéaires séparés par un grand espace peuvent soutenir la même droite. Relier automatiquement les points les plus éloignés ferait passer le segment dans une zone sans observation. Pour mesurer une pièce, projeter les points de support sur la direction de la droite, examiner les interruptions et appliquer des contraintes de longueur et de continuité cohérentes avec la tâche. Une variante qui renvoie des segments utilise elle aussi des paramètres de regroupement. Ses extrémités ne deviennent pas pour autant des limites physiques exactes sans contrôle de l'image et de l'incertitude.
+**Constructed example**: Two small collinear edges separated by a large space can support the same straight line. Automatically connecting the furthest points would move the segment into an area without observation. To measure a part, project the support points on the direction of the right, examine interruptions and apply length and continuity constraints consistent with the task. A variant that returns segments also uses grouping parameters. Its extremities do not, however, become exact physical limits without check of image and uncertainty.
 
-**Erreurs bloquantes** : Interpréter une droite infinie comme les contours complets d’une pièce.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Hough, How does it work? et Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
+**Find a Finished Support**: from the normal $n=(\cos\theta,\sin\theta)$, take a point $p_0=\rho n$ and the unit direction $d=(-\sin\theta,\cos\theta)$. For each $p$ contour point, test its normal $|n^Tp-\rho|$ distance, then project the points compatible with $s=d^T(p-p_0)$. Contiguous groups in $s$ offer segments, whose ends are equal to $p_0+s_{min}d$ and $p_0+s_{max}d$. This process distinguishes perpendicular tolerance and longitudinal holes. The choice of support, the presence of occlusions and a possible re-estimation of the line on its points condition the ends. It is not enough to take the minimum and maximum of all the collinear points of the image.
+
+**Blocking errors**: Interpret an infinite line as the complete contours of a room.
+Source: [[30-traitement-image/references/32-canny-hough|Full reference]] ; [OpenCV 4.13.0, Hough, How does it work? and Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html).
 Tags: cv::pilote cv::d03 famille::comparaison cv_id::CV-CANNY-HOUGH-003 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-CANNY-HOUGH-004
 
-Objectif : départager texture et structure. Famille : diagnostic. Provenance : agent.
+Objective: Differentiate texture and structure. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-CANNY-HOUGH-004
-Question: Hough produit beaucoup de droites sur une surface texturée. Quel contrôle évite un réglage aveugle du seuil de vote ?
-Reponse: **Noyau attendu** : Inspecter carte Canny, distribution angulaire, région utile et support spatial des candidats.
+Question: Hough detects many lines on a textured surface. Which check avoids blindly tuning the voting threshold?
+Reponse: **Expected answer**: Inspect map Canny, angular distribution, useful region and spatial support of candidates.
 
-**Approfondissement** : Tester une perturbation contrôlée de texture et des contraintes métier avant de valider une ligne.
+**Further explanation**: Test a controlled texture disturbance and business constraints before validating a line.
 
-**Enquête proposée** : superposer les droites et leurs points de support à l'image. Si les votes proviennent de stries répétées, le détecteur répond peut-être correctement à des contours qui ne sont simplement pas ceux de la pièce. Examiner ensuite la distribution des angles et le nombre de fragments : cela distingue une texture structurée d'un bruit dispersé.
+**Proposed investigation**: Overlapping the lines and their support points to the image. If the votes come from repeated streaks, the detector may respond correctly to contours that are simply not those of the room. Then examine the distribution of angles and the number of fragments: this distinguishes a structured texture from a dispersed noise.
 
-**Ablation construite** : fixer les bins et seuils, restreindre une région d'intérêt, puis modifier séparément le lissage et la contrainte d'orientation attendue. Mesurer lignes métier trouvées, faux candidats et erreur de position. Augmenter seulement le seuil de vote peut éliminer une arête utile peu contrastée tout en conservant une texture longue et répétitive. Une contrainte géométrique aide uniquement si elle reste valable pour les orientations réellement rencontrées. L'accumulateur compte un support photométrique ; la validation du modèle de pièce est une décision supplémentaire du pipeline.
+**Ablation construite**: Set the bins and thresholds, restrict a region of interest, and then separately change the smoothing and the expected orientation constraint. Measure business lines found, false candidates and position error. Increasing only the voting threshold can eliminate a useful edge that is not very contrasting while retaining a long and repetitive texture. A geometric constraint helps only if it remains valid for the orientations actually encountered. The accumulator has a photometric support; the validation of the part model is an additional decision of the pipeline.
 
-**Erreurs bloquantes** : Conclure que chaque maximum d’accumulateur est une arête physique.
-Source: [[30-traitement-image/references/32-canny-hough|Fiche complète]] ; [OpenCV 4.13.0, Hough, How does it work? et Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html) ; diagnostic de texture proposé par le projet.
+**Differentiating Vote and Adjustment Error**: a long texture provides a lot of points and therefore votes, even if it is not the desired structure. For a candidate, calculate in addition the normal distances $r_i=x_i\cos\theta+y_i\sin\theta-\rho$ on her support points, their longitudinal extent and the fraction of the positions actually covered. A very precise short line and a long discontinuous line do not have the same use. Also compare its relationship to other expected edges: parallelism, intersections or distances, if these properties are legitimate for the room. These validations are choices of the proposed pipeline; the accumulator score is not a calibrated probability of the presence of a business edge.
+
+**Blocking errors**: Conclude that each maximum accumulator is a physical edge.
+Source: [[30-traitement-image/references/32-canny-hough|Full reference]]; [OpenCV 4.13.0, Hough, How does it work? and Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html); texture diagnosis proposed by the project.
 Tags: cv::pilote cv::d03 famille::diagnostic cv_id::CV-CANNY-HOUGH-004 provenance::agent pole::B pole::E pole::F
 END

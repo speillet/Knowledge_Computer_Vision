@@ -1,13 +1,13 @@
-# Mouvement et vidéo
+# Motion and video
 
-Flot optique, suivi de points, visibilité et compréhension temporelle.
+optical flow, point tracking, visibility and temporal understanding.
 
-| Sujet | Référence | Cartes | Pôles |
+| Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [Flot optique : Lucas–Kanade, Farnebäck et RAFT](101-flot-optique.md) | [Lire](references/101-flot-optique.md) | 4 | B, C, D |
-| [Suivi de points, actions et compréhension vidéo](102-points-actions-video.md) | [Lire](references/102-points-actions-video.md) | 4 | D |
-| [Farnebäck — flot dense par expansion polynomiale](103-farneback.md) | [Lire](references/103-farneback.md) | 5 | B, C, D |
+| [Optical flow: Lucas–Kanade, Farnebäck and RAFT](101-flot-optique.md) | [Read](references/101-flot-optique.md) | 4 | B, C, D |
+| [Point tracking, actions and video understanding](102-points-actions-video.md) | [Read](references/102-points-actions-video.md) | 4 | D |
+| [Farnebäck — dense optical flow through polynomial expansion](103-farneback.md) | [Read](references/103-farneback.md) | 5 | B, C, D |
 
-Sous-deck : `CV::Pilote::100-mouvement-video`. Statut : rédigé ; export et maîtrise non vérifiés.
+Subdeck: `CV::Pilote::100-mouvement-video`. Status: drafted; device import and mastery unverified.
 
-[Accueil](../00-Accueil.md) · [Inventaire](../01-Parcours/Inventaire.md) · [Pôles](../01-Parcours/Poles-metiers.md).
+[Home](../00-Accueil.md) · [Inventory](../01-Parcours/Inventaire.md) · [Career tracks](../01-Parcours/Poles-metiers.md).

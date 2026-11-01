@@ -1,89 +1,97 @@
-# Filtres, gradients et pyramides — cartes
+# Flashcards — Filters, gradients and pyramids
 
-Fiche : [[30-traitement-image/references/31-filtrage-gradients|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[30-traitement-image/references/31-filtrage-gradients|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::30-traitement-image
 
 ## CV-FILTRES-001
 
-Objectif : choisir un filtre d’après le bruit. Famille : comparaison. Provenance : agent.
+Objective: Choose a filter based on the noise. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FILTRES-001
-Question: Pourquoi le médian peut-il convenir à du bruit impulsionnel sans être un remplaçant universel du Gaussien ?
-Reponse: **Noyau attendu** : Il rejette des valeurs extrêmes locales via l’ordre, tandis que le Gaussien moyenne ; l’effet dépend du bruit et des structures.
+Question: Why can a median filter suit impulse noise without universally replacing Gaussian filtering?
+Reponse: **Expected answer**: It rejects local extreme values via order, while the Gaussian average; the effect depends on noise and structures.
 
-**Approfondissement** : Comparer conservation des petits détails et performance aval ; le médian reste non linéaire et peut modifier la géométrie.
+**Further explanation**: Compare preservation of small details and downstream performance; the median remains non-linear and can change the geometry.
 
-**Mécanisme concret** : dans un voisinage où la plupart des intensités valent environ 100 et une valeur vaut 255, une moyenne propage l'influence de cette impulsion à sa sortie, tandis qu'une médiane peut rester proche du niveau majoritaire. En revanche, une rayure réelle très fine peut elle aussi devenir minoritaire dans le voisinage et disparaître. Le filtre ne sait pas distinguer une impulsion parasite d'un défaut utile sur leur seule taille.
+**Concrete mechanism**: in a neighborhood where most intensities are about 100 and a value is 255, an average propagates the influence of this pulse at its output, while a median can remain close to the majority level. On the other hand, a very thin real scratch can also become a minority in the neighborhood and disappear. The filter does not know how to distinguish a parasitic pulse from a useful defect on their size alone.
 
-**Choix proposé** : comparer plusieurs supports sur un lot contenant bruit, bords et détails critiques. Garder identiques les étapes aval, puis mesurer défauts manqués et erreurs de localisation. Un support plus grand augmente l'échelle de modification de l'image. Le médian ne se décrit pas comme une convolution linéaire ; le Gaussien réalise une moyenne pondérée dont le comportement fréquentiel aide à construire des pyramides. Ces différences expliquent le choix, sans établir de classement universel.
+**Proposed choice**: compare multiple media on a batch containing noise, edges and critical details. Keep the downstream steps identical, and then measure missed defects and location errors. Larger support increases the scale of image modification. The median does not describe itself as a linear convolution; the Gaussian achieves a weighted average whose frequency behavior helps to build pyramids. These differences explain the choice, without establishing a universal ranking.
 
-**Erreurs bloquantes** : Annoncer un filtre meilleur pour tous bruits et toutes tâches.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Fiche complète]] ; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html).
+**Linking the operation to the noise**: for a normalized linear filter $J(p)=\sum_q k_q I(p-q)$ and independent noises of variance $\sigma_n^2$, the output variance is $\sigma_n^2\sum_q k_q^2$. A uniform average of nine samples therefore divides it by nine, under these assumptions, but also mixes their signals. The median depends on the rank of the values: an isolated pulse can stay away from the central rank without drawing the result towards it. Noise correlations, edges and fine details change these tradeoffs. The Gaussian is separable: two convolutions 1D replace a convolution 2D for the same kernel produced, without making a median equivalent to this operation.
+
+**Blocking errors**: Advertise a better filter for all noises and tasks.
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html); [OpenCV 4.13, Smoothing Images, Theory, Gaussian, Median and Bilateral Filter](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), see 2026-10-30.
 Tags: cv::pilote cv::d03 famille::comparaison cv_id::CV-FILTRES-001 provenance::agent pole::A pole::B pole::E pole::F
 END
 
 ## CV-FILTRES-002
 
-Objectif : régler un bilatéral dans les bonnes unités. Famille : raisonnement. Provenance : agent.
+Objective: settle a bilateral in the right units. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FILTRES-002
-Question: Que change une normalisation d’intensité de [0,255] à [0,1] pour le sigma photométrique d’un bilatéral ?
-Reponse: **Noyau attendu** : Diviser le sigma photométrique par 255, comme les différences d’intensité, pour conserver les mêmes poids. Garder le même nombre rend le filtrage moins sélectif en intensité.
+Question: When intensities are normalized from [0,255] to [0,1], what changes for a bilateral filter's photometric sigma?
+Reponse: **Expected answer**: Divide the photometric sigma by 255, like the intensity differences, to maintain the same weights. Keeping the same number makes filtering less selective in intensity.
 
-**Approfondissement** : Le sigma spatial est en pixels et suit une autre logique. Consigner plage et espace couleur.
+**Further explanation**: The spatial sigma is in pixels and follows another logic. Record beach and color space.
 
-**Dérivation** : le poids photométrique dépend du rapport $|I(p)-I(q)|/\sigma_r$. Si l'intensité et $\sigma_r$ sont divisés par la même constante positive, ce rapport reste identique et donc le poids associé aussi, à support et calcul numérique inchangés. Modifier uniquement l'intensité rend les écarts relativement plus petits : davantage de voisins deviennent photométriquement semblables.
+**derivation**: The photometric weight depends on the $|I(p)-I(q)|/\sigma_r$ ratio. If the intensity and $\sigma_r$ are divided by the same positive constant, this ratio remains the same and therefore the associated weight also, with support and numerical calculation unchanged. Changing only the intensity makes the gaps relatively smaller: more neighbors become photometrically similar.
 
-**Exemple construit** : un écart de 20 niveaux comparé à un sigma de 10 représente deux sigma. Après division par 255, l'écart vaut environ 0,0784 et le sigma cohérent environ 0,0392 ; le rapport reste deux. Conserver un sigma de 10 dans cette nouvelle plage écrase cette distinction. Cette équivalence suppose une transformation linéaire de l'intensité : un gamma ou un changement d'espace couleur ne se traite pas par une simple division commune. Le sigma spatial et les conventions de bord restent séparés.
+**Constructed example**: A difference of 20 levels compared to a sigma of 10 represents two sigmas. After dividing by 255, the deviation is about 0,0784 and the consistent sigma is about 0,0392; the ratio remains two. Keeping a sigma of 10 in this new range overwhelms this distinction. This equivalence implies a linear transformation of the intensity: a gamma or a change of color space is not treated by a simple common division. Spatial sigma and boundary conventions remain separate.
 
-**Erreurs bloquantes** : Traiter tous les sigma comme des grandeurs sans unité.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Fiche complète]] ; [Tomasi et Manduchi 1998, Bilateral Filtering, §§2–3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf).
+**Complete form and role of standardization**: for a pixel $p$, write $J(p)=\sum_q w_{pq}I(q)/\sum_q w_{pq}$, with $w_{pq}=\exp(-\|p-q\|^2/(2\sigma_s^2))\exp(-(I(p)-I(q))^2/(2\sigma_r^2))$. The first factor favors nearby neighbors, the second one those whose intensity resembles that of the center. The denominator adapts the sum of the weights to the local content; without it, an edge could simply darken the result by rejecting neighbors. The weights depend on the image: it is a non-linear operation, even if the output looks like an average. The noise of the central pixel also influences which neighbors will be considered similar; preserving a contour remains conditional.
+
+**Blocking errors**: Treat all sigma as quantities without unity.
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [Tomasi and Manduchi 1998, Bilateral Filtering, §§2 – 3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf); [OpenCV 4.13, Smoothing Images, Theory, Gaussian, Median and Bilateral Filter](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), see 2026-10-30.
 Tags: cv::pilote cv::d03 famille::raisonnement cv_id::CV-FILTRES-002 provenance::agent pole::A pole::B pole::E pole::F
 END
 
 ## CV-FILTRES-003
 
-Objectif : protéger un détail métier. Famille : diagnostic. Provenance : agent.
+Objective: Protect a business detail. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FILTRES-003
-Question: Le débruitage améliore le PSNR mais fait disparaître des rayures. Comment évaluer le prétraitement ?
-Reponse: **Noyau attendu** : Mesurer le rappel des défauts et l’erreur de localisation à échelle pertinente, avec images et annotations réservées.
+Question: Denoising improves PSNR but removes scratches. How should this preprocessing be evaluated?
+Reponse: **Expected answer**: Measure defect recall and location error at relevant scale, with reserved images and annotations.
 
-**Approfondissement** : Un gain global de reconstruction peut masquer un défaut petit ou rare ; conserver la baseline sans filtrage.
+**Further explanation**: An overall rebuild gain can hide a small or rare defect; keep the baseline unfiltered.
 
-**Origine du paradoxe** : le PSNR résume une erreur de reconstruction sur l'ensemble des pixels. Une grande zone de fond mieux débruitée peut dominer cette mesure, alors qu'une petite rayure, pourtant décisive pour le métier, est effacée. Améliorer la ressemblance moyenne à une référence ne garantit donc pas de préserver le signal que le détecteur doit utiliser.
+**Origin of the paradox**: The PSNR summarizes a reconstruction error on all pixels. A large, more noise-free bottom area can dominate this measure, while a small scratch, however decisive for the trade, is erased. Improving the average similarity to a reference therefore does not guarantee to preserve the signal that the detector must use.
 
-**Expérience proposée** : comparer les pipelines avec et sans filtre sur les mêmes pièces et annotations, en isolant rayures fines, faibles contrastes et zones texturées. Faire varier uniquement le filtre et son échelle, puis examiner faux négatifs, faux positifs et localisation, à un point de fonctionnement explicite. Conserver quelques profils d'intensité avant/après sur les détails ratés. Si l'image paraît plus propre mais le rappel baisse, le filtre introduit un compromis défavorable à cette tâche. Le test réservé ne sert pas à choisir indéfiniment les paramètres.
+**Proposed experience**: Compare pipelines with and without filters on the same parts and annotations, isolating fine scratches, low contrasts and textured areas. Varying only the filter and its scale, then examining false negatives, false positives and location, at an explicit operating point. Keep some before/after intensity profiles on missed details. If the image looks cleaner but the recall drops, the filter introduces an unfavorable compromise to this task. The reserved test is not used to choose the parameters indefinitely.
 
-**Erreurs bloquantes** : Décider au PSNR seul.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Fiche complète]] ; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html) ; protocole aval proposé par le projet.
+**Make the compromise quantifiable**: $PSNR=10\log_{10}(L^2/MSE)$, with $L$ the maximum of the range announced and $MSE$ the average squared errors against a reference. Modifying $L$ or normalization without consistency changes the score. If a defect occupies a fraction $p$ of the pixels and undergoes an amplitude error $a$, its contribution to the MSE is only $pa^2$: it can remain small even if all its pixels are lost. Then measure the probability of detecting a defective part and the frequency of false alarms per part, with rules of association and constant thresholds. The reference to PSNR must itself be justified; a noisy image used as "clean" changes the problem.
+
+**Blocking errors**: Decide on the PSNR alone.
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html); downstream protocol proposed by the project; [OpenCV 4.13, PSNR/SSIM, definition of PSNR; built scarcity example](https://docs.opencv.org/4.13.0/d5/dc4/tutorial_video_input_psnr_ssim.html), consult the 2026-10-30.
 Tags: cv::pilote cv::d03 famille::diagnostic cv_id::CV-FILTRES-003 provenance::agent pole::A pole::B pole::E pole::F
 END
 
 ## CV-FILTRES-004
 
-Objectif : expliquer une pyramide. Famille : comprehension. Provenance : agent.
+Objective: Explain a pyramid. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FILTRES-004
-Question: Pourquoi ne suffit-il pas de prendre un pixel sur deux pour construire une pyramide de matching ?
-Reponse: **Noyau attendu** : La décimation sans filtrage peut replier les hautes fréquences en aliasing et changer les structures observées.
+Question: Why is simply retaining every other pixel insufficient for constructing a matching pyramid?
+Reponse: **Expected answer**: Decimation without filtering can fold high frequencies into aliasing and change observed structures.
 
-**Approfondissement** : Le filtre et l’échelle choisie conditionnent la répétabilité des features ; ils ne garantissent pas une invariance parfaite.
+**Further explanation**: The filter and the chosen scale condition the repeatability of the features; they do not guarantee perfect invariance.
 
-**Chaîne de raisonnement** : réduire la grille diminue la fréquence spatiale maximale représentable. Une alternance rapide d'intensités peut alors être interprétée comme un motif plus lent si l'on décime directement. Le lissage préalable atténue les composantes incompatibles avec la nouvelle grille ; la décimation réduit ensuite le nombre d'échantillons. Le préfiltre choisit donc ce qui est conservé avant la perte de résolution.
+**Chain of reasoning**: Reducing the grid decreases the maximum representable spatial frequency. A rapid alternation of intensities can then be interpreted as a slower pattern if one decimates directly. Pre-smoothing attenuates components that are incompatible with the new grid; decimation then reduces the number of samples. The prefilter therefore chooses what is stored before the loss of resolution.
 
-**Conséquence pour le matching** : les gradients et extrema utilisés comme features changent si la texture est repliée. Deux vues du même objet peuvent produire des descripteurs instables simplement à cause du rééchantillonnage. Dans un test construit, comparer le nombre de correspondances géométriquement vérifiées sur une mire réduite avec et sans préfiltre, à détecteur constant. Une meilleure stabilité ne constitue pas une invariance parfaite à l'échelle : un détail trop petit finit par disparaître même avec une pyramide correctement filtrée.
+**Consequences for Matching**: The gradients and extrema used as features change if the texture is folded. Two views of the same object can produce unstable descriptors simply because of resampling. In a constructed test, compare the number of geometrically verified matches on a reduced calibration target with and without a prefilter, with constant detector. Better stability is not a perfect invariance at scale: too small a detail ends up disappearing even with a properly filtered pyramid.
 
-**Erreurs bloquantes** : Confondre sous-échantillonnage et perte contrôlée d’information.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Fiche complète]] ; [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
+**Building the Levels**: A Gaussian pyramid follows $I_{\ell+1}(x,y)=(G_\ell*I_\ell)(2x,2y)$ in an example of decimation by two. Coordinates are approximately converted by $p_0=2^\ell p_\ell$, respecting the exact pixel center conventions. A five-ray window at the $\ell=3$ level covers about forty pixels of radius in the initial image: its physical support has changed. This is useful for bringing back a large displacement in a local capture area, but it can mix objects or eliminate a fine structure. Propagate coordinates, descriptor radius, and geometric thresholds in the same system of units, rather than treating levels as independent images.
+
+**Blocking errors**: Confusing undersampling and controlled loss of information.
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]] ; [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
 Tags: cv::pilote cv::d03 famille::comprehension cv_id::CV-FILTRES-004 provenance::agent pole::A pole::B pole::E pole::F
 END

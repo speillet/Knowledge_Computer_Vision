@@ -1,197 +1,139 @@
-# Cas de transfert réservés
+# Transfer case reserved
 
-Douze cas construits, distincts des exemples numériques corrigés. Ne pas lire
-les réponses avant la tentative de transfert. Un cas vu en révision n'est plus
-un cas inédit : consigner cette exposition et préparer un autre scénario pour
-mesurer le transfert. Aucun résultat de l'apprenant n'est rempli à l'avance.
+Twelve constructed cases, distinct from the corrected numerical examples. Do not read responses before attempting to transfer. A case seen under review is no longer an unprecedented case: record this exposure and prepare another scenario to measure the transfer. No results from the learner are filled in advance.
 
-Correction commune : tâche/sorties adéquates, hypothèses et conventions,
-choix argumenté, vérification discriminante, limites de conclusion. Tous les
-critères applicables doivent être satisfaits ; justifier une non-applicabilité.
+Common Correction: Adequate task/outputs, assumptions and conventions, reasoned choice, discriminating verification, conclusion limits. All applicable criteria must be met; justify non-applicability.
 
 ## Matching — choix
 
-Une pièce métallique peu texturée doit être repositionnée entre deux vues
-avec reflets, budget de calcul mesuré et quelques repères possibles. Quel
-pipeline comparer avant de retenir un matcher appris ?
+A poorly textured metal piece must be repositioned between two views with reflections, measured calculation budget and some possible coordinate frames. Which pipeline to compare before holding a learned matcher?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Stabiliser lumière/repères et définir précision/transformations. Comparer une
-baseline classique, des marqueurs si possibles et un matching appris sur mêmes
-paires, résolution et vérification géométrique. Mesurer couverture, erreurs et
-coût complet, y compris les échecs. Un modèle ne rétablit pas une information
-visuelle absente. Réussite : observations utiles, modèle compatible, comparaison
-équitable et stratégie de rejet explicites.
+Stabilize light/coordinate frames and set precision/transformations. Compare a classic baseline, markers if possible and matching learned on the same pairs, resolution and geometric verification. Measure coverage, errors, and full cost, including failures. A model does not restore missing visual information. Success: Useful observations, compatible model, fair comparison and explicit rejection strategy.
 
 </details>
 
 ## Matching — diagnostic
 
-Des correspondances sont bonnes à gauche mais biaisées à droite depuis une
-modification de crop dans une seule branche. Comment isoler le défaut ?
+Matches are good on the left but biased on the right since a crop change in a single branch. How to isolate the defect?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Tracer repères/resize/padding pour chaque image et tester des points connus.
-Restituer coordonnées puis examiner résidus spatiaux et modèle physique.
-Comparer avant/après prétraitement à matcher inchangé. Ne pas conclure à un
-défaut de descripteur depuis le seul score de matching.
+Trace coordinate frames/resize/padding for each image and test known points. Restore coordinates and then examine residuals spatial and physical model. Compare before/after pretreatment to matcher unchanged. Do not conclude a descriptor defect since the match score alone.
 
 </details>
 
-Référence et sources : [matching appris](../40-features-matching/references/44-superpoint-lightglue-loftr.md).
+Reference and sources: [matching appris](../40-features-matching/references/44-superpoint-lightglue-loftr.md).
 
-## Calibration/géométrie — choix
+## Calibration/geometry –  choice
 
-Une caméra déjà calibrée doit être localisée par rapport à une pièce 3D
-connue, non plane. Quelle inconnue et quel solveur choisir ?
+An already calibrated camera must be located in relation to a known, non-flat 3D part. Which unknown and which solver to choose?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-La pose objet→caméra est inconnue ; construire des correspondances 3D–2D puis
-choisir une variante PnP et contrôle robuste appropriés, avec unités, chiralité
-et validation réservée. L'homographie d'un plan ne décrit pas toute la pièce.
-Comparer précision utile et ambiguïtés ; aucune précision n'est déduite du
-seul nombre de points.
+The pose object→camera is unknown; build matches 3D – 2D then choose a suitable robust PnP and check variant, with units, chirality and reserved validation. The homography of a plan does not describe the whole room. Compare useful precision and ambiguities; no precision is deduced from the number of points alone.
 
 </details>
 
-## Calibration/géométrie — diagnostic
+## Calibration/geometry –  diagnosis
 
-Une caméra métrique fonctionne mais toutes les translations de pose changent
-d'un facteur après remplacement du fichier de mire. Que vérifier ?
+A metric camera works but all translations of pose change by a factor after replacing the calibration target file. What to check?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Inspecter taille des carrés, unité et ordre des points 3D, sans confondre
-intrinsèques pixel et translations métriques. Rejouer une pose et une dimension
-de référence indépendantes ; distinguer changement d'unité et changement
-physique. Un petit résidu pixel peut persister malgré une échelle fausse.
+Inspect square size, unit, and order of 3D points, without confusing intrinsic pixel and metric translations. Replay an independent pose and reference dimension; distinguish between change of unity and physical change. A small residual pixel can persist despite a false scale.
 
 </details>
 
-Référence et sources : [PnP/géométrie](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md).
+Reference and sources: [PnP/geometry](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md).
 
 ## Tracking — choix
 
-Suivre des colis d'apparence identique vus par caméra mobile avec pertes
-brèves de détection. Quelles hypothèses comparer avant un ReID générique ?
+Track identical-looking parcels seen by mobile camera with short detection losses. What assumptions to compare before a generic ReID?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Définir cadence/IDs, mesurer détecteur et ego-motion, comparer mouvement et
-seconde association faible-score à une apparence évaluée dans ce domaine.
-Prévoir pertes, incertitude et cycle de vie ; des colis identiques peuvent
-ne pas être distinguables par apparence. Mesurer association et coût avec mêmes
-détections/séquences, pas AP seulement.
+Set cadence/IDs, measure detector and ego-motion, compare movement and second low-score association to an evaluated appearance in this field. Predict losses, uncertainty and life cycle; identical packages may not be distinguishable by appearance. Measure association and cost with same detections/sequences, not AP only.
 
 </details>
 
 ## Tracking — diagnostic
 
-Les IDs se fragmentent après changement de cadence, sans modification visible
-du détecteur. Quels journaux discriminent temps, association et expiration ?
+The IDs fragment after changing rate, without visible modification of the detector. Which newspapers discriminate between time, association and expiration?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Conserver timestamps, appels même sans détections, prédictions, gating,
-associations et âges. Vérifier unité de vitesse et durées de vie exprimées en
-frames ; comparer une perturbation contrôlée de cadence. Une hausse aveugle
-de max_age ne démontre pas la cause ni la continuité réelle.
+Keep timestamps, calls even without detections, predictions, dating, associations and ages. Check unit speed and lifetimes expressed in frames; compare a controlled cadence disturbance. A blind increase in max_age does not demonstrate cause or actual continuity.
 
 </details>
 
-Référence et sources : [association](../110-tracking-association/references/112-deepsort-bytetrack.md).
+Reference and sources: [association](../110-tracking-association/references/112-deepsort-bytetrack.md).
 
-## Détection — choix
+## Detection –  choice
 
-Un détecteur de petits défauts doit traiter de grandes images sous budget
-mémoire. Quelle comparaison entre resize global et tuilage construire ?
+A small defect detector must process large images under memory budget. What is the comparison between global resize and tile build?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Fixer taille critique et tolérance ; comparer résolution effective, tuiles
-avec recouvrement et restitution des coordonnées. Mesurer défauts manqués,
-doublons/raccords et coût complet à seuils figés. Séparer qualité du modèle
-et défauts de posttraitement ; aucun avantage n'est universel.
+Set critical size and tolerance; compare effective resolution, tiles with overlap and restitution of coordinates. Measure missed defects, duplicates/matches and full cost at fixed thresholds. Separate model quality from post-processing defects; no advantage is universal.
 
 </details>
 
-## Détection — diagnostic
+## Detection –  diagnosis
 
-Les prédictions sont bonnes dans les crops, mais certaines boîtes finales sont
-décalées et disparaissent près des raccords. Quelle enquête mener ?
+Predictions are good in crops, but some final boxes are staggered and disappear near fittings. Which investigation to conduct?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Tracer crop/padding/resize vers l'image globale, visualiser propositions avant
-NMS et doublons de tuiles, contrôler masque de zone valide. Tester une image à
-objet connu traversant un raccord. Ne pas attribuer directement l'erreur au
-backbone ; mesurer ensuite le protocole complet.
+Trace crop/padding/resize to the global image, view proposals before NMS and tile duplicates, check valid area mask. Test an image with a known object passing through a fitting. Do not assign the error directly to the backbone; then measure the entire protocol.
 
 </details>
 
-Référence et sources : [détection](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md).
+Reference and sources: [Detection](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md).
 
-## Segmentation classique — choix
+## Classical segmentation –  choice
 
-Des cellules de tailles variables se touchent sous illumination inhomogène.
-Quelle baseline classique et quelle mesure tester avant un réseau ?
+Cells of varying sizes touch under inhomogeneous illumination. Which classic baseline and what measure to test before a network?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Comparer correction d'éclairage/seuillage local, marqueurs et séparation,
-avec annotations d'instances. Examiner variations de taille et contact ; Otsu
-global ne suit pas nécessairement la sémantique. Mesurer fusions/séparations et
-limites ; un réseau peut être justifié si le modèle classique reste insuffisant.
+Compare local lighting/shrinkage correction, markers and separation, with instance annotations. Examine size variations and contact; global Otsu does not necessarily follow semantics. Measure mergers/separations and limits; a network can be justified if the classical model remains insufficient.
 
 </details>
 
-## Segmentation classique — diagnostic
+## Classical Segmentation – Diagnosis
 
-Le masque foreground couvre toutes les cellules mais watershed produit trop
-de fragments sur leurs surfaces texturées. Comment isoler le problème ?
+The foreground mask covers all cells but watershed produces too many fragments on their textured surfaces. How to isolate the problem?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Visualiser topographie et germes, comparer sur copie avec marqueurs manuels,
-contrôler maxima parasites et échelle morphologique. Départager mauvais masque
-et sur-segmentation de germes ; valider par instances et tailles, sans conclure
-de la seule IoU foreground.
+View topography and germs, compare on copy with manual markers, check maxima parasites and morphological scale. Differentiate bad mask and oversegmentation of germs; validate by instances and sizes, without concluding from the only IoU foreground.
 
 </details>
 
-Référence et sources : [watershed](../90-segmentation/references/91-otsu-distance-watershed.md).
+Reference and sources: [watershed](../90-segmentation/references/91-otsu-distance-watershed.md).
 
-## Recalage 3D — choix
+## registration 3D –  choice
 
-Deux scans partiellement recouvrants d'un objet inconnu ont un grand décalage
-initial. Quel ordre de traitement et quelle preuve de pose prévoir ?
+Two partially overlapping scans of an unknown object have a large initial offset. What order of processing and what proof of pose foresee?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Vérifier unités/repères, réduire si utile, estimer features et initialisation
-globale puis raffiner localement avec variante ICP adaptée. Mesurer recouvrement,
-résidus et pose de référence ; tester symétries et zones indépendantes. Le faible
-RMSE seul ne garantit pas le bon minimum.
+Check units/coordinate frames, reduce if useful, estimate features and global initialization then refine locally with adapted ICP variant. Measure overlap, residuals and pose reference; test symmetries and independent zones. The low RMSE alone does not guarantee the right minimum.
 
 </details>
 
 ## Recalage 3D — diagnostic
 
-Une grande plaque plane donne des résidus point-to-plane très faibles tandis
-que sa position tangentielle varie entre essais. Est-ce nécessairement un bug ?
+A large flat plate gives very low point-to-plane residuals while its tangential position varies between tests. Is it necessarily a bug?
 
-<details><summary>Réponse de référence et critères</summary>
+<details><summary>Reference answer and criteria</summary>
 
-Tester les directions contraintes : un plan fournit peu d'information sur
-certains glissements/rotations. Ajouter géométrie, points distinctifs ou autre
-capteur selon le besoin ; examiner conditionnement et référence. Changer
-seulement le nombre d'itérations ne crée pas l'information manquante.
+Test constrained directions: A plan provides little information about certain slips/rotations. Add geometry, distinctive points or other sensor as needed; examine packaging and reference. Changing only the number of iterations does not create the missing information.
 
 </details>
 
-Référence et sources : [recalage global/ICP](../60-vision-3d/references/62-recalage-global-icp.md).
+Reference and sources: [recalage global/ICP](../60-vision-3d/references/62-recalage-global-icp.md).
 
-[Accueil](../00-Accueil.md) · [Journal des tentatives](Suivi-pilote.md).
+[Home](../00-Accueil.md) · [Journal of Attempts](Suivi-pilote.md).

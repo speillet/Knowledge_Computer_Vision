@@ -1,8 +1,6 @@
-"""Expériences arithmétiques du pilote ; Python 3.9+, bibliothèque standard.
+"""Arithmetic pilot experiments; Python 3.9+, standard library.
 
-Conventions : boîtes continues xyxy, NMS globale avec test strict IoU > seuil.
-L'AP est un cas analytique à un seuil, sans crowd/ignore, pas l'évaluateur COCO.
-La correction Kalman est scalaire, pas une réimplémentation de SORT.
+Conventions: xyxy continuous boxes, global NMS with strict test IoU > threshold. The AP is an analytical case at a threshold, without crowd/ignore, not the COCO evaluator. The Kalman update is scalar, not a re-implementation of SORT.
 """
 
 import json
@@ -11,13 +9,13 @@ import math
 
 def _valid_box(box):
     if len(box) != 4 or not all(math.isfinite(x) for x in box):
-        raise ValueError("Une boîte contient quatre coordonnées finies.")
+        raise ValueError('A box contains four finite coordinates.')
     if box[2] <= box[0] or box[3] <= box[1]:
-        raise ValueError("Une boîte doit avoir une aire strictement positive.")
+        raise ValueError('A box must have a strictly positive area.')
 
 
 def iou(a, b):
-    """IoU de deux boîtes continues dans le même repère, sans +1."""
+    """IoU of two continuous boxes in the same coordinate frame, without +1."""
     _valid_box(a)
     _valid_box(b)
     width = max(0.0, min(a[2], b[2]) - max(a[0], b[0]))
@@ -29,13 +27,13 @@ def iou(a, b):
 
 
 def hard_nms(boxes, scores, threshold):
-    """Indices conservés ; score décroissant, indice croissant en cas d'égalité."""
+    """Indices retained; score decreasing, index increasing in case of equality."""
     if len(boxes) != len(scores):
-        raise ValueError("Il faut un score par boîte.")
+        raise ValueError('You need a score per box.')
     if not math.isfinite(threshold) or not 0 <= threshold <= 1:
-        raise ValueError("Le seuil IoU doit appartenir à [0, 1].")
+        raise ValueError('Threshold IoU must belong to [0, 1].')
     if not all(math.isfinite(score) for score in scores):
-        raise ValueError("Les scores doivent être finis.")
+        raise ValueError('Scores must be finite.')
     for box in boxes:
         _valid_box(box)
     remaining = sorted(range(len(boxes)), key=lambda i: (-scores[i], i))
@@ -49,26 +47,26 @@ def hard_nms(boxes, scores, threshold):
 
 
 def ransac_trials(inlier_ratio, sample_size, confidence):
-    """Budget nominal de tirages indépendants ; ne vérifie pas la géométrie."""
+    """Nominal number of independent random draws; does not check geometry."""
     if not 0 < inlier_ratio <= 1 or not 0 < confidence < 1:
-        raise ValueError("Proportion dans ]0,1], confiance dans ]0,1[.")
+        raise ValueError('Proportion in ]0,1], confidence in ]0,1[.')
     if type(sample_size) is not int or sample_size < 1:
-        raise ValueError("La taille minimale est un entier positif.")
+        raise ValueError('The minimum size is a positive integer.')
     success = inlier_ratio ** sample_size
     if success == 1:
         return 1
     if success == 0:
-        raise ValueError("Probabilité trop petite pour cette précision numérique.")
+        raise ValueError('Probability too small for this numerical accuracy.')
     return math.ceil(math.log1p(-confidence) / math.log1p(-success))
 
 
 def kalman_scalar(prediction, prior_variance, measurement, measurement_variance):
-    """Correction linéaire scalaire : position, variance et gain."""
+    """Scalar linear correction: position, variance and gain."""
     values = (prediction, prior_variance, measurement, measurement_variance)
     if not all(math.isfinite(x) for x in values):
-        raise ValueError("Les paramètres doivent être finis.")
+        raise ValueError('The parameters must be finite.')
     if prior_variance < 0 or measurement_variance <= 0:
-        raise ValueError("Variance a priori >= 0 et variance de mesure > 0.")
+        raise ValueError('Prior variance must be >= 0 and measurement variance > 0.')
     gain = prior_variance / (prior_variance + measurement_variance)
     position = prediction + gain * (measurement - prediction)
     variance = (1 - gain) * prior_variance
@@ -76,17 +74,17 @@ def kalman_scalar(prediction, prior_variance, measurement, measurement_variance)
 
 
 def ap101_from_labels(labels, ground_truth_count):
-    """AP101 après appariement déjà fait, labels ordonnés TP=1/FP=0.
+    """AP101 after matching already done, ordered labels TP=1/FP=0.
 
-    Une catégorie, un seuil IoU, aucune annotation ignorée. L'appariement,
-    maxDets et les moyennes multiseuils/catégories sont hors de cette fonction.
-    """
+A category, a threshold IoU, no annotation ignored. The matching, maxDets and multi-threshold/category averages are out of this function.
+
+"""
     if type(ground_truth_count) is not int or ground_truth_count < 1:
-        raise ValueError("Il faut au moins une GT valide dans ce cas analytique.")
+        raise ValueError('At least one GT is required in this analytical case.')
     if any(label not in (0, 1) for label in labels):
-        raise ValueError("Les labels doivent être 0 ou 1.")
+        raise ValueError('Labels must be 0 or 1.')
     if sum(labels) > ground_truth_count:
-        raise ValueError("Un TP ne peut pas compter plusieurs fois une GT.")
+        raise ValueError('A TP cannot count several times a GT.')
     points = []
     tp = 0
     for rank, label in enumerate(labels, 1):

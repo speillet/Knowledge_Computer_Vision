@@ -7,85 +7,114 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-CLIP", "CV-VIDEO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
 ---
-# VLM, grounding et frontière vision–action
+# VLMs, grounding and the vision–action boundary
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Relier observations visuelles et langage pour questions, descriptions ou sorties structurées. Distinguer un embedding image–texte, un VLM génératif et un VLA produisant des actions. La commande robotique reste hors du périmètre de cette préparation.
+Connect visual observations and language for questions, descriptions or structured outputs. Distinguish between image – text embedding, generative VLM, and action-producing VLA. The robotic control remains outside the scope of this preparation.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-CLIP](../../70-reconnaissance-representations/references/72-clip-siglip.md) ; [CV-VIDEO](../../100-mouvement-video/references/102-points-actions-video.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-CLIP](../../70-reconnaissance-representations/references/72-clip-siglip.md); [CV-VIDEO](../../100-mouvement-video/references/102-points-actions-video.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-BLIP-2 relie encodeur visuel et LLM via Q-Former ; LLaVA combine connecteur et instruction tuning selon version ; Flamingo traite des entrées multimodales entrelacées. Une réponse textuelle peut s'appuyer sur le langage sans être correctement ancrée dans l'image. Florence-2 est une entrée multitâche à approfondir, pas une sortie universelle interchangeable.
+BLIP-2 connects visual encoder and LLM via Q-Former; LLaVA combines connector and tuning instruction according to version; Flamingo processes interwoven multimodal inputs. A textual response can rely on the language without being properly anchored in the image. Florence-2 is a multitasking input to deepen, not an interchangeable universal output.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-L'entrée est convertie en tokens/features visuels et textuels selon la méthode ; leur nombre, la résolution et le contexte conditionnent le coût. L’entraînement génératif optimise un objectif sur les tokens ; le décodage produit ensuite une séquence selon une stratégie de recherche ou d’échantillonnage. Aucun de ces objectifs ne constitue une preuve de vérité visuelle. Un score de vraisemblance texte ne remplace pas une annotation de boîte ou de masque.
+The input is converted into visual and textual tokens/features depending on the method; their number, resolution, and context condition the cost. Generative training optimizes an objective on the tokens; decoding then produces a sequence according to a research or sampling strategy. None of these objectives constitute proof of visual truth. A text likelihood score does not replace a box or mask annotation.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Checkpoint, image processor, prompt, format de sortie, outils éventuels et accès au futur. RT-2/OpenVLA/π0 introduisent une interface d'action ; connaître cette interface ne vaut pas valider une politique robotique.
+Checkpoint, image processor, prompt, output format, possible tools and access to the future. RT-2/OpenVLA/π0 introduce an action interface; knowing this interface is not worth validating a robotic policy.
 
-## Coût et implémentation
+## Cost and implementation
 
-Encodage, tokens visuels, contexte vidéo et décodage ont des coûts distincts. Aucun modèle exécuté ni disponibilité matérielle présumée. Les variantes doivent être nommées quand on cite un connecteur ou une propriété précise.
+Encoding, visual tokens, video context and decoding have separate costs. No model executed or hardware availability assumed. Variants should be named when quoting a specific connector or property.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : pipeline détection/tracking/règles versus VLM, avec mêmes tâches annotées et données réservées. Varier prompt et négatifs contrôlés ; mesurer hallucinations, omissions, localisation et coût, pas seulement fluidité.
+Baseline: pipeline detection/tracking/rules versus VLM, with same annotated tasks and reserved data. Vary quickly and negative controlled; measure hallucinations, omissions, location and cost, not just fluidity.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Description d'objet absent : inspecter résolution, prompt, hors-distribution et référence ; tester images négatives et formulations alternatives sans sélectionner le meilleur résultat sur test.
+Absent object description: inspect resolution, prompt, out-of-distribution and reference; test negative images and alternative formulations without selecting the best result on test.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Un pipeline explicite peut offrir des sorties plus contrôlables pour des événements définis ; VLM peut aider sur des descriptions/contextes nouveaux sous évaluation. Grounding doit avoir son protocole.
+An explicit pipeline can offer more controllable outputs for defined events; VLM can help with new descriptions/contexts under evaluation. Grounding must have its protocol.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent connecteur, ancrage visuel et test de dépendance à l’image. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop connector, visual anchoring and image dependency testing. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-VLM-001
+### Case linked to CV-VLM-001
 
-**Question de travail** : Que distingue CLIP utilisé pour comparer image et texte, un VLM génératif et un VLA ?
+**Question of work**: How do CLIP used for image–text comparison, a generative VLM and a VLA differ?
 
-**Réponse de référence** : CLIP compare des représentations image–texte ; un VLM génère des sorties conditionnées par vision/langage ; un VLA produit une interface d’action selon sa conception.
+**Reference Response**: CLIP compares image-text representations; a VLM generates outputs conditioned by vision/language; a VLA produces an action interface according to its design.
 
-**Définir l'interface** : comparer des embeddings sert à classer ou rechercher parmi des candidats ; générer du texte produit une séquence conditionnée ; produire des actions engage une autre représentation et un autre environnement d'évaluation. Une architecture peut partager des briques sans que ces contrats deviennent interchangeables.
+**Define the interface**: Comparing embeddings is used to rank or search among candidates; generating text produces a conditioned sequence; producing actions engages another representation and another evaluation environment. An architecture can share bricks without these contracts becoming interchangeable.
 
-**Exemple construit** : « une pièce est présente » peut être une description plausible, mais ne fournit ni une boîte validée ni une commande robotique correctement référencée. Pour une application, préciser format de sortie, temps de validité et référence attendue, puis mesurer omissions et fausses assertions. Si des actions sont étudiées, distinguer connaissance de l'interface et validation d'une politique en boucle fermée. Le parcours couvre ici la perception et ses limites ; le passage à la commande ne se déduit pas d'une réponse verbale convaincante ni d'un score de génération élevé. Les preuves doivent correspondre à ce que le système promet réellement.
+**Constructed example**: “A part is present” may be a plausible description, but does not provide a validated box or a properly referenced robotic control. For an application, specify output format, validity time and expected reference, and then measure omissions and false assertions. If actions are studied, distinguish between knowledge of the interface and validation of a closed-loop policy. The course here covers perception and its limits; the move to command is not inferred from a convincing verbal response or a high generation score. The evidence must match what the system actually promises.
 
-### Cas lié à CV-VLM-004
+### Case linked to CV-VLM-004
 
-**Question de travail** : Cas D — diagnostic : un VLM décrit des objets absents sur des images industrielles. Quelle enquête mène à une correction vérifiable ?
+**Question of work**: Track D — diagnosis: a VLM describes absent objects in industrial images. Which investigation leads to a verifiable correction?
 
-**Réponse de référence** : Vérifier image réellement reçue, résolution/prompt, distribution, négatifs et référence ; classer hallucinations et omissions puis tester une intervention à la fois.
+**Reference Response**: Check image actually received, resolution/prompt, distribution, negatives and reference; classify hallucinations and omissions then test one intervention at a time.
 
-**Ablation discriminante** : garder l'image et les labels de référence, modifier uniquement la formulation sur validation, puis comparer à une chaîne visuelle structurée. Tester aussi des images sans objet cible et des variations de résolution. Cela aide à distinguer une information mal transmise d'une tendance à compléter linguistiquement une scène familière.
+**Discriminant Ablation**: Keep the image and reference labels, edit only the formulation on validation, and then compare to a structured visual string. Also test images without target object and variations in resolution. This helps distinguish mistransmitted information from a tendency to linguistically complement a familiar scene.
 
-**Critère de correction** : chercher une baisse mesurée des assertions fausses sans augmenter silencieusement les omissions. Une consigne de prudence peut changer le style des réponses sans rendre leur contenu plus exact. Conserver une politique de refus, les entrées réellement traitées et le checkpoint pour reproduire les erreurs. Toute amélioration reste liée au protocole ; aucun prompt ne constitue ici une garantie générale de supprimer les hallucinations sur tous les nouveaux produits.
+**Criterion of correction**: Seek a measured decrease in false assertions without silently increasing omissions. A cautionary note can change the style of responses without making their content more accurate. Keep a policy of refusal, entries actually processed and checkpoint to reproduce errors. Any improvement remains protocol related; no prompt here is a general guarantee to remove hallucinations on all new products.
 
-**Repère documentaire de cette passe** : [BLIP-2](https://arxiv.org/html/2301.12597v3), §3, connecteur visuel et entraînement. Les autres développements figurent dans les [cartes associées](../121-vlm-grounding.md).
+**Documentary reference for this pass**: [BLIP-2](https://arxiv.org/html/2301.12597v3), §3, visual connector and drive. The other developments are in the [flashcards](../121-vlm-grounding.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Florence-2, résumé](https://arxiv.org/abs/2311.06242) : représentation par prompts pour plusieurs tâches.
-- [RT-2, résumé et fig. 1](https://arxiv.org/abs/2307.15818) et [π0, résumé](https://arxiv.org/abs/2410.24164) : interface vision–langage–action, sans validation robotique du projet.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-VLM-001
+
+**Situation**: How do CLIP used for image–text comparison, a generative VLM and a VLA differ?
+
+**Optimized quantity**: an autoregressive generation models $p(y\mid I,q)=\prod_kp(y_k\mid y_{<k},I,q)$ for a $I$ image, a $q$ question and $y_k$ tokens. A probable sequence under this model is not automatically a true visual proposition. A syntactically valid JSON format can also contain a false box or object. The evaluation must therefore separate respect for the schema, accuracy of the facts and spatial or temporal anchoring. For an action output, add more method-specific units, coordinate frames, and execution contract; the plausibility of tokens does not validate a physical action.
+
+### CV-VLM-002
+
+**Situation**: Which problem does BLIP-2's Q-Former address in its original architecture?
+
+**Goulot of representation**: learned queries query the features of the visual encoder by cross attention and produce an intermediate representation for the language model. They are not the free questions typed by the user. Limiting the number of vectors transmitted can reduce the cost of the interface while constraining the information available on small details. A frozen encoder and a frozen LLM can be linked by learned parameters without updating all their weights. The mechanism of the bridge and the learning protocol must therefore be described separately from the final behavior, which remains to be measured on the visual observations of the task.
+
+### CV-VLM-003
+
+**Situation**: Track D — design: index hours of video for event retrieval. How should a general-purpose VLM be compared with detection, tracking and rules?
+
+**Cost of indexing**: with a video of duration $T$ and a sampling step $\Delta$, the number of frames retained is of the order of $T/\Delta$. The cost includes decoding, visual encoding, building windows, and generating or indexing outputs. Reducing this number can make short events disappear; increasing the context can add cost and delay without restoring a frame never observed. A hybrid pipeline can first propose intervals and then describe them, but it is necessary to measure the recall of this preselection: an excluded event will never reach the VLM. Evaluate each step and the final index on the same reserved events.
+
+### CV-VLM-004
+
+**Situation**: Track D — diagnosis: a VLM describes absent objects in industrial images. Which investigation leads to a verifiable correction?
+
+**Anchor tests built**: use a positive image, a comparable negative image and, if feasible, a variation where only the target object changes. Check if the assertions actually follow this variation and if the correction increases the refusal rather than the accuracy. A decrease in the number of false assertions obtained by never responding is not the same result as better recognition; report coverage of responses and risk of error among responses issued. These tests must respect the distribution of the images, because an artificial masking can introduce an artifact. Outputs must remain connected to the exact version of the input and prompt used.
+
+**Passages consulted for these developments**: [Li et al., BLIP-2](https://arxiv.org/html/2301.12597v2), §3.1, learned queries and cross attention; probabilistic models and built tests.
+
+## Sources and flashcards
+
+- [Florence-2, summary](https://arxiv.org/abs/2311.06242): Prompt representation for multiple tasks.
+- [RT-2, summary and fig. 1](https://arxiv.org/abs/2307.15818) and [π, summary](https://arxiv.org/abs/2410.24164): vision – language – action interface, without robotic validation of the project.
 
 - [BLIP-2, architecture](https://arxiv.org/abs/2301.12597).
 - [LLaVA original](https://arxiv.org/abs/2304.08485).
 - [Flamingo](https://arxiv.org/abs/2204.14198).
 - [OpenVLA, interface actions](https://openvla.github.io/).
-- [Cartes associées](../121-vlm-grounding.md).
+- [Related flashcards](../121-vlm-grounding.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

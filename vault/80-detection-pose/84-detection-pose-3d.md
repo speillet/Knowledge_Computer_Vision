@@ -1,93 +1,101 @@
-# Détection 3D, pose d’objet et pose articulée — cartes
+# Flashcards — 3D detection, object pose and articulated pose
 
-Fiche : [[80-detection-pose/references/84-detection-pose-3d|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[80-detection-pose/references/84-detection-pose-3d|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::80-detection-pose
 
 ## CV-POSE3D-001
 
-Objectif : nommer la sortie de pose. Famille : comparaison. Provenance : agent.
+Objective: name the output of pose. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-POSE3D-001
-Question: Pourquoi ne pas comparer directement score de détection 3D et erreur de pose articulée ?
-Reponse: **Noyau attendu** : Boîtes/classes et articulations sont des sorties différentes avec annotations, correspondances et métriques différentes.
+Question: Why should a 3D detection score not be compared directly with articulated-pose error?
+Reponse: **Expected answer**: Boxes/classes and joints are different outputs with different annotations, matches and metrics.
 
-**Approfondissement** : Définir le livrable, repère, visibilité et alignement avant de choisir la mesure.
+**Further explanation**: Define the deliverable, coordinate frame, visibility and alignment before choosing the measurement.
 
-**Différence des inconnues** : une détection 3D fournit généralement une localisation, des dimensions et une orientation de boîte avec une classe. Une pose articulée décrit des positions de joints et leurs relations ; une pose rigide d'objet relie un modèle à une observation. Ces sorties ne codent pas la même géométrie.
+**Difference of unknowns**: A 3D detection usually provides location, dimensions, and box orientation with a class. An articulated pose describes joint positions and their relationships; a rigid object pose connects a model to an observation. These outputs do not code the same geometry.
 
-**Exemple construit** : une boîte entourant un piéton ne dit pas où se trouvent ses poignets. Un squelette bien ajusté ne fournit pas nécessairement une boîte 3D métrique dans le repère capteur. Définir d'abord l'information consommée par le module aval, ses unités et le traitement des points invisibles. Choisir ensuite correspondances et alignement autorisés dans l'évaluation. Une comparaison de scores hétérogènes peut être trompeuse même lorsque tous les articles emploient le mot pose. Une mesure doit être interprétée par son protocole, pas par son seul intitulé.
+**Constructed example**: A box surrounding a pedestrian does not say where his wrists are. A well-fitting skeleton does not necessarily provide a metric 3D box in the coordinate frame sensor. First define the information consumed by the downstream module, its units and the processing of invisible points. Then choose the matches and alignment allowed in the evaluation. A comparison of heterogeneous scores can be misleading even when all articles use the word pose. A measure must be interpreted by its protocol, not by its title alone.
 
-La référence et l'unité doivent être choisies selon l'information que le consommateur utilise réellement.
+The reference and the unit must be chosen according to the information that the consumer actually uses.
 
-**Erreurs bloquantes** : Assimiler tout problème appelé pose à la même métrique.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [CenterPoint, résumé et §4](https://arxiv.org/abs/2006.11275) ; [OpenPose, résumé et fig. 2](https://arxiv.org/abs/1611.08050).
+**Define the comparative quantity**: An average 3D seal error can write $J^{-1}\sum_j\|\hat p_j-p_j\|$ in a length unit, with visible seals or all seals according to protocol. Allowing rigid alignment or similarity removes some errors and changes the evaluated question. A AP of boxes, it, depends on a threshold of matching and the ranking of the scores. A rigid object pose estimates $R,t$ of a known model, while a skeleton estimates several related points. Specifying these unknowns and allowed transformations avoids comparing two digits, one of which has precisely neutralized the defect as the other measures.
+
+**Blocking errors**: Assimilate any problem called pose to the same metric.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [CenterPoint, summary and §4](https://arxiv.org/abs/2006.11275); [OpenPose, summary and fig. 2](https://arxiv.org/abs/1611.08050); [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), see 2026-10-30.
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-POSE3D-001 provenance::agent pole::A pole::C
 END
 
 ## CV-POSE3D-002
 
-Objectif : contrôler une boîte 3D. Famille : pratique. Provenance : agent.
+Objective: check a box 3D. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-POSE3D-002
-Question: Quels éléments vérifier si des boîtes 3D ont les bons centres mais des orientations/dimensions incohérentes ?
-Reponse: **Noyau attendu** : Repère, ancrage du centre, ordre des dimensions, axe/signe du yaw et radians/degrés.
+Question: What should be checked when 3D boxes have correct centers but inconsistent orientations or dimensions?
+Reponse: **Expected answer**: coordinate frame, center anchor, dimension order, yaw axis/sign and radians/degrees.
 
-**Approfondissement** : Tester une boîte connue et sa transformation entre capteurs ; le problème peut être un contrat de données.
+**Further explanation**: Test a known box and its transformation between sensors; the problem can be a data contract.
 
-**Exemple de convention** : permuter longueur et largeur peut faire sembler une boîte tournée d'un quart de tour, alors que son centre reste correct. Un centre défini au sol et un centre géométrique peuvent aussi différer en hauteur. Ces erreurs se situent à l'interface entre représentation et système, sans nécessiter un défaut de features.
+**Example of a convention**: Swapping length and width can make a box turn a quarter turn, while its center remains correct. A defined center on the ground and a geometric center can also differ in height. These errors are located at the interface between representation and system, without requiring a feature defect.
 
-**Contrôle proposé** : construire une boîte asymétrique de dimensions connues, la transformer entre repères puis revenir au repère initial. Vérifier ses coins, l'axe de rotation, le sens du yaw et l'unité d'angle. Utiliser une forme asymétrique évite de masquer une permutation. Comparer ensuite aux conventions exactes du jeu de données et de la visualisation. Un rendu plausible sur une voiture presque symétrique ne suffit pas. Une fois les conventions validées, analyser les erreurs de modèle sur des annotations réservées.
+**check**: build an asymmetric box of known dimensions, transform it between coordinate frames and return to the original coordinate frame. Check its corners, the axis of rotation, the direction of the yaw and the angle unit. Using an asymmetrical shape avoids masking a permutation. Then compare to the exact conventions of the dataset and visualization. A plausible rendering on an almost symmetrical car is not enough. Once the conventions are validated, analyze the model errors on reserved annotations.
 
-Comparer les coins après aller-retour permet de vérifier cette cohérence indépendamment d'un réseau.
+Comparing the corners after round trip makes it possible to verify this consistency independently of a network.
 
-**Erreurs bloquantes** : Réentraîner sans contrôler la convention de boîte.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; Diagnostic de conventions proposé par le projet ; [nuScenes, format et métriques](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulté le 2026-10-20.
+**Construction of corners**: for a geometric center $c$, dimensions $(l,w,h)$ and rotation $R$, the eight corners are $c+R(\pm l/2,\pm w/2,\pm h/2)^T$. If the center is anchored to the ground, the vertical component must be adjusted before using this formula. Transforming corners between sensors is more general than keeping a simple yaw: an extrinsic with roll or pitch can produce a box that is no longer described by a rotation around the single vertical axis of the target coordinate frame. A test with all distinct dimensions and non-zero rotation makes visible permutations, angle sign and loss of information when converting to a simplified box.
+
+**Blocking errors**: Retract without check the box convention.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; Diagnostic of conventions proposed by the project; [nuScenes, format and metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulted the 2026-10-20; [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), consulted the 2026-10-30.
 Tags: cv::pilote cv::d08 famille::pratique cv_id::CV-POSE3D-002 provenance::agent pole::A pole::C
 END
 
 ## CV-POSE3D-003
 
-Objectif : distinguer nuScenes et COCO. Famille : evaluation. Provenance : agent.
+Objective: distinguish nuScenes and COCO. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-POSE3D-003
-Question: Pourquoi une AP nuScenes 3D n’est-elle pas directement comparable à une AP bbox COCO ?
-Reponse: **Noyau attendu** : L’association nuScenes utilise des distances de centres au sol et un protocole spécifique ; COCO bbox utilise des recouvrements et ses propres règles.
+Question: Why is nuScenes 3D AP not directly comparable with COCO bounding-box AP?
+Reponse: **Expected answer**: The nuScenes association uses ground center distances and a specific protocol; COCO bbox uses overlaps and its own rules.
 
-**Approfondissement** : NDS combine aussi erreurs d’attributs géométriques/dynamiques ; nommer version, filtres et unités.
+**Further explanation**: NDS also combines geometric/dynamic attribute errors; naming version, filters, and units.
 
-**Ce que change l'appariement** : un critère de distance entre centres au sol ne pénalise pas dimensions et orientation de la même façon qu'un recouvrement de boîtes. Des erreurs peuvent donc être traitées dans d'autres termes ou indicateurs du benchmark. Le même mot AP ne rend pas identiques la notion de vrai positif et ses conditions.
+**What the matching changes**: a distance criterion between centres on the ground does not penalize dimensions and orientation in the same way as a cover of boxes. Errors can therefore be addressed in other terms or benchmark indicators. The same word AP does not make the notion of true positive and its conditions identical.
 
-**Comparaison proposée** : relever classes, filtres de distance, unités, seuils et règles d'appariement dans la version du protocole, puis tester quelques prédictions connues. Examiner séparément position, orientation, taille et autres attributs utiles au produit. Une amélioration de l'AP ne garantit pas automatiquement une meilleure géométrie de tous les attributs. Ne pas copier un seuil COCO parce qu'il porte un nom familier ; choisir une mesure adaptée au contrat de la sortie 3D et annoncer ce qu'elle ne teste pas.
+**Proposed comparison**: Record matching classes, distance filters, units, thresholds, and rules in the protocol version, and then test some known predictions. Separately examine position, orientation, size and other attributes useful to the product. An improvement to the AP does not automatically guarantee a better geometry of all attributes. Do not copy a COCO threshold because it has a familiar name; choose a measure that is appropriate to the contract of the 3D output and announce what it does not test.
 
-**Erreurs bloquantes** : Transposer les seuils IoU COCO à tout benchmark 3D.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [nuScenes, Average Precision metric et nuScenes detection score](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulté le 2026-10-20 ; [COCO bbox](https://cocodataset.org/#detection-eval).
+**Counter-example of geometry**: A prediction may have the exact center but doubled dimensions and a wrong yaw. A matching per center distance can still accept it according to its threshold, while a volume recovery can be bad. The nuScenes protocol reports other errors to characterize size, orientation, and movement; these must be read with the AP. Conversely, a small metric offset represents a very different part of a pedestrian and a large vehicle. Thresholds and classes therefore define what the measure prefers. Check a few built boxes before interpreting an aggregate score change.
+
+**Blocking errors**: Transpose the IoU COCO thresholds to any 3D benchmark.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [nuScenes, Average Precision metric and nuScenes detection score](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), accessed on 2026-10-20; [COCO bbox](https://cocodataset.org/#detection-eval); [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), accessed on 2026-10-30.
 Tags: cv::pilote cv::d08 famille::evaluation cv_id::CV-POSE3D-003 provenance::agent pole::A pole::C
 END
 
 ## CV-POSE3D-004
 
-Objectif : respecter les symétries de pose. Famille : diagnostic. Provenance : agent.
+Objective: respect the symmetries of pose. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-POSE3D-004
-Question: Un objet cylindrique est localisé correctement mais sa rotation autour de l’axe varie. Que vérifier ?
-Reponse: **Noyau attendu** : La symétrie visuelle et la définition de pose/évaluation : cette composante peut être ambiguë avec les observations disponibles.
+Question: A cylindrical object is localized correctly, but its rotation around the cylinder axis varies. What should be checked?
+Reponse: **Expected answer**: Visual symmetry and the definition of pose/evaluation: this component can be ambiguous with available observations.
 
-**Approfondissement** : Ajouter un indice distinctif si le produit exige cet angle ; un solveur plus précis ne crée pas un repère visible absent.
+**Further explanation**: Add a distinctive index if the product requires this angle; a more accurate solver does not create a visible absent coordinate frame.
 
-**Intuition d'identifiabilité** : si plusieurs rotations de l'objet produisent la même apparence sous les observations disponibles, la vision ne peut pas toujours choisir une orientation unique. Le modèle d'évaluation doit alors préciser comment les symétries sont traitées et quelles parties de la pose restent observables.
+**Intuition of Identifiable**: If several rotations of the object produce the same appearance under the available observations, the vision can not always choose a single orientation. The evaluation model must then specify how the symmetries are processed and which parts of the pose remain observable.
 
-**Exemple construit** : un cylindre sans marque distinctive peut être invariant à une rotation autour de son axe. Un marquage visible brise éventuellement cette ambiguïté ; une meilleure optimisation seule ne le fait pas apparaître. Si une étape d'assemblage exige cet angle, prévoir l'information supplémentaire et la mesurer. Une boîte orientée ou un score de pose faible ne suffit pas à trancher un degré de liberté symétrique. Rapporter la convention et l'incertitude évite de pénaliser arbitrairement des solutions visuellement équivalentes ou, inversement, de masquer une erreur observable sur un objet marqué.
+**Constructed example**: A cylinder without a distinctive mark can be invariant to a rotation around its axis. Visible marking may break this ambiguity; better optimization alone does not make it appear. If an assembly step requires this angle, provide additional information and measure it. A box oriented or a low pose score is not enough to slice a symmetrical degree of freedom. Reporting convention and uncertainty avoids arbitrarily penalizing visually equivalent solutions or, conversely, masking an observable error on a marked object.
 
-**Erreurs bloquantes** : Déclarer toute variation d’un angle symétrique comme une erreur observable.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Fiche complète]] ; [BOP, métriques VSD/MSSD/MSPD et symétries](https://bop.felk.cvut.cz/tasks/), consulté le 2026-10-20 ; application au cylindre : raisonnement du projet.
+**Equivalence of poses**: If $S$ belongs to the symmetry group of the model, the poses $T$ and $TS$ can represent the same observable object. A suitable error can minimize a geometric distance on these symmetries, instead of arbitrarily comparing two single matrices. The symmetry of the complete mesh and the indistinguishability of the only visible surfaces are not exactly the same notion; the protocol must specify the one it deals with. An observed marking may reduce the relevant group of symmetries. The validation must then take into account this new information and not maintain an equivalence tolerance that would hide an angle that has become effectively observable.
+
+**Blocking errors**: Declare any variation of a symmetrical angle as an observable error.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [BOP, VSD/MSSD/MSPD metrics and symmetries](https://bop.felk.cvut.cz/tasks/), see 2026-10-20; application to cylinder: project reasoning.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-POSE3D-004 provenance::agent pole::A pole::C
 END

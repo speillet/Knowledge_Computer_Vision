@@ -7,83 +7,112 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: ["CV-IOU-AP", "CV-SEGMENTATION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
 ---
-# Métriques de segmentation, inspection et applications
+# Metrics for segmentation, inspection and applications
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Choisir la mesure d'après la décision à prendre et l'unité d'évaluation. Un pixel, une région défectueuse, une pièce, un patient et un document ne doivent pas être implicitement pondérés pareil. Les protocoles de masques vides, classes absentes et agrégation sont explicités.
+Choose the measure based on the decision to be made and the unit of assessment. A pixel, a defective region, a part, a patient, and a document must not be implicitly weighted the same. The protocols of empty masks, absent classes and aggregation are explained.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [CV-IOU-AP](131-iou-ap-coco.md) ; [CV-SEGMENTATION](../../90-segmentation/references/93-semantique-instances-panoptique.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [CV-IOU-AP](131-iou-ap-coco.md); [CV-SEGMENTATION](../../90-segmentation/references/93-semantique-instances-panoptique.md). **Target competencies**: explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Recouvrement (IoU/Dice), distance de surface (HD95), détection/localisation de défauts (AUROC/PRO), reconnaissance de texte (CER/WER), biométrie et métrologie répondent à des erreurs différentes. La fiche compare les choix ; les définitions détaillées spécialisées restent à approfondir séparément.
+Coverage (IoU/Dice), surface distance (HD95), fault detection/location (AUROC/PRO), text recognition (CER/WER), biometrics and metrology respond to different errors. The reference note compares the choices; the specialized detailed definitions remain to be explored separately.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Dice=$2TP/(2TP+FP+FN)$ sous convention définie. HD95 requiert surfaces, unité physique et définition de percentile/directions. PRO donne un poids par région selon protocole ; préciser le domaine FPR d'intégration AU-PRO. En métrologie, biais, répétabilité, reproductibilité et stabilité sont distincts ; un RMS caméra pixel n'est pas une incertitude dimensionnelle.
+Dice=$2TP/(2TP+FP+FN)$ under defined convention. HD95 requires surfaces, physical unit and percentile/directions definition. PRO gives a weight per region according to protocol; specify the integration FPR domain AU-PRO. In metrology, bias, repeatability, reproducibility and stability are distinct; a RMS pixel camera is not a dimensional uncertainty.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Unités, objets ignorés, taille, négatifs, seuils et agrégation. Un patient avec gros volume ou un défaut étendu ne doit pas masquer des cas critiques par un pooling pixel incontrôlé.
+Units, ignored objects, size, negatives, thresholds, and aggregation. A patient with a large volume or an extended defect should not hide critical cases by an uncontrolled pooling pixel.
 
-## Coût et implémentation
+## Cost and implementation
 
-Certaines distances de surface coûtent plus que des comptages ; la collecte de références peut dominer. Aucun usage clinique, biométrique ou Gauge R&R réel exécuté.
+Some surface distances cost more than counts; reference collection can dominate. No real R&R clinical, biometric or gauge use performed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Variation analytique : conserver le grand objet correctement segmenté puis manquer un petit objet. Une moyenne pixel peut peu bouger ; une métrique par région/cas révèle la perte. Comparer au coût métier et au seuil d'exploitation.
+Analytical variation: keep the large object properly segmented and then miss a small object. An average pixel can move little; one metric per region/case reveals the loss. Compare to business cost and operating threshold.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Métriques contradictoires : chercher l'erreur mesurée, l'unité, les vides et le protocole ; ne pas retenir automatiquement le score le plus favorable.
+Contradictory metrics: look for measured error, unity, voids, and protocol; do not automatically retain the most favorable score.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Rapporter plusieurs vues complémentaires et leur limite. Les taux de comparaison FMR/FNMR, les décisions système FAR/FRR et PAD ne sont pas une métrique unique.
+Report multiple complementary views and their limitations. The comparison rates FMR/FNMR, the system decisions FAR/FRR and PAD are not a single metric.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent topologie, surfaces physiques et références incertaines. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop topology, physical surfaces and uncertain references. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-METRIQUES-APPLIQUEES-001
+### Case linked to CV-METRIQUES-APPLIQUEES-001
 
-**Question de travail** : Pourquoi Dice et HD95 peuvent-ils raconter des choses différentes sur un même masque ?
+**Question of work**: Why can Dice and HD95 tell different stories about the same mask?
 
-**Réponse de référence** : Dice mesure un recouvrement ; HD95 une distance de surface selon un percentile/protocole, avec unité physique si les coordonnées sont calibrées.
+**Reference Response**: Dice measures an overlap; HD95 a surface distance in a percentile/protocol, with physical unit if coordinates are calibrated.
 
-**Exemple de divergence** : un grand masque peut conserver presque tout son volume alors qu'une petite partie de surface est éloignée. Le recouvrement et une distance de surface pondèrent cet écart différemment. Un percentile écarte aussi une partie des distances extrêmes selon la définition retenue ; ce n'est pas nécessairement la distance maximale.
+**Example of Divergence**: A large mask can retain almost its entire volume while a small area is far away. Covering and a surface distance weighted this gap differently. A percentile also discards some of the extreme distances according to the definition used; it is not necessarily the maximum distance.
 
-**Protocole proposé** : annoncer définition des surfaces, distances dirigées ou symétrisées, percentile, espacement et unité. Conserver le traitement des vides et le niveau d'agrégation par cas ou pixel. Examiner les exemples où les métriques divergent pour identifier l'erreur qu'elles révèlent, plutôt que choisir automatiquement le score favorable. Une distance en millimètres nécessite une géométrie physique cohérente. Ces mesures peuvent être complémentaires si l'usage dépend à la fois de couverture et de frontière ; aucune valeur isolée ne démontre toute la qualité du masque ou son utilité dans un autre processus.
+**Proposed Protocol**: announce definition of surfaces, directed or symmetrized distances, percentile, spacing and unity. Keep empty processing and aggregation level per case or pixel. Examine examples where metrics diverge to identify the error they reveal, rather than automatically choosing the favorable score. A distance in millimeters requires consistent physical geometry. These measures can be complementary if the use depends on both coverage and boundary; no isolated value demonstrates the full quality of the mask or its usefulness in another process.
 
-### Cas lié à CV-METRIQUES-APPLIQUEES-004
+### Case linked to CV-METRIQUES-APPLIQUEES-004
 
-**Question de travail** : Que faut-il annoncer lorsqu’une métrique de segmentation rencontre référence ou prédiction vide ?
+**Question of work**: What must be stated when a segmentation metric encounters an empty reference or prediction?
 
-**Réponse de référence** : La convention choisie et son effet sur le score/agrégation ; ne pas laisser une division indéfinie devenir un résultat implicite.
+**Reference Response**: The chosen convention and its effect on the score/aggregation; do not let an indefinite division become an implied result.
 
-**Distinguer les situations** : deux masques vides, une référence vide avec faux positif et une prédiction vide sur un objet présent n'ont pas le même sens. Une distance de surface peut être indéfinie lorsqu'une surface manque, tandis qu'un recouvrement peut nécessiter une convention particulière pour un dénominateur nul.
+**Distinguishing situations**: two empty masks, an empty reference with false positive and an empty prediction on a present object do not have the same meaning. A surface distance may be indefinite when a surface is missing, while an overlap may require a special convention for a zero denominator.
 
-**Choix de protocole proposé** : définir ces cas avant les résultats et les conserver dans un tableau de comptage séparé si la métrique principale ne peut pas les résumer. Annoncer valeurs conventionnelles, exclusions éventuelles et poids dans l'agrégation. Retirer silencieusement les cas négatifs peut cacher des faux positifs ; retirer les prédictions vides peut cacher les objets entièrement manqués. Tester quelques exemples synthétiques connus dans l'outil d'évaluation et conserver sa version. La convention n'est pas une astuce numérique : elle détermine quelles erreurs le score final représente et lesquelles doivent être rapportées autrement.
+**Choice of proposed protocol**: define these cases before the results and keep them in a separate counting table if the main metric cannot summarize them. Announce conventional values, possible exclusions and weight in aggregation. Silently removing negative cases can hide false positives; removing empty predictions can hide entirely missed objects. Test some known synthetic examples in the evaluation tool and keep its version. The convention is not a digital trick: it determines which errors the final score represents and which must be reported otherwise.
 
-**Repère documentaire de cette passe** : [Reinke et al., Understanding metric-related pitfalls](https://arxiv.org/html/2302.01790v4), P2.2–P2.4 : tailles, formes, références/prédictions vides. Les autres développements figurent dans les [cartes associées](../134-metriques-applications.md).
+**Documentary reference for this pass**: [Reinke et al., Understanding metric-related pitfalls](https://arxiv.org/html/2302.01790v4), P2.2 – P2.4: empty sizes, shapes, references/predictions. The other developments are in the [flashcards](../134-metriques-applications.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Reinke et al., P2.1–P2.4 et P3.2](https://www.nature.com/articles/s41592-023-02150-0) : frontières, vides et agrégation.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-METRIQUES-APPLIQUEES-001
+
+**Situation**: Why can Dice and HD95 tell different stories about the same mask?
+
+**Link and difference of units**: for two non-empty binary masks under the same count, $Dice=2IoU/(1+IoU)$. These two overlaps are therefore linked for the same pair, while a surface distance uses the geometric positions of the borders and a unit of length. Aggregating the Dice per case is not necessarily equivalent to converting a global IoU by this formula, because the conversion is nonlinear and the weights change. HD95 also requires a precise convention of directions and percentile. The choice of metrics must thus announce both the quantity per pair and the level at which the averages are calculated.
+
+### CV-METRIQUES-APPLIQUEES-002
+
+**Situation**: Why can a global pixel score hide missed small defects in inspection?
+
+**Weighting by region**: A region-by-region overlap measure can assign to each annotated defect the fraction of its pixels found, and then average those fractions. A fault of 10 pixels then receives the same region weight as a fault of 1 000 pixels, unlike a pooling of all the defective pixels. This convention makes certain small regions visible without solving all the ambiguities of location. An area under a curve must specify the axis of false positives, its range and its normalization. Completing by decision by part and entirely missed defects retains the link with the actual load of rejects and business risks.
+
+### CV-METRIQUES-APPLIQUEES-003
+
+**Situation**: Does low camera RMS establish the repeatability and reproducibility of a length measurement?
+
+**Dimensional propagation**: for a simplified flat measurement $L=s\,p$ with $p$ pixel length and $s$ scale in mm/px, $\delta L\simeq p\delta s+s\delta p$. Under centered independent errors, $\sigma_L^2\simeq p^2\sigma_s^2+s^2\sigma_p^2$; otherwise add covariances. A repeatable location in pixels can therefore coexist with a dominant scale bias. This calculation assumes a plane geometry and a scale adapted, not a perspective camera of any kind. Repeating the measurement and varying the conditions predicted by the study then makes it possible to estimate contributions that the only calibration RMS does not represent.
+
+### CV-METRIQUES-APPLIQUEES-004
+
+**Situation**: What must be stated when a segmentation metric encounters an empty reference or prediction?
+
+**Case table defined before measurement**: if both reference and prediction are empty, the denominator of Dice is zero and a convention is required. If only the prediction is empty with present reference, the overlap is zero; if only the reference is empty with present prediction, it is also zero, but the business error is a false positive rather than a missed object. A surface distance may lack a set of points in each of these cases. Keeping counters of these situations and announcing their inclusion or exclusion prevents a filtered epsilon or `NaN` from silently changing the evaluated population.
+
+**Passages consulted for these developments**: [NIST, repeatability](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc441.htm), repeatability analysis; Dice/IoU relationships, region counts, voids and uncertainty propagation derived by the project.
+
+## Sources and flashcards
+
+- [Reinke et al., P2.1 – P2.4 and P3.2](https://www.nature.com/articles/s41592-023-02150-0): borders, voids and aggregation.
 
 - [Metrics Reloaded](https://doi.org/10.1038/s41592-023-02151-z).
 - [NIST, Gauge R&R](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc4.htm).
-- [MVTec AD2, PRO et protocole](https://arxiv.org/abs/2503.21622v1).
-- [Cartes associées](../134-metriques-applications.md).
+- [MVTec AD2, PRO and protocol](https://arxiv.org/abs/2503.21622v1).
+- [Related flashcards](../134-metriques-applications.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

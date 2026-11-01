@@ -7,84 +7,119 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 3
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
 ---
-# Splits, annotations, calibration des scores et dérive
+# Data splits, annotations, score calibration and drift
 
-## Problème, données et hypothèses
+## Problem, data and assumptions
 
-Établir si un système se généralise aux scènes et usages réellement visés. Entrées : unités d'acquisition, labels, sites/temps et hypothèses ; sortie : protocole et analyse d'erreurs. La séparation de fichiers ne garantit pas l'indépendance des données.
+Establish whether a system is generalized to the scenes and uses actually targeted. Inputs: acquisition units, labels, sites/time and assumptions; output: protocol and error analysis. File separation does not guarantee data independence.
 
-## Prérequis et compétences
+## Prerequisites and competencies
 
-**Prérequis obligatoires** : [Conventions du vault](../../01-Parcours/Pre-requis.md).
-**Compétences visées** : expliquer le mécanisme, comparer sous contraintes, interpréter une mesure et diagnostiquer un échec. Le niveau affiché porte sur cette fiche ; les variantes seulement citées ne sont pas toutes approfondies.
+**Required prerequisites**: [Conventions of vault](../../01-Parcours/Pre-requis.md). **Target competencies**: Explain the mechanism, compare under constraints, interpret a measurement and diagnose a failure. The level displayed is for this reference note; not all variants mentioned are detailed.
 
-## Intuition et déroulement
+## Intuition and procedure
 
-Définir unité de split (objet, scène, séquence, patient, région), puis annoter selon un contrat contrôlé. Séparer entraînement, validation des choix et test. Examiner long-tail, ambiguïtés et sous-groupes avant de réduire tout à une moyenne.
+Define split unit (object, scene, sequence, patient, region), then annotate according to a controlled contract. Separate training, validation of choices and testing. Examine long-tail, ambiguities and subgroups before reducing everything to an average.
 
-## Mathématiques, conventions et unités
+## Mathematics, conventions and units
 
-Une précision mesurée dépend du point d'exploitation et de la prévalence. Un score calibré vise une correspondance entre scores et fréquences selon protocole ; ce n'est pas la calibration géométrique d'une caméra. L'incertitude et la détection OOD doivent être évaluées sur les changements pertinents, pas déduites d'un softmax.
+Measured accuracy depends on point of use and prevalence. A calibrated score is a match between scores and frequencies according to protocol; it is not the geometric calibration of a camera. Uncertainty and OOD detection should be assessed on relevant changes, not inferred from a softmax.
 
-## Paramètres et propriétés
+## Parameters and properties
 
-Taxonomie, ignore, qualité des labels, split, seuils et règles de sélection d'échantillons. Active learning choisit des annotations utiles selon une stratégie ; il peut aussi biaiser l'évaluation si le test devient adaptatif.
+Taxonomy, ignores, quality of labels, split, thresholds and rules of selection of samples. Active learning chooses useful annotations according to a strategy; it can also bias the evaluation if the test becomes adaptive.
 
-## Coût et implémentation
+## Cost and implementation
 
-Collecte/revue d'annotations ont un coût ; calculer quelques scores ne le résume pas. Aucun résultat de généralisation ou d'incertitude réel n'est revendiqué.
+Collect/review annotations have a cost; calculating some scores does not summarize it. No generalization or actual uncertainty is claimed.
 
-## Évaluation et variation contrôlée
+## Evaluation and controlled variation
 
-Baseline : split par séquence/site et modèle figé ; variation de saison/caméra, avec mêmes annotations comparables. Décomposer acquisition, distribution, labels et seuil. Rapporter erreurs et couverture, y compris les échecs rares.
+Baseline: split by sequence/site and frozen model; season/camera variation, with same comparable annotations. Decompose acquisition, distribution, labels and threshold. Report errors and coverage, including rare failures.
 
-## Échecs et diagnostic
+## Failure modes and diagnosis
 
-Test très bon mais nouveau site faible : rechercher fuite et décalage. Une augmentation du score de confiance ne prouve pas une meilleure calibration ; fixer protocole et échantillon avant les résultats.
+Very good test but new site weak: look for leak and lag. An increase in confidence score does not prove better calibration; set protocol and sample before results.
 
-## Alternatives et usages
+## Alternatives and applications
 
-Conserver données brutes, contrats et traçabilité, puis réviser collecte/modèle sous validation. Une surveillance d'exploitation ne remplace pas le test initial.
+Keep raw data, contracts and traceability, and then review collection/model under validation. Operational monitoring does not replace the initial test.
 
-## Raisonnement guidé et contrôles proposés
+## Guided reasoning and proposed checks
 
-Ces cas construits développent unité de split, sélection et calibration des probabilités. Ils servent à expliquer ou tester le raisonnement ; leurs résultats image, vidéo ou matériels ne sont pas annoncés comme mesurés. Les propriétés de méthode restent attachées aux sources ci-dessous.
+These constructed cases develop split unit, selection, and probability calibration. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
-### Cas lié à CV-FIABILITE-001
+### Case linked to CV-FIABILITE-001
 
-**Question de travail** : Pourquoi des frames voisines d’une même vidéo ne constituent-elles pas forcément un bon train/test indépendant ?
+**Question of work**: Why do neighboring frames from the same video not necessarily provide independent training and test data?
 
-**Réponse de référence** : Elles partagent scène, objets et conditions ; la séparation doit suivre le scénario de généralisation.
+**Reference Response**: They share scene, objects and conditions; the separation must follow the generalization scenario.
 
-**Pourquoi les fichiers restent liés** : deux frames voisines contiennent souvent les mêmes objets, le même décor et presque la même acquisition. Un modèle peut retrouver ces indices dans le test sans avoir démontré sa généralisation vers une nouvelle scène. Des crops issus du même original peuvent renforcer encore cette proximité.
+**Why files remain linked**: Two neighboring frames often contain the same objects, the same decor and almost the same acquisition. A model can find these clues in the test without having demonstrated its generalization to a new scene. Crops from the same original can further reinforce this proximity.
 
-**Choix de protocole** : définir d'abord ce qui sera nouveau en exploitation, puis regrouper les données selon cette unité avant les dérivations et augmentations. Pour une nouvelle usine, séparer seulement les frames d'une séquence ne teste pas nécessairement le changement de site. Pour une autre tâche, une généralisation plus locale peut être pertinente. Contrôler doublons et recouvrements, conserver validation et test séparés, puis rapporter les groupes réellement évalués. Un split plus difficile n'est pas automatiquement meilleur ; il doit représenter le scénario annoncé sans lui transmettre indirectement des observations d'entraînement.
+**Choice of protocol**: first define what will be new in operation, then group the data according to this unit before the diversions and increases. For a new plant, separating only frames from a sequence does not necessarily test the site change. For another task, a more local generalization may be relevant. check duplicates and overlaps, keep validation and test separate, and then report the groups actually evaluated. A more difficult split is not automatically better; it must represent the predicted scenario without indirectly transmitting training observations to it.
 
-### Cas lié à CV-FIABILITE-005
+### Case linked to CV-FIABILITE-005
 
-**Question de travail** : Un détecteur garde des scores élevés sur un nouveau capteur mais se trompe davantage. Que conclure ?
+**Question of work**: A detector remains highly confident on a new sensor but makes more mistakes. What can be concluded?
 
-**Réponse de référence** : La confiance affichée n’est pas une preuve de calibration ou de fiabilité hors distribution.
+**Reference Response**: The confidence displayed is not a proof of calibration or reliability out of distribution.
 
-**Lecture de la confiance** : un score élevé peut être appris dans une distribution où certains indices étaient fiables, puis rester élevé lorsque ces indices changent de signification. La normalisation de la sortie ne détecte pas automatiquement ce décalage. Le nouveau capteur peut aussi rompre couleur, gamma, résolution ou plage d'intensité.
+**Reading confidence**: A high score can be learned in a distribution where certain indices were reliable, and then remain high when these indices change meaning. Output normalization does not automatically detect this shift. The new sensor can also break color, gamma, resolution or intensity range.
 
-**Enquête proposée** : comparer une entrée identique à travers les deux chaînes et mesurer les erreurs sur un lot annoté représentatif du nouveau capteur. Examiner calibration et rejet au point d'exploitation, avec les mêmes règles de localisation. Une chute de qualité nécessite une action, mais le score seul ne dit pas s'il faut corriger le prétraitement, recollecter ou adapter le modèle. Conserver une validation indépendante pour vérifier la correction. Une surveillance des distributions peut donner une alarme utile ; elle ne démontre pas à elle seule une dérive de précision sans référence appropriée.
+**Proposed investigation**: compare an identical input across the two strings and measure errors on a representative annotated batch of the new sensor. Examine calibration and rejection at the point of operation, with the same location rules. A drop in quality requires action, but the score alone does not say whether to correct the preprocessing, recollect or adapt the model. Keep an independent validation to verify the correction. Monitoring of distributions can provide a useful alarm; it does not by itself demonstrate a drift of precision without appropriate reference.
 
-**Repère documentaire de cette passe** : [Cawley et Talbot 2010](https://www.jmlr.org/papers/v11/cawley10a.html), résumé et biais de sélection. Les autres développements figurent dans les [cartes associées](../133-donnees-generalisation.md).
+**Documentary reference for this pass**: [Cawley and Talbot 2010](https://www.jmlr.org/papers/v11/cawley10a.html), summary and selection bias. The other developments are in the [flashcards](../133-donnees-generalisation.md).
 
-## Sources et cartes
+## Additional technical explanations — 2026-10-30
 
-- [Ovadia et al., 2019, résumé/introduction](https://arxiv.org/abs/1906.02530) : limites de calibration sous changement de distribution.
-- [Cawley–Talbot, 2010, résumé et introduction](https://www.jmlr.org/papers/v11/cawley10a.html) : surajustement de la sélection et biais d’évaluation.
+These explanations complement the mechanism associated with each question. Calculations are cases constructed under assumptions; protocols remain proposed until a test is recorded.
+
+### CV-FIABILITE-001
+
+**Situation**: Why do neighboring frames from the same video not necessarily provide independent training and test data?
+
+**Data Dependency Graph**: Link images from the same acquisition, room, patient, or space zone, then assign groups to the split before creating tiles and augmentations. A validation tile that covers a training tile can directly transmit common textures and objects. The relevant size of a group depends on the generalization announced: new point of view, new object or new site are not the same tests. To estimate the uncertainty of a metric, resample coherent groups rather than all pixels or frames as if they were independent. The large number of files does not replace the diversity of acquisition units.
+
+### CV-FIABILITE-002
+
+**Situation**: How do camera calibration and calibration of a detector's scores differ?
+
+**Reliability diagram**: first define the correct event, e.g. correct class and sufficiently precise location under a given matching. In score bins, compare the frequency of this event and average confidence with their numbers. A typical CDE averages the absolute differences weighted by the bin population; it depends on the binning and can hide subgroups. Geometric calibration compares projections to point measurements and estimates other parameters. A temperature transformation can change the scores without changing the order of the classes, while a change of intrinsics changes the geometry: these are two interventions of different nature.
+
+### CV-FIABILITE-003
+
+**Situation**: Why must selecting active-learning examples not turn into repeatedly tuning the final test set after failures?
+
+**Test became development**: After several cycles where the errors of the same test guide the choices, this set brings information to the selection process, even without direct training on it. The best result selected among many essays then incorporates this adaptation. Keep for each cycle the version of the data, the decisions made and the validation used; provide for an independent evaluation after freezing of the selected version. A targeted set of difficult cases remains useful as a regression, but does not necessarily replace a representative test of frequency of errors in operation. Naming these uses separately makes it impossible to interpret a gain on an adaptive collection as a general proof.
+
+### CV-FIABILITE-004
+
+**Situation**: Track E — diagnosis: a remote-sensing model degrades between seasons. Which analysis can distinguish possible causes?
+
+**Comparison plan**: cross known/new region and known/new season to separate as much as possible spatial and temporal novelty. check tapes, physical resolution, alignment and label policy in each box. A seasonal change can make an object really different or only its appearance different; the definition of the class must remain explicit. Examining paired areas helps to isolate the acquisition, but does not alone evaluate an area never seen before. Keeping the results per square and per class prevents a change in the proportion of easy terrain from artificially explaining the overall average. This plan remains a proposed protocol, not a measured remote sensing result.
+
+### CV-FIABILITE-005
+
+**Situation**: A detector remains highly confident on a new sensor but makes more mistakes. What can be concluded?
+
+**Risk and Coverage**: For a rule that denies scores below a threshold, coverage is the fraction of cases where a decision is issued; risk is the error among those decisions according to the protocol. One method can reduce the risk by refusing more, without improving the perception on the remaining cases. Compare risk-coverage curves and critical layers, with labels representative of the new sensor. A change in the distribution of features can serve as an alarm, but it does not directly give the error rate without reference. Check separately the entry contract and the relevance of the rule of refusal after change of domain.
+
+**Passages consulted for these developments**: [Guo et al., calibration](https://arxiv.org/html/1706.04599v2), §2, ECE and diagrams; detection protocol, splits and risk – covering built.
+
+## Sources and flashcards
+
+- [Ovadia et al., 2019, summary/introduction](https://arxiv.org/abs/1906.02530): Calibration limits under change of distribution.
+- [Cawley – Talbot, 2010, summary and introduction](https://www.jmlr.org/papers/v11/cawley10a.html): over-adjustment of selection and evaluation bias.
 
 - [Roberts et al., structured data cross-validation](https://doi.org/10.1111/ecog.02881).
 - [Calibration of modern neural networks](https://proceedings.mlr.press/v70/guo17a.html).
 - [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/).
-- [Cartes associées](../133-donnees-generalisation.md).
+- [Related flashcards](../133-donnees-generalisation.md).
 
-Rédaction : agent, 2026-10-18. Confrontation documentaire des affirmations centrales aux passages cités ; aucune expérience image/vidéo, performance matérielle ou validation indépendante annoncée. Les cas construits sont des raisonnements du projet.
+Editor: agent, 2026-10-18. Documentary confrontation of the central statements with the quoted passages; no image/video experience, material performance or independent validation announced. The cases constructed are reasonings of the project.

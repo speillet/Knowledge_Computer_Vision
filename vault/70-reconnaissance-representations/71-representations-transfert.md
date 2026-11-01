@@ -1,110 +1,120 @@
-# Représentations visuelles, ViT, Swin, ConvNeXt et DINOv2 — cartes
+# Flashcards — Visual representations, ViT, Swin, ConvNeXt and DINOv2
 
-Fiche : [[70-reconnaissance-representations/references/71-representations-transfert|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[70-reconnaissance-representations/references/71-representations-transfert|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::70-reconnaissance-representations
 
 ## CV-REPRESENTATIONS-001
 
-Objectif : estimer le coût des tokens. Famille : raisonnement. Provenance : agent.
+Objective: Estimate the cost of tokens. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-REPRESENTATIONS-001
-Question: Dans un ViT à patch fixe et attention globale dense, doubler largeur et hauteur change comment le nombre de tokens image (hors token de classe) et le terme quadratique associé ?
-Reponse: **Noyau attendu** : Tokens ×4 ; terme quadratique ×16, dans ce modèle de coût.
+Question: In a ViT with fixed patch size and dense global attention, how does doubling image width and height change the number of image tokens, excluding the class token, and the associated quadratic term?
+Reponse: **Expected answer**: Tokens ×4; quadratic term ×16, in this cost model.
 
-**Approfondissement** : Ce n’est pas une prédiction exacte du temps total : kernels, mémoire et autres blocs comptent.
+**Further explanation**: This is not an exact prediction of total time: kernels, memory and other blocks count.
 
-**Dérivation du coût** : avec des patches de côté $P$ fixé et des dimensions compatibles, $N=HW/P^2$. Doubler $H$ et $W$ multiplie le nombre de patches par quatre. Une matrice d'interactions globale entre tokens a alors seize fois plus de couples. Ce comptage concerne le terme d'attention considéré, pas toutes les opérations du réseau.
+**derivation of cost**: with fixed $P$ side patches and compatible dimensions, $N=HW/P^2$. Double $H$ and $W$ multiplies the number of patches by four. A global matrix of interactions between tokens then has sixteen times as many pairs. This count concerns the term of attention considered, not all operations of the network.
 
-**Conséquence pratique proposée** : avant d'augmenter la résolution pour de petits défauts, estimer mémoire des activations et tester la latence complète. Les projections, convolutions éventuelles, kernels et contraintes de bande passante ne suivent pas nécessairement ce même facteur. Une réduction de batch ou une autre représentation peut modifier le compromis. Vérifier aussi si l'information du défaut existe dans l'acquisition initiale : agrandir une image sans détail supplémentaire n'apporte pas les mêmes observations qu'une capture réellement mieux résolue. Les mesures sur le matériel cible complètent donc le modèle de coût.
+**Proposed practical consequence**: Before increasing resolution for small faults, estimate activation memory and test full latency. Projections, convolutions, kernels and bandwidth constraints do not necessarily follow this same factor. A batch reduction or other representation can change the compromise. Also check if the information of the defect exists in the initial acquisition: enlarging an image without additional detail does not bring the same observations as a capture actually better resolved. Measures on the target material therefore complement the cost model.
 
-**Erreurs bloquantes** : Annoncer une latence ×16 garantie pour tout transformer.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §3.1](https://arxiv.org/abs/2010.11929) ; comptage analytique du projet.
+**Example of dimensions**: a $224\times224$ image with $16\times16$ patches gives 196 image tokens; at $448\times448$, it gives 784. One attention per head typically calculates $QK^T$ of size $N\times N$, then a combination of values. The interaction term is of order $N^2d$, while the projections and the MLP introduce order terms $Nd^2$ for a width $d$. Depending on the plan, these contributions and memory access do not dominate in the same way. Memory-saving implementations can avoid storing the entire matrix without necessarily removing quadratic counting from calculated interactions.
+
+**Blocking errors**: Announce guaranteed ×16 latency to transform everything.
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Full reference]]; [ViT, §3.1](https://arxiv.org/abs/2010.11929); analytical counting of the project; [ViT, §3.1, sequence of patches; project counts and tests](https://arxiv.org/html/2010.11929v2), consult the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-REPRESENTATIONS-001 provenance::agent pole::A pole::D pole::E
 END
 
 ## CV-REPRESENTATIONS-002
 
-Objectif : situer Swin et ConvNeXt. Famille : comparaison. Provenance : agent.
+Objective: Swin and ConvNeXt. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-REPRESENTATIONS-002
-Question: Swin et ConvNeXt remplacent-ils les CNN par la même attention globale ?
-Reponse: **Noyau attendu** : Non : Swin utilise une hiérarchie à fenêtres locales décalées ; ConvNeXt reste un ConvNet modernisé.
+Question: Do Swin and ConvNeXt replace CNNs with the same global attention mechanism?
+Reponse: **Expected answer**: No: Swin uses an offset local window hierarchy; ConvNeXt remains a modernized ConvNet.
 
-**Approfondissement** : Séparer structure et recette d’entraînement, puis comparer sur le même protocole cible.
+**Further explanation**: Separate structure and training recipe, then compare on the same target protocol.
 
-**Ce que l'on compare** : une architecture décrit les opérations et leurs connexions ; une recette d'entraînement décrit données, objectifs et réglages utilisés pour les apprendre. Une amélioration observée en changeant les deux ne se rapporte pas automatiquement à un seul mécanisme architectural.
+**What we compare**: An architecture describes operations and their connections; a training recipe describes the data, objectives, and settings used to learn them. An improvement observed by changing the two does not automatically relate to a single architectural mechanism.
 
-**Exemple de comparaison construite** : pour une tâche dense, examiner résolution des features, hiérarchie et coût de la tête, puis comparer les mêmes splits et contraintes d'inférence. Une attention par fenêtres limite certaines interactions locales à un niveau, tandis que décalages et hiérarchie organisent l'échange d'information. Un ConvNet peut moderniser sa conception sans devenir une attention globale. Le bon raisonnement consiste à relier champ d'information, échelle, mémoire et protocole à la tâche, et pas à classer toutes les méthodes sous une étiquette supposée supérieure. Les méthodes nommées sont ici repérées ; chacune demanderait une fiche dédiée pour sa maîtrise complète.
+**Example of comparison built**: For a dense task, examine feature resolution, hierarchy, and head cost, and then compare the same splits and inference constraints. Window attention limits some local interactions to one level, while shifts and hierarchy organize the exchange of information. A ConvNet can modernize its design without becoming a global attention. The correct reasoning is to link information field, scale, memory, and protocol to the task, not to classify all methods under a supposedly superior label. The named methods are identified here; each would require a dedicated reference note for its complete mastery.
 
-**Erreurs bloquantes** : Qualifier ConvNeXt de transformer ou chaque couche Swin d’attention globale.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §§3–4](https://arxiv.org/abs/2010.11929) ; [Swin, §3](https://arxiv.org/abs/2103.14030) ; [ConvNeXt, §2](https://arxiv.org/abs/2201.03545) ; [DINOv2, méthode et transfert](https://arxiv.org/abs/2304.07193).
+**Counting by windows**: If a window contains $M^2$ tokens and the image contains $N$ tokens, the internal interactions total about $(N/M^2)(M^2)^2=NM^2$, instead of $N^2$ for global attention, fixed width. This simplification assumes a fixed window size and ignores projections, MLP, padding, and hierarchical merge. The staggered windows allow successive blocks to communicate previously separated regions. The information field is therefore built over layers; a local layer does not instantly access the entire image. Comparing this organization to convolutions requires also examining resolution, number of channels and dense task head.
+
+**Blocking errors**: Qualify ConvNeXt to transform or each Swin layer of overall attention.
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Full reference]]; [ViT, §§3 – 4](https://arxiv.org/abs/2010.11929); [Swin, §3](https://arxiv.org/abs/2103.14030); [ConvNeXt, §2](https://arxiv.org/abs/2201.03545); [DINOv2, method and transfer](https://arxiv.org/abs/2304.07193); [Liu et al., Swin, §3.2, equations 1 – 2, windows and offset; counting explained by the project](https://arxiv.org/html/2103.14030v2), see the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-REPRESENTATIONS-002 provenance::agent pole::A pole::D pole::E
 END
 
 ## CV-REPRESENTATIONS-003
 
-Objectif : utiliser des features autosupervisées. Famille : comprehension. Provenance : agent.
+Objective: Use self-supervised features. Family: understanding. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-REPRESENTATIONS-003
-Question: Que manque-t-il entre des features DINOv2 et un détecteur industriel de défauts prêt à évaluer ?
-Reponse: **Noyau attendu** : Définir sorties, tête ou stratégie de décision, données, seuils et protocole de validation du produit.
+Question: What is missing between DINOv2 features and an industrial defect detector ready for evaluation?
+Reponse: **Expected answer**: Define output, head or decision strategy, data, thresholds and product validation protocol.
 
-**Approfondissement** : Des features transférables ne sont pas automatiquement une taxonomie sémantique ou un score calibré sur le nouveau domaine.
+**Further explanation**: Transferable features are not automatically a semantic taxonomy or a calibrated score on the new domain.
 
-**Passage de représentation à décision** : une feature décrit l'image selon le préentraînement ; le produit doit encore définir défaut, localisation et comportement quand aucun exemple connu ne convient. Une tête supervisée, une comparaison au nominal ou une recherche de voisins posent des problèmes et des besoins de données différents.
+**Transition from representation to decision**: a feature describes the image according to the pretraining; the product must still define defect, location and behavior when no known example is suitable. A supervised head, a nominal comparison or a search for neighbors pose different problems and data needs.
 
-**Baseline proposée** : fixer extraction et prétraitement, choisir une règle simple, puis mesurer défauts manqués et faux rejets par type de pièce. Comparer ensuite une adaptation contrôlée avec les mêmes données réservées. Un excellent transfert moyen sur un benchmark n'établit pas la séparabilité des petits défauts de la nouvelle caméra. Examiner échelle des features, couverture du nominal et seuils avant de complexifier le système. La représentation est une ressource utile ; l'évaluation doit porter sur les sorties effectivement consommées par l'inspection, avec une politique pour les cas incertains.
+**Proposed Baseline**: fix extraction and pre-treatment, choose a simple rule, then measure missed defects and false rejections by part type. Then compare a controlled adaptation with the same reserved data. An excellent average transfer to a benchmark does not establish the separability of the small defects of the new camera. Examine feature scale, nominal coverage, and thresholds before making the system more complex. Representation is a useful resource; the evaluation should focus on the outputs actually consumed by the inspection, with a policy for uncertain cases.
 
-**Erreurs bloquantes** : Présenter l’extraction seule comme une solution supervisée complète.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §§3–4](https://arxiv.org/abs/2010.11929) ; [Swin, §3](https://arxiv.org/abs/2103.14030) ; [ConvNeXt, §2](https://arxiv.org/abs/2201.03545) ; [DINOv2, méthode et transfert](https://arxiv.org/abs/2304.07193).
+**From the token to the default zone**: Selecting local features retains a grid of patches, while a global vector aggregates the image. Interpolation of the grid to the original resolution increases the number of pixels of the score, without creating in itself a location accuracy absent from the features. Define how a patch covers the room and what defect size it should distinguish. A constructed baseline can freeze the extractor, index the nominal patches and use their distance as a score, before comparing to a supervised head. Keeping room masks, alignment, and aggregation policy allows errors to be attributed to the representation choice rather than to an implicit interface.
+
+**Blocking errors**: Present extraction alone as a complete supervised solution.
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Full reference]]; [ViT, §§3 – 4](https://arxiv.org/abs/2010.11929); [Swin, §3](https://arxiv.org/abs/2103.14030); [ConvNeXt, §2](https://arxiv.org/abs/2201.03545); [DINOv2, method and transfer](https://arxiv.org/abs/2304.07193); [Oquab et al., DINOv2, §7.4, patch tokens, flashcard low resolution and interpolation; proposed inspection baseline](https://arxiv.org/html/2304.07193v2), see the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::comprehension cv_id::CV-REPRESENTATIONS-003 provenance::agent pole::A pole::D pole::E
 END
 
 ## CV-REPRESENTATIONS-004
 
-Objectif : choisir une adaptation. Famille : comparaison. Provenance : agent.
+Objective: Choose an adaptation. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-REPRESENTATIONS-004
-Question: Quel compromis distingue linear probing, fine-tuning complet et LoRA/adapters en transfert visuel ?
-Reponse: **Noyau attendu** : Ils entraînent respectivement une tête, tout le modèle ou une partie paramétrée plus réduite ; coût d’apprentissage et flexibilité diffèrent.
+Question: Which tradeoffs distinguish linear probing, full fine-tuning and LoRA/adapters for visual transfer learning?
+Reponse: **Expected answer**: They drive a head, the whole model or a smaller set-up, respectively; learning costs and flexibility differ.
 
-**Approfondissement** : Mesurer généralisation, données nécessaires et coût final ; peu de paramètres appris ne garantit pas une inférence plus rapide.
+**Further explanation**: Measuring generalization, necessary data and final cost; few parameters learned does not guarantee faster inference.
 
-**Raisonnement sur les ressources** : geler le backbone réduit le nombre de gradients et de paramètres modifiés, mais le calcul de ses features reste nécessaire pour chaque nouvelle image. Des modules d'adaptation peuvent réduire le coût d'apprentissage ou de stockage des variantes sans supprimer le backbone de l'inférence.
+**Reasoning about resources**: Freezing the backbone reduces the number of gradients and modified parameters, but the calculation of its features remains necessary for each new image. Adaptive modules can reduce the cost of learning or storing variants without removing the backbone from the inference.
 
-**Comparaison proposée** : conserver données et sortie cible, puis comparer une tête seule, une adaptation partielle et un ajustement complet sur généralisation, mémoire d'entraînement et coût final. Rapporter aussi le coût des activations et la façon dont les paramètres adaptés sont intégrés au modèle déployé. Un faible nombre de paramètres entraînés peut être utile pour plusieurs variantes produit ; il ne prouve pas une meilleure précision avec peu de données ni une accélération sur chaque runtime. Le choix dépend donc de la capacité nécessaire au changement de domaine et des ressources réellement contraintes.
+**Proposed comparison**: Keep data and target output, then compare a single head, partial adaptation and full adjustment on generalization, training memory and final cost. Also report the cost of activations and how the appropriate parameters are integrated into the deployed model. A small number of trained parameters can be useful for several product variants; it does not prove better accuracy with little data or acceleration on each runtime. The choice therefore depends on the capacity required for the change of domain and the resources really constrained.
 
-**Erreurs bloquantes** : Assimiler faible nombre de paramètres entraînés et faible latence.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [ViT, §3.1](https://arxiv.org/abs/2010.11929) ; [Hu et al., LoRA, résumé et principe des paramètres gelés](https://arxiv.org/abs/2106.09685) ; [Houlsby et al., adapters, résumé](https://arxiv.org/abs/1902.00751) ; principe d’adaptation transposé à la vision, sans reprendre les gains NLP.
+**Parametrisation LoRA**: For a layer $W\in\mathbb R^{d\times k}$, replace the complete update with $\Delta W=BA$, with $B\in\mathbb R^{d\times r}$ and $A\in\mathbb R^{r\times k}$, causes $r(d+k)$ parameters instead of $dk$, out of bias and other modules. Rank $r$ constrains the space of updates and is a compromise to validate. When the adaptation is linear and compatible with weight representation, one can form $W'=W+BA$ for inference; this differs from a non-linear adaptation kept in the computation path. The small number of parameters learned does not therefore, by itself, describe the graph actually deployed.
+
+**Blocking errors**: Assimilate low number of parameters driven and low latency.
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Full reference]]; [ViT, §3.1](https://arxiv.org/abs/2010.11929); [Hu et al., LoRA, summary and principle of frozen parameters](https://arxiv.org/abs/2106.09685); [Houlsby et al., adaptors, summary](https://arxiv.org/abs/1902.00751); principle of adaptation transposed to the vision, without taking back the NLP gains; [Hu et al., LoRA, §4.1, parametrization W+BA and linear fusion](https://arxiv.org/html/2106.09685v2), consult the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-REPRESENTATIONS-004 provenance::agent pole::A pole::D pole::E
 END
 
 ## CV-REPRESENTATIONS-005
 
-Objectif : contrôler le prétraitement d’un backbone. Famille : diagnostic. Provenance : agent.
+Objective: check preprocessing a backbone. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-REPRESENTATIONS-005
-Question: Un backbone préentraîné se dégrade après remplacement du chargeur d’images. Que vérifier avant un nouveau fine-tuning ?
-Reponse: **Noyau attendu** : Ordre couleur, normalisation, plage, interpolation, crop et résolution réellement reçus.
+Question: A pretrained backbone degrades after the image loader is replaced. What should be checked before another fine-tuning run?
+Reponse: **Expected answer**: Color order, normalization, range, interpolation, crop and resolution actually received.
 
-**Approfondissement** : Comparer une image identique dans les deux chaînes avant d’attribuer l’écart aux données ou à l’architecture.
+**Further explanation**: Compare an identical image in both strings before assigning the deviation to the data or architecture.
 
-**Piège d'interface** : deux chargeurs peuvent produire des images visuellement semblables tout en différant dans l'ordre des canaux ou le traitement des centres de pixels. Une normalisation répétée ou omise peut également modifier fortement le tenseur reçu. Le backbone ne voit que ces valeurs, pas l'intention du pipeline.
+**Interface Trap**: Two chargers can produce visually similar images while differing in channel order or pixel center processing. Repeated or omitted normalization can also strongly alter the received tensor. The backbone sees only these values, not the pipeline intent.
 
-**Enquête reproductible proposée** : utiliser un fichier témoin identique, enregistrer formes, types, plages et pixels connus après chaque étape, puis comparer les tenseurs d'entrée. Refaire l'extraction avec les mêmes poids et paramètres. Si les features changent avant toute variation de scène, rechercher d'abord cette différence déterministe. Une fois le contrat restauré, évaluer le nouveau domaine sur un ensemble réservé. Un fine-tuning lancé trop tôt peut absorber partiellement un bug de prétraitement, rendre la régression moins visible et compliquer la reproductibilité sans avoir traité sa cause.
+**Proposed Reproducible Investigation**: use an identical cookie file, save known shapes, types, ranges and pixels after each step, and then compare the input tensors. Repeat the extraction with the same weights and parameters. If the features change before any scene variation, first look for this deterministic difference. Once the contract is restored, evaluate the new domain on a reserved set. A fine-tuning launched too early can partially absorb a pre-processing bug, make regression less visible and complicate reproducibility without having addressed its cause.
 
-**Erreurs bloquantes** : Changer l’entraînement sans contrôler le contrat d’entrée.
-Source: [[70-reconnaissance-representations/references/71-representations-transfert|Fiche complète]] ; [DINOv2, résumé et évaluation par transfert](https://arxiv.org/abs/2304.07193) ; contrôle du prétraitement proposé par le projet.
+**Pretreatment Invariant**: If the model waits for $z_c=(x_c/255-\mu_c)/\sigma_c$, giving it $x_c\in[0,255]$ directly before subtraction changes the scale by a factor close to 255, without being a variation of physical domain. Testing an artificial image with each channel is constant and different makes it possible to detect permutation RGB/BGR and repeated normalization. For a dense task, also check the transformation of labels and coordinates by crop, resize and padding. An identical input image is only a sufficient witness if all stochastic steps are neutralized and if weight, mode of evaluation and numerical precision are also fixed.
+
+**Blocking errors**: Change the drive without check the entry contract.
+Source: [[70-reconnaissance-representations/references/71-representations-transfert|Full reference]]; [DINOv2, summary and valuation by transfer](https://arxiv.org/abs/2304.07193); check of the preprocessing proposed by the project.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-REPRESENTATIONS-005 provenance::agent pole::A pole::D pole::E
 END

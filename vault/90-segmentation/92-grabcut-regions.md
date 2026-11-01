@@ -1,68 +1,74 @@
-# GrabCut, régions et modèles d’apparence — cartes
+# Flashcards — GrabCut, regions and appearance models
 
-Fiche : [[90-segmentation/references/92-grabcut-regions|Référence complète]]. Provenance : agent. Statut : rédigé, export expérimental.
+reference note: [[90-segmentation/references/92-grabcut-regions|Complete reference]]. Source: Agent. Status: written, experimental export.
 
 TARGET DECK: CV::Pilote::90-segmentation
 
 ## CV-GRABCUT-001
 
-Objectif : expliquer l’alternance GrabCut. Famille : algorithme. Provenance : agent.
+Objective: Explain the GrabCut alternation. Family: algorithm. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-GRABCUT-001
-Question: Quelles deux opérations principales GrabCut alterne-t-il ?
-Reponse: **Noyau attendu** : Estimer les modèles d’apparence fond/objet puis optimiser les labels via graph cut dans l’énergie définie.
+Question: Which two main operations does GrabCut alternate?
+Reponse: **Expected answer**: Estimate the background/object appearance patterns and then optimize the labels via graph cut in the defined energy.
 
-**Approfondissement** : Les contraintes sûres et probables de l’initialisation ont un rôle distinct ; le procédé n’est pas un classifieur sémantique générique.
+**Further explanation**: The safe and probable constraints of initialization have a distinct role; the process is not a generic semantic classifier.
 
-**Intuition de l'alternance** : les labels actuels donnent des exemples de couleur pour le fond et le premier plan ; les modèles d'apparence influencent ensuite le coût de chaque attribution. Les relations entre voisins ajoutent une préférence spatiale. La nouvelle partition sert à une nouvelle estimation, dans les contraintes de l'initialisation.
+**Intuition of alternation**: Current labels give color examples for background and foreground; appearance patterns then influence the cost of each attribution. Relations between neighbors add a spatial preference. The new partition is used for a new estimate, within the constraints of the initialization.
 
-**Exemple de limite** : si une partie de la cible ressemble au fond, son coût d'apparence peut favoriser la mauvaise région. Une indication utilisateur peut apporter une information que la couleur seule ne fournit pas. Le procédé ne nomme pas automatiquement un objet selon une taxonomie et un minimum d'énergie n'est pas une preuve de vérité métier. Vérifier initialisation et labels sûrs avant d'augmenter les itérations. Pour comparer à une méthode promptable apprise, compter aussi les interventions, les échecs et le coût complet, et pas seulement le temps de la dernière optimisation.
+**Example of limit**: If a part of the target looks like the bottom, its cost of appearance can favor the wrong region. A user indication can provide information that color alone does not provide. The process does not automatically name an object according to a taxonomy and a minimum of energy is not proof of business truth. Check initialization and safe labels before increasing iterations. To compare to a learned promptable method, also count interventions, failures and full cost, and not just the time of the last optimization.
 
-**Erreurs bloquantes** : Décrire seulement un seuil de couleur fixe.
-Source: [[90-segmentation/references/92-grabcut-regions|Fiche complète]] ; [OpenCV GrabCut, théorie et masques](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+**Energy and Cut**: for a binary label $L_p$, a unary term can be linked to $-\log p(I_p\mid L_p)$ under the corresponding color mixture. A schematic neighbor term $w_{pq}\mathbf1[L_p\ne L_q]$ penalizes a boundary between similar pixels; high contrast can reduce $w_{pq}$. With fixed appearance parameters and for a compatible binary energy, the cutoff of the graph optimizes this sub-problem. Alternating with the estimation of the mixtures does not imply an overall joint optimum of all the unknowns. Defining the solved sub-problem prevents confusing the solver's warranty with the correctness of the object model used.
+
+**Blocking errors**: Describe only a fixed color threshold.
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
 Tags: cv::pilote cv::d09 famille::algorithme cv_id::CV-GRABCUT-001 provenance::agent pole::A pole::E
 END
 
 ## CV-GRABCUT-002
 
-Objectif : contrôler une contrainte d’initialisation. Famille : diagnostic. Provenance : agent.
+Objective: check is an initialization constraint. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-GRABCUT-002
-Question: GrabCut exclut toujours une partie d’objet malgré plus d’itérations. Que vérifier d’abord ?
-Reponse: **Noyau attendu** : La zone initiale et les labels de fond sûr : une région utile peut être rendue impossible par la contrainte.
+Question: GrabCut consistently excludes part of an object despite more iterations. What should be checked first?
+Reponse: **Expected answer**: The initial zone and the safe background labels: a useful region can be made impossible by constraint.
 
-**Approfondissement** : Tester une correction manuelle des labels sur copie puis observer le masque ; distinguer initialisation et apparence insuffisante.
+**Further explanation**: Test a manual correction of labels on copy and then observe the mask; distinguish initialization and insufficient appearance.
 
-**Chaîne causale** : un pixel imposé comme fond sûr ne fait pas partie des labels que l'optimisation peut librement transformer en objet. Si le rectangle initial exclut une partie de la cible, la procédure peut respecter parfaitement son contrat tout en produisant un masque tronqué.
+**Causal chain**: A pixel imposed as a safe background is not one of the labels that optimization can freely transform into an object. If the initial rectangle excludes a part of the target, the procedure can perfectly comply with its contract while producing a truncated mask.
 
-**Vérification construite** : superposer labels sûrs et probables à l'image, puis corriger uniquement la zone erronée sur une copie. Conserver les autres paramètres et mesurer l'effet. Si cette correction ne suffit pas, comparer les distributions de couleur et la frontière, car plusieurs défauts peuvent coexister. Une répétition supplémentaire de la même optimisation ne remplace pas une information initiale correcte. Cette distinction entre contrainte fausse et modèle d'apparence insuffisant aide à choisir l'intervention utile : changer le masque de départ, ajouter un indice ou envisager un autre mécanisme plutôt que supposer une panne numérique.
+**Verification built**: Overlay safe and probable labels on the image, and then fix only the wrong area on a copy. Keep other parameters and measure the effect. If this correction is not enough, compare the color distributions and the border, because several defects can coexist. An additional repetition of the same optimization does not replace correct initial information. This distinction between a false constraint and a model of insufficient appearance helps to choose the useful intervention: changing the starting mask, adding a clue or considering another mechanism rather than assuming a digital failure.
 
-**Erreurs bloquantes** : Supposer que la convergence doit annuler toute contrainte erronée.
-Source: [[90-segmentation/references/92-grabcut-regions|Fiche complète]] ; [OpenCV GrabCut, théorie et masques](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+**Hard Constraint and Preference**: A certain label conceptually prohibits the other attribution, while a probable label lets the energy choose. If an actual part of the object is attached to the bottom, changing the appearance settings does not make this solution admissible. In a built test, only correct this constraint, and then compare iterations on the same initial saved state. An improvement locates a contract defect; a persistent exclusion may still come from close colors or regularization. Distinguishing the four states of the mask until the final decision avoids losing interaction information by prematurely binarizing the labels.
+
+**Blocking errors**: Assume that convergence must cancel out any erroneous constraint.
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
 Tags: cv::pilote cv::d09 famille::diagnostic cv_id::CV-GRABCUT-002 provenance::agent pole::A pole::E
 END
 
 ## CV-GRABCUT-003
 
-Objectif : choisir une interaction. Famille : comparaison. Provenance : agent.
+Objective: Choose an interaction. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-GRABCUT-003
-Question: Pour extraire un objet avec couleurs proches du fond, pourquoi comparer coût d’interaction et hypothèses plutôt que seulement temps d’optimisation ?
-Reponse: **Noyau attendu** : Les labels ajoutés par l’utilisateur peuvent fournir l’information manquante ; une solution rapide peut demander beaucoup de corrections.
+Question: When extracting an object whose colors resemble the background, why compare interaction cost and assumptions rather than optimization time alone?
+Reponse: **Expected answer**: Labels added by the user can provide the missing information; a quick fix can require a lot of corrections.
 
-**Approfondissement** : Évaluer masque, nombre de corrections et robustesse sur images réservées ; un optimum d’énergie ne suffit pas.
+**Further explanation**: Evaluate mask, number of corrections and robustness on reserved images; an optimum energy is not enough.
 
-**Coût réellement payé** : un algorithme rapide peut demander plusieurs retouches si son modèle de couleur sépare mal cible et fond. Une méthode plus coûteuse par appel peut réduire l'interaction ; l'inverse est aussi possible. Les temps doivent inclure la procédure nécessaire pour atteindre une qualité définie.
+**Cost actually paid**: A fast algorithm can require several retouches if its color model separates wrong target and background. A more expensive per-call method can reduce interaction; the opposite is also possible. The times must include the procedure necessary to achieve a defined quality.
 
-**Protocole proposé** : fixer des images réservées, une règle d'initialisation et un budget de correction, puis mesurer qualité de masque, nombre d'interventions, temps total et taux d'échec. Ajouter séparément un fond plus proche de la cible pour tester l'hypothèse d'apparence. Conserver les cas non résolus dans le bilan. Un optimum de l'énergie indique que la procédure a satisfait son modèle ; il ne dit pas que ce modèle possède assez d'information pour distinguer l'objet utile. La comparaison doit donc relier hypothèses de la méthode et effort humain, sans choisir seulement sur la durée du solveur.
+**Proposed Protocol**: fix reserved images, a reset rule and a correction budget, then measure mask quality, number of interventions, total time and failure rate. Separately add a background closer to the target to test the appearance hypothesis. Keep unresolved cases in the balance sheet. An energy optimum indicates that the procedure has satisfied its model; it does not say that this model has enough information to distinguish the useful object. The comparison must therefore relate hypotheses of the method and human effort, without choosing only on the duration of the solver.
 
-**Erreurs bloquantes** : Présenter un temps de calcul faible comme performance complète du processus.
-Source: [[90-segmentation/references/92-grabcut-regions|Fiche complète]] ; [OpenCV GrabCut, théorie et masques](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+**Quality curve – interaction**: Set a common rule to place the initial rectangle, and then a budget for corrections or user time. Measure quality after zero, one, and then multiple interactions and keep the rate of images that do not reach the target to the maximum budget. Clicks are only comparable if their policy and accessible information are announced; a correction chosen with the reference mask constitutes a different oracle from a real operator. Compare also borders and small useful regions. This protocol gives an exploitable compromise curve, instead of an isolated optimization time obtained after a particularly favorable initialization.
+
+**Blocking errors**: Present a low computing time as the complete performance of the process.
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-GRABCUT-003 provenance::agent pole::A pole::E
 END
