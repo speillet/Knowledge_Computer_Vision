@@ -1,88 +1,131 @@
-# flashcards Review Grid
+# Flashcard review grid
 
-Detailed criteria for skill step 2. They take over the pedagogical contract (`specs/001-cv-knowledge-base/learning-design.md`) and the requirements FR-007 to FR-016, FR-031, FR-032 and FR-036 of the spec.
+Detailed criteria for step 2 of `revue-cartes`, following the pedagogical
+contract (`specs/001-cv-knowledge-base/learning-design.md`) and requirements
+FR-007–FR-016, FR-031, FR-032 and FR-036.
 
-1. [Exactitude](#exactitude)
-2. [Relevance to a senior profile](#relevance-to-a-senior-profile)
-3. [Corrigibility](#corrigibility)
-4. [Consistency](#consistency)
-5. [Warning signals](#warning-signals)
-6. [Severity](#severity)
+1. [Accuracy](#accuracy)
+2. [Relevance to senior engineering](#relevance-to-senior-engineering)
+3. [Gradability](#gradability)
+4. [Answer development](#answer-development)
+5. [Consistency](#consistency)
+6. [Warning signals](#warning-signals)
+7. [Severity](#severity)
 
-## Exactitude
+## Accuracy
 
-- Is each central statement supported by **the Cited Passage**, and not just by the document in general?
-- Do the general properties (article) and implementation features (documentation or code, with version or commit) each have their source (FR-036)?
-- Are guarantees, approximations, hypotheses and empirical results distinguished (FR-011)?
-- Is a threshold, score or cost accompanied by its protocol, variant or hardware (FR-013)?
+- Does the cited passage support each central claim, rather than merely
+  discussing the general subject?
+- Do general properties (paper) and implementation details (documentation or
+  code at a version or commit) each have their own source (FR-036)?
+- Are guarantees, approximations, assumptions and empirical results distinguished (FR-011)?
+- Does a threshold, score or cost specify its protocol, variant and relevant hardware (FR-013)?
 - Does each equation define its symbols, conventions, validity conditions and units (FR-007)?
-- Is the data contract explicit: coordinate frame, origin of coordinates, normalization, effect of a resize, a crop or a padding (FR-031)?
-- Is the status of the code clear: illustrative, or executed with its environment and result (FR-008, FR-009)?
+- Is the data contract explicit: coordinate frame, coordinate origin,
+  normalization, resizing, cropping and padding (FR-031)?
+- Is code marked as illustrative or executed with its environment and result (FR-008, FR-009)?
 
-To check:
+Verification:
 
-- **Article**: open the quoted section and reread the exact sentence or equation. WebFetch does not read text from arXiv PDFs; use HTML version `https://ar5iv.labs.arxiv.org/html/<identifiant>`. The pseudocode is often an image: corroborate it with the official code. A contradiction between the article and an implementation, even on a boundary like `>` versus `≥`, is recorded with both contexts, not resolved in silence.
-- **Cited section**: A true statement attributed to the wrong section remains "unsupported" as long as the reference is not corrected.
-- **Code**: consult the file at the commit cited, with the line numbers.
-- **Documentation**: consult the quoted version (e.g. OpenCV 4.13).
-- **Numerical calculation**: do it again. `examples/pilot_math.py` already contains driver calculations; a new calculation is done in a temporary file outside the repository.
+- **Paper:** open the exact cited section, sentence or equation. If the available
+  fetch tool cannot read a PDF, use an available HTML version or PDF extraction.
+  Corroborate image-based pseudocode with official code. Record disagreements
+  between paper and implementation with both contexts, even for `>` versus `≥`.
+- **Cited section:** a true claim attributed to the wrong section remains
+  unsupported until the citation is corrected.
+- **Code:** read the cited file at its commit and line numbers.
+- **Documentation:** consult the cited version, such as OpenCV 4.13.
+- **Numerical calculation:** recalculate it. `examples/pilot_math.py` contains
+  existing pilot calculations; use a temporary file for a new exploratory check.
 
-| Verdict | Sens | Suite |
+| Verdict | Meaning | Next step |
 | --- | --- | --- |
-| Confirmed | The passage says the same thing, under the same conditions. | Rien |
-| Imprecise | True under an unspoken condition, or overly strong formulation | Correct the nuance |
-| False | The passage or calculation contradicts the assertion | Correct reference note and then flashcards |
-| Not supported | Perhaps true, but the source quoted does not say so. | Finding the right passage or removing the affirmation |
-| Not verifiable | Inaccessible or Paid Source | Say it in the report; do not confirm it |
+| Confirmed | The passage makes the same claim under the same conditions | None |
+| Imprecise | Missing condition or overly strong wording | Correct the nuance |
+| False | The source or calculation contradicts the claim | Correct the reference, then cards |
+| Unsupported | The cited passage does not establish the claim | Find the right passage or remove the claim |
+| Not verifiable | Source inaccessible or paywalled | Record the limitation; do not confirm |
 
-## Relevance to a senior profile
+## Relevance to senior engineering
 
-The learner has five years of experience in CV, masters ML/DL and semantic segmentation, and seeks to fill its gaps: classic methods, matching, calibration and registration, tracking, detection.
+The learner has five years of CV experience, knows ML/DL and semantic
+segmentation, and prioritizes classical methods, matching, calibration,
+registration, tracking and detection.
 
-- Does the flashcard involve a useful mechanism, reasoning, choice, diagnosis or evaluation in a project?
-- Should a senior know how to respond without looking? A value that is consulted in the documentation has no place in a flashcard, unless it serves a reasoning (128 = 4×4×8 explains the structure of the descriptor SIFT) or prevents a frequent error (Hamming standard for ORB).
-- Is the goal unique and does the family fit the question?
-- Does another flashcard of the subject already test the same kernel?
-- Does the flashcard recall a general DL course instead of the vision specificity (FR-001)?
-- Is the industrial case plausible and presented as a reasoning of the project, and not as a published result?
+- Does the card train a useful mechanism, reasoning, choice, diagnosis or evaluation?
+- Should a senior recall it without documentation? A lookup value needs a
+  reasoning role (128 = 4×4×8 explains SIFT's descriptor) or a frequent-error
+  prevention role (Hamming distance for ORB).
+- Is there one objective and a matching family?
+- Does another card already test the same expected answer?
+- Does it teach a vision-specific concept rather than generic DL material (FR-001)?
+- Is the industrial case plausible and labelled as project reasoning rather than a published result?
 
-## Corrigibility
+## Gradability
 
-- Is the question understood without opening the reference note?
-- Does the front avoid the key term, title, or source extract that gives the answer?
-- Is the **expected answer** a finite set of verifiable points? A detail of the **further explanation** does not have to be necessary to succeed.
-- Are **Blocking Errors**s plausible countersenses (confusion of task, coordinate frame or hypothesis), and not absurdities that no one would commit?
-- Does a comparison form a single coherent objective, rather than two juxtaposed questions?
-- Is the length reasonable for a recall? There is no ceiling. Report a much longer answer than the others of the subject, or a kernel too composite to be noted without hesitation.
+- Does the question stand alone without opening the reference?
+- Does the front avoid revealing the answer through a keyword, title or source extract?
+- Is the expected answer a finite set of verifiable points? Optional explanation
+  details must not become mandatory recall criteria.
+- Are blocking errors plausible misconceptions about task, coordinate frame
+  or assumption, rather than absurd mistakes?
+- Does a comparison serve one coherent objective?
+- Does the answer meet the 180-lexical-word threshold checked by
+  `scripts/learning_path.py` and the inventory? There is no upper limit;
+  length alone does not establish quality.
+- Can the expected answer still be graded without hesitation? If it contains
+  too many objectives, propose a complementary card instead of making it vague.
+
+## Answer development
+
+A detailed explanation helps reconstruct the answer and check whether it applies:
+
+- explain the mechanism instead of stating only a conclusion;
+- follow an interpreted example or constructed calculation with assumptions and units;
+- identify assumptions and limitations relevant to the objective;
+- include a discriminating check for a decision or diagnosis.
+
+Avoid paraphrasing the expected answer, repeating another card's diagnostic
+paragraph, collecting unrelated facts or presenting a project calculation or
+protocol as a published result.
 
 ## Consistency
 
-- Does the flashcard agree with the reference note, and the reference note with the other subjects? Look for the concepts shared by `grep` (IoU, residual, threshold, coordinate frame...).
-- Are the notations, units, and variable names those of the reference note?
-- Does the `famille::` tag match the family of the header line? The inventory reports discrepancies.
-- Does the `Source` field contain the wikilink to the reference note and an HTTPS source with its section, line or commit?
-- Are statements that depend on a version or date dated?
-- Does the format respect the [Model of flashcard](format-carte.md)?
+- Do the card, reference and related topics agree? Use `rg` for shared concepts
+  such as IoU, residuals, thresholds and coordinate frames.
+- Are notation, units and variables consistent with the reference?
+- Do the English header family and stable `famille::` tag correspond?
+- Does `Source` link to the canonical reference and an HTTPS source with a section,
+  line or commit?
+- Are version-dependent claims dated?
+- Does the format follow the [card template](format-carte.md)?
 
 ## Warning signals
 
-| Signal | Why it is Suspect | What to check |
+| Signal | Why it needs attention | Check |
 | --- | --- | --- |
-| “guarantee”, “invariant”, “always”, “optimal” | A guarantee is rare in vision | Exact conditions in the source |
-| Threshold presented as universal (0,5, 0,7, 0,8...) | A threshold depends on the dataset and the protocol | Origin of the threshold and validation |
-| Encryption without protocol, variant or hardware | It is not comparable | Measurement conditions (FR-013) |
-| Code presented as executed | The result may have been invented | Environment and real output |
-| Front containing the key word of the answer | Revision becomes recognition | Redrafting the context |
-| Two questions in a flashcard | Ambiguous notation | Split or unify the goal |
-| Core that requires an optional detail | Unfair failures | Move the detail to further explanation |
-| Source without section, line or commit | Unverifiable Affirmation | Specify the passage |
-| Approximation presented as equality | Countersense learned | Distinguish between “Approximate” and “Equal” |
-| coordinate frame, unit or origin of implicit coordinates | Calculation error in project | Data contract (FR-031) |
-| Failure of a library presented as property of the method | Confusion method/implementation | Separate scientific source (FR-036) |
-| Link to reference note missing or different from the file | flashcard orphaned or misarranged | Wikilink and domain |
+| “Guaranteed”, “invariant”, “always”, “optimal” | Guarantees need conditions | Exact source conditions |
+| Universal threshold (0.5, 0.7, 0.8, etc.) | Thresholds depend on data and protocol | Origin and validation |
+| Quantitative claim without protocol, variant or hardware | Results may be incomparable | Measurement conditions (FR-013) |
+| Code claimed as executed | A result needs evidence | Environment and actual output |
+| Front includes the answer's key term | Recall becomes recognition | Question context |
+| Two questions in one card | Ambiguous grading | Split or unify the objective |
+| Expected answer requires an optional detail | Unfair failure | Move it to the explanation |
+| Source lacks a section, line or commit | Claim is difficult to verify | Exact passage |
+| Approximation presented as equality | Incorrect interpretation | Approximation conditions |
+| Implicit coordinate frame, unit or origin | Calculation errors | Data contract (FR-031) |
+| Library defect treated as method property | Method/implementation confusion | Separate scientific source (FR-036) |
+| Missing or misplaced reference link | Orphaned card | Wikilink and domain |
+| Heading, table, blockquote or stray `$` in a field | Package conversion fails | Inventory conversion anomaly |
+| Paraphrase used to lengthen an answer | Review cost without information | Contribution of each paragraph |
+| Unlabelled constructed calculation or proposed ablation | Confusion with measured results | Number origin and execution evidence |
 
 ## Severity
 
-- **Bloquant**: scientific or numerical error; answer impossible to note unambiguously; answer revealed on the front; contradiction with the reference note.
-- **Important**: Overly strong wording or missing nuance that misleads; source that does not support assertion; double purpose; duplicate; implicit data contract where it counts.
-- **Minor**: style, inconsistent notation without consequence, too vague but exact reference, improved link.
+- **Blocking:** scientific or numerical error; ungradable answer; front reveals
+  the answer; contradiction with the reference.
+- **Important:** misleading omission or overly strong wording; unsupported claim;
+  multiple objectives; duplicate; important implicit data contract; answer below
+  the threshold or filled with irrelevant text.
+- **Minor:** wording, harmless notation inconsistency, vague but accurate reference
+  or an improvable link.

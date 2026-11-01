@@ -46,8 +46,10 @@ content: its existence does not establish topic coverage.
 
 To audit, correct or enrich existing reference notes and flashcards, use the
 repository's `revue-cartes` skill (`$revue-cartes` in Codex, `/revue-cartes`
-in Claude Code). It checks claims against sources, preserves IDs and Anki
-identities, records corrections and proposes additions to the learner.
+in Claude Code). It checks claims against sources, preserves the IDs from which
+Anki note identities are derived, records corrections and deepens answers by
+default (audit only on request). It tracks proposals through the learner's
+decision in `docs/revues/propositions.md`.
 
 ## Sources and documentation
 

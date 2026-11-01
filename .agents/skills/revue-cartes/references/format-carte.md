@@ -1,9 +1,10 @@
 # Pilot flashcard template
 
-This is the format required by `scripts/check_vault.py` and Obsidian_to_Anki
-3.6.0 (note type `CV-Pilote`). It remains experimental; coordinate changes with
+This is the format required by `scripts/check_vault.py` and exported to
+AnkiDroid by `scripts/build_apkg.py` (note type `CV-Pilote`; see
+`docs/export-apkg.md`). It remains experimental; coordinate changes with
 the specification and `specs/001-cv-knowledge-base/contracts/obsidian-anki.md`.
-Keep this template outside the vault: the plugin would import a `START` line
+Keep this template outside the vault: the validator rejects a `START` line
 inside a guide, index or reference note.
 
 ## Block
@@ -65,9 +66,15 @@ END
   The example uses `pole::B pole::E` for `poles: [B, E]`; adapt these to the
   parent reference. The pilot validator requires `provenance::agent`;
   learner-authored cards require a corresponding validator change.
-- **Anki identity**: after synchronization, the plugin inserts
-  `<!--ID: 1234567890-->` between `Tags:` and `END`. Never write it manually,
-  copy it to another card or move it.
-- **Content**: use `$…$` and `$$…$$` for mathematics. Code blocks may be used
-  without relying on syntax highlighting. Local images must have filenames
-  unique across the vault. Avoid trailing whitespace.
+- **Anki identity**: the package derives the note GUID from its pedagogical ID
+  (`genanki.guid_for("CV-Pilote", ID)`), independently of content. Changing an
+  existing ID creates another note on the phone and leaves the old one behind.
+  Legacy plugin comments `<!--ID: …-->` are no longer produced; preserve any
+  existing comment and never copy it to another card.
+- **Content**: use `$…$` and `$$…$$` for mathematics. Paragraphs, simple lists,
+  bold, italic, code and links are supported. Local image filenames must be
+  unique across the vault. Avoid trailing whitespace. The package rejects
+  headings, tables, blockquotes and `$` outside a formula; the inventory reports
+  conversion errors.
+- **Length**: at least 180 lexical words in `Reponse`, without an upper limit
+  or padding. The expected answer remains concise and gradable.

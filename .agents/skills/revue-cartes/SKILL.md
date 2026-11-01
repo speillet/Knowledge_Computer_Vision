@@ -1,187 +1,209 @@
 ---
 name: revue-cartes
-description: "Audit and improve existing computer vision reference notes and Anki flashcards in vault/. Check relevance, scientific accuracy and grading criteria; preserve pedagogical IDs and Anki identities, record corrections and propose enrichments. Use for review, correction and improvement of existing content, not for creating an absent topic."
+description: "Audit relevance, scientific accuracy and gradability of existing computer vision reference notes and Anki flashcards in vault/. Correct defects while preserving IDs, deepen answers by default, and track proposals for new cards through the learner's decision. Use for requests to check, review, audit, correct, deepen, develop, complete or enrich cards, Anki notes, references, a deck, a topic or the whole vault, even without an explicit skill invocation. Do not use to create an absent topic or build or publish an Anki package (use paquet-anki)."
 ---
 
-# Review vault reference notes and flashcards
+# Vault card review
 
-The vault was authored by an agent and has received documentary self-review.
-It serves an experienced CV engineer aiming for senior proficiency. A confidently
-stated error, an ungradable answer or a low-value card can waste daily review time
-and reinforce misconceptions. This skill performs a careful, sourced review.
+The vault's notes and cards are agent-authored and have received agent self-review.
+They serve an experienced computer vision engineer progressing toward senior
+proficiency. An incorrect claim, an answer that cannot be graded or an anecdotal
+card wastes review time and can reinforce a misconception. Review slowly against
+sources, rather than treating this as a style pass.
 
-Audit content, apply corrections, propose enrichments, update counts and produce
-a report. This skill does not validate Anki export, AnkiDroid rendering or learner
-mastery. Never mark a reference as independently reviewed: agent self-review does
-not constitute independent review (FR-037).
+This skill validates neither AnkiDroid rendering nor the learner's proficiency.
+Never mark a reference as independently reviewed: agent self-review does not
+satisfy FR-037.
+
+## Choose a mode
+
+The mode determines the permitted changes. At the learner's request of
+2026-10-30, the default is `approfondir` (deepen): invoking this skill authorizes
+answer development. Always audit first; do not expand an unchecked answer.
+
+| | `approfondir` (default) | `audit` | `ajouter` (add) |
+| --- | --- | --- | --- |
+| Trigger | Any review request unless specified otherwise | Explicit audit-only request | Learner accepts a registered proposal |
+| ID, question, objective, family, tags | Preserved | Preserved | New IDs |
+| Expected answer | Preserved except for sourced corrections | Corrected when contradicted by a source | Written |
+| Further explanation | Corrected, then developed | Corrected | Written |
+| Canonical reference | Corrected and aligned first | Corrected first | Extended |
+| New cards | Proposed only | Proposed only | Written |
+
+`approfondir` follows steps 1–4; `audit` skips step 4. Both finish with steps 5–7.
 
 ## 0. Define the scope
 
-Accept a flashcard file or its reference, such as
-`vault/80-detection-pose/81-nms.md`, a reference ID (`CV-NMS`), a card ID
-(`CV-NMS-003`), a topic directory (`vault/50-calibration-geometrie/`) or `all`.
-Ask for scope when none is provided.
+The argument may be a card or reference file
+(`vault/80-detection-pose/81-nms.md`), a reference ID (`CV-NMS`), a card ID
+(`CV-NMS-003`), a topic directory (`vault/50-calibration-geometrie/`) or the
+whole vault. Ask for the scope if none is provided or inferable.
 
-Work through one topic — a reference and its cards — per pass. Checking each
-claim against a precise source takes time. For a directory or `all`, process
-topics in sequence, produce a report for each, and offer stopping points between
-topics. Follow the user's existing authorization for the requested scope.
+A work unit is one subject: its reference and cards. Checking each claim takes
+time. For several subjects, write a scope record first, process subjects one
+at a time with a report for each, and finish with an overview; see the
+[report conventions](references/rapports.md). Offer a pause between subjects
+unless the learner has requested continuous work.
 
 ## 1. Prepare
 
-1. Run `git status --short` and record pre-existing changes; another agent may
-   be working in the same repository.
-2. Establish the baseline:
+1. Run `git status --short` and `git branch --show-current`. Another agent may
+   be working here; keep its changes separate. Use a dedicated review branch
+   as described in `CONTRIBUTING.md`.
+2. Establish the baseline and report existing failures before making changes:
 
    ```sh
    python3 scripts/check_vault.py
-   python3 -m unittest discover -s tests
+   python3 scripts/sync_catalog.py --check
+   python3 scripts/learning_path.py
+   uv run --no-project --with genanki==0.13.1 python -m unittest discover -s tests
    ```
 
-   Report a failure before proceeding; do not mix a format repair with a content review.
-3. Inventory the scope and retain a complete baseline outside the repository:
+3. Inventory the scope and save the full inventory outside the repository for
+   the final comparison:
 
    ```sh
-   python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py <file-or-folder>
+   python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py <file-or-directory>
    python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py vault --json > <tmp>/before.json
    ```
 
-   The inventory reports each card's family, objective, answer length, sources
-   and Anki identity, plus missing families and the next available ID.
-4. Read, in order:
-   - The flashcard file and its canonical note in `references/`.
-   - The [review rubric](references/grille.md).
-   - The sections “Flashcard contract,” “Expected answer and further explanation,”
-     “Card families” and “Sources, review and corrections” in
-     `specs/001-cv-knowledge-base/learning-design.md`.
-   - Self-review and correction history in `vault/01-Parcours/Suivi-pilote.md`,
-     to avoid repeating or contradicting earlier corrections.
+   For each card, inspect its family, objective, career tracks, answer length
+   against the contract threshold, Anki GUID and sources. The inventory also
+   flags unsupported export syntax and reports missing families and next free IDs.
+4. Read only what is needed, without repeating completed checks unnecessarily:
+   - the card file and canonical reference under `references/`;
+   - the [review grid](references/grille.md);
+   - the latest subject report under `docs/revues/`; do not contradict an earlier
+     finding without a source;
+   - relevant progress-log entries, using
+     `rg -n "<reference-ID>" vault/01-Parcours/Suivi-pilote.md`;
+   - the subject's entries in `docs/revues/propositions.md`;
+   - when needed, the card contract, expected-answer and card-family sections
+     of `specs/001-cv-knowledge-base/learning-design.md`.
 
 ## 2. Audit
 
-Start with the reference note: cards cannot be more accurate than their source.
-Then evaluate each card on the four axes detailed in the review rubric.
+Start with the reference, then assess every card against the review grid.
 
-- **Accuracy.** Extract central claims from the expected answer and explanation.
-  Open the precise cited passage: paper section, code line at a commit, or
-  versioned documentation. Use web tools for papers and pages. For library APIs
-  or parameters, use Context7 (`resolve-library-id`, then `query-docs`), followed
-  by official documentation as required by `AGENTS.md`. Give each claim a verdict:
-  confirmed, imprecise, false, unsupported by the citation, or unverifiable.
-  Never mark a claim confirmed from memory. An inaccessible source leaves the
-  claim unverifiable; report that limitation.
-- **Relevance.** Does the card train a mechanism, decision, diagnosis or evaluation
-  needed by a senior engineer? Require a coherent objective, an appropriate
-  family and no redundant question within the topic.
-- **Gradability.** The question stands alone; its front does not reveal the answer.
-  The expected answer is a finite set of verifiable points, blocking errors are
-  actual misconceptions, and optional detail is not required to pass. Report
-  answer length without imposing a ceiling: the spec measures review load rather
-  than capping it.
-- **Consistency.** Check agreement with the reference and other cards, notation,
-  frames, units, dated version-dependent claims and the
-  [flashcard format](references/format-carte.md).
+- **Accuracy:** list central claims in the expected answer and explanation,
+  then consult their exact cited passage: paper section, code at a commit or
+  versioned documentation. For APIs, use Context7 followed by official
+  documentation as required by `AGENTS.md`. Classify each claim as confirmed,
+  imprecise, false, unsupported by the cited passage or not verifiable. Memory
+  does not establish confirmation. Record inaccessible sources and unverified claims.
+- **Relevance:** judge whether the card trains a mechanism, decision, diagnosis
+  or evaluation useful to a senior engineer. Require one objective, an appropriate
+  family and no duplicate within the subject.
+- **Gradability:** the question stands alone, the front does not reveal the
+  answer, the expected answer has finite verifiable criteria, and blocking
+  errors are plausible misconceptions. Answers meet the 180-lexical-word
+  threshold checked by `learning_path.py`. Explanations develop a mechanism,
+  example, assumption or limitation; optional details are not required for recall.
+- **Consistency:** check the reference, related cards, notation, coordinate
+  frames, units, dated version-specific claims, the
+  [card template](references/format-carte.md) and package conversion.
 
-Assign severity to each finding:
+Classify findings by severity:
 
-- **Blocking**: scientific error, ungradable answer or answer revealed on the front.
-- **Important**: misleading imprecision, unsupported citation, multiple independent
-  objectives or redundant content.
-- **Minor**: wording, notation or insufficiently precise source location.
+- **Blocking:** scientific or numerical error, ungradable answer, answer exposed
+  on the front or contradiction with the reference.
+- **Important:** misleading omission, unsupported claim, multiple objectives,
+  duplicate or answer below the threshold.
+- **Minor:** wording, notation or an imprecise reference that still supports the claim.
 
 ## 3. Correct
 
-Apply blocking and important corrections directly, along with low-risk minor fixes.
+Apply blocking and important corrections, and low-risk minor corrections.
 Preserve review history and traceability:
 
-- Read each file again immediately before editing. If it changed since inspection,
-  stop and report the conflict instead of overwriting another agent's work.
-- Correct the reference first, then search the whole vault for cards repeating the
-  claim, including other topics. Leave no contradictory active card (SC-007).
-- Preserve `ID:` and the `## ID` heading. Preserve the plugin's `<!--ID: …-->`
-  immediately before `END`; never generate one manually. It connects the card
-  with its Anki note and history.
-- If a correction changes the learning objective itself, propose a new card and
-  a disposition for the old one rather than rewriting it under the same ID.
-  Deleting Anki notes has not yet been tested.
-- For learner-authored or mixed content (`apprenant` or `mixte` provenance),
-  propose changes instead of applying them. After learner acceptance, use `mixte`.
-- Increment the canonical note's `revision`; retain `statut: redige`.
-- Write English prose with original technical names, `$…$`/`$$…$$` mathematics
-  and no trailing whitespace. Preserve compatibility keys and identifiers.
-- Record each correction in the correction-log table under the follow-up section
-  of `vault/01-Parcours/Suivi-pilote.md`. Include date, reference and new revision,
-  affected cards, error and source, correction, responsible author
-  (“Agent Codex or Claude Code, self-review (`revue-cartes`)”), checks and export
-  status. Use one row per distinct error. A card with a plugin identity needs
-  resynchronization; otherwise mark it unsynchronized. Preserve dated evidence
-  sections, which describe what was actually tested at that time.
+- Reread a file immediately before editing. If it has changed, stop and report
+  the concurrent edit instead of overwriting it.
+- Correct the reference first, then use `rg` across the vault to find every
+  card repeating the claim, including other topics. Leave no contradictory
+  active card (SC-007).
+- Preserve `ID:` and the `## ID` heading. The package derives Anki GUIDs from
+  pedagogical IDs; changing an ID creates another phone note and leaves the
+  old one and its history behind. Preserve any legacy `<!--ID: …-->` comment;
+  never invent one.
+- If a correction changes the recall objective, register a proposal instead
+  of rewriting the same ID. State what should happen to the old card.
+- Propose changes to learner-authored (`apprenant` or `mixte`) content rather
+  than editing it. Accepted changes receive `mixte` provenance.
+- Increment the canonical reference's `revision`; keep `statut: redige`.
+- Write prose in English, preserving method names, compatibility identifiers
+  and technical terms. Use `$…$` or `$$…$$`, avoid trailing whitespace, and do
+  not put headings, tables or blockquotes inside card fields.
+- Record each distinct correction in the correction log of
+  `vault/01-Parcours/Suivi-pilote.md`: date, reference and revision, affected IDs,
+  error and source, correction, responsible agent and self-review status,
+  checks, and export status (`to republish with paquet-anki`). Do not rewrite
+  dated validation evidence.
 
-## 4. Propose enrichment
+## 4. Deepen answers (default mode)
 
-Look for useful gaps for a senior engineer:
+For each card, find what its recall objective still needs:
 
-- A missing family with a meaningful question here; justify inapplicable families
-  instead of filling every category.
-- A central concept not tested by any card.
-- A missing failure mode, industrial case or decision under constraints.
-- Missing or empty contract sections, a baseline and controlled variation (FR-033),
-  the distinction between scientific and implementation sources (FR-036), or an
-  undated version-dependent claim.
-- Career tracks A–F only when `poles` exists in the data model (T017); otherwise
-  record a proposal without implementing that metadata.
+- an implicit mechanism, explained derivation or constructed calculation;
+- an algorithm step, parameter effect or counterexample;
+- equation symbols, dimensions, units and assumptions.
 
-Present proposals without adding cards:
+Align the reference first, then the card. Every addition contributes sourced or
+explicitly constructed information. Label project calculations and protocols;
+claim an executed experiment only with evidence. Do not paraphrase existing
+paragraphs or pad an answer to reach the threshold. The expected answer remains
+sufficient for recall. Preserve a card that is already complete and say so in
+its report.
 
-| Proposal | Gap addressed | Family or section | Review cost | Intended primary source |
-| --- | --- | --- | --- | --- |
+## 5. Propose, obtain decisions and add
 
-Each added card is reviewed for months. Prefer a few valuable additions and state
-their review cost. After explicit user acceptance:
+Find gaps that matter to a senior engineer:
 
-1. Use the [template](references/format-carte.md), next available ID and
-   `Provenance: agent`. Check every central claim as in step 2.
-2. Link the reference to its new cards; expand it as needed and increment `revision`.
-3. Update current counts from the inventory in the vault home, topic index,
-   inventory, README, layout guide, Anki guide, export contract and batch header
-   of the progress log. Preserve dated results such as “47 notes recognized.”
-4. Record additions in the correction log like other changes.
+- an absent card family that has a useful objective for this subject;
+- a central reference concept not tested by any card;
+- a missing failure mode, industrial case or constrained decision;
+- an absent or shallow reference section, baseline and controlled variation
+  (FR-033), or distinction between scientific and implementation sources (FR-036).
 
-## 5. Verify
+Register each proposal with a stable ID in `docs/revues/propositions.md` using
+its format. Check for duplicates and do not repeat rejected proposals without
+new evidence. Prefer a few valuable proposals and state their review cost.
+
+At the end, present pending proposals in the scope, ordered by usefulness, and
+ask the learner to accept, reject or defer each. Record their decisions.
+
+For an accepted proposal (`ajouter` mode):
+
+1. Follow the [card template](references/format-carte.md), use the next free ID
+   from the inventory and `Provenance: agent`. Verify claims as in step 2 and
+   meet the answer-length threshold.
+2. Link the reference to its new cards and increment `revision`.
+3. Run `python3 scripts/sync_catalog.py`. Search for the old total in current
+   non-generated documents under `docs/`, `specs/`,
+   `vault/01-Parcours/Guide-Anki.md` and the batch heading of `Suivi-pilote.md`.
+   Update current-state counts, preserving dated experiment results.
+4. Mark the proposal completed with its new IDs and log the addition.
+
+## 6. Verify
 
 ```sh
 python3 scripts/check_vault.py
-python3 -m unittest discover -s tests
+python3 scripts/sync_catalog.py --check
+python3 scripts/learning_path.py
+uv run --no-project --with genanki==0.13.1 python -m unittest discover -s tests
+python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py vault
 python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py vault --compare <tmp>/before.json
 ```
 
-Require successful checks and matching inventory totals. The comparison must show
-no missing ID or changed Anki identity; only explicitly accepted additions may
-appear. Search for outdated current counts and review the complete scope diff.
+All checks must pass. Inventory totals must match the validator, without format,
+conversion or answer-length anomalies. Compare IDs and legacy identity comments:
+no removed ID, and additions only after approval. Review the complete scoped
+diff. Explain that corrected cards reach the phone through a new package and
+refer to `paquet-anki`.
 
-## 6. Report
+## 7. Report
 
-Use this structure:
-
-```markdown
-# Review — <topic> — <date>
-
-## Overview
-<cards audited; findings by severity; applied corrections; pending proposals>
-
-## Findings by card
-| Card | Accuracy | Relevance | Gradability | Consistency | Severity | Action |
-
-## Applied corrections
-<file, change, rationale and consulted source>
-
-## Proposed enrichments, pending acceptance
-<proposal table from step 4>
-
-## Sources
-<passages actually consulted; unverifiable sources and reasons>
-
-## Checks and limitations
-<commands and results; remaining export, AnkiDroid rendering, learner mastery
-and independent-validation checks>
-```
+Write one report per subject under
+`docs/revues/<YYYY-MM-DD>[-<purpose>]/<card-filename>.md`. For several subjects,
+write `00-cadrage.md` first and `00-bilan.md` last, following the
+[report conventions](references/rapports.md). Summarize findings by severity,
+corrections, pending decisions, checks and limitations in the conversation.

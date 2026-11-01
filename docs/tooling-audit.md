@@ -67,7 +67,27 @@ $speckit-constitution $speckit-specify $speckit-clarify $speckit-plan $speckit-c
 
 ## Local flashcards Review Skill
 
-`.agents/skills/revue-cartes/` is a project-specific skill, versioned with the repository. It audits a reference note and its flashcards on accuracy, relevance, correctness and consistency, then it applies the corrections and records each change in the tracking log. It proposes enrichments, which are applied only after agreement. Codex invokes it with `$revue-cartes`. Claude Code accesses it via the symbolic link `.claude/skills/revue-cartes` and invokes it with `/revue-cartes`. Its `scripts/inventaire_cartes.py` script lists the read-only flashcards and compares two inventories to verify that Anki IDs and identities are preserved. The skill does not replace either `scripts/check_vault.py` or a replay by the learner.
+`.agents/skills/revue-cartes/` is a project-specific skill versioned with the
+repository. Codex invokes it with `$revue-cartes`; Claude Code uses
+`/revue-cartes` through the `.claude/skills/revue-cartes` symlink.
+
+It has three modes:
+
+- `approfondir` (deepen), the learner-requested default: audit first, then
+  develop answers while preserving IDs, questions and expected answers except
+  for sourced corrections;
+- `audit`, on an explicit audit-only request: check accuracy, relevance,
+  gradability and consistency, then apply and log corrections;
+- `ajouter` (add): write cards whose proposals the learner has accepted.
+
+Proposals are tracked through a decision in `docs/revues/propositions.md`.
+Reports follow `.agents/skills/revue-cartes/references/rapports.md`.
+
+The read-only `scripts/inventaire_cartes.py` helper lists cards and their Anki
+GUIDs, flags answers below the 180-word threshold and syntax rejected by the
+package converter, and compares inventories for removed IDs or changed legacy
+plugin identity comments. It does not replace `scripts/check_vault.py` or a
+review by the learner.
 
 ## Context7: configuration and real use
 
