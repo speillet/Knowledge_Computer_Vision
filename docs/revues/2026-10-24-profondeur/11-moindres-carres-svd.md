@@ -1,41 +1,41 @@
-# Revue — Moindres carrés, SVD et conditionnement — 2026-10-24
+# Review –  Smaller squares, SVD and packaging –  2026-10-24
 
-## Synthèse
+## Overview
 
-9 cartes examinées pour leur pertinence et leur développement ; 5 réponses enrichies sur accord explicite de l’apprenant. Axe travaillé : blanchiment, perte de rang et distinction ajustement–identifiabilité. Aucun nouvel objectif ni ID. Les questions restent des rappels de mécanisme, de choix ou de diagnostic utiles en projet. Aucun doublon d’objectif justifiant un retrait dans ce sujet.
+9 flashcards examined for their relevance and development; 5 enriched responses on explicit agreement of the learner. Worked axis: whitening, loss of rank and distinction adjustment – identification. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
-Constat éditorial : mécanisme ou mise à l’épreuve trop peu développé dans les réponses modifiées, gravité mineure. Aucun nouveau contresens bloquant établi par la confrontation ciblée ; cela ne certifie pas toutes les affirmations du noyau antérieur.
+Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SVD-001 | Réponse conservée ; pas de nouvelle affirmation | raisonnement : distinguer résidu et identifiabilité | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Aucun écart éditorial retenu | Conserver : 184 mots lexicaux, déjà développée |
-| CV-SVD-002 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | comparaison : choisir QR ou équations normales | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 172 → 217 mots lexicaux |
-| CV-SVD-003 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | pratique : pondérer des résidus hétérogènes | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 133 → 213 mots lexicaux |
-| CV-SVD-004 | Protocole proposé sous hypothèses ; noyau antérieur conservé | diagnostic : distinguer outliers et rang déficient | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 173 → 220 mots lexicaux |
-| CV-SVD-005 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | algorithme : dérouler une estimation DLT | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 169 → 217 mots lexicaux |
-| CV-SVD-006 | Réponse conservée ; pas de nouvelle affirmation | raisonnement : relier normalisation et conditionnement de la DLT | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Aucun écart éditorial retenu | Conserver : 223 mots lexicaux, déjà développée |
-| CV-SVD-007 | Réponse conservée ; pas de nouvelle affirmation | comprehension : situer Gauss-Newton et Levenberg-Marquardt | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Aucun écart éditorial retenu | Conserver : 204 mots lexicaux, déjà développée |
-| CV-SVD-008 | Réponse conservée ; pas de nouvelle affirmation | pratique : régler l'échelle d'une perte robuste | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Aucun écart éditorial retenu | Conserver : 200 mots lexicaux, déjà développée |
-| CV-SVD-009 | Protocole proposé sous hypothèses ; noyau antérieur conservé | evaluation : interpréter une covariance d'estimation | Noyau fini et erreurs bloquantes conservés | Fiche r5, unités/hypothèses explicites | Mineure | Développer : 177 → 221 mots lexicaux |
+| CV-SVD-001 | Retained response; no new affirmation | Reasoning: distinguishing residual and identifiability | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | No editorial deviation retained | Keep: 184 lexical words, already developed |
+| CV-SVD-002 | Deduction or example built under assumptions; previous core retained | comparison: choose QR or normal equations | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 172 → 217 lexical words |
+| CV-SVD-003 | Deduction or example built under assumptions; previous core retained | Practice: weighting heterogeneous residuals | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 133 → 213 lexical words |
+| CV-SVD-004 | Proposed protocol under assumptions; previous core retained | Diagnosis: distinguish outliers and deficient rank | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 173 → 220 lexical words |
+| CV-SVD-005 | Deduction or example built under assumptions; previous core retained | algorithm: unroll a DLT estimate | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 169 → 217 lexical words |
+| CV-SVD-006 | Retained response; no new affirmation | reasoning: linking standardization and conditioning of the DLT | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | No editorial deviation retained | Keep: 223 lexical words, already developed |
+| CV-SVD-007 | Retained response; no new affirmation | understanding: locate Gauss-Newton and Levenberg-Marquardt | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | No editorial deviation retained | Keep: 204 lexical words, already developed |
+| CV-SVD-008 | Retained response; no new affirmation | Practical: Adjusting the Scale of a Robust Loss | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | No editorial deviation retained | Keep: 200 lexical words, already developed |
+| CV-SVD-009 | Proposed protocol under assumptions; previous core retained | evaluation: interpret an estimation covariance | Finished core and retained blocking errors | reference note r5, explicit units/assumptions | Minor | Develop: 177 → 221 lexical words |
 
-## Corrections appliquées
+## Corrections applied
 
-- [Réponses](../../../vault/10-mathematiques-estimation/11-moindres-carres-svd.md) : explications, exemples et vérifications développés, sans changer questions, objectifs, Source, tags ni identités. L’approfondissement reste facultatif pour réussir le rappel.
-- [Fiche](../../../vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md) : révision 5, deux cas guidés repris des cartes pour relier compréhension et contrôle ; statut `redige` conservé.
+- [Replies](../../../vault/10-mathematiques-estimation/11-moindres-carres-svd.md): explanations, examples and verifications developed, without changing questions, objectives, source, tags or identities. The further explanation remains optional to successfully recall.
+- [Reference note](../../../vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md): revision 5, two guided cases taken from flashcards to link understanding and check; status `redige` preserved.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout en attente pour cette passe : le développement des réponses existantes est explicitement demandé. Aucune nouvelle carte créée. Les approfondissements APP encore ouverts restent dans l’inventaire ; ils ne sont pas déclarés couverts ici.
+No pending additions for this pass: the development of existing answers is explicitly requested. No new flashcard created. The still open further study APPs remain in inventory; they are not declared covered here.
 
 ## Sources
 
-- [Ceres, Covariance Estimation](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) : Introduction, Rank of the Jacobian et Gauge Invariance, passage consulté le 2026-10-24. Il soutient le mécanisme de référence ; il ne fournit pas les résultats des scénarios construits du projet.
-- Vérifications de bibliothèques : OpenCV 4.13 via Context7 pour filtres/pyramides, features/matching, fisheye/hand-eye ; documentation primaire en complément. Les autres sujets utilisent les sources primaires précisées ci-dessus, sans prétendre à une couverture intégrale de Context7.
+- [Ceres, Covariance Estimation](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html): Introduction, Rank of the Jacobian and Gauge Invariance, passage consulted on 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
-## Contrôles et limites
+## Checks and limitations
 
-Voir les [preuves globales](00-bilan.md) pour les commandes exécutées et leurs résultats. La comparaison à `8c428b4` conserve IDs, objectifs, questions, Source et tags ; le contrôle de longueur utilise `re.findall(r"\w+", Reponse)`. Le nombre de mots est un garde-fou éditorial, sans garantie de mémorisation.
+See [Global Evidence](00-bilan.md) for executed commands and their results. Comparison to `8c428b4` retains IDs, objectives, questions, source and tags; the length check uses `re.findall(r"\w+", Reponse)`. The number of words is an editorial safeguard, with no guarantee of memorization.
 
-Confrontation documentaire ciblée et auto-revue pédagogique par agent Codex : les affirmations antérieures ne font pas toutes l’objet d’une nouvelle confirmation ligne à ligne. Les exemples analytiques sont déduits, les essais de diagnostic sont proposés ; aucune expérimentation image/vidéo ou validation indépendante n’est revendiquée. Rendu Obsidian/AnkiDroid et maîtrise de l’apprenant non vérifiés.
+Targeted documentary confrontation and educational self-review by agent Codex: not all previous statements are subject to a new confirmation line. Analytical examples are deduced, diagnostic tests are proposed; no image/video experimentation or independent validation is claimed. Rendered Obsidian/AnkiDroid and mastered the unverified learner.

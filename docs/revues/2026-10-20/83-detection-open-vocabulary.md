@@ -1,48 +1,47 @@
-# Revue — Détection open-vocabulary et grounding — 2026-10-20
+# Review –  Open-vocabulary detection and grounding –  2026-10-20
 
-## Synthèse
+## Overview
 
-3 cartes auditées. Pas de défaut scientifique dans les noyaux ; attribution et précision des sources corrigées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+3 flashcards audited. No scientific fault in kernels; attribution and accuracy of corrected sources. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 3 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 3 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-OPENVOC-001 | Confirmé après précision de source | séparer les sorties multimodales. | 55 mots à l’entrée ; Noyau fini, objectif conservé | Fiche et format contrôlés | mineur | Cibler la source |
-| CV-OPENVOC-002 | Raisonnement du projet explicité | choisir un système à catalogue évolutif. | 84 mots à l’entrée ; Critères finis ; cas non exécuté | Fiche et format contrôlés | mineur | Préciser attribution |
-| CV-OPENVOC-003 | Raisonnement du projet explicité | vérifier la spécificité du texte. | 45 mots à l’entrée ; Critères finis ; cas non exécuté | Fiche et format contrôlés | mineur | Préciser attribution |
+| CV-OPENVOC-001 | Confirmed after source accuracy | separate the multimodal outputs. | 55 words at the entrance; Finished core, objective retained | reference note and controlled format | Minor | Targeting the source |
+| CV-OPENVOC-002 | Detailed Project Reasoning | choose a system with a scalable catalog. | 84 words at entry; Criteria finished; case not executed | reference note and controlled format | Minor | Specify attribution |
+| CV-OPENVOC-003 | Detailed Project Reasoning | Check the specificity of the text. | 45 words at entry; Criteria finished; case not executed | reference note and controlled format | Minor | Specify attribution |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : OWL-ViT adapte le modèle image–texte à des sorties régionales ; Grounding DINO conditionne la sélection des requêtes et son décodeur par le texte.
-- Confirmé : classer l'image entière ne fournit pas à lui seul des localisations d'instances.
-- Les négatifs, seuils figés, rejets et coûts de maintenance sont des exigences de validation proposées par le projet. Aucun taux de généralisation ni garantie de calibration n'est déduit des articles.
-- Trois objectifs distincts : type de sortie, choix sous contrainte, diagnostic de confusion ; aucun doublon interne.
+- Confirmed: OWL-ViT adapts the image – text model to regional outputs; Grounding DINO conditions the selection of queries and its decoder by text.
+- Confirmed: classifying the entire image does not provide instance locations on its own.
+- Negatives, fixed thresholds, discharges and maintenance costs are validation requirements proposed by the project. No generalization rate or calibration guarantee is deducted from the items.
+- Three distinct objectives: type of output, choice under constraint, diagnosis of confusion; no internal duplicates.
 
-## Corrections appliquées
+## Corrections applied
 
-Sources des trois cartes ciblées, fiche révisée ; aucun objectif modifié.
+Sources of the three targeted flashcards, revised reference note; no targets modified.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, comprehension, evaluation, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, evaluation, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OWL-ViT, résumé et §§3.1–3.2](https://arxiv.org/abs/2205.06230).
-- [Grounding DINO, §§3.1–3.3](https://arxiv.org/abs/2303.05499).
+- [OWL-ViT, summary and §§3.1 – 3.2](https://arxiv.org/abs/2205.06230).
+- [Grounding DINO, §§3.1 – 3.3](https://arxiv.org/abs/2303.05499).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

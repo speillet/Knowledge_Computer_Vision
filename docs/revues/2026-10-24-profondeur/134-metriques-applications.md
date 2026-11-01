@@ -1,37 +1,37 @@
-# Revue — Métriques de segmentation, inspection et applications — 2026-10-24
+# Review –  Segmentation, inspection and application metrics –  2026-10-24
 
-## Synthèse
+## Overview
 
-4 cartes examinées pour leur pertinence et leur développement ; 4 réponses enrichies sur accord explicite de l’apprenant. Axe travaillé : topologie, surfaces physiques et références incertaines. Aucun nouvel objectif ni ID. Les questions restent des rappels de mécanisme, de choix ou de diagnostic utiles en projet. Aucun doublon d’objectif justifiant un retrait dans ce sujet.
+4 flashcards examined for their relevance and development; 4 enriched responses on explicit agreement of the learner. Focus: topology, physical surfaces and uncertain references. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
-Constat éditorial : mécanisme ou mise à l’épreuve trop peu développé dans les réponses modifiées, gravité mineure. Aucun nouveau contresens bloquant établi par la confrontation ciblée ; cela ne certifie pas toutes les affirmations du noyau antérieur.
+Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-METRIQUES-APPLIQUEES-001 | Protocole proposé sous hypothèses ; noyau antérieur conservé | comparaison : distinguer recouvrement et frontière | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 51 → 196 mots lexicaux |
-| CV-METRIQUES-APPLIQUEES-002 | Protocole proposé sous hypothèses ; noyau antérieur conservé | evaluation : mesurer les petits défauts | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 53 → 191 mots lexicaux |
-| CV-METRIQUES-APPLIQUEES-003 | Protocole proposé sous hypothèses ; noyau antérieur conservé | diagnostic : séparer calibration et métrologie | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 44 → 193 mots lexicaux |
-| CV-METRIQUES-APPLIQUEES-004 | Protocole proposé sous hypothèses ; noyau antérieur conservé | pratique : traiter les masques vides | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 48 → 192 mots lexicaux |
+| CV-METRIQUES-APPLIQUEES-001 | Proposed protocol under assumptions; previous core retained | Comparison: distinguish between overlap and border | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 51 → 196 lexical words |
+| CV-METRIQUES-APPLIQUEES-002 | Proposed protocol under assumptions; previous core retained | Evaluation: measuring small defects | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 53 → 191 lexical words |
+| CV-METRIQUES-APPLIQUEES-003 | Proposed protocol under assumptions; previous core retained | diagnosis: separating calibration and metrology | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 44 → 193 lexical words |
+| CV-METRIQUES-APPLIQUEES-004 | Proposed protocol under assumptions; previous core retained | Practice: Treating Empty Masks | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 48 → 192 lexical words |
 
-## Corrections appliquées
+## Corrections applied
 
-- [Réponses](../../../vault/130-evaluation-fiabilite/134-metriques-applications.md) : explications, exemples et vérifications développés, sans changer questions, objectifs, Source, tags ni identités. L’approfondissement reste facultatif pour réussir le rappel.
-- [Fiche](../../../vault/130-evaluation-fiabilite/references/134-metriques-applications.md) : révision 3, deux cas guidés repris des cartes pour relier compréhension et contrôle ; statut `redige` conservé.
+- [Replies](../../../vault/130-evaluation-fiabilite/134-metriques-applications.md): explanations, examples and verifications developed, without changing questions, objectives, source, tags or identities. The further explanation remains optional to successfully recall.
+- [Reference note](../../../vault/130-evaluation-fiabilite/references/134-metriques-applications.md): revision 3, two guided cases taken from flashcards to link understanding and check; status `redige` preserved.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout en attente pour cette passe : le développement des réponses existantes est explicitement demandé. Aucune nouvelle carte créée. Les approfondissements APP encore ouverts restent dans l’inventaire ; ils ne sont pas déclarés couverts ici.
+No pending additions for this pass: the development of existing answers is explicitly requested. No new flashcard created. The still open further study APPs remain in inventory; they are not declared covered here.
 
 ## Sources
 
-- [Reinke et al., Understanding metric-related pitfalls](https://arxiv.org/html/2302.01790v4) : P2.2–P2.4 : tailles, formes, références/prédictions vides, passage consulté le 2026-10-24. Il soutient le mécanisme de référence ; il ne fournit pas les résultats des scénarios construits du projet.
-- La page Nature et le miroir PMC étaient inaccessibles ; le manuscrit primaire arXiv a été lu en repli. NIST Gauge R&R, présentation des sources de variation, a aussi été ouvert.
-- Vérifications de bibliothèques : OpenCV 4.13 via Context7 pour filtres/pyramides, features/matching, fisheye/hand-eye ; documentation primaire en complément. Les autres sujets utilisent les sources primaires précisées ci-dessus, sans prétendre à une couverture intégrale de Context7.
+- [Reinke et al., Understanding metric-related pitfalls](https://arxiv.org/html/2302.01790v4): P2.2 – P2.4: empty sizes, shapes, references/predictions, check the 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- The Nature page and the PMC mirror were inaccessible; the primary manuscript arXiv was read backwards. NIST Gauge R&R, presentation of sources of variation, was also opened.
+- Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
-## Contrôles et limites
+## Checks and limitations
 
-Voir les [preuves globales](00-bilan.md) pour les commandes exécutées et leurs résultats. La comparaison à `8c428b4` conserve IDs, objectifs, questions, Source et tags ; le contrôle de longueur utilise `re.findall(r"\w+", Reponse)`. Le nombre de mots est un garde-fou éditorial, sans garantie de mémorisation.
+See [Global Evidence](00-bilan.md) for executed commands and their results. Comparison to `8c428b4` retains IDs, objectives, questions, source and tags; the length check uses `re.findall(r"\w+", Reponse)`. The number of words is an editorial safeguard, with no guarantee of memorization.
 
-Confrontation documentaire ciblée et auto-revue pédagogique par agent Codex : les affirmations antérieures ne font pas toutes l’objet d’une nouvelle confirmation ligne à ligne. Les exemples analytiques sont déduits, les essais de diagnostic sont proposés ; aucune expérimentation image/vidéo ou validation indépendante n’est revendiquée. Rendu Obsidian/AnkiDroid et maîtrise de l’apprenant non vérifiés.
+Targeted documentary confrontation and educational self-review by agent Codex: not all previous statements are subject to a new confirmation line. Analytical examples are deduced, diagnostic tests are proposed; no image/video experimentation or independent validation is claimed. Rendered Obsidian/AnkiDroid and mastered the unverified learner.

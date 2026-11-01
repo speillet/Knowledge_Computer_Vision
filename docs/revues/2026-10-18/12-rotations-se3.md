@@ -1,42 +1,42 @@
-# Revue — SO(3), SE(3) et conventions de transformation — 2026-10-18
+# Review –  SO(3), SE(3) and transformation conventions –  2026-10-18
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 2 importante, 2 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 2 large, 2 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SE3-001 | Confirmé : composition Eq.171 | composer avec des repères nommés. | Noyau fini ; 40 mots | Accord fiche et format | Important (source) | Source SE(3) |
-| CV-SE3-002 | Confirmé : inverse Eq.170 | inverser une pose rigide. | Noyau fini ; 44 mots | Accord fiche et format | Important (source) | Source SE(3) |
-| CV-SE3-003 | Confirmé sous convention local→global | distinguer perturbations locale et globale. | Noyau fini ; 48 mots | Accord fiche et format | Mineur | Sections II-E–II-H |
-| CV-SE3-004 | Confirmé : quatre choix de convention | contrôler un quaternion. | Noyau fini ; 46 mots | Accord fiche et format | Mineur | Section 3.1 |
+| CV-SE3-001 | Confirmed: composition Eq.171 | deal with named coordinate framess. | Finished core; 40 words | reference note and format | Important (source) | Source SE(3) |
+| CV-SE3-002 | Confirmed: reverse Eq.170 | Reverse a rigid pose. | Finished core; 44 words | reference note and format | Important (source) | Source SE(3) |
+| CV-SE3-003 | Confirmed under local convention→global | distinguish between local and global disturbances. | Finished core; 48 words | reference note and format | Minor | Sections II-E–II-H |
+| CV-SE3-004 | Confirmed: four convention choices | check a quaternion. | Finished core; 46 words | reference note and format | Minor | Section 3.1 |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : orthogonalité, déterminant positif, composition et inverse ; perturbations droite/gauche dans la convention énoncée ; dépendance des Jacobiennes au repère ; conventions quaternion. Le centre caméra est déduit en posant son point image 3D dans le repère caméra à zéro. Les tests de points connus et de composition sont des propositions du projet.
+Confirmed: orthogonality, positive determinant, composition, and inverse; right/left perturbations in the stated convention; dependence of Jacobians to coordinate frame; quaternion conventions. The camera center is deduced by placing its image point 3D in the coordinate frame camera to zero. The tests of known points and composition are proposals of the project.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 : préciser « orientation de la base ». Cartes 001–002 : remplacer la source sur les quaternions par les équations SE(3) appropriées ; 003–004 : cibler les passages. Questions, objectifs et identifiants conservés.
+reference note revision 2: specify "base orientation". flashcards 001 – 002: replace the source on the quaternions with the appropriate equations SE(3); 003 – 004: target the passages. Questions, objectives and identifiers retained.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Transporter une covariance par l’adjoint | Éviter un mélange de repères d’incertitude | Raisonnement ; une carte | 3 critères ; durée à mesurer | Solà et al., §II-H |
+| Transporting a covariance by the assistant | Avoid mixing coordinate frames with uncertainty | Reasoning; a flashcard | 3 criteria; duration to be measured | Solà et al., §II-H |
 
 ## Sources
 
-- [Solà et al., A micro Lie theory, annexe D-A, équations 170–171](https://arxiv.org/html/1812.01537v9#A4.SS1).
-- [Solà et al., A micro Lie theory, §§II-E–II-H](https://arxiv.org/html/1812.01537v9#S2.SS5).
-- [Solà, Quaternion kinematics, §3.1, équations 140–143](https://arxiv.org/pdf/1711.02508). Version HTML 1711.02508v6 inaccessible (404), PDF consulté.
+- [Solà et al., A micro Lie theory, appendix D-A, equations 170 – 171](https://arxiv.org/html/1812.01537v9#A4.SS1).
+- [Solà et al., A micro Lie theory, §§II-E – II-H](https://arxiv.org/html/1812.01537v9#S2.SS5).
+- [Solà, Quaternion kinematics, §3.1, equations 140 – 143](https://arxiv.org/pdf/1711.02508). HTML version 1711.02508v6 inaccessible (404), PDF consulted.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-30",
+  "type": "Local package and collection Anki disposable; no Android testing",
+  "paquet": {
+    "chemin": "dist/CV-Pilote.apkg",
+    "sha256": "081d51ef6970433833a2e8acd72177db02baf85f9916fd8275b174e2fa47c13c",
+    "genanki": "0.13.1",
+    "source": "3390852ebe2fa645b8586932b2bda3173b0a1cb2-modifie",
+    "notes": 282,
+    "cartes": 282,
+    "decks": 14,
+    "medias": [
+      "cv-sort-pipeline.svg"
+    ],
+    "modele": {
+      "nom": "CV-Pilote",
+      "id": 1153189853
+    }
+  },
+  "comparaison_au_manifeste_local_initial": {
+    "ajoutees": 0,
+    "modifiees": 282,
+    "retirees": 0,
+    "guid_conserves": 282
+  },
+  "simulation": {
+    "commande": "uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1 python scripts/simulate_anki_import.py",
+    "resultat": "OK",
+    "import_initial": 282,
+    "reimport_sans_modification": 282,
+    "mise_a_jour_contenu_appliquee": true,
+    "doublons": false,
+    "ids_notes_conserves": true,
+    "css_mis_a_jour": true,
+    "cartes_revisees_avec_historique_conserve": [
+      "CV-ACQUISITION-001",
+      "CV-ACQUISITION-002",
+      "CV-ACQUISITION-003"
+    ]
+  },
+  "publication": false,
+  "rendu_ankidroid_verifie": false
+}

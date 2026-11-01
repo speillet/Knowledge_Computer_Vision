@@ -1,42 +1,42 @@
-# Revue — Filtres, gradients et pyramides — 2026-10-18
+# Review –  Filters, gradients and pyramids –  2026-10-18
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 3 importante, 0 mineure, 1 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 3 large, 0 minor, 1 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FILTRES-001 | Confirmé : ordre/moyenne ; effet conditionnel | choisir un filtre d’après le bruit. | Noyau fini ; 55 mots | Accord fiche et format | Aucune | Conserver |
-| CV-FILTRES-002 | Confirmé par invariance du ratio ΔI/σ | régler un bilatéral dans les bonnes unités. | Noyau fini ; 57 mots | Accord fiche et format | Important | Conversion explicite |
-| CV-FILTRES-003 | Protocole aval déduit ; pas résultat OpenCV | protéger un détail métier. | Noyau fini ; 44 mots | Accord fiche et format | Important (source) | Attribution corrigée |
-| CV-FILTRES-004 | Confirmé : filtrage puis décimation | expliquer une pyramide. | Noyau fini ; 47 mots | Accord fiche et format | Important (source) | Source pyramide |
+| CV-FILTRES-001 | Confirmed: order/average; conditional effect | Choose a filter based on the noise. | Finished core; 55 words | reference note and format | None | Keep |
+| CV-FILTRES-002 | Confirmed by invariance of the ratio ΔI/σ | settle a bilateral in the right units. | Finished core; 57 words | reference note and format | Important | Conversion explicite |
+| CV-FILTRES-003 | Downstream protocol deduced; not result OpenCV | Protect a business detail. | Finished core; 44 words | reference note and format | Important (source) | Corrected Attribution |
+| CV-FILTRES-004 | Confirmed: filtering and decimation | Explain a pyramid. | Finished core; 47 words | reference note and format | Important (source) | Source pyramide |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : moyenne gaussienne, statistique médiane, bilatéral non linéaire, normalisation du poids, décimation filtrée. Déduction vérifiable : diviser intensités et sigma par 255 conserve le quotient dans l’exponentielle. Choix de métrique métier, pipeline et baseline : propositions du projet. Le coût du bilatéral naïf se déduit des visites du support ; aucune mesure de temps.
+Confirmed: Gaussian mean, median statistic, nonlinear bilateral, weight normalization, filtered decimation. Verifiable deduction: dividing intensities and sigma by 255 retains the quotient in the exponential. Choice of business metrics, pipeline and baseline: project proposals. The cost of the naive bilateral is deduced from the visits of the support; no measurement of time.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 : cas scalaire/gaussien et conversion. Carte 002 : réponse numérique évaluable. Sources par objet pour 003–004 ; IDs préservés.
+reference note revision 2: scalar/gaussian case and conversion. flashcard 002: evaluable numerical response. Sources per object for 003 – 004; preserved IDs.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Choisir une échelle de dérivée | Relier lissage, bruit et localisation d’un contour | Raisonnement ; une carte | 3 critères ; durée à mesurer | Canny 1986 ; étude d’une marche bruitée |
+| Choose a derivative scale | Linking smoothing, noise and contour location | Reasoning; a flashcard | 3 criteria; duration to be measured | Canny 1986; study of a noisy walk |
 
 ## Sources
 
 - [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html).
-- [Tomasi et Manduchi 1998, Bilateral Filtering, §§2–3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf) : poids spatiaux et photométriques et cas gaussien.
+- [Tomasi and Manduchi 1998, Bilateral Filtering, §§2 – 3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf): space and photometric weights and Gaussian case.
 - [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

@@ -1,123 +1,90 @@
-# Revue — SO(3), SE(3) et conventions de transformation — 2026-10-23
+# Review –  SO(3), SE(3) and transformation conventions –  2026-10-23
 
-## Synthèse
+## Overview
 
-Quatre cartes auditées, plus leur fiche. Aucune affirmation fausse. Il y a
-trois constats importants de corrigibilité ou de pertinence et un constat
-mineur de notation dans la fiche. Les corrections sont appliquées : fiche en
-révision 3, IDs et objectifs inchangés. Trois nouvelles cartes et un
-complément ont été proposés ; deux cartes ont été acceptées et rédigées en
-révision 4. Le sujet passe de 4 à 6 cartes.
+Four flashcards audited, plus their reference note. No false claims. There are three important findings of correctability or relevance and one minor rating finding in the reference note. Corrections are applied: reference note in revision 3, IDs and objectives unchanged. Three new flashcards and a supplement were proposed; two flashcards were accepted and drafted for revision 4. The subject goes from 4 to 6 flashcards.
 
-Les cartes étaient justes mais trop faciles pour le profil visé. L'une se
-résolvait par substitution d'indices au recto. Une autre admettait des
-réponses valides hors du noyau. La dernière était une question fermée.
+The flashcards were fair but too easy for the intended profile. One was solved by substituting clues on the front. Another admitted valid answers out of the kernel. The last one was a closed question.
 
-Auto-revue : Agent Claude Code (`revue-cartes`). Statut éditorial `redige`.
+Self-review: Agent Claude Code (`revue-cartes`). Editorial status `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SE3-001 | Confirmé (Solà, éq. 171) | Faible : composition livrée par les indices | Recto qui révèle la réponse | `p_a` hors math | Important | Scénario de pose relative SLAM ; formule de composition ; variante OpenCV |
-| CV-SE3-002 | Confirmé (Solà, éq. 170) ; calcul refait | Forte : confusion fréquente avec `tvec` | Noyau net | Accord fiche | Aucun | Enrichissement proposé |
-| CV-SE3-003 | Confirmé (Solà, §II-E) | Forte | La question admet d'autres causes, comme la paramétrisation | Famille comparaison sans choix | Important | Conditions au recto ; adjoint ; critère de choix |
-| CV-SE3-004 | Confirmé (Solà, Quaternion kinematics, §3.1, éq. 140–143) | Forte | Question oui/non qui suggère « non » | Accord fiche | Important | Scénario, test discriminant, exemples Eigen et SciPy |
+| CV-SE3-001 | Confirmed (Solà, eq. 171) | Low: composition delivered by indices | Front that reveals the answer | `p_a` hors math | Important | Scenario of pose relative SLAM; composition formula; variant OpenCV |
+| CV-SE3-002 | Confirmed (Solà, eq. 170); calculation redone | Strong: frequent confusion with `tvec` | Net Core | Agreement reference note | None | Proposed Enrichment |
+| CV-SE3-003 | Confirmed (Solà, §II-E) | Forte | The question admits of other causes, such as parameterization | Family comparison without choice | Important | Conditions on the front; assistant; criterion of choice |
+| CV-SE3-004 | Confirmed (Solà, Quaternion kinematics, §3.1, eq. 140 – 143) | Forte | Yes/no question that suggests “no” | Agreement reference note | Important | Scenario, discriminating test, examples Eigen and SciPy |
 
-Fiche : notation $\operatorname{Exp}([\delta\theta]_\times)$ incorrecte, car
-Solà réserve `Exp` aux vecteurs et `exp` à l'algèbre de Lie (mineur).
+reference note: notation $\operatorname{Exp}([\delta\theta]_\times)$ incorrect, because Sol to reserve `Exp` to vectors and `exp` to Lie algebra (minor).
 
-## Corrections appliquées
+## Corrections applied
 
-- `vault/10-mathematiques-estimation/references/12-rotations-se3.md`,
-  révision 3 :
-  - formule de composition et pose relative ;
-  - notation Exp corrigée ;
-  - adjoint et transformation des jacobiennes ;
-  - quatre choix de convention des quaternions ;
-  - ordres Eigen et SciPy datés ;
-  - double couverture ;
-  - sources précisées par équation.
-- `vault/10-mathematiques-estimation/12-rotations-se3.md` : CV-SE3-001, 003
-  et 004 réécrites sans changer d'objectif.
-- Journal de correction : une ligne par erreur distincte.
+- `vault/10-mathematiques-estimation/references/12-rotations-se3.md`, revision 3:
+  - composition formula and relative pose;
+  - Corrected Exp notation;
+  - assistant and transformation of the Jacobians;
+  - Four choice of quaternions convention;
+  - Eigen and SciPy orders dated;
+  - double coverage;
+  - Sources specified by equation.
+- `vault/10-mathematiques-estimation/12-rotations-se3.md`: CV-SE3-001, 003 and 004 rewritten without changing the objectivees.
+- Correction log: one line per separate error.
 
-Aucune autre carte du vault ne traite quaternions, perturbations ou
-composition de poses : pas d'autre carte à aligner.
+No other flashcard of the vault deals with quaternions, perturbations or composition of poses: no other flashcard to align.
 
-## Enrichissements : décision de l'apprenant
+## Enrichments: decision of the learner
 
-Les ajouts suivants ont été acceptés le 2026-10-23 et rédigés en révision 4 :
+The following additions were accepted on 2026-10-23 and drafted in revision 4:
 
-- **CV-SE3-005**, la métrique géodésique, proposée comme « CV-SE3-005 » ;
-- **CV-SE3-006**, les conventions d'axes caméra, proposée comme
-  « CV-SE3-007 ». Elle prend le prochain ID libre : il n'y a pas de trou
-  de numérotation.
+- **CV-SE3-005**, the geodetic metric, proposed as "CV-SE3-005";
+- **CV-SE3-006**, the camera axis conventions, proposed as "CV-SE3-007". It takes the next free ID: there is no numbering hole.
 
-La fiche reçoit seulement ce que ces deux cartes exigent : métrique,
-variation contrôlée « Euler ou géodésique » et conventions d'axes.
+The reference note receives only what these two flashcards require: metric, Euler or geodesic controlled variation and axis conventions.
 
-Non retenus : la projection sur SO(3) et l'enrichissement de CV-SE3-002.
-Ils restent possibles plus tard, avec les sources déjà vérifiées ci-dessous.
+Not retained: projection on SO(3) and enrichment of CV-SE3-002. They remain possible later, with the sources already verified below.
 
-Le total passe de 238 à 240 cartes. Contrôles après ajouts :
+The total goes from 238 to 240 flashcards. Checks after additions:
 
-- `check_vault.py` OK, 240 cartes ;
-- 34 tests réussis ;
-- catalogue régénéré puis à jour ;
-- l'inventaire ne montre que les IDs ajoutés.
+- `check_vault.py` OK, 240 flashcards;
+- 34 successful tests;
+- catalogue regenerated and updated;
+- The inventory shows only the added IDs.
 
-Table des propositions telle que soumise :
+Table of proposals as submitted:
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| CV-SE3-002 : lien avec `rvec`/`tvec` de `solvePnP` et exemple chiffré : $R=R_z(90°)$, $t=(1,0,0)$ donne $C=(0,1,0)\neq-t$ | Carte juste mais abstraite ; c'est l'erreur la plus courante en projet | approfondissement seul | aucun nouveau rappel | OpenCV 4.13.0, `calib3d.hpp`, l. 1031–1032 ; calcul du projet |
-| CV-SE3-005 : erreur angulaire géodésique $\theta=\arccos\frac{\operatorname{tr}(R_1^TR_2)-1}{2}$ ; pièges des angles d'Euler et de $q/-q$ | Aucune métrique de rotation dans le vault, alors que pose, SLAM et calibration en rapportent | evaluation | 1 carte ; noyau à 3 points | Solà et al., annexe B-A ; calcul du projet |
-| CV-SE3-006 : rotation la plus proche d'une matrice bruitée par SVD, avec correction du déterminant | Sortie de Zhang, DLT ou Umeyama non orthonormée ; risque de réflexion | algorithme | 1 carte ; noyau à 3 points | Zhang 1998, annexe C ; Eigen `Umeyama.h` au commit 4529102e, l. 128–139, qui suit Umeyama 1991, éq. 39–40 |
-| CV-SE3-007 : conventions d'axes caméra OpenCV, OpenGL et ROS ; passage OpenCV→OpenGL par $\mathrm{diag}(1,-1,-1)$ | Aucune carte sur la source de bug d'intégration la plus fréquente entre vision, rendu et robotique | diagnostic | 1 carte ; noyau à 3 points | REP 103 au commit 6fbda48 ; Khronos `gluLookAt` ; OpenCV 4.13.0 `calib3d.hpp`, modèle sténopé |
-| Fiche : sections métrique de rotation, projection sur SO(3) et conventions d'axes ; variation contrôlée « Euler ou géodésique » (FR-033) | Rubriques Évaluation et Échecs minces | fiche | sans carte | mêmes sources |
+| CV-SE3-002: link to `rvec`/`tvec` from `solvePnP` and numerical example: $R=R_z(90°)$, $t=(1,0,0)$ gives $C=(0,1,0)\neq-t$ | flashcard just but abstract; this is the most common error in project | further explanation alone | No new reminders | OpenCV 4.13.0, `calib3d.hpp`, l. 1031 – 1032; calculation of the project |
+| CV-SE3-005: geodetic angular error $\theta=\arccos\frac{\operatorname{tr}(R_1^TR_2)-1}{2}$; Euler and $q/-q$ angle traps | No rotation metric in the vault, while pose, SLAM and calibration report it | evaluation | 1 flashcard; core at 3 points | Solà et al., Annex B-A; calculation of the project |
+| CV-SE3-006: rotation closest to a matrix noisy by SVD, with correction of the determinant | Exit of Zhang, DLT or Umeyama not orthonormal; risk of reflection | algorithm | 1 flashcard; core at 3 points | Zhang 1998, Appendix C; Eigen `Umeyama.h` to commit 4529102e, l. 128 – 139, which follows Umeyama 1991, eq. 39 – 40 |
+| CV-SE3-007: camera axis conventions OpenCV, OpenGL and ROS; passage OpenCV→OpenGL by $\mathrm{diag}(1,-1,-1)$ | No flashcard on the most common integration bug source between vision, rendering and robotics | diagnosis | 1 flashcard; core at 3 points | REP 103 to commit 6fbda48; Khronos `gluLookAt`; OpenCV 4.13.0 `calib3d.hpp`, pinhole model |
+| reference note: metric rotation sections, projection on SO(3) and axis conventions; controlled variation "Euler or geodesic" (FR-033) | Sections Evaluation and Thin Failures | reference note | without flashcard | The same sources |
 
-Calculs déjà exécutés, hors dépôt (NumPy 2.2.6, SciPy 1.13.1), cas
-construits :
+Calculations already executed, excluding deposit (NumPy 2.2.6, SciPy 1.13.1), built cases:
 
-- ZYX $(30°, 89{,}9°, 0°)$ contre $(0°, 89{,}9°, -30°)$ : 30° d'écart sur
-  deux angles d'Euler, 0,052° d'écart géodésique.
-- $q$ et $-q$ : distance euclidienne 2, angle 0.
-- Matrice proche d'une réflexion : $\det(UV^T)=-1$ ; après correction,
-  $\det=+1$.
-- $\mathrm{diag}(1,-1,-1)$ a un déterminant $+1$ et envoie le point OpenCV
-  $(0,0,5)$, devant la caméra, sur $(0,0,-5)$, devant la caméra OpenGL.
+- ZYX $(30°, 89{,}9°, 0°)$ vs. $(0°, 89{,}9°, -30°)$: 30° deviation on two Euler angles, 0,052° geodesic deviation.
+- $q$ and $-q$: Euclidean distance 2, angle 0.
+- Matrix close to a reflection: $\det(UV^T)=-1$; after correction, $\det=+1$.
+- $\mathrm{diag}(1,-1,-1)$ has a determinant $+1$ and sends the point OpenCV $(0,0,5)$, in front of the camera, to $(0,0,-5)$, in front of the OpenGL camera.
 
 ## Sources
 
-- [Solà, Deray et Atchuthan, A micro Lie theory, v9](https://arxiv.org/html/1812.01537v9) :
-  §II-E, éq. 25–28 ; §II-F, éq. 29–32 ; annexe B : double couverture, Log
-  (éq. 135) et angle par la trace, $\mathrm{Ad}_R=R$ (éq. 139) ; annexe D-A,
-  éq. 170–171.
-- [Solà, Quaternion kinematics for the error-state Kalman filter](https://arxiv.org/abs/1711.02508),
-  lu en HTML sur ar5iv : §3.1, éq. 140–143, table 2, et Eigen classé Hamilton.
-- [Eigen 5.0.1-dev, Quaternion](https://libeigen.gitlab.io/eigen/docs-nightly/classEigen_1_1Quaternion.html) :
-  avertissement sur l'ordre du constructeur et du stockage.
-- [SciPy 1.18.0, Rotation.from_quat](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.from_quat.html) :
-  ordre scalaire en dernier par défaut, paramètre `scalar_first`.
-- Pour les propositions :
-  - [Zhang 1998, annexe C](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf) :
-    $R=UV^T$ sous la seule contrainte d'orthogonalité ;
+- [Solà, Deray and Atchuthan, A micro Lie theory, v9](https://arxiv.org/html/1812.01537v9): §II-E, eq. 25 – 28; §II-F, eq. 29 – 32; Appendix B: Double Coverage, Log (eq. 135) and angle by trace, $\mathrm{Ad}_R=R$ (eq. 139); Annex D-A, Eq. 170 – 171.
+- [Solà, Quaternion kinetics for the error-state Kalman filter](https://arxiv.org/abs/1711.02508), read in HTML on ar5iv: §3.1, eq. 140 – 143, table 2, and Eigen classified Hamilton.
+- [Eigen 5.0.1-dev, Quaternion](https://libeigen.gitlab.io/eigen/docs-nightly/classEigen_1_1Quaternion.html): warning on manufacturer and storage order.
+- [SciPy 1.18.0, Rotation.from_quat](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.from_quat.html): Last scalar order by default, parameter `scalar_first`.
+- For proposals:
+  - [Zhang 1998, annexe C](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf): $R=UV^T$ under the sole constraint of orthogonality;
   - [Eigen `Umeyama.h`, commit 4529102e](https://gitlab.com/libeigen/eigen/-/blob/4529102e6d5c62be44d61d3215504eb581e18157/Eigen/src/Geometry/Umeyama.h#L128-139) ;
-  - [REP 103, commit 6fbda48](https://github.com/ros-infrastructure/rep/blob/6fbda48350825b28aec74609b29c7ee18c8e619a/rep-0103.rst) :
-    axes du corps, repère `_optical` et angles d'Euler déconseillés ;
+  - [REP 103, commit 6fbda48](https://github.com/ros-infrastructure/rep/blob/6fbda48350825b28aec74609b29c7ee18c8e619a/rep-0103.rst): body axes, coordinate frame `_optical` and Euler angles not recommended;
   - [Khronos, gluLookAt](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml) ;
   - [OpenCV 4.13.0, `calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp#L1031-L1032).
-- Non vérifiables :
-  - la page HTML de documentation OpenCV et la page ros.org de REP 103
-    bloquent les accès automatisés ; les sources équivalentes au tag ou au
-    commit ont été lues ;
-  - l'article d'Umeyama 1991 est payant : seule sa reprise par Eigen a été
-    lue.
+- Non-Verifiable:
+  - The HTML documentation page OpenCV and the ros.org page of REP 103 block automated access; sources equivalent to the tag or commit have been read;
+  - Umeyama 1991's article is paid: only its reprise by Eigen has been read.
 
-## Contrôles et limites
+## Checks and limitations
 
-`check_vault.py` OK (125 Markdown, 52 fiches, 238 cartes) après corrections.
-Les contrôles complets du passage sont consignés à la fin du sujet, dans le
-suivi. Context7 n'est pas disponible dans cette session. Non vérifiés :
-export Anki, rendu Obsidian et AnkiDroid, maîtrise, validation indépendante.
+`check_vault.py` OK (125 Markdown, 52 reference notes, 238 flashcards) after corrections. The complete controls of the passage are recorded at the end of the subject, in the follow-up. Context7 is not available in this session. Not verified: export Anki, rendering Obsidian and AnkiDroid, mastering, independent validation.

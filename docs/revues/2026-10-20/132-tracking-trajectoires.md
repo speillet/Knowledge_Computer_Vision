@@ -1,54 +1,53 @@
-# Revue — Évaluer identités, trajectoires et localisation 3D — 2026-10-20
+# Review –  Evaluate identities, trajectories and location 3D –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. Source directe de RPE et notations ajoutées ; sources des cinq cartes ciblées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. Direct source of RPE and added ratings; sources of the five targeted flashcards. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 4 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 4 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-METRIQUES-TEMPS-001 | Déduction de protocole confirmée | séparer détection et identité. | 44 mots à l’entrée ; Contre-exemple précis | Fiche et format contrôlés | mineur | Cibler source |
-| CV-METRIQUES-TEMPS-002 | Confirmé | respecter l’agrégation HOTA. | 49 mots à l’entrée ; Agrégation finie | Fiche et format contrôlés | mineur | Cibler HOTA |
-| CV-METRIQUES-TEMPS-003 | Confirmé | choisir un alignement de trajectoire. | 55 mots à l’entrée ; Une liberté de jauge identifiée | Fiche et format contrôlés | mineur | Cibler tableau I |
-| CV-METRIQUES-TEMPS-004 | Confirmé avec source ajoutée | distinguer ATE et RPE. | 45 mots à l’entrée ; Distinction des mesures finie | Fiche et format contrôlés | important | Ajouter Sturm |
-| CV-METRIQUES-TEMPS-005 | Diagnostic du projet | comparer des évaluateurs temporels. | 45 mots à l’entrée ; Liste de paramètres finie | Fiche et format contrôlés | mineur | Attribuer le cas |
+| CV-METRIQUES-TEMPS-001 | Deduction of confirmed protocol | Separate detection and identity. | 44 words at the entrance; precise counter-example | reference note and controlled format | Minor | Cibler source |
+| CV-METRIQUES-TEMPS-002 | Confirmed | Comply with the HOTA aggregation. | 49 words at entry; Aggregation finished | reference note and controlled format | Minor | Cibler HOTA |
+| CV-METRIQUES-TEMPS-003 | Confirmed | choose a trajectory alignment. | 55 words at the entrance; A gauge freedom identified | reference note and controlled format | Minor | Target Table I |
+| CV-METRIQUES-TEMPS-004 | Confirmed with source added | distinguish ATE and RPE. | 45 words at entry; Distinction of finite measurements | reference note and controlled format | important | Ajouter Sturm |
+| CV-METRIQUES-TEMPS-005 | Diagnosis of the project | Comparing temporal evaluators. | 45 words at input; Finished parameter list | reference note and controlled format | Minor | Assign the case |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : MOTA agrège FN/FP/IDSW ; IDF1 repose sur des correspondances d'identités (HOTA §4, équations 2/6).
-- Confirmé : HOTA §5 calcule la moyenne des scores par seuil, approximant une intégrale, avec α de 0,05 à 0,95 ; la racine du produit est calculée avant cette moyenne.
-- Confirmé : Zhang–Scaramuzza tableau I distingue similitude monoculaire, transformation rigide stéréo et transformation à yaw seul pour inertiel. L'alignement ne doit pas absorber un défaut observable.
-- Confirmé avec source ajoutée : RPE de Sturm équation 1 correspond au produit relatif de la fiche ; ATE est évaluée après alignement. La RE par sous-trajectoires présentée par Zhang n'est pas une convention RPE universelle.
-- Les unités supposent des poses métriques ; conversion d'angle et intervalle doivent être spécifiés.
-- Permutation d'IDs et diagnostic d'écart entre outils : déductions du projet, aucun score de benchmark calculé.
+- Confirmed: MOTA aggregates FN/FP/IDSW; IDF1 is based on identity matches (HOTA §4, equations 2/6).
+- Confirmed: HOTA §5 calculates the average of the scores by threshold, approximating an integral, with α from 0,05 to 0,95; the root of the product is calculated before this average.
+- Confirmed: Zhang – Scaramuzza Table I distinguishes monocular similarity, stereo rigid transformation and single yaw transformation for inertial. The alignment must not absorb an observable defect.
+- Confirmed with added source: Sturm's RPE equation 1 corresponds to the relative product of the reference note; ATE is evaluated after alignment. The RE by subtrajectories presented by Zhang is not a universal RPE convention.
+- Units assume poses metrics; angle and interval conversion must be specified.
+- ID switching and tool gap diagnosis: Project deductions, no benchmark score calculated.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée et bibliographie complétée ; sources des cartes adaptées.
+Revised reference note and completed bibliography; sources of adapted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Calculer l’effet d’un ID switch sur IDF1 | La distinction de métriques reste qualitative | raisonnement | 1 carte sur une courte séquence | Définition IDF1 et HOTA §4 |
+| Calculate the effect of an ID switch on IDF1 | The distinction of metrics remains qualitative. | reasoning | 1 flashcard in a short sequence | Definition IDF1 and HOTA §4 |
 
-Familles absentes : algorithme, comprehension, conception, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [HOTA, §4 équations 2/6, §5 agrégation](https://arxiv.org/abs/2009.07736).
-- [Zhang–Scaramuzza, §III/tableau I, §IV/tableau II](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
-- [Sturm et al., §VII-A/B équations 1–4](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf).
-- [nuScenes, Metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), contrôlé dans la revue 84.
+- [HOTA, §4 equations 2/6, §5 aggregation](https://arxiv.org/abs/2009.07736).
+- [Zhang – Scaramuzza, §III/table I, §IV/table II](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf).
+- [Sturm et al., §VII-A/B equations 1 – 4](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf).
+- [nuScenes, Metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), checked in the journal 84.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

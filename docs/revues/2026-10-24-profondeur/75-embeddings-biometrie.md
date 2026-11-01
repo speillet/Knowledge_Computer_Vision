@@ -1,35 +1,35 @@
-# Revue — Reconnaissance biométrique, ArcFace et PAD — 2026-10-24
+# Review –  Biometric recognition, ArcFace and PAD –  2026-10-24
 
-## Synthèse
+## Overview
 
-2 cartes examinées pour leur pertinence et leur développement ; 2 réponses enrichies sur accord explicite de l’apprenant. Axe travaillé : vérification, identification et point d’exploitation. Aucun nouvel objectif ni ID. Les questions restent des rappels de mécanisme, de choix ou de diagnostic utiles en projet. Aucun doublon d’objectif justifiant un retrait dans ce sujet.
+2 flashcards examined for their relevance and development; 2 enriched responses on explicit agreement of the learner. Axis worked: verification, identification and point of exploitation. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
-Constat éditorial : mécanisme ou mise à l’épreuve trop peu développé dans les réponses modifiées, gravité mineure. Aucun nouveau contresens bloquant établi par la confrontation ciblée ; cela ne certifie pas toutes les affirmations du noyau antérieur.
+Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-BIOMETRIE-001 | Protocole proposé sous hypothèses ; noyau antérieur conservé | comparaison : distinguer identité et présentation | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 45 → 186 mots lexicaux |
-| CV-BIOMETRIE-002 | Protocole proposé sous hypothèses ; noyau antérieur conservé | evaluation : choisir un point d’exploitation | Noyau fini et erreurs bloquantes conservés | Fiche r3, unités/hypothèses explicites | Mineure | Développer : 47 → 186 mots lexicaux |
+| CV-BIOMETRIE-001 | Proposed protocol under assumptions; previous core retained | Comparison: distinguishing identity and presentation | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 45 → 186 lexical words |
+| CV-BIOMETRIE-002 | Proposed protocol under assumptions; previous core retained | evaluation: choose an operating point | Finished core and retained blocking errors | reference note r3, explicit units/assumptions | Minor | Develop: 47 → 186 lexical words |
 
-## Corrections appliquées
+## Corrections applied
 
-- [Réponses](../../../vault/70-reconnaissance-representations/75-embeddings-biometrie.md) : explications, exemples et vérifications développés, sans changer questions, objectifs, Source, tags ni identités. L’approfondissement reste facultatif pour réussir le rappel.
-- [Fiche](../../../vault/70-reconnaissance-representations/references/75-embeddings-biometrie.md) : révision 3, deux cas guidés repris des cartes pour relier compréhension et contrôle ; statut `redige` conservé.
+- [Replies](../../../vault/70-reconnaissance-representations/75-embeddings-biometrie.md): explanations, examples and verifications developed, without changing questions, objectives, source, tags or identities. The further explanation remains optional to successfully recall.
+- [Reference note](../../../vault/70-reconnaissance-representations/references/75-embeddings-biometrie.md): revision 3, two guided cases taken from flashcards to link understanding and check; status `redige` preserved.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout en attente pour cette passe : le développement des réponses existantes est explicitement demandé. Aucune nouvelle carte créée. Les approfondissements APP encore ouverts restent dans l’inventaire ; ils ne sont pas déclarés couverts ici.
+No pending additions for this pass: the development of existing answers is explicitly requested. No new flashcard created. The still open further study APPs remain in inventory; they are not declared covered here.
 
 ## Sources
 
-- [NIST, FRTE 1:1 Verification](https://pages.nist.gov/frvt/html/frvt11.html) : présentation de l’évaluation vérification et erreurs, passage consulté le 2026-10-24. Il soutient le mécanisme de référence ; il ne fournit pas les résultats des scénarios construits du projet.
-- ArcFace et le rapport NIST FATE Part 10 PAD ont aussi été ouverts au niveau résumé. Aucun classement ni résultat de déploiement n’est repris.
-- Vérifications de bibliothèques : OpenCV 4.13 via Context7 pour filtres/pyramides, features/matching, fisheye/hand-eye ; documentation primaire en complément. Les autres sujets utilisent les sources primaires précisées ci-dessus, sans prétendre à une couverture intégrale de Context7.
+- [NIST, FRTE 1:1 Verification](https://pages.nist.gov/frvt/html/frvt11.html): presentation of the evaluation check and errors, check the 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- ArcFace and the NIST FATE Part 10 PAD report were also opened at the summary level. No ranking or deployment results are included.
+- Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
-## Contrôles et limites
+## Checks and limitations
 
-Voir les [preuves globales](00-bilan.md) pour les commandes exécutées et leurs résultats. La comparaison à `8c428b4` conserve IDs, objectifs, questions, Source et tags ; le contrôle de longueur utilise `re.findall(r"\w+", Reponse)`. Le nombre de mots est un garde-fou éditorial, sans garantie de mémorisation.
+See [Global Evidence](00-bilan.md) for executed commands and their results. Comparison to `8c428b4` retains IDs, objectives, questions, source and tags; the length check uses `re.findall(r"\w+", Reponse)`. The number of words is an editorial safeguard, with no guarantee of memorization.
 
-Confrontation documentaire ciblée et auto-revue pédagogique par agent Codex : les affirmations antérieures ne font pas toutes l’objet d’une nouvelle confirmation ligne à ligne. Les exemples analytiques sont déduits, les essais de diagnostic sont proposés ; aucune expérimentation image/vidéo ou validation indépendante n’est revendiquée. Rendu Obsidian/AnkiDroid et maîtrise de l’apprenant non vérifiés.
+Targeted documentary confrontation and educational self-review by agent Codex: not all previous statements are subject to a new confirmation line. Analytical examples are deduced, diagnostic tests are proposed; no image/video experimentation or independent validation is claimed. Rendered Obsidian/AnkiDroid and mastered the unverified learner.

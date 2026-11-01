@@ -1,0 +1,23 @@
+{
+  "cartes_enrichies": 282,
+  "fiches_alignees": 60,
+  "thematiques": 14,
+  "mots_avant": {
+    "min": 180,
+    "mediane": 200.5,
+    "max": 329
+  },
+  "mots_apres": {
+    "min": 284,
+    "mediane": 311.5,
+    "max": 439
+  },
+  "identites_guid_conservees": 282,
+  "modele": {
+    "nom": "CV-Pilote",
+    "id": 1153189853
+  },
+  "nouveaux_ids": 0,
+  "ids_retires": 0,
+  "approfondissements_backlog_restants": 119
+}

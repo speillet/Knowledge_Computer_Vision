@@ -1,53 +1,52 @@
-# Revue — Représentations visuelles, ViT, Swin, ConvNeXt et DINOv2 — 2026-10-20
+# Review –  Visual representations, ViT, Swin, ConvNeXt and DINOv2 –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. 0 bloquant ; 1 important (source manquante) ; 2 mineurs.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. 0 blocking; 1 important (missing source); 2 minor. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 2 mineure, 2 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 2 minor, 2 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-REPRESENTATIONS-001 | Confirmé : N×4 et terme image×16 | estimer le coût des tokens. | 39 mots à l’entrée ; token de classe exclu | Fiche et format contrôlés | Mineur | Recto précisé |
-| CV-REPRESENTATIONS-002 | Confirmé : fenêtres décalées vs convolution | situer Swin et ConvNeXt. | 43 mots à l’entrée ; comparaison unique | Fiche et format contrôlés | Aucune | Conserver |
-| CV-REPRESENTATIONS-003 | Transfert confirmé ; exigences produit déduites | utiliser des features autosupervisées. | 47 mots à l’entrée ; sorties et décision évaluables | Fiche et format contrôlés | Aucune | Conserver |
-| CV-REPRESENTATIONS-004 | Non soutenu initialement pour LoRA/adapters ; confirmé par sources dédiées | choisir une adaptation. | 52 mots à l’entrée ; paramètres entraînés vs inférence | Fiche et format contrôlés | Important | Sources ajoutées |
-| CV-REPRESENTATIONS-005 | Checklist du projet | contrôler le prétraitement d’un backbone. | 43 mots à l’entrée ; contrat d’entrée précis | Fiche et format contrôlés | Mineur | Attribution explicite |
+| CV-REPRESENTATIONS-001 | Confirmed: N×4 and term image×16 | Estimate the cost of tokens. | 39 words at entry; class token excluded | reference note and controlled format | Minor | Specified front |
+| CV-REPRESENTATIONS-002 | Confirmed: offset windows vs convolution | Swin and ConvNeXt. | 43 words at entry; unique comparison | reference note and controlled format | None | Keep |
+| CV-REPRESENTATIONS-003 | Transfer confirmed; product requirements deducted | Use self-supervised features. | 47 words at entry; evaluable outputs and decision | reference note and controlled format | None | Keep |
+| CV-REPRESENTATIONS-004 | Not initially supported for LoRA/adapters; confirmed by dedicated sources | Choose an adaptation. | 52 words at input; parameters trained vs inference | reference note and controlled format | Important | Added sources |
+| CV-REPRESENTATIONS-005 | Project Checklist | check preprocessing a backbone. | 43 words on entry; precise entry contract | reference note and controlled format | Minor | Attribution explicite |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-ViT : patches et coût ; Swin : fenêtres hiérarchiques ; ConvNeXt : ConvNet ; DINOv2 : apprentissage autosupervisé et transfert. LoRA/adapters vérifiés au niveau du principe, sans extrapoler leurs performances NLP à la vision. MAE reconstruit des pixels masqués. HOG résumé primaire disponible dans l’index, téléchargement INRIA indisponible ; aucune dérivation HOG approfondie n’est confirmée. Le calcul exclut tokens additionnels et ne prédit pas la latence.
+ViT: patches and cost; Swin: hierarchical windows; ConvNeXt: ConvNet; DINOv2: self-supervised learning and transfer. LoRA/adapters verified at the principle level, without extrapolating their NLP performance to vision. MAE reconstructs hidden pixels. HOG primary summary available in index, INRIA download unavailable; no thorough derivation HOG is confirmed. The calculation excludes additional tokens and does not predict latency.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 et sources 001/004/005 ; recto 001 précisé.
+reference note revision 2 and sources 001/004/005; front 001 specified.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Interpréter tokens denses et token global | Choisir les sorties pour une tâche localisée | Pratique | Une carte, deux critères ; durée à mesurer | DINOv2, tâches denses |
+| Interpret dense tokens and global tokens | Selecting Outputs for a Localized Task | Practice | One flashcard, two criteria; duration to be measured | DINOv2, dense tasks |
 
-Familles absentes : algorithme, conception, evaluation, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, design, evaluation, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
 - [ViT, §3.1](https://arxiv.org/abs/2010.11929)
 - [Swin, §3](https://arxiv.org/abs/2103.14030)
 - [ConvNeXt, §2](https://arxiv.org/abs/2201.03545)
-- [DINOv2, résumé et évaluation par transfert](https://arxiv.org/abs/2304.07193)
-- [Hu et al., LoRA, résumé et principe des paramètres gelés](https://arxiv.org/abs/2106.09685)
-- [Houlsby et al., adapters, résumé](https://arxiv.org/abs/1902.00751)
-- [He et al., MAE, résumé](https://arxiv.org/abs/2111.06377)
-- [Dalal–Triggs, HOG, résumé](https://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
+- [DINOv2, summary and valuation by transfer](https://arxiv.org/abs/2304.07193)
+- [Hu et al., LoRA, summary and principle of frozen parameters](https://arxiv.org/abs/2106.09685)
+- [Houlsby et al., adaptors, summary](https://arxiv.org/abs/1902.00751)
+- [He et al., MAE, summary](https://arxiv.org/abs/2111.06377)
+- [Dalal – Triggs, HOG, summary](https://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

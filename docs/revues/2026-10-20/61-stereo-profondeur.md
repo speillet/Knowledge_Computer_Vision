@@ -1,46 +1,45 @@
-# Revue — Stéréo rectifiée, SGM et profondeur — 2026-10-20
+# Review –  Corrected stereo, SGM and depth –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. 0 bloquant ; 2 importants (conditions et noyau) ; 1 mineur.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. 0 blocking; 2 important (conditions and kernel); 1 minor. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 1 mineure, 2 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 1 minor, 2 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-STEREO-001 | Confirmé par calcul : 10 m | calculer une profondeur rectifiée. | 49 mots à l’entrée ; noyau recentré sur la question | Fiche et format contrôlés | Important | Conventions et détail facultatif |
-| CV-STEREO-002 | Confirmé par dérivation : sensibilité en 1/d² | interpréter l’incertitude de profondeur. | 51 mots à l’entrée ; une relation, f/B fixés | Fiche et format contrôlés | Mineur | Attribution du calcul |
-| CV-STEREO-003 | Confirmé : facteur 16 et conversion flottante | décoder une disparité fixe. | 50 mots à l’entrée ; contrat de stockage | Fiche et format contrôlés | Aucune | Source versionnée |
-| CV-STEREO-004 | Confirmé : rectifier ne résout pas les ambiguïtés | séparer rectification et matching. | 48 mots à l’entrée ; un rôle géométrique | Fiche et format contrôlés | Aucune | Conserver |
+| CV-STEREO-001 | Confirmed by calculation: 10 m | Calculate a rectified depth. | 49 words at entry; core refocused on the issue | reference note and controlled format | Important | Conventions and optional detail |
+| CV-STEREO-002 | Confirmed by derivation: sensitivity in 1/d² | Interpreting the uncertainty of depth. | 51 words at entry; a relationship, f/B set | reference note and controlled format | Minor | Attribution of calculation |
+| CV-STEREO-003 | Confirmed: 16 factor and floating conversion | decode a fixed disparity. | 50 words at entry; storage contract | reference note and controlled format | None | Source versioned |
+| CV-STEREO-004 | Confirmed: correcting does not resolve ambiguities | Separate rectification and matching. | 48 words at the entry; a geometric role | reference note and controlled format | None | Keep |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Conditions du modèle simple précisées ; 1000×0,2/20=10 m, puis 20 m pour 10 px. La dérivée vaut −fB/d² ; la propagation est au premier ordre, pour f et B fixés. SGBM est explicitement une variante, avec pénalités et format documentés. La profondeur n’est pas validée par un masque de signe universel.
+Simple model conditions specified; 1000×0,2/20=10 m, then 20 m for 10 px. The derivative is −fB/d²; the propagation is first order, for f and B fixed. SGBM is explicitly a variant, with documented penalties and format. The depth is not validated by a universal sign mask.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; carte 001 clarifiée sans changer son objectif ; références 001–003 précisées.
+reference note revision 2; flashcard 001 clarified without changing its purpose; references 001 – 003 specified.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Expliquer les pénalités SGM P1/P2 | Mécanisme nommé mais pas interrogé | Algorithme | Une carte, trois critères ; durée à mesurer | Hirschmüller, SGM ; OpenCV pour SGBM |
+| Explain the penalties SGM P1/P2 | Mechanism Named but Not Questioned | Algorithme | One flashcard, three criteria; duration to be measured | Hirschmüller, SGM; OpenCV for SGBM |
 
-Familles absentes : algorithme, comprehension, conception, evaluation, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, evaluation, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OpenCV 4.13.0, StereoSGBM, Detailed Description et create](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html)
-- [OpenCV 4.13.0, stereoRectify et reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) : conversion /16 explicitement demandée ; minDisparity peut changer avec la rectification.
+- [OpenCV 4.13.0, StereoSGBM, Detailed Description and create](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html)
+- [OpenCV 4.13.0, stereoRectify and reprojectImageTo3D](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): conversion /16 explicitly requested; minDisparity may change with rectification.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

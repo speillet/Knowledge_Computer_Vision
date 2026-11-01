@@ -1,51 +1,50 @@
-# Revue — Contrats de données, profiling et pipelines vidéo — 2026-10-20
+# Review –  Data contracts, profiling and video pipelines –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. Noyaux confirmés ; sources datées et calculs/protocoles distingués.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. Confirmed cores; dated sources and distinguished calculations/protocols. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 5 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 5 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-PIPELINE-001 | Déduction du projet explicite | séparer latence débit et fraîcheur. | 43 mots à l’entrée ; Hypothèses et critères de mesure finis | Fiche et format contrôlés | mineur | Attribuer le raisonnement |
-| CV-PIPELINE-002 | Déduction du projet explicite | raisonner sur une file vidéo. | 48 mots à l’entrée ; Hypothèses et critères de mesure finis | Fiche et format contrôlés | mineur | Attribuer le raisonnement |
-| CV-PIPELINE-003 | Confirmé ; source datée et ciblée | définir un benchmark complet. | 44 mots à l’entrée ; Noyau fini, objectif conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-PIPELINE-004 | Déduction du projet explicite | dimensionner huit flux sous p99. | 95 mots à l’entrée ; Hypothèses et critères de mesure finis | Fiche et format contrôlés | mineur | Attribuer le raisonnement |
-| CV-PIPELINE-005 | Déduction du projet explicite | localiser un goulot par trace. | 49 mots à l’entrée ; Hypothèses et critères de mesure finis | Fiche et format contrôlés | mineur | Attribuer le raisonnement |
+| CV-PIPELINE-001 | Deduction from the explicit project | separate latency flow and freshness. | 43 words at entry; finite assumptions and measurement criteria | reference note and controlled format | Minor | Attributing Reasoning |
+| CV-PIPELINE-002 | Deduction from the explicit project | reasoning on a video file. | 48 words at entry; finite assumptions and measurement criteria | reference note and controlled format | Minor | Attributing Reasoning |
+| CV-PIPELINE-003 | Confirmed; source dated and targeted | Set a complete benchmark. | 44 words at the entrance; Finished core, objective retained | reference note and controlled format | Minor | Specify source |
+| CV-PIPELINE-004 | Deduction from the explicit project | Size eight streams under p99. | 95 words at entry; finite assumptions and measurement criteria | reference note and controlled format | Minor | Attributing Reasoning |
+| CV-PIPELINE-005 | Deduction from the explicit project | Locate a bottleneck by trace. | 49 words at entry; finite assumptions and measurement criteria | reference note and controlled format | Minor | Attributing Reasoning |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : TensorRT distingue Throughput, Host Latency, GPU Compute Time et transferts ; les exemples de timing synchronisent les opérations. Le périmètre d'une inférence n'est pas celui d'une caméra complète.
-- Confirmé : GStreamer queue bloque à une limite et propose leaky pour abandonner nouveaux ou anciens buffers. La croissance non bornée de la fiche est un modèle de file sans limite, pas le comportement par défaut de cet élément borné.
-- Calcul analytique : 8×30=240 images/s, déficit 40 images/s face à 200. La capacité ne corrige pas un déficit soutenu ; admission, rétropression ou abandon changent les hypothèses.
-- Déduction statistique : les quantiles de sommes ne sont pas en général des sommes de quantiles. Aucun p99 réel ni régime thermique n'a été mesuré.
-- Les cartes de conception/diagnostic définissent des critères, sans prescrire une machine ou garantir un débit.
+- Confirmed: TensorRT distinguishes Throughput, Host Latency, GPU Compute Time and transfers; timing examples synchronize operations. The perimeter of an inference is not that of a complete camera.
+- Confirmed: GStreamer queue blocks to a limit and offers leaky to abandon new or old buffers. The unbounded growth of the reference note is a limitless queue model, not the default behavior of this bounded element.
+- Analytical calculation: 8×30=240 images/s, deficit 40 images/s facing 200. Capacity does not correct a sustained deficit; admission, retropression, or abandonment change assumptions.
+- Statistical deduction: Quantiles of sums are not generally sums of quantiles. No actual p99 or thermal regime was measured.
+- The design/diagnosis flashcards define criteria, without prescribing a machine or guaranteeing a flow.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée ; formulation « valeurs par défaut » et sources des cinq cartes précisées.
+reference note revised; formulation "default values" and sources of the five specified flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, comprehension, evaluation. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, evaluation. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [TensorRT, Measure End-to-End Performance, Reported Performance Metrics et timing CUDA](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), documentation latest consultée le 20 octobre 2026.
-- [GStreamer queue, limites, blocage et leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consulté le 20 octobre 2026.
+- [TensorRT, Measure End-to-End Performance, Reported Performance Metrics and timing CUDA](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), documentation latest accessed on 20 October 2026.
+- [GStreamer tail, limits, lock and leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), accessed on 20 October 2026.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

@@ -1,55 +1,54 @@
-# Revue — Déploiement edge, compression et surveillance — 2026-10-20
+# Review –  Edge deployment, compression and monitoring –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Trois manques importants de justification corrigés ; dérivation et limites du modèle explicitées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. Three significant justification gaps corrected; derivation and model limitations explained. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 3 importante, 1 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 3 large, 1 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-DEPLOIEMENT-001 | Calcul analytique confirmé | borner un gain de système. | 44 mots à l’entrée ; Un calcul sous hypothèses explicites | Fiche et format contrôlés | important | Remplacer citation inadéquate |
-| CV-DEPLOIEMENT-002 | Confirmé avec source ajoutée | relier compression et accélération. | 49 mots à l’entrée ; Une dépendance matérielle précise | Fiche et format contrôlés | important | Citer Sparsity |
-| CV-DEPLOIEMENT-003 | Confirmé ; source datée et ciblée | versionner un système complet. | 48 mots à l’entrée ; Noyau fini, objectif conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-DEPLOIEMENT-004 | Mécanisme confirmé ; diagnostic proposé | tester le régime edge. | 42 mots à l’entrée ; Traces discriminantes finies | Fiche et format contrôlés | important | Ajouter source thermique |
+| CV-DEPLOIEMENT-001 | Confirmed analytical calculation | Limiting a system gain. | 44 words at the input; A calculation under explicit assumptions | reference note and controlled format | important | Replacing inappropriate citation |
+| CV-DEPLOIEMENT-002 | Confirmed with source added | Linking compression and acceleration. | 49 words at entry; A precise hardware dependency | reference note and controlled format | important | Citer Sparsity |
+| CV-DEPLOIEMENT-003 | Confirmed; source dated and targeted | version a complete system. | 48 words at the entrance; Finished core, objective retained | reference note and controlled format | Minor | Specify source |
+| CV-DEPLOIEMENT-004 | Confirmed mechanism; proposed diagnosis | Test the edge. | 42 words at entry; Discriminant traces finished | reference note and controlled format | important | Ajouter source thermique |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Calcul confirmé : temps initial normalisé à 1, temps nouveau 0,9+0,1/2=0,95, gain 1,0526316. Modèle séquentiel sans surcoût, pas une règle de p99 ni de pipeline recouvrant les calculs.
-- Confirmé : TensorRT 8.6.1 documente des motifs 2:4 et précise que des tactiques denses peuvent rester plus rapides. Exemple versionné, pas une annonce du support universel actuel.
-- Confirmé : Hinton propose la supervision d'un modèle compact par sorties du modèle enseignant ; aucune réduction automatique des transferts ne s'en déduit.
-- Confirmé : ML Test Score traite reproductibilité, intégration, rollback et surveillance. La liste d'artefacts de la carte est une adaptation du projet.
-- Confirmé : Jetson r36.4 documente surveillance thermique et réduction des fréquences ; l'identification de la cause exige toujours les traces proposées. Aucun appareil mesuré ni modifié.
+- Calculation confirmed: initial time normalized to 1, new time 0,9+0,1/2=0,95, gain 1,0526316. Sequential model without additional cost, not a p99 rule or pipeline covering the calculations.
+- Confirmed: TensorRT 8.6.1 documents 2:4 patterns and specifies that dense tactics can stay faster. Example versioned, not an announcement of current universal support.
+- Confirmed: Hinton offers supervision of a compact model by outputting the teaching model; no automatic transfer reduction is inferred.
+- Confirmed: ML Test Score deals with reproducibility, integration, rollback and monitoring. The list of artifacts of the flashcard is an adaptation of the project.
+- Confirmed: Jetson r36.4 documents thermal monitoring and frequency reduction; cause identification always requires proposed traces. No devices measured or modified.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée, sources d’Amdahl/sparsité/distillation/thermique ajoutées ; sources des quatre cartes ciblées.
+reference note revised, Amdahl/sparsity/distillation/thermal sources added; sources of the four targeted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, comprehension, conception, evaluation. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, evaluation. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [Amdahl (1967), p. 483](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf) : limite de la partie non accélérée ; calcul numérique dérivé par le projet.
+- [Amdahl (1967), p. 483](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf): limit of the non-accelerated part; numerical calculation derived by the project.
 
 - [ML Test Score, introduction, Model tests, Infra tests](https://storage.googleapis.com/gweb-research2023-media/pubtools/4156.pdf).
 - [TensorRT 8.6.1, §6.10 Sparsity](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-861/developer-guide/index.html#structured-sparsity).
-- [Hinton et al., introduction et soft targets](https://arxiv.org/abs/1503.02531).
+- [Hinton et al., introduction and soft targets](https://arxiv.org/abs/1503.02531).
 - [Jetson Linux r36.4, Thermal Management](https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html).
-- [TensorRT, Support Matrix, portabilité](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html), consultée le 20 octobre 2026.
+- [TensorRT, Matrix support, portability](https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/support-matrix.html), accessed on 20 October 2026.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

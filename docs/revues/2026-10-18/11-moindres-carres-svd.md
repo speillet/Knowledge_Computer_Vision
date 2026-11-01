@@ -1,42 +1,42 @@
-# Revue — Moindres carrés, SVD et conditionnement — 2026-10-18
+# Review –  Smaller squares, SVD and packaging –  2026-10-18
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 3 importante, 1 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 3 large, 1 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SVD-001 | Confirmé : rang et sensibilité ; diagnostic déduit | Diagnostic utile | 42 mots ; noyau identifiable | Source précisée | Important (source) | Référence Ceres |
-| CV-SVD-002 | Confirmé à rang colonne plein | Choix de solveur utile | 52 mots ; une justification | Accord fiche | Mineur | Passage Eigen précisé |
-| CV-SVD-003 | Imprécis puis corrigé : blanchiment et covariance | Pondération utile | 51 mots avant correction ; un objectif | Accord fiche corrigée | Important | Hypothèse et source corrigées |
-| CV-SVD-004 | Diagnostic déduit ; source initiale insuffisante | Robustesse ≠ identifiabilité | 42 mots ; critère fini | Accord homographie | Important (source) | Sources dédiées |
+| CV-SVD-001 | Confirmed: rank and sensitivity; diagnosis inferred | Diagnostic utile | 42 words; identifiable core | Specified source | Important (source) | Reference Ceres |
+| CV-SVD-002 | Confirmed to rank full column | Choice of useful solver | 52 words; a justification | Agreement reference note | Minor | Passage Eigen |
+| CV-SVD-003 | Imprecise then corrected: whitening and covariance | Useful weighting | 51 words before correction; a goal | Corrected reference note Agreement | Important | Corrected Hypothesis and Source |
+| CV-SVD-004 | Inferred diagnosis; insufficient initial source | Robustness ≠ Identifiable | 42 words; criterion finite | Accord homographie | Important (source) | Dedicated sources |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : objectif quadratique, conditionnement au carré à rang plein, rôle du rang et pondération. Imprécis corrigé : covariance inversible et distinction blanchiment/coût. Les recommandations de couverture spatiale, perturbation et jeu réservé sont des déductions du projet, pas des résultats attribués à Eigen. Régulariser change le problème ; aucune précision expérimentale n’est annoncée.
+Confirmed: quadratic objective, squared full rank, role of rank and weighting. Imprecise corrected: invertible covariance and distinction between money laundering and cost. Spatial coverage, disturbance, and set-aside recommendations are deductions from the project, not results attributed to Eigen. Regularizing changes the problem; no experimental precision is announced.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche `vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md`, révision 2 ; fichier de cartes homonyme : définition du blanchiment, hypothèse de covariance et références adaptées. IDs inchangés.
+reference note `vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md`, revision 2; file of flashcards homonymous: definition of whitening, hypothesis of covariance and adapted references. IDs are unchanged.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Propager une incertitude après résolution | Interpréter une covariance sans confondre observabilité et précision | Raisonnement ; une carte | 3 critères, durée à mesurer | Ceres, Covariance Estimation, Introduction et Gauge Invariance |
+| Spreading uncertainty after resolution | Interpret covariance without confusing observability and accuracy | Reasoning; a flashcard | 3 criteria, duration to be measured | Ceres, Covariance Estimation, Introduction and Gauge Invariance |
 
 ## Sources
 
-- [Eigen, Using normal equations](https://libeigen.gitlab.io/eigen/docs-nightly/group__LeastSquares.html), conditionnement au carré ; version affichée 5.0.1-dev+7c7d8473.
-- [Ceres, Covariance Estimation, Introduction et Rank of the Jacobian (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html) : pondération, rang et exemple presque singulier.
-- [Ceres, Modeling Non-linear Least Squares, Introduction (consulté le 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html) : rôle des pertes robustes. Le domaine ceres-solver.org a renvoyé une erreur 502 ; miroir officiel Read the Docs consulté.
+- [Eigen, Using normal equations](https://libeigen.gitlab.io/eigen/docs-nightly/group__LeastSquares.html), squared; displayed version 5.0.1-dev+7c7d8473.
+- [Ceres, Covariance Estimation, Introduction and Rank of the Jacobian (consulted on 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html): weighting, rank and almost singular example.
+- [Ceres, Modeling Non-linear Least Squares, Introduction (accessed on 2026-10-18)](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html): robust loss role. The domain ceres-solver.org returned an error 502; official mirror Read the Docs consulted.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

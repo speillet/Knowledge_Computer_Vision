@@ -1,40 +1,40 @@
-# Revue — Morphologie et composantes connexes — 2026-10-18
+# Review –  Morphology and related components –  2026-10-18
 
-## Synthèse
+## Overview
 
-3 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 2 importante, 0 mineure, 1 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+3 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 2 large, 0 minor, 1 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-MORPHO-001 | Confirmé : ordre et effet géométrique | distinguer ouverture et fermeture. | Noyau fini ; 67 mots | Accord fiche et format | Important | Réponse alignée sur la question |
-| CV-MORPHO-002 | Confirmé par définition : 2 puis 1 | choisir une connectivité. | Noyau fini ; 32 mots | Accord fiche et format | Important (source) | Source et contexte précisés |
-| CV-MORPHO-003 | Diagnostic conditionnel confirmé par les opérations | expliquer une fusion de pièces. | Noyau fini ; 51 mots | Accord fiche et format | Aucune | Conserver le noyau |
+| CV-MORPHO-001 | Confirmed: geometric order and effect | distinguish between opening and closing. | Finished core; 67 words | reference note and format | Important | Answer aligned to the question |
+| CV-MORPHO-002 | Confirmed by definition: 2 then 1 | Choose connectivity. | Finished core; 32 words | reference note and format | Important (source) | Specified source and context |
+| CV-MORPHO-003 | Conditional diagnosis confirmed by operations | Explaining a merger of parts. | Finished core; 51 words | reference note and format | None | Keep the kernel |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : ordre des opérations, rôle du structurant, 4/8-connectivité et distinction labels/identités. Les formules ensemblistes et le comptage des deux pixels sont des déductions selon les conventions annoncées. La séparation à marqueurs reste une alternative conditionnelle, sans résultat expérimental.
+Confirmed: order of operations, role of the structurer, 4/8-connectivity and label/identity distinction. The ensemblist formulas and the counting of the two pixels are deductions according to the announced conventions. Marker separation remains a conditional alternative, with no experimental results.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; cartes 001–002 clarifiées et références adaptées. Aucun ID changé.
+reference note revision 2; flashcards 001 – 002 clarified and references adapted. No ID changed.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Relier taille physique et structurant | Éviter un post-traitement différent après resize | Pratique ; une carte | 2 critères ; durée à mesurer | Morphologie OpenCV et contrat d’échelle du projet |
+| Linking physical and structuring size | Avoid different post-treatment after resize | Practice; a flashcard | 2 criteria; duration to be measured | Morphology OpenCV and project scale contract |
 
 ## Sources
 
-- [OpenCV 4.13.0, Morphological Transformations, §§1–4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html) : érosion, dilatation, ouverture, fermeture.
-- [OpenCV 4.13.0, connectedComponents, paramètres connectivity et labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html) : connectivité et labels internes ; cas à deux pixels déduit.
+- [OpenCV 4.13.0, Morphological Transformations, §§1 – 4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html): erosion, expansion, opening, closing.
+- [OpenCV 4.13.0, connectedComponents, connectivity settings and labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html): connectivity and internal labels; two-pixel case deduced.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.

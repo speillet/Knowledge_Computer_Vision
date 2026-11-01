@@ -1,45 +1,45 @@
-# Revue — Capteurs, rolling shutter et synchronisation — 2026-10-18
+# Review –  Sensors, rolling shutter and synchronization –  2026-10-18
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 3 importante, 1 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 3 large, 1 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-Auto-revue : Agent Codex (`revue-cartes`). Le statut éditorial reste `redige`.
+Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-CAPTEURS-001 | Confirmé : instants par ligne | séparer exposition et lecture rolling shutter. | Noyau fini ; 47 mots | Accord fiche et format | Mineur | Version Basler explicitée |
-| CV-CAPTEURS-002 | Confirmé par calcul : 0,10 m | estimer un décalage temporel spatial. | Noyau fini ; 42 mots | Accord fiche et format | Important (attribution) | Calcul du projet |
-| CV-CAPTEURS-003 | Diagnostic conditionnel ; deskew corroboré | départager calibration et temps. | Noyau fini ; 87 mots | Accord fiche et format | Important (source) | Source LOAM |
-| CV-CAPTEURS-004 | Confirmé : vitesse radiale relative | interpréter les sorties de capteurs. | Noyau fini ; 49 mots | Accord fiche et format | Important (source) | Source radar dédiée |
+| CV-CAPTEURS-001 | Confirmed: instants per line | separate exhibition and reading rolling shutter. | Finished core; 47 words | reference note and format | Minor | Explained Basler Version |
+| CV-CAPTEURS-002 | Confirmed by calculation: 0,10 m | estimate a spatial time lag. | Finished core; 42 words | reference note and format | Important (attribution) | Calculation of the project |
+| CV-CAPTEURS-003 | Conditional diagnosis; substantiated deskew | Calibration and time. | Finished core; 87 words | reference note and format | Important (source) | Source LOAM |
+| CV-CAPTEURS-004 | Confirmed: relative radial velocity | interpret the output of sensors. | Finished core; 49 words | reference note and format | Important (source) | Dedicated radar source |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : rolling shutter ≠ durée d’exposition ; vitesse radiale distincte du vecteur 3D ; mouvement pendant un scan. Calcul exécuté : 2×0,050=0,10 m. Le diagnostic extrinsèques/temps et la transformation des covariances sont des déductions du modèle de mesure, sans benchmark de capteurs.
+Confirmed: rolling shutter ≠ exposure time; radial velocity distinct from vector 3D; motion during a scan. Calculation executed: 2×0,050=0,10 m. Extrinsic/time diagnosis and transformation of covariances are deductions from the measurement model, without sensor benchmarks.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; sources ciblées des quatre cartes ; aucune modification des objectifs ou des IDs.
+reference note revision 2; targeted sources of the four flashcards; no changes to objectives or IDs.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Construire un budget d’erreur temporelle | Lier précision visée, vitesse et dérive des horloges | Conception ; une carte | 3 critères ; durée à mesurer | LOAM §§III–V, Basler shutter ; calcul du projet |
+| Building a Time Error Budget | Link precision, speed and drift of clocks | Design; a flashcard | 3 criteria; duration to be measured | LOAM §§III – V, Basler shutter; calculation of the project |
 
 ## Sources
 
 - [Basler, Electronic Shutter Types, Rolling Shutter (v136, 2026-10-01)](https://docs.baslerweb.com/electronic-shutter-types#rolling-shutter).
-- [Zhang et Singh 2014, LOAM, §§II et V, correction de distorsion de mouvement](https://www.roboticsproceedings.org/rss10/p07.pdf) : distorsion des scans et compensation par le mouvement ; lecture du PDF.
-- [Texas Instruments, TIDUF01 (2021), §2.4.9](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf) : vitesse radiale et mouvement ego.
-- [Forster, préintégration](https://dellaert.github.io/files/Forster16tro.pdf) ouvert ; ne justifie pas les affirmations radar.
+- [Zhang and Singh 2014, LOAM, §§II and V, motion distortion correction](https://www.roboticsproceedings.org/rss10/p07.pdf): distortion of scans and compensation by movement; reading PDF.
+- [Texas Instruments, TIDUF01 (2021), §2.4.9](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf): radial velocity and ego movement.
+- [Forster, pre-integration](https://dellaert.github.io/files/Forster16tro.pdf) open; does not justify radar claims.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles de référence : 52 fiches, 224 cartes, 34 tests réussis. Les contrôles après modification et la conservation des identifiants sont consignés dans le [bilan commun](../2026-10-20/00-bilan.md). Context7 indisponible : accès direct aux documentations officielles quand nécessaire.
+Reference checks: 52 reference notes, 224 flashcards, 34 passed tests. Controls after modification and retention of identifiers are recorded in the [bilan commun](../2026-10-20/00-bilan.md). Context7 unavailable: direct access to official documentation when necessary.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l’apprenant et validation scientifique indépendante non vérifiés. Les scénarios et recommandations de diagnostic sont des raisonnements du projet, sauf résultat explicitement attribué. Les familles absentes ne justifient pas à elles seules de nouvelles cartes.
+Real export Anki, rendering Obsidian/AnkiDroid, mastery of the learner and independent scientific validation not verified. Scenarios and diagnostic recommendations are reasonings of the project, unless explicitly assigned. Absent families alone do not justify new flashcards.
 
-La carte 003 comporte 85 mots et cinq critères de cas en plus du noyau : sa charge réelle reste à mesurer ; ces critères servent le même diagnostic, sans nécessiter de nouvelle carte.
+The flashcard 003 contains 85 words and five case criteria in addition to the core: its actual load remains to be measured; these criteria serve the same diagnosis, without requiring a new flashcard.

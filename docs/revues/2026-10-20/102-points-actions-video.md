@@ -1,53 +1,52 @@
-# Revue — Suivi de points, actions et compréhension vidéo — 2026-10-20
+# Review –  Monitoring of points, actions and video comprehension –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. Bibliographie incomplète de la fiche corrigée ; provenance des cas précisée.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. Incomplete bibliography of the corrected reference note; source of cases specified. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 3 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 3 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-VIDEO-001 | Confirmé avec source ciblée | choisir la bonne sortie vidéo. | 52 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Préciser source |
-| CV-VIDEO-002 | Contre-exemple mathématique | tester la perte d’événements courts. | 45 mots à l’entrée ; Question autonome, un point | Fiche et format contrôlés | mineur | Attribuer au projet |
-| CV-VIDEO-003 | Confirmé avec source complémentaire | contrôler causalité et délai. | 40 mots à l’entrée ; Contrat temporel fini | Fiche et format contrôlés | important | Ajouter CoTracker3 |
-| CV-VIDEO-004 | Confirmé avec source ciblée | vérifier l’utilisation de l’ordre temporel. | 49 mots à l’entrée ; Objectif conservé | Fiche et format contrôlés | mineur | Préciser source |
+| CV-VIDEO-001 | Confirmed with targeted source | Choose the right video output. | 52 words at the entrance; Goal retained | reference note and controlled format | Minor | Specify source |
+| CV-VIDEO-002 | Mathematical Counterexample | Test the loss of short events. | 45 words at the entrance; autonomous question, one point | reference note and controlled format | Minor | Attribute to the project |
+| CV-VIDEO-003 | Confirmed with additional source | check causation and delay. | 40 words at entry; finite time contract | reference note and controlled format | important | Ajouter CoTracker3 |
+| CV-VIDEO-004 | Confirmed with targeted source | check the use of the time order. | 49 words at the entrance; Goal retained | reference note and controlled format | Minor | Specify source |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : CoTracker exploite les interactions entre trajectoires et estime leur visibilité ; fenêtres chevauchantes et récurrence inter-fenêtres décrites dans §3.
-- Confirmé : TimeSformer sépare notamment attention spatiale et temporelle ; ViViT traite des tokens spatio-temporels. VideoMAE utilise le masquage en tubes pour une reconstruction de préentraînement ; son ratio 90–95 % ne devient pas une prescription générale.
-- Sources manquantes ajoutées pour ViViT et les variantes CoTracker3 online/offline.
-- Déductions vérifiées : un événement de 100 ms peut tenir entre t=0 et t=1 s ; L timestamps réguliers couvrent (L−1)/f. Ce sont des arguments d'échantillonnage, pas des performances de réseau.
-- La permutation des frames est une intervention proposée ; elle n'établit pas à elle seule ce que le modèle a appris.
+- Confirmed: CoTracker exploits interactions between trajectories and estimates their visibility; overlapping windows and inter-window recurrence described in §3.
+- Confirmed: TimeSformer separates spatial and temporal attention; ViViT deals with space-time tokens. VideoMAE uses tube masking for pretraining reconstruction; its 90 – 95% ratio does not become a general requirement.
+- Missing sources added for ViViT and CoTracker3 variants online/offline.
+- Verified Deductions: An event of 100 ms can hold between t=0 and t=1 s; Regular timestamps cover (L−1)/f. These are sampling arguments, not network performance.
+- Frame permutation is a proposed intervention; it does not establish by itself what the model has learned.
 
-## Corrections appliquées
+## Corrections applied
 
-Ajout des sources manquantes dans la fiche ; sources des quatre cartes adaptées.
+Addition of missing sources in the reference note; sources of the four adapted flashcards.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : algorithme, comprehension, conception, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, understanding, design, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [CoTracker, introduction et §3](https://arxiv.org/abs/2307.07635).
-- [TimeSformer, résumé et divided attention](https://arxiv.org/abs/2102.05095).
-- [ViViT, résumé](https://arxiv.org/abs/2103.15691).
-- [VideoMAE, résumé](https://arxiv.org/abs/2203.12602).
-- [CoTracker3, résumé et introduction](https://arxiv.org/abs/2410.11831).
+- [CoTracker, introduction and §3](https://arxiv.org/abs/2307.07635).
+- [TimeSformer, summary and divided attention](https://arxiv.org/abs/2102.05095).
+- [ViViT, summary](https://arxiv.org/abs/2103.15691).
+- [VideoMAE, summary](https://arxiv.org/abs/2203.12602).
+- [CoTracker3, summary and introduction](https://arxiv.org/abs/2410.11831).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

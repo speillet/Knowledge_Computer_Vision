@@ -1,38 +1,38 @@
-# Revue — SO(3), SE(3) et conventions de transformation — 2026-10-24
+# Review –  SO(3), SE(3) and transformation conventions –  2026-10-24
 
-## Synthèse
+## Overview
 
-6 cartes examinées pour leur pertinence et leur développement ; 5 réponses enrichies sur accord explicite de l’apprenant. Axe travaillé : composition des repères et perturbations gauche/droite. Aucun nouvel objectif ni ID. Les questions restent des rappels de mécanisme, de choix ou de diagnostic utiles en projet. Aucun doublon d’objectif justifiant un retrait dans ce sujet.
+6 flashcards examined for their relevance and development; 5 enriched responses on explicit agreement of the learner. Axis worked: composition of the coordinate frames and disturbances left/right. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
-Constat éditorial : mécanisme ou mise à l’épreuve trop peu développé dans les réponses modifiées, gravité mineure. Aucun nouveau contresens bloquant établi par la confrontation ciblée ; cela ne certifie pas toutes les affirmations du noyau antérieur.
+Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SE3-001 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | raisonnement : composer avec des repères nommés | Noyau fini et erreurs bloquantes conservés | Fiche r6, unités/hypothèses explicites | Mineure | Développer : 140 → 206 mots lexicaux |
-| CV-SE3-002 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | pratique : inverser une pose rigide | Noyau fini et erreurs bloquantes conservés | Fiche r6, unités/hypothèses explicites | Mineure | Développer : 44 → 195 mots lexicaux |
-| CV-SE3-003 | Protocole proposé sous hypothèses ; noyau antérieur conservé | comparaison : distinguer perturbations locale et globale | Noyau fini et erreurs bloquantes conservés | Fiche r6, unités/hypothèses explicites | Mineure | Développer : 159 → 206 mots lexicaux |
-| CV-SE3-004 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | diagnostic : contrôler un quaternion | Noyau fini et erreurs bloquantes conservés | Fiche r6, unités/hypothèses explicites | Mineure | Développer : 151 → 212 mots lexicaux |
-| CV-SE3-005 | Déduction ou exemple construit sous hypothèses ; noyau antérieur conservé | evaluation : mesurer un écart de rotation | Noyau fini et erreurs bloquantes conservés | Fiche r6, unités/hypothèses explicites | Mineure | Développer : 175 → 222 mots lexicaux |
-| CV-SE3-006 | Réponse conservée ; pas de nouvelle affirmation | diagnostic : convertir entre conventions d'axes caméra | Noyau fini et erreurs bloquantes conservés | Fiche r6, unités/hypothèses explicites | Aucun écart éditorial retenu | Conserver : 240 mots lexicaux, déjà développée |
+| CV-SE3-001 | Deduction or example built under assumptions; previous core retained | Reasoning: Dealing with Named coordinate framess | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 140 → 206 lexical words |
+| CV-SE3-002 | Deduction or example built under assumptions; previous core retained | Practice: Reverse a rigid pose | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 44 → 195 lexical words |
+| CV-SE3-003 | Proposed protocol under assumptions; previous core retained | Comparison: distinguish between local and global disturbances | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 159 → 206 lexical words |
+| CV-SE3-004 | Deduction or example built under assumptions; previous core retained | diagnosis: check a quaternion | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 151 → 212 lexical words |
+| CV-SE3-005 | Deduction or example built under assumptions; previous core retained | evaluation: measure a deviation of rotation | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 175 → 222 lexical words |
+| CV-SE3-006 | Retained response; no new affirmation | diagnosis: convert between camera axis conventions | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | No editorial deviation retained | Keep: 240 lexical words, already developed |
 
-## Corrections appliquées
+## Corrections applied
 
-- [Réponses](../../../vault/10-mathematiques-estimation/12-rotations-se3.md) : explications, exemples et vérifications développés, sans changer questions, objectifs, Source, tags ni identités. L’approfondissement reste facultatif pour réussir le rappel.
-- [Fiche](../../../vault/10-mathematiques-estimation/references/12-rotations-se3.md) : révision 6, deux cas guidés repris des cartes pour relier compréhension et contrôle ; statut `redige` conservé.
+- [Replies](../../../vault/10-mathematiques-estimation/12-rotations-se3.md): explanations, examples and verifications developed, without changing questions, objectives, source, tags or identities. The further explanation remains optional to successfully recall.
+- [Reference note](../../../vault/10-mathematiques-estimation/references/12-rotations-se3.md): revision 6, two guided cases taken from flashcards to link understanding and check; status `redige` preserved.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout en attente pour cette passe : le développement des réponses existantes est explicitement demandé. Aucune nouvelle carte créée. Les approfondissements APP encore ouverts restent dans l’inventaire ; ils ne sont pas déclarés couverts ici.
+No pending additions for this pass: the development of existing answers is explicitly requested. No new flashcard created. The still open further study APPs remain in inventory; they are not declared covered here.
 
 ## Sources
 
-- [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537v9) : §II, perturbations et incertitudes ; annexe D, SE(3), passage consulté le 2026-10-24. Il soutient le mécanisme de référence ; il ne fournit pas les résultats des scénarios construits du projet.
-- Vérifications de bibliothèques : OpenCV 4.13 via Context7 pour filtres/pyramides, features/matching, fisheye/hand-eye ; documentation primaire en complément. Les autres sujets utilisent les sources primaires précisées ci-dessus, sans prétendre à une couverture intégrale de Context7.
+- [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537v9): §II, disturbances and uncertainties; Appendix D, SE(3), passage consulted on 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
-## Contrôles et limites
+## Checks and limitations
 
-Voir les [preuves globales](00-bilan.md) pour les commandes exécutées et leurs résultats. La comparaison à `8c428b4` conserve IDs, objectifs, questions, Source et tags ; le contrôle de longueur utilise `re.findall(r"\w+", Reponse)`. Le nombre de mots est un garde-fou éditorial, sans garantie de mémorisation.
+See [Global Evidence](00-bilan.md) for executed commands and their results. Comparison to `8c428b4` retains IDs, objectives, questions, source and tags; the length check uses `re.findall(r"\w+", Reponse)`. The number of words is an editorial safeguard, with no guarantee of memorization.
 
-Confrontation documentaire ciblée et auto-revue pédagogique par agent Codex : les affirmations antérieures ne font pas toutes l’objet d’une nouvelle confirmation ligne à ligne. Les exemples analytiques sont déduits, les essais de diagnostic sont proposés ; aucune expérimentation image/vidéo ou validation indépendante n’est revendiquée. Rendu Obsidian/AnkiDroid et maîtrise de l’apprenant non vérifiés.
+Targeted documentary confrontation and educational self-review by agent Codex: not all previous statements are subject to a new confirmation line. Analytical examples are deduced, diagnostic tests are proposed; no image/video experimentation or independent validation is claimed. Rendered Obsidian/AnkiDroid and mastered the unverified learner.

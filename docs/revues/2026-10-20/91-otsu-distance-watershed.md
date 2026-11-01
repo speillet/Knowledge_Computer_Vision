@@ -1,51 +1,50 @@
-# Revue — Otsu, distance transform et watershed — 2026-10-20
+# Review –  Otsu, distance transform and watershed –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. Aucun défaut nécessitant correction dans les cinq cartes. Les diagnostics restent des cas construits.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. No defects requiring correction in the five flashcards. Diagnostics are still built cases. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 0 mineure, 5 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 0 minor, 5 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-WATERSHED-001 | Raisonnement explicite du projet | interpréter l’objectif Otsu. | 55 mots à l’entrée ; Vérifications finies, sans promesse de résultat | Fiche et format contrôlés | — | Conserver |
-| CV-WATERSHED-002 | Confirmé | reconstruire le pipeline à marqueurs. | 46 mots à l’entrée ; Noyau fini et autonome | Fiche et format contrôlés | — | Conserver |
-| CV-WATERSHED-003 | Confirmé | distinguer fond et inconnu. | 48 mots à l’entrée ; Noyau fini et autonome | Fiche et format contrôlés | — | Conserver |
-| CV-WATERSHED-004 | Raisonnement explicite du projet | localiser une sous-segmentation. | 58 mots à l’entrée ; Vérifications finies, sans promesse de résultat | Fiche et format contrôlés | — | Conserver |
-| CV-WATERSHED-005 | Raisonnement explicite du projet | choisir une métrique d’instances classique. | 48 mots à l’entrée ; Vérifications finies, sans promesse de résultat | Fiche et format contrôlés | — | Conserver |
+| CV-WATERSHED-001 | Explicit Reasoning of the Project | interpret the Otsu objective. | 55 words at input; Verifications finished, no promise of result | reference note and controlled format | — | Keep |
+| CV-WATERSHED-002 | Confirmed | Rebuild the marker pipeline. | 46 words at the entrance; finite and autonomous core | reference note and controlled format | — | Keep |
+| CV-WATERSHED-003 | Confirmed | distinguish background and unknown. | 48 words at the entrance; finite and autonomous core | reference note and controlled format | — | Keep |
+| CV-WATERSHED-004 | Explicit Reasoning of the Project | Locate a sub-segmentation. | 58 words at input; Verifications finished, no promise of result | reference note and controlled format | — | Keep |
+| CV-WATERSHED-005 | Explicit Reasoning of the Project | Choose a classic instance metric. | 48 words at input; Verifications finished, no promise of result | reference note and controlled format | — | Keep |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : minimisation de la variance intra-classe pondérée dans OpenCV, équivalence à la variance inter-classe par décomposition de la variance totale.
-- Confirmé : `distanceTransform` mesure la distance au pixel nul le plus proche ; la métrique et le masque importent. Un maximum ne constitue pas une classe sémantique.
-- Confirmé : marqueurs int32 de même taille, labels positifs, 0 inconnu, frontières −1 et modification du tableau ; le tutoriel distingue explicitement fond connu et inconnu.
-- Diagnostics et protocole d'instances : déductions du projet. Une union de deux objets peut garder le même masque binaire après fusion, donc l'IoU binaire ne teste pas le comptage.
-- L'exemple Otsu du dépôt est un calcul d'histogramme ; aucune exécution OpenCV ou validation sur image revendiquée.
+- Confirmed: minimization of weighted intra-class variance in OpenCV, equivalence to inter-class variance by decomposition of total variance.
+- Confirmed: `distanceTransform` measures the distance to the nearest null pixel; metric and mask matter. A maximum is not a semantic class.
+- Confirmed: int32 markers of the same size, positive labels, unknown 0, borders −1 and table modification; the tutorial explicitly distinguishes known and unknown background.
+- Diagnostics and Instance Protocol: Project Deductions. A union of two objects can keep the same binary mask after merging, so the binary IoU does not test the count.
+- The Otsu example of the repository is a histogram calculation; no OpenCV execution or claimed image validation.
 
-## Corrections appliquées
+## Corrections applied
 
-Aucune correction nécessaire.
+No correction needed.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : comparaison, comprehension, conception. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: comparison, understanding, conception. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [OpenCV 4.13.0, Otsu’s Binarization et How does… work](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html).
-- [OpenCV 4.13.0, watershed, Theory et Code : distance et marqueurs](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html).
+- [OpenCV 4.13.0, Otsu’s Binarization and How does... work](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html).
+- [OpenCV 4.13.0, watershed, Theory and Code: distance and markers](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

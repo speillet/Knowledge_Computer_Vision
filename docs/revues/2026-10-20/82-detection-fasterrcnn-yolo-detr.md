@@ -1,51 +1,50 @@
-# Revue — Détection : Faster R-CNN, familles YOLO et DETR — 2026-10-20
+# Review –  Detection: Faster R-CNN, families YOLO and DETR –  2026-10-20
 
-## Synthèse
+## Overview
 
-5 cartes auditées. Un manque important de justification de la diversité YOLO corrigé ; sources des autres cartes précisées.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+5 flashcards audited. A significant lack of justification for YOLO diversity corrected; sources of other specified flashcards. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-5 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 1 importante, 4 mineure, 0 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+5 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 1 large, 4 minor, 0 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-DETECTEURS-001 | Confirmé après précision de source | situer le partage de features. | 50 mots à l’entrée ; Noyau fini, objectif conservé | Fiche et format contrôlés | mineur | Cibler la source |
-| CV-DETECTEURS-002 | Confirmé avec sources complémentaires | ne pas généraliser toute la famille YOLO. | 40 mots à l’entrée ; Objectif unique | Fiche et format contrôlés | important | Ajouter preuves de variantes |
-| CV-DETECTEURS-003 | Confirmé après précision de source | distinguer les trois affectations. | 57 mots à l’entrée ; Noyau fini, objectif conservé | Fiche et format contrôlés | mineur | Cibler la source |
-| CV-DETECTEURS-004 | Raisonnement du projet explicité | analyser les petits objets après resize. | 82 mots à l’entrée ; Critères finis ; cas non exécuté | Fiche et format contrôlés | mineur | Préciser attribution |
-| CV-DETECTEURS-005 | Raisonnement du projet explicité | comparer des pipelines de détection. | 48 mots à l’entrée ; Critères finis ; cas non exécuté | Fiche et format contrôlés | mineur | Préciser attribution |
+| CV-DETECTEURS-001 | Confirmed after source accuracy | Find the sharing of features. | 50 words at the entrance; Finished core, objective retained | reference note and controlled format | Minor | Targeting the source |
+| CV-DETECTEURS-002 | Confirmed with additional sources | Do not generalize the whole YOLO family. | 40 words at the entrance; Single goal | reference note and controlled format | important | Add proof of variants |
+| CV-DETECTEURS-003 | Confirmed after source accuracy | distinguish between the three assignments. | 57 words at the entrance; Finished core, objective retained | reference note and controlled format | Minor | Targeting the source |
+| CV-DETECTEURS-004 | Detailed Project Reasoning | analyze small objects after resize. | 82 words at entry; Criteria finished; case not executed | reference note and controlled format | Minor | Specify attribution |
+| CV-DETECTEURS-005 | Detailed Project Reasoning | compare detection pipelines. | 48 words at entry; Criteria finished; case not executed | reference note and controlled format | Minor | Specify attribution |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : RPN et tête de détection partagent les convolutions de l'image (Faster R-CNN §3).
-- La diversité YOLO était non soutenue par le seul article original : YOLOv3 §2.1 décrit ses anchors ; YOLOX §2.1 décrit explicitement le passage anchor-free, la tête et SimOTA. Sources ajoutées, sans étendre le programme des cartes.
-- Confirmé : DETR §3.1 affecte par matching biparti les prédictions à un ensemble de cibles complété par no-object ; supervision et NMS ont des fonctions distinctes.
-- Les contrôles de resize, le choix d'un split et les conditions de chronométrage sont des propositions de protocole, pas des résultats empiriques de ces articles.
+- Confirmed: RPN and detection head share the convolutions of the image (Faster R-CNN §3).
+- The YOLO diversity was not supported by the only original article: YOLOv3 §2.1 describes its anchors; YOLOX §2.1 explicitly describes the anchor-free passage, the head and SimOTA. Added sources, without extending the flashcards program.
+- Confirmed: DETR §3.1 assigns bipartite matching predictions to a set of targets completed by no-object; supervision and NMS have distinct functions.
+- Resize controls, split selection, and timing conditions are protocol proposals, not empirical results of these papers.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée puis sources des cinq cartes ciblées ; réponses et IDs conservés.
+reference note revised and then sources of the five targeted flashcards; responses and IDs retained.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : conception, pratique, raisonnement. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: conception, practice, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [Faster R-CNN, §3 et introduction](https://arxiv.org/abs/1506.01497).
-- [DETR, §3.1, fig. 1 et équations 1–2](https://arxiv.org/abs/2005.12872).
-- [YOLOv3, §2.1](https://arxiv.org/abs/1804.02767) ; [YOLOX, §2.1, paragraphes Anchor-free/Decoupled head](https://arxiv.org/abs/2107.08430).
+- [Faster R-CNN, §3 and introduction](https://arxiv.org/abs/1506.01497).
+- [DETR, §3.1, fig. 1 and equations 1 – 2](https://arxiv.org/abs/2005.12872).
+- [YOLov3, §2.1](https://arxiv.org/abs/1804.02767) ; [YOLOX, §2.1, paragraphes Anchor-free/Decoupled head](https://arxiv.org/abs/2107.08430).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

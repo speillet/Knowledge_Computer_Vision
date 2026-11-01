@@ -1,72 +1,52 @@
-# Revue — Détecteurs : apprentissage et FPN — 2026-10-21
+# Review –  Detectors: learning and FPN –  2026-10-21
 
-## Synthèse
+## Overview
 
-Cinq nouvelles cartes auditées et ajoutées après accord explicite de l'apprenant :
-CV-DETECTEURS-006 à 010. Aucun défaut bloquant, important ou mineur restant relevé
-sur ces ajouts. La fiche passe de la révision 2 à 3, statut `redige` conservé.
-Les cinq cartes antérieures sont inchangées ; leur audit reste dans le
-[rapport précédent](../2026-10-20/82-detection-fasterrcnn-yolo-detr.md).
+Five new flashcards audited and added after explicit agreement of the learner: CV-DETECTEURS-006 to 010. No blocking, significant or minor defects remaining on these additions. The reference note changes from the revision 2 to 3, retained `redige` status. The five previous flashcards remain unchanged; their audit remains in the [previous report](../2026-10-20/82-detection-fasterrcnn-yolo-detr.md).
 
-La conclusion antérieure « Aucune addition prioritaire » était trop limitée
-pour l'objectif senior : assignation, cibles, losses et fusion multiéchelle
-méritent un rappel propre. Cette nouvelle décision complète le rapport daté
-sans le réécrire. Les deux cartes de diagnostic également acceptées seront
-traitées dans le passage suivant. Aucune affirmation d'exhaustivité.
+The earlier conclusion "No Priority Addition" was too limited for the senior objective: assignment, targets, loss and multi-scale merger deserve a clean reminder. This new decision completes the dated report without rewriting it. The two equally accepted diagnostic flashcards will be dealt with in the following passage. No assertion of completeness.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-DETECTEURS-006 | Confirmé : FCOS §§3.1–3.2 | Reconstruire l'assignation sans anchors | 105 mots au verso ; admissibilité, arbitrage et cible ; détails de variante facultatifs | Plages de distances, pas seulement aire ; version précisée | Aucun défaut restant relevé | Ajouter |
-| CV-DETECTEURS-007 | Équation 1 confirmée ; calcul refait | Appliquer un encodage de boîte | 84 mots ; quatre valeurs attendues, décodage facultatif | Coordonnées continues et pixels d'entrée explicites | Aucun défaut restant relevé | Ajouter |
-| CV-DETECTEURS-008 | Équation 5 et rôle des paramètres confirmés | Expliquer le déséquilibre en détection dense | 117 mots ; facteur et effet suffisent, formule complète facultative | Probabilité du label correct, y compris pour un négatif | Aucun défaut restant relevé | Ajouter |
-| CV-DETECTEURS-009 | Plateau IoU et pénalité confirmés ; calcul refait | Relier géométrie et signal de régression | 131 mots ; mécanisme au noyau, exemple numérique facultatif | Rectangle englobant aligné sur les axes ; aucune garantie universelle | Aucun défaut restant relevé | Ajouter |
-| CV-DETECTEURS-010 | §3 et figure 3 confirmés | Comprendre les features utiles aux petits objets | 103 mots ; deux apports à distinguer, détails de convolutions facultatifs | Ne confond pas pyramide de features et d'images | Aucun défaut restant relevé | Ajouter |
+| CV-DETECTEURS-006 | Confirmed: FCOS §§3.1 – 3.2 | Rebuild assignment without anchors | 105 words on verso; eligibility, arbitration and target; optional variant details | Distance ranges, not just area; specified version | No defects remaining noted | Ajouter |
+| CV-DETECTEURS-007 | Equation 1 confirmed; calculation redone | Applying a Box Encoding | 84 words; four expected values, optional decoding | Continuous coordinates and explicit input pixels | No defects remaining noted | Ajouter |
+| CV-DETECTEURS-008 | Equation 5 and role of confirmed parameters | Explain the imbalance in dense detection | 117 words; factor and effect suffice, optional full formula | Probability of the correct label, including a negative | No defects remaining noted | Ajouter |
+| CV-DETECTEURS-009 | Plate IoU and penalty confirmed; calculation redone | Linking geometry and regression signal | 131 words; kernel mechanism, optional numerical example | Axis-aligned all-encompassing rectangle; no universal warranty | No defects remaining noted | Ajouter |
+| CV-DETECTEURS-010 | §3 and figure 3 confirmed | Understanding the features useful to small objects | 103 words; two contributions to distinguish, details of optional convolutions | Do not confuse pyramid of features and images | No defects remaining noted | Ajouter |
 
-Les versos sont plus développés que les 40 à 82 mots des cartes précédentes.
-Le calcul de GIoU reste dans l'approfondissement : il n'est pas requis pour
-réussir le rappel du mécanisme. Charge et durée de révision non mesurées.
-La famille conception reste absente : aucune carte artificielle ajoutée
-pour remplir cette catégorie.
+The versoes are more developed than the 40 to 82 words of the previous flashcards. The calculation of GIoU remains in the further explanation: it is not required to successfully recall the mechanism. Unmeasured load and duration of revision. The design family remains absent: no artificial flashcard added to fill this category.
 
-## Corrections appliquées
+## Corrections applied
 
-- [Fiche](../../../vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) : assignation FCOS, convention de coordonnées, Focal Loss, GIoU et FPN développés avant l'écriture des cartes. Les cas numériques sont attribués au projet.
-- [Cartes](../../../vault/80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) : cinq objectifs nouveaux, IDs 006 à 010, aucun identifiant de synchronisation inventé.
-- Comptes courants, index et navigation par pôles recalculés : 52 fiches, 229 cartes. Journal : une ligne par ajout accepté, export « Non synchronisé ».
-- Recherche transversale FCOS/Focal/GIoU/FPN/anchor-free dans le vault : aucun noyau contradictoire ou doublon de ces cinq objectifs repéré.
+- [Reference note](../../../vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md): assignment FCOS, coordinate convention, Focal Loss, GIoU and FPN developed before the writing of the flashcards. Digital cases are assigned to the project.
+- [Flashcards](../../../vault/80-detection-pose/82-detection-fasterrcnn-yolo-detr.md): Five new lenses, IDs 006 to 010, no synchronization identifier invented.
+- Current accounts, index and navigation by recalculated poles: 52 reference notes, 229 flashcards. Log: one line per add accepted, export "Unsynchronized".
+- Cross-sectional search FCOS/Focal/GIoU/FPN/anchor-free in the vault: no contradictory or duplicate core of these five objectives identified.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-Aucune nouvelle proposition en attente d'accord. Les sept cartes proposées
-ont été acceptées ; cette livraison réalise les cinq cartes sur l'apprentissage.
-La décomposition des erreurs, les annotations et le cas des petits objets
-restent à réaliser dans le second passage déjà autorisé.
+No new proposals pending agreement. The seven proposed flashcards have been accepted; this delivery achieves the five flashcards on learning. The decomposition of errors, annotations and the case of small objects remain to be carried out in the second passage already authorized.
 
 ## Sources
 
-Passages primaires réellement consultés le 2026-10-21 :
+Primary passages actually consulted the 2026-10-21:
 
-- [FCOS v5, §§3.1–3.3](https://arxiv.org/html/1904.01355v5) : équation 1, choix de la boîte de plus petite aire après filtrage du niveau, distinction avec les variantes de center sampling.
-- [Focal Loss v2, §2 et §§3.1–3.2](https://arxiv.org/html/1708.02002v2) : difficulté contre pondération de classe, équations 3–5 ; ce n'est pas une loss robuste aux cas aberrants.
-- [GIoU v2, §3.1 et algorithmes 1–2](https://arxiv.org/html/1902.09630v2) : enveloppe rectangulaire, plateau sans recouvrement. La carte n'étend pas la propriété à une garantie de convergence.
-- [FPN v2, §3 et figure 3](https://arxiv.org/html/1612.03144v2) : apport sémantique descendant et localisation latérale.
+- [FCOS v5, §§3.1 – 3.3](https://arxiv.org/html/1904.01355v5): equation 1, choice of smaller area box after level filtering, distinction with center sampling variants.
+- [Focal Loss v2, §2 and §§3.1 – 3.2](https://arxiv.org/html/1708.02002v2): difficulty versus class weighting, equations 3 – 5; this is not a robust loss to outliers.
+- [GIoU v2, §3.1 and algorithms 1 – 2](https://arxiv.org/html/1902.09630v2): rectangular envelope, tray without covering. The flashcard does not extend ownership to a convergence guarantee.
+- [FPN v2, §3 and figure 3](https://arxiv.org/html/1612.03144v2): Descending semantic input and lateral localization.
 
-Les articles ont été consultés sur arXiv en versions épinglées ; aucun passage
-central inaccessible. Aucune API de bibliothèque introduite ni exécutée.
-Les exemples chiffrés sont des dérivations synthétiques, pas des mesures publiées.
+The articles were viewed on arXiv in pinned versions; no central passage inaccessible. No library APIs introduced or executed. The numerical examples are synthetic derivations, not published measurements.
 
-## Contrôles et limites
+## Checks and limitations
 
-- `python3 scripts/check_vault.py` : OK, 125 Markdown, 52 fiches et 229 cartes.
-- `python3 -m unittest discover -s tests` : 34 tests réussis.
-- `python3 scripts/sync_catalog.py --check` : 18 documents à jour.
-- Inventaire complet comparé à celui d'avant enrichissement : cinq ajouts attendus, aucun ID disparu ni identité Anki modifiée ; objectifs et tags des 224 cartes conservés. Le comparateur signale les ajouts, qui sont attendus.
-- Calculs Python temporaires avec fractions exactes : distances (20,20,50,40), décodage exact ; facteurs 1/100 et 81/100 ; losses GIoU 6/5 puis 10/9. Aucun réseau exécuté.
-- Diff, liens locaux, caractères de contrôle et conservation des sections de preuves datées vérifiés. Les occurrences de 224 restantes décrivent l'historique ou la référence de comparaison.
+- `python3 scripts/check_vault.py`: OK, 125 Markdown, 52 reference notes and 229 flashcards.
+- `python3 -m unittest discover -s tests`: 34 tests passed.
+- `python3 scripts/sync_catalog.py --check`: 18 up to date documents.
+- Complete inventory compared to pre-enrichment: five expected additions, no missing ID or modified Anki identity; objectives and tags of the 224 flashcards preserved. The comparator reports the additions, which are expected.
+- Temporary Python calculations with exact fractions: distances (20,20,50,40), exact decoding; factors 1/100 and 81/100; losses GIoU 6/5 then 10/9. No network executed.
+- Diff, local links, check characters and retention of verified dated evidence sections. The remaining occurrences of 224 describe the history or comparison reference.
 
-Auto-revue par Agent Codex (`revue-cartes`). Export Anki réel, rendu
-Obsidian/AnkiDroid, validation scientifique indépendante et maîtrise de
-l'apprenant restent non vérifiés. Les anciens essais de parseur ne constituent
-pas une validation d'export des nouvelles cartes.
+Self-reviewed by Agent Codex (`revue-cartes`). Export Anki real, rendered Obsidian/AnkiDroid, independent scientific validation and mastery of the learner remain unverified. The old parser tests do not constitute an export validation of the new flashcards.

@@ -1,46 +1,45 @@
-# Revue — CLIP, SigLIP et reconnaissance par texte — 2026-10-20
+# Review –  CLIP, SigLIP and text recognition –  2026-10-20
 
-## Synthèse
+## Overview
 
-4 cartes auditées. 0 bloquant ; 1 important partagé (mauvais passage cité) ; 2 mineurs.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+4 flashcards audited. 0 blocking; 1 important shared (bad passage cited); 2 minors. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-4 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 2 mineure, 2 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+4 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 2 minor, 2 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-CLIP-001 | Confirmé : encodeurs et classes textuelles | interpréter le zero-shot CLIP. | 51 mots à l’entrée ; phrase ambiguë clarifiée | Fiche et format contrôlés | Mineur | Reformuler |
-| CV-CLIP-002 | Déduit de la normalisation sur candidats | refuser une probabilité trompeuse. | 45 mots à l’entrée ; contre-exemple fini | Fiche et format contrôlés | Aucune | Conserver |
-| CV-CLIP-003 | Confirmé : softmax bidirectionnel vs sigmoid par paire | distinguer objectifs contrastifs. | 51 mots à l’entrée ; distinction centrale | Fiche et format contrôlés | Aucune | Conserver |
-| CV-CLIP-004 | Protocole du projet | tester la sensibilité au texte. | 55 mots à l’entrée ; séparation validation/test | Fiche et format contrôlés | Mineur | Attribution |
+| CV-CLIP-001 | Confirmed: Encoders and Text Classes | interpret the zero-shot CLIP. | 51 words at entry; ambiguous sentence clarified | reference note and controlled format | Minor | Reformuler |
+| CV-CLIP-002 | Deducted from standardization on candidates | Reject a misleading probability. | 45 words at the entrance; counter-example finished | reference note and controlled format | None | Keep |
+| CV-CLIP-003 | Confirmed: bidirectional softmax vs sigmoid per pair | distinguer objectifs contrastifs. | 51 words at the entrance; central distinction | reference note and controlled format | None | Keep |
+| CV-CLIP-004 | Project Protocol | test the sensitivity to the text. | 55 words at input; validation/test separation | reference note and controlled format | Minor | Attribution |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Forme normalisée des embeddings et température, classement zero-shot, sensibilités aux prompts, objectif sigmoid avec température et biais confirmés par les passages consultés. Les limites générales sont au §6 de CLIP, le §7 traite les impacts. La non-calibration automatique est une limite logique ; pas de seuil ni performance cible attribués aux auteurs.
+Standardized form of embeddings and temperature, zero-shot classification, sensitivity to prompts, sigmoid lens with temperature and bias confirmed by the passages consulted. The general limits are at §6 of CLIP, the §7 deals with impacts. Automatic non-calibration is a logical limit; no threshold or target performance attributed to authors.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 2 ; §6 partout ; approfondissement 001 clarifié.
+reference note revision 2; §6 everywhere; further explanation 001 clarified.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Effet d’un candidat supplémentaire sur softmax | Exemple numérique du raisonnement de 002 | Approfondissement | Aucun nouveau rappel nécessaire | Définition du softmax ; CLIP §2.3 |
+| Effect of an additional candidate on softmax | Numerical example of the reasoning of 002 | Further explanation | No new reminders needed | Definition of softmax; CLIP §2.3 |
 
-Familles absentes : algorithme, conception, diagnostic, pratique. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: algorithm, design, diagnosis, practice. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [Radford et al., CLIP, §§2.3, 3.1 et limites §6](https://arxiv.org/abs/2103.00020) : PDF, pseudocode §2.3, §3.1.4 et §6.
-- [Zhai et al., SigLIP, §3 et algorithme 1](https://arxiv.org/abs/2303.15343) : PDF, algorithme 1 et §3.
+- [Radford et al., CLIP, §§2.3, 3.1 and limits §6](https://arxiv.org/abs/2103.00020): PDF, pseudocode §2.3, §3.1.4 and §6.
+- [Zhai et al., SigLIP, §3 and algorithm 1](https://arxiv.org/abs/2303.15343): PDF, algorithm 1 and §3.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

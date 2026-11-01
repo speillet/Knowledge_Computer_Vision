@@ -1,165 +1,122 @@
-# Bilan de revue des cartes — 2026-10-20
+# Review of flashcards –  2026-10-20
 
-Bilan consolidé le 21 octobre 2026.
+Consolidated balance sheet on 21 October 2026.
 
-## Périmètre et résultat
+## Perimeter and result
 
-Les **52 sujets et 224 cartes existants** ont un rapport individuel et une
-évaluation des quatre axes du skill `revue-cartes` : exactitude, pertinence,
-corrigibilité et cohérence. Les 12 rapports du 18 octobre (50 cartes), déjà
-présents à la reprise, sont intégrés au bilan ; les 40 sujets restants
-(174 cartes) ont été examinés le 20 octobre. Les sources des 12 premiers
-rapports ne sont pas présentées comme nouvellement consultées le 20 octobre.
-Les synthèses et liens de ces rapports ont été harmonisés à la consolidation.
+The **52 subjects and 224 existing flashcards** have an individual report and an assessment of the four axes of the `revue-cartes` skill: accuracy, relevance, correctability and consistency. The 12 reports of 18 October (50 flashcards), already present at the takeover, are included in the balance sheet; the remaining 40 subjects (174 flashcards) were examined on 20 October. The sources of the first 12 reports are not presented as newly consulted on 20 October. The summaries and links of these reports have been harmonized with consolidation.
 
-Le périmètre est le contenu existant, pas l'ensemble du programme de computer
-vision. Aucun ajout, suppression, changement d'objectif ou d'ID ; aucun
-identifiant de synchronisation Anki n'était présent. Les fiches modifiées
-ont une révision incrémentée et restent `statut: redige`, provenance `agent`.
-Les comptes courants (52 fiches, 224 cartes) restent inchangés.
+The perimeter is the existing content, not the entire computer vision program. No additions, deletions, lens changes or IDs; no Anki sync IDs were present. The modified reference notess have an incremental revision and remain `statut: redige`, source `agent`. Current accounts (52 reference notes, 224 flashcards) remain unchanged.
 
-| Gravité maximale par carte avant correction | Cartes |
+| Maximum gravity per flashcard before correction | Flashcards |
 | --- | ---: |
 | Bloquante | 0 |
 | Importante | 46 |
-| Mineure | 92 |
-| Aucun défaut relevé dans le passage audité | 86 |
+| Minor | 92 |
+| No defects found in the audited passage | 86 |
 | Total | 224 |
 
-Ce décompte compte chaque carte une fois ; il ne compte ni les erreurs
-indépendantes ni les défauts limités aux fiches. « Aucun défaut relevé »
-n'est pas une certification d'exactitude. Les corrections concernent surtout
-les sources insuffisantes, les hypothèses et conventions implicites, ainsi
-que des critères de réponse trop vagues. Le [journal de correction](../../../vault/01-Parcours/Suivi-pilote.md#suite-et-corrections)
-consigne chaque intervention et sa révision.
+This count counts every flashcard once; it does not count independent errors or defects limited to reference notes. "No defects found" is not a certification of accuracy. Corrections mainly concern insufficient sources, implicit assumptions and conventions, as well as too vague response criteria. The [Correction Log](../../../vault/01-Parcours/Suivi-pilote.md#follow-up-and-corrections) records each intervention and its revision.
 
-## Corrections principales
+## Main corrections
 
-- Pondération et blanchiment des résidus ; articulation EKF/ESKF, repères et
-  unités ; critères de réponse pour Hough et morphologie.
-- Contrats `solvePnP`/`solveP3P`, mouvements relatifs hand–eye, conditions de
-  Schur et convention de disparité pour la profondeur stéréo.
-- Convention CER classique distinguée de celle des benchmarks OCR-D ;
-  partition panoptique sans recouvrement ; sources propres aux variantes de
-  méthodes, à la pose et aux symétries.
-- Contrat SORT sans détection, entrée vide de forme `(0, 5)` ; distinction
-  entre template fixe SiamFC et actualisation dans un tracker adaptatif.
-- Marginale de bruit DDPM distinguée d'une transition ; densité NeRF
-  dépendant de la position, couleur dépendant aussi de la direction.
-- Quantification entière bornée et distincte de FP8 ; limites matérielles
-  de la sparsité et du régime thermique ; modèle séquentiel d'Amdahl explicite.
-- Passages de sources ciblés par carte ; dates ou versions des documentations
-  précisées ; raisonnements, diagnostics et protocoles du projet distingués
-  des résultats publiés et des expériences réellement exécutées.
+- Weighting and whitening of residuals; joint EKF/ESKF, coordinate frames and units; response criteria for Hough and morphology.
+- Contracts `solvePnP`/`solveP3P`, hand – eye relative movements, Schur conditions and disparity convention for stereo depth.
+- Convention CER classic distinguished from that of OCR-D benchmarks; panoptic partition without overlap; sources specific to method variants, pose and symmetries.
+- Contract SORT without detection, empty input form `(0, 5)`; distinction between fixed template SiamFC and update in an adaptive tracker.
+- Noise margin DDPM distinguished from a transition; density NeRF dependent on the position, color also dependent on the direction.
+- Boundary and distinct integer quantification of FP8; material limits of sparsity and thermal regime; explicit Amdahl sequential model.
+- Passes from sources targeted by flashcard; dates or versions of specified documentation; reasoning, diagnostics and project protocols distinguished from published results and actually performed experiments.
 
-## Cartographie des rapports
+## Mapping of reports
 
-| Sujet et fiche canonique | Cartes | Rapport |
+| Subject and canonical reference note | Flashcards | Rapport |
 | --- | ---: | --- |
-| [Moindres carrés, SVD et conditionnement](../../../vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md) | [4](../../../vault/10-mathematiques-estimation/11-moindres-carres-svd.md) | [2026-10-18](../2026-10-18/11-moindres-carres-svd.md) |
-| [SO(3), SE(3) et conventions de transformation](../../../vault/10-mathematiques-estimation/references/12-rotations-se3.md) | [4](../../../vault/10-mathematiques-estimation/12-rotations-se3.md) | [2026-10-18](../2026-10-18/12-rotations-se3.md) |
-| [Kalman, EKF, UKF et ESKF pour la fusion](../../../vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) | [4](../../../vault/10-mathematiques-estimation/13-kalman-ekf-eskf.md) | [2026-10-18](../2026-10-18/13-kalman-ekf-eskf.md) |
-| [Graphes de facteurs et optimisation incrémentale](../../../vault/10-mathematiques-estimation/references/14-graphes-facteurs.md) | [3](../../../vault/10-mathematiques-estimation/14-graphes-facteurs.md) | [2026-10-18](../2026-10-18/14-graphes-facteurs.md) |
-| [Exposition, bruit, couleur et échantillonnage](../../../vault/20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) | [4](../../../vault/20-acquisition-images/21-exposition-bruit-echantillonnage.md) | [2026-10-18](../2026-10-18/21-exposition-bruit-echantillonnage.md) |
-| [Capteurs, rolling shutter et synchronisation](../../../vault/20-acquisition-images/references/22-capteurs-horodatage.md) | [4](../../../vault/20-acquisition-images/22-capteurs-horodatage.md) | [2026-10-18](../2026-10-18/22-capteurs-horodatage.md) |
-| [Line-scan, télédétection et volumes médicaux](../../../vault/20-acquisition-images/references/23-imageries-specialisees.md) | [3](../../../vault/20-acquisition-images/23-imageries-specialisees.md) | [2026-10-18](../2026-10-18/23-imageries-specialisees.md) |
-| [Filtres, gradients et pyramides](../../../vault/30-traitement-image/references/31-filtrage-gradients.md) | [4](../../../vault/30-traitement-image/31-filtrage-gradients.md) | [2026-10-18](../2026-10-18/31-filtrage-gradients.md) |
-| [Canny et Hough : contours, droites et segments](../../../vault/30-traitement-image/references/32-canny-hough.md) | [4](../../../vault/30-traitement-image/32-canny-hough.md) | [2026-10-18](../2026-10-18/32-canny-hough.md) |
-| [Morphologie et composantes connexes](../../../vault/30-traitement-image/references/33-morphologie-composantes.md) | [3](../../../vault/30-traitement-image/33-morphologie-composantes.md) | [2026-10-18](../2026-10-18/33-morphologie-composantes.md) |
-| [SIFT — points locaux et description à plusieurs échelles](../../../vault/40-features-matching/references/41-sift.md) | [7](../../../vault/40-features-matching/41-sift.md) | [2026-10-18](../2026-10-18/41-sift.md) |
-| [ORB — détection et descripteur binaire orienté](../../../vault/40-features-matching/references/42-orb.md) | [6](../../../vault/40-features-matching/42-orb.md) | [2026-10-18](../2026-10-18/42-orb.md) |
-| [Détecteurs locaux, descripteurs et matchers](../../../vault/40-features-matching/references/43-detecteurs-matchers.md) | [4](../../../vault/40-features-matching/43-detecteurs-matchers.md) | [2026-10-20](43-detecteurs-matchers.md) |
-| [SuperPoint, LightGlue et LoFTR](../../../vault/40-features-matching/references/44-superpoint-lightglue-loftr.md) | [5](../../../vault/40-features-matching/44-superpoint-lightglue-loftr.md) | [2026-10-20](44-superpoint-lightglue-loftr.md) |
-| [Recalage par intensités et ECC](../../../vault/40-features-matching/references/45-recalage-ecc.md) | [3](../../../vault/40-features-matching/45-recalage-ecc.md) | [2026-10-20](45-recalage-ecc.md) |
-| [RANSAC appliqué à une homographie](../../../vault/50-calibration-geometrie/references/51-ransac-homographie.md) | [7](../../../vault/50-calibration-geometrie/51-ransac-homographie.md) | [2026-10-20](51-ransac-homographie.md) |
-| [Calibration caméra sur mire — méthode de Zhang](../../../vault/50-calibration-geometrie/references/52-calibration-zhang.md) | [7](../../../vault/50-calibration-geometrie/52-calibration-zhang.md) | [2026-10-20](52-calibration-zhang.md) |
-| [Épipolaire, PnP et triangulation](../../../vault/50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | [5](../../../vault/50-calibration-geometrie/53-epipolaire-pnp-triangulation.md) | [2026-10-20](53-epipolaire-pnp-triangulation.md) |
-| [Bundle adjustment et complément de Schur](../../../vault/50-calibration-geometrie/references/54-bundle-adjustment.md) | [4](../../../vault/50-calibration-geometrie/54-bundle-adjustment.md) | [2026-10-20](54-bundle-adjustment.md) |
-| [Calibration multicapteurs, hand-eye et temps](../../../vault/50-calibration-geometrie/references/55-calibration-multicapteurs.md) | [3](../../../vault/50-calibration-geometrie/55-calibration-multicapteurs.md) | [2026-10-20](55-calibration-multicapteurs.md) |
-| [Stéréo rectifiée, SGM et profondeur](../../../vault/60-vision-3d/references/61-stereo-profondeur.md) | [4](../../../vault/60-vision-3d/61-stereo-profondeur.md) | [2026-10-20](61-stereo-profondeur.md) |
-| [Recalage global et ICP local](../../../vault/60-vision-3d/references/62-recalage-global-icp.md) | [5](../../../vault/60-vision-3d/62-recalage-global-icp.md) | [2026-10-20](62-recalage-global-icp.md) |
-| [SLAM, VIO, préintégration IMU et bouclage](../../../vault/60-vision-3d/references/63-slam-vio.md) | [5](../../../vault/60-vision-3d/63-slam-vio.md) | [2026-10-20](63-slam-vio.md) |
-| [Nuages, BEV et représentations d’occupation](../../../vault/60-vision-3d/references/64-nuages-bev-occupation.md) | [5](../../../vault/60-vision-3d/64-nuages-bev-occupation.md) | [2026-10-20](64-nuages-bev-occupation.md) |
-| [Représentations visuelles, ViT, Swin, ConvNeXt et DINOv2](../../../vault/70-reconnaissance-representations/references/71-representations-transfert.md) | [5](../../../vault/70-reconnaissance-representations/71-representations-transfert.md) | [2026-10-20](71-representations-transfert.md) |
-| [CLIP, SigLIP et reconnaissance par texte](../../../vault/70-reconnaissance-representations/references/72-clip-siglip.md) | [4](../../../vault/70-reconnaissance-representations/72-clip-siglip.md) | [2026-10-20](72-clip-siglip.md) |
-| [Inspection : golden template, PatchCore et PaDiM](../../../vault/70-reconnaissance-representations/references/73-patchcore-padim.md) | [4](../../../vault/70-reconnaissance-representations/73-patchcore-padim.md) | [2026-10-20](73-patchcore-padim.md) |
-| [OCR et compréhension documentaire](../../../vault/70-reconnaissance-representations/references/74-ocr-documents.md) | [3](../../../vault/70-reconnaissance-representations/74-ocr-documents.md) | [2026-10-20](74-ocr-documents.md) |
-| [Reconnaissance biométrique, ArcFace et PAD](../../../vault/70-reconnaissance-representations/references/75-embeddings-biometrie.md) | [2](../../../vault/70-reconnaissance-representations/75-embeddings-biometrie.md) | [2026-10-20](75-embeddings-biometrie.md) |
-| [NMS — supprimer des détections redondantes](../../../vault/80-detection-pose/references/81-nms.md) | [5](../../../vault/80-detection-pose/81-nms.md) | [2026-10-20](81-nms.md) |
-| [Détection : Faster R-CNN, familles YOLO et DETR](../../../vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) | [5](../../../vault/80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) | [2026-10-20](82-detection-fasterrcnn-yolo-detr.md) |
-| [Détection open-vocabulary et grounding](../../../vault/80-detection-pose/references/83-detection-open-vocabulary.md) | [3](../../../vault/80-detection-pose/83-detection-open-vocabulary.md) | [2026-10-20](83-detection-open-vocabulary.md) |
-| [Détection 3D, pose d’objet et pose articulée](../../../vault/80-detection-pose/references/84-detection-pose-3d.md) | [4](../../../vault/80-detection-pose/84-detection-pose-3d.md) | [2026-10-20](84-detection-pose-3d.md) |
-| [Otsu, distance transform et watershed](../../../vault/90-segmentation/references/91-otsu-distance-watershed.md) | [5](../../../vault/90-segmentation/91-otsu-distance-watershed.md) | [2026-10-20](91-otsu-distance-watershed.md) |
-| [GrabCut, régions et modèles d’apparence](../../../vault/90-segmentation/references/92-grabcut-regions.md) | [3](../../../vault/90-segmentation/92-grabcut-regions.md) | [2026-10-20](92-grabcut-regions.md) |
-| [Segmentation sémantique, instances et panoptique](../../../vault/90-segmentation/references/93-semantique-instances-panoptique.md) | [4](../../../vault/90-segmentation/93-semantique-instances-panoptique.md) | [2026-10-20](93-semantique-instances-panoptique.md) |
-| [SAM, SAM 2 et segmentation guidée en vidéo](../../../vault/90-segmentation/references/94-sam-sam2.md) | [3](../../../vault/90-segmentation/94-sam-sam2.md) | [2026-10-20](94-sam-sam2.md) |
-| [Flot optique : Lucas–Kanade, Farnebäck et RAFT](../../../vault/100-mouvement-video/references/101-flot-optique.md) | [4](../../../vault/100-mouvement-video/101-flot-optique.md) | [2026-10-20](101-flot-optique.md) |
-| [Suivi de points, actions et compréhension vidéo](../../../vault/100-mouvement-video/references/102-points-actions-video.md) | [4](../../../vault/100-mouvement-video/102-points-actions-video.md) | [2026-10-20](102-points-actions-video.md) |
-| [SORT — tracking multiobjet par mouvement et association](../../../vault/110-tracking-association/references/111-sort.md) | [8](../../../vault/110-tracking-association/111-sort.md) | [2026-10-20](111-sort.md) |
-| [DeepSORT, ByteTrack et association multiobjet](../../../vault/110-tracking-association/references/112-deepsort-bytetrack.md) | [4](../../../vault/110-tracking-association/112-deepsort-bytetrack.md) | [2026-10-20](112-deepsort-bytetrack.md) |
-| [Tracking monoobjet : corrélation, siamois et MeanShift](../../../vault/110-tracking-association/references/113-tracking-monoobjet.md) | [2](../../../vault/110-tracking-association/113-tracking-monoobjet.md) | [2026-10-20](113-tracking-monoobjet.md) |
-| [VLM, grounding et frontière vision–action](../../../vault/120-generatif-multimodal/references/121-vlm-grounding.md) | [4](../../../vault/120-generatif-multimodal/121-vlm-grounding.md) | [2026-10-20](121-vlm-grounding.md) |
-| [VAE, GAN et diffusion pour génération/restauration](../../../vault/120-generatif-multimodal/references/122-generation-restauration.md) | [3](../../../vault/120-generatif-multimodal/122-generation-restauration.md) | [2026-10-20](122-generation-restauration.md) |
-| [NeRF, 3D Gaussian Splatting et reconstruction](../../../vault/120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | [3](../../../vault/120-generatif-multimodal/123-nerf-gaussian-splatting.md) | [2026-10-20](123-nerf-gaussian-splatting.md) |
-| [IoU et AP — protocole COCO de détection](../../../vault/130-evaluation-fiabilite/references/131-iou-ap-coco.md) | [7](../../../vault/130-evaluation-fiabilite/131-iou-ap-coco.md) | [2026-10-20](131-iou-ap-coco.md) |
-| [Évaluer identités, trajectoires et localisation 3D](../../../vault/130-evaluation-fiabilite/references/132-tracking-trajectoires.md) | [5](../../../vault/130-evaluation-fiabilite/132-tracking-trajectoires.md) | [2026-10-20](132-tracking-trajectoires.md) |
-| [Splits, annotations, calibration des scores et dérive](../../../vault/130-evaluation-fiabilite/references/133-donnees-generalisation.md) | [5](../../../vault/130-evaluation-fiabilite/133-donnees-generalisation.md) | [2026-10-20](133-donnees-generalisation.md) |
-| [Métriques de segmentation, inspection et applications](../../../vault/130-evaluation-fiabilite/references/134-metriques-applications.md) | [4](../../../vault/130-evaluation-fiabilite/134-metriques-applications.md) | [2026-10-20](134-metriques-applications.md) |
-| [Contrats de données, profiling et pipelines vidéo](../../../vault/140-ingenierie-systemes/references/141-contrats-profiling-video.md) | [5](../../../vault/140-ingenierie-systemes/141-contrats-profiling-video.md) | [2026-10-20](141-contrats-profiling-video.md) |
-| [PTQ, QAT, INT8/FP8 et runtimes](../../../vault/140-ingenierie-systemes/references/142-quantification-runtimes.md) | [5](../../../vault/140-ingenierie-systemes/142-quantification-runtimes.md) | [2026-10-20](142-quantification-runtimes.md) |
-| [Déploiement edge, compression et surveillance](../../../vault/140-ingenierie-systemes/references/143-edge-reproductibilite.md) | [4](../../../vault/140-ingenierie-systemes/143-edge-reproductibilite.md) | [2026-10-20](143-edge-reproductibilite.md) |
+| [Lesser squares, SVD and packaging](../../../vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md) | [4](../../../vault/10-mathematiques-estimation/11-moindres-carres-svd.md) | [2026-10-18](../2026-10-18/11-moindres-carres-svd.md) |
+| [SO(3), SE(3) and processing conventions](../../../vault/10-mathematiques-estimation/references/12-rotations-se3.md) | [4](../../../vault/10-mathematiques-estimation/12-rotations-se3.md) | [2026-10-18](../2026-10-18/12-rotations-se3.md) |
+| [Kalman, EKF, UKF and ESKF for fusion](../../../vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) | [4](../../../vault/10-mathematiques-estimation/13-kalman-ekf-eskf.md) | [2026-10-18](../2026-10-18/13-kalman-ekf-eskf.md) |
+| [Factor Graphs and Incremental Optimization](../../../vault/10-mathematiques-estimation/references/14-graphes-facteurs.md) | [3](../../../vault/10-mathematiques-estimation/14-graphes-facteurs.md) | [2026-10-18](../2026-10-18/14-graphes-facteurs.md) |
+| [Exposure, noise, colour and sampling](../../../vault/20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) | [4](../../../vault/20-acquisition-images/21-exposition-bruit-echantillonnage.md) | [2026-10-18](../2026-10-18/21-exposition-bruit-echantillonnage.md) |
+| [Sensors, rolling shutter and synchronization](../../../vault/20-acquisition-images/references/22-capteurs-horodatage.md) | [4](../../../vault/20-acquisition-images/22-capteurs-horodatage.md) | [2026-10-18](../2026-10-18/22-capteurs-horodatage.md) |
+| [Line-scan, remote sensing and medical volumes](../../../vault/20-acquisition-images/references/23-imageries-specialisees.md) | [3](../../../vault/20-acquisition-images/23-imageries-specialisees.md) | [2026-10-18](../2026-10-18/23-imageries-specialisees.md) |
+| [Filters, gradients and pyramids](../../../vault/30-traitement-image/references/31-filtrage-gradients.md) | [4](../../../vault/30-traitement-image/31-filtrage-gradients.md) | [2026-10-18](../2026-10-18/31-filtrage-gradients.md) |
+| [Canny and Hough: contours, lines and segments](../../../vault/30-traitement-image/references/32-canny-hough.md) | [4](../../../vault/30-traitement-image/32-canny-hough.md) | [2026-10-18](../2026-10-18/32-canny-hough.md) |
+| [Morphology and related components](../../../vault/30-traitement-image/references/33-morphologie-composantes.md) | [3](../../../vault/30-traitement-image/33-morphologie-composantes.md) | [2026-10-18](../2026-10-18/33-morphologie-composantes.md) |
+| [SIFT –  local points and description on several scales](../../../vault/40-features-matching/references/41-sift.md) | [7](../../../vault/40-features-matching/41-sift.md) | [2026-10-18](../2026-10-18/41-sift.md) |
+| [ORB –  detection and binary oriented descriptor](../../../vault/40-features-matching/references/42-orb.md) | [6](../../../vault/40-features-matching/42-orb.md) | [2026-10-18](../2026-10-18/42-orb.md) |
+| [Local detectors, descriptors and matchers](../../../vault/40-features-matching/references/43-detecteurs-matchers.md) | [4](../../../vault/40-features-matching/43-detecteurs-matchers.md) | [2026-10-20](43-detecteurs-matchers.md) |
+| [SuperPoint, LightGlue and LoFTR](../../../vault/40-features-matching/references/44-superpoint-lightglue-loftr.md) | [5](../../../vault/40-features-matching/44-superpoint-lightglue-loftr.md) | [2026-10-20](44-superpoint-lightglue-loftr.md) |
+| [registration by intensities and ECC](../../../vault/40-features-matching/references/45-recalage-ecc.md) | [3](../../../vault/40-features-matching/45-recalage-ecc.md) | [2026-10-20](45-recalage-ecc.md) |
+| [RANSAC applied to a homography](../../../vault/50-calibration-geometrie/references/51-ransac-homographie.md) | [7](../../../vault/50-calibration-geometrie/51-ransac-homographie.md) | [2026-10-20](51-ransac-homographie.md) |
+| [Camera calibration on calibration target –  Zhang's method](../../../vault/50-calibration-geometrie/references/52-calibration-zhang.md) | [7](../../../vault/50-calibration-geometrie/52-calibration-zhang.md) | [2026-10-20](52-calibration-zhang.md) |
+| [Epipolar, PnP and triangulation](../../../vault/50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) | [5](../../../vault/50-calibration-geometrie/53-epipolaire-pnp-triangulation.md) | [2026-10-20](53-epipolaire-pnp-triangulation.md) |
+| [Bundle adjustment and complement of Schur](../../../vault/50-calibration-geometrie/references/54-bundle-adjustment.md) | [4](../../../vault/50-calibration-geometrie/54-bundle-adjustment.md) | [2026-10-20](54-bundle-adjustment.md) |
+| [Multisensor calibration, hand-eye and time](../../../vault/50-calibration-geometrie/references/55-calibration-multicapteurs.md) | [3](../../../vault/50-calibration-geometrie/55-calibration-multicapteurs.md) | [2026-10-20](55-calibration-multicapteurs.md) |
+| [Rectified stereo, SGM and depth](../../../vault/60-vision-3d/references/61-stereo-profondeur.md) | [4](../../../vault/60-vision-3d/61-stereo-profondeur.md) | [2026-10-20](61-stereo-profondeur.md) |
+| [registration global and local PKI](../../../vault/60-vision-3d/references/62-recalage-global-icp.md) | [5](../../../vault/60-vision-3d/62-recalage-global-icp.md) | [2026-10-20](62-recalage-global-icp.md) |
+| [SLAM, VIO, pre-integration IMU and loopback](../../../vault/60-vision-3d/references/63-slam-vio.md) | [5](../../../vault/60-vision-3d/63-slam-vio.md) | [2026-10-20](63-slam-vio.md) |
+| [Clouds, BEV and occupancy representations](../../../vault/60-vision-3d/references/64-nuages-bev-occupation.md) | [5](../../../vault/60-vision-3d/64-nuages-bev-occupation.md) | [2026-10-20](64-nuages-bev-occupation.md) |
+| [Visual representations, ViT, Swin, ConvNeXt and DINOv2](../../../vault/70-reconnaissance-representations/references/71-representations-transfert.md) | [5](../../../vault/70-reconnaissance-representations/71-representations-transfert.md) | [2026-10-20](71-representations-transfert.md) |
+| [CLIP, SigLIP and text recognition](../../../vault/70-reconnaissance-representations/references/72-clip-siglip.md) | [4](../../../vault/70-reconnaissance-representations/72-clip-siglip.md) | [2026-10-20](72-clip-siglip.md) |
+| [Inspection: golden template, PatchCore and PaDiM](../../../vault/70-reconnaissance-representations/references/73-patchcore-padim.md) | [4](../../../vault/70-reconnaissance-representations/73-patchcore-padim.md) | [2026-10-20](73-patchcore-padim.md) |
+| [OCR and Documentary Understanding](../../../vault/70-reconnaissance-representations/references/74-ocr-documents.md) | [3](../../../vault/70-reconnaissance-representations/74-ocr-documents.md) | [2026-10-20](74-ocr-documents.md) |
+| [Biometric recognition, ArcFace and PAD](../../../vault/70-reconnaissance-representations/references/75-embeddings-biometrie.md) | [2](../../../vault/70-reconnaissance-representations/75-embeddings-biometrie.md) | [2026-10-20](75-embeddings-biometrie.md) |
+| [NMS –  remove redundant detections](../../../vault/80-detection-pose/references/81-nms.md) | [5](../../../vault/80-detection-pose/81-nms.md) | [2026-10-20](81-nms.md) |
+| [Detection: Faster R-CNN, YOLO and DETR families](../../../vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) | [5](../../../vault/80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) | [2026-10-20](82-detection-fasterrcnn-yolo-detr.md) |
+| [Open-vocabulary detection and grounding](../../../vault/80-detection-pose/references/83-detection-open-vocabulary.md) | [3](../../../vault/80-detection-pose/83-detection-open-vocabulary.md) | [2026-10-20](83-detection-open-vocabulary.md) |
+| [Detection 3D, object pose and articulated pose](../../../vault/80-detection-pose/references/84-detection-pose-3d.md) | [4](../../../vault/80-detection-pose/84-detection-pose-3d.md) | [2026-10-20](84-detection-pose-3d.md) |
+| [Otsu, distance transform and watershed](../../../vault/90-segmentation/references/91-otsu-distance-watershed.md) | [5](../../../vault/90-segmentation/91-otsu-distance-watershed.md) | [2026-10-20](91-otsu-distance-watershed.md) |
+| [GrabCut, regions and models of appearance](../../../vault/90-segmentation/references/92-grabcut-regions.md) | [3](../../../vault/90-segmentation/92-grabcut-regions.md) | [2026-10-20](92-grabcut-regions.md) |
+| [Semantic segmentation, instances and panopticon](../../../vault/90-segmentation/references/93-semantique-instances-panoptique.md) | [4](../../../vault/90-segmentation/93-semantique-instances-panoptique.md) | [2026-10-20](93-semantique-instances-panoptique.md) |
+| [SAM, SAM 2 and video guided segmentation](../../../vault/90-segmentation/references/94-sam-sam2.md) | [3](../../../vault/90-segmentation/94-sam-sam2.md) | [2026-10-20](94-sam-sam2.md) |
+| [optical flow: Lucas – Kanade, Farnebäck and RAFT](../../../vault/100-mouvement-video/references/101-flot-optique.md) | [4](../../../vault/100-mouvement-video/101-flot-optique.md) | [2026-10-20](101-flot-optique.md) |
+| [Monitoring of points, actions and video comprehension](../../../vault/100-mouvement-video/references/102-points-actions-video.md) | [4](../../../vault/100-mouvement-video/102-points-actions-video.md) | [2026-10-20](102-points-actions-video.md) |
+| [SORT –  multiobject tracking by movement and association](../../../vault/110-tracking-association/references/111-sort.md) | [8](../../../vault/110-tracking-association/111-sort.md) | [2026-10-20](111-sort.md) |
+| [DeepSORT, ByteTrack and multiobject association](../../../vault/110-tracking-association/references/112-deepsort-bytetrack.md) | [4](../../../vault/110-tracking-association/112-deepsort-bytetrack.md) | [2026-10-20](112-deepsort-bytetrack.md) |
+| [Single Object Tracking: Correlation, Siamese and MeanShift](../../../vault/110-tracking-association/references/113-tracking-monoobjet.md) | [2](../../../vault/110-tracking-association/113-tracking-monoobjet.md) | [2026-10-20](113-tracking-monoobjet.md) |
+| [VLM, grounding and frontier vision – action](../../../vault/120-generatif-multimodal/references/121-vlm-grounding.md) | [4](../../../vault/120-generatif-multimodal/121-vlm-grounding.md) | [2026-10-20](121-vlm-grounding.md) |
+| [VAE, GAN and broadcast for generation/restoration](../../../vault/120-generatif-multimodal/references/122-generation-restauration.md) | [3](../../../vault/120-generatif-multimodal/122-generation-restauration.md) | [2026-10-20](122-generation-restauration.md) |
+| [NeRF, 3D Gaussian Splatting and Reconstruction](../../../vault/120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | [3](../../../vault/120-generatif-multimodal/123-nerf-gaussian-splatting.md) | [2026-10-20](123-nerf-gaussian-splatting.md) |
+| [IoU and AP –  COCO detection protocol](../../../vault/130-evaluation-fiabilite/references/131-iou-ap-coco.md) | [7](../../../vault/130-evaluation-fiabilite/131-iou-ap-coco.md) | [2026-10-20](131-iou-ap-coco.md) |
+| [Evaluate identities, trajectories and location 3D](../../../vault/130-evaluation-fiabilite/references/132-tracking-trajectoires.md) | [5](../../../vault/130-evaluation-fiabilite/132-tracking-trajectoires.md) | [2026-10-20](132-tracking-trajectoires.md) |
+| [Splits, annotations, scoring calibration and drift](../../../vault/130-evaluation-fiabilite/references/133-donnees-generalisation.md) | [5](../../../vault/130-evaluation-fiabilite/133-donnees-generalisation.md) | [2026-10-20](133-donnees-generalisation.md) |
+| [Segmentation, inspection and application metrics](../../../vault/130-evaluation-fiabilite/references/134-metriques-applications.md) | [4](../../../vault/130-evaluation-fiabilite/134-metriques-applications.md) | [2026-10-20](134-metriques-applications.md) |
+| [Data contracts, profiling and video pipelines](../../../vault/140-ingenierie-systemes/references/141-contrats-profiling-video.md) | [5](../../../vault/140-ingenierie-systemes/141-contrats-profiling-video.md) | [2026-10-20](141-contrats-profiling-video.md) |
+| [PTQ, QAT, INT8/FP8 and runtimes](../../../vault/140-ingenierie-systemes/references/142-quantification-runtimes.md) | [5](../../../vault/140-ingenierie-systemes/142-quantification-runtimes.md) | [2026-10-20](142-quantification-runtimes.md) |
+| [Edge deployment, compression and monitoring](../../../vault/140-ingenierie-systemes/references/143-edge-reproductibilite.md) | [4](../../../vault/140-ingenierie-systemes/143-edge-reproductibilite.md) | [2026-10-20](143-edge-reproductibilite.md) |
 
-## Enrichissements prioritaires proposés
+## Proposed Priority Enrichments
 
-Aucune nouvelle carte n'a été rédigée. Les propositions détaillées sont dans
-les rapports ; la priorité ci-dessous est un choix éditorial à discuter, pas
-une mesure de la maîtrise de l'apprenant.
+No new flashcard has been written. The detailed proposals are in the reports; the priority below is an editorial choice to be discussed, not a measure of mastery of the learner.
 
-| Proposition | Lacune comblée | Famille | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Contrôler NIS et résidus biaisés | Distinguer faible résidu et covariance cohérente | Évaluation | 1 carte, 3 critères ; durée à mesurer | [Gamse et al., §§2.2.2 et 3.4](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/) |
-| Transporter une covariance par l'adjoint | Éviter le mélange des repères d'incertitude | Raisonnement | 1 carte, 3 critères ; durée à mesurer | [Solà et al., §II-H](https://arxiv.org/abs/1812.01537) |
-| Calculer PQ sur un mini-appariement | Rendre opératoire la métrique panoptique | Évaluation | 1 carte, TP/FP/FN et IoU moyenne | [Panoptic Segmentation, §4](https://arxiv.org/abs/1801.00868) |
-| Calculer l'effet d'un ID switch sur IDF1 | Passer de la distinction qualitative à un cas calculé | Raisonnement | 1 carte sur une courte séquence | [Ristani et al., métriques d'identité](https://arxiv.org/abs/1609.01775) |
+| check NIS and residuals biased | Distinguish between low residual and coherent covariance | Evaluation | 1 flashcard, 3 criteria; duration to be measured | [Gamse et al., §§2.2.2 and 3.4](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/) |
+| Transporting a covariance by the assistant | Avoid mixing uncertainty coordinate frames | Reasoning | 1 flashcard, 3 criteria; duration to be measured | [Solà et al., §II-H](https://arxiv.org/abs/1812.01537) |
+| Calculate PQ on a mini-matching | Make the panoptic metric operational | Evaluation | 1 flashcard, TP/FP/FN and IoU average | [Panoptic Segmentation, §4](https://arxiv.org/abs/1801.00868) |
+| Calculate the effect of an ID switch on IDF1 | Moving from qualitative distinction to a calculated case | Reasoning | 1 flashcard in a short sequence | [Ristani et al., identity metrics](https://arxiv.org/abs/1609.01775) |
 
-## Contrôles exécutés
+## Controls carried out
 
-Contrôles exécutés le 20 octobre, puis vérifiés à la livraison du 21 octobre :
+Checks executed on 20 October, then checked on delivery on 21 October:
 
-| Contrôle | Résultat |
+| check | Result |
 | --- | --- |
-| `python3 scripts/check_vault.py` | OK : 125 documents Markdown, 52 fiches, 224 cartes |
-| `python3 -m unittest discover -s tests` | 34 tests réussis |
-| `python3 scripts/sync_catalog.py --check` | 18 documents générés, aucun périmé |
-| `inventaire_cartes.py vault --comparer <inventaire_base.json>` | Aucun ID ajouté/disparu, aucune identité Anki modifiée |
-| `python3 examples/pilot_math.py` | IoU 2/3 ; NMS [0,2] puis [0,1,2] ; RANSAC 72/9 ; Kalman et AP cohérents |
-| `python3 examples/curriculum_math.py` | Otsu 1→21 avec partition identique ; projection/associations cohérentes ; stéréo 10/20 m ; 240 images/s ; gain 1,05263 |
-| `git diff --check` et relecture du diff | Aucune erreur d'espacement ; modifications du périmètre relues |
+| `python3 scripts/check_vault.py` | OK: 125 documents Markdown, 52 reference notes, 224 flashcards |
+| `python3 -m unittest discover -s tests` | 34 successful tests |
+| `python3 scripts/sync_catalog.py --check` | 18 generated documents, no expired |
+| `inventaire_cartes.py vault --comparer <inventaire_base.json>` | No ID added/disappeared, no Anki identity changed |
+| `python3 examples/pilot_math.py` | IoU 2/3; NMS [0,2] then [0,1,2]; RANSAC 72/9; Kalman and AP consistent |
+| `python3 examples/curriculum_math.py` | Otsu 1→21 with identical score; coherent projection/associations; stereo 10/20 m; 240 fps; gain 1,05263 |
+| `git diff --check` and review of the diff | No spacing error; perimeter changes re-read |
 
-La comparaison initiale du 20 octobre a été complétée à la livraison par une
-comparaison à l'inventaire du commit de départ `e5b41f0`, extrait hors du dépôt.
-Des contrôles ponctuels ont aussi vérifié : une ligne de rapport par carte
-(224 IDs distincts dans 52 rapports), les liens locaux du bilan et des rapports,
-les colonnes des tableaux, l'absence de caractères de contrôle, les objectifs
-inchangés, les révisions incrémentées et les sections historiques préservées.
-Ces contrôles ponctuels ne sont pas une CI ni une nouvelle commande du dépôt.
+The initial comparison of 20 October was supplemented with a comparison to the inventory of the original `e5b41f0`, extracted from the repository. One-time checks also verified: a report row by flashcard (224 separate IDs in 52 reports), local balance sheet and report links, table columns, no check characters, unchanged objectives, incremental revisions, and preserved historical sections. These one-time checks are not an IC or a new order from the repository.
 
-## Limites et points ouverts
+## Limits and Open Points
 
-- Auto-revue d'agent, sans relecture scientifique indépendante. Les fiches ne
-  sont pas promues au statut « relu ».
-- [UKF](../2026-10-18/13-kalman-ekf-eskf.md) : mécanisme des sigma-points
-  non vérifié dans le texte primaire intégral accessible lors du passage.
-  [ECC](45-recalage-ecc.md) : résumé primaire et documentation OpenCV
-  consultés ; dérivation complète du papier non vérifiable pendant la revue.
-- Les limites d'accès plus locales (notamment résumé HOG et mécanisme
-  GrabCut vérifié dans la documentation officielle) sont indiquées dans
-  leurs rapports. Une source absente n'est pas déclarée confirmée.
-- Context7 indisponible : recours direct aux documentations officielles,
-  avec versions et dates consignées. Les liens `latest` restent évolutifs.
-- Aucun essai réel d'export, de mise à jour Anki ou de rendu
-  Obsidian/AnkiDroid pendant cette revue ; les preuves datées du 18 octobre
-  n'ont pas été réécrites. Le contenu reste non synchronisé.
-- Maîtrise, durée de rappel et coût réel des cartes non mesurés. Les
-  contre-exemples analytiques ne constituent pas des benchmarks d'images
-  ni des performances mesurées sur matériel.
+- Agent self-review, without independent scientific proofreading. The reference notes are not promoted to "reread" status.
+- [UKF](../2026-10-18/13-kalman-ekf-eskf.md): mechanism of sigma-points not verified in the full primary text accessible during the passage. [ECC](45-recalage-ecc.md): primary summary and OpenCV documentation consulted; derivation completes non-verifiable paper during review.
+- More local access limits (including HOG summary and GrabCut mechanism verified in official documentation) are indicated in their reports. An absent source has not been confirmed.
+- Context7 unavailable: direct use of official documentation, with recorded versions and dates. `latest` links remain scalable.
+- No actual export, update Anki or Obsidian/AnkiDroid rendering attempts during this review; evidence dated October 18 has not been rewritten. The content is not synchronized.
+- Control, recall time and real cost of unmeasured flashcards. Analytical counterexamples do not constitute image benchmarks or measured performance on hardware.

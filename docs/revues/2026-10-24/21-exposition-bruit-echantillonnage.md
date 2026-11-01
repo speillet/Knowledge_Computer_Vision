@@ -1,35 +1,28 @@
 # Revue — CV-ACQUISITION — 2026-10-24
 
-## Synthèse
+## Overview
 
-Correction ciblée avant fusion de la PR existante. Comparaison de resize 2022 généralisée au présent ; symboles et unités SNR absents. Limiter l’observation à Parmar 2022 ; définir QE, photons, gain et variances, préciser modèle linéaire.
-Pas de carte ajoutée ni d’ID modifié ; fiche révision 5, statut `redige`.
-Les autres cartes du sujet ne font pas l’objet d’un nouvel audit exhaustif.
+Targeted correction before merging the existing PR. Generalized comparison of resize 2022 to the present; missing SNR symbols and units. Limit observation to Parmar 2022; define QE, photons, gain and variances, specify linear model. No flashcard added or ID changed; reference note revision 5, status `redige`. The other flashcards on the subject are not subject to a comprehensive re-audit.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-ACQUISITION-002 | Point signalé vérifié avec les sources ci-dessous | Objectif existant conservé | Noyau et limites explicités | Fiche et carte accordées | Important | Corrigé |
-| CV-ACQUISITION-003 | Point signalé vérifié avec les sources ci-dessous | Objectif existant conservé | Noyau et limites explicités | Fiche et carte accordées | Important | Corrigé |
+| CV-ACQUISITION-002 | Point reported checked with sources below | Existing objective retained | Core and Explicit Limits | reference note and flashcard granted | Important | Corrected |
+| CV-ACQUISITION-003 | Point reported checked with sources below | Existing objective retained | Core and Explicit Limits | reference note and flashcard granted | Important | Corrected |
 
-## Corrections appliquées
+## Corrections applied
 
-`vault/20-acquisition-images/references/21-exposition-bruit-echantillonnage.md` et `vault/20-acquisition-images/21-exposition-bruit-echantillonnage.md` : Limiter l’observation à Parmar 2022 ; définir QE, photons, gain et variances, préciser modèle linéaire. Journal complété sans réécrire
-les preuves datées du passage précédent. Les identités pédagogiques et Anki
-restent stables.
+`vault/20-acquisition-images/references/21-exposition-bruit-echantillonnage.md` and `vault/20-acquisition-images/21-exposition-bruit-echantillonnage.md`: Limit observation to Parmar 2022; define QE, photons, gain and variances, specify linear model. Journal completed without rewriting the evidence dated from the previous passage. Pedagogical identities and Anki remain stable.
 
-## Enrichissements proposés (en attente d’accord)
+## Proposed enrichments (pending agreement)
 
-Aucun ajout proposé dans ce correctif. Les nouveaux sujets prioritaires feront
-l’objet d’un lot distinct autorisé par l’apprenant le 2026-10-24.
+No additions proposed in this fix. The new priority subjects will be the subject of a separate batch authorized by the learner on the 2026-10-24.
 
 ## Sources
 
-[Parmar et al. 2022, §§3.2 et 6.3](https://arxiv.org/html/2104.11222v3) ; [torchvision 0.24 Resize, antialias](https://docs.pytorch.org/vision/0.24/generated/torchvision.transforms.Resize.html) ; [EMVA 1288 Linear 4.0, §§2.4–2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf).
+[Parmar et al. 2022, §§3.2 and 6.3](https://arxiv.org/html/2104.11222v3) ; [torchvision 0.24 Resize, antialias](https://docs.pytorch.org/vision/0.24/generated/torchvision.transforms.Resize.html) ; [EMVA 1288 Linear 4.0, §§2.4 – 2.7](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf).
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôleur, tests de la bibliothèque standard et comparaison d’inventaire
-exécutés avant publication. Aucun export réel, rendu AnkiDroid, mesure matérielle
-ou validation scientifique indépendante n’est déduit de cette auto-revue.
+Controller, standard library tests, and inventory comparison run before publication. No actual export, AnkiDroid rendering, material measurement or independent scientific validation is deducted from this self-review.

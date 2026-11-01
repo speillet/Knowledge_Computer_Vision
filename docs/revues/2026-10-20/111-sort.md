@@ -1,56 +1,55 @@
-# Revue — SORT — tracking multiobjet par mouvement et association — 2026-10-20
+# Review –  SORT –  multiobject tracking by movement and association –  2026-10-20
 
-## Synthèse
+## Overview
 
-8 cartes auditées. Deux imprécisions importantes et des renvois périmés corrigés ; mécanismes confirmés.
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+8 flashcards audited. Two important inaccuracies and outdated returns corrected; confirmed mechanisms. Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-8 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 2 importante, 0 mineure, 6 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+8 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 2 large, 0 minor, 6 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SORT-001 | Confirmé ; critère clarifié | séparer les responsabilités du tracker. | 105 mots à l’entrée ; Un contresens bloquant désormais précis | Fiche et format contrôlés | important | Corriger critère |
-| CV-SORT-002 | Confirmé | interpréter un état et ses unités. | 119 mots à l’entrée ; Objectif unique, noyau fini | Fiche et format contrôlés | — | Conserver |
-| CV-SORT-003 | Confirmé | interpréter le poids d'une mesure. | 99 mots à l’entrée ; Objectif unique, noyau fini | Fiche et format contrôlés | — | Conserver |
-| CV-SORT-004 | Confirmé ; entrée vide précisée | distinguer mémoire et émission. | 103 mots à l’entrée ; Cas fini sur deux frames | Fiche et format contrôlés | important | Préciser tableau 2D |
-| CV-SORT-005 | Confirmé | comprendre le rejet après affectation. | 105 mots à l’entrée ; Objectif unique, noyau fini | Fiche et format contrôlés | — | Conserver |
-| CV-SORT-006 | Déduction explicite du projet | établir un diagnostic discriminant. | 106 mots à l’entrée ; Cas et vérifications finis | Fiche et format contrôlés | — | Conserver |
-| CV-SORT-007 | Confirmé | distinguer les tâches temporelles. | 100 mots à l’entrée ; Objectif unique, noyau fini | Fiche et format contrôlés | — | Conserver |
-| CV-SORT-008 | Déduction explicite du projet | définir une mesure de performance complète. | 106 mots à l’entrée ; Cas et vérifications finis | Fiche et format contrôlés | — | Conserver |
+| CV-SORT-001 | Confirmed; criterion clarified | Separate the responsibilities of the tracker. | 105 words at the entrance; A blocker now accurate | reference note and controlled format | important | Correct criteria |
+| CV-SORT-002 | Confirmed | interpret a state and its units. | 119 words at entry; Single objective, finite kernel | reference note and controlled format | — | Keep |
+| CV-SORT-003 | Confirmed | interpret the weight of a measure. | 99 words at entry; Single objective, finite kernel | reference note and controlled format | — | Keep |
+| CV-SORT-004 | Confirmed; empty entry specified | Distinguish between memory and transmission. | 103 words at input; Finished case on two frames | reference note and controlled format | important | Specify table 2D |
+| CV-SORT-005 | Confirmed | Understanding rejection after assignment. | 105 words at entry; Single objective, finite kernel | reference note and controlled format | — | Keep |
+| CV-SORT-006 | Explicit Deduction of the Project | Make a discriminating diagnosis. | 106 words at entry; Cases and completed checks | reference note and controlled format | — | Keep |
+| CV-SORT-007 | Confirmed | Distinguish between temporal tasks. | 100 words at entry; Single objective, finite kernel | reference note and controlled format | — | Keep |
+| CV-SORT-008 | Explicit Deduction of the Project | define a complete performance measure. | 106 words at entry; Cases and completed checks | reference note and controlled format | — | Keep |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-- Confirmé : SORT traite les détections image par image, sans apparence ni futur ; état centre/aire/ratio et trois vitesses, transition F à pas unitaire dans le code épinglé.
-- Confirmé par lecture du code : max_age=1, min_hits=3, seuil 0,3 ; suppression si âge > maximum, émission seulement après mise à jour et condition de hit_streak/exception de démarrage.
-- Confirmé : association par IoU, raccourci pour paires non ambiguës puis affectation et rejet sous seuil. Le contre-exemple matriciel est un calcul construit : 0,90 > 0,62 puis une seule paire retenue.
-- Exemple Kalman recalculé avec `examples/pilot_math.py` : 107,352941 px et variance 6,617647 ; R=100 donne 102 px. Ce n'est pas une exécution de SORT.
-- Corrigibilité : le critère 001 sur « sortie indépendante » était ambigu ; remplacé par le contresens net du tracker qui ferait lui-même la détection.
-- API : la documentation du code exige un tableau vide (0,5), pas une liste Python vide. Correction 004.
-- Les diagnostics 006/008 sont des protocoles à exécuter ; aucun résultat vidéo déduit du papier.
+- Confirmed: SORT processes image-by-image detections, without appearance or future; center/area/ratio state and three speeds, transition F to unit pitch in the pinned code.
+- Confirmed by reading the code: max_age=1, min_hits=3, threshold 0,3; deletion if age > maximum, issue only after update and hit_streak condition/start exception.
+- Confirmed: combination by IoU, shortcut for unambiguous pairs, then assignment and rejection under threshold. The matrix counter-example is a calculation constructed: 0,90 > 0,62 then a single pair retained.
+- Example Kalman recalculated with `examples/pilot_math.py`: 107,352941 px and variance 6,617647; R=100 gives 102 px. This is not an execution of SORT.
+- Correctability: the 001 criterion on “independent output” was ambiguous; replaced by the net countersense of the tracker that would make the detection itself.
+- API: The code documentation requires an empty array (0,5), not an empty Python list. Correction 004.
+- 006/008 diagnostics are protocols to be performed; no video results are deduced from the paper.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révisée ; critère de correction 001 et contrat d’entrée vide 004 précisés ; liens vers sujets désormais existants.
+reference note revised; correction criteria 001 and empty entry contract 004 specified; links to now existing topics.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Aucune addition prioritaire | Les objectifs existants suffisent au périmètre annoncé | — | Aucun rappel ajouté | Sources ci-dessous |
+| No Priority Addition | Existing objectives are sufficient for the scope announced | — | No reminders added | Sources ci-dessous |
 
-Familles absentes : conception. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: conception. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [SORT, §§3.1–3.4 et §4](https://arxiv.org/abs/1602.00763).
-- [Code officiel commit 2236dff, convert_bbox_to_z, KalmanBoxTracker, association et Sort.update](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py), lu via raw.
+- [SORT, §§3.1 – 3.4 and §4](https://arxiv.org/abs/1602.00763).
+- [Official code commit 2236dff, convert_bbox_to_z, KalmanBoxTracker, association and Sort.update](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py), lu via raw.
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

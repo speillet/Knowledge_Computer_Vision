@@ -1,50 +1,49 @@
-# Revue — RANSAC appliqué à une homographie — 2026-10-20
+# Review –  RANSAC applied to a homography –  2026-10-20
 
-## Synthèse
+## Overview
 
-7 cartes auditées. 0 bloquant, 0 important ; 1 mineur partagé (statut des cas).
-Auto-revue documentaire par Agent Codex (`revue-cartes`) ; statut `redige` conservé.
+7 flashcards audited. 0 blocking, 0 important; 1 minor shared (case status). Self-reviewed documentary by Agent Codex (`revue-cartes`); status `redige` preserved.
 
-7 cartes auditées. Gravité maximale relevée par carte avant correction : 0 bloquante, 0 importante, 1 mineure, 6 sans défaut relevé. Les constats portant uniquement sur la fiche sont détaillés séparément ci-dessous.
+7 flashcards audited. Maximum gravity recorded by flashcard before correction: 0 blocking, 0 large, 1 minor, 6 without detected defect. The observations relating only to the reference note are detailed separately below.
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-HOMOGRAPHIE-001 | Confirmé : plan/rotation pure, parallaxe | choisir un modèle géométrique. | 103 mots à l’entrée ; noyau distinct de l’approfondissement | Fiche et format contrôlés | Aucune | Conserver |
-| CV-HOMOGRAPHIE-002 | Confirmé : huit degrés et rang minimal | relier degrés de liberté et dégénérescence. | 93 mots à l’entrée ; noyau distinct de l’approfondissement | Fiche et format contrôlés | Aucune | Conserver |
-| CV-HOMOGRAPHIE-003 | Confirmé : hypothèse, consensus, réestimation | reconstruire une itération robuste. | 111 mots à l’entrée ; noyau distinct de l’approfondissement | Fiche et format contrôlés | Aucune | Conserver |
-| CV-HOMOGRAPHIE-004 | Confirmé par §II et calcul : 72/9 | interpréter le budget nominal de RANSAC. | 122 mots à l’entrée ; noyau distinct de l’approfondissement | Fiche et format contrôlés | Aucune | Conserver la justification demandée |
-| CV-HOMOGRAPHIE-005 | Confirmé : résidu destination ; resize déduit | interpréter l'unité d'un seuil de résidu. | 117 mots à l’entrée ; noyau distinct de l’approfondissement | Fiche et format contrôlés | Aucune | Conserver |
-| CV-HOMOGRAPHIE-006 | Diagnostic algébrique du projet | diagnostiquer un modèle extrapolé. | 95 mots à l’entrée ; noyau distinct de l’approfondissement | Fiche et format contrôlés | Mineur | Attribution explicite |
-| CV-HOMOGRAPHIE-007 | Confirmé : incompatibilité de modèle | expliquer une incompatibilité de modèle. | 100 mots à l’entrée ; noyau distinct de l’approfondissement | Fiche et format contrôlés | Aucune | Conserver |
+| CV-HOMOGRAPHIE-001 | Confirmed: pure plan/rotation, parallax | Choose a geometric model. | 103 words at the input; distinct core of the further explanation | reference note and controlled format | None | Keep |
+| CV-HOMOGRAPHIE-002 | Confirmed: 8 degrees and minimum rank | Connecting degrees of freedom and degeneration. | 93 words at the input; distinct core of the further explanation | reference note and controlled format | None | Keep |
+| CV-HOMOGRAPHIE-003 | Confirmed: hypothesis, consensus, re-evaluation | Rebuild a robust iteration. | 111 words at the input; distinct core of the further explanation | reference note and controlled format | None | Keep |
+| CV-HOMOGRAPHIE-004 | Confirmed by §II and calculation: 72/9 | interpret the nominal budget of RANSAC. | 122 words at the input; distinct core of the further explanation | reference note and controlled format | None | Keep the requested justification |
+| CV-HOMOGRAPHIE-005 | Confirmed: residual destination; resize deducted | interpret the unit of a threshold of residual. | 117 words at the input; distinct core of the further explanation | reference note and controlled format | None | Keep |
+| CV-HOMOGRAPHIE-006 | Algebraic diagnosis of the project | Diagnose an extrapolated model. | 95 words at the input; distinct core of the further explanation | reference note and controlled format | Minor | Attribution explicite |
+| CV-HOMOGRAPHIE-007 | Confirmed: model incompatibility | Explain a model incompatibility. | 100 words at the input; distinct core of the further explanation | reference note and controlled format | None | Keep |
 
-### Affirmations de la fiche et des cartes
+### reference note and flashcards claims
 
-Confirmés : modèle homogène, cas plan/rotation, calcul de résidu, quatre correspondances non dégénérées, budget sous hypothèse indépendante. La normalisation ne rétablit pas un rang absent : déduction algébrique. Les diagnostics spatiaux ne sont pas des résultats d’expérience. Les deux diagnostics 006/007 ont des causes différentes (conditionnement et modèle). La carte 004 donne le résultat numérique mais demande sa dérivation et son interprétation : pas de réponse révélée.
+Confirmed: homogeneous model, plan/rotation case, calculation of residual, four non-degenerate correspondences, budget under independent assumption. Normalization does not restore an absent rank: algebraic deduction. Spatial diagnostics are not the result of experience. The two diagnoses 006/007 have different causes (packaging and model). The flashcard 004 gives the numerical result but asks for its derivation and its interpretation: no answer revealed.
 
-## Corrections appliquées
+## Corrections applied
 
-Fiche révision 3 et source de 006. Calculs de examples/pilot_math.py exécutés : 72 et 9.
+reference note revision 3 and source of 006. Calculations of examples/pilot_math.py executed: 72 and 9.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Résidu symétrique et incertitude dans les deux images | Limite du seul transfert destination | Raisonnement | Une carte, trois critères ; durée à mesurer | Hartley–Zisserman, estimation optimale d’homographie |
+| residual symmetric and uncertainty in both images | Limit of the only transfer to destination | Reasoning | One flashcard, three criteria; duration to be measured | Hartley – Zisserman, Optimal Homography Estimation |
 
-Familles absentes : comprehension, conception, evaluation. Leur absence ne commande pas de remplissage automatique ; les propositions visent une lacune concrète. Aucun ajout de carte effectué.
+Absent families: understanding, design, evaluation. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 
 ## Sources
 
-- [Fischler–Bolles 1981, §II, procédure et probabilité p.383](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf), PDF extrait ; formule et interprétation consultées.
-- [OpenCV 4.13, homographie, Basic theory et Demo 5](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html).
-- [OpenCV 4.13, findHomography, paramètres et algorithme](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+- [Fischler – Bolles 1981, §II, procedure and probability p.383](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf), PDF extract; formula and interpretation consulted.
+- [OpenCV 4.13, homography, Basic theory and Demo 5](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html).
+- [OpenCV 4.13, findHomography, parameters and algorithm](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
 
-## Contrôles et limites
+## Checks and limitations
 
-Les longueurs proviennent de l'inventaire initial ; ce sont celles du verso entier, pas du seul noyau. Pas de plafond arbitraire ; durée et charge de rappel non mesurées.
+The lengths come from the initial inventory; they are those of the entire verso, not just the core. No arbitrary ceiling; duration and recall load not measured.
 
-Contrôleur, 34 tests unitaires, comparaison des 224 IDs et identités Anki et diff : résultats finaux dans le [bilan commun](00-bilan.md). Context7 indisponible ; recours direct aux documentations officielles pour les API.
+Controller, 34 unit tests, comparison of 224 IDs and identities Anki and diff: final results in the [bilan commun](00-bilan.md). Context7 unavailable; direct use of official API documentation.
 
-Export Anki réel, rendu Obsidian/AnkiDroid, maîtrise de l'apprenant et validation scientifique indépendante non vérifiés. Les propositions de protocoles et diagnostics restent des raisonnements du projet, pas des expériences exécutées.
+Real export Anki, rendering Obsidian/AnkiDroid, control of the learner and independent scientific validation not verified. Propositions of protocols and diagnoses remain reasonings of the project, not experiments performed.

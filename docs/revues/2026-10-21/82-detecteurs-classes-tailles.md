@@ -1,75 +1,48 @@
-# Revue — Détecteurs : instances, classes et tailles — 2026-10-21
+# Review –  Detectors: instances, classes and sizes –  2026-10-21
 
-## Synthèse
+## Overview
 
-Une nouvelle carte auditée et ajoutée, CV-DETECTEURS-013, pour répondre à la
-demande de cas de détections multiples et de multiclasse. Aucun défaut bloquant,
-important ou mineur relevé sur cet ajout. Fiche révision 5 : contrat de sortie
-et exemples de tailles/rapports d'aspect développés. Les douze cartes
-antérieures sont inchangées ; leurs audits restent dans les rapports
-[d'apprentissage](82-detecteurs-apprentissage.md) et de
-[diagnostic](82-detecteurs-diagnostic.md), ainsi que le
-[rapport initial](../2026-10-20/82-detection-fasterrcnn-yolo-detr.md).
+A new audited and added flashcard, CV-DETECTEURS-013, to meet the demand for multiple detection and multiclass cases. No blocking, significant or minor defects noted on this addition. reference note revision 5: output contract and examples of sizes / aspect ratios developed. The previous twelve flashcards remain unchanged; their audits remain in the [Apprenticeship](82-detecteurs-apprentissage.md) and [diagnosis](82-detecteurs-diagnostic.md) reports, as well as the [rapport initial](../2026-10-20/82-detection-fasterrcnn-yolo-detr.md).
 
-## Constats par carte
+## Views by flashcard
 
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+| flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-DETECTEURS-013 | Distinction multi-étiquette confirmée par YOLOv3 §2.2 ; cas d'instances construit ; portée NMS confirmée | Séparer nombre d'objets, catégories et labels par objet | 129 mots ; cinq instances, deux classes et un label par instance dans le cas donné | Ne généralise pas YOLOv3 à toute la famille ; annotation et posttraitement explicites | Aucun défaut relevé | Ajouter |
+| CV-DETECTEURS-013 | Multi-tag distinction confirmed by YOLov3 §2.2; instance case built; scope NMS confirmed | Separate number of objects, categories and labels by object | 129 words; five instances, two classes and one label per instance in the given case | Does not generalize YOLov3 to the whole family; explicit annotation and post-treatment | No defects found | Ajouter |
 
-Les choix de supervision et de sortie ne se déduisent pas du seul nombre de
-classes présentes dans l'image. Le noyau est limité à cette distinction ;
-les détails de tête et de NMS sont des approfondissements.
+The choices of supervision and output are not deduced from the only number of classes present in the image. The core is limited to this distinction; the head and NMS details are further study.
 
-## Corrections appliquées
+## Corrections applied
 
-[Fiche](../../../vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md)
-complétée avant la [carte](../../../vault/80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) :
-plusieurs instances de même classe, plusieurs classes par image, labels
-multiples ou exclusifs par instance ; renvois vers les scénarios NMS.
+[Reference note](../../../vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) completed before [flashcard](../../../vault/80-detection-pose/82-detection-fasterrcnn-yolo-detr.md): multiple instances of the same class, multiple classes per image, multiple or exclusive labels per instance; references to NMS scenarios.
 
-La rubrique géométrique calcule l'effet d'une erreur de deux pixels sur des
-boîtes 4×4, 40×40 et 40×4, selon l'axe du déplacement. Elle distingue taille,
-rapport d'aspect et changement commun d'échelle. Ce calcul développe le
-rappel de diagnostic déjà présent dans CV-IOU-AP-006 ; aucune nouvelle carte
-redondante sur ce dernier objectif n'est ajoutée.
+The geometric field calculates the effect of a two-pixel error on boxes 4×4, 40×40 and 40×4, depending on the axis of displacement. It distinguishes size, aspect ratio and common scale change. This calculation expands the diagnostic reminder already present in CV-IOU-AP-006; no new redundant flashcard on the latter objective is added.
 
-Fiche NMS et carte NMS-006 traitent l'autre cas de tailles différentes :
-inclusion sans forte IoU. Les deux fiches se renvoient l'une à l'autre. Comptes
-courants : 52 fiches, 233 cartes, dont six NMS et treize détecteurs ; journal
-et navigation recalculés. Aucun identifiant Anki inventé.
+reference note NMS and flashcard NMS-006 handle the other case of different sizes: inclusion without strong IoU. The two reference notess refer to each other. Current accounts: 52 reference notes, 233 flashcards, including six NMS and thirteen detectors; recalculated log and navigation. No Anki identifier invented.
 
-## Enrichissements proposés (en attente d'accord)
+## Proposed enrichments (pending agreement)
 
-Aucune proposition supplémentaire en attente. Le complément demandé est rédigé.
-Les scénarios ne prétendent pas couvrir toutes les architectures ou politiques
-d'annotation. Leur interprétation empirique reste à éprouver sur des images.
+No additional proposals pending. The supplement requested is written. Scenarios do not claim to cover all annotation architectures or policies. Their empirical interpretation remains to be tested on images.
 
 ## Sources
 
-Passages réellement consultés le 2026-10-21 :
+Passes actually consulted the 2026-10-21:
 
-- [YOLOv3 v1, §§2.1–2.3](https://arxiv.org/html/1804.02767v1) : régression des dimensions, classification logistique indépendante et prédictions à plusieurs échelles. Les exemples voiture/vélo et véhicule/voiture sont ceux du projet.
-- [GIoU v2, §3, équation 1 et propriété d'échelle](https://arxiv.org/html/1902.09630v2) : point de départ des calculs synthétiques. Translation fixée en pixels et redimensionnement commun des deux boîtes sont distingués.
-- [Torchvision 0.29, batched_nms, description](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html) : séparation des catégories, sans exclusivité des labels ni contrainte d'une boîte par classe. Context7 indisponible ; documentation officielle consultée directement.
+- [YOLov3 v1, §§2.1 – 2.3](https://arxiv.org/html/1804.02767v1): dimension regression, independent logistic classification and multi-scale predictions. The examples of car/bike and vehicle/car are those of the project.
+- [GIoU v2, §3, equation 1 and scale property](https://arxiv.org/html/1902.09630v2): the starting point for synthetic calculations. Translation fixed in pixels and common resizing of the two boxes are distinguished.
+- [Torchvision 0.29, batched_nms, description](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html): separation of categories, without label exclusivity or constraint of one box per class. Context7 unavailable; official documentation accessed directly.
 
-Recherche transversale dans détection et IoU/AP : les objectifs de format de
-boîte, de doublon d'évaluation et de sensibilité à la localisation sont déjà
-présents et restent distincts. Aucune contradiction repérée. Aucun passage
-central inaccessible ; aucun appel de bibliothèque ni réseau exécuté.
+Cross-sectional search in detection and IoU/AP: the objectives of box format, evaluation duplicates and location sensitivity are already present and remain distinct. No contradictions identified. No central passage inaccessible; no library calls or networks executed.
 
-## Contrôles et limites
+## Checks and limitations
 
-Contrôles communs aux deux passages de ce complément :
+Controls common to the two passages of this supplement:
 
-- `python3 scripts/check_vault.py` : OK, 125 Markdown, 52 fiches, 233 cartes.
-- `python3 -m unittest discover -s tests` : 34 tests réussis.
-- `python3 scripts/sync_catalog.py --check` : 18 documents à jour.
-- Inventaire comparé aux 231 cartes initiales : seuls CV-NMS-006 et CV-DETECTEURS-013 sont ajoutés ; aucun ID disparu, objectif ni identité Anki existant modifié. Les cartes antérieures sont intactes sauf NMS-003 et NMS-005, enrichies sous leurs objectifs initiaux.
-- Calculs temporaires en Python, fractions exactes : inclusion 1/25 ; translations 1/3, 19/21, 19/21, 1/3. Aucun réseau ni appel Torchvision exécuté.
-- Comptes courants, liens locaux et ancres ajoutées, tableaux, caractères de contrôle et diff vérifiés. Preuves datées conservées. Les anciens totaux restants sont historiques ou des références de comparaison.
+- `python3 scripts/check_vault.py`: OK, 125 Markdown, 52 reference notes, 233 flashcards.
+- `python3 -m unittest discover -s tests`: 34 tests passed.
+- `python3 scripts/sync_catalog.py --check`: 18 up to date documents.
+- Inventory compared to the initial 231 flashcards: only CV-NMS-006 and CV-DETECTEURS-013 are added; no missing ID, lens or existing Anki identity modified. The previous flashcards are intact except for NMS-003 and NMS-005, enriched under their original objectives.
+- Temporary calculations in Python, exact fractions: inclusion 1/25; translations 1/3, 19/21, 19/21, 1/3. No network or Torchvision call executed.
+- Current accounts, local links and anchors added, tables, characters of check and diff checked. Dated evidence retained. The remaining old totals are historical or comparative references.
 
-Auto-revue par Agent Codex (`revue-cartes`) ; statut `redige`. Export réel,
-rendu Obsidian/AnkiDroid, benchmark, validation scientifique indépendante,
-maîtrise et charge de rappel non vérifiés. Les scénarios et recommandations
-de diagnostic sont des raisonnements du projet.
+Self-reviewed by Agent Codex (`revue-cartes`); status `redige`. Real export, Obsidian/AnkiDroid rendering, benchmark, independent scientific validation, unverified control and recall load. The scenarios and diagnostic recommendations are reasonings of the project.

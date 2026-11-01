@@ -1,51 +1,21 @@
-# Revue avant fusion — 2026-10-18
+# Review before merger –  2026-10-18
 
-Base fixe : `19c54feb830c459858850030880432c2f466e6d2`, ancien `origin/main`.
-Périmètre : specs, workflow de revue, socle Obsidian/Anki et extension aux
-quatorze thèmes. Deux agents ont examiné le diff séparément avec `code-review`.
-La revue initiale portait sur `3fa8127` ; les commits encore non publiés ont
-ensuite été réordonnés pour inclure la correction du gabarit dès la première PR.
-Cette revue ne constitue pas une expertise scientifique indépendante.
+Fixed base: `19c54feb830c459858850030880432c2f466e6d2`, old `origin/main`. Scope: specs, review workflow, base Obsidian/Anki and extension to fourteen themes. Two agents examined the diff separately with `code-review`. The initial review was about `3fa8127`; unreleased commits were then reordered to include template correction from the first PR. This review does not constitute independent scientific expertise.
 
 ## Standards
 
-**P2 — Gabarit de carte incomplet.** Le modèle du skill omettait les tags de
-pôles alors que le contrôleur exige leur correspondance exacte avec la fiche.
-**Corrigé** dans le commit `db664e5` : exemple `pole::B pole::E` et règle de
-correspondance avec `poles`, sans doublon. Aucun ID existant modifié.
+**P2 –  Incomplete flashcard template.** The skill model omits pole tags while the controller requires their exact match to the reference note. **Corrected** in commit `db664e5`: example `pole::B pole::E` and matching rule with `poles`, no duplicates. No existing ID changed.
 
-Aucun autre écart bloquant identifié. Commits Conventional Commits, prose
-française, organisation par thème, provenance et limites des preuves sont
-cohérents avec les conventions. Aucun smell de conception ne justifie une
-restructuration dans ce lot. La duplication limitée de parsing entre les
-outils constitue un point de maintenance, pas une violation documentée.
+No other blocking deviations identified. Commits Conventional Commits, French prose, organization by theme, provenance and limits of evidence are consistent with conventions. No design smell justifies a restructuring in this lot. The limited duplication of parsing between tools is a maintenance point, not a documented violation.
 
 ## Spec
 
-**P2 — Métadonnées des approfondissements partielles.** FR-030 et SC-001
-demandent compétences et dépendances par méthode. Les 129 entrées APP ont une
-priorité, une profondeur et une connexion, sans compétences propres ni
-prérequis obligatoires validés. **Suivi ouvert dans T023** ; les colonnes et
-états de l’inventaire indiquent explicitement cette limite. SC-001 reste
-partiellement satisfait pour ce backlog. Cette lacune ne bloque pas la
-publication provisoire couvrant les quatorze thèmes selon SC-013.
+**P2 –  Metadata of partial further study.** FR-030 and SC-001 require skills and dependencies per method. The 129 APP entries have priority, depth and connection, with no proper skills or validated mandatory prerequisites. **Tracked open in T023**; the columns and states of the inventory explicitly indicate this limit. SC-001 remains partially satisfied for this backlog. This gap does not block the provisional publication covering the fourteen themes according to SC-013.
 
-Les validations applicatives et pédagogiques restent ouvertes dans
-T009/T010/T013. La simulation du parseur ne leur est pas substituée.
-Aucun débordement de périmètre injustifié ni autre exigence incorrectement
-implémentée identifié dans ce passage. Les six pôles ont leurs cas conception
-et diagnostic ; les douze cas de transfert couvrent les six familles avec
-corrigés. Les prérequis inspectés sont liés et sans cycle.
+Application and pedagogical validations remain open in T009/T010/T013. The parser simulation is not substituted for them. No unjustified perimeter overflow or other incorrectly implemented requirement identified in this passage. The six poles have their cases conception and diagnosis; the twelve cases of transfer cover the six families with corrected. The inspected prerequisites are linked and cycle-free.
 
-## Contrôles et limites
+## Checks and limitations
 
-34 tests réussis ; contrôleur : 125 documents Markdown, 52 fiches et 224 cartes ;
-catalogue sans divergence ; inventaire sans anomalie ; liens locaux, JSON,
-SVG et espaces de fin de ligne vérifiés. Le parseur officiel 3.6.0 a reconnu
-224 notes, puis 224 mises à jour et zéro ajout avec des IDs simulés.
-Ces contrôles ne prouvent ni la justesse de chaque phrase, ni l’export réel,
-le rendu Android ou la maîtrise de l’apprenant. Aucun check CI n’est configuré.
+34 successful tests; controller: 125 Markdown documents, 52 reference notes and 224 flashcards; catalog without divergence; inventory without anomaly; local links, JSON, SVG and end-of-line spaces checked. The official parser 3.6.0 recognized 224 notes, then 224 updates and zero addition with simulated IDs. These checks do not prove the accuracy of each sentence, nor the actual export, Android rendering or control of the learner. No CI check is configured.
 
-Standards : un constat corrigé ; Spec : un constat suivi dans T023 et les
-validations applicatives/pédagogiques déjà ouvertes. Aucun blocage de fusion
-identifié pour le périmètre éditorial autorisé.
+Standards: a corrected observation; Spec: a follow-up observation in T023 and the application/educational validations already open. No merger blocking identified for the authorized editorial perimeter.
