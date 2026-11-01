@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 6
+revision: 7
 tags: [cv/d04, matching, orb]
 ---
 # ORB — detection and oriented binary descriptors
@@ -46,7 +46,7 @@ Example built: bytes `00000000` and `10000000`. Hamming = 1, while the numerical
 
 OpenCV 4.13 offers `nfeatures`, `scaleFactor`, `nlevels`, `fastThreshold`, `patchSize`, `edgeThreshold` and `WTA_K`. Changing the pyramid changes both the coverage of the scales and the cost. Areas close to the edge can be excluded to ensure an actionable patch. [OpenCV ORB][opencv]
 
-`WTA_K=2` produces binary tests: `NORM_HAMMING`. For `WTA_K=3` or `4`, the winning index is encoded on two bits: `NORM_HAMMING2` compares these symbols. It's not "Hamming Squared." This variant is a choice of implementation to record; do not generalize its standard to the original descriptor.
+`WTA_K=2` produces binary tests: `NORM_HAMMING`. For `WTA_K=3` or `4`, the winning index is encoded on two bits: `NORM_HAMMING2` compares these symbols. It's not "Hamming Squared." This variant is a choice of implementation to record; do not generalize its norm to the original descriptor.
 
 Rotation: local compensation, subject to stable orientation. Ladder: discreet cover by the pyramid, without perfect invariance. Perspective, motion blur and low contrasts remain causes of failure. The speed figures of 2011 are not guarantees on a current device.
 
@@ -69,19 +69,19 @@ The memory of binary descriptors and XOR/popcount comparisons are potential bene
 
 **Proposal for non-executed experiment**: compare ORB and SIFT on the same annotated pairs, with true geometry and the same validation budget. Measure successful registration rate, residuals, spatial coverage, p50/p95 latency and memory. Do not compare only the gross number of matches.
 
-**Controlled variation**: change only `WTA_K` from 2 to 4, adapt the standard and keep the rest of the protocol fixed. Prediction: results and cost may change; an old incorrect standard would introduce a confounding factor. The expected result is not “4 is always better”.
+**Controlled variation**: change only `WTA_K` from 2 to 4, adapt the norm and keep the rest of the protocol fixed. Prediction: results and cost may change; an old incorrect norm would introduce a confounding factor. The expected result is not “4 is always better”.
 
 | Symptom | Possible causes | check useful |
 | --- | --- | --- |
-| Degradation after change of `WTA_K` | Standard remained Hamming, other simultaneous modification | Read `defaultNorm()`, enter parameters |
-| Failure to change scale | Pyramid beach, missing details | View keypoint levels and repeatability |
+| Degradation after change of `WTA_K` | norm remained Hamming, other simultaneous modification | Read `defaultNorm()`, enter parameters |
+| Failure to change scale | Pyramid range, missing details | View keypoint levels and repeatability |
 | A lot of matches but false geometry | Repetitive patterns, parallax, false pattern | Ratio/cross-check then spatial and geometric verification |
 
 **Choix industriel**: On-board CPU, start with a ORB baseline if the variations are compatible, and then measure SIFT or a learned approach if the success rate is insufficient. The time constraint does not replace the validation of the task.
 
 ## Guided reasoning and proposed checks
 
-These constructed cases develop separate detection, orientation, representation and standard. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
+These constructed cases develop separate detection, orientation, representation and norm. They are used to explain or test reasoning; their image, video or material results are not advertised as measured. The method properties remain attached to the sources below.
 
 ### Case linked to CV-ORB-001
 
@@ -91,19 +91,19 @@ These constructed cases develop separate detection, orientation, representation 
 
 **Interpreted mechanism**: Detecting a position is not enough to compare two turned neighborhoods. The orientation establishes a local coordinate frame in which the test pattern is moved; the binary responses then describe intensity relationships in this coordinate frame. The pyramid provides several sizes of observation, without making all the details identical to the different resolutions.
 
-**Diagnostic construit**: If keypoints are detected but matches disappear under rotation, inspect orientation stability and patch content before changing the number of points. If the keypoints disappear themselves, examine thresholds, blur and pyramid levels. This separation of steps makes it possible to attribute a failure to a specific mechanism instead of treating ORB as a black box.
+**Constructed diagnosis**: If keypoints are detected but matches disappear under rotation, inspect orientation stability and patch content before changing the number of points. If the keypoints disappear themselves, examine thresholds, blur and pyramid levels. This separation of steps makes it possible to attribute a failure to a specific mechanism instead of treating ORB as a black box.
 
 ### Case linked to CV-ORB-006
 
 **Question of work**: You must localize a marking on an embedded CPU with limited memory. How can an ORB baseline be built without assuming its final suitability?
 
-**Reference Response**: set variations and location tolerance, extract ORB with recorded parameters, match with its standard and then validate geometrically. Measure full cost and failures on representative data, and then compare an alternative if the need is not met.
+**Reference Response**: set variations and location tolerance, extract ORB with recorded parameters, match with its norm and then validate geometrically. Measure full cost and failures on representative data, and then compare an alternative if the need is not met.
 
 **Usable baseline**: Explicitly predict three outcomes: accepted transformation, uncertain outcome, and no outcome. Set the acceptance from the residuals, cover and plausibility of the movement, and then evaluate the acceptance errors on reserved parts. A controlled refusal may be preferable to a poorly placed inspection region.
 
 **Proposed comparison**: Keep the same inputs and tolerances for a SIFT alternative, including steps that actually change in cost. Measure maximum memory and latency in representative conditions, not just the time of an isolated call. The compact representation of ORB motivates the test; it is the balance of precision, robustness, cost and behavior in failure that decides its suitability.
 
-**Documentary reference for this pass**: [OpenCV 4.13, ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), Theory, Orientation and BRIEF shot. The other developments are in the [flashcards](../42-orb.md).
+**Documentary reference for this pass**: [OpenCV 4.13, ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), Theory, orientation and steered BRIEF. The other developments are in the [flashcards](../42-orb.md).
 
 ## Additional technical explanations — 2026-10-30
 
@@ -145,7 +145,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Establishing a concrete memory budget**: In the current OpenCV variant at 256 bits, a descriptor occupies 32 bytes; 2000 descriptors represent about 64 kB of raw data. This excludes keypoints, pyramid images, buffers, indexes, allocations, and program structures: this calculation is not a measure of memory peak. An exhaustive search between two sets of $n$ and $m$ points processes $nm$ pairs, even with a fast binary distance. Preparing behavior when there are no descriptors or too few pairs for the model prevents a speed optimization from turning a normal observation failure into an arbitrary result or execution error.
 
-**Passages consulted for these developments**: [OpenCV 4.13, ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), Theory and WTA_K; [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), standards, cross-check and knnMatch; verified with Context7.
+**Passages consulted for these developments**: [OpenCV 4.13, ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), Theory and WTA_K; [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), norms, cross-check and knnMatch; verified with Context7.
 
 ## Sources and flashcards
 

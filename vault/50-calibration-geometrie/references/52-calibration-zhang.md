@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-HOMOGRAPHIE"]
-revision: 6
+revision: 7
 tags: [cv/d05, calibration, zhang]
 ---
 # Camera calibration with a target — Zhang’s method
@@ -72,7 +72,7 @@ Pseudocode **not executed**: detect → check → calibrate → analyze the resi
 
 **Protocol proposed by the project**, not a paper prescription: keep $K,d$ fixed on reserved catches; estimate the pose with one part of the corners and measure the others. Add an independent measurement adapted to the product, for example a known dimension at different positions and distances. Acceptance thresholds come from business need, not a universal RMS value.
 
-**Variation not executed**: Compare an almost front-end game to a game with various orientations, with comparable views and corner quality. Prediction: Diversity improves observability; the drive RMS can remain low in both cases. Examine external stability and validation.
+**Variation not executed**: Compare an almost front-end dataset to a dataset with various orientations, with comparable views and corner quality. Prediction: Diversity improves observability; the drive RMS can remain low in both cases. Examine external stability and validation.
 
 | Symptom | Possible causes | Discriminant verification |
 | --- | --- | --- |
@@ -92,7 +92,7 @@ These constructed cases develop view constraints, resize and check out of learni
 
 **Reference Response**: Calibration estimates image formation parameters, including intrinsic and distortion; pose describes a transformation of coordinate frames; registration aligns observations according to a chosen model.
 
-**Example of a string**: In a fixed cell, a calibration describes how rays are transformed into pixels. An estimate of pose places the camera or room in a coordinate frame. A registration can then align a reference image with the current observation. These operations combine, but their unknowns and reference data are not identical.
+**Example of a string**: In a fixed cell, a calibration describes how rays are transformed into pixels. An estimate of pose places the camera or part in a coordinate frame. A registration can then align a reference image with the current observation. These operations combine, but their unknowns and reference data are not identical.
 
 **Consequences for the diagnosis**: A good alignment of a calibration target plane can hide a bad extrapolation of parameters out of the views used. Conversely, a well-calibrated camera can give a bad registration if the matches are wrong. Naming the expected output makes it possible to choose the right protocol and avoids asking a single homograph to certify the entire geometry of the system.
 

@@ -30,7 +30,7 @@ No correction needed.
 
 | Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Distinguish EPE and validity under occlusion | Explicitly choose the pixels evaluated | evaluation | 1 flashcard; standard and mask | RAFT §4 and selected game protocol |
+| Distinguish EPE and validity under occlusion | Explicitly choose the pixels evaluated | evaluation | 1 flashcard; norm and mask | RAFT §4 and selected dataset protocol |
 
 Absent families: algorithm, understanding, design, evaluation. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 

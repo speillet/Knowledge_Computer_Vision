@@ -75,7 +75,7 @@
     },
     {
       "carte": "CV-CLIP-002",
-      "calcul": "softmax two logs, difference log 19",
+      "calcul": "softmax two logits, difference log 19",
       "resultat": 0.9500000000000001,
       "attendu": 0.95,
       "tolerance": 1e-09

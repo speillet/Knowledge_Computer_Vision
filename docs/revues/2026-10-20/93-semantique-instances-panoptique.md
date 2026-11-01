@@ -1,4 +1,4 @@
-# Journal –  Semantic segmentation, instances and panopticon –  2026-10-20
+# Journal –  Semantic segmentation, instances and panoptic segmentation –  2026-10-20
 
 ## Overview
 
@@ -31,7 +31,7 @@ reference note and 001 kernel specify partition; sources 002 – 004 suitable.
 
 | Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Calculate PQ on a mini-matching | The reference note cites PQ without an operating reminder | evaluation | 1 flashcard; TP/FP/FN and IoU medium | Panoptic Segmentation §4 |
+| Calculate PQ on a mini-matching | The reference note cites PQ without an operating recall | evaluation | 1 flashcard; TP/FP/FN and IoU medium | Panoptic Segmentation §4 |
 
 Absent families: algorithm, understanding, design, reasoning. Their absence does not require automatic filling; the proposals aim at a concrete gap. No flashcard added.
 

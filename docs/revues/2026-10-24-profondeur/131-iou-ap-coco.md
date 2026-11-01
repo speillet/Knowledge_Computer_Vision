@@ -10,7 +10,7 @@ Editorial finding: mechanism or testing too little developed in modified respons
 
 | flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-IOU-AP-001 | Proposed protocol under assumptions; previous core retained | Practice: calculate a recovery in the right contract | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 98 → 212 lexical words |
+| CV-IOU-AP-001 | Proposed protocol under assumptions; previous core retained | Practice: calculate a overlap in the right contract | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 98 → 212 lexical words |
 | CV-IOU-AP-002 | Proposed protocol under assumptions; previous core retained | understanding: distinguish between local measurement and aggregated protocol | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 124 → 240 lexical words |
 | CV-IOU-AP-003 | Proposed protocol under assumptions; previous core retained | Algorithm: Explain the penalty of a duplicate | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 94 → 218 lexical words |
 | CV-IOU-AP-004 | Deduction or example built under assumptions; previous core retained | Reasoning: Rebuild a simple interpolated AP | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 110 → 225 lexical words |

@@ -11,7 +11,7 @@ The documentary confrontation focuses on the new mechanisms mentioned below; the
 | flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
 | CV-ANOMALIES-001 | Deduction/Assumption Cases; Documentary Context Below | Distance geometry: specifies the existing question | Finished core preserved; 191 → 297 words, optional addition | Same addition in reference note; ID/deck/tags retained | –  (enrichment) | Applied Supplement |
-| CV-ANOMALIES-002 | Deduction/Assumption Cases; Documentary Context Below | Gluttony selection: specifies the existing question | Finished core preserved; 183 → 286 words, optional addition | Same addition in reference note; ID/deck/tags retained | –  (enrichment) | Applied Supplement |
+| CV-ANOMALIES-002 | Deduction/Assumption Cases; Documentary Context Below | Greedy selection: specifies the existing question | Finished core preserved; 183 → 286 words, optional addition | Same addition in reference note; ID/deck/tags retained | –  (enrichment) | Applied Supplement |
 | CV-ANOMALIES-003 | Project Deduction/Protocol; no new external confirmation claimed | Matched experience: specifies the existing question | Finished core preserved; 189 → 296 words, optional addition | Same addition in reference note; ID/deck/tags retained | –  (enrichment) | Applied Supplement |
 | CV-ANOMALIES-004 | Project Deduction/Protocol; no new external confirmation claimed | Translation in industrial load: specifies the existing question | Finished core preserved; 214 → 319 words, optional addition | Same addition in reference note; ID/deck/tags retained | –  (enrichment) | Applied Supplement |
 

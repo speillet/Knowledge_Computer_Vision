@@ -4,7 +4,7 @@
 
 Five new flashcards audited and added after explicit agreement of the learner: CV-DETECTEURS-006 to 010. No blocking, significant or minor defects remaining on these additions. The reference note changes from the revision 2 to 3, retained `redige` status. The five previous flashcards remain unchanged; their audit remains in the [previous report](../2026-10-20/82-detection-fasterrcnn-yolo-detr.md).
 
-The earlier conclusion "No Priority Addition" was too limited for the senior objective: assignment, targets, loss and multi-scale merger deserve a clean reminder. This new decision completes the dated report without rewriting it. The two equally accepted diagnostic flashcards will be dealt with in the following passage. No assertion of completeness.
+The earlier conclusion "No Priority Addition" was too limited for the senior objective: assignment, targets, loss and multi-scale merger deserve a clean recall. This new decision completes the dated report without rewriting it. The two equally accepted diagnostic flashcards will be dealt with in the following passage. No assertion of completeness.
 
 ## Views by flashcard
 

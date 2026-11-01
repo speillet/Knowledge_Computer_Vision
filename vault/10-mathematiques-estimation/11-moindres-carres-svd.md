@@ -52,7 +52,7 @@ START
 CV-Pilote
 ID: CV-SVD-003
 Question: A calibration objective adds an error in pixels to an error in meters. How can you prevent the units from determining their relative weights?
-Reponse: **Expected answer**: Set the covariance $C$ of the residuals, assumed to be positive, and then whiten them: with $C=LL^T$, use $L^{-1}r$. Its norm squared is $r^TC^{-1}r$, dimensionless and weighted by uncertainty.
+Reponse: **Expected answer**: Set the covariance $C$ of the residuals, assumed to be positive definite, and then whiten them: with $C=LL^T$, use $L^{-1}r$. Its norm squared is $r^TC^{-1}r$, dimensionless and weighted by uncertainty.
 
 **Further explanation**: Changing meters to millimeters must not arbitrarily change the solution. Example calculated by the project: $r_{px}=0{,}8$ px with $\sigma_{px}=0{,}5$ px, $r=3$ mm with $\sigma=2$ mm. The gross sum of the squares is 0,64 in meters and 9,64 in millimeters: the unit chooses which term dominates. The amount cleared is 4,81 in both cases. Check noise pattern and correlations; a possible robust loss then applies to the whitened residual.
 
@@ -117,7 +117,7 @@ ID: CV-SVD-006
 Question: Why is DLT built from raw pixel coordinates on the order of $10^3$ poorly conditioned, and which normalization proposed by Hartley addresses this?
 Reponse: **Expected answer**: a row of the matrix mixes terms of the order of 1, coordinates of the order of $10^3$ and products of the order of $10^6$; the inputs of $L^TL$ are spread over a dozen orders of magnitude and the solution vector becomes very sensitive to noise. For each image separately, translate the points to bring their centroid to the origin, then scale them isotropically for an average distance of $\sqrt2$; estimate $\hat H$ on these points, then denormalize: $H=T'^{-1}\hat HT$. Since the algebraic solution is not invariant to these transformations, normalization changes the estimator, not just the rounded ones.
 
-**Further explanation**: Hartley measures an improved conditioning of about $10^8$ on the "house" pair. Case executed by the project: with 50 points spread over 1920×1080, $\sigma_1/\sigma_8$ Passing $8\cdot10^6$ To 4 But the error remains towards 0,2 px; with 20 points in a square of 200 px, the median error on the image is about 1000 PX 28 px. Normalization does not create the missing coverage. For $F$: $F=T'^T\hat FT$.
+**Further explanation**: Hartley measures an improved conditioning of about $10^8$ on the "house" pair. Case executed by the project: with 50 points spread over 1920×1080, $\sigma_1/\sigma_8$ Passing $8\cdot10^6$ To 4 But the error remains towards 0,2 px; with 20 points in a square of 200 px, the median error on the image is reduced from about 1000 px to 28 px. Normalization does not create the missing coverage. For $F$: $F=T'^T\hat FT$.
 
 **Calculate the normalization**: for points $p_i=(x_i,y_i)$, calculate $c=n^{-1}\sum_i p_i$, the average distance $\bar d=n^{-1}\sum_i\|p_i-c\|_2$, then $s=\sqrt2/\bar d$ if $\bar d>0$. The homogeneous transformation has lines $(s,0,-sc_x)$, $(0,s,-sc_y)$ and $(0,0,1)$. It must be calculated separately in each image. If all the points coincide, this operation is indefinite: it is not a simple rounding problem, but an absence of usable geometry. After denormalization, compare the residuals in pixels in the original images; a residual expressed in the centered and reduced coordinates does not keep the same numerical threshold.
 

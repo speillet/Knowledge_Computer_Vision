@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3", "CV-FUSION", "CV-FACTEURS", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -60,7 +60,7 @@ These constructed cases develop inertial fusion, gauges and evaluation without m
 
 **Reference Response**: No: it summarizes measurements between keyframes in constraints with noise and bias; the system must also associate the vision, initialize and estimate the states.
 
-**Pre-integration contract**: Between two keyframes, the many inertial observations are condensed into motion constraints with their uncertainty and dependence on biases. These constraints must be combined with visual observations, initial state and gravity in consistent coordinate framess.
+**Pre-integration contract**: Between two keyframes, the many inertial observations are condensed into motion constraints with their uncertainty and dependence on biases. These constraints must be combined with visual observations, initial state and gravity in consistent coordinate frames.
 
 **Example of limit**: integrate an acceleration measured in the coordinate frame IMU as if it were directly an acceleration world confuses orientation, specific force and gravity. A very good vision does not automatically repair this model inconsistency. A complete system must also handle timestamps, extrinsic, bias, keyframes and observation losses. Pre-integration avoids naïvely resuming the entire raw sequence at each calculation; it does not provide an absolute pose or a global reference absent from the sensors. Validating the system therefore requires trajectory, uncertainty, availability and latency on representative movements.
 
@@ -90,7 +90,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: What does loop closure change compared with local odometry?
 
-**Relative constraint**: For poses $T_i,T_j$ sending local coordinate framess to the world, the predicted transformation from $j$ to $i$ is $T_i^{-1}T_j$. A loop provides a $Z_{ij}$ measurement of this relation; a possible residual is $\operatorname{Log}(Z_{ij}^{-1}T_i^{-1}T_j)$, depending on the conventions and the graph model. Its weighting reflects the accuracy of the verified measurement. Appearance detection alone does not provide this geometric accuracy. A graph can redistribute an inconsistency over many poses: a moderate final cost does not clear a false loop. Comparing before/after consistency and independent observations remains essential.
+**Relative constraint**: For poses $T_i,T_j$ sending local coordinate frames to the world, the predicted transformation from $j$ to $i$ is $T_i^{-1}T_j$. A loop provides a $Z_{ij}$ measurement of this relation; a possible residual is $\operatorname{Log}(Z_{ij}^{-1}T_i^{-1}T_j)$, depending on the conventions and the graph model. Its weighting reflects the accuracy of the verified measurement. Appearance detection alone does not provide this geometric accuracy. A graph can redistribute an inconsistency over many poses: a moderate final cost does not clear a false loop. Comparing before/after consistency and independent observations remains essential.
 
 ### CV-VIO-003
 

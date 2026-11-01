@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -28,7 +28,7 @@ ArcFace learns an angular separation of identity representations. An embedding c
 
 ## Mathematics, conventions and units
 
-FMR/FNMR describe comparison errors below a threshold; FAR/FRR system also depend on procedure and acquisition failures. An ERA is a balancing point of a protocol, not the result of very low false acceptance rates. Similarities remain dependent on the domain.
+FMR/FNMR describe comparison errors below a threshold; FAR/FRR system also depend on procedure and acquisition failures. An EER is a balancing point of a protocol, not the result of very low false acceptance rates. Similarities remain dependent on the domain.
 
 ## Parameters and properties
 
@@ -40,7 +40,7 @@ Encode, search, and maintain the gallery have different costs between 1:1 and 1:
 
 ## Evaluation and controlled variation
 
-Proposed variation: quality/pose then gallery size separately. Measure at business threshold and intervals according to protocol, not just a global accuracy or ERA.
+Proposed variation: quality/pose then gallery size separately. Measure at business threshold and intervals according to protocol, not just a global accuracy or EER.
 
 ## Failure modes and diagnosis
 
@@ -70,7 +70,7 @@ These built cases develop verification, identification and point of exploitation
 
 **Reference Response**: It describes a balance point that may differ significantly from the target threshold; measure FNMR and other errors at the required point.
 
-**Reading the curve**: Moving the threshold simultaneously changes wrongly accepted comparisons and wrongly rejected identities. The ERA refers to an equality of these rates in a given protocol; a product aimed at a very low rate of false correspondence generally works elsewhere on the curve.
+**Reading the curve**: Moving the threshold simultaneously changes wrongly accepted comparisons and wrongly rejected identities. The EER refers to an equality of these rates in a given protocol; a product aimed at a very low rate of false correspondence generally works elsewhere on the curve.
 
 **Proposed evaluation**: set the threshold on setting data, then measure the rate of false non-matches at the level of FMR targeted on an independent test. Record acquisition quality, population, enrollment, and set size; examine subgroups and statistical uncertainty when relevant. Capture failures still add events at the system level. A good average value does not predict all operating conditions. The operating point and the comparison units must remain visible for two recognition results to be interpretable.
 
@@ -90,7 +90,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Why is EER insufficient for a system operating at a threshold with very low FMR?
 
-**Amount of evidence**: Under a simplified model of $n$ independent non-matte comparisons with probability of false correspondence $p$, observing zero error has probability $(1-p)^n$. The unilateral upper limit of 95% is then $1-0,05^{1/n}$, approximately $3/n$ for large $n$. Zero error on 1 000 comparisons thus remains compatible with a rate of around 0,003, and does not demonstrate a target of $10^{-6}$. Comparisons sharing the same identities are not necessarily independent; the uncertainty must respect the protocol. This constructed analysis explains why an excellent ERA and a small test do not characterize the distribution tails at the target threshold.
+**Amount of evidence**: Under a simplified model of $n$ independent non-matte comparisons with probability of false correspondence $p$, observing zero error has probability $(1-p)^n$. The unilateral upper limit of 95% is then $1-0,05^{1/n}$, approximately $3/n$ for large $n$. Zero error on 1 000 comparisons thus remains compatible with a rate of around 0,003, and does not demonstrate a target of $10^{-6}$. Comparisons sharing the same identities are not necessarily independent; the uncertainty must respect the protocol. This constructed analysis explains why an excellent EER and a small test do not characterize the distribution tails at the target threshold.
 
 **Passages consulted for these developments**: [Deng et al., ArcFace](https://arxiv.org/html/1801.07698v4), §III-A, angular margin; binomial bound and system reasoning constructed.
 

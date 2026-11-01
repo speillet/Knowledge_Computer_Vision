@@ -4,7 +4,7 @@
 
 ## Summary
 
-Create a stand-alone vault in `vault/`, with the initial seven pilot subjects, canonical reference notess, and detailed single-lens flashcards. The three extensions and the production of the catalog remain the next steps. The confirmed revision client is **AnkiDroid on Android**.
+Create a stand-alone vault in `vault/`, with the initial seven pilot subjects, canonical reference notes, and detailed single-lens flashcards. The three extensions and the production of the catalog remain the next steps. The confirmed revision client is **AnkiDroid on Android**.
 
 ## Technical background
 
@@ -40,11 +40,11 @@ vault/ .obsidian/app.json 00-Home.md 01-Parcours/             # inventory, guide
 
 ## Delivery and Limits
 
-A first delivery includes the seven references, the flashcards and local controls. The reports remain “written / self-reviewed”, without independent validation or presumed mastery. Reminder sessions are left to complete. The twelve transfer cases covering the six families, the extensions, the Anki tests and the pedagogical measure remain visible in [tasks.md](tasks.md). The expanded editorial preparation is allowed by the current application; the technical and pedagogical pilot remains to be succeeded before adoption of the format.
+A first delivery includes the seven references, the flashcards and local controls. The reports remain “written / self-reviewed”, without independent validation or presumed mastery. recall sessions are left to complete. The twelve transfer cases covering the six families, the extensions, the Anki tests and the pedagogical measure remain visible in [tasks.md](tasks.md). The expanded editorial preparation is allowed by the current application; the technical and pedagogical pilot remains to be succeeded before adoption of the format.
 
 ## Organization requested after the first batch
 
-The request of the 2026-10-18 retains a directory by theme, inspired by Knowledge_AI_Engineering. The flashcards are directly in the theme; the complete reference notess are grouped in its subfolder `references/`. The subdeck takes the name of the theme, the IDs remain stable, and the home links the fourteen indexes. Links, media, controller and parser test are adapted to this structure before any new publication.
+The request of the 2026-10-18 retains a directory by theme, inspired by Knowledge_AI_Engineering. The flashcards are directly in the theme; the complete reference notes are grouped in its subfolder `references/`. The subdeck takes the name of the theme, the IDs remain stable, and the home links the fourteen indexes. Links, media, controller and parser test are adapted to this structure before any new publication.
 
 ## Thematic coverage package –  revision 6
 

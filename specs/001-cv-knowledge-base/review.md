@@ -21,7 +21,7 @@ The impact levels below describe the effect on the project, not a quality scient
 | RV-03 | High | Presence of a reference note and flashcards incorrectly equated to an applicable skill | Baseline, controlled variation and new cases of choice/diagnosis; FR-033/034, SC-006/009 | Corrected; tests to be carried out |
 | RV-04 | High | A very detailed answer had no clear line between essential and optional | expected answer, further explanation and blocking errors; FR-015, SC-003 | Corrected in the teaching contract |
 | RV-05 | Medium | The six pilot subjects were focused on the classic 2D | Three contrasting extensions: classic segmentation, learned matching, registration 3D; SC-004 | Reinforced proposal, to be reviewed |
-| RV-06 | High | Data contract and timing errors remained unclear | coordinate frames, types/beaches, normalization, crops and targets, cadence and causation; FR-031/032 | Corrected in requirements |
+| RV-06 | High | Data contract and timing errors remained unclear | coordinate frames, types/value ranges, normalization, crops and targets, cadence and causation; FR-031/032 | Corrected in requirements |
 | RV-07 | Medium | A single primary source did not distinguish between general property and library peculiarity. | Scientific traceability/implementation, processing of discrepancies and proof of review; FR-036/037 | Corrected in the contract |
 | RV-08 | Medium | The initial form review did not measure the real utility of the flashcards | First attempt, delayed recall, ambiguities and corrections; FR-035, SC-008 | Defined protocol; no results yet obtained |
 | RV-09 | Medium | The capabilities of a documented plugin could be confused with a validated integration | Research and essays remain separate; editorial preparation possible during the choice of the plugin; FR-028 | Open dependency, explicitly preserved |
@@ -44,7 +44,7 @@ Points examined without modification: FR-007 to FR-010 take up the section “Eq
 
 ## Enrichment by business units (revision 5)
 
-**Demande** (2026-10-18): Cover six business family-related clusters, from A (Image Understanding) to F (Vision Systems & Deployment). **Type**: enrichment by an agent (Claude Code) according to the decisions of the user; no reference note or flashcard produced.
+**Request** (2026-10-18): Cover six business family-related clusters, from A (Image Understanding) to F (Vision Systems & Deployment). **Type**: enrichment by an agent (Claude Code) according to the decisions of the user; no reference note or flashcard produced.
 
 User's decisions:
 
@@ -109,7 +109,7 @@ The six poles are relevant as complementary routes to the base. They remain an o
 | RV-22 | Medical formats, biometrics and metrics could mask their protocol | Units, external validation, FMR/FNMR/PAD and specified limits |
 | RV-23 | A file or name cited could be counted as a detailed cover | SC-013 and inventory separate 52 reference notes written, 224 flashcards and further study open |
 
-The 45 new reference notes and 177 new flashcards complete the fourteen themes. Advanced topics have a depth displayed; 129 entries of further explanation remain identified individually. Business cases are linked by ID and the twelve transfer cases have reserved corrections. Executable checks and evidence can be found in the vault log. No reminder session, independent validation, or actual synchronization is declared successful.
+The 45 new reference notes and 177 new flashcards complete the fourteen themes. Advanced topics have a depth displayed; 129 entries of further explanation remain identified individually. Business cases are linked by ID and the twelve transfer cases have reserved corrections. Executable checks and evidence can be found in the vault log. No recall session, independent validation, or actual synchronization is declared successful.
 
 ## Relevant next step
 

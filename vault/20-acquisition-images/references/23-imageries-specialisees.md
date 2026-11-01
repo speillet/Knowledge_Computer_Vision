@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -70,7 +70,7 @@ These constructed cases develop physical geometry, line-scan and generalization 
 
 **Reference Response**: They share scene, texture and context; the test can look like training beyond the intended future scenario.
 
-**Why splits can fool**: Separate tiles can contain the same buildings, the same background or part of a common image. Even without exact recovery, a site shares acquisition, season and materials. The model can therefore succeed by recognizing an environment already encountered, while the product must work in another region.
+**Why splits can fool**: Separate tiles can contain the same buildings, the same background or part of a common image. Even without exact overlap, a site shares acquisition, season and materials. The model can therefore succeed by recognizing an environment already encountered, while the product must work in another region.
 
 **Proposed Protocol**: first define the generalization sought: new positions of the same site, new date or new territory. Group the data according to this unit before the tile, check the geographical footprints and reserve a test that represents this use. Compare results by site and season rather than just the overall average. A more difficult geographic split is not automatically more representative: it must correspond to the announced need. The risk described is methodological reasoning, not a measure of leakage established on all remote sensing sets.
 

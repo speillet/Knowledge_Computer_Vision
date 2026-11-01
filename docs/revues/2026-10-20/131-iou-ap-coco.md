@@ -10,7 +10,7 @@
 
 | flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-IOU-AP-001 | Confirmed | calculate a recovery in the right contract. | 98 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
+| CV-IOU-AP-001 | Confirmed | calculate a overlap in the right contract. | 98 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
 | CV-IOU-AP-002 | Confirmed | Distinguish between local measurement and aggregated protocol. | 124 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
 | CV-IOU-AP-003 | Confirmed | Explain the penalty for a duplicate. | 94 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |
 | CV-IOU-AP-004 | Confirmed | rebuild a simple interpolated AP. | 110 words at the entrance; Finished core, context and explicit conventions | reference note and controlled format | — | Keep |

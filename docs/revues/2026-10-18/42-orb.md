@@ -12,14 +12,14 @@ Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`
 | --- | --- | --- | --- | --- | --- | --- |
 | CV-ORB-001 | Confirmed: FAST/Harris/centroid/rBRIEF | rebuild the ORB mechanism. | Finished core; 97 words | reference note and format | None | Keep |
 | CV-ORB-002 | Confirmed by binary definition and example | Linking representation and distance. | Finished core; 106 words | reference note and format | None | Keep |
-| CV-ORB-003 | Confirmed: WTA_K and defaultNorm | select the standard after changing the variant. | Finished core; 103 words | reference note and format | None | Keep |
+| CV-ORB-003 | Confirmed: WTA_K and defaultNorm | select the norm after changing the variant. | Finished core; 103 words | reference note and format | None | Keep |
 | CV-ORB-004 | Confirmed: Reciprocity vs ratio | distinguish between two matching filters. | Finished core; 96 words | reference note and format | None | Keep |
 | CV-ORB-005 | Confirmed: Coverage Limits in Scale | Diagnose a loss of repeatability. | Finished core; 104 words | reference note and format | None | Keep |
 | CV-ORB-006 | Design explicitly proposed | articulating computational constraint and task success. | Finished core; 111 words | reference note and format | Minor | Added Application Passages |
 
 ### reference note and flashcards claims
 
-Confirmed: Harris selection score, centered moments, oriented tests, offline choice, 256 bits, discrete scale coverage; WTA_K standards and reciprocity. Example recalculated: one bit changed, numerical deviation 128. Diagnostics and embedded baseline are propositions, not published performance. Unexecuted API extracts.
+Confirmed: Harris selection score, centered moments, oriented tests, offline choice, 256 bits, discrete scale coverage; WTA_K norms and reciprocity. Example recalculated: one bit changed, numerical deviation 128. Diagnostics and embedded baseline are propositions, not published performance. Unexecuted API extracts.
 
 ## Corrections applied
 

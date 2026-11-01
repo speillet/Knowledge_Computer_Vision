@@ -17,7 +17,7 @@
 
 ### reference note and flashcards claims
 
-Standardized form of embeddings and temperature, zero-shot classification, sensitivity to prompts, sigmoid lens with temperature and bias confirmed by the passages consulted. The general limits are at §6 of CLIP, the §7 deals with impacts. Automatic non-calibration is a logical limit; no threshold or target performance attributed to authors.
+Standardized form of embeddings and temperature, zero-shot classification, sensitivity to prompts, sigmoid objective with temperature and bias confirmed by the passages consulted. The general limits are at §6 of CLIP, the §7 deals with impacts. Automatic non-calibration is a logical limit; no threshold or target performance attributed to authors.
 
 ## Corrections applied
 

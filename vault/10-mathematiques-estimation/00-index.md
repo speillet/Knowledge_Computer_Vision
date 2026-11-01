@@ -1,6 +1,6 @@
 # Mathematics and estimation
 
-Packaging, least squares, robust estimation and uncertainty.
+Conditioning, least squares, robust estimation and uncertainty.
 
 | Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |

@@ -14,7 +14,7 @@ ID: CV-HOMOGRAPHIE-001
 Question: When is a single global homography an appropriate model for relating two images, and which change usually causes it to fail?
 Reponse: **Expected answer**: suitable for points of the same plane, or pure camera rotation in the ideal perspective model. A translation in front of different depths usually creates a parallax incompatible with a single global model.
 
-**Further explanation**: The role of the sensor, distortion and pre-treatment must be consistent with this model. A homography of a particular shot can remain valid in a 3D scene without describing the other points. Depending on the need, examine epipolar model, pose or several planes.
+**Further explanation**: The role of the sensor, distortion and pre-treatment must be consistent with this model. A homography of a particular plane can remain valid in a 3D scene without describing the other points. Depending on the need, examine epipolar model, pose or several planes.
 
 **Constructed example**: for a rigid flat label, its points can follow a same projective transformation between two shots, even if the bottom is at another depth. Accepting this homography for the label does not allow it to be extended to the bottom.
 
@@ -134,7 +134,7 @@ START
 CV-Pilote
 ID: CV-HOMOGRAPHIE-006
 Question: A homography has 90% inliers concentrated in one corner but projects the opposite edge poorly. Which checks distinguish consensus quality from registration quality?
-Reponse: **Expected answer**: Examine spatial coverage, packaging, and error on reserved points spread across the useful area. Consensus can be good locally while constraining extrapolation poorly.
+Reponse: **Expected answer**: Examine spatial coverage, conditioning, and error on reserved points spread across the useful area. Consensus can be good locally while constraining extrapolation poorly.
 
 **Further explanation**: compare estimates on subsets, check for lack of alignment and model plane, and then look for informative observations elsewhere. Report the region in which the accuracy is established. Increasing the threshold or number of draws does not provide the missing spatial constraints.
 
@@ -163,7 +163,7 @@ Reponse: **Expected answer**: test a parallax due to the different depths, there
 
 **Why does relief matter?**: Under camera translation, the apparent displacement depends in particular on the depth. Near and far points may require different deformations, while a global homography imposes a unique relationship. A consensus dominated by the background can thus leave a nearby object visibly split.
 
-**Proposed deletion**: select separately matches on each plane, compare their models and check the crossed residuals. If two local models explain different groups, this supports the parallax hypothesis without proving that all associations are correct. Then choose a capture or a model adapted to the product. Expanding the threshold only mixes more groups in the same category of inliers and can hide the structure of the error.
+**Proposed ablation**: select separately matches on each plane, compare their models and check the crossed residuals. If two local models explain different groups, this supports the parallax hypothesis without proving that all associations are correct. Then choose a capture or a model adapted to the product. Expanding the threshold only mixes more groups in the same category of inliers and can hide the structure of the error.
 
 **Link to the disparity**: In a simple example of lateral translation between parallel cameras, the image displacement varies as $fB/Z$, with focal length $f$ in pixels, translation $B$ and depth $Z$ in the same unit. Two planes of depth $Z_1,Z_2$ therefore require displacements whose difference is $fB(1/Z_1-1/Z_2)$. This constructed case explains why the foreground can split up while the bottom aligns well. A local deformation or multi-plane assembly can reduce the visual artifact, but does not automatically provide a single metric reconstruction. Choose capture, model and success criterion according to the actual measurement or final image expected.
 

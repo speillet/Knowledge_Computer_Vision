@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3", "CV-BEV", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -28,7 +28,7 @@ PointPillars encodes pillars as pseudo-images for a detection head; CenterPoint 
 
 ## Mathematics, conventions and units
 
-Define coordinate frame, unit of dimensions, box anchor and yaw axis/sign, usually meters/radians in metric data. For a rigid pose, a symmetry of the object can make several rotations visually equivalent. A seal error must specify 2D pixels or 3D length and possible alignment.
+Define coordinate frame, unit of dimensions, box anchor and yaw axis/sign, usually meters/radians in metric data. For a rigid pose, a symmetry of the object can make several rotations visually equivalent. A joint error must specify 2D pixels or 3D length and possible alignment.
 
 ## Parameters and properties
 
@@ -84,7 +84,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Why should a 3D detection score not be compared directly with articulated-pose error?
 
-**Define the comparative quantity**: An average 3D seal error can write $J^{-1}\sum_j\|\hat p_j-p_j\|$ in a length unit, with visible seals or all seals according to protocol. Allowing rigid alignment or similarity removes some errors and changes the evaluated question. A AP of boxes, it, depends on a threshold of matching and the ranking of the scores. A rigid object pose estimates $R,t$ of a known model, while a skeleton estimates several related points. Specifying these unknowns and allowed transformations avoids comparing two digits, one of which has precisely neutralized the defect as the other measures.
+**Define the comparative quantity**: An average 3D joint error can write $J^{-1}\sum_j\|\hat p_j-p_j\|$ in a length unit, with visible joints or all joints according to protocol. Allowing rigid alignment or similarity removes some errors and changes the evaluated question. A AP of boxes, it, depends on a threshold of matching and the ranking of the scores. A rigid object pose estimates $R,t$ of a known model, while a skeleton estimates several related points. Specifying these unknowns and allowed transformations avoids comparing two digits, one of which has precisely neutralized the defect as the other measures.
 
 ### CV-POSE3D-002
 
@@ -96,7 +96,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation** : Why is nuScenes 3D AP not directly comparable with COCO bounding-box AP?
 
-**Counter-example of geometry**: A prediction may have the exact center but doubled dimensions and a wrong yaw. A matching per center distance can still accept it according to its threshold, while a volume recovery can be bad. The nuScenes protocol reports other errors to characterize size, orientation, and movement; these must be read with the AP. Conversely, a small metric offset represents a very different part of a pedestrian and a large vehicle. Thresholds and classes therefore define what the measure prefers. Check a few built boxes before interpreting an aggregate score change.
+**Counter-example of geometry**: A prediction may have the exact center but doubled dimensions and a wrong yaw. A matching per center distance can still accept it according to its threshold, while a volume overlap can be bad. The nuScenes protocol reports other errors to characterize size, orientation, and movement; these must be read with the AP. Conversely, a small metric offset represents a very different part of a pedestrian and a large vehicle. Thresholds and classes therefore define what the measure prefers. Check a few built boxes before interpreting an aggregate score change.
 
 ### CV-POSE3D-004
 

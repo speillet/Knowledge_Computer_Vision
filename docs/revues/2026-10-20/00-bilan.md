@@ -6,7 +6,7 @@ Consolidated balance sheet on 21 October 2026.
 
 The **52 subjects and 224 existing flashcards** have an individual report and an assessment of the four axes of the `revue-cartes` skill: accuracy, relevance, correctability and consistency. The 12 reports of 18 October (50 flashcards), already present at the takeover, are included in the balance sheet; the remaining 40 subjects (174 flashcards) were examined on 20 October. The sources of the first 12 reports are not presented as newly consulted on 20 October. The summaries and links of these reports have been harmonized with consolidation.
 
-The perimeter is the existing content, not the entire computer vision program. No additions, deletions, lens changes or IDs; no Anki sync IDs were present. The modified reference notess have an incremental revision and remain `statut: redige`, source `agent`. Current accounts (52 reference notes, 224 flashcards) remain unchanged.
+The perimeter is the existing content, not the entire computer vision program. No additions, deletions, lens changes or IDs; no Anki sync IDs were present. The modified reference notes have an incremental revision and remain `statut: redige`, source `agent`. Current accounts (52 reference notes, 224 flashcards) remain unchanged.
 
 | Maximum gravity per flashcard before correction | Flashcards |
 | --- | ---: |
@@ -32,7 +32,7 @@ This count counts every flashcard once; it does not count independent errors or 
 
 | Subject and canonical reference note | Flashcards | Rapport |
 | --- | ---: | --- |
-| [Lesser squares, SVD and packaging](../../../vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md) | [4](../../../vault/10-mathematiques-estimation/11-moindres-carres-svd.md) | [2026-10-18](../2026-10-18/11-moindres-carres-svd.md) |
+| [Least squares, SVD and conditioning](../../../vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md) | [4](../../../vault/10-mathematiques-estimation/11-moindres-carres-svd.md) | [2026-10-18](../2026-10-18/11-moindres-carres-svd.md) |
 | [SO(3), SE(3) and processing conventions](../../../vault/10-mathematiques-estimation/references/12-rotations-se3.md) | [4](../../../vault/10-mathematiques-estimation/12-rotations-se3.md) | [2026-10-18](../2026-10-18/12-rotations-se3.md) |
 | [Kalman, EKF, UKF and ESKF for fusion](../../../vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) | [4](../../../vault/10-mathematiques-estimation/13-kalman-ekf-eskf.md) | [2026-10-18](../2026-10-18/13-kalman-ekf-eskf.md) |
 | [Factor Graphs and Incremental Optimization](../../../vault/10-mathematiques-estimation/references/14-graphes-facteurs.md) | [3](../../../vault/10-mathematiques-estimation/14-graphes-facteurs.md) | [2026-10-18](../2026-10-18/14-graphes-facteurs.md) |
@@ -53,7 +53,7 @@ This count counts every flashcard once; it does not count independent errors or 
 | [Bundle adjustment and complement of Schur](../../../vault/50-calibration-geometrie/references/54-bundle-adjustment.md) | [4](../../../vault/50-calibration-geometrie/54-bundle-adjustment.md) | [2026-10-20](54-bundle-adjustment.md) |
 | [Multisensor calibration, hand-eye and time](../../../vault/50-calibration-geometrie/references/55-calibration-multicapteurs.md) | [3](../../../vault/50-calibration-geometrie/55-calibration-multicapteurs.md) | [2026-10-20](55-calibration-multicapteurs.md) |
 | [Rectified stereo, SGM and depth](../../../vault/60-vision-3d/references/61-stereo-profondeur.md) | [4](../../../vault/60-vision-3d/61-stereo-profondeur.md) | [2026-10-20](61-stereo-profondeur.md) |
-| [registration global and local PKI](../../../vault/60-vision-3d/references/62-recalage-global-icp.md) | [5](../../../vault/60-vision-3d/62-recalage-global-icp.md) | [2026-10-20](62-recalage-global-icp.md) |
+| [registration global and local ICP](../../../vault/60-vision-3d/references/62-recalage-global-icp.md) | [5](../../../vault/60-vision-3d/62-recalage-global-icp.md) | [2026-10-20](62-recalage-global-icp.md) |
 | [SLAM, VIO, pre-integration IMU and loopback](../../../vault/60-vision-3d/references/63-slam-vio.md) | [5](../../../vault/60-vision-3d/63-slam-vio.md) | [2026-10-20](63-slam-vio.md) |
 | [Clouds, BEV and occupancy representations](../../../vault/60-vision-3d/references/64-nuages-bev-occupation.md) | [5](../../../vault/60-vision-3d/64-nuages-bev-occupation.md) | [2026-10-20](64-nuages-bev-occupation.md) |
 | [Visual representations, ViT, Swin, ConvNeXt and DINOv2](../../../vault/70-reconnaissance-representations/references/71-representations-transfert.md) | [5](../../../vault/70-reconnaissance-representations/71-representations-transfert.md) | [2026-10-20](71-representations-transfert.md) |
@@ -67,7 +67,7 @@ This count counts every flashcard once; it does not count independent errors or 
 | [Detection 3D, object pose and articulated pose](../../../vault/80-detection-pose/references/84-detection-pose-3d.md) | [4](../../../vault/80-detection-pose/84-detection-pose-3d.md) | [2026-10-20](84-detection-pose-3d.md) |
 | [Otsu, distance transform and watershed](../../../vault/90-segmentation/references/91-otsu-distance-watershed.md) | [5](../../../vault/90-segmentation/91-otsu-distance-watershed.md) | [2026-10-20](91-otsu-distance-watershed.md) |
 | [GrabCut, regions and models of appearance](../../../vault/90-segmentation/references/92-grabcut-regions.md) | [3](../../../vault/90-segmentation/92-grabcut-regions.md) | [2026-10-20](92-grabcut-regions.md) |
-| [Semantic segmentation, instances and panopticon](../../../vault/90-segmentation/references/93-semantique-instances-panoptique.md) | [4](../../../vault/90-segmentation/93-semantique-instances-panoptique.md) | [2026-10-20](93-semantique-instances-panoptique.md) |
+| [Semantic segmentation, instances and panoptic segmentation](../../../vault/90-segmentation/references/93-semantique-instances-panoptique.md) | [4](../../../vault/90-segmentation/93-semantique-instances-panoptique.md) | [2026-10-20](93-semantique-instances-panoptique.md) |
 | [SAM, SAM 2 and video guided segmentation](../../../vault/90-segmentation/references/94-sam-sam2.md) | [3](../../../vault/90-segmentation/94-sam-sam2.md) | [2026-10-20](94-sam-sam2.md) |
 | [optical flow: Lucas – Kanade, Farnebäck and RAFT](../../../vault/100-mouvement-video/references/101-flot-optique.md) | [4](../../../vault/100-mouvement-video/101-flot-optique.md) | [2026-10-20](101-flot-optique.md) |
 | [Monitoring of points, actions and video comprehension](../../../vault/100-mouvement-video/references/102-points-actions-video.md) | [4](../../../vault/100-mouvement-video/102-points-actions-video.md) | [2026-10-20](102-points-actions-video.md) |
@@ -92,7 +92,7 @@ No new flashcard has been written. The detailed proposals are in the reports; th
 | Proposition | Gap filled | Family | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
 | check NIS and residuals biased | Distinguish between low residual and coherent covariance | Evaluation | 1 flashcard, 3 criteria; duration to be measured | [Gamse et al., §§2.2.2 and 3.4](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/) |
-| Transporting a covariance by the assistant | Avoid mixing uncertainty coordinate frames | Reasoning | 1 flashcard, 3 criteria; duration to be measured | [Solà et al., §II-H](https://arxiv.org/abs/1812.01537) |
+| Transporting a covariance by the adjoint | Avoid mixing uncertainty coordinate frames | Reasoning | 1 flashcard, 3 criteria; duration to be measured | [Solà et al., §II-H](https://arxiv.org/abs/1812.01537) |
 | Calculate PQ on a mini-matching | Make the panoptic metric operational | Evaluation | 1 flashcard, TP/FP/FN and IoU average | [Panoptic Segmentation, §4](https://arxiv.org/abs/1801.00868) |
 | Calculate the effect of an ID switch on IDF1 | Moving from qualitative distinction to a calculated case | Reasoning | 1 flashcard in a short sequence | [Ristani et al., identity metrics](https://arxiv.org/abs/1609.01775) |
 

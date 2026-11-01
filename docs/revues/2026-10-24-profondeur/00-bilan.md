@@ -45,7 +45,7 @@ Each report indicates the flashcards, the sources actually consulted and the sco
 | [CV-CANNY-HOUGH](32-canny-hough.md) | 4 | 4 | linking contours, votes and geometric validation |
 | [CV-MORPHO](33-morphologie-composantes.md) | 3 | 3 | Geometric support, topology and connectivity convention |
 | [CV-SIFT](41-sift.md) | 7 | 7 | normalizations, ratio ambiguity and geometric coverage |
-| [CV-ORB](42-orb.md) | 6 | 6 | separate detection, orientation, representation and standard |
+| [CV-ORB](42-orb.md) | 6 | 6 | separate detection, orientation, representation and norm |
 | [CV-MATCHING](43-detecteurs-matchers.md) | 4 | 4 | contracts of steps and diagnosis before change of method |
 | [CV-MATCH-APPRIS](44-superpoint-lightglue-loftr.md) | 5 | 5 | compatibility features – matcher, resolution and validation |
 | [CV-ECC](45-recalage-ecc.md) | 3 | 3 | photometric criterion, convergence basin and masks |

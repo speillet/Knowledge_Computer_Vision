@@ -17,7 +17,7 @@
 
 ### reference note and flashcards claims
 
-Bank of patches, gluttonous coreset and maximum reweighting confirmed. PaDiM: covariance by position, epsilon I regularization, Mahalanobis distance; formula and role distinct from probabilities. Acquisition effects and batch splits are validation choices, not published guarantees. No confusion patch/image score in the reference note.
+Bank of patches, greedy coreset and maximum reweighting confirmed. PaDiM: covariance by position, epsilon I regularization, Mahalanobis distance; formula and role distinct from probabilities. Acquisition effects and batch splits are validation choices, not published guarantees. No confusion patch/image score in the reference note.
 
 ## Corrections applied
 

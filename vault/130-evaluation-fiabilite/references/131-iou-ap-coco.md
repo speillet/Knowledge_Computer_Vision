@@ -8,14 +8,14 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 6
+revision: 7
 tags: [cv/d13, evaluation, iou, ap]
 ---
 # IoU and AP — the COCO detection protocol
 
 ## Problem and data
 
-The IoU measures a overlap; the AP measures the precision/reminder compromise of a list of detections classified in a given protocol. Neither of these measures alone the temporal identity, latency or business gravity of an error. This reference note is a reference to **metric/protocol**, not a feature extraction algorithm. [COCO, evaluation][cocodoc]
+The IoU measures a overlap; the AP measures the precision/recall compromise of a list of detections classified in a given protocol. Neither of these measures alone the temporal identity, latency or business gravity of an error. This reference note is a reference to **metric/protocol**, not a feature extraction algorithm. [COCO, evaluation][cocodoc]
 
 Inputs: predictions with image, category, box/mask and score; annotations with categories, area, ignore/crowd according to protocol. The COCO bbox results use `xywh`. Keep even coordinate frame and same transformations as annotations. Category identifiers are not necessarily contiguous indices. [Format of results][format]
 
@@ -47,7 +47,7 @@ A category with GT valid but without detection has AP null; without GT valid, it
 
 The Python reference pinned `8c9bcc3` with `useCats=1` applies `maxDets=100` **by image and category** before accumulation. The COCO descriptive page announces a global ceiling for all classes; a wrapper or server can also perform this global filtering. This divergence is explained: compare only executions of which version and pre-filtering are known. [Code, `evaluateImg` and `Params`][code]
 
-For a crowd, multiple predictions can be absorbed and ignored; the overlap used can be $|D\cap G|/|D|$ for a $D$ detection and a $G$ crowd region, instead of the regular IoU. Non-associated predictions outside the range can also be ignored. Do not replace these rules with a simple one-to-one match to announce a “AP COCO”. [Implementation of recovery][mask]
+For a crowd, multiple predictions can be absorbed and ignored; the overlap used can be $|D\cap G|/|D|$ for a $D$ detection and a $G$ crowd region, instead of the regular IoU. Non-associated predictions outside the range can also be ignored. Do not replace these rules with a simple one-to-one match to announce a “AP COCO”. [Implementation of overlap][mask]
 
 ## Executed example, baseline and variation
 
@@ -63,7 +63,7 @@ There are 51 recall thresholds from 0 to 0,50 included. The FP intermediate lowe
 
 ## Cost, evaluation and diagnosis
 
-Sorting and comparisons to GTs depend on the number of predictions and thresholds/categories. Set score filtering, NMS, top-k, versions and split. No training or pycocotools call on a real game is run here.
+Sorting and comparisons to GTs depend on the number of predictions and thresholds/categories. Set score filtering, NMS, top-k, versions and split. No training or pycocotools call on a real dataset is run here.
 
 | Symptom | Explication possible | Validation |
 | --- | --- | --- |
@@ -123,7 +123,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: For two valid GT instances, one category, a fixed IoU threshold and no crowd/ignore annotations, ranked predictions are TP, duplicate FP, TP. How is AP interpolated over 101 recall levels calculated?
 
-**Algorithm of the envelope**: After stacking TP and FP, go through the accuracy from right to left and replace each value with the maximum between it and the next. For each reminder requested, then take the first level reached to its right according to the rules of the evaluator, or zero if it is not reached. This procedure explains the 51 levels included up to 0,50 in the case built. It differs from an arbitrary trapezoidal integration of three points. Categories without valid GT and ignored annotations follow other rules, so a ranking example is not a complete COCO re-implementation.
+**Algorithm of the envelope**: After stacking TP and FP, go through the accuracy from right to left and replace each value with the maximum between it and the next. For each recall requested, then take the first level reached to its right according to the rules of the evaluator, or zero if it is not reached. This procedure explains the 51 levels included up to 0,50 in the case built. It differs from an arbitrary trapezoidal integration of three points. Categories without valid GT and ignored annotations follow other rules, so a ranking example is not a complete COCO re-implementation.
 
 ### CV-IOU-AP-005
 

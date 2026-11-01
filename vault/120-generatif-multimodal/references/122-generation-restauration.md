@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -74,7 +74,7 @@ These constructed cases develop conditional distribution and restoration fidelit
 
 **Proposed Validation**: preserve the crude and, if possible, a reference acquired with an adapted resolution, then measure preservation, width and location of defects. Compare to a simple restoration with explicit assumptions and examine errors on rare cases. Do not replace the proof of acquisition with a more convincing generated image. An improvement in perceptual score or overall reconstruction may mask the modification of a small but critical structure. The choice depends on the objective: producing an illustration and measuring a crack do not require the same fidelity. No generator is executed in this case, which is used to reason on the output contract.
 
-**Documentary reference for this pass**: [Latent Diffusion Models](https://arxiv.org/html/2112.10752v2), §3, latent space and packaging. The other developments are in the [flashcards](../122-generation-restauration.md).
+**Documentary reference for this pass**: [Latent Diffusion Models](https://arxiv.org/html/2112.10752v2), §3, latent space and conditioning. The other developments are in the [flashcards](../122-generation-restauration.md).
 
 ## Additional technical explanations — 2026-10-30
 
@@ -90,7 +90,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: What tradeoff is introduced by performing diffusion in an autoencoder's latent space?
 
-**Bilan spatial**: If the encoder reduces each image dimension by a factor of $f$, the latent grid has about $HW/f^2$ positions, with a different number of channels. This reduction alone does not predict time savings, as decoder, attention and iterations have their own costs. Note $\tilde x=D(E(x))$ and compare $x$ to $\tilde x$ isolates the reconstruction of the autoencoder before diffusion. Specially evaluate structures smaller than the effective compression support. A good average reconstruction can preserve the large shapes while modifying a rare detail that the product precisely seeks to measure.
+**Spatial size check**: If the encoder reduces each image dimension by a factor of $f$, the latent grid has about $HW/f^2$ positions, with a different number of channels. This reduction alone does not predict time savings, as decoder, attention and iterations have their own costs. Note $\tilde x=D(E(x))$ and compare $x$ to $\tilde x$ isolates the reconstruction of the autoencoder before diffusion. Specially evaluate structures smaller than the effective compression support. A good average reconstruction can preserve the large shapes while modifying a rare detail that the product precisely seeks to measure.
 
 ### CV-DIFFUSION-003
 

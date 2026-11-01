@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-FLOT", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -82,7 +82,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: For an ideal quadratic model, $A=\mathrm{diag}(2,1)$ and $b_1-b_2=(8,-2)^T$. If $2Ad=b_1-b_2$, what displacement is obtained, and which limitation must be kept in mind?
 
-**Directional Sensitivity**: with $A=\operatorname{diag}(2,\varepsilon)$, the ideal equations become $4d_x=\Delta b_x$ and $2\varepsilon d_y=\Delta b_y$. A small error on $\Delta b_y$ is amplified by $1/(2\varepsilon)$ when $\varepsilon$ is small. A weak residual can thus coexist with a strong error on $d_y$. Solving the system by proper factorization and inspecting its packaging is more informative than blindly applying an inverse. A regularization numerically stabilizes the weak direction by adding a preference; it does not transform this preference into certain observation. This is precisely what the diagonal example makes it possible to understand without executing a complete flow.
+**Directional Sensitivity**: with $A=\operatorname{diag}(2,\varepsilon)$, the ideal equations become $4d_x=\Delta b_x$ and $2\varepsilon d_y=\Delta b_y$. A small error on $\Delta b_y$ is amplified by $1/(2\varepsilon)$ when $\varepsilon$ is small. A weak residual can thus coexist with a strong error on $d_y$. Solving the system by proper factorization and inspecting its conditioning is more informative than blindly applying an inverse. A regularization numerically stabilizes the weak direction by adding a preference; it does not transform this preference into certain observation. This is precisely what the diagonal example makes it possible to understand without executing a complete flow.
 
 ### CV-FARNEBACK-003
 

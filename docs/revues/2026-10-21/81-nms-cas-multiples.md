@@ -28,7 +28,7 @@ No additional proposals pending. The explicitly requested cases are implemented,
 
 Passes actually consulted the 2026-10-21:
 
-- [Soft-NMS, §§1, 3 and 4](https://arxiv.org/html/1704.04503): removal of real neighbors, processing by class, score and recovery. No performance gains from the article are attributed to the project cases.
+- [Soft-NMS, §§1, 3 and 4](https://arxiv.org/html/1704.04503): removal of real neighbors, processing by class, score and overlap. No performance gains from the article are attributed to the project cases.
 - [Torchvision 0.29, batched_nms, description and settings](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html): no deletion between different categories and strict threshold. Context7 unavailable in this session; direct use of official documentation, without API execution.
 - [GIoU v2, §3, equation 1](https://arxiv.org/html/1902.09630v2): definition of IoU whose inclusion area ratio is one derivation of the project.
 

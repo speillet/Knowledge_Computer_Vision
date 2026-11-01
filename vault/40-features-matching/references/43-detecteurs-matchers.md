@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -32,7 +32,7 @@ The local matrix $M=\sum w\nabla I\nabla I^T$ describes the gradient information
 
 ## Parameters and properties
 
-Number of points, local NMS, thresholds, scale, standard and filtering must be consistent. BF compares exhaustively; FLANN approximates a search with indexes and compatible parameters. The metric comes from the descriptor, not the matcher's name.
+Number of points, local NMS, thresholds, scale, norm and filtering must be consistent. BF compares exhaustively; FLANN approximates a search with indexes and compatible parameters. The metric comes from the descriptor, not the matcher's name.
 
 ## Cost and implementation
 
@@ -44,7 +44,7 @@ Analytical variation: edge patch then corner. Predict an improperly constrained 
 
 ## Failure modes and diagnosis
 
-Many unnecessary points: inspect spatial distribution and repetition. Missing matches: Check standard/type, thresholds and actual number of neighbors before changing the detector.
+Many unnecessary points: inspect spatial distribution and repetition. Missing matches: Check norm/type, thresholds and actual number of neighbors before changing the detector.
 
 ## Alternatives and applications
 
@@ -60,7 +60,7 @@ These constructed cases develop contract steps and diagnosis before method chang
 
 **Reference Response**: Two directions of variation constrain the movement; on an edge, the tangent displacement is hardly observable.
 
-**Local model**: for a small displacement $d$, the photometric variation is close to a quadratic form $d^TMd$. The matrix $M$ gathers the products of the gradients in the vicinity. Its own directions indicate the directions of movement that change the appearance much or little.
+**Local model**: for a small displacement $d$, the photometric variation is close to a quadratic form $d^TMd$. The matrix $M$ gathers the products of the gradients in the vicinity. Its eigenvectors indicate the directions of movement that change the appearance much or little.
 
 **Constructed example**: On a uniform vertical edge, moving the patch horizontally changes its contents; moving it along the edge can almost leave it the same. A visible corner shows changes in two directions, which helps locate a move. This does not imply that it is unique in the image: the corners of a grid can all look the same. So distinguish local location information and ambiguity of association between images. A poorly lit, obscured or too large window can also invalidate the small photometric model despite favorable eigenvalues.
 
@@ -72,9 +72,9 @@ These constructed cases develop contract steps and diagnosis before method chang
 
 **What the Geometry Tests**: A homography for a plane, or an appropriate multiview constraint, links candidate positions in images. The residual expresses their disagreement with this model in a defined unit. A matcher chooses neighbors in an appearance representation; these two problems are different.
 
-**Limite construite**: Two identical logos on the same medium can produce a coherent group of matches and a transformation that matches the wrong logo. A geometric model does not necessarily resolve a symmetry of the scene. Look for a single brand, an expected position, or an additional observation that distinguishes assumptions. check also supports spatial points and reserved observations. This step provides reasons for accepting a transformation for a specific purpose, without automatically transforming the consensus into proof of the object's identity.
+**Constructed limitation**: Two identical logos on the same medium can produce a coherent group of matches and a transformation that matches the wrong logo. A geometric model does not necessarily resolve a symmetry of the scene. Look for a single brand, an expected position, or an additional observation that distinguishes assumptions. check also supports spatial points and reserved observations. This step provides reasons for accepting a transformation for a specific purpose, without automatically transforming the consensus into proof of the object's identity.
 
-**Documentary reference for this pass**: [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), Brute-Force Matcher, standards and FLANN. The other developments are in the [flashcards](../43-detecteurs-matchers.md).
+**Documentary reference for this pass**: [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), Brute-Force Matcher, norms and FLANN. The other developments are in the [flashcards](../43-detecteurs-matchers.md).
 
 ## Additional technical explanations — 2026-10-30
 

@@ -18,7 +18,7 @@
 
 - Confirmed: SAM provides prompt-conditioned masks; several masks may represent ambiguity. §7.5 is explicitly a proof of concept text-to-mask, distinct from the model of previous experiments.
 - Confirmed: SAM 2 §4 adds memory and conditions common frames on memory/prompts to produce masklets; one output per guided object does not define a fully taxonomic stand-alone MOT.
-- Confirmed: Reusable image encoding and decoder packaged in SAM §3; no run time is transferred to the project machines.
+- Confirmed: Reusable image encoding and decoder conditioned in SAM §3; no run time is transferred to the project machines.
 - The objection to the offline/cause comparison is a deduction from the available information, not a quantified result of the paper.
 
 ## Corrections applied

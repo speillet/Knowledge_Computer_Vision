@@ -33,7 +33,7 @@ def project(point, fx, fy, cx, cy):
     """Pinhole ideal in coordinate frame camera, without distortion; point in front of the camera."""
     x, y, z = point
     if not all(math.isfinite(v) for v in (x, y, z, fx, fy, cx, cy)) or z <= 0:
-        raise ValueError('Finished coordinates and expected positive depth.')
+        raise ValueError('Finite coordinates and expected positive depth.')
     return fx * x / z + cx, fy * y / z + cy
 
 

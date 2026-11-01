@@ -89,7 +89,7 @@ The production syntax remains conditioned to this driver. An experimental contra
 
 **Decision**: Continue editorial preparation without installing Anki in personal applications. **Reason**: Anki Desktop is missing; the official parser can be tested in isolation but does not simulate an actual collection. **Alternative**: Wait for applications; it is not necessary to write the authorized driver. Application testing remains open.
 
-Context7: resolution of OpenCV then query `/websites/opencv_4_13_0` on standards and matching; plugin resolution and query performed in format search. Results against official APIs and code.
+Context7: resolution of OpenCV then query `/websites/opencv_4_13_0` on norms and matching; plugin resolution and query performed in format search. Results against official APIs and code.
 
 The [contrat](contracts/obsidian-anki.md), [The vault](../../vault/01-Parcours/Guide-Anki.md) and [Journal of Evidence](../../vault/01-Parcours/Suivi-pilote.md) specify versions, controls performed and limits. The coloring and behavior of wikilinks have been fixed from the local runtime of the converter.
 

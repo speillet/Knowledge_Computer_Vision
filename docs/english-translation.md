@@ -90,6 +90,13 @@ Detailed results and canonical revisions appear in the
 
 ## Limits and publication state
 
+Before merging on 2026-11-01, the Standards and Spec reviews identified technical
+mistranslations that structural checks had missed. A targeted correction pass
+restored the French source meanings and updated affected canonical revisions;
+see the [pre-merge review](revues/2026-11-01-traduction/00-bilan.md). The initial
+validation results above and their 2026-10-31 revision record remain historical.
+The integration with PR #24 adds four regression tests for the English inventory.
+
 This is a local, machine-assisted translation with direct translation of all
 questions and targeted terminology and structural review. It is not independent
 scientific validation or a complete native-speaker proofread of every paragraph.

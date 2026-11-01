@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -16,7 +16,7 @@ tags: [cv/d06]
 
 ## Problem, data and assumptions
 
-Estimate a rigid transformation source→target between clouds expressed in compatible units. Outputs: pose and recovery measures/residual under given threshold. A correct pose requires more than a low RMSE on a small subset.
+Estimate a rigid transformation source→target between clouds expressed in compatible units. Outputs: pose and overlap measures/residual under given threshold. A correct pose requires more than a low RMSE on a small subset.
 
 ## Prerequisites and competencies
 
@@ -40,7 +40,7 @@ Look for neighbors, normal, features and iterations dominate. No real cloud proc
 
 ## Evaluation and controlled variation
 
-Analytical variation: same points and known matches, then remote initialization with nearest neighbors. Predict a risk of erroneous associations and local minimum. Compare pose reference, recovery and error out of consensus.
+Analytical variation: same points and known matches, then remote initialization with nearest neighbors. Predict a risk of erroneous associations and local minimum. Compare pose reference, overlap and error out of consensus.
 
 ## Failure modes and diagnosis
 
@@ -68,11 +68,11 @@ These constructed cases develop initialization, correspondences and directions w
 
 **Question of work**: Is point-to-plane ICP always a better replacement for point-to-point ICP?
 
-**Reference Response**: It exploits reliable normals and a geometry that constrains useful movements; it can be poorly placed on certain surfaces or normal noise.
+**Reference Response**: It exploits reliable normals and a geometry that constrains useful movements; it can be ill-posed on certain surfaces or normal noise.
 
 **Comparison of the information used**: point-to-point penalizes a difference of positions according to three components; point-to-plane uses a local surface approximation. When normals and initialization are adjusted, this approximation can be effective. If the normals are unstable or the geometry poor, the criterion may lose its interest or leave some directions little constrained.
 
-**Ablation construite**: keep clouds, initial matches, threshold and reference, then compare variants by varying the noise of normals and overlap separately. Measure pose error, convergence, failures and cost. A drop in the residual specific to one variant is not directly comparable to the residual of another formulation. The right choice depends on the observed surface area and the accuracy required. Do not use a single favorable plan case to advertise superiority over all coins and all initializations.
+**Constructed ablation**: keep clouds, initial matches, threshold and reference, then compare variants by varying the noise of normals and overlap separately. Measure pose error, convergence, failures and cost. A drop in the residual specific to one variant is not directly comparable to the residual of another formulation. The right choice depends on the observed surface area and the accuracy required. Do not use a single favorable plan case to advertise superiority over all coins and all initializations.
 
 **Documentary reference for this pass**: [Open3D 0.19, ICP registration](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), Point-to-plane ICP and evaluation. The other developments are in the [flashcards](../62-recalage-global-icp.md).
 
@@ -114,7 +114,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 ## Sources and flashcards
 
-- [Open3D 0.19.0, point-to-point and point-to-plane PKI](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html).
+- [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html).
 - [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
 - [Related flashcards](../62-recalage-global-icp.md).
 

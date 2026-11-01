@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -24,7 +24,7 @@ Keep an end-to-end decision requirement under flow. Inputs: frames with timestam
 
 ## Intuition and procedure
 
-Decompose acquisition, decoding, preprocessing, transfers, inference, postprocessing and transmission. CPU/GPU profiler/tails with consistent timestamp. Batching and overlaying can increase throughput without improving individual latency; a queue accumulates delay if the service is insufficient.
+Decompose acquisition, decoding, preprocessing, transfers, inference, postprocessing and transmission. Profile CPU, GPU and queues with consistent timestamps. Batching and overlapping work can increase throughput without improving individual latency; a queue accumulates delay if the service is insufficient.
 
 ## Mathematics, conventions and units
 
@@ -32,7 +32,7 @@ For eight streams at 30 frames/s, the inflow rate is 240 frames/s. This average 
 
 ## Parameters and properties
 
-Batch, competition, cadence, drop policy, buffers and measuring point. Zero-copy describes some avoided transfers, not a universal lack of copy. Hardware decoding and color conversion can still be bottlenecks.
+Batch, concurrency, cadence, drop policy, buffers and measuring point. Zero-copy describes some avoided transfers, not a universal lack of copy. Hardware decoding and color conversion can still be bottlenecks.
 
 ## Cost and implementation
 
@@ -40,11 +40,11 @@ Measure engine time and transfers separately, then complete system; Nsight can h
 
 ## Evaluation and controlled variation
 
-Baseline: a stream and then increasing load to fixed model; measure p50/p99, frame age, drops, throughput and memory. The load variation tests files and competition, not just the average kernel.
+Baseline: a stream and then increasing load to fixed model; measure p50/p99, frame age, drops, throughput and memory. The load variation tests queues and concurrency, not just the average kernel.
 
 ## Failure modes and diagnosis
 
-Stable but old frames: inspect files/backpressure and timestamps. Low-busy GPU: Profile CPU/decoding/transfers. Do not conclude that the model is too small or too large without a trace.
+Stable FPS but old frames: inspect queues/backpressure and timestamps. Low-busy GPU: Profile CPU/decoding/transfers. Do not conclude that the model is too small or too large without a trace.
 
 ## Alternatives and applications
 
@@ -58,21 +58,21 @@ These constructed cases develop contracts, queues and information age. They are 
 
 **Question of work**: A pipeline sustains 240 images/s but makes decisions on old frames. Does it necessarily meet its real-time requirement?
 
-**Reference Response**: No: the debit does not guarantee the age of the observation or the deadline by decision.
+**Reference Response**: No: the throughput does not guarantee the age of the observation or the deadline by decision.
 
 **Two distinct quantities**: A bitrate counts outputs per second; the age of a frame compares its capture time to when its decision is available. A system can process a lot of images while accumulating a significant expectation before the calculation. The real-time term must therefore be linked to a defined useful time.
 
-**Constructed example**: A queue already contains several seconds of images when the engine reaches its rated speed. The exits arrive regularly, but describe a past too old for downstream action. Measure wait and freshness, then choose a charging policy consistent with the need. Abandoning old frames can reduce seniority, but affects tracking and short events; processing all frames can preserve completeness by violating delay. The right compromise cannot be deduced from the FPS alone: it belongs to the product contract and must be tested under load.
+**Constructed example**: A queue already contains several seconds of images when the engine reaches its rated speed. The exits arrive regularly, but describe a past too old for downstream action. Measure wait and freshness, then choose a charging policy consistent with the need. Abandoning old frames can reduce frame age, but affects tracking and short events; processing all frames can preserve completeness by violating delay. The right compromise cannot be deduced from the FPS alone: it belongs to the product contract and must be tested under load.
 
 ### Case linked to CV-PIPELINE-005
 
 **Question of work**: GPU utilization is low while latency is high. Which measurements distinguish CPU decoding, transfers and queues?
 
-**Reference Response**: Trace CPU/GPU time, H2D/D2H, expectations and age of frames with representative load.
+**Reference Response**: Trace CPU/GPU time, H2D/D2H, waits and age of frames with representative load.
 
 **Interpretation of traces**: A low-busy GPU can wait for decoded images, copies, or a step-by-step dependency. A usage average masks the computational and waiting alternations; it does not directly say which component should be accelerated.
 
-**Proposed deletion**: Instrument the timeline, then temporarily replace the decoding with prepared inputs or compare an isolated transfer, with an explicit measurement objective. Then reintroduce the complete chain to check the product gain. check also batch and file size, as reducing a cost can move the drop. The quality of the inputs and outputs must remain the same. This approach relates a hypothesis to a discriminating measurement and avoids modifying architecture or precision when the model constitutes only a fraction of the observed delay. The tests described are proposed, without any physical trace executed here.
+**Proposed ablation**: Instrument the timeline, then temporarily replace the decoding with prepared inputs or compare an isolated transfer, with an explicit measurement objective. Then reintroduce the complete chain to check the product gain. check also batch and file size, as reducing a cost can move the drop. The quality of the inputs and outputs must remain the same. This approach relates a hypothesis to a discriminating measurement and avoids modifying architecture or precision when the model constitutes only a fraction of the observed delay. The tests described are proposed, without any physical trace executed here.
 
 **Documentary reference for this pass**: [GStreamer, tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), limits, blocking, leaky and current levels. The other developments are in the [flashcards](../141-contrats-profiling-video.md).
 

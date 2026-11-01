@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-REPRESENTATIONS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -24,7 +24,7 @@ Link images and descriptions in a common space for retrieval or classification w
 
 ## Intuition and procedure
 
-CLIP brings the positive pairs closer together and compares the candidates by a contrasting goal. SigLIP uses a sigmoid lens in pairs with temperature/learned bias. The zero-shot constructs class descriptions and compares them to images.
+CLIP brings the positive pairs closer together and compares the candidates by a contrastive objective. SigLIP uses a sigmoid objective in pairs with temperature/learned bias. The zero-shot constructs class descriptions and compares them to images.
 
 ## Mathematics, conventions and units
 
@@ -90,7 +90,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Why does a CLIP softmax score of 0.95 over two labels not prove that the predicted object is present?
 
-**Algebraic counter-example**: for two logs $a,b$, $p_1=1/(1+e^{b-a})$. A difference $a-b=\log19\simeq2,94$ is enough to give $p_1=0,95$, regardless of the absolute value of the two logs. Adding the same constant to the two does not change anything. If a third candidate receives a logit equal to $a$, the probability of the first becomes $19/(19+1+19)=19/39$, approximately 0,487, without any change in the image. This built case isolates the effect of the candidate set; it does not predict the values of a checkpoint. A robust rejection therefore requires a protocol including the absences and distributions actually encountered.
+**Algebraic counter-example**: for two logits $a,b$, $p_1=1/(1+e^{b-a})$. A difference $a-b=\log19\simeq2,94$ is enough to give $p_1=0,95$, regardless of the absolute value of the two logits. Adding the same constant to the two does not change anything. If a third candidate receives a logit equal to $a$, the probability of the first becomes $19/(19+1+19)=19/39$, approximately 0,487, without any change in the image. This built case isolates the effect of the candidate set; it does not predict the values of a checkpoint. A robust rejection therefore requires a protocol including the absences and distributions actually encountered.
 
 ### CV-CLIP-003
 
@@ -102,7 +102,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: How can an image–text classifier be tested without tuning prompts on the final test set?
 
-**Measurable sensitivity**: For each reserved image, keep the winning label, its margin with the second candidate and the decision changes between predefined formulations. Report the rate of disagreement by class and field, in addition to the final accuracy. An average of several prompts must be set before the test and its costs incorporated into the protocol. Separate also the images of the same object or sequence between games: several very similar views can make the validation too favorable. These measures transform an impression of robustness to words into observable property, without selecting only the formulation that succeeds on each example after the fact.
+**Measurable sensitivity**: For each reserved image, keep the winning label, its margin with the second candidate and the decision changes between predefined formulations. Report the rate of disagreement by class and field, in addition to the final accuracy. An average of several prompts must be set before the test and its costs incorporated into the protocol. Separate also the images of the same object or sequence between datasets: several very similar views can make the validation too favorable. These measures transform an impression of robustness to words into observable property, without selecting only the formulation that succeeds on each example after the fact.
 
 **Passages consulted for these developments**: [Radford et al., CLIP](https://arxiv.org/html/2103.00020v1), §2.3, symmetrical loss; §3.1, text classification; algebraic project counterexamples; [Zhai et al., SigLIP](https://arxiv.org/pdf/2303.15343), summary, objective per pair; HTML v4 version inaccessible, use of PDF.
 

@@ -40,7 +40,7 @@ Absent families: algorithm, understanding, design, reasoning. Their absence does
 - [CenterPoint, summary](https://arxiv.org/abs/2006.11275).
 - [OpenPose, summary and fig. 2](https://arxiv.org/abs/1611.08050).
 - [BOP, tasks and metrics](https://bop.felk.cvut.cz/tasks/), accessed on 20 October 2026.
-- [nuScenes, fichier officiel lu via sa version raw, Metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), accessed on 20 October 2026.
+- [nuScenes, official file read through its raw version, Metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), accessed on 20 October 2026.
 
 ## Checks and limitations
 

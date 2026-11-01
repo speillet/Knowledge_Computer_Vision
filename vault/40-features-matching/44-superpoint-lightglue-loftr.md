@@ -35,7 +35,7 @@ START
 CV-Pilote
 ID: CV-MATCH-APPRIS-002
 Question: LoFTR is detector-free. Does this imply a reliable trajectory for every pixel?
-Reponse: **Expected answer**: No: it produces coarse-to-fine matches without explicit split detector; it is neither a guaranteed flow anywhere nor a complete time tracker.
+Reponse: **Expected answer**: No: it produces coarse-to-fine matches without explicit sparse detector; it is neither a guaranteed flow anywhere nor a complete time tracker.
 
 **Further explanation**: Set coordinate frames, scores and geometric validation as for any match proposal.
 

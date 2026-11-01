@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -28,7 +28,7 @@ Note $G_i=T_{bg_i}$, $C_i=T_{c_it}$, $X=T_{gc}$ and $Y=T_{bt}$. The fixed chain 
 
 ## Mechanism, parameters and observability
 
-Some solvers estimate rotation and translation separately; others treat them together, for example with dual quaternions. Compare solutions with a reserved residual on poses, not by name alone. Movements around a single axis or without rotation diversity leave poorly constrained directions. In OpenCV 4.13, `calibrateHandEye` receives the →base and target→camera and returns camera→gripper; its documentation requires at least two movements with non-parallel axes of rotation, i.e. three poses, and recommends more views. This minimum does not replace a conditioning diagnosis.
+Some solvers estimate rotation and translation separately; others treat them together, for example with dual quaternions. Compare solutions with a reserved residual on poses, not by name alone. Movements around a single axis or without rotation diversity leave poorly constrained directions. In OpenCV 4.13, `calibrateHandEye` receives gripper→base and target→camera and returns camera→gripper; its documentation requires at least two movements with non-parallel axes of rotation, i.e. three poses, and recommends more views. This minimum does not replace a conditioning diagnosis.
 
 ## Cost, synchronization and variants
 

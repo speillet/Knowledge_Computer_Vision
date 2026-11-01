@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -24,7 +24,7 @@ Modify a binary geometry and group its regions according to connectivity. Inputs
 
 ## Intuition and procedure
 
-Erosion removes points without compatible neighborhood; expansion extends the support. Opening and closing make up these operations in different orders. The related components then group connected pixels according to 4 or 8 neighbors.
+Erosion removes points without compatible neighborhood; dilation extends the support. Opening and closing make up these operations in different orders. Connected components then group connected pixels according to 4 or 8 neighbors.
 
 ## Mathematics, conventions and units
 
@@ -84,7 +84,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Which geometric effects distinguish binary opening and closing, and why must structuring-element size suit the task?
 
-**Properties to know**: on ideal binary sets with the same structuring, the opening is anti-extensive: its result is included in the initial first plane. The closure is extensive: it can be added. They are idempotent: applying a second time the complete operation with the same structuring should no longer change the theoretical set obtained. Increasing the number of erosions and dilations on the other hand changes the effective support, and is not "repeat an identical opening". Finite images, edge values, and anchors must be consistent to find these properties in an implementation. Opening can break a thin bridge, closing can create a bridge; these topological changes can be decisive for counting objects.
+**Properties to know**: on ideal binary sets with the same structuring element, the opening is anti-extensive: its result is included in the initial foreground. The closure is extensive: it can be added. They are idempotent: applying a second time the complete operation with the same structuring element should no longer change the theoretical set obtained. Increasing the number of erosions and dilations on the other hand changes the effective support, and is not "repeat an identical opening". Finite images, edge values, and anchors must be consistent to find these properties in an implementation. Opening can break a thin bridge, closing can create a bridge; these topological changes can be decisive for counting objects.
 
 ### CV-MORPHO-002
 
@@ -96,7 +96,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: After morphological closing, two nearby parts are counted as one. Which assumption should be checked?
 
-**Why the air filter is too late**: The area of a merged component essentially adds those of the two rooms and the pixels of the bridge. It can therefore perfectly pass a minimum threshold, even when the count is false. Separately measuring the distance between borders before closing, the width of the bridge created and the maximum distance inside each room helps to choose a remedy. A marker watershed can use two reliable centers to provide separation, but bad markers can oversegment a single piece. In the evaluation, explicitly distinguish merge error, division error and boundary error: an average pixel score can remain good despite an object lost on counting.
+**Why the area filter is too late**: The area of a merged component essentially adds those of the two parts and the pixels of the bridge. It can therefore perfectly pass a minimum threshold, even when the count is false. Separately measuring the distance between borders before closing, the width of the bridge created and the maximum distance inside each part helps to choose a remedy. A marker watershed can use two reliable centers to provide separation, but bad markers can oversegment a single piece. In the evaluation, explicitly distinguish merge error, division error and boundary error: an average pixel score can remain good despite an object lost on counting.
 
 **Passages consulted for these developments**: [OpenCV 4.13, Morphological Transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html), §§1 – 4, erosion, dilation, opening and closing; [OpenCV 4.13, connectedComponents](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html), connectivity and labels.
 

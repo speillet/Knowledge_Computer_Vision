@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-PIPELINE", "CV-QUANT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -36,7 +36,7 @@ Artifacts/runtime, shapes, thresholds, cold start, thermal, consumption, observa
 
 ## Cost and implementation
 
-Unstructured pluming only accelerates if kernels/hardware exploit its sparsity; distilling may require training but does not automatically change transfers. No equipment/server modified or consumption measured.
+Unstructured pruning only accelerates if kernels/hardware exploit its sparsity; distilling may require training but does not automatically change transfers. No equipment/server modified or consumption measured.
 
 ## Evaluation and controlled variation
 

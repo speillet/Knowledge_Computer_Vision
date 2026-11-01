@@ -1,0 +1,303 @@
+{
+  "date": "2026-11-01",
+  "english_predecessor": "18ee590eea2dbc70d09727d3a607fbfa181778c3",
+  "subjects": 49,
+  "revised_references": 44,
+  "correction_rows": 202,
+  "canonical_revisions": [
+    {
+      "id": "CV-SVD",
+      "path": "vault/10-mathematiques-estimation/references/11-moindres-carres-svd.md",
+      "before_revision": 7,
+      "after_revision": 8
+    },
+    {
+      "id": "CV-SE3",
+      "path": "vault/10-mathematiques-estimation/references/12-rotations-se3.md",
+      "before_revision": 8,
+      "after_revision": 9
+    },
+    {
+      "id": "CV-FUSION",
+      "path": "vault/10-mathematiques-estimation/references/13-kalman-ekf-eskf.md",
+      "before_revision": 8,
+      "after_revision": 8
+    },
+    {
+      "id": "CV-FACTEURS",
+      "path": "vault/10-mathematiques-estimation/references/14-graphes-facteurs.md",
+      "before_revision": 8,
+      "after_revision": 9
+    },
+    {
+      "id": "CV-VIDEO",
+      "path": "vault/100-mouvement-video/references/102-points-actions-video.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-FARNEBACK",
+      "path": "vault/100-mouvement-video/references/103-farneback.md",
+      "before_revision": 4,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-SORT",
+      "path": "vault/110-tracking-association/references/111-sort.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-CORRELATION",
+      "path": "vault/110-tracking-association/references/114-mosse-kcf.md",
+      "before_revision": 4,
+      "after_revision": 4
+    },
+    {
+      "id": "CV-MEANSHIFT",
+      "path": "vault/110-tracking-association/references/115-meanshift-camshift.md",
+      "before_revision": 4,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-DIFFUSION",
+      "path": "vault/120-generatif-multimodal/references/122-generation-restauration.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-IOU-AP",
+      "path": "vault/130-evaluation-fiabilite/references/131-iou-ap-coco.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-FIABILITE",
+      "path": "vault/130-evaluation-fiabilite/references/133-donnees-generalisation.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-PIPELINE",
+      "path": "vault/140-ingenierie-systemes/references/141-contrats-profiling-video.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-QUANT",
+      "path": "vault/140-ingenierie-systemes/references/142-quantification-runtimes.md",
+      "before_revision": 5,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-DEPLOIEMENT",
+      "path": "vault/140-ingenierie-systemes/references/143-edge-reproductibilite.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-ACQUISITION",
+      "path": "vault/20-acquisition-images/references/21-exposition-bruit-echantillonnage.md",
+      "before_revision": 8,
+      "after_revision": 9
+    },
+    {
+      "id": "CV-IMAGERIES",
+      "path": "vault/20-acquisition-images/references/23-imageries-specialisees.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-CAPTEURS",
+      "path": "vault/20-acquisition-images/references/22-capteurs-horodatage.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-CANNY-HOUGH",
+      "path": "vault/30-traitement-image/references/32-canny-hough.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-MORPHO",
+      "path": "vault/30-traitement-image/references/33-morphologie-composantes.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-FILTRES",
+      "path": "vault/30-traitement-image/references/31-filtrage-gradients.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-SIFT",
+      "path": "vault/40-features-matching/references/41-sift.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-ORB",
+      "path": "vault/40-features-matching/references/42-orb.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-MATCHING",
+      "path": "vault/40-features-matching/references/43-detecteurs-matchers.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-MATCH-APPRIS",
+      "path": "vault/40-features-matching/references/44-superpoint-lightglue-loftr.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-CORNERS",
+      "path": "vault/40-features-matching/references/46-harris-shi-tomasi.md",
+      "before_revision": 4,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-FAST-BRIEF",
+      "path": "vault/40-features-matching/references/47-fast-brief.md",
+      "before_revision": 4,
+      "after_revision": 4
+    },
+    {
+      "id": "CV-FLANN",
+      "path": "vault/40-features-matching/references/48-flann.md",
+      "before_revision": 4,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-HOMOGRAPHIE",
+      "path": "vault/50-calibration-geometrie/references/51-ransac-homographie.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-ZHANG",
+      "path": "vault/50-calibration-geometrie/references/52-calibration-zhang.md",
+      "before_revision": 6,
+      "after_revision": 7
+    },
+    {
+      "id": "CV-EPIPOLAIRE",
+      "path": "vault/50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-BA",
+      "path": "vault/50-calibration-geometrie/references/54-bundle-adjustment.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-MULTICALIB",
+      "path": "vault/50-calibration-geometrie/references/55-calibration-multicapteurs.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-FISHEYE",
+      "path": "vault/50-calibration-geometrie/references/56-calibration-fisheye.md",
+      "before_revision": 4,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-HANDEYE",
+      "path": "vault/50-calibration-geometrie/references/57-calibration-hand-eye.md",
+      "before_revision": 4,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-STEREO",
+      "path": "vault/60-vision-3d/references/61-stereo-profondeur.md",
+      "before_revision": 5,
+      "after_revision": 5
+    },
+    {
+      "id": "CV-ICP",
+      "path": "vault/60-vision-3d/references/62-recalage-global-icp.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-VIO",
+      "path": "vault/60-vision-3d/references/63-slam-vio.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-REPRESENTATIONS",
+      "path": "vault/70-reconnaissance-representations/references/71-representations-transfert.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-CLIP",
+      "path": "vault/70-reconnaissance-representations/references/72-clip-siglip.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-ANOMALIES",
+      "path": "vault/70-reconnaissance-representations/references/73-patchcore-padim.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-OCR",
+      "path": "vault/70-reconnaissance-representations/references/74-ocr-documents.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-BIOMETRIE",
+      "path": "vault/70-reconnaissance-representations/references/75-embeddings-biometrie.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-NMS",
+      "path": "vault/80-detection-pose/references/81-nms.md",
+      "before_revision": 7,
+      "after_revision": 8
+    },
+    {
+      "id": "CV-DETECTEURS",
+      "path": "vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md",
+      "before_revision": 8,
+      "after_revision": 9
+    },
+    {
+      "id": "CV-OPENVOC",
+      "path": "vault/80-detection-pose/references/83-detection-open-vocabulary.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-POSE3D",
+      "path": "vault/80-detection-pose/references/84-detection-pose-3d.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-SEGMENTATION",
+      "path": "vault/90-segmentation/references/93-semantique-instances-panoptique.md",
+      "before_revision": 5,
+      "after_revision": 6
+    },
+    {
+      "id": "CV-SAM",
+      "path": "vault/90-segmentation/references/94-sam-sam2.md",
+      "before_revision": 5,
+      "after_revision": 6
+    }
+  ]
+}

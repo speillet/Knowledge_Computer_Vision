@@ -10,7 +10,7 @@ Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`
 
 | flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-FUSION-001 | EKF/ESKF confirmed and specified; UKF unverifiable | distinguish filter variants. | Finished core; 77 words | reference note and format | Important | Explicit recovery, separate source UKF |
+| CV-FUSION-001 | EKF/ESKF confirmed and specified; UKF unverifiable | distinguish filter variants. | Finished core; 77 words | reference note and format | Important | Explicit overlap, separate source UKF |
 | CV-FUSION-002 | Confirmed: NIS Eq.7 | interpret a standardized innovation. | Finished core; 55 words | reference note and format | Important | Symbols and source added |
 | CV-FUSION-003 | Confirmed: reset covariance Eq.286 | preserve the covariance ESKF. | Finished core; 50 words | reference note and format | Minor | Section specified |
 | CV-FUSION-004 | Confirmed: propagation in Δt; diagnosis deduced | Processing time and missing data. | Finished core; 53 words | reference note and format | Minor | Specified passages |

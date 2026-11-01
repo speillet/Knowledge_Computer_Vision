@@ -37,7 +37,7 @@ START
 CV-Pilote
 ID: CV-SORT-002
 Question: In original SORT, what do the seven state components represent, and which timing assumptions need checking when frame rate changes?
-Reponse: **Expected answer**: $[u,v,s,r,\dot u,\dot v,\dot s]^T$ contains center, area, width/height ratio and three speeds. The measurement is $[u,v,s,r]$; the ratio is constant in the deterministic model. The reference takes a frame like no time.
+Reponse: **Expected answer**: $[u,v,s,r,\dot u,\dot v,\dot s]^T$ contains center, area, width/height ratio and three speeds. The measurement is $[u,v,s,r]$; the ratio is constant in the deterministic model. The reference uses one frame as its time step.
 
 **Further explanation**: center in pixels, area in square pixels, ratio without unit; speeds per frame. Call the tracker at each frame even without detection. Lower frame rates and skipped frames change movement and uncertainty: check pattern, frequency of calls and units before setting thresholds.
 
@@ -89,7 +89,7 @@ Reponse: **Expected answer**: deletion occurs if `time_since_update > max_age`. 
 
 **Chronology to explain**: Memorizing a track allows you to reassociate it later, while issuing a box describes what the consumer receives in the current frame. These two decisions follow separate conditions in the reference. An absence on the screen does not therefore alone demonstrate that the track has already been destroyed.
 
-**Test construit**: prepare a detection, an empty frame, then a detection feedback, and trace age, hits, internal ID and output. Rework with two empty frames and with a different cadence. Do not interpret an age in frames as a universal duration. The expected result is for the pinned commit; another library or variant may adopt a different cycle.
+**Constructed test**: prepare a detection, an empty frame, then a detection feedback, and trace age, hits, internal ID and output. Rework with two empty frames and with a different cadence. Do not interpret an age in frames as a universal duration. The expected result is for the pinned commit; another library or variant may adopt a different cycle.
 
 **Physical Duration and Issue**: at 30 frames, a maximum age of one frame is approximately 33 ms between regular calls; at 10 images/s, approximately 100 ms. The exact deletion rule and updates still condition the timeline. A stored but not issued track can regain its old ID, while a consumer has not received any boxes during the absence. If the product requires a predicted box during this period, it is another contract that must be defined and evaluated, with a predicted status and appropriate uncertainty. Extending memory does not automatically provide this output or re-identification after expiration.
 
@@ -114,7 +114,7 @@ Reponse: **Expected answer**: the diagonal gives 0,90, against 0,62 for the cros
 
 **Use of counter-example**: separately test impossible pairs, non-assignment choices and thresholds, and then look at the consequences on IDs. Changing only the solver without changing the formulation can retain the same behavior. The toy matrix demonstrates a logical difference between two problems; it does not say which one produces the best trajectories on all scenes.
 
-**Non-affectation explicite**: An issue can introduce fictitious rows or columns representing a track without measurement and detection without track, with announced costs. This makes it possible to express that a poor association may be less desirable than a lack of correction. The choice of these costs determines the preference, and is not inferred from the use of Hungarian alone. If the priority objective is the cardinality of the allowable pairs, it must be represented explicitly before distinguishing by similarity. The counterexample of the flashcard therefore does not prescribe a universal formulation: it learns to verify the objective really solved and its temporal consequences.
+**Explicit non-assignment**: An issue can introduce fictitious rows or columns representing a track without measurement and detection without track, with announced costs. This makes it possible to express that a poor association may be less desirable than a lack of correction. The choice of these costs determines the preference, and is not inferred from the use of Hungarian alone. If the priority objective is the cardinality of the allowable pairs, it must be represented explicitly before distinguishing by similarity. The counterexample of the flashcard therefore does not prescribe a universal formulation: it learns to verify the objective really solved and its temporal consequences.
 
 **Blocking errors**: assert that any post-assignment gating is equivalent to before gating, without checking the wording.
 Source: [[110-tracking-association/references/111-sort|SORT reference]]; [association SORT, L154](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L154); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
@@ -140,7 +140,7 @@ Increasing `max_age` only helps certain absences; a method with appearance or ot
 
 **Temporal investigation**: find the last frame correctly associated, the first frame missed, the possible moment of deletion and the first reappearance. If the track still exists but another detection is chosen, the problem differs from a normal creation after expiration.
 
-**Proposed deletion**: fix detections and change only the life cycle, then fix this cycle and examine another association information. Check the consequences on false holds of tracks and errors after crossing. A longer duration of persistence can help a short absence but keep a false assumption. The diagnosis must explain the observed event and its compromises, without systematically applying the same parameter to any loss of identity.
+**Proposed ablation**: fix detections and change only the life cycle, then fix this cycle and examine another association information. Check the consequences on false holds of tracks and errors after crossing. A longer duration of persistence can help a short absence but keep a false assumption. The diagnosis must explain the observed event and its compromises, without systematically applying the same parameter to any loss of identity.
 
 **Discriminant Chronology**: build an array with time, internal ID, associated detection, age since last correction and issue status. A new track after deleting the old one is not the same event as an exchange between two still active trackss. Replaying the same detections isolates this difference from the detector. If the track was active but the real box has a IoU too low, test prediction, cadence and gating; if two boxes are eligible, examine the complete matrix and assignment objective. This procedure links an intervention to an observed cause and makes it possible to measure the false supports that it can introduce elsewhere.
 

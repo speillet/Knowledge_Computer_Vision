@@ -37,7 +37,7 @@ ID: CV-FISHEYE-002
 Question: Which acquisitions should be added when a wide-angle calibration uses many views concentrated near the image center?
 Reponse: **Expected answer**: Add views covering the periphery and diversify orientations and distances of the calibration target. Reserve poses and regions for validation. The number of photos does not replace the geometric information they provide.
 
-**Further explanation**: The peripheral parameters are little constrained by rays close to the axis. check sharpness, spot detection, rigidity of the calibration target and stability of the mounting. The proposed protocol aims at packaging, without guaranteeing the calibration of any device.
+**Further explanation**: The peripheral parameters are little constrained by rays close to the axis. check sharpness, spot detection, rigidity of the calibration target and stability of the mounting. The proposed protocol aims at conditioning, without guaranteeing the calibration of any device.
 
 **Reading of observations**: points close to the axis explore a small range of angles. Several models or parameters can then produce similar projections in this range while diverging at the edges. Adding nearly identical central images does not test this extrapolation.
 
@@ -64,7 +64,7 @@ Reponse: **Expected answer**: Map the residuals according to radius, position an
 
 **Why the average hides the defect**: If most of the corners are near the center, their small error dominates the RMS, while the useful peripheral region is little evaluated. A global average must therefore be accompanied by a spatial map and comparable error groups.
 
-**Diagnostic construit**: fix the calibration and project points reserved for several radii, then observe direction and amplitude of errors. A systematic pattern suggests a structured cause, but does not single-handedly differentiate between optical model and location bias. Inspect the points and repeat with new poses. Validate also a quantity related to the use: the precision of a projection at the edges is not summarized by the corrected appearance.
+**Constructed diagnosis**: fix the calibration and project points reserved for several radii, then observe direction and amplitude of errors. A systematic pattern suggests a structured cause, but does not single-handedly differentiate between optical model and location bias. Inspect the points and repeat with new poses. Validate also a quantity related to the use: the precision of a projection at the edges is not summarized by the corrected appearance.
 
 **Pixel Error and Angular Error**: breaking down the residual image $e$ in a unitary radial direction $n_r$ and a tangent $n_t$ gives $e_r=n_r^Te$ and $e_t=n_t^Te$. Analyzing these components by crown, with headcount and distributions, reveals biases that the average norm mixes. In a single radial cut, $\delta r\simeq f\,(d\theta_d/d\theta)\delta\theta$: a pixel does not represent everywhere the same angular error if the derivative varies. Metric conversion still depends on the scene and its depth. This analysis is a diagnosis, not a certain identification of the optical or localization cause.
 
@@ -87,7 +87,7 @@ Reponse: **Expected answer**: Use the model and the new matrix associated with t
 
 **Data Chain**: The remap defines which source position contributes to each output pixel. The new grid therefore describes another projection, even if it comes from the same sensor. To reassemble a pixel to a radius, use the contract of this grid, not that of the raw file.
 
-**Test construit**: From a known 3D point, project it into the raw image, follow the transformation to the output, and then check the radius or calculated pose in the rectified model. Include crop, padding and data-free areas. Then applying the raw distortion a second time is like transforming already corrected coordinates. A general visual coherence can let this error pass, especially near the center where the models look more alike.
+**Constructed test**: From a known 3D point, project it into the raw image, follow the transformation to the output, and then check the radius or calculated pose in the rectified model. Include crop, padding and data-free areas. Then applying the raw distortion a second time is like transforming already corrected coordinates. A general visual coherence can let this error pass, especially near the center where the models look more alike.
 
 **Radius of exit**: for rectification to a pinhole model, a homogeneous pixel $\tilde u'$ gives a radius $q'=K_{\mathrm{new}}^{-1}\tilde u'$ in the rectified coordinate frame. If $R_{\mathrm{rect}}$ sends the raw camera rays to this coordinate frame, the corresponding raw ray is proportional to $R_{\mathrm{rect}}^Tq'$. The fisheye projection of this ray provides the position to be sampled in the source image: it is a reverse map construction. This transformation is usually unrefined. After an output crop, also adapt the main center; after a resize, adapt focal lengths and coordinates according to the pixel convention chosen. Pixels without a valid source do not create any geometric measurements.
 

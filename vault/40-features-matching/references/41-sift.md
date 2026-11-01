@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 6
+revision: 7
 tags: [cv/d04, matching, sift]
 ---
 # SIFT — local features and multiscale descriptors
@@ -57,7 +57,7 @@ A stricter ratio threshold generally reduces retained matches; it is necessary t
 
 ## Cost and implementation
 
-Pyramid, detection and description depend on the resolution, levels and number of points. An exhaustive matching of $n$ and $m$ vectors of dimension $d$ costs in the order of $nmd$ scalar comparisons; FLANN changes the time/reminder compromise. No material speed gain is assumed here.
+Pyramid, detection and description depend on the resolution, levels and number of points. An exhaustive matching of $n$ and $m$ vectors of dimension $d$ costs in the order of $nmd$ scalar comparisons; FLANN changes the time/recall compromise. No material speed gain is assumed here.
 
 Extract **Illustrative not executed**, API OpenCV 4.13 checked:
 
@@ -71,7 +71,7 @@ good = [a for pair in pairs if len(pair) == 2
         for a, b in [pair] if a.distance < 0.75 * b.distance]
 ```
 
-`gray`, `descriptors_a` and `descriptors_b` are prepared entries, not variables created by this extract. The 0,75 ratio is illustrative. The standard derives from the sense of the descriptor, not just its memory type. [OpenCV, matching][opencv]
+`gray`, `descriptors_a` and `descriptors_b` are prepared entries, not variables created by this extract. The 0,75 ratio is illustrative. The norm derives from the sense of the descriptor, not just its memory type. [OpenCV, matching][opencv]
 
 ## Evaluation, variation and diagnosis
 
@@ -151,7 +151,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: A repetitive facade produces many SIFT matches and a high inlier ratio, but localization is displaced by one window. What diagnosis should be proposed, and how can it be checked?
 
-**Ambiguity to several solutions**: A periodic pattern allows $H_0,H_1,\ldots$ candidate transformations that shift the alignment of a period while retaining small residualss on repeated windows. We must compare information that does not have this symmetry, or announce that the problem remains ambiguous. Then construct an acceptance rule including an absolute reference or a justified motion marker. A better score of a few inliers is not proof when all the observations are repeated. Examine several assumptions and their margin may be more informative than returning only the best model, provided you evaluate this rule on ambiguous reserved cases.
+**Ambiguity to several solutions**: A periodic pattern allows $H_0,H_1,\ldots$ candidate transformations that shift the alignment of a period while retaining small residuals on repeated windows. We must compare information that does not have this symmetry, or announce that the problem remains ambiguous. Then construct an acceptance rule including an absolute reference or a justified motion marker. A better score of a few inliers is not proof when all the observations are repeated. Examine several assumptions and their margin may be more informative than returning only the best model, provided you evaluate this rule on ambiguous reserved cases.
 
 ### CV-SIFT-007
 
@@ -164,7 +164,7 @@ These explanations complement the mechanism associated with each question. Calcu
 ## Sources and flashcards
 
 - [Lowe 2004][lowe]: §§3 – 4 detection, §5 orientation, §6 description, §7.1 matching. Scientific source of the classical method.
-- [OpenCV 4.13, matching][opencv]: standard and API; implementation source.
+- [OpenCV 4.13, matching][opencv]: norm and API; implementation source.
 - [flashcards SIFT](../41-sift.md).
 
 [lowe]: https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf

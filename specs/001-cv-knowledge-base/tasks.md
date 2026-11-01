@@ -46,7 +46,7 @@ The ten APP entries now written retain their objectives and prerequisites. T023 
 
 T026 – T028 deliver the direct export of the 2026-10-24. They do not close T009/T010: personal installation, Android rendering and application cases remain to be observed.
 
-- [x] T029 –  Develop existing responses according to 2026-10-24 request: mechanisms, explained cases, hypotheses and controls, without changing identities or objectives; align canonical reference notess and trace self-review.
+- [x] T029 –  Develop existing responses according to 2026-10-24 request: mechanisms, explained cases, hypotheses and controls, without changing identities or objectives; align canonical reference notes and trace self-review.
 - [x] T030 –  Order the 60 subjects in nine steps adapted to the profile, with controlled prerequisites, passage criteria and integrations; detect short answers without confusing length and quality.
 
 T029 – T030 relate to the existing lot. They do not close the remaining 119 APP targets (T023), nor the application and recall tests (T009/T010/T013).

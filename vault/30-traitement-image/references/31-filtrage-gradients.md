@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -24,7 +24,7 @@ Mitigate certain disturbances without destroying the structures needed for the p
 
 ## Intuition and procedure
 
-Gaussian: linear spatial weighted average. Midwayer: Nonlinear order statistics useful for pulses. Bilateral: weight of proximity and photometric similarity. Deriver amplifies certain high frequencies; smoothing and then drifting chooses an analysis scale.
+Gaussian: linear spatial weighted average. Median: Nonlinear order statistics useful for pulses. Bilateral: weight of proximity and photometric similarity. Differentiation amplifies certain high frequencies; smoothing before differentiation selects an analysis scale.
 
 ## Mathematics, conventions and units
 

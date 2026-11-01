@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -28,7 +28,7 @@ Canny exploits gradients, local suppression of non-maxima and hysteresis between
 
 ## Mathematics, conventions and units
 
-For a straight line, $\rho=x\cos\theta+y\sin\theta$, with x,y and $\rho$ in pixels and $\theta$ in radians in the chosen convention. The discretization of the accumulator determines its resolution. The gradient combines spatial derivatives; its standard L1 or L2 is not the same score.
+For a straight line, $\rho=x\cos\theta+y\sin\theta$, with x,y and $\rho$ in pixels and $\theta$ in radians in the chosen convention. The discretization of the accumulator determines its resolution. The gradient combines spatial derivatives; its norm L1 or L2 is not the same score.
 
 ## Parameters and properties
 
@@ -40,7 +40,7 @@ The number of active points and bins dominates the cost of naïve Hough; a proba
 
 ## Evaluation and controlled variation
 
-Proposed variation: add texture and blur separately to a room with known edges. Predict stray or lost contours; measure repeatability and line error, not just contour density.
+Proposed variation: add texture and blur separately to a part with known edges. Predict stray or lost contours; measure repeatability and line error, not just contour density.
 
 ## Failure modes and diagnosis
 
@@ -70,9 +70,9 @@ These constructed cases develop connecting contours, votes and geometric validat
 
 **Reference Response**: Inspect Canny edge map, angular distribution, useful region and spatial support of candidates.
 
-**Proposed investigation**: Overlapping the lines and their support points to the image. If the votes come from repeated streaks, the detector may respond correctly to contours that are simply not those of the room. Then examine the distribution of angles and the number of fragments: this distinguishes a structured texture from a dispersed noise.
+**Proposed investigation**: Overlapping the lines and their support points to the image. If the votes come from repeated streaks, the detector may respond correctly to contours that are simply not those of the part. Then examine the distribution of angles and the number of fragments: this distinguishes a structured texture from a dispersed noise.
 
-**Ablation construite**: Set the bins and thresholds, restrict a region of interest, and then separately change the smoothing and the expected orientation constraint. Measure business lines found, false candidates and position error. Increasing only the voting threshold can eliminate a useful edge that is not very contrasting while retaining a long and repetitive texture. A geometric constraint helps only if it remains valid for the orientations actually encountered. The accumulator has a photometric support; the validation of the part model is an additional decision of the pipeline.
+**Constructed ablation**: Set the bins and thresholds, restrict a region of interest, and then separately change the smoothing and the expected orientation constraint. Measure business lines found, false candidates and position error. Increasing only the voting threshold can eliminate a useful edge that is not very contrasting while retaining a long and repetitive texture. A geometric constraint helps only if it remains valid for the orientations actually encountered. The accumulator has a photometric support; the validation of the part model is an additional decision of the pipeline.
 
 **Documentary reference for this pass**: [OpenCV 4.13, Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html), polar parametrization and votes. The other developments are in the [flashcards](../32-canny-hough.md).
 
@@ -102,7 +102,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Hough detects many lines on a textured surface. Which check avoids blindly tuning the voting threshold?
 
-**Differentiating Vote and Adjustment Error**: a long texture provides a lot of points and therefore votes, even if it is not the desired structure. For a candidate, calculate in addition the normal distances $r_i=x_i\cos\theta+y_i\sin\theta-\rho$ on her support points, their longitudinal extent and the fraction of the positions actually covered. A very precise short line and a long discontinuous line do not have the same use. Also compare its relationship to other expected edges: parallelism, intersections or distances, if these properties are legitimate for the room. These validations are choices of the proposed pipeline; the accumulator score is not a calibrated probability of the presence of a business edge.
+**Differentiating Vote and Adjustment Error**: a long texture provides a lot of points and therefore votes, even if it is not the desired structure. For a candidate, calculate in addition the normal distances $r_i=x_i\cos\theta+y_i\sin\theta-\rho$ on her support points, their longitudinal extent and the fraction of the positions actually covered. A very precise short line and a long discontinuous line do not have the same use. Also compare its relationship to other expected edges: parallelism, intersections or distances, if these properties are legitimate for the part. These validations are choices of the proposed pipeline; the accumulator score is not a calibrated probability of the presence of a business edge.
 
 **Passages consulted for these developments**: [OpenCV 4.13, Canny](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html), gradient, Non-maximum Suppression and Hysteresis Thresholding; [OpenCV 4.13, Hough](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html), How does it work; Standard and Probabilistic Hough.
 

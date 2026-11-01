@@ -1,4 +1,4 @@
-# Review –  Smaller squares, SVD and packaging –  2026-10-24
+# Review –  Least squares, SVD and conditioning –  2026-10-24
 
 ## Overview
 

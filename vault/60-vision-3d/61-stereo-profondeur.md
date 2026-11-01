@@ -58,13 +58,13 @@ START
 CV-Pilote
 ID: CV-STEREO-003
 Question: An SGBM reconstruction has the wrong scale despite good calibration. Which numerical convention should be checked?
-Reponse: **Expected answer**: The storage of the disparity and its scaling factor, including the four fractional bits of the concerned outputs; convert and hide invalids.
+Reponse: **Expected answer**: The storage of the disparity and its scaling factor, including the four fractional bits of the concerned outputs; convert and mask invalid values.
 
 **Further explanation**: Check also baseline and Q before arbitrarily correcting the final coordinates.
 
 **Representation Trap**: An integer can encode a real value with fractional bits. If the relevant output stores sixteen times the disparity, a value 320 represents 20 pixels and not 320 pixels. Since depth is inversely proportional to disparity in the simple case, interpreting 320 as pixels would reduce depth by a factor of sixteen.
 
-**Proposed investigation**: inspect type, valid values, disability watch and exact function documentation. Then reproject a known point by checking the matrix associated with the rectification and the basic units. Do not simply multiply the final cloud to hide a contract defect: this could leave inconsistent masks and other downstream quantities. A good geometric calibration does not protect from a bad digital conversion of the matcher output.
+**Proposed investigation**: inspect type, valid values, invalid-value sentinel and exact function documentation. Then reproject a known point by checking the matrix associated with the rectification and the basic units. Do not simply multiply the final cloud to hide a contract defect: this could leave inconsistent masks and other downstream quantities. A good geometric calibration does not protect from a bad digital conversion of the matcher output.
 
 **Order of operations**: Conceptually, retain the mask provided by the matcher's contract, convert the fixed disparity to real, then apply $[X_h,Y_h,Z_h,W_h]^T=Q[x,y,d,1]^T$ and divide by $W_h$ when the projection is valid. These are homogeneous coordinates, not yet meters before this division and the interpretation of the units of $Q$. Do not build the mask only after filling the holes: an interpolation can replace a sentinel with a plausible value. Keep the original measurement, its validity and any depth completed separate. Testing a known pixel makes it possible to distinguish storage factor, disparity convention, and baseline unit.
 

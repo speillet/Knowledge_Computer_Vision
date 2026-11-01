@@ -41,7 +41,7 @@ Reponse: **Expected answer**: No: their effect is transmitted to the reduced sys
 
 **Reading the system in blocks**: Camera and dot increments are coupled. Algebraically solve the block of points and then replace it in the camera equations gives the complement of Schur. The reduced system retains the effect of the points on the cameras; after resolution, a substitution recovers the increments of points.
 
-**Consequence of sparsity**: Multiple cameras that see the same landmark can be paired in the reduced system. The cost therefore depends on the connections and not only on the total number of points. In a constructed example, two games of the same size but different visibility may have different memory costs. The inverses in derivation refer to algebraic operations; an implementation uses appropriate factorizations or resolutions. Elimination refers to the current linearized problem and does not remove the need to relinearize or the initialization dependency.
+**Consequence of sparsity**: Multiple cameras that see the same landmark can be paired in the reduced system. The cost therefore depends on the connections and not only on the total number of points. In a constructed example, two datasets of the same size but different visibility may have different memory costs. The inverses in derivation refer to algebraic operations; an implementation uses appropriate factorizations or resolutions. Elimination refers to the current linearized problem and does not remove the need to relinearize or the initialization dependency.
 
 **Reduced system derivation**: Linearized problem gives $B\delta_c+E\delta_p=v$ and $E^T\delta_c+C\delta_p=w$. If $C$ is invertible, the second equation provides $\delta_p=C^{-1}(w-E^T\delta_c)$; its substitution in the first $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$ product. In a classic BA where each residual connects a camera and a point, the points do not interact directly with each other in this block: $C$ is diagonal block per point. A point seen by many cameras, on the other hand, creates couplings in the reduced system. Point – point constraints or other factors can change this structure; the factorization of the problem should be checked instead of assuming Schur to be always the same.
 
@@ -81,13 +81,13 @@ START
 CV-Pilote
 ID: CV-BA-004
 Question: Why can freeing additional camera coefficients reduce the optimization cost while degrading calibration?
-Reponse: **Expected answer**: Additional settings may over-adjust an uninformative game or be correlated.
+Reponse: **Expected answer**: Additional settings may over-adjust an uninformative dataset or be correlated.
 
 **Further explanation**: Measure stability by subsets and error on independent observations; choose the constraints of the model physically.
 
 **Why the cost goes down**: A larger parameter space can contain a solution that further adjusts training observations. This does not say if the additional parameters represent the camera or absorb noise, deformation of calibration target and mismatches. Several parameters can also produce similar effects on an uninformative capture.
 
-**Ablation construite**: Keep observations and release a group of parameters at once. Examine their dispersion in subsets, correlations and residualss on reserved views including edges. A better adjustment cost with out-of-sample degradation suggests an unfavorable trade-off. Conversely, a model that is too constrained can retain a real bias. The choice must be based on optics, diversity of data and usage, without making the mere reduction in cost a calibration criterion.
+**Constructed ablation**: Keep observations and release a group of parameters at once. Examine their dispersion in subsets, correlations and residuals on reserved views including edges. A better adjustment cost with out-of-sample degradation suggests an unfavorable trade-off. Conversely, a model that is too constrained can retain a real bias. The choice must be based on optics, diversity of data and usage, without making the mere reduction in cost a calibration criterion.
 
 **Example of missing information**: In a polynomial radial model, the effects of high-order coefficients grow with normalized radius powers. Observations near the center can hardly constrain these terms; different values then produce almost the same pixels observed but diverge at the edge. Unleashing these coefficients increases flexibility without adding informative data. The damping of LM limits the current resolution pitch: it is not automatically a physical priority on the final parameters. Justify the free parameters, check the directions with little stress and test the geometry where it will be used. A reserved validation must keep poses and really different areas, not just neighboring points of the same catches.
 

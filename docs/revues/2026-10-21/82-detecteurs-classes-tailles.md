@@ -16,9 +16,9 @@ The choices of supervision and output are not deduced from the only number of cl
 
 [Reference note](../../../vault/80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) completed before [flashcard](../../../vault/80-detection-pose/82-detection-fasterrcnn-yolo-detr.md): multiple instances of the same class, multiple classes per image, multiple or exclusive labels per instance; references to NMS scenarios.
 
-The geometric field calculates the effect of a two-pixel error on boxes 4×4, 40×40 and 40×4, depending on the axis of displacement. It distinguishes size, aspect ratio and common scale change. This calculation expands the diagnostic reminder already present in CV-IOU-AP-006; no new redundant flashcard on the latter objective is added.
+The geometric field calculates the effect of a two-pixel error on boxes 4×4, 40×40 and 40×4, depending on the axis of displacement. It distinguishes size, aspect ratio and common scale change. This calculation expands the diagnostic recall already present in CV-IOU-AP-006; no new redundant flashcard on the latter objective is added.
 
-reference note NMS and flashcard NMS-006 handle the other case of different sizes: inclusion without strong IoU. The two reference notess refer to each other. Current accounts: 52 reference notes, 233 flashcards, including six NMS and thirteen detectors; recalculated log and navigation. No Anki identifier invented.
+reference note NMS and flashcard NMS-006 handle the other case of different sizes: inclusion without strong IoU. The two reference notes refer to each other. Current accounts: 52 reference notes, 233 flashcards, including six NMS and thirteen detectors; recalculated log and navigation. No Anki identifier invented.
 
 ## Proposed enrichments (pending agreement)
 

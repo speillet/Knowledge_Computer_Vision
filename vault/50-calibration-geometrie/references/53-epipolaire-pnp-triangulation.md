@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -48,7 +48,7 @@ Huge depth with small residual: examine parallax, scale, cheirality and bad asso
 
 ## Alternatives and applications
 
-Homography for a shot; PnP if a 3D map is known; two views then reconstruction if the map is unknown. Do not interpret any translation as metric.
+Homography for a plane; PnP if a 3D map is known; two views then reconstruction if the map is unknown. Do not interpret any translation as metric.
 
 ## Guided reasoning and proposed checks
 

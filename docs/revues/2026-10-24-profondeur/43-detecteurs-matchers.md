@@ -26,7 +26,7 @@ No pending additions for this pass: the development of existing answers is expli
 
 ## Sources
 
-- [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html): Brute-Force Matcher, standards and FLANN, viewed on 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
+- [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html): Brute-Force Matcher, norms and FLANN, viewed on 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
 - Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
 ## Checks and limitations

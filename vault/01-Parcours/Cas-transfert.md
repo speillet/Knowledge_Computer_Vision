@@ -32,7 +32,7 @@ An already calibrated camera must be located in relation to a known, non-flat 3D
 
 <details><summary>Reference answer and criteria</summary>
 
-The pose object→camera is unknown; build matches 3D – 2D then choose a suitable robust PnP and check variant, with units, chirality and reserved validation. The homography of a plan does not describe the whole room. Compare useful precision and ambiguities; no precision is deduced from the number of points alone.
+The pose object→camera is unknown; build matches 3D – 2D then choose a suitable robust PnP and check variant, with units, chirality and reserved validation. The homography of a plan does not describe the whole part. Compare useful precision and ambiguities; no precision is deduced from the number of points alone.
 
 </details>
 
@@ -130,7 +130,7 @@ A large flat plate gives very low point-to-plane residuals while its tangential 
 
 <details><summary>Reference answer and criteria</summary>
 
-Test constrained directions: A plan provides little information about certain slips/rotations. Add geometry, distinctive points or other sensor as needed; examine packaging and reference. Changing only the number of iterations does not create the missing information.
+Test constrained directions: A plane provides little information about certain slips/rotations. Add geometry, distinctive points or other sensor as needed; examine conditioning and reference. Changing only the number of iterations does not create the missing information.
 
 </details>
 

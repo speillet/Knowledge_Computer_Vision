@@ -10,6 +10,6 @@ Request: deepen the existing flashcards to make their explanations as complete a
 - Preserve IDs, objectives, questions, families, tags, subdecks, model fields, and Anki identities. Keep the kernels, unless explicitly sourced and logged scientific correction; developments remain optional to succeed in the recall.
 - Align each canonical reference note before its flashcards and increment its revision, without turning the self-review into a "reread" status.
 - Confront new properties with primary sources; check library peculiarities with Context7 and official documentation. Record failed accesses and unvalidated claims.
-- Produce a report by subject and a balance sheet, complete the journal without rewriting the old proofs, then check structure, route, catalog, identities and conversion Anki. Do not declare Android rendering or reminder validated.
+- Produce a report by subject and a balance sheet, complete the journal without rewriting the old proofs, then check structure, route, catalog, identities and conversion Anki. Do not declare Android rendering or recall validated.
 
 The current batch remains at 282 flashcards: this request does not require new IDs or the closing of the 119 further study backlog. Enrichment is explicitly allowed by learner.

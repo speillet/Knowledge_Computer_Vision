@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-FLOT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -72,7 +72,7 @@ These constructed cases develop point trajectories, visibility and time horizon.
 
 **Alternative Hypothesis**: The presence of a tool, a decor or a characteristic posture can be enough to predict the label of the clip. Frame swapping preserves many of these clues. A high accuracy does not, therefore, alone allow to attribute the decision to the temporal order.
 
-**Proposed deletion**: Compare the model to an aggregation of image predictions, and then select cases where the same visual states in a different order correspond to different events. check sampling, labels, background and leakage between neighboring clips. If the performance remains the same on tasks that are really sensitive to order, look at the information used. A fall after permutation sustains a temporal dependence, but does not prove any form of causal understanding. Reasoning must remain tied to the tasks and controls performed, not just in the name of the architecture.
+**Proposed ablation**: Compare the model to an aggregation of image predictions, and then select cases where the same visual states in a different order correspond to different events. check sampling, labels, background and leakage between neighboring clips. If the performance remains the same on tasks that are really sensitive to order, look at the information used. A fall after permutation sustains a temporal dependence, but does not prove any form of causal understanding. Reasoning must remain tied to the tasks and controls performed, not just in the name of the architecture.
 
 **Documentary reference for this pass**: [CoTracker3](https://arxiv.org/abs/2410.11831), summary, point tracking task. The other developments are in the [flashcards](../102-points-actions-video.md).
 
@@ -90,7 +90,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: A video is summarized with one frame per second. Why can detection of a 100 ms event not be guaranteed?
 
-**Sampling phase**: In a constructed model where an event of duration $d<\Delta$ begins with a uniform phase with respect to a grid of steps $\Delta$, and where an instantaneous capture is sufficient, the probability that at least one sample falls into the event is $d/\Delta$. For 100 ms and a step of 1 s, it is 0,1 under these assumptions. This is not a predicted performance of a real model: exposure, visibility, and persistent clues change the problem. The calculation shows, however, why varying the phase is essential and why a demonstration where the event falls exactly on a frame does not validate a guaranteed reminder.
+**Sampling phase**: In a constructed model where an event of duration $d<\Delta$ begins with a uniform phase with respect to a grid of steps $\Delta$, and where an instantaneous capture is sufficient, the probability that at least one sample falls into the event is $d/\Delta$. For 100 ms and a step of 1 s, it is 0,1 under these assumptions. This is not a predicted performance of a real model: exposure, visibility, and persistent clues change the problem. The calculation shows, however, why varying the phase is essential and why a demonstration where the event falls exactly on a frame does not validate a guaranteed recall.
 
 ### CV-VIDEO-003
 

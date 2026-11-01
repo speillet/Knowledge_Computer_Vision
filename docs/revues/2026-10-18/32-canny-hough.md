@@ -32,7 +32,7 @@ reference note revision 2; core of the flashcard 002 and Source passages specifi
 ## Sources
 
 - [OpenCV 4.13.0, Canny, Non-maximum Removal and Hysteresis Thresholding](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html): steps and L1/L2 norm.
-- [OpenCV 4.13.0, Hough, How does it work? and Standard and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html): parameterization, votes and outputs of the two variants.
+- [OpenCV 4.13.0, Hough, How does it work? and norm and Probabilistic Hough Line Transform](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html): parameterization, votes and outputs of the two variants.
 
 ## Checks and limitations
 

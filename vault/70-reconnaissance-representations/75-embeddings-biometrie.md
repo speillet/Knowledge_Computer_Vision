@@ -39,13 +39,13 @@ Reponse: **Expected answer**: It describes a balance point that may differ signi
 
 **Further explanation**: Specify data, acquisition and subgroups; an average does not give the whole curve.
 
-**Reading the curve**: Moving the threshold simultaneously changes wrongly accepted comparisons and wrongly rejected identities. The ERA refers to an equality of these rates in a given protocol; a product aimed at a very low rate of false correspondence generally works elsewhere on the curve.
+**Reading the curve**: Moving the threshold simultaneously changes wrongly accepted comparisons and wrongly rejected identities. The EER refers to an equality of these rates in a given protocol; a product aimed at a very low rate of false correspondence generally works elsewhere on the curve.
 
 **Proposed evaluation**: set the threshold on setting data, then measure the rate of false non-matches at the level of FMR targeted on an independent test. Record acquisition quality, population, enrollment, and set size; examine subgroups and statistical uncertainty when relevant. Capture failures still add events at the system level. A good average value does not predict all operating conditions. The operating point and the comparison units must remain visible for two recognition results to be interpretable.
 
-**Amount of evidence**: Under a simplified model of $n$ independent non-matte comparisons with probability of false correspondence $p$, observing zero error has probability $(1-p)^n$. The unilateral upper limit of 95% is then $1-0,05^{1/n}$, approximately $3/n$ for large $n$. Zero error on 1 000 comparisons thus remains compatible with a rate of around 0,003, and does not demonstrate a target of $10^{-6}$. Comparisons sharing the same identities are not necessarily independent; the uncertainty must respect the protocol. This constructed analysis explains why an excellent ERA and a small test do not characterize the distribution tails at the target threshold.
+**Amount of evidence**: Under a simplified model of $n$ independent non-matte comparisons with probability of false correspondence $p$, observing zero error has probability $(1-p)^n$. The unilateral upper limit of 95% is then $1-0,05^{1/n}$, approximately $3/n$ for large $n$. Zero error on 1 000 comparisons thus remains compatible with a rate of around 0,003, and does not demonstrate a target of $10^{-6}$. Comparisons sharing the same identities are not necessarily independent; the uncertainty must respect the protocol. This constructed analysis explains why an excellent EER and a small test do not characterize the distribution tails at the target threshold.
 
-**Blocking errors**: Assimilate ERA and performance to any threshold.
+**Blocking errors**: Assimilate EER and performance to any threshold.
 Source: [[70-reconnaissance-representations/references/75-embeddings-biometrie|Full reference]]; [NIST FRTE 1:1, definitions FMR/FNMR, consulted on 2026-10-20](https://pages.nist.gov/frvt/html/frvt11.html); comparison of operating points deduced from the error curve; [Deng et al., ArcFace, §III-A, angular margin; binomial bound and system reasoning constructed](https://arxiv.org/html/1801.07698v4), consulted the 2026-10-30.
 Tags: cv::pilote cv::d07 famille::evaluation cv_id::CV-BIOMETRIE-002 provenance::agent pole::E
 END

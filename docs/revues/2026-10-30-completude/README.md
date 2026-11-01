@@ -4,7 +4,7 @@ The **282 flashcards** have each received a development specific to their questi
 
 ## Pedagogical outcome
 
-Additions include DLT lines and SVD subspaces, covariances and coordinate frames of pose, temporal noise patterns, SIFT/ORB steps, hand-eye chains, fisheye projection, ICP Jacobianss, depth contracts, detection assignment, watershed markers, compositional mechanisms. The diagnostic and design flashcards receive a more precise calculation, decomposition or protocol related to their question.
+Additions include DLT lines and SVD subspaces, covariances and coordinate frames of pose, temporal noise patterns, SIFT/ORB steps, hand-eye chains, fisheye projection, ICP Jacobians, depth contracts, detection assignment, watershed markers, compositional mechanisms. The diagnostic and design flashcards receive a more precise calculation, decomposition or protocol related to their question.
 
 Answers: **284 to 439 lexical words**, median **311,5**, versus 180 at 329 and median 200,5 before this pass. The length is measured, with no new quota. The finite core remains the rule of recall; developments serve to understand and reconstruct the response, without requiring integral recitation.
 
@@ -42,7 +42,7 @@ Android rendering, review time, delayed recall, and real project forwarding rema
 
 | Subject | Reference note | flashcards | Revision |
 | --- | --- | --- | --- |
-| [CV-SVD](01-cv-svd.md) | Lesser squares, SVD and packaging | 9 | 5 → 6 |
+| [CV-SVD](01-cv-svd.md) | Least squares, SVD and conditioning | 9 | 5 → 6 |
 | [CV-SE3](02-cv-se3.md) | SO(3), SE(3) and processing conventions | 6 | 6 → 7 |
 | [CV-FUSION](03-cv-fusion.md) | Kalman, EKF, UKF and ESKF for fusion | 6 | 6 → 7 |
 | [CV-FACTEURS](04-cv-facteurs.md) | Factor Graphs and Incremental Optimization | 5 | 6 → 7 |
@@ -68,7 +68,7 @@ Android rendering, review time, delayed recall, and real project forwarding rema
 | [CV-FISHEYE](24-cv-fisheye.md) | Calibration fisheye –  Angular projection and off-centre validation | 5 | 2 → 3 |
 | [CV-HANDEYE](25-cv-handeye.md) | Hand-eye calibration –  solve AX = XB without mixing the coordinate frames | 5 | 2 → 3 |
 | [CV-STEREO](26-cv-stereo.md) | Rectified stereo, SGM and depth | 4 | 3 → 4 |
-| [CV-ICP](27-cv-icp.md) | registration global and local PKI | 5 | 3 → 4 |
+| [CV-ICP](27-cv-icp.md) | registration global and local ICP | 5 | 3 → 4 |
 | [CV-VIO](28-cv-vio.md) | SLAM, VIO, pre-integration IMU and loopback | 5 | 3 → 4 |
 | [CV-BEV](29-cv-bev.md) | Clouds, BEV and occupancy representations | 5 | 3 → 4 |
 | [CV-REPRESENTATIONS](30-cv-representations.md) | Visual representations, ViT, Swin, ConvNeXt and DINOv2 | 5 | 3 → 4 |
@@ -82,7 +82,7 @@ Android rendering, review time, delayed recall, and real project forwarding rema
 | [CV-POSE3D](38-cv-pose3d.md) | Detection 3D, object pose and articulated pose | 4 | 3 → 4 |
 | [CV-WATERSHED](39-cv-watershed.md) | Otsu, distance transform and watershed | 5 | 2 → 3 |
 | [CV-GRABCUT](40-cv-grabcut.md) | GrabCut, regions and models of appearance | 3 | 2 → 3 |
-| [CV-SEGMENTATION](41-cv-segmentation.md) | Semantic segmentation, instances and panopticon | 4 | 3 → 4 |
+| [CV-SEGMENTATION](41-cv-segmentation.md) | Semantic segmentation, instances and panoptic segmentation | 4 | 3 → 4 |
 | [CV-SAM](42-cv-sam.md) | SAM, SAM 2 and video guided segmentation | 3 | 3 → 4 |
 | [CV-FLOT](43-cv-flot.md) | optical flow: Lucas – Kanade, Farnebäck and RAFT | 4 | 2 → 3 |
 | [CV-VIDEO](44-cv-video.md) | Monitoring of points, actions and video comprehension | 4 | 4 → 5 |

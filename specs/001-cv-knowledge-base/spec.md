@@ -2,7 +2,7 @@
 
 **Branch of work**: `feat/obsidian-pilot` **Establishment**: 2026-10-18 **Editorial review**: 6, pole review and thematic coverage the 2026-10-18 **Status**: framing in implementation; editorial and application validation followed separately **Perimeter Spec Kit**: `specs/001-cv-knowledge-base`
 
-**Demande**: build a vault Obsidian and flashcards exportable to Anki, largely covering classical and modern computer vision, to progress towards a senior generalist profile in industry.
+**Request**: build a vault Obsidian and flashcards exportable to Anki, largely covering classical and modern computer vision, to progress towards a senior generalist profile in industry.
 
 **Confirmed Public**: CV engineer for five years, comfortable in ML/DL, experienced in semantic segmentation. Priority gaps: classic methods, specific vision techniques, matching, calibration/registration, tracking and detection.
 
@@ -10,7 +10,7 @@
 
 **Start-up decisions, 2026-10-18**: The user requests to start the implementation. The first batch follows the seven initial topics proposed; the confirmed revision client is **AnkiDroid on Android**. The export format remains experimental during this batch, without early technical or pedagogical validation. The initial flashcards are written by an agent, provenance displayed.
 
-**Confirmed Organization**: a directory by theme, inspired by the Knowledge_AI_Engineering repository specified by the user. The flashcards and their reference reference notess are grouped in this theme; the navigation and the subdecks Anki follow this organization.
+**Confirmed Organization**: a directory by theme, inspired by the Knowledge_AI_Engineering repository specified by the user. The flashcards and their reference reference notes are grouped in this theme; the navigation and the subdecks Anki follow this organization.
 
 **Business units, 2026-10-18**: The user requests to cover six clusters related to business families, from A (Image Understanding) to F (Vision Systems & Deployment), described in [cartographie](curriculum.md). Decisions: the poles form an overlay of the existing domains, which remain the organization of the vault; the V0 wave remains devoted to the shortcomings expressed (first); the specs are enriched first and the carry-over in the vault follows by tasks.
 
@@ -61,7 +61,7 @@ I want to revise contextualized questions to the developed answers, and then ret
 2. Paragraphs, lists, formulas, images and code remain readable after export, without missing essential information.
 3. To unchanged note template, edit a response updates the expected note, without duplicates or loss of the associated revision history.
 4. An unmodified export retains the expected number of notes and flashcards.
-5. The expected answer and blocking errors allow to correct my reminder, even if the back has optional further study.
+5. The expected answer and blocking errors allow to correct my recall, even if the back has optional further study.
 6. The revision time and the projected daily load are known before generalizing the format of the flashcards.
 
 ### Track 4 –  Navigate and track coverage (P2)
@@ -70,7 +70,7 @@ I want to find a notion by problem, method, domain or prerequisite, and identify
 
 **Justification**: make visible the gaps and skills actually covered.
 
-**Independent validation**: review the mapping before writing all reference notess.
+**Independent validation**: review the mapping before writing all reference notes.
 
 **Scenarios of acceptance** :
 
@@ -149,7 +149,7 @@ I want to see, for a targeted family of trades, the areas and subjects to work, 
 - **FR-012**: Each validated reference note MUST cite at least one relevant primary source; central assertions must be traceable to their source.
 - **FR-013**: Scores and costs dependent on a protocol, hardware, or variant MUST specify these conditions; information that may evolve must have a verification date and a version if relevant.
 - **FR-014**: The flashcards MUST cover the relevant families defined in the “flashcards Families” section of [Pedagogical Contract](learning-design.md). A non-applicable family must be justified during the review.
-- **FR-015**: each flashcard MUST define a recall objective and correction criteria distinguishing expected answer, optional further explanation and blocking errors; its response remains developed without a ceiling of length. Since the request of the 2026-10-24, all the versoes must be long and explanatory: mechanism, example or reasoning followed and useful limits. The editorial threshold is described in the pedagogical contract; the expected answer remains the rule of correction of the reminder.
+- **FR-015**: each flashcard MUST define a recall objective and correction criteria distinguishing expected answer, optional further explanation and blocking errors; its response remains developed without a ceiling of length. Since the request of the 2026-10-24, all the versoes must be long and explanatory: mechanism, example or reasoning followed and useful limits. The editorial threshold is described in the pedagogical contract; the expected answer remains the rule of correction of the recall.
 - **FR-016**: Each flashcard MUST be connected to a canonical reference note and remain understandable in its autonomous revision context.
 - **FR-017**: Reference reference note and flashcards MUST have separate roles; no uniform number of flashcards per method is imposed.
 - **FR-018**: Priority areas MUST include cases of choice or diagnosis under industrial constraints, with an evaluable justification.
@@ -165,12 +165,12 @@ I want to see, for a targeted family of trades, the areas and subjects to work, 
 - **FR-028**: Large-scale production MUST be preceded by a driver validating the teaching contract, its contrasting cases and export capabilities. The preparatory editorial work remains possible during the choice of the plugin.
 - **FR-029**: The catalog MUST make visible scope, gaps and enrichment procedure; its coverage cannot be declared exhaustive by default.
 - **FR-030**: Each selected method MUST have an inventory entry with target depth, intended skills, dependencies, and associated artifacts. Priority, depth, editorial status and personal mastery are distinct.
-- **FR-031**: Subjects concerned MUST specify the data contract: shapes/types/beaches, color, coordinate frames, units, normalization and propagation of resolution changes, crop, padding or coordinates.
+- **FR-031**: Subjects concerned MUST specify the data contract: shapes/types/value ranges, color, coordinate frames, units, normalization and propagation of resolution changes, crop, padding or coordinates.
 - **FR-032**: Relevant reference notes MUST relate assumptions and failures to acquisition, cadence, temporal causality and industrial constraints; an unapplicable assumption is explicitly ruled out.
 - **FR-033**: Each family of the driver MUST offer a simple baseline or reference and a controlled variation, with prediction, expected or observed result and analysis. An analytical or non-executed experiment must be identified.
 - **FR-034**: The pilot MUST include two separate cases of the corrected examples for each of its six families: matching, calibration/geometry, tracking, detection, classical segmentation and registration 3D. One case is about choice, the other is about diagnosis, with explicit correction criteria.
-- **FR-035**: The instructional essay MUST record a first attempt and a reminder at another session on the dates chosen by the learner, the necessary ambiguities and corrections, without assuming a retention rate. The sample shall cover the six pilot families and each type of flashcard actually produced; its selection shall be recorded before observing the results. The test also measures the duration of revision by flashcard and estimates the daily load of the first production batch, without a ceiling fixed a priori.
-- **FR-036**: General properties and implementation features MUST be browsed separately. An unresolved central discrepancy prevents validating the claim and the reference note concerned.
+- **FR-035**: The instructional essay MUST record a first attempt and a recall at another session on the dates chosen by the learner, the necessary ambiguities and corrections, without assuming a retention rate. The sample shall cover the six pilot families and each type of flashcard actually produced; its selection shall be recorded before observing the results. The test also measures the duration of revision by flashcard and estimates the daily load of the first production batch, without a ceiling fixed a priori.
+- **FR-036**: General properties and implementation features MUST be sourced separately. An unresolved central discrepancy prevents validating the claim and the reference note concerned.
 - **FR-037**: Editorial validation MUST retain date, responsibility, evidence and limitations. An auto-review must be identified; blocking errors or correction ambiguities must be resolved before publication.
 - **FR-038**: each reference note and each flashcard MUST indicate its writing source: learner, agent or mixed. A central statement written by an agent is only validated after confrontation with the passage of the cited source; the presence of a reference is not enough.
 - **FR-039**: The vault MUST be organized by numbered thematic directory, with section index and central summary. The flashcards of a theme and their canonical references MUST be grouped in its directory; the target deck follows the theme. Displacement MUST preserve identifiers and update links, media, and controls. A section without written content MUST display its status, without being counted as acquired coverage.
@@ -210,7 +210,7 @@ A "validated" reference note was reviewed in accordance with the teaching contra
 - **SC-009**: Each pilot family has a documented reference and controlled variation; the evidence distinguishes prediction, observed result, analytical result, and unexecuted example.
 - **SC-010**: 100% of the published reference notes and flashcards indicate their source of writing; for content written by an agent, the journal records the central statements faced with their source.
 - **SC-011**: each of the six divisions has, in the cartography, its perimeter, its indicative professions, its mobilized domains, its key entries and further study with a unique host domain, as well as a design case and a diagnostic case with reference answers, hypotheses, discriminating verifications and correction criteria; the only statements are not enough to satisfy this criterion.
-- **SC-012**: No subject shared between poles has two canonical reference notess; the editorial advancement of each pole is available in vault, distinct from personal mastery.
+- **SC-012**: No subject shared between poles has two canonical reference notes; the editorial advancement of each pole is available in vault, distinct from personal mastery.
 - **SC-013**: each of the fourteen domains has effective reference notes and flashcards for the entries retained in the cover lot. The matrix distinguishes this thematic coverage, the detailed processing of each algorithm, the variants only introduced and the subjects remaining to be written. None of these states are equivalent to export validation or professional competence.
 
 ## Assumptions and Open Decisions

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -96,7 +96,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: What is missing between DINOv2 features and an industrial defect detector ready for evaluation?
 
-**From the token to the default zone**: Selecting local features retains a grid of patches, while a global vector aggregates the image. Interpolation of the grid to the original resolution increases the number of pixels of the score, without creating in itself a location accuracy absent from the features. Define how a patch covers the room and what defect size it should distinguish. A constructed baseline can freeze the extractor, index the nominal patches and use their distance as a score, before comparing to a supervised head. Keeping room masks, alignment, and aggregation policy allows errors to be attributed to the representation choice rather than to an implicit interface.
+**From the token to the default zone**: Selecting local features retains a grid of patches, while a global vector aggregates the image. Interpolation of the grid to the original resolution increases the number of pixels of the score, without creating in itself a location accuracy absent from the features. Define how a patch covers the part and what defect size it should distinguish. A constructed baseline can freeze the extractor, index the nominal patches and use their distance as a score, before comparing to a supervised head. Keeping part masks, alignment, and aggregation policy allows errors to be attributed to the representation choice rather than to an implicit interface.
 
 ### CV-REPRESENTATIONS-004
 

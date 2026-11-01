@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-ZHANG", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -36,7 +36,7 @@ Optimization depends on views, points and parameters. For video, you can calcula
 
 ## Evaluation and controlled variation
 
-Proposed baseline: Pinhole model with distortion and even learning game. Variation: fisheye model, with comparable constraints. Evaluate residuals per radius and pose on out-of-the-way views; check a useful geometric measurement, not just a global RMS. Analytical example, without additional distortion: at $\theta=60°$, a focal length of 300 px gives an angular radius of 314,16 px against 519,62 px in pinhole. This calculation explains why undoing the coefficients does not convert to each other.
+Proposed baseline: Pinhole model with distortion and even learning dataset. Variation: fisheye model, with comparable constraints. Evaluate residuals per radius and pose on out-of-the-way views; check a useful geometric measurement, not just a global RMS. Analytical example, without additional distortion: at $\theta=60°$, a focal length of 300 px gives an angular radius of 314,16 px against 519,62 px in pinhole. This calculation explains why undoing the coefficients does not convert to each other.
 
 ## Diagnosis and alternatives
 

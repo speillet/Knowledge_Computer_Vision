@@ -20,7 +20,7 @@
 
 ### reference note and flashcards claims
 
-Confirmed: homogeneous model, plan/rotation case, calculation of residual, four non-degenerate correspondences, budget under independent assumption. Normalization does not restore an absent rank: algebraic deduction. Spatial diagnostics are not the result of experience. The two diagnoses 006/007 have different causes (packaging and model). The flashcard 004 gives the numerical result but asks for its derivation and its interpretation: no answer revealed.
+Confirmed: homogeneous model, plan/rotation case, calculation of residual, four non-degenerate correspondences, budget under independent assumption. Normalization does not restore an absent rank: algebraic deduction. Spatial diagnostics are not the result of experience. The two diagnoses 006/007 have different causes (conditioning and model). The flashcard 004 gives the numerical result but asks for its derivation and its interpretation: no answer revealed.
 
 ## Corrections applied
 

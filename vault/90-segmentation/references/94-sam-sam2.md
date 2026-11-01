@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SEGMENTATION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -16,7 +16,7 @@ tags: [cv/d09]
 
 ## Problem, data and assumptions
 
-Produce masks packaged by dots, boxes or masks depending on the model. SAM processes prompt image segmentation; SAM 2 adds video memory/propagation. Neither semantic classes nor automatic detection of all identities are guaranteed by these outputs.
+Produce masks conditioned by dots, boxes or masks depending on the model. SAM processes prompt image segmentation; SAM 2 adds video memory/propagation. Neither semantic classes nor automatic detection of all identities are guaranteed by these outputs.
 
 ## Prerequisites and competencies
 

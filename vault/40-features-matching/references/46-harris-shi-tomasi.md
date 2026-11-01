@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-FILTRES", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -24,7 +24,7 @@ Choose points whose displacement is identifiable in two directions. Input: grays
 
 ## Intuition and mechanism
 
-A small movement modifies a flat area, changes the normal direction at an edge and modifies two directions around a corner. Harris turns this observation into a score; Shi – Tomasi tests the least constrained direction. Procedure: derive → aggregate gradient products → calculate score → remove non-local maxima → impose spacing and point budget. They are local texture detectors, without object recognition.
+A small displacement barely changes a flat patch, changes the image mainly in the direction normal to an edge, and changes it in both directions around a corner. Harris turns this observation into a score; Shi – Tomasi tests the least constrained direction. Procedure: derive → aggregate gradient products → calculate score → remove non-local maxima → impose spacing and point budget. They are local texture detectors, without object recognition.
 
 ## Mathematics and conventions
 

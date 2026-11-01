@@ -2,7 +2,7 @@
 
 ## Overview
 
-6 flashcards examined for their relevance and development; 6 enriched responses on explicit agreement of the learner. Worked axis: separate detection, orientation, representation and standard. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
+6 flashcards examined for their relevance and development; 6 enriched responses on explicit agreement of the learner. Worked axis: separate detection, orientation, representation and norm. No new goals or IDs. The questions remain reminders of useful mechanism, choice or diagnosis in the project. No duplicate objective justifying a withdrawal in this subject.
 
 Editorial finding: mechanism or testing too little developed in modified responses, minor severity. No new blocking nonsense established by the targeted confrontation; this does not certify all claims of the previous kernel.
 
@@ -12,7 +12,7 @@ Editorial finding: mechanism or testing too little developed in modified respons
 | --- | --- | --- | --- | --- | --- | --- |
 | CV-ORB-001 | Deduction or example built under assumptions; previous core retained | Algorithm: reconstructing the ORB mechanism | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 97 → 216 lexical words |
 | CV-ORB-002 | Deduction or example built under assumptions; previous core retained | Reasoning: Connecting Representation and Distance | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 106 → 219 lexical words |
-| CV-ORB-003 | Proposed protocol under assumptions; previous core retained | practice: choose the standard after changing the variant | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 103 → 217 lexical words |
+| CV-ORB-003 | Proposed protocol under assumptions; previous core retained | practice: choose the norm after changing the variant | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 103 → 217 lexical words |
 | CV-ORB-004 | Proposed protocol under assumptions; previous core retained | comparison: distinguish two matching filters | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 96 → 220 lexical words |
 | CV-ORB-005 | Proposed protocol under assumptions; previous core retained | diagnosis: diagnose a loss of repeatability | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 104 → 229 lexical words |
 | CV-ORB-006 | Proposed protocol under assumptions; previous core retained | design: articulating computational constraint and task success | Finished core and retained blocking errors | reference note r4, explicit units/assumptions | Minor | Develop: 111 → 227 lexical words |

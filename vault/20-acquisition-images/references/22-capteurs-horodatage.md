@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -40,7 +40,7 @@ Deskew and interpolation require movement and timestamps; their accuracy depends
 
 ## Evaluation and controlled variation
 
-Analytical case: at 2 m/s and 50 ms difference, provide 0,10 m translation shift. check separately time and extrinsic on motion sequences then in motion.
+Analytical case: at 2 m/s and 50 ms difference, provide 0,10 m translation shift. check separately time and extrinsic on stationary sequences, then moving sequences.
 
 ## Failure modes and diagnosis
 

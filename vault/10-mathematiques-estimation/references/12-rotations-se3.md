@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -30,7 +30,7 @@ A rotation preserves norms and orientation of the base (determinant +1), but gen
 
 Define $p_a=R_{ab}p_b+t_{ab}$ and $T_{ac}=T_{ab}T_{bc}$, i.e. $(R_{ab}R_{bc},\;t_{ab}+R_{ab}t_{bc})$: $t_{bc}$, expressed in $b$, is rotated in $a$ before addition (Solà et al., equation 171). $R^TR=I$, $\det R=1$; $T^{-1}=(R^T,-R^Tt)$ (equation 170). For a relative pose between two data cameras in the world, $T_{c_1c_2}=T_{wc_1}^{-1}T_{wc_2}$. Translations have a unit of length; small rotations are in radians.
 
-$R'=R\operatorname{Exp}(\delta\theta)$ and $R'=\operatorname{Exp}(\delta\theta)R$ are different local (right) and global (left) perturbations (§II-E, equations 25 – 28). The assistant connects them: $\operatorname{Exp}(\mathrm{Ad}_R\,\delta\theta_L)R=R\operatorname{Exp}(\delta\theta_L)$, with $\mathrm{Ad}_R=R$ for SO(3) (§II-F, equations 29 – 32; appendix B-C, equation 139). A Jacobian compared to the local increment is therefore $J_L=J_GR$. `Exp` takes a vector of $\mathbb R^3$; `exp` takes the antisymmetric matrix $[\delta\theta]_\times$.
+$R'=R\operatorname{Exp}(\delta\theta)$ and $R'=\operatorname{Exp}(\delta\theta)R$ are different local (right) and global (left) perturbations (§II-E, equations 25 – 28). The adjoint connects them: $\operatorname{Exp}(\mathrm{Ad}_R\,\delta\theta_L)R=R\operatorname{Exp}(\delta\theta_L)$, with $\mathrm{Ad}_R=R$ for SO(3) (§II-F, equations 29 – 32; appendix B-C, equation 139). A Jacobian compared to the local increment is therefore $J_L=J_GR$. `Exp` takes a vector of $\mathbb R^3$; `exp` takes the antisymmetric matrix $[\delta\theta]_\times$.
 
 ## Parameters and properties
 
@@ -100,7 +100,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Two implementations of the same cost parameterize rotation increments with a small vector $\delta\theta$ and obtain different Jacobians, both verified by finite differences. Which convention can explain this, how are the two related, and which should you choose?
 
-**Complete extension to poses**: by ordering increment $\xi=(\rho,\phi)$, translation then rotation, the assistant of $T=(R,t)$ is $\operatorname{Ad}_T=\begin{bmatrix}R&[t]_\times R\\0&R\end{bmatrix}$, where $[t]_\times a=t\times a$. Switching from a right disturbance to the equivalent left disturbance uses $\xi_G=\operatorname{Ad}_T\xi_L$. A covariance follows $P_G=\operatorname{Ad}_TP_L\operatorname{Ad}_T^T$ in this local approximation. The cross block reflects the fact that a small rotation around another origin also induces a displacement. A simple block-by-block rotation would forget this lever arm effect. The translation/rotation conventions must accompany the matrix to avoid swapping its blocks.
+**Complete extension to poses**: by ordering increment $\xi=(\rho,\phi)$, translation then rotation, the adjoint of $T=(R,t)$ is $\operatorname{Ad}_T=\begin{bmatrix}R&[t]_\times R\\0&R\end{bmatrix}$, where $[t]_\times a=t\times a$. Switching from a right disturbance to the equivalent left disturbance uses $\xi_G=\operatorname{Ad}_T\xi_L$. A covariance follows $P_G=\operatorname{Ad}_TP_L\operatorname{Ad}_T^T$ in this local approximation. The cross block reflects the fact that a small rotation around another origin also induces a displacement. A simple block-by-block rotation would forget this lever arm effect. The translation/rotation conventions must accompany the matrix to avoid swapping its blocks.
 
 ### CV-SE3-004
 

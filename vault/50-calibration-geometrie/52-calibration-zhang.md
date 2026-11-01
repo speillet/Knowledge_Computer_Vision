@@ -16,7 +16,7 @@ Reponse: **Expected answer**: Calibration estimates image formation parameters, 
 
 **Further explanation**: A Zhang calibration procedure also estimates a pose of calibration target per view, but this does not make the objectives equivalent. PnP can estimate a pose with a camera already calibrated; a homography can register a plane without finding all the intrinsics. Calibrating the scores of a network is yet another problem.
 
-**Example of a string**: In a fixed cell, a calibration describes how rays are transformed into pixels. An estimate of pose places the camera or room in a coordinate frame. A registration can then align a reference image with the current observation. These operations combine, but their unknowns and reference data are not identical.
+**Example of a string**: In a fixed cell, a calibration describes how rays are transformed into pixels. An estimate of pose places the camera or part in a coordinate frame. A registration can then align a reference image with the current observation. These operations combine, but their unknowns and reference data are not identical.
 
 **Consequences for the diagnosis**: A good alignment of a calibration target plane can hide a bad extrapolation of parameters out of the views used. Conversely, a well-calibrated camera can give a bad registration if the matches are wrong. Naming the expected output makes it possible to choose the right protocol and avoids asking a single homograph to certify the entire geometry of the system.
 

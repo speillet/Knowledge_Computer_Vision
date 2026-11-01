@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SVD", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -24,7 +24,7 @@ Representing poses, speeds, biases and observations as an inference problem. Inp
 
 ## Intuition and procedure
 
-A factor graph is a bipartite graph between factors and variables; it factorizes a function, typically a posteriori density (GTSAM, §1; Kaess et al. 2012, §2). Each factor connects the variables needed for an observation; a solver linearizes and optimizes. GTSAM separates the graph from the `Values`, which carries the initial estimate of the MAP (§§2.3 – 2.4). In a pose graph, the prior on the first pose is the only factor that ties the graph to a global coordinate frame (§4.1). GTSAM provides these abstractions and iSAM2 an incremental strategy with selective relativization (§7). It remains to provide the front-end loop associations and closures, models and covariances, initialization and gauge. A false buckle closure can distort the entire graph.
+A factor graph is a bipartite graph between factors and variables; it factorizes a function, typically a posteriori density (GTSAM, §1; Kaess et al. 2012, §2). Each factor connects the variables needed for an observation; a solver linearizes and optimizes. GTSAM separates the graph from the `Values`, which carries the initial estimate of the MAP (§§2.3 – 2.4). In a pose graph, the prior on the first pose is the only factor that ties the graph to a global coordinate frame (§4.1). GTSAM provides these abstractions and iSAM2 an incremental strategy with selective relinearization (§7). It remains to provide the front-end loop associations and closures, models and covariances, initialization and gauge. A false buckle closure can distort the entire graph.
 
 ## Mathematics, conventions and units
 

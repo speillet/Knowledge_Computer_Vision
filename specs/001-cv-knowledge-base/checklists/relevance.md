@@ -16,7 +16,7 @@ Editorial checklist created manually after the `plan.md` prerequisite of the Spe
 
 - [ ] CHK006 Does the contract allow developed answers while defining a core of correction? [Clarity, Spec FR-015/017, learning-design]
 - [ ] CHK007 Is the status of optional further studys and blocking errors unambiguous? [Clarity, Spec FR-015/037]
-- [ ] CHK008 Do requirements distinguish between a reminder of an example and reasoning about a new case? [Cover, Spec FR-034/035]
+- [ ] CHK008 Do requirements distinguish between a recall of an example and reasoning about a new case? [Cover, Spec FR-034/035]
 - [ ] CHK009 Are the conditions for a successful choice or diagnosis explicitly defined? [Measurability, Spec SC-006]
 - [ ] CHK010 Can the test protocol lead to the correction of the flashcards contract without imposing an arbitrary revision period? [Relevance, Spec FR-035, SC-008]
 - [ ] CHK011 Is a baseline and a controlled variation required for each pilot family? [Complete, Spec FR-033, SC-009]

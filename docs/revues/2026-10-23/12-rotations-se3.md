@@ -14,7 +14,7 @@ Self-review: Agent Claude Code (`revue-cartes`). Editorial status `redige`.
 | --- | --- | --- | --- | --- | --- | --- |
 | CV-SE3-001 | Confirmed (Solà, eq. 171) | Low: composition delivered by indices | Front that reveals the answer | `p_a` hors math | Important | Scenario of pose relative SLAM; composition formula; variant OpenCV |
 | CV-SE3-002 | Confirmed (Solà, eq. 170); calculation redone | Strong: frequent confusion with `tvec` | Net Core | Agreement reference note | None | Proposed Enrichment |
-| CV-SE3-003 | Confirmed (Solà, §II-E) | Forte | The question admits of other causes, such as parameterization | Family comparison without choice | Important | Conditions on the front; assistant; criterion of choice |
+| CV-SE3-003 | Confirmed (Solà, §II-E) | Forte | The question admits of other causes, such as parameterization | Family comparison without choice | Important | Conditions on the front; adjoint; criterion of choice |
 | CV-SE3-004 | Confirmed (Solà, Quaternion kinematics, §3.1, eq. 140 – 143) | Forte | Yes/no question that suggests “no” | Agreement reference note | Important | Scenario, discriminating test, examples Eigen and SciPy |
 
 reference note: notation $\operatorname{Exp}([\delta\theta]_\times)$ incorrect, because Sol to reserve `Exp` to vectors and `exp` to Lie algebra (minor).
@@ -24,7 +24,7 @@ reference note: notation $\operatorname{Exp}([\delta\theta]_\times)$ incorrect, 
 - `vault/10-mathematiques-estimation/references/12-rotations-se3.md`, revision 3:
   - composition formula and relative pose;
   - Corrected Exp notation;
-  - assistant and transformation of the Jacobians;
+  - adjoint and transformation of the Jacobians;
   - Four choice of quaternions convention;
   - Eigen and SciPy orders dated;
   - double coverage;

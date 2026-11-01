@@ -1,4 +1,4 @@
-# Journal –  Semantic segmentation, instances and panopticon –  2026-10-24
+# Journal –  Semantic segmentation, instances and panoptic segmentation –  2026-10-24
 
 ## Overview
 

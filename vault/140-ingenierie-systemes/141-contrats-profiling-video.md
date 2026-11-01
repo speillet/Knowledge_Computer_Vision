@@ -12,13 +12,13 @@ START
 CV-Pilote
 ID: CV-PIPELINE-001
 Question: A pipeline sustains 240 images/s but makes decisions on old frames. Does it necessarily meet its real-time requirement?
-Reponse: **Expected answer**: No: the debit does not guarantee the age of the observation or the deadline by decision.
+Reponse: **Expected answer**: No: the throughput does not guarantee the age of the observation or the deadline by decision.
 
 **Further explanation**: Measure capture timestamps to output, latency distribution, queue and drops under representative load.
 
 **Two distinct quantities**: A bitrate counts outputs per second; the age of a frame compares its capture time to when its decision is available. A system can process a lot of images while accumulating a significant expectation before the calculation. The real-time term must therefore be linked to a defined useful time.
 
-**Constructed example**: A queue already contains several seconds of images when the engine reaches its rated speed. The exits arrive regularly, but describe a past too old for downstream action. Measure wait and freshness, then choose a charging policy consistent with the need. Abandoning old frames can reduce seniority, but affects tracking and short events; processing all frames can preserve completeness by violating delay. The right compromise cannot be deduced from the FPS alone: it belongs to the product contract and must be tested under load.
+**Constructed example**: A queue already contains several seconds of images when the engine reaches its rated speed. The exits arrive regularly, but describe a past too old for downstream action. Measure wait and freshness, then choose a charging policy consistent with the need. Abandoning old frames can reduce frame age, but affects tracking and short events; processing all frames can preserve completeness by violating delay. The right compromise cannot be deduced from the FPS alone: it belongs to the product contract and must be tested under load.
 
 **Age and waiting**: For a frame, note $t_c$ capture, $t_s$ start processing and $t_o$ output. The capture→exit delay is $(t_s-t_c)+(t_o-t_s)$: speeding up the calculation does not cancel an already accumulated wait. A receiving timestamp replaces only part of this contract if the transport or camera adds a delay. Check that the compared clocks are consistent and that the units are identical. Also measure the share of outputs exceeding the useful time; two systems with the same throughput can serve the product very differently depending on their queue and abandonment policy.
 
@@ -81,7 +81,7 @@ START
 CV-Pilote
 ID: CV-PIPELINE-004
 Question: Track F — design: process eight 1080p streams at 30 frames/s on an embedded module with a defined p99 latency budget. Which process makes the hardware choice verifiable?
-Reponse: **Expected answer**: Set freshness, drops and quality; profile each stage and then the full stream at 240 images/s; test batch/competition/tails and load/thermal scenarios before choosing material or optimization.
+Reponse: **Expected answer**: Set freshness, drops and quality; profile each stage and then the full stream at 240 images/s; test batching/concurrency/queues and load/thermal scenarios before choosing material or optimization.
 
 **Further explanation**: Keep latency, throughput, memory and quality together. Provide an explicit overload rather than an infinite buffer; no product throughput is guaranteed here.
 
@@ -106,13 +106,13 @@ START
 CV-Pilote
 ID: CV-PIPELINE-005
 Question: GPU utilization is low while latency is high. Which measurements distinguish CPU decoding, transfers and queues?
-Reponse: **Expected answer**: Trace CPU/GPU time, H2D/D2H, expectations and age of frames with representative load.
+Reponse: **Expected answer**: Trace CPU/GPU time, H2D/D2H, waits and age of frames with representative load.
 
 **Further explanation**: Change one floor at a time and keep the same quality contract. An average occupation alone does not locate the cause.
 
 **Interpretation of traces**: A low-busy GPU can wait for decoded images, copies, or a step-by-step dependency. A usage average masks the computational and waiting alternations; it does not directly say which component should be accelerated.
 
-**Proposed deletion**: Instrument the timeline, then temporarily replace the decoding with prepared inputs or compare an isolated transfer, with an explicit measurement objective. Then reintroduce the complete chain to check the product gain. check also batch and file size, as reducing a cost can move the drop. The quality of the inputs and outputs must remain the same. This approach relates a hypothesis to a discriminating measurement and avoids modifying architecture or precision when the model constitutes only a fraction of the observed delay. The tests described are proposed, without any physical trace executed here.
+**Proposed ablation**: Instrument the timeline, then temporarily replace the decoding with prepared inputs or compare an isolated transfer, with an explicit measurement objective. Then reintroduce the complete chain to check the product gain. check also batch and file size, as reducing a cost can move the drop. The quality of the inputs and outputs must remain the same. This approach relates a hypothesis to a discriminating measurement and avoids modifying architecture or precision when the model constitutes only a fraction of the observed delay. The tests described are proposed, without any physical trace executed here.
 
 **Locate a drop by substitution**: Replacing decoding with prepared frames approximately retains the downstream work and tests a hypothesis of data provision. Replacing the network temporarily with a saved result tests another limit, provided you keep the cost of postprocessing and the number of candidates. These tests are not product performance: they isolate contributions. If the drop moves after correction, re-trace the entire track rather than adding the isolated gains. check also includes copy dependencies and involuntary serialization; low GPU usage may come from repeated short waits and not from a lack of network capacity.
 

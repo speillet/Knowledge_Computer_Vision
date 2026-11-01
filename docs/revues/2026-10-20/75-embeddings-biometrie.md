@@ -15,7 +15,7 @@
 
 ### reference note and flashcards claims
 
-ArcFace’s angular margin and FRTE comparison errors checked; PAD confronted with NIST’s primary summary. The ERA is not a universal measure at all thresholds: deduction from the curve protocol. The reference note remains to be tracked; FAR/FRR system and acquisition failures require a specific specification for detailed study. No compliance or certification assessed.
+ArcFace’s angular margin and FRTE comparison errors checked; PAD confronted with NIST’s primary summary. The EER is not a universal measure at all thresholds: deduction from the curve protocol. The reference note remains to be tracked; FAR/FRR system and acquisition failures require a specific specification for detailed study. No compliance or certification assessed.
 
 ## Corrections applied
 

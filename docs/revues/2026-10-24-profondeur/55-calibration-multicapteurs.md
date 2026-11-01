@@ -26,7 +26,7 @@ No pending additions for this pass: the development of existing answers is expli
 ## Sources
 
 - [OpenCV 4.13, Camera Calibration and 3D Reconstruction](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): projection models and extrinsic composition, passage consulted on the 2026-10-24. It supports the reference mechanism; it does not provide the results of the constructed scenarios of the project.
-- Rotating residualss and reserved protocols are proposed by the project; numerical results of multisensor calibration are not established here.
+- Rotating residuals and reserved protocols are proposed by the project; numerical results of multisensor calibration are not established here.
 - Library checks: OpenCV 4.13 via Context7 for filters/pyramids, features/matching, fisheye/hand-eye; additional primary documentation. The other subjects use the primary sources specified above, without claiming full coverage of Context7.
 
 ## Checks and limitations

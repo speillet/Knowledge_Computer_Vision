@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SVD", "CV-EPIPOLAIRE", "CV-FACTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -28,7 +28,7 @@ Linearize projections, solve a sparse increment, accept a step and then repeat. 
 
 ## Mathematics, conventions and units
 
-Minimize $\sum_{ij}\rho(r_{ij}^T\Sigma_{ij}^{-1}r_{ij})$, where $r_{ij}$ is a residual pixel, $\Sigma_{ij}$ its positive definite covariance and $\rho$ a robust loss applied to its squared whitened standard. For camera blocks/points B,E,C and right-hand sides v,w, solve $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$, and then recover $\delta_p=C^{-1}(w-E^T\delta_c)$. This writing assumes the blocks of $C$ invertibles; constraints and/or damping must process the singular directions. Noted inverses describe algebra; the implementation uses appropriate resolutions.
+Minimize $\sum_{ij}\rho(r_{ij}^T\Sigma_{ij}^{-1}r_{ij})$, where $r_{ij}$ is a residual pixel, $\Sigma_{ij}$ its positive definite covariance and $\rho$ a robust loss applied to its squared whitened norm. For camera blocks/points B,E,C and right-hand sides v,w, solve $(B-EC^{-1}E^T)\delta_c=v-EC^{-1}w$, and then recover $\delta_p=C^{-1}(w-E^T\delta_c)$. This writing assumes the blocks of $C$ invertibles; constraints and/or damping must process the singular directions. Noted inverses describe algebra; the implementation uses appropriate resolutions.
 
 ## Parameters and properties
 
@@ -68,11 +68,11 @@ These built cases develop gauge, robust residuals and optimization blocks. They 
 
 **Question of work**: Why can freeing additional camera coefficients reduce the optimization cost while degrading calibration?
 
-**Reference Response**: Additional settings may over-adjust an uninformative game or be correlated.
+**Reference Response**: Additional settings may over-adjust an uninformative dataset or be correlated.
 
 **Why the cost goes down**: A larger parameter space can contain a solution that further adjusts training observations. This does not say if the additional parameters represent the camera or absorb noise, deformation of calibration target and mismatches. Several parameters can also produce similar effects on an uninformative capture.
 
-**Ablation construite**: Keep observations and release a group of parameters at once. Examine their dispersion in subsets, correlations and residualss on reserved views including edges. A better adjustment cost with out-of-sample degradation suggests an unfavorable trade-off. Conversely, a model that is too constrained can retain a real bias. The choice must be based on optics, diversity of data and usage, without making the mere reduction in cost a calibration criterion.
+**Constructed ablation**: Keep observations and release a group of parameters at once. Examine their dispersion in subsets, correlations and residuals on reserved views including edges. A better adjustment cost with out-of-sample degradation suggests an unfavorable trade-off. Conversely, a model that is too constrained can retain a real bias. The choice must be based on optics, diversity of data and usage, without making the mere reduction in cost a calibration criterion.
 
 **Documentary reference for this pass**: [Ceres, Non-linear Least Squares Solving](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), Schur solvers and bundle adjustment. The other developments are in the [flashcards](../54-bundle-adjustment.md).
 

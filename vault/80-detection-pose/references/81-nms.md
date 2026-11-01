@@ -8,14 +8,14 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 7
+revision: 8
 tags: [cv/d08, detection, nms]
 ---
 # NMS — suppressing redundant detections
 
 ## Problem and data
 
-Several hypotheses of a detector can designate the same object. The greyy hard NMS (*Non-Maximum Suppression*) successively retains the best score box and removes candidates who overwhelm it. It assumes that score and recovery make it possible to distinguish duplicates from true neighbors; this hypothesis may fail in a crowd. [Soft-NMS, §4][paper]
+Several hypotheses of a detector can designate the same object. The greedy hard NMS (*Non-Maximum Suppression*) successively retains the best score box and removes candidates who overwhelm it. It assumes that score and overlap make it possible to distinguish duplicates from true neighbors; this hypothesis may fail in a crowd. [Soft-NMS, §4][paper]
 
 Entries: `xyxy` valid boxes in a common coordinate frame, scalar scores, classes if we separate the categories. Outputs: preserved clues, not merged boxes. Scores are used for ranking; their probabilistic calibration is not a necessary condition for calculation. Standardized coordinates or pixels may be appropriate if all boxes share the same convention.
 
@@ -43,11 +43,11 @@ These three thresholds have neither the same pair of objects nor the same role. 
 
 Continuous boxes $A=(0,0,10,10)$, $B=(2,0,12,10)$, $C=(20,0,30,10)$, respective scores $0,9;0,8;0,7$. Intersection $A\cap B=80$ px², union 120 px², IoU $=2/3$. At $\tau_{nms}=0,5$, keep $A,C$; at 0,7, keep $A,B,C$. This result is executed in `examples/pilot_math.py`, without reproducing a detector.
 
-**Interpretation of controlled variation**: increasing the threshold here keeps more boxes; this can save a real neighbor or keep a duplicate. The boxes alone do not say which one: it takes the annotations of the task. A AP measured on a real game remains necessary to settle the compromise.
+**Interpretation of controlled variation**: increasing the threshold here keeps more boxes; this can save a real neighbor or keep a duplicate. The boxes alone do not say which one: it takes the annotations of the task. A AP measured on a real dataset remains necessary to settle the compromise.
 
 ## Multiple detections, classes and sizes of boxes
 
-An image can contain multiple instances of the same class. Their detections must be kept separate; NMS does not select "only one object per class". Conversely, several candidates may designate a single instance. The deletion uses recovery as an indication of redundancy, without knowing the real identity of the objects. A crowd is precisely putting this hypothesis in default. [Soft-NMS, §§1 and 3 – 4][paper]
+An image can contain multiple instances of the same class. Their detections must be kept separate; NMS does not select "only one object per class". Conversely, several candidates may designate a single instance. The deletion uses overlap as an indication of redundancy, without knowing the real identity of the objects. A crowd is precisely putting this hypothesis in default. [Soft-NMS, §§1 and 3 – 4][paper]
 
 ### Same geometry, different semantic decisions
 
@@ -55,10 +55,10 @@ The following scenarios are built for reasoning; the correct business output dep
 
 | Situation | Possible effect of NMS | check required |
 | --- | --- | --- |
-| Several candidates of the same class around a single object | Reduction of duplicates if the recovery exceeds the threshold | Check the associated GT and the location of the holding box |
+| Several candidates of the same class around a single object | Reduction of duplicates if the overlap exceeds the threshold | Check the associated GT and the location of the holding box |
 | Two distinct people whose boxes overlap strongly | Possible deletion of a real neighbor, even with NMS per class | Coverage of each of the two GT before/after NMS |
 | Two objects of different classes, for example person and bicycle | A global NMS can have one removed by the other if the IoU exceeds the threshold | Contract of the objects to be detected; NMS per class if both are to be kept |
-| An instance receives two exclusive classes, for example two room types. | NMS per class can keep both assumptions | Resolve class decision according to contract; maximum score is not proof of accuracy |
+| An instance receives two exclusive classes, for example two part types. | NMS per class can keep both assumptions | Resolve class decision according to contract; maximum score is not proof of accuracy |
 | A small box is entirely in a large | Inclusion is not enough to cause deletion | Calculate the IoU, then distinguish object/part, two instances, or wrong location |
 
 For only two candidates, from IoU $0{,}8$, scores $0{,}9$ and $0{,}8$ and different classes, hard NMS overall to $0{,}5$ retains only the first. One NMS per class retains both. If they have the same class, class separation does not protect them from each other. Nor does it merge their labels and impose their exclusivity. [Batched NMS, description and parameters][batched]
@@ -90,7 +90,7 @@ Set thresholds on validation, freeze before testing, analyze by class, size and 
 | Symptom | Causes to be distinguished | Validation |
 | --- | --- | --- |
 | A pedestrian disappears in a crowd | NMS too aggressive, detector never proposing the box | Compare outputs before and after NMS with GT |
-| Several boxes around a room | Overly permissive threshold, different classes, false convention | Journal scores/classes/IoU and contact information contract |
+| Several boxes around a part | Overly permissive threshold, different classes, false convention | Journal scores/classes/IoU and contact information contract |
 | Different results with equal scores | Non-deterministic order or backend | Explicit separation, targeted testing without concluding a gap in the network |
 
 A detector trained to produce a non-redundant set, such as DETR, can do without NMS: do not apply it as a universal obligation. [DETR, summary][detr]
@@ -105,7 +105,7 @@ These constructed cases develop suppression, equality threshold and recall of ne
 
 **Reference Response**: select $A$, delete $B$ because their intersection is 80, union 120 and IoU $2/3>0,5$; then keep $C$, disjoint. The output is $A,C$.
 
-**Reasoning on instances**: Overlay is used as an index of redundancy between predictions, without knowing the real identity of the objects. If A and B represent two close people, deleting B can remove a real instance; if they represent the same room, the deletion can instead be useful.
+**Reasoning on instances**: Overlay is used as an index of redundancy between predictions, without knowing the real identity of the objects. If A and B represent two close people, deleting B can remove a real instance; if they represent the same part, the deletion can instead be useful.
 
 **check**: keep the outputs before and after the operation and check which annotations remain covered. The threshold therefore settles a compromise depending on the scene. A remote box remains candidate even with a lower score, as long as it passes the other filters in the pipeline. This reading avoids turning the gluton selection into a "one box per image" or "one box per class" rule.
 
@@ -117,7 +117,7 @@ These constructed cases develop suppression, equality threshold and recall of ne
 
 **Geometric reading**: A small box entirely contained in a large one has an intersection equal to its own area, but a union equal to the large area. The cover for the small box and the IoU therefore answer two different questions. Replacing one with the other would change the deletion rule.
 
-**Consequences of diagnosis**: Two surviving boxes do not prove two instances: they can be two very different locations of the same room. Conversely, both object and part of object can be legitimate if the taxonomy so provides. Check annotations, scores, and the exit contract before changing the collection action. This analytical case shows a limit to the slogan “big boxes eliminate small ones”.
+**Consequences of diagnosis**: Two surviving boxes do not prove two instances: they can be two very different locations of the same part. Conversely, both object and part of object can be legitimate if the taxonomy so provides. Check annotations, scores, and the exit contract before changing the overlap measure. This analytical case shows a limit to the slogan “big boxes eliminate small ones”.
 
 **Documentary reference for this pass**: [Soft-NMS](https://arxiv.org/html/1704.04503v2), method and decrease of scores. The other developments are in the [flashcards](../81-nms.md).
 
@@ -129,7 +129,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Three continuous boxes $A=(0,0,10,10)$, $B=(2,0,12,10)$ and $C=(20,0,30,10)$ have scores $0,9;0,8;0,7$. Which boxes are retained by hard NMS that suppresses candidates with IoU greater than 0.5?
 
-**Selection is not transitive**: build three boxes of the same size with $A=(0,0,10,10)$, $B=(3,0,13,10)$ and $C=(6,0,16,10)$. The IoU $A/B$ and $B/C$ are worth $7/13>0,5$, but $A/C=4/16=0,25$. With decreasing scores A, B, C, NMS keeps A, deletes B then keeps C: B deleted does not in turn delete its neighbors. This distinguishes the gluttony algorithm from a grouping into related components of the overlap graph. The result depends on the ranking and does not automatically look for the set of maximum score sum boxes.
+**Selection is not transitive**: build three boxes of the same size with $A=(0,0,10,10)$, $B=(3,0,13,10)$ and $C=(6,0,16,10)$. The IoU $A/B$ and $B/C$ are worth $7/13>0,5$, but $A/C=4/16=0,25$. With decreasing scores A, B, C, NMS keeps A, deletes B then keeps C: B deleted does not in turn delete its neighbors. This distinguishes the greediness algorithm from a grouping into related components of the overlap graph. The result depends on the ranking and does not automatically look for the set of maximum score sum boxes.
 
 ### CV-NMS-002
 
@@ -141,7 +141,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Two candidates from different classes have scores $0{,}9$ and $0{,}8$ and IoU $0{,}8$. With NMS threshold $0{,}5$, what tradeoff distinguishes global suppression from per-class suppression?
 
-**Conflict of taxonomy built**: If the same instance receives the scores 0,8 for "vehicle" and 0,75 for "car", the two labels can be consistent in a hierarchical taxonomy but redundant in a single category contract. Set this policy before choosing deletion. With the same geometry, a person holding a bike and a room receiving two exclusive classes ask for different decisions. Separately testing interclass conflicts and neighbors of the same class helps to measure what class separation actually protects. The highest score does not indicate, by construction, whether two hypotheses share a physical identity.
+**Conflict of taxonomy built**: If the same instance receives the scores 0,8 for "vehicle" and 0,75 for "car", the two labels can be consistent in a hierarchical taxonomy but redundant in a single category contract. Set this policy before choosing deletion. With the same geometry, a person holding a bike and a part receiving two exclusive classes ask for different decisions. Separately testing interclass conflicts and neighbors of the same class helps to measure what class separation actually protects. The highest score does not indicate, by construction, whether two hypotheses share a physical identity.
 
 ### CV-NMS-004
 
@@ -159,7 +159,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Two continuous boxes of the same class, $A=(0,0,100,100)$ and $B=(40,40,60,60)$, have scores $0{,}9$ and $0{,}8$. Does B being contained in A imply suppression by hard NMS at IoU threshold $>0{,}5$? Justify the answer.
 
-**Condition of inclusion**: for $B\subset A$ and a strict deletion at threshold $\tau$, B can only be deleted by A if $|B|>\tau|A|$, provided that A is actually selected before it. At $\tau=0,5$, a contained box covering 4% of the large area therefore remains very far from the condition. Reversing the scores does not change the IoU, but changes the first box retained; with more candidates, it can change the whole gluttonous suite. This reasoning distinguishes the symmetry of the overlap measure and the algorithm's dependence on ranking.
+**Condition of inclusion**: for $B\subset A$ and a strict deletion at threshold $\tau$, B can only be deleted by A if $|B|>\tau|A|$, provided that A is actually selected before it. At $\tau=0,5$, a contained box covering 4% of the large area therefore remains very far from the condition. Reversing the scores does not change the IoU, but changes the first box retained; with more candidates, it can change the whole greedy suite. This reasoning distinguishes the symmetry of the overlap measure and the algorithm's dependence on ranking.
 
 **Passages consulted for these developments**: [Bodla et al., Soft-NMS](https://arxiv.org/html/1704.04503v2), §4, selection and decay; geometric counterexamples constructed.
 

@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -22,11 +22,11 @@ Locate and classify objects according to boxes, scores and labels. Inputs: image
 
 The number of objects and the number of classes are two distinct dimensions. Detecting three cars and two bicycles requires five instance locations, divided into two categories present in the image. A multiclass detection model can therefore produce several objects of each class; it does not reduce to a label for the entire image or to a box per class.
 
-The **Multi-label** classification concerns several valid labels for the same instance, if the taxonomy so provides. For example, a contract can retain both "vehicle" and "car"; other games only annotate the most specific category. Two exclusive labels offered on the same object represent an ambiguity to be solved, not automatically two objects. The cases and their annotation policy are examples of the project.
+The **Multi-label** classification concerns several valid labels for the same instance, if the taxonomy so provides. For example, a contract can retain both "vehicle" and "car"; other datasets only annotate the most specific category. Two exclusive labels offered on the same object represent an ambiguity to be solved, not automatically two objects. The cases and their annotation policy are examples of the project.
 
 YOLov3 §2.2 illustrates the distinction: its independent logistic classifiers allow a multi-label formulation, unlike a softmax modeling exclusive classes. This is not enough to determine the final labels: supervision, thresholds, possible choice of the best class and post-processing must follow the contract. Do not assign this choice to all YOLO versions. [YOLov3 v1, §2.2](https://arxiv.org/html/1804.02767v1)
 
-For inference and evaluation, keep the triplet box, score and class for each hypothesis, as well as its original image. Then distinguish: several hypotheses of an instance, several instances of the same class and objects of different classes that overlap. The [NMS multi-class and multi-instance cases](81-nms.md#multiple-detections-classes-and-sizes-of-boxes) show why recovery alone does not slice this identity.
+For inference and evaluation, keep the triplet box, score and class for each hypothesis, as well as its original image. Then distinguish: several hypotheses of an instance, several instances of the same class and objects of different classes that overlap. The [NMS multi-class and multi-instance cases](81-nms.md#multiple-detections-classes-and-sizes-of-boxes) show why overlap alone does not slice this identity.
 
 ## Prerequisites and competencies
 
@@ -58,7 +58,7 @@ $$
 
 Decoding returns $(x-l,y-t,x+r,y+b)$. First, the feature map site must be returned to the coordinate frame image; any normalization by the stride must be reversed. Analytical example of the project: site $(40,30)$ and box $(20,10,90,70)$ give $(20,20,50,40)$ pixels, then exactly the initial box to decoding. Continuous widths do not use a $+1$ term.
 
-### Classification dense : Focal Loss
+### Dense classification : Focal Loss
 
 With $p_t$ the probability assigned to the correct binary label, the weighted form is
 
@@ -68,7 +68,7 @@ $$
 
 $\alpha_t$ weighs the class; $\gamma\geq0$ modulates the contribution according to the difficulty. For $\gamma=0$, we find the weighted cross entropy. For $\gamma>0$, already well-ranked examples weigh less, which limits the accumulation of many easy negatives in dense detection. At $\gamma=2$, the multiplicative factors are $0{,}01$ for $p_t=0{,}9$ and $0{,}81$ for $p_t=0{,}1$; they modulate the loss, not directly its gradient. The method does not remove negatives and is not designed to neutralize erroneous annotations among difficult cases.
 
-### Location without collection : GIoU
+### Location without overlap : GIoU
 
 For two rectangular boxes aligned on the axes, positive areas, $A$ and $B$, $C$ is the smallest rectangle aligned on the axes that contains them. With $|\cdot|$ the area,
 
@@ -92,18 +92,18 @@ Backbone, multiscale, number of regions/requests and postprocessing count; measu
 
 This project protocol is **to be executed**; no image results are available.
 
-1. **Baseline**: choose a checkpoint and a backend accepting both sizes, freeze weights, classes and annotated validation game, separated from the training by scene. Record the versions and the annotation policy. Use an entry letterbox $1280\times1280$.
+1. **Baseline**: choose a checkpoint and a backend accepting both sizes, freeze weights, classes and annotated validation dataset, separated from the training by scene. Record the versions and the annotation policy. Use an entry letterbox $1280\times1280$.
 2. **Variation**: upgrade to $640\times640$, without retraining. Keep interpolation, standardization, padding policy, score threshold, possible NMS and identical detection ceilings. Only the resulting dimensions and coordinate transformations change. Archive decoded predictions before filtering, after score threshold, and after NMS or model-specific postprocessing.
 3. **Prediction to confront**: Small objects could lose details or be less well located; the cost of the network could drop. These are assumptions, neither a necessary AP drop nor a promise of total latency.
-4. **Mesures**: return all boxes to the original image. Compare AP50, AP75, AP per size and recall to score/IoU set, with the same ignore/crowd and cap rules. Define the size strata only once from the original annotations, depending on the protocol chosen; do not move a stratum object because the entry has been reduced. For each filtering step, measure the coverage of the same GT, of good class and at the same threshold IoU, not counting duplicates as additional objects.
+4. **Measurements**: return all boxes to the original image. Compare AP50, AP75, AP per size and recall to score/IoU set, with the same ignore/crowd and cap rules. Define the size strata only once from the original annotations, depending on the protocol chosen; do not move a stratum object because the entry has been reduced. For each filtering step, measure the coverage of the same GT, of good class and at the same threshold IoU, not counting duplicates as additional objects.
 5. **Diagnosis and cost**: Examine errors by class, size, density, and step, as well as corresponding images. Time decoding, resize/transfers, network and postprocessing on the same hardware, accuracy and batch, with warm-up and documented repetitions; report full latency and dispersion. A case where the GT is no longer covered after NMS distinguishes a selection problem from a lack of a correct proposal.
-6. **Limited conclusion**: formulate a hypothesis from the cases and then test a single correction on validation. Freeze the choices before testing. A win on this game and this checkpoint does not rank universally Faster R-CNN, YOLO and DETR.
+6. **Limited conclusion**: formulate a hypothesis from the cases and then test a single correction on validation. Freeze the choices before testing. A win on this dataset and this checkpoint does not rank universally Faster R-CNN, YOLO and DETR.
 
 The AP framework is that of the [reference note IoU/AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md); the score, NMS and evaluation thresholds remain distinct.
 
 ## Failure modes and diagnosis
 
-Correct boxes before postprocessing but missing outputs: inspect thresholds/NMS. Loss good but weak reminder: check assignment, labels, stride, scale and protocol before changing the backbone.
+Correct boxes before postprocessing but missing outputs: inspect thresholds/NMS. Loss good but weak recall: check assignment, labels, stride, scale and protocol before changing the backbone.
 
 ### Read errors beyond the global AP
 
@@ -113,12 +113,12 @@ TIDE §2.2 separates six families. In simple cases without ignorance/crowd, the 
 | --- | --- | --- |
 | Classification | Good location, poor class | Close classes, definition of labels and annotations |
 | Location | Good class, intermediate overlap between $t_b$ and $t_f$ | coordinate frame, Targets, Box Accuracy and Scale |
-| Classification and localization | Poor class and intermediate recovery | Examine jointly image, label and box |
-| Doublon | Good class and sufficient coverage, GT already associated with better scoring detection | Class, scores and post-processing; do not count two TP |
-| Fond | Cover less than $t_b$ with all GT | False object or unannotated real object |
+| Classification and localization | Poor class and intermediate overlap | Examine jointly image, label and box |
+| Duplicate | Good class and sufficient coverage, GT already associated with better scoring detection | Class, scores and post-processing; do not count two TP |
+| Background | Cover less than $t_b$ with all GT | False object or unannotated real object |
 | GT missed | GT not detected and not already explained by classification/location errors | Coverage before/after filtering, scale, occlusion and data |
 
-Three independent situations with a single GT "car": IoU $0{,}8$ and class "truck" give a classification error; IoU $0{,}3$ and class "car", a location error; a second "car" box of IoU $0{,}8$ after a better decorated box already associated, a duplicate. These classifications use case assumptions, not a causality deduced from an aggregated score.
+Three independent situations with a single GT "car": IoU $0{,}8$ and class "truck" give a classification error; IoU $0{,}3$ and class "car", a location error; a second "car" box of IoU $0{,}8$ after a higher-scoring box already associated, a duplicate. These classifications use case assumptions, not a causality deduced from an aggregated score.
 
 The raw number of errors does not measure their effect on the AP: their rank by score counts. TIDE estimates effects by oracle corrections applied separately to the same baseline (§§2.2 – 2.3). These gains generally do not add up (Appendix A.1) and do not predict the gain of an actual retraining. The controls proposed above are tracks, not taxonomically proven causes.
 
@@ -126,7 +126,7 @@ The raw number of errors does not measure their effect on the AP: their rank by 
 
 A detection not associated with a GT and not ignored is counted FP by the protocol, even if an inspection confirms an omitted real object. A high score is not enough: check the image, the expected class, partial objects, box conventions, exclusions and crowd/ignore processing. TIDE §3.4 and Appendix D show examples of missing or ambiguous annotations; Appendix E also shows that the management of ignored detections influences diagnosis.
 
-Protocol proposed by the project: review a documented sample without privileging a model, apply stable annotation rules, arbitrate ambiguous cases, and then version corrections. Re-evaluate all models compared on the same version, keeping the previous results. Do not selectively remove the FP from a model to improve its score. An object omission is different from an intentional exclusion by the game’s policy.
+Protocol proposed by the project: review a documented sample without privileging a model, apply stable annotation rules, arbitrate ambiguous cases, and then version corrections. Re-evaluate all models compared on the same version, keeping the previous results. Do not selectively remove the FP from a model to improve its score. An object omission is different from an intentional exclusion by the dataset’s policy.
 
 ### Box sizes, aspect ratios and accuracy
 
@@ -141,7 +141,7 @@ The relative size of the boxes also counts as **after** prediction. An inclusion
 | $40\times4$ | $(2,0)$ pixels | $152/168$ | $19/21\approx0{,}905$ |
 | $40\times4$ | $(0,2)$ pixels | $80/240$ | $1/3$ |
 
-Two error pixels represent a different fraction of the dimension involved. An elongated box here is much more sensitive to displacement on its short axis. This is not a contradiction with the invariance of IoU when we resize **Set** the two boxes: here the error remains fixed at two pixels. derivation of the definition of IoU, [GIoU v2, §3, equation 1](https://arxiv.org/html/1902.09630v2), verified calculations without detector executed.
+Two error pixels represent a different fraction of the dimension involved. An elongated box here is much more sensitive to displacement on its short axis. This is not a contradiction with the invariance of IoU when we resize the two boxes **together**: here the error remains fixed at two pixels. derivation of the definition of IoU, [GIoU v2, §3, equation 1](https://arxiv.org/html/1902.09630v2), verified calculations without detector executed.
 
 In the proposed protocol, cross-class, size, aspect ratio, and density on the same annotations, and then inspect the score distributions and post-processing losses. Do not conclude that a setting is good for small boxes from the only average AP; do not change coordinate frame or area convention between sizes.
 
@@ -158,7 +158,7 @@ Constructed example, a GT, a class, no area ignored, two candidates only, score 
 | $P=(300,290,304,293)$ | $0{,}8$ | 1 | Covers the GT | Deleted |
 | $Q=(301{,}5,290,305{,}5,293)$ | $0{,}9$ | $5/11\approx0{,}455$ | Does not cover the GT at the assessment threshold | Preserved |
 
-Both candidates pass the score threshold. Their mutual IoU is worth $5/11>0{,}4$: Q, better scored, removes P. The recall of this GT goes from 1 to 0; here, the loss lies in the postprocessing, because a correct proposal existed at this resolution. This does not show that any drop in AP after resize comes from NMS. If no correct candidate exists before filtering, look instead at the actual size, features, data, and workout assignment. The deletion mechanism is documented by Soft-NMS §4; the numbers are a calculation of the project, without network inference.
+Both candidates pass the score threshold. Their mutual IoU is worth $5/11>0{,}4$: Q, better scored, removes P. The recall of this GT goes from 1 to 0; here, the loss lies in the postprocessing, because a correct proposal existed at this resolution. This does not show that any drop in AP after resize comes from NMS. If no correct candidate exists before filtering, look instead at the actual size, features, data, and training assignment. The deletion mechanism is documented by Soft-NMS §4; the numbers are a calculation of the project, without network inference.
 
 ## Alternatives and applications
 
@@ -264,13 +264,13 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: A detector produces a highly confident box with no matched GT, although the image appears to contain an object of the target class. What should be checked before concluding that it confused the background with an object?
 
-**check of annotations**: A sample of disagreements from multiple models and regions drawn independently of their scores. An audit limited to very confident predictions of a system may favor its own biases. For each case, keep image, inclusion rule, old label, arbitration and new version of the game. A crowd or ignore zone does not necessarily follow the same count as an isolated object; apply the rules of the exact evaluator before qualifying a FP. After correction, recalculate all comparisons and keep previous results as historical, without mixing metrics produced on two different ground truths.
+**check of annotations**: A sample of disagreements from multiple models and regions drawn independently of their scores. An audit limited to very confident predictions of a system may favor its own biases. For each case, keep image, inclusion rule, old label, arbitration and new version of the dataset. A crowd or ignore zone does not necessarily follow the same count as an isolated object; apply the rules of the exact evaluator before qualifying a FP. After correction, recalculate all comparisons and keep previous results as historical, without mixing metrics produced on two different ground truths.
 
 ### CV-DETECTEURS-013
 
 **Situation**: A task requires localizing three cars and two bicycles, with one label per object. Is this necessarily multilabel classification per box? Distinguish the number of instances, classes present and labels per instance.
 
-**Probability and contract of labels**: A softmax per box requires that the probabilities of the chosen categories share a total mass, which corresponds to an exclusive choice in this set. Independent sigmoids can represent multiple labels simultaneously, but do not automatically make "vehicle", "car" and exclusive categories consistent. The game of annotations and the rule of decision must specify these relationships. At the image scale, aggregating the presence of a category can lose the number of instances; three cars become a single presence indicator. Maintaining instance identities and their boxes avoids confusing scene classification with object detection.
+**Probability and contract of labels**: A softmax per box requires that the probabilities of the chosen categories share a total mass, which corresponds to an exclusive choice in this set. Independent sigmoids can represent multiple labels simultaneously, but do not automatically make "vehicle", "car" and exclusive categories consistent. The dataset of annotations and the rule of decision must specify these relationships. At the image scale, aggregating the presence of a category can lose the number of instances; three cars become a single presence indicator. Maintaining instance identities and their boxes avoids confusing scene classification with object detection.
 
 **Passages consulted for these developments** : [Carion et al., DETR](https://arxiv.org/html/2005.12872v3), §3.1, matching and supervision; project protocols and calculations; [Tian et al., FCOS](https://arxiv.org/html/1904.01355v5), §3.3center-ness, equation 3 ; example calculated by project; [Lin et al., Focal Loss](https://arxiv.org/html/1708.02002v2), §3, modulation of the loss; factors and commentary on the gradient deduced; [Rezatofighi et al., GIoU](https://arxiv.org/html/1902.09630v2), Algorithme 1 and §3.1 ; example of built sensitivity; [Lin et al., FPN](https://arxiv.org/html/1612.03144v2), §3, flashcards Merged and Smoothed 3×3 outings, figure 3.
 

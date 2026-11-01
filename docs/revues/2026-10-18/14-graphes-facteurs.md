@@ -16,7 +16,7 @@ Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`
 
 ### reference note and flashcards claims
 
-Confirmed: separate factorization of the solver; incremental version with selective relativization; cost dependent on sparsity and order; gauge without absolute reference. Fixed Imprecises: Quadratic MAP objective under Gaussian assumptions and fixed covariances. A false loop closure and the proposed controls are a project scenario.
+Confirmed: separate factorization of the solver; incremental version with selective relinearization; cost dependent on sparsity and order; gauge without absolute reference. Fixed Imprecises: Quadratic MAP objective under Gaussian assumptions and fixed covariances. A false loop closure and the proposed controls are a project scenario.
 
 ## Corrections applied
 

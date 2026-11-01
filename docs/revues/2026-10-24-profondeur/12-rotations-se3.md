@@ -10,7 +10,7 @@ Editorial finding: mechanism or testing too little developed in modified respons
 
 | flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SE3-001 | Deduction or example built under assumptions; previous core retained | Reasoning: Dealing with Named coordinate framess | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 140 → 206 lexical words |
+| CV-SE3-001 | Deduction or example built under assumptions; previous core retained | Reasoning: Dealing with Named coordinate frames | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 140 → 206 lexical words |
 | CV-SE3-002 | Deduction or example built under assumptions; previous core retained | Practice: Reverse a rigid pose | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 44 → 195 lexical words |
 | CV-SE3-003 | Proposed protocol under assumptions; previous core retained | Comparison: distinguish between local and global disturbances | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 159 → 206 lexical words |
 | CV-SE3-004 | Deduction or example built under assumptions; previous core retained | diagnosis: check a quaternion | Finished core and retained blocking errors | reference note r6, explicit units/assumptions | Minor | Develop: 151 → 212 lexical words |

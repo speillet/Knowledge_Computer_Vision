@@ -18,7 +18,7 @@ Reponse: **Expected answer**: FAST detects candidates in a pyramid; a ranking, H
 
 **Interpreted mechanism**: Detecting a position is not enough to compare two turned neighborhoods. The orientation establishes a local coordinate frame in which the test pattern is moved; the binary responses then describe intensity relationships in this coordinate frame. The pyramid provides several sizes of observation, without making all the details identical to the different resolutions.
 
-**Diagnostic construit**: If keypoints are detected but matches disappear under rotation, inspect orientation stability and patch content before changing the number of points. If the keypoints disappear themselves, examine thresholds, blur and pyramid levels. This separation of steps makes it possible to attribute a failure to a specific mechanism instead of treating ORB as a black box.
+**Constructed diagnosis**: If keypoints are detected but matches disappear under rotation, inspect orientation stability and patch content before changing the number of points. If the keypoints disappear themselves, examine thresholds, blur and pyramid levels. This separation of steps makes it possible to attribute a failure to a specific mechanism instead of treating ORB as a black box.
 
 **Calculate the orientation**: In a keypoint-centric patch, set the $m_{pq}=\sum_{x,y}x^py^qI(x,y)$ moments. The direction to the centroid is obtained by $\theta=\operatorname{atan2}(m_{01},m_{10})$ when these moments give an actionable direction. The pattern of comparisons is then rotated according to $\theta$ before the intensity readings. If the patch is almost symmetrical or noisy, a small disturbance can strongly change this orientation: the position can remain repeatable without the tests describing the same oriented neighborhood. The edges of the patch and the actual presence of the required pixels must also be managed, not silently supplemented by unrelated content.
 
@@ -52,7 +52,7 @@ END
 
 ## CV-ORB-003
 
-Objective: select the standard after changing the variant. Family: practice. Provenance: agent.
+Objective: select the norm after changing the variant. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
@@ -117,7 +117,7 @@ Reponse: **Expected answer**: check the range and spacing of the pyramid scales,
 
 **Physical example**: A small well-solved marking near the camera may only cover a few pixels after remoteness. Changing the density of the pyramid can help if a relevant size was sampled incorrectly, but not if the acquisition has already destroyed the contrast of the marking. Increasing the quota only adds points elsewhere.
 
-**Proposed investigation**: track the same visible structures between distances, observe their detection levels and check the number of pixels actually devoted to the pattern. Test separately resolution, focus and pyramid. Then measure an error on the useful region, because more points on the bottom does not restore the location of the room. This reasoning links acquisition and features rather than assigning everything to the matcher.
+**Proposed investigation**: track the same visible structures between distances, observe their detection levels and check the number of pixels actually devoted to the pattern. Test separately resolution, focus and pyramid. Then measure an error on the useful region, because more points on the bottom does not restore the location of the part. This reasoning links acquisition and features rather than assigning everything to the matcher.
 
 **Scales and cost coverage**: with a pyramid factor $s>1$, a detail of size $r$ pixels at the initial level covers about $r/s^\ell$ pixels at the $\ell$ level. Increasing the number of levels extends the scales examined; reducing $s$ samples them more finely but increases the work for the same range. No level restores an already undersampled detail in the input image. In a constructed case, a three-pixel-wide tag reduced to one pixel no longer offers the same intensity tests, even if its overall position remains known. The detection thresholds and quotas distributed between levels must therefore be analysed with the resolution actually available on the target.
 

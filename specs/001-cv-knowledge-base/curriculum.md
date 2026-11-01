@@ -139,7 +139,7 @@ Job titles are indicative; their content varies between companies. Covering a po
 - **further study (V2/R), per application** :
   - Remote sensing: multispectral imaging and SAR, georeferencing (d02); change detection (d09); large image tuiling (d14).
   - Medical imaging: formats DICOM/NifTI and volumes (d02); nnU-Net (d09); Dice, HD95, external validation and distinction between algorithmic performance and clinical utility (d13).
-  - Biometrics: ArcFace facial recognition and attack detection by presentation, ISO/IEC 30107 framework to be versioned during its study (d07); FMR/FNMR, FAR/FRR according to protocol, ERA, PAD metrics and subgroups (d13).
+  - Biometrics: ArcFace facial recognition and attack detection by presentation, ISO/IEC 30107 framework to be versioned during its study (d07); FMR/FNMR, FAR/FRR according to protocol, EER, PAD metrics and subgroups (d13).
   - Documents: OCR CRNN/CTC and TrOCR, layout LayoutLM, Donut without OCR (d07); CER and WER (d13).
 - **Cas propres**: design –  inspection of rare defects on a timed line with very few defective examples; diagnosis –  remote sensing model that degrades from one season to the next.
 
@@ -169,7 +169,7 @@ This first floor checks the format on the immediate gaps. A second contrasting f
 | SuperPoint + LightGlue in front of a classic reference | Learned method, components, protocol and comparable costs |
 | Local ICP and initialization by registration global | Geometry 3D, coordinate frames, local minimum and evaluation |
 
-The driver consists of seven initial subjects and three extensions, not ten reference notes in the required format. A comparison or pipeline can link several canonical reference notess. The two floors remain proposals to be validated.
+The driver consists of seven initial subjects and three extensions, not ten reference notes in the required format. A comparison or pipeline can link several canonical reference notes. The two floors remain proposals to be validated.
 
 ## Monitoring of coverage during production
 

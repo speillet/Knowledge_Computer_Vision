@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-CLIP", "CV-DETECTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -40,7 +40,7 @@ Text/image encoding, number of candidates, and postprocessing count. No model ex
 
 ## Evaluation and controlled variation
 
-Baseline: Closed detector retrained versus text approach on new products separated from the setting. Measure AP/reminder, rejects and cost of updates; freeze formulations before testing.
+Baseline: Closed detector retrained versus text approach on new products separated from the setting. Measure AP/recall, rejects and cost of updates; freeze formulations before testing.
 
 ## Failure modes and diagnosis
 

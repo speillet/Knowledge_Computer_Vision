@@ -35,11 +35,11 @@ START
 CV-Pilote
 ID: CV-HANDEYE-002
 Question: Which coordinate-frame contract must be checked before calling OpenCV 4.13 calibrateHandEye for an eye-in-hand setup?
-Reponse: **Expected answer**: Provide the poses griper→base and calibration target→camera for the same acquisitions; the output is camera→gripper. Also check rotation order, translation units and synchronization.
+Reponse: **Expected answer**: Provide the poses gripper→base and calibration target→camera for the same acquisitions; the output is camera→gripper. Also check rotation order, translation units and synchronization.
 
 **Further explanation**: The pose supplied by solvePnP for a calibration target is usually object/calibration target→camera. The robot controller convention may be the opposite of what is expected. Test the entire chain on a known point before comparing the values of the final matrix.
 
-**Why the exit is surprising**: The camera transformation →grab expresses where the camera is located relative to the tool. To get camera→base at a given pose, it is still necessary to deal with the pose of the tool in the base; this overall transformation varies when the robot moves.
+**Why the exit is surprising**: The camera→gripper transformation expresses where the camera is located relative to the tool. To get camera→base at a given pose, it is still necessary to deal with the pose of the tool in the base; this overall transformation varies when the robot moves.
 
 **check interface proposed**: choose an observation, follow a point calibration target→camera→gripper→base, then compare with the same calibration target observed from another pose. Keep a single unit for all translations. A controller can store the inverse pose or another rotation convention; a matrix of correct shape does not ensure compatibility. This test links the API function to the actual mount, instead of interpreting the output as a universal pose.
 
@@ -58,7 +58,7 @@ START
 CV-Pilote
 ID: CV-HANDEYE-003
 Question: Why can many poses around a single axis produce unstable hand–eye calibration?
-Reponse: **Expected answer**: The number does not replace the diversity of movements: some components remain little constrained. Acquire rotations around non-parallel axes and poses covering the useful volume, and then examine packaging and reserved validation.
+Reponse: **Expected answer**: The number does not replace the diversity of movements: some components remain little constrained. Acquire rotations around non-parallel axes and poses covering the useful volume, and then examine conditioning and reserved validation.
 
 **Further explanation**: OpenCV documents a minimum of two non-parallel axis movements, or three poses, while recommending more data. The theoretical minimum is not a sufficient industrial protocol. Pairs drawn from the same poses are correlated.
 
@@ -81,7 +81,7 @@ START
 CV-Pilote
 ID: CV-HANDEYE-004
 Question: In an eye-in-hand setup, the camera is rigidly attached to the gripper and the target is fixed in the robot base frame. The estimated extrinsics look plausible, but reconstructed points move when the robot rotates. Which transformation-chain test and possible causes should be checked?
-Reponse: **Expected answer**: Note $G_i$ the transformation →base, $C_i$ calibration target→camera and $X$ camera →gripper, all homogeneous and with common translation units. Calculate $Y_i=G_iXC_i$ on several reserved poses: the fixed calibration target must give a coherent transformation calibration target→base. If it varies, check inversions, units, timestamps, intrinsics and rigidity of the calibration target.
+Reponse: **Expected answer**: Note $G_i$ the gripper→base transformation, $C_i$ calibration target→camera and $X$ camera →gripper, all homogeneous and with common translation units. Calculate $Y_i=G_iXC_i$ on several reserved poses: the fixed calibration target must give a coherent transformation calibration target→base. If it varies, check inversions, units, timestamps, intrinsics and rigidity of the calibration target.
 
 **Further explanation**: Compare rotations and translations in their units before aggregating them. Repeating the experiment with a motionless robot and then in motion helps to isolate a delay. The test is proposed by the project; it does not automatically locate a single cause.
 

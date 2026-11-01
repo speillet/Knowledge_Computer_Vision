@@ -34,8 +34,8 @@ Passes actually consulted the 2026-10-21:
 
 - [TIDE v2, §2.2](https://arxiv.org/html/2008.08115v2): six categories, thresholds, duplicates and importance of rank by score.
 - Same article, §2.3 and appendix A.1: oracles from the same baseline and general non-additivity; these idealized interventions do not guarantee the effect of a model modification.
-- Same article, §3.4 and appendices D – E: errors and ambiguities of annotations, flags crowd, effect of ignored detections on the diagnosis. The percentages of their study are not generalized to the game of the project.
-- [Soft-NMS, §4](https://arxiv.org/html/1704.04503): A better localized box can be removed by a better decorated box; the calculations of the case are those of the project. Equalitys at thresholds are avoided, in accordance with the distinction documented in reference note NMS.
+- Same article, §3.4 and appendices D – E: errors and ambiguities of annotations, flags crowd, effect of ignored detections on the diagnosis. The percentages of their study are not generalized to the dataset of the project.
+- [Soft-NMS, §4](https://arxiv.org/html/1704.04503): A better localized box can be removed by a higher-scoring box; the calculations of the case are those of the project. Equalitys at thresholds are avoided, in accordance with the distinction documented in reference note NMS.
 - [FPN v2, §3](https://arxiv.org/html/1612.03144v2), consulted on the first passage of the same day: roles of the fine and deep features, without guarantee of recall.
 
 No central passage inaccessible. No new library APIs or TIDE implementations introduced; these are the mechanisms described in the articles.

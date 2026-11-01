@@ -1,4 +1,4 @@
-# Review –  registration global and local PKI –  2026-10-20
+# Review –  registration global and local ICP –  2026-10-20
 
 ## Overview
 

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SIFT", "CV-ORB", "CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -24,7 +24,7 @@ Build matches with learned components, without confusing detector, descriptor an
 
 ## Intuition and procedure
 
-SuperPoint learns detection and description with homographic adaptation. LightGlue exploits context and interactions between features, with calculation adaptation. LoFTR uses context and coarse and then fine matches without requiring an explicit split detector.
+SuperPoint learns detection and description with homographic adaptation. LightGlue exploits context and interactions between features, with calculation adaptation. LoFTR uses context and coarse and then fine matches without requiring an explicit sparse detector.
 
 ## Mathematics, conventions and units
 

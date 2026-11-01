@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-ZHANG", "CV-SE3", "CV-CAPTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -62,7 +62,7 @@ These constructed cases develop separate spatial transformations and desynchroni
 
 **derivation per chain**: in eye-in-hand with a fixed calibration target, the composition tool→base, camera→tool then calibration target→camera must give the same pose calibration target→base for each acquisition. The equality of these compositions leads to relative movements on either side of the unknown extrinsic. The meaning of the products is not free: it comes from the adjacent coordinate frames.
 
-**Test construit**: take a known pose, transform a point from calibration target to the base, and then check the reverse of the string. Repeat with non-trivial rotation and non-zero translations in common units. An identity test can leave inversions invisible. This interface validation precedes the solver setting; if it fails, adding data or changing the optimization method addresses an issue other than the convention error.
+**Constructed test**: take a known pose, transform a point from calibration target to the base, and then check the reverse of the string. Repeat with non-trivial rotation and non-zero translations in common units. An identity test can leave inversions invisible. This interface validation precedes the solver setting; if it fails, adding data or changing the optimization method addresses an issue other than the convention error.
 
 ### Case linked to CV-MULTICALIB-003
 

@@ -1,6 +1,6 @@
 """Simulates import, revision and re-import of the package with the Anki engine.
 
-uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1 \\ python scripts/simulate_anki_import.py
+uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1 python scripts/simulate_anki_import.py
 
 Everything happens in a temporary folder: copy of the vault and templates, disposable collection Anki. Neither the deposit nor a personal collection is changed. The simulation does not replace the test on AnkiDroid: it says nothing about the rendering or the version installed on the phone.
 """

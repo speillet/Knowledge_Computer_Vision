@@ -25,7 +25,7 @@ Sources : [Packages and Updates Anki](https://docs.ankiweb.net/manual/importing/
 
 The following sections retain the original candidate's protocol. They concern a separate test collection from the one fed by the package.
 
-Obsidian on computer → Obsidian_to_Anki → AnkiConnect in Anki Desktop → AnkiWeb → AnkiDroid. The 3.6.0 plugin is desktop only; it does not run in AnkiDroid. Formulas and answers must remain usable without access to the reference note or the Internet during the reminder.
+Obsidian on computer → Obsidian_to_Anki → AnkiConnect in Anki Desktop → AnkiWeb → AnkiDroid. The 3.6.0 plugin is desktop only; it does not run in AnkiDroid. Formulas and answers must remain usable without access to the reference note or the Internet during the recall.
 
 Sources : [plugin officiel](https://github.com/ObsidianToAnki/Obsidian_to_Anki), [synchronisation Anki](https://docs.ankiweb.net/manual/syncing), [Manual AnkiDroid](https://docs.ankidroid.org/#_using_anki_desktop_with_ankidroid).
 
@@ -34,7 +34,7 @@ Sources : [plugin officiel](https://github.com/ObsidianToAnki/Obsidian_to_Anki),
 1. Open the `vault/` folder as vault Obsidian.
 2. Prepare Anki Desktop and [AnkiConnect](https://ankiweb.net/shared/info/2055492159). In the AnkiConnect configuration, keep the necessary settings and allow `app://obsidian.md` in `webCorsOriginList`, then restart Anki. Keep access local: There is no network port to open for this driver.
 3. In Anki, create the `CV::Pilote` parent deck and a **CV-Pilote** note type. File directives distribute the flashcards into thematic subdecks such as `CV::Pilote::40-features-matching`. From a simple type to a single flashcard. Create/rename and order exactly the four fields **ID**, **Question**, **Reponse**, **Source**.
-4. Keep a single "Reminder" template. Copy the contents of `anki/front.html`, `anki/back.html` and `anki/style.css` from the repository in front, back and style. `anki/model.json` describes these matches; this file is not an importable package in Anki. For this string, the model is created manually; the `.apkg` generator automatically provides it in its own package.
+4. Keep a single `Rappel` template. Copy the contents of `anki/front.html`, `anki/back.html` and `anki/style.css` from the repository in front, back and style. `anki/model.json` describes these matches; this file is not an importable package in Anki. For this string, the model is created manually; the `.apkg` generator automatically provides it in its own package.
 
 The accounts and the Anki collection remain those of the learner. For a first AnkiWeb already filled in, follow the sync manual before choosing a forwarding direction; an empty local collection should not overwrite the existing one.
 

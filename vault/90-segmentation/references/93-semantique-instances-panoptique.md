@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -16,7 +16,7 @@ tags: [cv/d09]
 
 ## Problem, data and assumptions
 
-Define the output before choosing architecture and loss: class by pixel, accounting object masks or panoptical stuff/things partition without overlapping between segments. Inputs: consistent images and annotations; outputs: logs/masks/classes according to the contract.
+Define the output before choosing architecture and loss: class by pixel, accounting object masks or panoptical stuff/things partition without overlapping between segments. Inputs: consistent images and annotations; outputs: logits/masks/classes according to the contract.
 
 ## Prerequisites and competencies
 
@@ -28,7 +28,7 @@ U-Net exploits encoder – decoder and resolution links; DeepLab exploits dilate
 
 ## Mathematics, conventions and units
 
-Class IoU uses TP/(TP+FP+FN); binary Dice is $2TP/(2TP+FP+FN)$ under class/vacuum convention set. PQ combines instance recovery and recognition in a matching protocol. The averages and pixels ignored must be announced; the chosen losses are not these metrics automatically.
+Class IoU uses TP/(TP+FP+FN); binary Dice is $2TP/(2TP+FP+FN)$ under class/vacuum convention set. PQ combines instance overlap and recognition in a matching protocol. The averages and pixels ignored must be announced; the chosen losses are not these metrics automatically.
 
 ## Parameters and properties
 
@@ -58,11 +58,11 @@ These constructed cases develop unit output and aggregation of segmentation erro
 
 **Question of work**: How do semantic, instance and panoptic segmentation differ?
 
-**Reference Response**: Semantic: class by pixel; instances: separate accounting objects; panopticon: partition without overlap, with class and instance for things, class for stuff.
+**Reference Response**: Semantic: class by pixel; instances: separate countable objects; panoptic segmentation: partition without overlap, with class and instance for things, class for stuff.
 
-**Example of contract**: Two people who touch each other share the semantic label person but must have different instance IDs if you want to count them. A sky region is stuff in the usual panoptic contract and does not require the same separation into accounting objects.
+**Example of contract**: Two people who touch each other share the semantic label person but must have different instance IDs if you want to count them. A sky region is stuff in the usual panoptic contract and does not require the same separation into countable objects.
 
-**Consequences for data**: A class mask does not necessarily contain the boundary between two instances of the same class. A model trained on these labels alone therefore does not explicitly receive this information. Instance identifiers can be renumbered without changing the partition; their numeric value does not express a quantity to be interpolated. Also set ignored pixels and overlay policy before evaluation. A class score, an instance score and PQ test different aspects: choose the one that corresponds to the requested deliverable, with additional measures if several properties count.
+**Consequences for data**: A class mask does not necessarily contain the boundary between two instances of the same class. A model trained on these labels alone therefore does not explicitly receive this information. Instance identifiers can be renumbered without changing the partition; their numeric value does not express a quantity to be interpolated. Also set ignored pixels and overlay policy before evaluation. A per-class overlap score, an instance score and PQ test different aspects: choose the one that corresponds to the requested deliverable, with additional measures if several properties count.
 
 ### Case linked to CV-SEGMENTATION-004
 
@@ -70,7 +70,7 @@ These constructed cases develop unit output and aggregation of segmentation erro
 
 **Reference Response**: It measures an overlap according to protocol; external validation, borders, rare cases, physical units and intended use provide further evidence.
 
-**Why the recovery is partial**: A large region can retain a strong Dice despite an error located on an important border. A small missed structure may also weigh little in some aggregations. The score must therefore be interpreted in its units, its level of aggregation and its empty conventions.
+**Why the overlap is partial**: A large region can retain a strong Dice despite an error located on an important border. A small missed structure may also weigh little in some aggregations. The score must therefore be interpreted in its units, its level of aggregation and its empty conventions.
 
 **Proposed technical evaluation**: separate patients and sites, measure boundaries in the appropriate physical geometry and retain rare or absent cases. Set the output effectively useful and an independent reference, and then examine the failures individually. An improvement on an internal validation may depend on the acquisition and not transfer to another site. These controls describe the technical validity of the model; they do not constitute medical advice or evidence of clinical utility. The senior reasoning keeps distinct segmentation performance, protocol reproducibility and consequence in the intended use.
 
@@ -84,7 +84,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: How do semantic, instance and panoptic segmentation differ?
 
-**Lost information**: From a partition of classified instances, we can often merge the IDs of the same class to produce a semantic map. The reverse is not determined: multiple instance partitions can have exactly the same map of classes. IDs are arbitrary, but the relationship "these pixels belong to the same object" is not. In panopticon, each valid pixel belongs to a segment according to the contract, which requires a rule to solve the possible overlaps of predicted masks. Evaluating only classes after merging can therefore hide a major error in the identity or number of segments.
+**Lost information**: From a partition of classified instances, we can often merge the IDs of the same class to produce a semantic map. The reverse is not determined: multiple instance partitions can have exactly the same map of classes. IDs are arbitrary, but the relationship "these pixels belong to the same object" is not. In panoptic segmentation, each valid pixel belongs to a segment according to the contract, which requires a rule to solve the possible overlaps of predicted masks. Evaluating only classes after merging can therefore hide a major error in the identity or number of segments.
 
 ### CV-SEGMENTATION-002
 
@@ -96,13 +96,13 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Why must geometric image augmentation be applied differently, but consistently, to the class mask?
 
-**Transforming the adapted representation**: for a geometric transformation $W$, image and annotation must use the same spatial correspondence, but an interpolation of discrete labels must retain the categorical contract. Interpolating real logs and then taking an argmax is another operation and usually does not switch with argmax and then interpolating labels. At crop borders, explicitly define the class or value ignores the padding. For an increase that destroys a region of the image, do not silently keep an annotation as if its content remains visible. A two-class synthetic mask and a void zone provides a simple witness of these invariants.
+**Transforming the adapted representation**: for a geometric transformation $W$, image and annotation must use the same spatial correspondence, but an interpolation of discrete labels must retain the categorical contract. Interpolating real logits and then taking an argmax is another operation and usually does not switch with argmax and then interpolating labels. At crop borders, explicitly define the class or value ignores the padding. For an increase that destroys a region of the image, do not silently keep an annotation as if its content remains visible. A two-class synthetic mask and a void zone provides a simple witness of these invariants.
 
 ### CV-SEGMENTATION-004
 
 **Situation**: Why is high mean Dice insufficient to establish the usefulness of medical segmentation?
 
-**Physical scale of the defect**: The same boundary error of a voxel represents 0,5 mm on one axis and 3 mm on another if the spacings differ. Surface distances must therefore be calculated in the relevant physical geometry. An average per volume and an average per patient do not give the same weight to cases; also announce cases where the structure is absent. A test built with a large region and a small structure shows how an aggregated Dice can privilege the first. This analysis focuses on the technical metric and its assumptions, without inferring a clinical utility of a recovery value.
+**Physical scale of the defect**: The same boundary error of a voxel represents 0,5 mm on one axis and 3 mm on another if the spacings differ. Surface distances must therefore be calculated in the relevant physical geometry. An average per volume and an average per patient do not give the same weight to cases; also announce cases where the structure is absent. A test built with a large region and a small structure shows how an aggregated Dice can privilege the first. This analysis focuses on the technical metric and its assumptions, without inferring a clinical utility of a overlap value.
 
 **Passages consulted for these developments**: [Cheng et al., Mask2Former](https://arxiv.org/html/2112.01527v3), Introduction, distinction of tasks and annotations; representational calculations and constructed metrics.
 

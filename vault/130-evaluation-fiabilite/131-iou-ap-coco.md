@@ -6,7 +6,7 @@ TARGET DECK: CV::Pilote::130-evaluation-fiabilite
 
 ## CV-IOU-AP-001
 
-Objective: calculate a recovery in the right contract. Family: practice. Provenance: agent.
+Objective: calculate a overlap in the right contract. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
@@ -58,7 +58,7 @@ START
 CV-Pilote
 ID: CV-IOU-AP-003
 Question: Two well-localized predictions cover the same ordinary ground-truth instance. Why can detection evaluation count one as a TP and the other as an FP?
-Reponse: **Expected answer**: the matching follows the protocol and the order of the scores; an ordinary GT can only justify a single TP. The second prediction is a duplicate even if its recovery is high.
+Reponse: **Expected answer**: the matching follows the protocol and the order of the scores; an ordinary GT can only justify a single TP. The second prediction is a duplicate even if its overlap is high.
 
 **Further explanation**: A NMS is aimed at this redundancy but can remove real neighbors. The ignored crowd and GT have specific rules: do not generalize the ordinary rule to all COCO annotations. The classification of duplicates influences the precision/recall curve and therefore the AP.
 
@@ -81,7 +81,7 @@ START
 CV-Pilote
 ID: CV-IOU-AP-004
 Question: For two valid GT instances, one category, a fixed IoU threshold and no crowd/ignore annotations, ranked predictions are TP, duplicate FP, TP. How is AP interpolated over 101 recall levels calculated?
-Reponse: **Expected answer**: reminders $0,5;0,5;1$, details $1;0,5;2/3$. The maximum envelope to the right is 1 up to and including the 0,5 reminder, then $2/3$. So $AP=(51+50\times2/3)/101\approx0,834983$.
+Reponse: **Expected answer**: reminders $0,5;0,5;1$, details $1;0,5;2/3$. The maximum envelope to the right is 1 up to and including the 0,5 recall, then $2/3$. So $AP=(51+50\times2/3)/101\approx0,834983$.
 
 **Further explanation**: The 101 levels are $0;0,01;\ldots;1$, so 51 levels are at most 0,5. Unreachable reminders receive zero; only one GT detected out of two would give $51/101$, despite an accuracy of 1 for detection alone. Example executed; this simplified calculation does not implement all COCO.
 
@@ -89,7 +89,7 @@ Reponse: **Expected answer**: reminders $0,5;0,5;1$, details $1;0,5;2/3$. The ma
 
 **Variation interpreted**: placing the duplicate after the two TPs can keep a perfect envelope of AP in this small case, while the system always produces a duplicate. The score therefore summarizes a ranking under a specific convention and not all business consequences of the list. Also review the exits at the operating threshold, and then do not generalize this toy calculation to the crowd or other details of the full appraiser.
 
-**Algorithm of the envelope**: After stacking TP and FP, go through the accuracy from right to left and replace each value with the maximum between it and the next. For each reminder requested, then take the first level reached to its right according to the rules of the evaluator, or zero if it is not reached. This procedure explains the 51 levels included up to 0,50 in the case built. It differs from an arbitrary trapezoidal integration of three points. Categories without valid GT and ignored annotations follow other rules, so a ranking example is not a complete COCO re-implementation.
+**Algorithm of the envelope**: After stacking TP and FP, go through the accuracy from right to left and replace each value with the maximum between it and the next. For each recall requested, then take the first level reached to its right according to the rules of the evaluator, or zero if it is not reached. This procedure explains the 51 levels included up to 0,50 in the case built. It differs from an arbitrary trapezoidal integration of three points. Categories without valid GT and ignored annotations follow other rules, so a ranking example is not a complete COCO re-implementation.
 
 **Blocking errors**: average only the three raw precisions or replace the 101 reminders with a single operating point.
 Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py, accumulate L353](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L353); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
@@ -129,7 +129,7 @@ ID: CV-IOU-AP-006
 Question: AP50 remains high while AP75 falls sharply after new preprocessing. What should be checked before blaming the network?
 Reponse: **Expected answer**: Check location accuracy and coordinate propagation through resize/crop/padding. Compare predictions and GT in the same coordinate frame, then analyze the results by size and class.
 
-**Further explanation**: A small translation can leave the IoU above 0,50 and under 0,75, especially on small objects. Also check rounded, box format and postprocessing. The discrepancy suggests a sensitivity to the recovery criterion, but does not alone demonstrate a single cause.
+**Further explanation**: A small translation can leave the IoU above 0,50 and under 0,75, especially on small objects. Also check rounded, box format and postprocessing. The discrepancy suggests a sensitivity to the overlap criterion, but does not alone demonstrate a single cause.
 
 **Example of signature**: A translation of two pixels can be small for a large box and represent a large fraction of a small defect. A constant padding or rounding error can therefore affect sizes and thresholds differently.
 

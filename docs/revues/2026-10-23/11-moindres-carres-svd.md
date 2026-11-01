@@ -1,4 +1,4 @@
-# Review –  Smaller squares, SVD and packaging –  2026-10-23
+# Review –  Least squares, SVD and conditioning –  2026-10-23
 
 ## Overview
 
@@ -84,9 +84,9 @@ Calculations already executed for these proposals, excluding repository, Python 
 - [Ceres, Covariance Estimation (consulted on 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html): hypothesis of identity covariance and scaling $S^{-1/2}f$, full rank, pseudo-inverse, gauge, example of Jacobian almost singular under `min_reciprocal_condition_number`.
 - [Ceres, Solving Non-linear Least Squares (accessed 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_solving.html): Levenberg-Marquardt as regularized version of Gauss-Newton, `DENSE_QR`, `DENSE_NORMAL_CHOLESKY`, Schur solvers and their scales.
 - [Ceres, Modeling Non-linear Least Squares (accessed on 2026-10-23)](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html): `LossFunction`, conditions on $\rho$, Huber, SoftLOne, Cauchy, scale $a$.
-- [Eigen 5.0.1-dev, Solving linear least squares systems](https://libeigen.gitlab.io/eigen/docs-nightly/group__LeastSquares.html): square packaging, loss of about twice as many digits, speed for $A$ high and narrow. The old eigen.tuxfamily.org address returns a 301 redirect to this page.
-- [Zhang 1998, MSR-TR-98-71](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf), §3.2 and Appendix A: DLT per singular vector, mispackaging, standardization, Levenberg-Marquardt refinement.
-- [Hartley 1997, IEEE TPAMI 19(6)](https://doi.org/10.1109/34.601246), §§3 – 5 and 7.3: denormalization, non-invariance of the solution, ratio $d_1/d_8$, medium-distance isotropic normalization $\sqrt2$, packaging gain of about $10^8$ on the "house" pair. Version of the paid editor; passages read on a copy hosted by the University of Crete.
+- [Eigen 5.0.1-dev, Solving linear least squares systems](https://libeigen.gitlab.io/eigen/docs-nightly/group__LeastSquares.html): square conditioning, loss of about twice as many digits, speed for $A$ high and narrow. The old eigen.tuxfamily.org address returns a 301 redirect to this page.
+- [Zhang 1998, MSR-TR-98-71](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf), §3.2 and Appendix A: DLT per singular vector, misconditioning, standardization, Levenberg-Marquardt refinement.
+- [Hartley 1997, IEEE TPAMI 19(6)](https://doi.org/10.1109/34.601246), §§3 – 5 and 7.3: denormalization, non-invariance of the solution, ratio $d_1/d_8$, medium-distance isotropic normalization $\sqrt2$, conditioning gain of about $10^8$ on the "house" pair. Version of the paid editor; passages read on a copy hosted by the University of Crete.
 - [Triggs, McLauchlan, Hartley and Fitzgibbon 2000, HAL inria-00548290](https://inria.hal.science/inria-00548290), §§3.1, 3.3, 4.2 and 4.3, full text.
 - [Chum, Werner and Matas 2005](https://dspace.cvut.cz/bitstream/10467/9495/1/2005-Two-view-geometry-estimation-unaffected-by-dominant-plane.pdf): abstract accessed via ML Anthology; full text of CVUT repository not read. The theorem cited is that of the summary.
 

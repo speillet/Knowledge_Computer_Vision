@@ -10,7 +10,7 @@ Self-review: Agent Codex (`revue-cartes`). The editorial status remains `redige`
 
 | flashcard | Exactitude | Pertinence | Corrigibility | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SE3-001 | Confirmed: composition Eq.171 | deal with named coordinate framess. | Finished core; 40 words | reference note and format | Important (source) | Source SE(3) |
+| CV-SE3-001 | Confirmed: composition Eq.171 | deal with named coordinate frames. | Finished core; 40 words | reference note and format | Important (source) | Source SE(3) |
 | CV-SE3-002 | Confirmed: reverse Eq.170 | Reverse a rigid pose. | Finished core; 44 words | reference note and format | Important (source) | Source SE(3) |
 | CV-SE3-003 | Confirmed under local convention→global | distinguish between local and global disturbances. | Finished core; 48 words | reference note and format | Minor | Sections II-E–II-H |
 | CV-SE3-004 | Confirmed: four convention choices | check a quaternion. | Finished core; 46 words | reference note and format | Minor | Section 3.1 |
@@ -27,7 +27,7 @@ reference note revision 2: specify "base orientation". flashcards 001 – 002: r
 
 | Proposition | Gap filled | Family or category | Cost of revision | Planned primary source |
 | --- | --- | --- | --- | --- |
-| Transporting a covariance by the assistant | Avoid mixing coordinate frames with uncertainty | Reasoning; a flashcard | 3 criteria; duration to be measured | Solà et al., §II-H |
+| Transporting a covariance by the adjoint | Avoid mixing coordinate frames with uncertainty | Reasoning; a flashcard | 3 criteria; duration to be measured | Solà et al., §II-H |
 
 ## Sources
 

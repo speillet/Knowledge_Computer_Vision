@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -24,7 +24,7 @@ Quickly search for neighbors among many descriptors. The entry includes base, qu
 
 ## Mechanism, parameters and cost
 
-FLANN includes several search structures and configuration choices, not a single matching algorithm. Muja and Lowe study random kd-tree forests and hierarchical k-mean trees. The index builds an organization of the database; the query explores a fraction of the candidates. Trees and visiting budget exchange memory, construction, request time and reminder. OpenCV 4.13 shows a kd-tree for SIFT and an LSH index for common binary ORB descriptors. These configurations do not make any metric compatible.
+FLANN includes several search structures and configuration choices, not a single matching algorithm. Muja and Lowe study random kd-tree forests and hierarchical k-mean trees. The index builds an organization of the database; the query explores a fraction of the candidates. Trees and visiting budget exchange memory, construction, request time and recall. OpenCV 4.13 shows a kd-tree for SIFT and an LSH index for common binary ORB descriptors. These configurations do not make any metric compatible.
 
 ## Mathematics and conventions
 
@@ -50,7 +50,7 @@ These constructed cases develop neighbor recall, index ratio and damping. They a
 
 **Example of amortized cost**: With 2 s of construction and 1 ms per query, a hundred queries cost about 2,1 s, while an exhaustive search at 3 ms each costs 0,3 s. For ten thousand queries on the same basis, the hypothetical costs become 12 s and 30 s. The values illustrate a calculation, without constituting a benchmark FLANN.
 
-**Interpretation**: The actual number of re-uses of the index and its period of validity decide the depreciation. A reconstructed base with each image can lose this advantage. Also compare the quality of the neighbors: reducing the time by accepting an insufficient reminder is not a gain to constant objective. The choice depends on volume, material, batches and protocol.
+**Interpretation**: The actual number of re-uses of the index and its period of validity decide the depreciation. A reconstructed base with each image can lose this advantage. Also compare the quality of the neighbors: reducing the time by accepting an insufficient recall is not a gain to constant objective. The choice depends on volume, material, batches and protocol.
 
 ### Case linked to CV-FLANN-004
 
@@ -60,7 +60,7 @@ These constructed cases develop neighbor recall, index ratio and damping. They a
 
 **Separate three measures**: Neighbor recall compares the index to an exact search in a descriptor space; match accuracy compares pairs to a matching truth; geometric success judges the resulting transformation. These levels can diverge on repetitive textures or poorly distributed regions.
 
-**Proposed Decision Curve**: for several budgets, keep base and queries then report full time, memory, reminder of the first two neighbors and errors of the final registration. Add the maintenance cost if the base changes. Choose an operating region that meets the constraints of the product, and then check it on a reserved lot. This result is not limited to maximising recall: exhaustive research can be unnecessarily expensive, but a very fast approximation can be insufficient.
+**Proposed Decision Curve**: for several budgets, keep base and queries then report full time, memory, recall of the first two neighbors and errors of the final registration. Add the maintenance cost if the base changes. Choose an operating region that meets the constraints of the product, and then check it on a reserved lot. This result is not limited to maximising recall: exhaustive research can be unnecessarily expensive, but a very fast approximation can be insufficient.
 
 **Documentary reference for this pass**: [Muja and Lowe 2009](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), §§2 – 3, index and search compromise. The other developments are in the [flashcards](../48-flann.md).
 
@@ -90,7 +90,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 **Situation**: Which measurements help tune approximate-search effort without hiding degradation of the overall pipeline?
 
-**Read a quality – cost curve**: an operating point dominates another if it retains at least the useful quality by costing less depending on the resources considered. Between undominated points, the choice depends on the budget and tolerance produced, not on a single universal score. Separating build time, query latency, memory, and update frequency from the base avoids masking a misplaced extra cost. Testing queries without a real match is also essential: a neighbor search will usually return someone even if the correct answer is "absent". The rejection of pairs and the geometric verification define this possibility of refusal, which the only reminder of the neighbors does not measure.
+**Read a quality – cost curve**: an operating point dominates another if it retains at least the useful quality by costing less depending on the resources considered. Between undominated points, the choice depends on the budget and tolerance produced, not on a single universal score. Separating build time, query latency, memory, and update frequency from the base avoids masking a misplaced extra cost. Testing queries without a real match is also essential: a neighbor search will usually return someone even if the correct answer is "absent". The rejection of pairs and the geometric verification define this possibility of refusal, which the only recall of the neighbors does not measure.
 
 **Passages consulted for these developments**: [Muja and Lowe 2009](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), §§3.1 – 3.3, structures, budget and configuration.
 
