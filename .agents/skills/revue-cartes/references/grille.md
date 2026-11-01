@@ -1,130 +1,88 @@
-# Grille de revue des cartes
+# flashcards Review Grid
 
-Critères détaillés de l'étape 2 du skill. Ils reprennent le contrat
-pédagogique (`specs/001-cv-knowledge-base/learning-design.md`) et les
-exigences FR-007 à FR-016, FR-031, FR-032 et FR-036 de la spec.
+Detailed criteria for skill step 2. They take over the pedagogical contract (`specs/001-cv-knowledge-base/learning-design.md`) and the requirements FR-007 to FR-016, FR-031, FR-032 and FR-036 of the spec.
 
 1. [Exactitude](#exactitude)
-2. [Pertinence pour un profil senior](#pertinence-pour-un-profil-senior)
-3. [Corrigibilité](#corrigibilité)
-4. [Cohérence](#cohérence)
-5. [Signaux d'alerte](#signaux-dalerte)
-6. [Gravité](#gravité)
+2. [Relevance to a senior profile](#relevance-to-a-senior-profile)
+3. [Corrigibility](#corrigibility)
+4. [Consistency](#consistency)
+5. [Warning signals](#warning-signals)
+6. [Severity](#severity)
 
 ## Exactitude
 
-- Chaque affirmation centrale est-elle soutenue par **le passage cité**, et
-  pas seulement par le document en général ?
-- Les propriétés générales (article) et les particularités d'implémentation
-  (documentation ou code, avec version ou commit) ont-elles chacune leur
-  source (FR-036) ?
-- Garantie, approximation, hypothèse et résultat empirique sont-ils
-  distingués (FR-011) ?
-- Un seuil, un score ou un coût est-il accompagné de son protocole, de sa
-  variante ou de son matériel (FR-013) ?
-- Chaque équation définit-elle ses symboles, ses conventions, ses conditions
-  de validité et ses unités (FR-007) ?
-- Le contrat des données est-il explicite : repère, origine des coordonnées,
-  normalisation, effet d'un resize, d'un crop ou d'un padding (FR-031) ?
-- Le statut du code est-il clair : illustratif, ou exécuté avec son
-  environnement et son résultat (FR-008, FR-009) ?
+- Is each central statement supported by **the Cited Passage**, and not just by the document in general?
+- Do the general properties (article) and implementation features (documentation or code, with version or commit) each have their source (FR-036)?
+- Are guarantees, approximations, hypotheses and empirical results distinguished (FR-011)?
+- Is a threshold, score or cost accompanied by its protocol, variant or hardware (FR-013)?
+- Does each equation define its symbols, conventions, validity conditions and units (FR-007)?
+- Is the data contract explicit: coordinate frame, origin of coordinates, normalization, effect of a resize, a crop or a padding (FR-031)?
+- Is the status of the code clear: illustrative, or executed with its environment and result (FR-008, FR-009)?
 
-Pour vérifier :
+To check:
 
-- **Article** : ouvrir la section citée et relire la phrase ou l'équation
-  exacte. WebFetch ne lit pas le texte des PDF arXiv ; utiliser la version
-  HTML `https://ar5iv.labs.arxiv.org/html/<identifiant>`. Le pseudocode y est
-  souvent une image : le corroborer avec le code officiel. Une contradiction
-  entre l'article et une implémentation, même sur une frontière comme `>`
-  contre `≥`, est consignée avec les deux contextes, pas tranchée en silence.
-- **Section citée** : une affirmation vraie mais attribuée à la mauvaise
-  section reste « non soutenue » tant que la référence n'est pas corrigée.
-- **Code** : consulter le fichier au commit cité, avec les numéros de ligne.
-- **Documentation** : consulter la version citée (par exemple OpenCV 4.13).
-- **Calcul numérique** : le refaire. `examples/pilot_math.py` contient déjà
-  des calculs du pilote ; un nouveau calcul se fait dans un fichier
-  temporaire hors du dépôt.
+- **Article**: open the quoted section and reread the exact sentence or equation. WebFetch does not read text from arXiv PDFs; use HTML version `https://ar5iv.labs.arxiv.org/html/<identifiant>`. The pseudocode is often an image: corroborate it with the official code. A contradiction between the article and an implementation, even on a boundary like `>` versus `≥`, is recorded with both contexts, not resolved in silence.
+- **Cited section**: A true statement attributed to the wrong section remains "unsupported" as long as the reference is not corrected.
+- **Code**: consult the file at the commit cited, with the line numbers.
+- **Documentation**: consult the quoted version (e.g. OpenCV 4.13).
+- **Numerical calculation**: do it again. `examples/pilot_math.py` already contains driver calculations; a new calculation is done in a temporary file outside the repository.
 
 | Verdict | Sens | Suite |
 | --- | --- | --- |
-| Confirmé | Le passage dit la même chose, dans les mêmes conditions | Rien |
-| Imprécis | Vrai sous une condition non dite, ou formulation trop forte | Corriger la nuance |
-| Faux | Le passage ou un calcul contredit l'affirmation | Corriger fiche puis cartes |
-| Non soutenu | Peut-être vrai, mais la source citée ne le dit pas | Trouver le bon passage ou retirer l'affirmation |
-| Non vérifiable | Source inaccessible ou payante | Le dire dans le rapport ; ne pas confirmer |
+| Confirmed | The passage says the same thing, under the same conditions. | Rien |
+| Imprecise | True under an unspoken condition, or overly strong formulation | Correct the nuance |
+| False | The passage or calculation contradicts the assertion | Correct reference note and then flashcards |
+| Not supported | Perhaps true, but the source quoted does not say so. | Finding the right passage or removing the affirmation |
+| Not verifiable | Inaccessible or Paid Source | Say it in the report; do not confirm it |
 
-## Pertinence pour un profil senior
+## Relevance to a senior profile
 
-L'apprenant a cinq ans d'expérience en CV, maîtrise le ML/DL et la
-segmentation sémantique, et cherche à combler ses lacunes : méthodes
-classiques, matching, calibration et recalage, tracking, détection.
+The learner has five years of experience in CV, masters ML/DL and semantic segmentation, and seeks to fill its gaps: classic methods, matching, calibration and registration, tracking, detection.
 
-- La carte entraîne-t-elle un mécanisme, un raisonnement, un choix, un
-  diagnostic ou une évaluation utile en projet ?
-- Un senior doit-il savoir y répondre sans chercher ? Une valeur qu'on
-  consulte dans la documentation n'a pas sa place dans une carte, sauf si elle
-  sert un raisonnement (128 = 4×4×8 explique la structure du descripteur SIFT)
-  ou prévient une erreur fréquente (norme de Hamming pour ORB).
-- L'objectif est-il unique et la famille correspond-elle à la question ?
-- Une autre carte du sujet teste-t-elle déjà le même noyau ?
-- La carte rappelle-t-elle un cours général de DL au lieu de la spécificité
-  vision (FR-001) ?
-- Le cas industriel est-il plausible et présenté comme un raisonnement du
-  projet, et non comme un résultat publié ?
+- Does the flashcard involve a useful mechanism, reasoning, choice, diagnosis or evaluation in a project?
+- Should a senior know how to respond without looking? A value that is consulted in the documentation has no place in a flashcard, unless it serves a reasoning (128 = 4×4×8 explains the structure of the descriptor SIFT) or prevents a frequent error (Hamming standard for ORB).
+- Is the goal unique and does the family fit the question?
+- Does another flashcard of the subject already test the same kernel?
+- Does the flashcard recall a general DL course instead of the vision specificity (FR-001)?
+- Is the industrial case plausible and presented as a reasoning of the project, and not as a published result?
 
-## Corrigibilité
+## Corrigibility
 
-- La question se comprend-elle sans ouvrir la fiche ?
-- Le recto évite-t-il le terme clé, le titre ou l'extrait de source qui donne
-  la réponse ?
-- Le **noyau attendu** est-il un ensemble fini de points vérifiables ? Un
-  détail de l'**approfondissement** ne doit pas être nécessaire pour réussir.
-- Les **erreurs bloquantes** sont-elles des contresens plausibles (confusion
-  de tâche, de repère ou d'hypothèse), et non des absurdités que personne ne
-  commettrait ?
-- Une comparaison forme-t-elle un seul objectif cohérent, plutôt que deux
-  questions juxtaposées ?
-- La longueur est-elle raisonnable pour un rappel ? Il n'y a pas de plafond.
-  Signaler une réponse nettement plus longue que les autres du sujet, ou un
-  noyau trop composite pour être noté sans hésiter.
+- Is the question understood without opening the reference note?
+- Does the front avoid the key term, title, or source extract that gives the answer?
+- Is the **expected answer** a finite set of verifiable points? A detail of the **further explanation** does not have to be necessary to succeed.
+- Are **Blocking Errors**s plausible countersenses (confusion of task, coordinate frame or hypothesis), and not absurdities that no one would commit?
+- Does a comparison form a single coherent objective, rather than two juxtaposed questions?
+- Is the length reasonable for a recall? There is no ceiling. Report a much longer answer than the others of the subject, or a kernel too composite to be noted without hesitation.
 
-## Cohérence
+## Consistency
 
-- La carte s'accorde-t-elle avec la fiche, et la fiche avec les autres
-  sujets ? Chercher les notions partagées par `grep` (IoU, résidu, seuil,
-  repère…).
-- Les notations, les unités et les noms de variables sont-ils ceux de la
-  fiche ?
-- Le tag `famille::` correspond-il à la famille de la ligne d'en-tête ?
-  L'inventaire signale les écarts.
-- Le champ `Source` contient-il le wikilink vers la fiche et une source HTTPS
-  avec sa section, sa ligne ou son commit ?
-- Les affirmations qui dépendent d'une version ou d'une date sont-elles datées ?
-- Le format respecte-t-il le [modèle de carte](format-carte.md) ?
+- Does the flashcard agree with the reference note, and the reference note with the other subjects? Look for the concepts shared by `grep` (IoU, residual, threshold, coordinate frame...).
+- Are the notations, units, and variable names those of the reference note?
+- Does the `famille::` tag match the family of the header line? The inventory reports discrepancies.
+- Does the `Source` field contain the wikilink to the reference note and an HTTPS source with its section, line or commit?
+- Are statements that depend on a version or date dated?
+- Does the format respect the [Model of flashcard](format-carte.md)?
 
-## Signaux d'alerte
+## Warning signals
 
-| Signal | Pourquoi c'est suspect | Que vérifier |
+| Signal | Why it is Suspect | What to check |
 | --- | --- | --- |
-| « garantit », « invariant », « toujours », « optimal » | Une garantie est rare en vision | Conditions exactes dans la source |
-| Seuil présenté comme universel (0,5, 0,7, 0,8…) | Un seuil dépend du jeu de données et du protocole | Origine du seuil et validation |
-| Chiffre sans protocole, variante ni matériel | Il n'est pas comparable | Conditions de mesure (FR-013) |
-| Code présenté comme exécuté | Résultat peut-être inventé | Environnement et sortie réelle |
-| Recto contenant le mot clé de la réponse | La révision devient de la reconnaissance | Reformuler le contexte |
-| Deux questions dans une carte | Notation ambiguë | Scinder ou unifier l'objectif |
-| Noyau qui exige un détail facultatif | Échecs injustes | Déplacer le détail en approfondissement |
-| Source sans section, ligne ni commit | Affirmation invérifiable | Préciser le passage |
-| Approximation présentée comme égalité | Contresens appris | Distinguer « approxime » et « égale » |
-| Repère, unité ou origine des coordonnées implicites | Erreur de calcul en projet | Contrat des données (FR-031) |
-| Défaut d'une bibliothèque présenté comme propriété de la méthode | Confusion méthode/implémentation | Source scientifique distincte (FR-036) |
-| Lien vers la fiche absent ou différent du dossier | Carte orpheline ou mal rangée | Wikilink et domaine |
+| “guarantee”, “invariant”, “always”, “optimal” | A guarantee is rare in vision | Exact conditions in the source |
+| Threshold presented as universal (0,5, 0,7, 0,8...) | A threshold depends on the dataset and the protocol | Origin of the threshold and validation |
+| Encryption without protocol, variant or hardware | It is not comparable | Measurement conditions (FR-013) |
+| Code presented as executed | The result may have been invented | Environment and real output |
+| Front containing the key word of the answer | Revision becomes recognition | Redrafting the context |
+| Two questions in a flashcard | Ambiguous notation | Split or unify the goal |
+| Core that requires an optional detail | Unfair failures | Move the detail to further explanation |
+| Source without section, line or commit | Unverifiable Affirmation | Specify the passage |
+| Approximation presented as equality | Countersense learned | Distinguish between “Approximate” and “Equal” |
+| coordinate frame, unit or origin of implicit coordinates | Calculation error in project | Data contract (FR-031) |
+| Failure of a library presented as property of the method | Confusion method/implementation | Separate scientific source (FR-036) |
+| Link to reference note missing or different from the file | flashcard orphaned or misarranged | Wikilink and domain |
 
-## Gravité
+## Severity
 
-- **Bloquant** : erreur scientifique ou numérique ; réponse impossible à noter
-  sans ambiguïté ; réponse révélée au recto ; contradiction avec la fiche.
-- **Important** : formulation trop forte ou nuance manquante qui induit en
-  erreur ; source qui ne soutient pas l'affirmation ; objectif double ;
-  doublon ; contrat des données implicite là où il compte.
-- **Mineur** : style, notation incohérente sans conséquence, référence trop
-  vague mais exacte, lien améliorable.
+- **Bloquant**: scientific or numerical error; answer impossible to note unambiguously; answer revealed on the front; contradiction with the reference note.
+- **Important**: Overly strong wording or missing nuance that misleads; source that does not support assertion; double purpose; duplicate; implicit data contract where it counts.
+- **Minor**: style, inconsistent notation without consequence, too vague but exact reference, improved link.

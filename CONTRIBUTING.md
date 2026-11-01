@@ -1,19 +1,20 @@
-# Contribuer
+# Contributing
 
-## Changements
+## Changes
 
-Travailler sur une branche dédiée, par exemple `docs/camera-calibration` ou
-`chore/development-workflow`. Garder une intention par commit et des PR assez
-petites pour être relues avec leurs sources et leurs preuves de validation.
+Work on a dedicated branch, such as `docs/camera-calibration` or
+`chore/development-workflow`. Keep each commit focused on one intent and each
+PR small enough to review alongside its sources and validation evidence.
+Write prose in English; retain stable paths, IDs and Anki schema names.
 
-Pour un changement structurant, rédiger les critères d'acceptation avant
-l'implémentation. Spec Kit et les skills de Matt Pocock sont décrits dans
-[l'audit des outils](docs/tooling-audit.md).
+For structural changes, write acceptance criteria before implementation.
+Spec Kit and Matt Pocock's skills are described in the
+[tooling audit](docs/tooling-audit.md).
 
 ## Commits
 
-Suivre [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
-avec une description courte, précise et à l'impératif, en anglais :
+Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
+with a short, precise, imperative description in English:
 
 ```text
 docs(calibration): explain reprojection error
@@ -21,49 +22,47 @@ fix(anki): preserve note ids during updates
 chore(tooling): configure specification workflow
 ```
 
-Utiliser `docs` pour le contenu pédagogique, `feat` pour une nouvelle capacité,
-`fix` pour un défaut, `test` pour les tests, `ci` pour l'intégration continue et
-`chore` pour l'outillage. Le scope est facultatif. Signaler les changements
-incompatibles avec `!` ou un pied de message `BREAKING CHANGE:`.
+Use `docs` for learning content, `feat` for a new capability, `fix` for a defect,
+`test` for tests, `ci` for continuous integration, and `chore` for tooling.
+The scope is optional. Mark incompatible changes with `!` or a
+`BREAKING CHANGE:` footer.
 
-Avant de committer, inspecter `git status`, le diff et les fichiers indexés.
-Ajouter les fichiers par chemin et vérifier `git diff --cached --check`.
-Le skill `$git-commit` aide à préparer le message et le regroupement des fichiers.
+Before committing, inspect `git status`, the diff and staged files. Stage files
+by path and run `git diff --cached --check`. The `$git-commit` skill helps
+prepare the message and group files by intent.
 
-Vérifier l'identité d'auteur existante avant de committer avec
-`git var GIT_AUTHOR_IDENT`. Respecter la configuration de l'utilisateur. Une
-identité ponctuelle déjà vérifiée peut être fournie sans modifier ses réglages.
-Pour configurer ensuite l'identité habituelle de ce dépôt :
+Check the existing author identity with `git var GIT_AUTHOR_IDENT`. Respect the
+user's configuration. An explicitly verified identity can be supplied without
+changing their settings. To configure the usual identity for this repository later:
 
 ```sh
-git config --local user.name "Votre nom"
-git config --local user.email "votre-adresse-de-commit"
+git config --local user.name "Your name"
+git config --local user.email "your-commit-address"
 ```
 
 ## Pull requests
 
-Le titre de PR suit la même convention que les commits :
-`<type>[optional scope]: <description>`, par exemple
+PR titles follow the same convention as commits:
+`<type>[optional scope]: <description>`, for example
 `docs(specs): define the computer vision learning requirements`.
-Il peut ainsi servir de message lors d'une fusion par squash, après relecture.
+After review, the title can serve as the squash merge message.
 
-Utiliser le modèle du dépôt : résumé du changement, preuve de validation et
-impact de la fusion. Mentionner la spec ou l'issue quand elle existe.
-Le skill `$pr` aide à rédiger cette description ; `$code-review` compare le
-changement aux conventions et à la spec. Lui fournir une référence de départ
-résolvable, par exemple `origin/main`.
+Use the repository template: describe the change, validation evidence and merge
+impact. Link the specification or issue when available. `$pr` helps write the
+body; `$code-review` compares changes against conventions and the specification.
+Give it a resolvable starting reference, such as `origin/main`.
 
-Pour une carte, vérifier la justesse scientifique, les hypothèses, la cohérence
-des notations, les sources et la compréhension de la question hors contexte.
-Pour un changement de format, vérifier également l'export dans un deck d'essai.
+For a flashcard, check scientific accuracy, assumptions, notation consistency,
+sources and whether the question is understandable on its own. For a format
+change, also test export in a disposable deck.
 
-Pour un changement pédagogique, lancer `python3 scripts/learning_path.py` :
-chaque fiche apparaît une fois dans le parcours, après ses prérequis, et chaque
-réponse atteint le seuil éditorial de développement. Relire aussi le mécanisme,
-l'exemple et les limites : la longueur ne garantit pas la pertinence. Ajouter
-un sujet dans `scripts/learning_path.json`, puis régénérer le catalogue avec
-`python3 scripts/sync_catalog.py` ; ne pas modifier le parcours généré à la main.
+For learning content changes, run `python3 scripts/learning_path.py`: each
+reference note must appear once in the curriculum, after its prerequisites,
+and every answer must meet the editorial depth threshold. Also review the
+mechanism, example and limitations: length does not establish relevance.
+Add new subjects to `scripts/learning_path.json`, then regenerate the catalogue
+with `python3 scripts/sync_catalog.py`; do not edit the generated path by hand.
 
-Les skills `$gh-address-comments` et `$gh-fix-ci` accompagnent respectivement
-les retours de revue et le diagnostic des checks GitHub Actions.
-Les conventions ci-dessus ne sont pas encore imposées par des hooks ou une CI.
+The `$gh-address-comments` and `$gh-fix-ci` skills help address review comments
+and diagnose GitHub Actions failures, respectively. The conventions above are
+not currently enforced by hooks or CI.

@@ -1,215 +1,187 @@
 ---
 name: revue-cartes
-description: "Audite la pertinence, l'exactitude et la corrigibilité des fiches et cartes Anki existantes du vault de computer vision (vault/), corrige les défauts en préservant IDs et identités Anki, puis propose des enrichissements à valider. Utiliser dès que l'utilisateur demande de vérifier, relire, auditer, corriger, améliorer, compléter ou enrichir des cartes, flashcards, notes Anki, fiches de référence, un deck ou un thème du vault (par exemple « relis les cartes SIFT », « vérifie le deck NMS », « enrichis la calibration »), même sans nommer ce skill. Ne pas l'utiliser pour créer un sujet encore absent du vault."
+description: "Audit and improve existing computer vision reference notes and Anki flashcards in vault/. Check relevance, scientific accuracy and grading criteria; preserve pedagogical IDs and Anki identities, record corrections and propose enrichments. Use for review, correction and improvement of existing content, not for creating an absent topic."
 ---
 
-# Revue des cartes du vault
+# Review vault reference notes and flashcards
 
-Les fiches et cartes du vault ont été rédigées par un agent et n'ont eu qu'une
-auto-revue documentaire. Elles servent un ingénieur CV expérimenté qui vise un
-niveau senior : une erreur affirmée avec assurance, une réponse impossible à
-noter ou une carte anecdotique coûte du temps de révision chaque jour et peut
-ancrer une idée fausse. Ce skill fait donc une revue lente et sourcée, pas une
-relecture de style.
+The vault was authored by an agent and has received documentary self-review.
+It serves an experienced CV engineer aiming for senior proficiency. A confidently
+stated error, an ungradable answer or a low-value card can waste daily review time
+and reinforce misconceptions. This skill performs a careful, sourced review.
 
-Il audite, applique les corrections, propose des enrichissements, met à jour
-les comptes et produit un rapport. Il ne valide ni l'export Anki, ni le rendu
-AnkiDroid, ni la maîtrise de l'apprenant, et ne déclare jamais une fiche
-« relue » : l'auto-revue d'un agent n'est pas une relecture (FR-037).
+Audit content, apply corrections, propose enrichments, update counts and produce
+a report. This skill does not validate Anki export, AnkiDroid rendering or learner
+mastery. Never mark a reference as independently reviewed: agent self-review does
+not constitute independent review (FR-037).
 
-## 0. Délimiter le passage
+## 0. Define the scope
 
-L'argument peut être un fichier de cartes ou sa fiche
-(`vault/80-detection-pose/81-nms.md`), un ID de fiche (`CV-NMS`) ou de carte
-(`CV-NMS-003`), un dossier thématique (`vault/50-calibration-geometrie/`) ou
-`tout`. Sans argument, demander le périmètre.
+Accept a flashcard file or its reference, such as
+`vault/80-detection-pose/81-nms.md`, a reference ID (`CV-NMS`), a card ID
+(`CV-NMS-003`), a topic directory (`vault/50-calibration-geometrie/`) or `all`.
+Ask for scope when none is provided.
 
-Traiter un sujet, c'est-à-dire une fiche et ses cartes, par passage :
-confronter chaque affirmation à son passage source prend du temps. Pour un
-dossier ou `tout`, enchaîner les sujets un par un, produire un rapport par
-sujet et proposer de s'arrêter entre deux sujets.
+Work through one topic — a reference and its cards — per pass. Checking each
+claim against a precise source takes time. For a directory or `all`, process
+topics in sequence, produce a report for each, and offer stopping points between
+topics. Follow the user's existing authorization for the requested scope.
 
-## 1. Préparer
+## 1. Prepare
 
-1. Lancer `git status --short` et noter les fichiers déjà modifiés : un autre
-   agent travaille parfois sur ce dépôt en parallèle.
-2. Établir la référence :
+1. Run `git status --short` and record pre-existing changes; another agent may
+   be working in the same repository.
+2. Establish the baseline:
 
    ```sh
    python3 scripts/check_vault.py
    python3 -m unittest discover -s tests
    ```
 
-   Si l'un échoue, le signaler avant tout et ne pas mélanger une réparation de
-   format avec la revue.
-3. Inventorier le périmètre, puis garder un inventaire complet hors du dépôt
-   (scratchpad ou répertoire temporaire) pour la comparaison finale :
+   Report a failure before proceeding; do not mix a format repair with a content review.
+3. Inventory the scope and retain a complete baseline outside the repository:
 
    ```sh
-   python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py <fichier-ou-dossier>
-   python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py vault --json > <tmp>/avant.json
+   python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py <file-or-folder>
+   python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py vault --json > <tmp>/before.json
    ```
 
-   L'inventaire donne, par carte, famille, objectif, longueur, sources et
-   identité Anki, ainsi que les familles absentes et le prochain ID libre.
-4. Lire, dans cet ordre :
-   - le fichier de cartes et sa fiche dans `references/` ;
-   - [la grille de revue](references/grille.md) : critères et signaux d'alerte ;
-   - dans `specs/001-cv-knowledge-base/learning-design.md`, les sections
-     « Contrat d'une carte », « Noyau attendu et approfondissement »,
-     « Familles de cartes » et « Sources, revue et corrections » ;
-   - l'auto-revue et le journal de correction de
-     `vault/01-Parcours/Suivi-pilote.md`, pour ne pas refaire ni contredire
-     une correction antérieure.
+   The inventory reports each card's family, objective, answer length, sources
+   and Anki identity, plus missing families and the next available ID.
+4. Read, in order:
+   - The flashcard file and its canonical note in `references/`.
+   - The [review rubric](references/grille.md).
+   - The sections “Flashcard contract,” “Expected answer and further explanation,”
+     “Card families” and “Sources, review and corrections” in
+     `specs/001-cv-knowledge-base/learning-design.md`.
+   - Self-review and correction history in `vault/01-Parcours/Suivi-pilote.md`,
+     to avoid repeating or contradicting earlier corrections.
 
-## 2. Auditer
+## 2. Audit
 
-Commencer par la fiche : une carte ne peut pas être plus juste qu'elle. Puis
-évaluer chaque carte sur quatre axes, détaillés dans la grille.
+Start with the reference note: cards cannot be more accurate than their source.
+Then evaluate each card on the four axes detailed in the review rubric.
 
-- **Exactitude.** Relever les affirmations centrales du noyau et de
-  l'approfondissement, puis ouvrir le passage précis cité : section d'article,
-  ligne de code à un commit, page de documentation versionnée. WebFetch sert
-  pour les articles et les pages. Pour une API ou un paramètre de bibliothèque,
-  passer par Context7 (`resolve-library-id`, puis `query-docs`), puis par la
-  documentation officielle, comme le demande `AGENTS.md`. Donner un verdict
-  par affirmation : confirmé, imprécis, faux, non soutenu par la source citée,
-  non vérifiable. Ne jamais conclure « confirmé » de mémoire : la valeur de la
-  revue tient à la confrontation réelle. Une source inaccessible laisse
-  l'affirmation « non vérifiable », et le rapport le dit.
-- **Pertinence.** La carte entraîne-t-elle un mécanisme, un choix, un
-  diagnostic ou une évaluation dont un senior a besoin en projet ? Objectif
-  unique, famille cohérente avec la question, pas de doublon dans le sujet.
-- **Corrigibilité.** La question se comprend sans la fiche ; le recto ne livre
-  pas la réponse ; le noyau est un ensemble fini de points vérifiables ; les
-  erreurs bloquantes sont de vrais contresens ; l'approfondissement n'est pas
-  nécessaire pour réussir. Signaler une réponse longue (nombre de mots de
-  l'inventaire) sans imposer de plafond : la spec mesure la charge au lieu de
-  la borner.
-- **Cohérence.** Accord avec la fiche et les autres cartes, notations,
-  repères et unités, affirmations dépendant d'une version datées, format
-  conforme au [modèle de carte](references/format-carte.md).
+- **Accuracy.** Extract central claims from the expected answer and explanation.
+  Open the precise cited passage: paper section, code line at a commit, or
+  versioned documentation. Use web tools for papers and pages. For library APIs
+  or parameters, use Context7 (`resolve-library-id`, then `query-docs`), followed
+  by official documentation as required by `AGENTS.md`. Give each claim a verdict:
+  confirmed, imprecise, false, unsupported by the citation, or unverifiable.
+  Never mark a claim confirmed from memory. An inaccessible source leaves the
+  claim unverifiable; report that limitation.
+- **Relevance.** Does the card train a mechanism, decision, diagnosis or evaluation
+  needed by a senior engineer? Require a coherent objective, an appropriate
+  family and no redundant question within the topic.
+- **Gradability.** The question stands alone; its front does not reveal the answer.
+  The expected answer is a finite set of verifiable points, blocking errors are
+  actual misconceptions, and optional detail is not required to pass. Report
+  answer length without imposing a ceiling: the spec measures review load rather
+  than capping it.
+- **Consistency.** Check agreement with the reference and other cards, notation,
+  frames, units, dated version-dependent claims and the
+  [flashcard format](references/format-carte.md).
 
-Attribuer une gravité à chaque constat :
+Assign severity to each finding:
 
-- **bloquant** : erreur scientifique, réponse impossible à noter, réponse
-  révélée au recto ;
-- **important** : imprécision qui peut induire en erreur, source qui ne
-  soutient pas l'affirmation, objectif double, doublon ;
-- **mineur** : formulation, notation, référence de source trop vague.
+- **Blocking**: scientific error, ungradable answer or answer revealed on the front.
+- **Important**: misleading imprecision, unsupported citation, multiple independent
+  objectives or redundant content.
+- **Minor**: wording, notation or insufficiently precise source location.
 
-## 3. Corriger
+## 3. Correct
 
-Appliquer directement les corrections bloquantes et importantes, ainsi que les
-mineures sans risque. Les règles suivantes protègent l'historique de révision
-et la traçabilité.
+Apply blocking and important corrections directly, along with low-risk minor fixes.
+Preserve review history and traceability:
 
-- Relire le fichier juste avant de l'éditer. S'il a changé depuis la lecture,
-  s'arrêter et le signaler plutôt que d'écraser le travail d'un autre agent.
-- Corriger d'abord la fiche, puis chercher par `grep` dans tout le vault les
-  cartes qui reprennent l'affirmation, y compris dans d'autres thèmes : aucune
-  carte contradictoire ne doit rester active (SC-007).
-- Garder `ID:` et le titre `## ID` inchangés : l'ID pédagogique est stable par
-  contrat. Laisser intact le commentaire `<!--ID: …-->` du plugin, juste avant
-  `END`, et ne jamais en écrire un : il relie la carte à sa note Anki et à son
-  historique.
-- Si la correction change l'objectif même de la carte, ne pas la réécrire sous
-  le même ID. Proposer une nouvelle carte et le sort de l'ancienne : la
-  suppression d'une note Anki n'a pas encore été testée.
-- Un contenu rédigé par l'apprenant (provenance `apprenant` ou `mixte`) reçoit
-  une proposition, pas une modification. Si l'apprenant l'accepte, la
-  provenance devient `mixte`.
-- Dans la fiche, incrémenter `revision` et laisser `statut: redige`.
-- Garder la forme du vault : prose française, termes techniques et noms
-  originaux, maths en `$…$` ou `$$…$$`, aucun espace en fin de ligne.
-- Consigner chaque correction dans la section « Suite et corrections » de
-  `vault/01-Parcours/Suivi-pilote.md`, dans un tableau « Journal de
-  correction » (le créer s'il n'existe pas) avec ces colonnes : date, fiche
-  et sa nouvelle révision, cartes affectées, erreur et source, correction,
-  responsable (« Agent <Codex ou Claude Code>, auto-revue (`revue-cartes`) »),
-  contrôles, statut d'export. Une ligne par erreur distincte. Une carte qui a
-  une identité Anki est « à resynchroniser », sinon « non synchronisé ». Ne pas
-  modifier les sections de preuves datées : elles décrivent ce qui a été testé
-  à une date.
+- Read each file again immediately before editing. If it changed since inspection,
+  stop and report the conflict instead of overwriting another agent's work.
+- Correct the reference first, then search the whole vault for cards repeating the
+  claim, including other topics. Leave no contradictory active card (SC-007).
+- Preserve `ID:` and the `## ID` heading. Preserve the plugin's `<!--ID: …-->`
+  immediately before `END`; never generate one manually. It connects the card
+  with its Anki note and history.
+- If a correction changes the learning objective itself, propose a new card and
+  a disposition for the old one rather than rewriting it under the same ID.
+  Deleting Anki notes has not yet been tested.
+- For learner-authored or mixed content (`apprenant` or `mixte` provenance),
+  propose changes instead of applying them. After learner acceptance, use `mixte`.
+- Increment the canonical note's `revision`; retain `statut: redige`.
+- Write English prose with original technical names, `$…$`/`$$…$$` mathematics
+  and no trailing whitespace. Preserve compatibility keys and identifiers.
+- Record each correction in the correction-log table under the follow-up section
+  of `vault/01-Parcours/Suivi-pilote.md`. Include date, reference and new revision,
+  affected cards, error and source, correction, responsible author
+  (“Agent Codex or Claude Code, self-review (`revue-cartes`)”), checks and export
+  status. Use one row per distinct error. A card with a plugin identity needs
+  resynchronization; otherwise mark it unsynchronized. Preserve dated evidence
+  sections, which describe what was actually tested at that time.
 
-## 4. Proposer l'enrichissement
+## 4. Propose enrichment
 
-Chercher ce qui manquerait à un senior sur ce sujet, pas des cases à remplir :
+Look for useful gaps for a senior engineer:
 
-- une famille de cartes absente (voir l'inventaire) qui a un vrai objet ici ;
-  une famille sans objet se justifie au lieu de se remplir ;
-- une notion centrale de la fiche qu'aucune carte n'interroge ;
-- un mode d'échec, un cas industriel ou une décision sous contrainte manquant ;
-- dans la fiche : une rubrique du contrat absente ou creuse, la baseline et la
-  variation contrôlée (FR-033), la distinction entre source scientifique et
-  source d'implémentation (FR-036), une affirmation non datée qui dépend
-  d'une version ;
-- les pôles métiers A–F, seulement si le champ `poles` existe déjà dans
-  `specs/001-cv-knowledge-base/data-model.md` (tâche T017) ; sinon, noter la
-  proposition sans l'appliquer.
+- A missing family with a meaningful question here; justify inapplicable families
+  instead of filling every category.
+- A central concept not tested by any card.
+- A missing failure mode, industrial case or decision under constraints.
+- Missing or empty contract sections, a baseline and controlled variation (FR-033),
+  the distinction between scientific and implementation sources (FR-036), or an
+  undated version-dependent claim.
+- Career tracks A–F only when `poles` exists in the data model (T017); otherwise
+  record a proposal without implementing that metadata.
 
-Présenter les propositions sans rien écrire :
+Present proposals without adding cards:
 
-| Proposition | Lacune comblée | Famille ou rubrique | Coût de révision | Source primaire prévue |
+| Proposal | Gap addressed | Family or section | Review cost | Intended primary source |
 | --- | --- | --- | --- | --- |
 
-Chaque carte ajoutée se révise pendant des mois : privilégier peu de cartes à
-forte valeur et indiquer leur coût.
+Each added card is reviewed for months. Prefer a few valuable additions and state
+their review cost. After explicit user acceptance:
 
-Après accord explicite de l'utilisateur :
+1. Use the [template](references/format-carte.md), next available ID and
+   `Provenance: agent`. Check every central claim as in step 2.
+2. Link the reference to its new cards; expand it as needed and increment `revision`.
+3. Update current counts from the inventory in the vault home, topic index,
+   inventory, README, layout guide, Anki guide, export contract and batch header
+   of the progress log. Preserve dated results such as “47 notes recognized.”
+4. Record additions in the correction log like other changes.
 
-1. Rédiger selon le [modèle de carte](references/format-carte.md), avec le
-   prochain ID libre de l'inventaire et `Provenance : agent`. Vérifier chaque
-   affirmation comme à l'étape 2.
-2. Relier la fiche à ses nouvelles cartes et compléter la fiche si besoin, en
-   incrémentant `revision`.
-3. Mettre à jour les comptes qui décrivent l'état courant, d'après les
-   totaux de l'inventaire : `vault/00-Accueil.md`, le `00-index.md` du thème,
-   `vault/01-Parcours/Inventaire.md`, `README.md`, `docs/vault-layout.md`,
-   `vault/01-Parcours/Guide-Anki.md`,
-   `specs/001-cv-knowledge-base/contracts/obsidian-anki.md` et l'en-tête
-   « Lot » de `Suivi-pilote.md`. Ne pas toucher aux résultats d'essais datés,
-   comme « 47 notes reconnues ».
-4. Consigner l'ajout dans le journal, comme une correction.
-
-## 5. Vérifier
+## 5. Verify
 
 ```sh
 python3 scripts/check_vault.py
 python3 -m unittest discover -s tests
-python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py vault --comparer <tmp>/avant.json
+python3 .agents/skills/revue-cartes/scripts/inventaire_cartes.py vault --compare <tmp>/before.json
 ```
 
-- Le contrôleur et les tests passent ; les totaux de l'inventaire égalent ceux
-  du contrôleur.
-- La comparaison ne montre ni ID disparu ni identité Anki modifiée ; seuls
-  apparaissent les IDs ajoutés après accord.
-- Un `grep` sur l'ancien total ne trouve plus de compte d'état courant oublié.
-- Relire le diff complet du périmètre.
+Require successful checks and matching inventory totals. The comparison must show
+no missing ID or changed Anki identity; only explicitly accepted additions may
+appear. Search for outdated current counts and review the complete scope diff.
 
-## 6. Rapporter
+## 6. Report
 
-Toujours utiliser ce modèle :
+Use this structure:
 
 ```markdown
-# Revue — <sujet> — <date>
+# Review — <topic> — <date>
 
-## Synthèse
-<cartes auditées ; constats par gravité ; corrections appliquées ; propositions en attente>
+## Overview
+<cards audited; findings by severity; applied corrections; pending proposals>
 
-## Constats par carte
-| Carte | Exactitude | Pertinence | Corrigibilité | Cohérence | Gravité | Action |
+## Findings by card
+| Card | Accuracy | Relevance | Gradability | Consistency | Severity | Action |
 
-## Corrections appliquées
-<fichier, changement et raison, source consultée>
+## Applied corrections
+<file, change, rationale and consulted source>
 
-## Enrichissements proposés (en attente d'accord)
-<tableau de l'étape 4>
+## Proposed enrichments, pending acceptance
+<proposal table from step 4>
 
 ## Sources
-<passages réellement consultés ; sources non vérifiables et pourquoi>
+<passages actually consulted; unverifiable sources and reasons>
 
-## Contrôles et limites
-<commandes et résultats ; reste non vérifié : export Anki, rendu AnkiDroid,
-maîtrise de l'apprenant, validation indépendante>
+## Checks and limitations
+<commands and results; remaining export, AnkiDroid rendering, learner mastery
+and independent-validation checks>
 ```

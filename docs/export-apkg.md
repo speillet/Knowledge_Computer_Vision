@@ -1,38 +1,17 @@
-# Contrat d'export direct vers AnkiDroid
+# Direct export contract to AnkiDroid
 
-Le lot du 2026-10-24 publie l'exporteur local et son skill. Il rend possible
-l'import sans installer Anki Desktop ni AnkiConnect. Les fiches et cartes
-du vault restent la source canonique ; les états pédagogiques restent inchangés.
+The lot of the 2026-10-24 publishes the local exporter and his skill. It makes it possible to import without installing Anki Desktop or AnkiConnect. The reference notes and flashcards of vault remain the canonical source; the pedagogical states remain unchanged.
 
-## Critères d'acceptation
+## Criteria for acceptance
 
-1. Refuser un vault invalide avant construction. Chaque bloc contrôlé devient
-   une note `CV-Pilote`, quatre champs dans l'ordre `ID`, `Question`, `Reponse`,
-   `Source`, une carte et le sous-deck thématique déclaré. Préserver les tags.
-2. Garder le `modelId` 1153189853 du paquet local préexistant et calculer le
-   GUID avec `genanki.guid_for("CV-Pilote", ID)`, indépendamment du contenu.
-   Ne pas changer champs, nom ou nombre de gabarits sans migration explicite.
-3. Convertir paragraphes, listes simples, gras, italique, code, formules et
-   liens des cartes. Échapper le texte HTML. Transformer `$…$` en `\(…\)` et
-   `$$…$$` en `\[…\]`, sans transformer le dollar à l'intérieur du code.
-   Refuser titres, tableaux, citations, dollars orphelins et images introuvables
-   avec l'ID de la carte concernée. Ce n'est pas un moteur Markdown général.
-4. Embarquer les images locales du vault sous leur basename unique et utiliser
-   les gabarits et CSS locaux. Les liens de référence pointent sur GitHub ;
-   leur ouverture nécessite Internet. Les réponses restent autonomes.
-5. Générer `dist/CV-Pilote.apkg` et `dist/CV-Pilote-manifest.json`, sans les
-   committer. Relire ZIP/SQLite et contrôler IDs, GUID dérivés des IDs, modèle,
-   champs, tags, médias et exactement une carte par note dans son sous-deck,
-   sans carte orpheline et avec l'unique gabarit attendu.
-   Le manifeste conserve commit, version de genanki, comptes et empreintes
-   du contenu et des tags. La comparaison liste ajouts, corrections et retraits ;
-   elle ne mesure pas les modifications des CSS/gabarits ou des octets d'une image.
-6. Tester dans une collection jetable une première importation, trois révisions,
-   une correction de contenu, puis une correction de contenu et du style.
-   Refuser doublons, notes recréées, contenu ou style non mis à jour et historique
-   modifié. Une simulation moteur ne valide ni le rendu ni les réglages Android.
+1. Refuse an invalid vault before construction. Each controlled block becomes a note `CV-Pilote`, four fields in the order `ID`, `Question`, `Reponse`, `Source`, a flashcard and the declared thematic subdeck. Preserve tags.
+2. Keep the `modelId` 1153189853 from the pre-existing local packet and calculate the GUID with `genanki.guid_for("CV-Pilote", ID)`, regardless of content. Do not change fields, names, or number of templates without explicit migration.
+3. Convert paragraphs, simple lists, bold, italic, code, formulas, and links from flashcards. Escape HTML text. Convert `$…$` to `\(…\)` and `$$…$$` to `\[…\]`, without transforming the dollar inside the code. Refuse titles, tables, quotes, orphaned dollars and images not found with the relevant flashcard ID. It's not a general Markdown engine.
+4. Embed local images of the vault under their unique basename and use local templates and CSS. The reference links point to GitHub; opening them requires the Internet. The answers remain autonomous.
+5. Generate `dist/CV-Pilote.apkg` and `dist/CV-Pilote-manifest.json`, without committing them. Read ZIP/SQLite and check IDs, GUID derived IDs, template, fields, tags, media and exactly one flashcard per note in its subdeck, without orphaned flashcard and with the only template expected. The manifesto retains commit, genanki version, accounts and footprints of content and tags. The comparison lists additions, corrections, and removals; it does not measure changes in CSS/gabarits or bytes of an image.
+6. Test in a disposable collection a first import, three revisions, a content correction, and then a content and style correction. Refuse duplicates, recreated notes, unupdated content or style, and changed history. An engine simulation does not validate Android rendering or settings.
 
-## Vérifications reproductibles
+## Reproducible checks
 
 ```sh
 python3 scripts/check_vault.py
@@ -44,31 +23,18 @@ uv run --no-project --python 3.12 --with anki==26.9.3 --with genanki==0.13.1 \
   python scripts/simulate_anki_import.py
 ```
 
-Comparer deux versions avec `python3 scripts/build_apkg.py --comparer
-<ancien-manifeste.json>` ; l'ancien manifeste doit être sauvegardé avant
-reconstruction. Les résultats sont consignés dans le
-[journal du pilote](../vault/01-Parcours/Suivi-pilote.md).
+Compare two versions with `python3 scripts/build_apkg.py --comparer <ancien-manifeste.json>`; the old manifest must be saved before rebuilding. The results are recorded in the [The Pilot's Journal](../vault/01-Parcours/Suivi-pilote.md).
 
-## Mise à jour et limites
+## update and limits
 
-Importer un paquet plus récent avec mise à jour conditionnelle des notes et types
-de notes, sans importer de progression. Une édition plus récente dans Anki peut
-empêcher la mise à jour : résoudre le conflit dans le vault, puis reconstruire.
-Une carte retirée du paquet reste dans la collection jusqu'à suppression manuelle.
-Le champ et le tag `cv_id::<ID>` aident à retrouver la note.
+Import a newer package with update conditional notes and note types, without importing progress. A more recent edition in Anki can prevent the update: resolve the conflict in the vault, and then rebuild. A flashcard removed from the package remains in the collection until manually deleted. The `cv_id::<ID>` field and tag help to find the note.
 
-Les commentaires numériques du plugin restent intacts dans le vault mais ne
-déterminent pas les GUID de ce paquet. Les deux chaînes ne doivent pas alimenter
-la même collection. Aucun outil de migration ou de suppression distante n'est fourni.
+The digital comments of the plugin remain intact in the vault but do not determine the GUIDs of this package. The two chains must not feed the same collection. No remote migration or removal tools are provided.
 
-Les tests ne touchent aucune collection personnelle. Le rendu MathJax, SVG,
-code, liens et mode sombre, ainsi que la réimportation après révision sur le
-téléphone, restent à essayer. Une release est distincte d'une PR : la fusion
-publie le code, et la construction locale suffit à obtenir le fichier importable.
+The tests do not affect any personal collection. MathJax rendering, SVG, code, links and dark mode, as well as reimporting after revision on the phone, remain to be tried. A release is distinct from a PR: the merge releases the code, and the local build is enough to get the importable file.
 
 ## Sources
 
-- [genanki : identités des notes](https://github.com/kerrickstaley/genanki#note-guids),
-  consulté via Context7 puis vérifié avec genanki 0.13.1.
-- [Anki : import et mises à jour des paquets](https://docs.ankiweb.net/manual/importing/packaged-decks).
-- [AnkiDroid : import](https://docs.ankidroid.org/#_importing_anki_files).
+- [genanki: identities of notes](https://github.com/kerrickstaley/genanki#note-guids), accessed via Context7 and then verified with GENANKI 0.13.1.
+- [Anki: import and update packages](https://docs.ankiweb.net/manual/importing/packaged-decks).
+- [AnkiDroid: import](https://docs.ankidroid.org/#_importing_anki_files).

@@ -1,68 +1,71 @@
-# Instructions pour les agents
+# Agent instructions
 
-## Objectif
+## Objective
 
-Ce dépôt prépare un vault Obsidian de connaissances et de flashcards de computer
-vision, destiné à une progression vers un niveau d'ingénieur senior.
+This repository contains an Obsidian knowledge vault and computer vision
+flashcards for progression toward senior engineering proficiency.
 
-- Préserver la profondeur descriptive demandée : problème, intuition,
-  formulation, hypothèses, compromis, limites et applications.
-- Donner à chaque question un objectif de rappel explicite et une réponse
-  évaluable. Une réponse développée est bienvenue lorsqu'elle sert cet objectif.
-- Distinguer les faits sourcés des hypothèses et des décisions du projet.
-- Ne pas annoncer une couverture exhaustive sans cartographie du programme
-  et vérification des lacunes.
-- Choisir et valider le plugin d'export avant de généraliser une syntaxe Anki.
-  Préserver les identifiants de synchronisation lorsqu'il en génère.
+- Preserve the requested depth: problem, intuition, formulation, assumptions,
+  tradeoffs, limitations and applications.
+- Give each question an explicit recall objective and an answer that can be
+  graded. Detailed answers are welcome when they serve that objective.
+- Distinguish sourced facts from assumptions and project decisions.
+- Do not claim exhaustive coverage without mapping the curriculum and checking
+  its gaps.
+- Select and validate the export plugin before adopting an Anki syntax throughout
+  the vault. Preserve any synchronization identifiers it generates.
+- Write all new and revised prose in English, following the learner's request
+  of 2026-10-31. Preserve method names and compatibility identifiers; see
+  `docs/english-translation.md`.
 
 ## Workflow
 
-Lire `CONTRIBUTING.md` avant de préparer un commit ou une PR.
+Read `CONTRIBUTING.md` before preparing a commit or PR.
 
-Pour une décision structurante, clarifier le besoin avant d'implémenter.
-Les skills de Matt Pocock sont installés au niveau utilisateur ; l'intégration
-Spec Kit est locale au dépôt. Voir `docs/tooling-audit.md` pour leur état réel.
+Clarify requirements before implementing a structural decision. Matt Pocock's
+skills are installed at user level; Spec Kit integration is local to this
+repository. See `docs/tooling-audit.md` for the audited installation state.
 
-La constitution `.specify/memory/constitution.md` est encore le modèle fourni
-par Spec Kit. Ne pas traiter ses exemples et placeholders comme des décisions
-ratifiées. La remplir lors du cadrage du projet.
+The constitution at `.specify/memory/constitution.md` is still the template
+provided by Spec Kit. Do not treat its examples and placeholders as ratified
+decisions. Complete it during project scoping.
 
-La configuration du tracker des skills de Matt Pocock n'est pas encore choisie.
-Utiliser `$setup-matt-pocock-skills` avant le premier `$to-spec` pour fixer cette
-destination. Cette préparation n'autorise aucune publication d'issue ou de PR.
+The tracker destination for Matt Pocock's skills has not yet been chosen.
+Use `$setup-matt-pocock-skills` before the first `$to-spec` to configure that
+destination. This preparation does not authorize publishing issues or PRs.
 
-## Organisation du vault
+## Vault organization
 
-Classer les cartes par thématique, selon `scripts/vault_sections.json` :
-un répertoire numéroté par domaine, un index `00-index.md`, les fichiers de
-cartes directement dans le thème et leurs fiches canoniques dans `references/`.
-Les conventions détaillées sont dans `docs/vault-layout.md`.
-Préserver IDs pédagogiques et identités Anki lors des déplacements ; adapter
-liens, médias, deck cible et preuves de validation. Un répertoire vide de contenu
-reste à rédiger : sa présence ne valide pas la couverture du domaine.
+Organize flashcards by topic according to `scripts/vault_sections.json`:
+one numbered directory per domain, an index named `00-index.md`, flashcard
+files directly inside the topic directory, and canonical reference notes in
+`references/`. Detailed conventions appear in `docs/vault-layout.md`.
+Preserve pedagogical IDs and Anki identities when moving files; update links,
+media, target decks and validation evidence. An empty directory still needs
+content: its existence does not establish topic coverage.
 
-Pour auditer, corriger ou enrichir des fiches et cartes existantes, utiliser le
-skill du dépôt `revue-cartes` (`$revue-cartes` dans Codex, `/revue-cartes`
-dans Claude Code). Il confronte les affirmations à leurs sources, préserve IDs
-et identités Anki, consigne les corrections et soumet les ajouts à l'apprenant.
+To audit, correct or enrich existing reference notes and flashcards, use the
+repository's `revue-cartes` skill (`$revue-cartes` in Codex, `/revue-cartes`
+in Claude Code). It checks claims against sources, preserves IDs and Anki
+identities, records corrections and proposes additions to the learner.
 
-## Sources et documentation
+## Sources and documentation
 
-Utiliser Context7 pour vérifier les API, versions, configurations et exemples de
-bibliothèques : résoudre l'identifiant avec `resolve-library-id`, puis interroger
-`query-docs` sur un sujet précis. Préférer les projets officiels aux forks.
-Si une bibliothèque est absente de Context7, consulter sa documentation officielle
-et signaler ce recours.
+Use Context7 to verify library APIs, versions, configurations and examples:
+resolve the identifier with `resolve-library-id`, then call `query-docs`
+with a specific question. Prefer official projects over forks.
+If a library is absent from Context7, consult its official documentation and
+report that fallback.
 
-Pour les concepts de computer vision, consulter les articles et documentations
-primaires pertinents ; Context7 ne remplace pas une bibliographie scientifique.
+For computer vision concepts, consult relevant primary papers and official
+reference material; Context7 does not replace a scientific bibliography.
 
-## Vérification
+## Validation
 
-Adapter les vérifications au changement. Pour la documentation, relire les liens,
-les exemples et le diff. Pour un export de cartes, tester création puis mise à
-jour dans un deck d'essai, et vérifier formules, médias et absence de doublons.
-Pour un script, vérifier les comportements utiles et les cas d'erreur concernés.
+Match checks to the change. For documentation, review links, examples and the
+diff. For flashcard export, test creation and update in a disposable deck;
+check equations, media and duplicate prevention. For a script, verify the
+relevant behavior and error cases.
 
-Ne pas présenter un skill installé comme une CI ou un contrôle automatique.
-Indiquer ce qui a été vérifié et ce qui reste à valider dans Obsidian et Anki.
+Do not describe an installed skill as CI or an automated check. State what
+was verified and what remains to be validated in Obsidian and Anki.
