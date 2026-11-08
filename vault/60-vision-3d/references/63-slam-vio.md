@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SE3", "CV-FUSION", "CV-FACTEURS", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -111,6 +111,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Drift due to bias, simplified case**: If a constant acceleration bias $b_a$ remains uncorrected in a fixed world direction, it produces approximately a speed error $b_at$ and position error $\tfrac12b_at^2$. A constant gyroscope bias produces an angular error of the order of $b_\omega t$; this error can also incorrectly orient gravity and contaminate translation. These constructed laws assume a simplified orientation and conditions, they do not predict a real trajectory. Looking for these time signatures in parallel with feature losses and loop corrections helps to propose discriminating essays rather than a single cause in view of the final plot.
 
 **Passages consulted for these developments**: [Qin et al., VINS-Mono](https://arxiv.org/html/1708.03852v1), §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-VIO-001 — Bias correction has a local validity range
+
+Preintegrated increments are computed around a chosen bias estimate. First-order bias Jacobians allow a nearby correction without reintegrating every IMU sample, but a large bias change can require reintegration. Retain the time interval and linearization bias with the factor. Summarizing measurements reduces repeated work; it does not make their covariance, gravity convention, timestamp alignment or bias dependence optional.
+
+### CV-VIO-002 — A corrected map can move discontinuously
+
+A loop closure may change the global optimized trajectory even when the current local motion estimate remains smooth. A system driving a controller or renderer should specify how it exposes local odometry and globally corrected poses, including the transform between them. This is a project interface choice. Evaluate both local continuity and long-term consistency; a lower globally aligned trajectory error does not by itself establish an acceptable real-time pose signal.
+
+### CV-VIO-005 — Weak texture and weak excitation can coincide
+
+A long straight corridor can provide repetitive visual structure and nearly constant velocity. Both association ambiguity and weak inertial scale/bias information can then contribute to drift. Compare controlled turns and accelerations while logging track geometry, innovation behavior, initialization and timing. Evaluate without freely correcting metric scale. A single low-texture explanation is insufficient when synchronization or an incorrectly modeled bias can produce similar trajectory symptoms.
+
+Consulted foundations: [Forster et al. preintegration](https://dellaert.github.io/files/Forster16tro.pdf): §§IV–VI relative inertial factors, bias correction and estimation; [Qin et al. VINS-Mono](https://arxiv.org/html/1708.03852v1): §V-B initialization, §VI estimation and §VIII pose graph.
 
 ## Sources and flashcards
 

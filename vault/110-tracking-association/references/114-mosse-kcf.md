@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-SOT", "CV-FILTRES"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -103,6 +103,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Measure of success**: A curve can report, for each $\tau$ threshold, the proportion of frames where the IoU of the target exceeds $\tau$, under an announced presence policy. The area under this curve describes something other than the accuracy of the center at a fixed pixel threshold. Two boxes of the same center but of very different sizes can have a good center error and a bad IoU. The resets still change which periods are evaluated and what information is provided. Publishing the rules with the curve and the losses allows to compare the compromises without retaining only the frames where the tracker has succeeded.
 
 **Passages consulted for these developments**: [Bolme et al., MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf), §3.1 – 3.2, edges and learning; mathematical complements and built protocols; [Henriques et al., KCF](https://arxiv.org/html/1404.7584v1), §IV, regression and circulant structure; project deductions.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-CORRELATION-001 — A search crop defines the capture region
+
+If the target moves entirely outside the sampled search crop, a response maximum still exists inside that crop but need not correspond to the target. A reliability check and an explicit failure outcome are therefore essential. Evaluate search size against expected frame-to-frame motion and distractors. A larger crop increases candidate context and computation and can introduce stronger competing peaks; it is not a free guarantee of reacquisition.
+
+### CV-CORRELATION-002 — Cyclic training creates artificial boundary examples
+
+A circular shift wraps one side of a patch onto the other, which can create an artificial seam absent from a physical translation. Windowing and search-region design reduce some boundary effects under their assumptions. The Fourier diagonalization exploits this structured training set; it does not make arbitrary independent patches circulant. Compare border-crossing and large-displacement cases when testing whether the efficient model remains suitable for the target sequence.
+
+### CV-CORRELATION-003 — PSR is invariant to some response rescalings
+
+If the response map is transformed by $r^{\prime}=ar+b$ with $a>0$ and the sidelobe region is unchanged, peak-minus-mean and standard deviation both scale by $a$, leaving PSR unchanged. A constant map instead has zero sidelobe standard deviation and requires a defined policy. This constructed relation explains why raw peak height and PSR measure different things, and why neither is a calibrated probability of correct identity.
+
+### CV-CORRELATION-004 — A learned distractor can make confidence self-reinforcing
+
+Once the update absorbs background appearance, later correlation peaks may look reliable relative to that altered model. Compare against a saved pre-occlusion model and inspect the update history before treating a high response as confirmation. A proposed intervention separates freezing updates from expanding search and reinitialization, since each changes a different mechanism. Evaluate false recovery as well as overlap after a successful reacquisition.
+
+Consulted foundations: [KCF](https://arxiv.org/html/1404.7584v1): §IV circulant ridge regression and Appendix F MOSSE; [MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf): §§3.2–3.5 filter adaptation and PSR.
 
 ## Sources and flashcards
 

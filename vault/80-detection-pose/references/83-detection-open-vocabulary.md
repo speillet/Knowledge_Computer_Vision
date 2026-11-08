@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-CLIP", "CV-DETECTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -99,6 +99,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Separate vocabulary and location**: For each false positive, compare first the proposed region to the visible object, then the category of this object to the business definition. A correct box on a semantically neighboring object is a different problem than a box placed between multiple objects. Adding precise formulations can move scores from an entire distribution: re-evaluate recall and rejection, without assuming an invariant threshold to prompt. Record the exact expressions, their tokenization if it affects the interpretation of scores and the rules of grouping into labels. These elements are part of the decision-making model and must be versioned with the checkpoint.
 
 **Passages consulted for these developments**: [Liu et al., Grounding DINO](https://arxiv.org/html/2303.05499v4), §3.2 – 3.3, text-guided selection and decoding; project testing.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-OPENVOC-001 — Region grounding needs a localization evaluation
+
+A global image embedding can identify that an image resembles a text description while giving no location or count of the matching objects. Cropping every possible region would add a proposal/search problem with its own cost and evaluation. Compare instance recall, localization and absent-category behavior when evaluating open-vocabulary detection, rather than transferring a global zero-shot classification accuracy directly to the detection task.
+
+### CV-OPENVOC-002 — Vocabulary updates need backward-compatibility evidence
+
+A new product description can compete with old descriptions and change old-category decisions even without retraining the image encoder. A proposed monthly protocol freezes a reference set of old products, adds new products and near negatives, then measures both acquisition cost and regression on the old set. Include threshold/prompt maintenance and inference cost. An unchanged checkpoint does not imply an unchanged end-to-end classifier or detector.
+
+### CV-OPENVOC-003 — A broad phrase can be semantically correct but operationally wrong
+
+If the requested target is a specific fastener and the prompt describes generic metal parts, boxes on related tools may match the language while violating the product category. Audit whether localization is correct before changing the text. Then compare narrower descriptions and controlled near negatives on validation. A higher text-region score alone cannot decide a category boundary that the task specification has not defined.
+
+Consulted foundations: [OWL-ViT](https://arxiv.org/html/2205.06230v2): §3 localized image-text matching; [Grounding DINO](https://arxiv.org/html/2303.05499v4): §§3.2–3.3 language-guided queries and cross-modal decoding.
 
 ## Sources and flashcards
 

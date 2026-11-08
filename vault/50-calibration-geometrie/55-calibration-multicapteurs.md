@@ -22,8 +22,10 @@ Reponse: **Expected answer**: We must define the coordinate frames, the relative
 
 **Usable formulation**: Note $G_i={}^bT_{g_i}$, $C_i={} ^{c_i}T_t$ and $X={}^gT_c$, where the top coordinate frame receives the coordinates. The fixed calibration target imposes $G_iXC_i=Y$, with $Y={}^bT_t$ constant. Between two catches, multiply the equality left by $G_j^{-1}$ and right by $C_i^{-1}$ gives $(G_j^{-1}G_i)X=X(C_jC_i^{-1})$. The indices and the assembly therefore determine exactly $A$ and $B$. The case built with translations alone checks the units, but noncommutative rotations are needed to detect many order errors. The $X$ matrix must remain the same on all synchronized captures.
 
+**Pair order must change on both sides**: From $AX=XB$, reversing the same motion pair gives $A^{-1}X=XB^{-1}$. Inverting only one of the relative motions generally creates another equation with no common true solution. A constructed chain test should generate poses from known $X$ and a fixed target, then verify every relative pair before solving. This catches direction conventions independently of observation noise and the numerical hand-eye method.
+
 **Blocking errors**: Copy the matrices of an API without checking their meaning.
-Source: [[50-calibration-geometrie/references/55-calibration-multicapteurs|Full reference]] ; [OpenCV 4.13.0, calibrateHandEye, eye-in-hand equations and note on axes](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/55-calibration-multicapteurs|Full reference]] ; [OpenCV 4.13.0, calibrateHandEye, eye-in-hand equations and note on axes](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-MULTICALIB-001 provenance::agent pole::B pole::C pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Examine observability and vary rotations/positions
 
 **Component not constrained**: by developing homogeneous transformations, we obtain $(R_A-I)t_X=R_Xt_B-t_A$. For a rotation around a unit axis $n$, $(R_A-I)n=0$: this equation alone does not determine the component of $t_X$ following $n$. Repeating the same axis leaves this structural defect. Stacking movements of different axes can lift it, subject to a rotation $R_X$ itself correctly estimated. Examine the singular values of this system after scaling and compare the solutions by subsets of poses. A large number of correlated pairs does not transform into as many independent directions of information.
 
+**Pure translations leave hand-eye translation unconstrained**: When $R_A=I$, the translation equation $(R_A-I)t_X=R_Xt_B-t_A$ has a zero left-hand coefficient. Such a motion can constrain the relation between observed translation vectors and rotation, but supplies no direct constraint on $t_X$ through this equation. Adding many pure-translation poses therefore does not replace informative rotations. Evaluate the stacked system's singular directions in the intended movement range.
+
 **Blocking errors**: Reply only “more images” without diversity of movement.
-Source: [[50-calibration-geometrie/references/55-calibration-multicapteurs|Full reference]] ; [OpenCV 4.13.0, calibrateHandEye, eye-in-hand equations and note on axes](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/55-calibration-multicapteurs|Full reference]] ; [OpenCV 4.13.0, calibrateHandEye, eye-in-hand equations and note on axes](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-MULTICALIB-002 provenance::agent pole::B pole::C pole::E
 END
 
@@ -68,7 +72,9 @@ Reponse: **Expected answer**: It does not alone test the extrinsic between senso
 
 **Order of temporal magnitude**: in a local rigid displacement model, the deviation of a point expressed in the same coordinate frame is of the order of $\delta p\simeq(v+\omega\times p)\delta t$, with speed $v$ in m/s, angular speed $\omega$ in rad/s and delay $\delta t$ in s. The sign depends on the sense of comparison. At 10 m/s, 20 ms already represent 20 cm of translation; the angular contribution increases with the lever arm. The image projection then adds its Jacobian and depends on the depth. This built-in calculation explains why testing multiple speeds, distances, and direction of rotation helps distinguish a delay from a constant extrinsic.
 
+**Static and dynamic tests isolate different contracts**: A proposed validation sequence first checks static cross-sensor alignment, then repeats known translations and turns with the same extrinsics. Error proportional to speed or angular rate suggests a timing or deskew problem; persistent static offset instead directs attention toward the spatial chain or projection model. These are diagnostic tendencies, not proofs. Keep clock, timestamp reference and per-point acquisition conventions explicit before refitting a fixed transform.
+
 **Blocking errors**: Assimilate camera calibration quality and complete fusion quality.
-Source: [[50-calibration-geometrie/references/55-calibration-multicapteurs|Full reference]]; [Zhang – Singh 2014, LOAM, §§II, IV and V-B](https://www.roboticsproceedings.org/rss10/p07.pdf); intrinsic/extrinsic/time comparison deduced by the project.
+Source: [[50-calibration-geometrie/references/55-calibration-multicapteurs|Full reference]]; [Zhang – Singh 2014, LOAM, §§II, IV and V-B](https://www.roboticsproceedings.org/rss10/p07.pdf); intrinsic/extrinsic/time comparison deduced by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::comparaison cv_id::CV-MULTICALIB-003 provenance::agent pole::B pole::C pole::E
 END

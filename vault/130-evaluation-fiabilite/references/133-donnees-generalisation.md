@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -111,6 +111,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Risk and Coverage**: For a rule that denies scores below a threshold, coverage is the fraction of cases where a decision is issued; risk is the error among those decisions according to the protocol. One method can reduce the risk by refusing more, without improving the perception on the remaining cases. Compare risk-coverage curves and critical layers, with labels representative of the new sensor. A change in the distribution of features can serve as an alarm, but it does not directly give the error rate without reference. Check separately the entry contract and the relevance of the rule of refusal after change of domain.
 
 **Passages consulted for these developments**: [Guo et al., calibration](https://arxiv.org/html/1706.04599v2), §2, ECE and diagrams; detection protocol, splits and risk – covering built.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FIABILITE-001 — Derived samples inherit their source group
+
+Creating crops, augmentations or neighboring frames before a random split can place near copies of one source acquisition in both training and test. Assign the source group first and propagate its split to every derivative. A proposed audit checks acquisition, part/site/patient and temporal identifiers according to the deployment question. More test files then do not necessarily mean more independent evidence of transfer to unseen conditions.
+
+### CV-FIABILITE-003 — An untouched test is consumed by repeated selection
+
+If the same test failures repeatedly guide prompt, threshold or dataset choices, the test becomes development evidence whether or not gradients were computed on it. A proposed workflow keeps active-learning selection in the training pool, uses validation for choices and reserves an independent final evaluation. When a benchmark has already influenced the design, report that history and obtain fresh evidence rather than relabeling the old score as unbiased.
+
+### CV-FIABILITE-004 — Season and sensor can be confounded
+
+If all summer images come from one sensor and all winter images from another, a performance gap cannot be attributed uniquely to season. A proposed analysis seeks overlapping acquisition factors or controlled comparisons, then stratifies by site, band mapping, ground sampling distance, label policy and visible land-cover change. Geographic or temporal grouping must reflect deployment; shuffling nearby tiles does not isolate the source of the shift.
+
+Consulted foundations: [Guo et al. calibration](https://proceedings.mlr.press/v70/guo17a.html): §2 confidence/calibration and reliability diagrams; [Cawley and Talbot](https://www.jmlr.org/papers/v11/cawley10a.html): model-selection overfitting and evaluation bias.
 
 ## Sources and flashcards
 

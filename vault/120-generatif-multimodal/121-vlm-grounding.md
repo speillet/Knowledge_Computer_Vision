@@ -22,8 +22,10 @@ Reponse: **Expected answer**: CLIP compares image-text representations; a VLM ge
 
 **Optimized quantity**: an autoregressive generation models $p(y\mid I,q)=\prod_kp(y_k\mid y_{<k},I,q)$ for a $I$ image, a $q$ question and $y_k$ tokens. A probable sequence under this model is not automatically a true visual proposition. A syntactically valid JSON format can also contain a false box or object. The evaluation must therefore separate respect for the schema, accuracy of the facts and spatial or temporal anchoring. For an action output, add more method-specific units, coordinate frames, and execution contract; the plausibility of tokens does not validate a physical action.
 
+**An action interface needs a state and timing contract**: A VLA output can encode commands in a learned action representation, but the controller still needs units, reference frames, frequency and validity limits. A plausible language description does not establish an executable command, and a valid command schema does not prove that the visual state was estimated correctly. Compare models at their declared outputs and evaluate any conversion into physical actions separately. No robotic execution is established by these notes.
+
 **Blocking errors**: Present a textual description as a validated order policy.
-Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; [CLIP, §2.3](https://arxiv.org/abs/2103.00020); [LLaVA, §§4.1 – 4.2](https://arxiv.org/abs/2304.08485); [OpenVLA, architecture and actions](https://openvla.github.io/), see 2026-10-20.
+Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; [CLIP, §2.3](https://arxiv.org/abs/2103.00020); [LLaVA, §§4.1 – 4.2](https://arxiv.org/abs/2304.08485); [OpenVLA, architecture and actions](https://openvla.github.io/), see 2026-10-20. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d12 famille::comparaison cv_id::CV-VLM-001 provenance::agent pole::A pole::D
 END
 
@@ -68,10 +70,12 @@ Reponse: **Expected answer**: Define events, time outputs, cost and latency; bui
 
 **Cost of indexing**: with a video of duration $T$ and a sampling step $\Delta$, the number of frames retained is of the order of $T/\Delta$. The cost includes decoding, visual encoding, building windows, and generating or indexing outputs. Reducing this number can make short events disappear; increasing the context can add cost and delay without restoring a frame never observed. A hybrid pipeline can first propose intervals and then describe them, but it is necessary to measure the recall of this preselection: an excluded event will never reach the VLM. Evaluate each step and the final index on the same reserved events.
 
+**Retrieval needs both event coverage and verification**: A proposed video index can use a cheap first stage to retrieve candidate intervals and a more expensive model to verify them. Measure missed events introduced by the retrieval stage separately from false descriptions introduced by verification. Include short events and temporally similar negatives, and account for sampling, decoding and prompt cost. An accurate verifier cannot recover an event never presented in its sampled candidate frames.
+
 **Blocking errors**: Choose from a few plausible descriptions without ground truth.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; Case and indexing protocol designed by the project; sample image/video model: [Flamingo, §2](https://arxiv.org/abs/2204.14198).
+Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; Case and indexing protocol designed by the project; sample image/video model: [Flamingo, §2](https://arxiv.org/abs/2204.14198). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d12 famille::conception cv_id::CV-VLM-003 provenance::agent pole::A pole::D cas_pole::D::conception
 END
 
@@ -93,9 +97,11 @@ Reponse: **Expected answer**: Check image actually received, resolution/prompt, 
 
 **Anchor tests built**: use a positive image, a comparable negative image and, if feasible, a variation where only the target object changes. Check if the assertions actually follow this variation and if the correction increases the refusal rather than the accuracy. A decrease in the number of false assertions obtained by never responding is not the same result as better recognition; report coverage of responses and risk of error among responses issued. These tests must respect the distribution of the images, because an artificial masking can introduce an artifact. Outputs must remain connected to the exact version of the input and prompt used.
 
+**A counterfactual image pair can test visual dependence**: Construct paired inputs differing in one controlled object while keeping prompt and scene context fixed. Check whether the answer changes with the image and whether absence is acknowledged on a negative image. Preserve the actual decoded inputs and generation settings. This proposed diagnostic helps identify context-driven responses, but passing a few pairs does not certify grounding across the deployment distribution or eliminate hallucinations globally.
+
 **Blocking errors**: Accept the phrase fluid as visual proof or guarantee a total deletion by prompting.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; Survey proposed by the project; architecture and reference objective: [LLaVA, §§4.1 – 4.2](https://arxiv.org/abs/2304.08485).
+Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; Survey proposed by the project; architecture and reference objective: [LLaVA, §§4.1 – 4.2](https://arxiv.org/abs/2304.08485). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d12 famille::diagnostic cv_id::CV-VLM-004 provenance::agent pole::A pole::D cas_pole::D::diagnostic
 END

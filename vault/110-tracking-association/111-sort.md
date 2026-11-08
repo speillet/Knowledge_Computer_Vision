@@ -24,8 +24,10 @@ Original scheme of the project, agent, MIT license. A filter can confidently cor
 
 **Causal Order**: For each frame, the prediction advances all states even if the detector provides nothing. The association then compares measures and predicted tracks; only accepted pairs cause a correction. The remaining detections and the remaining trackss finally pass into rules of creation, confirmation, memorization or deletion. Invert correction and association would use a measure whose identity is not yet decided. A useful trace therefore also preserves the non-associations, and not only the couples retained. The internal state of the filter, the ID of track and the box actually emitted are three related but distinct elements of the output contract.
 
+**A confident correction can preserve a wrong identity**: If two people cross and the association selects the other person's detection, the Kalman update can reduce covariance while moving the state toward the wrong physical target. Low posterior variance then describes confidence within the chosen association, not confidence that identity was preserved. Log candidate costs and association decisions around crossings; inspecting only the smoothed state or its covariance can conceal the causal error.
+
 **Blocking errors**: assign the re-identification to Kalman or assign the production of detections to the SORT tracker.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Bewley et al., §3](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Bewley et al., §3](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::comprehension cv_id::CV-SORT-001 provenance::agent pole::C pole::D pole::E
 END
 
@@ -47,8 +49,10 @@ Reponse: **Expected answer**: $[u,v,s,r,\dot u,\dot v,\dot s]^T$ contains center
 
 **Back to the box**: with area $s>0$ and report $r=w/h>0$, rebuild $w=\sqrt{sr}$ and $h=\sqrt{s/r}$, then corners $(u\pm w/2,v\pm h/2)$. The positive domains of $s$ and $r$ are therefore essential; a linear extrapolation of the area can produce a non-physical state if it is not managed. For an explicit step $\Delta t$, the center transition becomes $u'=u+\dot u\Delta t$ and $v'=v+\dot v\Delta t$, with speeds now in pixels/s. Adapting only this transition without adapting the process noise and life cycle times still leaves inconsistent time conventions.
 
+**Area rate has a different unit from center rate**: Under the original per-frame state, center rates have units px/frame while area rate has units px²/frame; aspect ratio is dimensionless. A frame interval change therefore affects more than the displacement of the box center. Use actual elapsed time if modifying the model, and transform the process-noise contract consistently. A positive predicted center does not ensure a valid box when predicted area or aspect ratio leaves its permitted domain.
+
 **Blocking errors**: take $s$ for detector score, gear for speed or assume the model automatically adapts to real time.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Article, §3.2](https://arxiv.org/abs/1602.00763); [reference, L94](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Article, §3.2](https://arxiv.org/abs/1602.00763); [reference, L94](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::raisonnement cv_id::CV-SORT-002 provenance::agent pole::C pole::D pole::E
 END
 
@@ -70,8 +74,10 @@ Reponse: **Expected answer**: $K=P^-/(P^-+R)=25/34$, so $u^+=u^-+K(z-u^-)\approx
 
 **Merging scalar information**: For independent Gaussian errors in this model, the a posteriori variance checks $1/P^+=1/P^-+1/R$. The corrected average can be written as $P^+(u^-/P^-+z/R)$: each estimate is weighted by its precision, inverse of variance. This writing explains the decrease in uncertainty under assumptions, but not a certainty of identity. If the measurement belongs to another object, the probabilistic model used for this merge is violated; announcing a small $P^+$ does not detect it automatically. The gating and the association must therefore precede this interpretation of precision.
 
+**Posterior variance gives a second scalar check**: For the front's independent scalar model, $P^+=(1-K)P^-=225/34\approx6.62$ px². The corrected mean lies between prediction and measurement because $0<K<1$. These are useful constructed checks for sign, variance and unit mistakes. Correlated prediction and measurement errors require another update model; a numerically plausible weighted mean does not establish that reused evidence is independent.
+
 **Blocking errors**: further approximates the estimation of a measure when its variance increases, or confuses variance and standard deviation.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [reference Kalman from SORT](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [reference Kalman from SORT](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L94); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::raisonnement cv_id::CV-SORT-003 provenance::agent pole::C pole::D pole::E
 END
 
@@ -93,8 +99,10 @@ Reponse: **Expected answer**: deletion occurs if `time_since_update > max_age`. 
 
 **Physical Duration and Issue**: at 30 frames, a maximum age of one frame is approximately 33 ms between regular calls; at 10 images/s, approximately 100 ms. The exact deletion rule and updates still condition the timeline. A stored but not issued track can regain its old ID, while a consumer has not received any boxes during the absence. If the product requires a predicted box during this period, it is another contract that must be defined and evaluated, with a predicted status and appropriate uncertainty. Extending memory does not automatically provide this output or re-identification after expiration.
 
+**A kept track and a published track are different states**: For the pinned lifecycle, record internal retention, current-frame update and output eligibility separately. A missed association can leave a track available for later matching without publishing its predicted box. Increasing max_age can preserve more internal hypotheses while also allowing stale competitors; it does not automatically fill output gaps. A proposed sequence test logs both internal IDs and returned IDs through misses and reappearance.
+
 **Blocking errors**: confuse retained track with displayed box, or announce deletion as soon as the age is equal to the maximum.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [reference, life cycle L199](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L199); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [reference, life cycle L199](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L199); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::algorithme cv_id::CV-SORT-004 provenance::agent pole::C pole::D pole::E
 END
 
@@ -116,8 +124,10 @@ Reponse: **Expected answer**: the diagonal gives 0,90, against 0,62 for the cros
 
 **Explicit non-assignment**: An issue can introduce fictitious rows or columns representing a track without measurement and detection without track, with announced costs. This makes it possible to express that a poor association may be less desirable than a lack of correction. The choice of these costs determines the preference, and is not inferred from the use of Hungarian alone. If the priority objective is the cardinality of the allowable pairs, it must be represented explicitly before distinguishing by similarity. The counterexample of the flashcard therefore does not prescribe a universal formulation: it learns to verify the objective really solved and its temporal consequences.
 
+**Admissibility can be a lexicographic objective**: If the application first wants as many valid pairs as possible and only then the best total score, encode those priorities explicitly in assignment costs and unmatched alternatives. Maximizing raw IoU and rejecting afterward solves a different problem, as the front's matrix demonstrates. A project comparison should evaluate ambiguous small matrices before sequence-level metrics, including ties and cases where leaving a track unmatched is preferable to a weak feasible association.
+
 **Blocking errors**: assert that any post-assignment gating is equivalent to before gating, without checking the wording.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [association SORT, L154](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L154); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [association SORT, L154](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L154); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::pratique cv_id::CV-SORT-005 provenance::agent pole::C pole::D pole::E
 END
 
@@ -144,8 +154,10 @@ Increasing `max_age` only helps certain absences; a method with appearance or ot
 
 **Discriminant Chronology**: build an array with time, internal ID, associated detection, age since last correction and issue status. A new track after deleting the old one is not the same event as an exchange between two still active trackss. Replaying the same detections isolates this difference from the detector. If the track was active but the real box has a IoU too low, test prediction, cadence and gating; if two boxes are eligible, examine the complete matrix and assignment objective. This procedure links an intervention to an observed cause and makes it possible to measure the false supports that it can introduce elsewhere.
 
+**Trace the first divergence, not only the final ID**: Use the same stored detector outputs to replay the frames around an identity change. Mark the first missing candidate, first inadmissible pair, deletion or selection of a competitor. These events support different interventions: detector recall, gating/model changes, lifecycle duration or association evidence. Changing all of them together may improve one example without identifying its cause. Keep replay settings and random/tie policies fixed.
+
 **Blocking errors**: Automatically prescribe a higher age or assign any ID exchange to the Kalman filter.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §§3.2 – 3.4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §§3.2 – 3.4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-SORT-006 provenance::agent pole::C pole::D pole::E
 END
 
@@ -167,8 +179,10 @@ Reponse: **Expected answer**: The stream describes point/pixel displacements; th
 
 **Spatial Invariance at IDs**: Renaming the identifiers of all predictions to each frame does not change their boxes or classes. A detection metric calculated image by image can therefore remain exactly the same while identity continuity is destroyed. A ReID representation evaluated on isolated pairs also does not test the exclusivity constraints or the life cycle of a sequence. Constructing this ID permutation as a counterexample makes it possible to verify that the chosen metric penalizes the defect promised by the system. Measuring location, presence and temporal association separately avoids replacing one output with another.
 
+**Per-frame geometry is invariant to ID renaming**: If all predicted IDs are randomly permuted each frame while boxes and scores stay unchanged, per-frame detection AP is unchanged. A temporal identity metric can change drastically. This constructed transformation isolates why a strong detector is useful but insufficient evidence of good tracking. Likewise, a good appearance embedding cannot recover a detection absent from the candidate stream or repair a lifecycle rule that deletes the target too soon.
+
 **Blocking errors**: confuse these outputs or deduce the identity continuity of the AP alone.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §§2 – 4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §§2 – 4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::comparaison cv_id::CV-SORT-007 provenance::agent pole::C pole::D pole::E
 END
 
@@ -190,7 +204,9 @@ Reponse: **Expected answer**: measure acquisition, detection, NMS, transfers and
 
 **Overload policy**: Processing all frames in a queue retains the sequence but can continuously increase their seniority if the service throughput is insufficient. Keeping only the most recent one reduces the wait but increases the intervals and movements between calls from the tracker. The two policies simultaneously change the time budget and the conditions of association. Compare them with actual timestamps, same detector and same scene, then measure late decisions, lost tracks and full cost. Acceleration of the single assignment solver may be ineffective if the drop is the decoding or the detector; a step-by-step trace identifies the truly limiting resource.
 
+**Dropped frames change motion and lifecycle assumptions**: A latest-frame policy bounds queue age but creates longer and variable motion intervals; processing every queued frame preserves intervals while allowing growing staleness under overload. Neither policy can be evaluated from tracker-only throughput. A proposed product benchmark records capture time, consumed frames, update intervals, pose/box age and identity metrics under bursts. The detector, postprocessing and transfer stages must be included in that timing contract.
+
 **Blocking errors**: Present the component frequency as the full system frequency or ignore the ID exchanges in the evaluation.
-Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [SORT, §4](https://arxiv.org/abs/1602.00763); [Bewley et al., SORT, §3, estimation, association and cycle; state calculations, timelines and project protocols](https://arxiv.org/html/1602.00763v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-SORT-008 provenance::agent pole::C pole::D pole::E
 END

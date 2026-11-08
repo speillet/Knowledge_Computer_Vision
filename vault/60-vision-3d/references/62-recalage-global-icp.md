@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SE3", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -111,6 +111,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Where do the normals come from**: A current local estimator centers the neighbors, calculates their covariance matrix and takes the eigenvector of smallest eigenvalue as the plane normal. A neighborhood too small becomes sensitive to noise; too large, it mixes edges and curved surfaces. If eigenvalues do not distinguish a normal direction, the local surface is itself ambiguous. For the residual point-to-plane isolated square, reversing the sign of a normal does not change the cost; a consistent orientation may nevertheless be required by other steps such as descriptors or rejection rules. Compare the quality of pose with this provenance of the explained normals.
 
 **Passages consulted for these developments**: [Open3D 0.19.0](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html), Point-to-point and Point-to-plane ICP; project linearization and scale analyses; [Open3D 0.19.0](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html), FPFH and RANSAC; no Open3D execution.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-ICP-001 — Global initialization is also a hypothesis
+
+Repeated geometry can give a plausible global alignment to the wrong copy of a structure. ICP can then reduce local residuals while preserving that incorrect correspondence basin. Validate overlap extent and independently known landmarks after refinement, rather than accepting a lower ICP objective as confirmation of the initializer. In a proposed comparison, include large initial displacements and symmetric alternatives, and report rejected registrations as well as final errors.
+
+### CV-ICP-002 — A plane leaves tangential motion unpenalized
+
+For target normal $n=(0,0,1)^T$, the residual becomes the difference in height. Translating all transformed points parallel to the plane leaves it unchanged, as does rotation about the plane normal for an ideal infinite plane. A small point-to-plane residual can therefore coexist with substantial tangential pose error. This constructed nullspace example motivates inspecting normal diversity and the linearized system, not simply reducing the distance threshold.
+
+### CV-ICP-003 — The denominator can improve the score by exclusion
+
+Constructed example: retaining 10 close pairs with 1 mm error and rejecting 90 distant points yields 1 mm inlier RMSE but little evidence of whole-cloud alignment. Report accepted-pair fraction, the source/target direction of that fraction, coverage and threshold with RMSE. Evaluate pose error independently where possible. Changing the correspondence threshold changes both the accepted population and its conditional error, so two RMSE values are not automatically comparable.
+
+### CV-ICP-004 — Scale changes affect normal estimation too
+
+Converting meters to millimeters requires scaling correspondence thresholds, voxel size and normal-neighborhood radii by 1000. Unit normals remain dimensionless, but the neighborhoods used to estimate them change if their radius is left unchanged. Residual variance scales by $10^6$. Thus even when the transform translation is converted correctly, an inconsistent preprocessing radius can alter normals, matches and the convergence behavior.
+
+### CV-ICP-005 — Normal reliability depends on neighborhood geometry
+
+For a local point covariance with eigenvalues $\lambda_1\le\lambda_2\le\lambda_3$, a well-separated small $\lambda_1$ supports a plane normal. If both first eigenvalues are small, the neighborhood is line-like and its normal direction is ambiguous; if all are comparable, a plane may be a poor model. These are geometry diagnostics rather than universal cutoffs. Neighborhood scale, range noise and mixed surfaces must be evaluated for the intended registration.
+
+Consulted foundations: [Open3D 0.19 ICP](https://www.open3d.org/docs/0.19.0/tutorial/pipelines/icp_registration.html): point-to-point versus point-to-plane objectives, initialization and evaluation; Context7 checked.
 
 ## Sources and flashcards
 

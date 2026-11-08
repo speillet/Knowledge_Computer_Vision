@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 7
+revision: 8
 tags: [cv/d04, matching, sift]
 ---
 # SIFT — local features and multiscale descriptors
@@ -160,6 +160,42 @@ These explanations complement the mechanism associated with each question. Calcu
 **Break down the causes of failure**: separately measure repeatability of detection, match accuracy, recall of useful matches and registration rate accepted to business tolerance. A ratio of players can increase simply because almost all matches have been withdrawn; you have to keep its denominator and coverage. The exhaustive cost between $n$ and $m$ descriptors of dimension $d$ is of the order of $nmd$ scalar operations; varying the quota of points therefore also changes the matcher and the budget RANSAC. Comparing a quality-cost boundary for multiple settings is more instructive than confronting two default parameters, without announcing a winner before the measurements.
 
 **Passages consulted for these developments**: [Lowe 2004](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf), §§3 – 7.1, scale space, location, description and matching.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-SIFT-001 — Match count does not establish spatial support
+
+A constructed set of fifty matches concentrated on one tiny logo can constrain the logo while allowing large extrapolation error across the label. Record the convex-hull area or a spatial coverage statistic alongside inlier count, then evaluate transfer on independent corners of the whole target. Such a coverage rule is a project acceptance choice. It supplements residual checks because a small fitted error at observed points does not bound error outside their support.
+
+### CV-SIFT-002 — Scale sampling and octave boundaries
+
+If an octave spans a factor of two and contains $s$ scale intervals, adjacent smoothing scales differ by $k=2^{1/s}$. Increasing $s$ samples scale more finely but increases the images and comparisons required per octave. Scale-space extrema also need adjacent scale levels, so boundary levels serve neighborhood construction rather than all yielding detections. This relationship explains a cost/repeatability tradeoff; it does not imply that arbitrarily fine sampling recovers detail already lost in the input.
+
+### CV-SIFT-003 — Orientation ambiguity can create multiple descriptors
+
+A patch can contain two strong orientation modes. Keeping multiple supported orientations at one localized point creates several descriptors for that location, increasing matching opportunities but also descriptor count. These are alternative normalized views of the same local structure, rather than independent spatial observations for geometric fitting. Deduplicate or track point provenance when interpreting an apparent increase in match support, especially around repeated corners or symmetric markings.
+
+### CV-SIFT-004 — The second neighbor depends on the search population
+
+A ratio test compares distinctiveness within the descriptor population actually searched. Removing competing near-duplicate descriptors can make a match pass without changing its appearance. Conversely, a larger database can introduce legitimate close competitors. Record the database composition and nearest-neighbor approximation when transferring a threshold. If fewer than two valid neighbors exist, define a separate rejection or fallback policy; there is no measured second-neighbor ratio to apply.
+
+### CV-SIFT-005 — Viewpoint normalization cannot recover occlusion
+
+Even a perfect local affine normalization cannot reconstruct the surface region hidden in one view. Separate anisotropic deformation of a visible patch from visibility loss and specular appearance changes when diagnosing viewpoint failures. A proposed controlled check uses a textured planar target over increasing tilt, records the common visible area, and evaluates correspondence only where the physical surface is jointly observable. Otherwise reduced overlap may be mistaken for descriptor failure.
+
+### CV-SIFT-006 — A geometric consensus can support the wrong period
+
+Construct a reference containing four identical windows and one unique sign. A one-window translation can fit most window features while misplacing the sign. Reserve that sign as independent evidence when testing the fitted transformation. If no nonperiodic evidence is available, the honest output is an ambiguity set or rejection according to the product contract. Tightening RANSAC residual thresholds cannot by itself distinguish two exactly periodic explanations.
+
+### CV-SIFT-007 — Compare refusal as well as successful localization
+
+A pipeline that returns a pose on every image can have lower availability-adjusted quality than one that rejects unsupported cases. Define a success as both producing an estimate and meeting geometric tolerance, then separately report incorrect acceptances and justified refusals. Include feature extraction, matching, robust estimation and validation in timing. A faster descriptor can lose its advantage if its ambiguous matches repeatedly exhaust the geometry budget.
+
+Consulted foundations: [Lowe 2004](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf): §§3–7 scale-space, localization, orientation, descriptor and matching.
 
 ## Sources and flashcards
 

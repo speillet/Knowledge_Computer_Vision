@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SOT", "CV-ACQUISITION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -93,6 +93,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Two factors, four tests**: To distinguish adaptation and appearance, compare histogram H1 with fixed/adaptive window, then histogram H2 with the same two policies. Measure overlap, center error and initialization losses and identical sequences. The interaction can be important: an adaptive window benefits from a clean backprojection but encompasses more background with a poorly separated histogram. A change of binning modifies the trade-off between color discrimination and noise robustness; a low-saturation mask further changes the retained pixels. These choices must be recorded separately to make the result reproducible and attributable to the mechanism actually modified.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, MeanShift/CamShift](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html), MeanShift, centroid and backprojection; moments and factorial plan deduced by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-MEANSHIFT-001 — Total mass and centroid convey different evidence
+
+Multiplying every nonnegative backprojection score in a window by the same positive constant leaves its centroid unchanged while changing total mass. A weak diffuse response can therefore point to the same centroid as a strong response. Record both support and mass under the chosen score normalization, with a distinct zero-mass outcome. A converged window position alone does not establish that the target remains visible.
+
+### CV-MEANSHIFT-002 — Moment orientation becomes ambiguous for a round distribution
+
+If the two eigenvalues of the normalized second-moment matrix are nearly equal, its dominant axis is weakly defined. Small changes in scores can rotate the fitted ellipse greatly without much change in the underlying nearly circular distribution. Avoid interpreting that angle as stable object orientation or metric pose. A proposed validation separates center/scale tracking from orientation reliability on elongated and symmetric targets.
+
+### CV-MEANSHIFT-003 — Convergence can strengthen a semantically wrong mode
+
+Two same-color parts can create two backprojection modes. MeanShift moves according to the local score mass, with no built-in physical identity label. More iterations can reduce numerical movement while converging to the wrong part. Test controlled distractors and inspect the mode structure before changing stopping criteria. A geometric motion limit or richer appearance model is a project intervention that needs its own measured tradeoff.
+
+Consulted foundations: [OpenCV MeanShift/CamShift](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html): backprojection centroid iteration and moment-based adaptive window.
 
 ## Sources and flashcards
 

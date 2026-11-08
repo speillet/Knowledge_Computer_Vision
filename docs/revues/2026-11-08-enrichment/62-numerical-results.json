@@ -1,0 +1,480 @@
+{
+  "date": "2026-11-08",
+  "environment": "Python standard library",
+  "scope": "constructed arithmetic only; no CV implementation run",
+  "passed": 59,
+  "checks": [
+    {
+      "card": "CV-SVD-001",
+      "quantity": "weak-direction parameter change",
+      "expression": "1e-6 / 1e-6",
+      "actual": 1.0,
+      "expected": 1,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-SVD-003",
+      "quantity": "common correlated residual cost, rho=0.5, a=1",
+      "expression": "2 / (1 + 0.5)",
+      "actual": 1.3333333333333333,
+      "expected": 1.3333333333333333,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-SVD-003",
+      "quantity": "opposite correlated residual cost, rho=0.5, a=1",
+      "expression": "2 / (1 - 0.5)",
+      "actual": 4.0,
+      "expected": 4,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ACQUISITION-001",
+      "quantity": "exposure budget, ms",
+      "expression": "1000 / 800",
+      "actual": 1.25,
+      "expected": 1.25,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ACQUISITION-002",
+      "quantity": "SNR at 25 electrons",
+      "expression": "25 / sqrt(25+25)",
+      "actual": 3.5355339059327373,
+      "expected": 3.5355339059327373,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ACQUISITION-002",
+      "quantity": "SNR at 50 electrons",
+      "expression": "50 / sqrt(50+25)",
+      "actual": 5.773502691896257,
+      "expected": 5.773502691896257,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ACQUISITION-002",
+      "quantity": "SNR improvement factor",
+      "expression": "(50/sqrt(75))/(25/sqrt(50))",
+      "actual": 1.632993161855452,
+      "expected": 1.632993161855452,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-CAPTEURS-001",
+      "quantity": "rolling-shutter skew, px",
+      "expression": "1000 * 0.020",
+      "actual": 20.0,
+      "expected": 20,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-CAPTEURS-002",
+      "quantity": "drift after ten minutes, ms",
+      "expression": "20e-6 * 600 * 1000",
+      "actual": 12.0,
+      "expected": 12,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-CAPTEURS-002",
+      "quantity": "drift displacement at 2 m/s, mm",
+      "expression": "2 * 0.012 * 1000",
+      "actual": 24.0,
+      "expected": 24,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-IMAGERIES-001",
+      "quantity": "anisotropic step length, mm",
+      "expression": "sqrt(0.5**2 + 3**2)",
+      "actual": 3.0413812651491092,
+      "expected": 3.0413812651491097,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-IMAGERIES-002",
+      "quantity": "new longitudinal sampling, mm/line",
+      "expression": "750 / 5000",
+      "actual": 0.15,
+      "expected": 0.15,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-IMAGERIES-002",
+      "quantity": "part length with stale scale, mm",
+      "expression": "(30/0.15)*0.1",
+      "actual": 20.0,
+      "expected": 20,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-FILTRES-001",
+      "quantity": "mean of an impulse neighborhood",
+      "expression": "(8*10 + 250)/9",
+      "actual": 36.666666666666664,
+      "expected": 36.666666666666664,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ORB-001",
+      "quantity": "sample shift from orientation error, px",
+      "expression": "15 * radians(5)",
+      "actual": 1.3089969389957472,
+      "expected": 1.3089969389957472,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ORB-002",
+      "quantity": "Hamming distance, 0 versus 128",
+      "expression": "popcount(128)",
+      "actual": 1,
+      "expected": 1,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ORB-002",
+      "quantity": "Hamming distance, 0 versus 3",
+      "expression": "popcount(3)",
+      "actual": 2,
+      "expected": 2,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-FAST-BRIEF-005 / CV-HOMOGRAPHIE-004",
+      "quantity": "RANSAC budget, w=0.5",
+      "expression": "ceil(log(0.01)/log(1-0.5**4))",
+      "actual": 72,
+      "expected": 72,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-FAST-BRIEF-005 / CV-HOMOGRAPHIE-004",
+      "quantity": "RANSAC budget, w=0.25",
+      "expression": "ceil(log(0.01)/log(1-0.25**4))",
+      "actual": 1177,
+      "expected": 1177,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-FAST-BRIEF-005 / CV-HOMOGRAPHIE-004",
+      "quantity": "RANSAC budget, w=0.3",
+      "expression": "ceil(log(0.01)/log(1-0.3**4))",
+      "actual": 567,
+      "expected": 567,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-HOMOGRAPHIE-007",
+      "quantity": "near disparity, px",
+      "expression": "800 * 0.1 / 2",
+      "actual": 40.0,
+      "expected": 40,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-HOMOGRAPHIE-007",
+      "quantity": "far disparity, px",
+      "expression": "800 * 0.1 / 10",
+      "actual": 8.0,
+      "expected": 8,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ZHANG-004",
+      "quantity": "target scale bias, percent",
+      "expression": "(20/19.8-1)*100",
+      "actual": 1.0101010101010166,
+      "expected": 1.0101010101010166,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ZHANG-005",
+      "quantity": "resize then crop principal point, px",
+      "expression": "0.5*320-20",
+      "actual": 140.0,
+      "expected": 140,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-ZHANG-005",
+      "quantity": "crop then resize principal point, px",
+      "expression": "0.5*(320-20)",
+      "actual": 150.0,
+      "expected": 150,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-FISHEYE-001",
+      "quantity": "fisheye radius at 60 degrees",
+      "expression": "radians(60)",
+      "actual": 1.0471975511965976,
+      "expected": 1.0471975511965976,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-FISHEYE-001",
+      "quantity": "pinhole radius at 60 degrees",
+      "expression": "tan(radians(60))",
+      "actual": 1.7320508075688767,
+      "expected": 1.7320508075688767,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-FISHEYE-003",
+      "quantity": "radially imbalanced RMS, px",
+      "expression": "sqrt((90*0.2**2+10*2**2)/100)",
+      "actual": 0.6603029607687672,
+      "expected": 0.6603029607687672,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-STEREO-002",
+      "quantity": "near bound, m",
+      "expression": "200/2.5",
+      "actual": 80.0,
+      "expected": 80,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-STEREO-002",
+      "quantity": "far bound, m",
+      "expression": "200/1.5",
+      "actual": 133.33333333333334,
+      "expected": 133.33333333333334,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-STEREO-003",
+      "quantity": "unconverted fixed-point depth scale",
+      "expression": "20/320",
+      "actual": 0.0625,
+      "expected": 0.0625,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-VIO-004",
+      "quantity": "orientation age error, degrees",
+      "expression": "100*0.020",
+      "actual": 2.0,
+      "expected": 2,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-CLIP-002",
+      "quantity": "original softmax",
+      "expression": "19/(19+1)",
+      "actual": 0.95,
+      "expected": 0.95,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-CLIP-002",
+      "quantity": "softmax after competing top label",
+      "expression": "19/(19+19+1)",
+      "actual": 0.48717948717948717,
+      "expected": 0.48717948717948717,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-OCR-002",
+      "quantity": "micro CER, percent",
+      "expression": "100/101",
+      "actual": 0.9900990099009901,
+      "expected": 0.9900990099009901,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-DETECTEURS-004",
+      "quantity": "scaled object width, px",
+      "expression": "12*(640/1920)",
+      "actual": 4.0,
+      "expected": 4,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-DETECTEURS-004",
+      "quantity": "scaled object height, px",
+      "expression": "9*(640/1920)",
+      "actual": 3.0,
+      "expected": 3,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-DETECTEURS-004",
+      "quantity": "vertical padding per side, px",
+      "expression": "(640-1080/3)/2",
+      "actual": 140.0,
+      "expected": 140,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-DETECTEURS-009",
+      "quantity": "GIoU with unit gap",
+      "expression": "-(3-2)/3",
+      "actual": -0.3333333333333333,
+      "expected": -0.3333333333333333,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-DETECTEURS-009",
+      "quantity": "GIoU with two-unit gap",
+      "expression": "-(4-2)/4",
+      "actual": -0.5,
+      "expected": -0.5,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-DETECTEURS-008",
+      "quantity": "focal logit gradient at z=-2.0",
+      "expression": "analytic derivative versus central finite difference, gamma=2",
+      "actual": -1.076713730448482,
+      "expected": -1.0767137304190655,
+      "tolerance": 1e-07
+    },
+    {
+      "card": "CV-DETECTEURS-008",
+      "quantity": "focal logit gradient at z=0.0",
+      "expression": "analytic derivative versus central finite difference, gamma=2",
+      "actual": -0.29828679513998635,
+      "expected": -0.29828679513760337,
+      "tolerance": 1e-07
+    },
+    {
+      "card": "CV-DETECTEURS-008",
+      "quantity": "focal logit gradient at z=2.0",
+      "expression": "analytic derivative versus central finite difference, gamma=2",
+      "actual": -0.004870940195392782,
+      "expected": -0.004870940195872246,
+      "tolerance": 1e-07
+    },
+    {
+      "card": "CV-VIDEO-002",
+      "quantity": "event hit probability",
+      "expression": "0.1/1",
+      "actual": 0.1,
+      "expected": 0.1,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-VIDEO-003",
+      "quantity": "five-frame lookahead at 30 Hz, ms",
+      "expression": "5/30*1000",
+      "actual": 166.66666666666666,
+      "expected": 166.66666666666666,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-SORT-003",
+      "quantity": "posterior variance, px squared",
+      "expression": "(1-25/34)*25",
+      "actual": 6.617647058823528,
+      "expected": 6.617647058823529,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-IOU-AP-004",
+      "quantity": "AP101",
+      "expression": "(51+50*(2/3))/101",
+      "actual": 0.834983498349835,
+      "expected": 0.834983498349835,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-IOU-AP-006",
+      "quantity": "one-pixel shift IoU",
+      "expression": "9/11",
+      "actual": 0.8181818181818182,
+      "expected": 0.8181818181818182,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-IOU-AP-006",
+      "quantity": "two-pixel shift IoU",
+      "expression": "8/12",
+      "actual": 0.6666666666666666,
+      "expected": 0.6666666666666666,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-IOU-AP-007",
+      "quantity": "precision at low prevalence",
+      "expression": "99/(99+999)",
+      "actual": 0.09016393442622951,
+      "expected": 0.09016393442622951,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-METRIQUES-TEMPS-002",
+      "quantity": "mean per-threshold HOTA example",
+      "expression": "(sqrt(1*0.25)+sqrt(0.25*1))/2",
+      "actual": 0.5,
+      "expected": 0.5,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-METRIQUES-TEMPS-002",
+      "quantity": "incorrect recombination example",
+      "expression": "sqrt(0.625*0.625)",
+      "actual": 0.625,
+      "expected": 0.625,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-METRIQUES-APPLIQUEES-004",
+      "quantity": "empty-dominated mean Dice",
+      "expression": "99/100",
+      "actual": 0.99,
+      "expected": 0.99,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-PIPELINE-002",
+      "quantity": "buffer fill time, seconds",
+      "expression": "400/(240-200)",
+      "actual": 10.0,
+      "expected": 10,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-QUANT-004",
+      "quantity": "ideal total speedup",
+      "expression": "1/(0.8+0.2/2)",
+      "actual": 1.1111111111111112,
+      "expected": 1.1111111111111112,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-DEPLOIEMENT-001",
+      "quantity": "total time with overhead",
+      "expression": "0.9+0.1/2+0.05",
+      "actual": 1.0,
+      "expected": 1,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-CANNY-HOUGH-002",
+      "quantity": "ROI vertical line full-image rho, px",
+      "expression": "20 + 100*cos(0) + 50*sin(0)",
+      "actual": 120.0,
+      "expected": 120,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-BA-002",
+      "quantity": "camera-pair connections from a five-camera track",
+      "expression": "5*(5-1)/2",
+      "actual": 10.0,
+      "expected": 10,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-BA-002",
+      "quantity": "camera-pair connection from a two-camera track",
+      "expression": "2*(2-1)/2",
+      "actual": 1.0,
+      "expected": 1,
+      "tolerance": 1e-09
+    }
+  ]
+}

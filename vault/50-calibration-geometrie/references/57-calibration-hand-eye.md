@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -103,6 +103,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Explicit eye-to-hand channel**: If the camera is fixed in the base and the calibration target is attached to the gripper, note $G_i={}^bT_{g_i}$, $C_i={}^cT_{t_i}$, $X={}^bT_c$ and $Y={}^gT_t$. We have $G_iY=XC_i$, so $G_i^{-1}XC_i=Y$ constant. The shape becomes that of a hand-eye chain using the inverted robot poses, under these precise conventions, and the unknown now corresponds to camera→base. The equation justifies adaptation; reversing only an old exit does not justify it. If the calibration target is not attached to the gripper, this constancy of $Y$ disappears and observations and unknowns must be reformulated before any resolution.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, calibration hand-eye](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), calibrateHandEye, coordinate frames, eye-in-hand and eye-to-hand strings and non-parallel axes; algebraic complements of the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-HANDEYE-001 — Pose pairing creates correlated relative motions
+
+All relative pairs derived from a small set of absolute poses are not independent observations: pairs sharing a pose share its error. Creating every possible pair can increase equation count without the equivalent number of independent measurements. Report the pairing scheme and evaluate held-out absolute-chain closure. This does not forbid pairwise solvers; it limits how their residual count or naive least-squares covariance should be interpreted.
+
+### CV-HANDEYE-002 — A valid rigid matrix can still have wrong units
+
+A transform with translation in millimeters passes orthogonality, determinant and homogeneous-row checks just as one in meters does. A thousandfold unit mismatch is therefore not a rotation-validity failure. Use a known baseline or target displacement in the same physical chain to check scale, and synchronize paired robot/camera poses. Correct matrix dimensions alone do not establish that they describe the same acquisition or the expected frame direction.
+
+### CV-HANDEYE-003 — Tiny rotations provide weak translation leverage
+
+For a small relative rotation vector $\phi$, $R_A-I\approx[\phi]_\times$. Even when rotation axes vary, very small angles make the translation system coefficients small relative to observation noise. Acquire safe, sufficiently distinct motions with nonparallel axes and retained target visibility. Assess singular values after appropriate scaling and validate at the actual working volume; the minimum pose count establishes algebraic possibility, not useful metrological precision.
+
+### CV-HANDEYE-004 — Closure residuals need separate position and angle scales
+
+For each held-out pose, compute $Y_i=G_iXC_i$ and compare it with a common target-to-base estimate. Report translation deviation in a declared metric unit and rotation deviation as a geodesic angle. Combining them into one scalar requires an explicit weighting or covariance; adding meters to radians has no physical default. Dependence on robot orientation, time or target location can help isolate lever-arm, synchronization or lens-model errors.
+
+Consulted foundations: [OpenCV calibrateHandEye](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): input/output frame directions, eye-in-hand/eye-to-hand equations and minimum motions; checked with Context7.
 
 ## Sources and flashcards
 

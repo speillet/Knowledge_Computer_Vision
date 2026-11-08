@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 7
+revision: 8
 tags: [cv/d05, geometrie, ransac, matching]
 ---
 # RANSAC for homography estimation
@@ -160,6 +160,42 @@ Absentee treatment is a normal exit if no permissible assumption satisfies the c
 **Link to the disparity**: In a simple example of lateral translation between parallel cameras, the image displacement varies as $fB/Z$, with focal length $f$ in pixels, translation $B$ and depth $Z$ in the same unit. Two planes of depth $Z_1,Z_2$ therefore require displacements whose difference is $fB(1/Z_1-1/Z_2)$. This constructed case explains why the foreground can split up while the bottom aligns well. A local deformation or multi-plane assembly can reduce the visual artifact, but does not automatically provide a single metric reconstruction. Choose capture, model and success criterion according to the actual measurement or final image expected.
 
 **Passages consulted for these developments**: [OpenCV 4.13, Homography](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html), Basic theory and Demo 3/5; plane and rotation models; [Fischler and Bolles 1981](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf), §II, consensus; combinatorial precisions deduced by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-HOMOGRAPHIE-001 — Plane height changes the valid transform
+
+Constructed inspection case: a homography is calibrated on a conveyor plane while a raised component is imaged from a translated viewpoint. Its top surface need not follow the conveyor homography because it lies on a different plane. Residuals grouped by object height can distinguish this model mismatch from random matching noise. The correct intervention depends on whether the product needs planar position, top-surface measurement or full 3D geometry.
+
+### CV-HOMOGRAPHIE-002 — General position is more than a point count
+
+Four distinct source points can still be collinear, leaving transformations away from that line unconstrained. Nearly collinear points can yield a numerical solution whose extrapolation is highly unstable. Check independence in both images and inspect normalized system rank. A proposed perturbation check moves observations by a small plausible localization error and examines transferred points across the useful region; point count alone does not predict the effect.
+
+### CV-HOMOGRAPHIE-003 — Refinement should refresh acceptance evidence
+
+After refitting on an initial consensus, recompute every residual with the refined model and the same declared threshold. The inlier mask can change because the fitted transformation changed. Preserve the model used to generate each mask so diagnostics remain reproducible. A larger consensus is useful evidence only when it retains spatial support and independent geometric accuracy; a coherent wrong periodic alignment can also increase its inlier count.
+
+### CV-HOMOGRAPHIE-004 — Nominal confidence is sensitive to the inlier estimate
+
+For four-point samples and confidence 0.99, an assumed inlier rate of 0.5 gives 72 draws, whereas 0.3 requires about 567. The budget can therefore be badly understated when the inlier fraction is guessed optimistically. Correlated matches and degenerate all-inlier samples further break the simple success model. Record a maximum iteration budget and a failure outcome rather than presenting the requested confidence as a probability that the returned homography is correct.
+
+### CV-HOMOGRAPHIE-005 — Anisotropic resizing changes a circular gate
+
+Under pixel scaling $D=\operatorname{diag}(a_x,a_y)$, a residual vector becomes $e^{\prime}=De$. If $a_x\ne a_y$, an old circular Euclidean threshold maps to an ellipse, not another circle obtained by one scalar factor. Propagating the residual covariance gives $C^{\prime}=DC D^T$ and preserves a correctly transformed Mahalanobis gate. This constructed relation explains why merely multiplying a pixel threshold by an average resize factor changes selection.
+
+### CV-HOMOGRAPHIE-006 — Projective division amplifies extrapolation
+
+For $u=(h_1^T\tilde x)/(h_3^T\tilde x)$, small denominator values amplify changes in both coordinates and fitted coefficients. A homography may therefore be stable on the observed patch yet predict extreme positions farther away. Check denominator behavior and held-out transfer throughout the intended ROI. This is especially important when a small corner of a label supplies most matches but the measurement concerns the opposite edge.
+
+### CV-HOMOGRAPHIE-007 — Parallax has a predictable depth trend
+
+Constructed case: with $f=800$ px and a 0.1 m lateral baseline, ideal disparity is 40 px at 2 m and 8 px at 10 m. A single depth-independent translation cannot align both. A homography fitting one plane leaves structured residuals elsewhere. Plotting residual direction and magnitude against scene regions or independent depth supports testing parallax before raising the threshold and absorbing a systematic model error as noise.
+
+Consulted foundations: [OpenCV projective geometry](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): homography, findHomography residuals and robust estimation; [Zhang 1998](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf): §2.2 planar homography and Appendix A homogeneous estimation.
 
 ## Sources and flashcards
 

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-IOU-AP", "CV-SEGMENTATION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Case table defined before measurement**: if both reference and prediction are empty, the denominator of Dice is zero and a convention is required. If only the prediction is empty with present reference, the overlap is zero; if only the reference is empty with present prediction, it is also zero, but the business error is a false positive rather than a missed object. A surface distance may lack a set of points in each of these cases. Keeping counters of these situations and announcing their inclusion or exclusion prevents a filtered epsilon or `NaN` from silently changing the evaluated population.
 
 **Passages consulted for these developments**: [NIST, repeatability](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc441.htm), repeatability analysis; Dice/IoU relationships, region counts, voids and uncertainty propagation derived by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-METRIQUES-APPLIQUEES-001 — A percentile deliberately ignores part of the tail
+
+HD95 summarizes a specified 95th percentile of surface distances, so a sufficiently small collection of extreme surface errors may lie outside its reported percentile. Dice can also remain high when a large region dominates. Include a maximum or task-specific local boundary check when a tiny outlying structure matters. State whether directed distances are pooled or their percentiles combined, because those conventions can produce different HD95 values.
+
+### CV-METRIQUES-APPLIQUEES-002 — Pixel and part denominators imply different burdens
+
+One false-positive pixel per normal image and one entirely false detected part do not have the same operational meaning. Define how connected predictions become alarms and how alarms match real defects before reporting false positives per part. Stratify recall by defect size and type, retaining sample counts. This proposed protocol prevents a favorable background-dominated pixel aggregate from hiding missed critical regions or excessive review workload.
+
+### CV-METRIQUES-APPLIQUEES-003 — Repeatability does not establish absence of bias
+
+A fixed camera can repeatedly report 10.2 mm for a true 10.0 mm reference with very small dispersion. Repeatability is good in this constructed example while bias remains 0.2 mm. Vary the relevant operator, setup or environmental factors to study reproducibility, and compare with an independent dimensional reference. Low calibration RMS does not directly measure either component of the final measurement process.
+
+### CV-METRIQUES-APPLIQUEES-004 — Empty-case policy can dominate a rare-object mean
+
+Constructed example: 99 empty cases and one missed positive produce a mean Dice of 0.99 if empty/empty receives one and the missed positive receives zero. The sole real object was still missed. Report positive-case performance, negative-case false alarms and the empty-case convention separately where relevant. A defined aggregation policy makes the number reproducible; it does not automatically make it suitable for the application decision.
+
+Consulted foundations: [Metric-related pitfalls](https://arxiv.org/html/2302.01790v4): P2 boundary, size, empty-reference and aggregation pitfalls; [NIST repeatability](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc441.htm): repeatability variation and measurement-process evaluation.
 
 ## Sources and flashcards
 

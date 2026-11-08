@@ -22,8 +22,10 @@ Reponse: **Expected answer**: SIFT provides keypoints and their local descriptor
 
 **Linking Outputs to an Estimate**: represent the points by two tables $P_A\in\mathbb R^{n\times2}$ and $P_B\in\mathbb R^{m\times2}$, and their descriptors by two tables with 128 columns. The matcher returns $(i,j)$ indices, not directly the coordinates of a transformation. A robust estimate then uses the $(P_A[i],P_B[j])$ pairs in the same pixel contract as its threshold. If the extraction was done on a resized image, the estimated matrix connects these resized images; composing it with the preprocessing transformations is necessary to return to the initial images. Maintaining these associations of indices avoids confusing the quality of the descriptor and the error of manipulation of the coordinates.
 
+**Match count does not establish spatial support**: A constructed set of fifty matches concentrated on one tiny logo can constrain the logo while allowing large extrapolation error across the label. Record the convex-hull area or a spatial coverage statistic alongside inlier count, then evaluate transfer on independent corners of the whole target. Such a coverage rule is a project acceptance choice. It supplements residual checks because a small fitted error at observed points does not bound error outside their support.
+
 **Blocking errors**: say that the descriptor directly estimates the pose or that each nearest neighbor is a true match.
-Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe 2004, §§3 – 7](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf).
+Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe 2004, §§3 – 7](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::comprehension cv_id::CV-SIFT-001 provenance::agent pole::B pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: $D(x,y,\sigma)=L(x,y,k\sigma)-L(x,y,\sigma)$ compa
 
 **Why DoG is Approaching a Laplacian**: for $k$ close to 1, a scale development gives $L(k\sigma)-L(\sigma)\approx(k-1)\sigma\,\partial L/\partial\sigma$. The Gaussian diffusion equation links this derivative to $\sigma\nabla^2L$: the difference is therefore proportional to a Laplacian normalized by $\sigma^2$. This approximation implies a suitable spacing of scales, not an exact identity for any $k$. Detecting an extremum is just the beginning: local refinement estimates position and scale between samples, then low-contrast and edge-dominated rejections avoid describing unstable points. The same number of candidates does not mean the same number of reliable keypoints.
 
+**Scale sampling and octave boundaries**: If an octave spans a factor of two and contains $s$ scale intervals, adjacent smoothing scales differ by $k=2^{1/s}$. Increasing $s$ samples scale more finely but increases the images and comparisons required per octave. Scale-space extrema also need adjacent scale levels, so boundary levels serve neighborhood construction rather than all yielding detections. This relationship explains a cost/repeatability tradeoff; it does not imply that arbitrarily fine sampling recovers detail already lost in the input.
+
 **Blocking errors**: confuse scale and orientation, or announce perfect invariance for any change in resolution.
-Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §3](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf).
+Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §3](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-SIFT-002 provenance::agent pole::B pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Assign a dominant orientation, describe gradients 
 
 **Understanding normalization**: For a non-zero $d$ histogram, division by $\|d\|_2$ cancels out a common multiplicative gain; subtracting a constant from all intensities does not already change their differences in the ideal model. On the other hand, if a few gradients dominate, they can crush the contribution of other cells. A clipping followed by a new normalization limits this domination. Constructed example: two patches with a single edge becoming much stronger can keep a similar directional layout while changing the raw norm. Interpolation between cells and orientation bins also prevents a small geometric variation from abruptly shifting the entire contribution on one side of a discrete boundary.
 
+**Orientation ambiguity can create multiple descriptors**: A patch can contain two strong orientation modes. Keeping multiple supported orientations at one localized point creates several descriptors for that location, increasing matching opportunities but also descriptor count. These are alternative normalized views of the same local structure, rather than independent spatial observations for geometric fitting. Deduplicate or track point provenance when interpreting an apparent increase in match support, especially around repeated corners or symmetric markings.
+
 **Blocking errors**: Describe 128 raw pixels, or claim that normalization guarantees invariance to any lighting.
-Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §§5 – 6](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf).
+Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §§5 – 6](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::algorithme cv_id::CV-SIFT-003 provenance::agent pole::B pole::E
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: reject the first ($20/21\approx0,952$), keep the s
 
 **Beware of squared distances**: If a routine provides $s_1=d_1^2$ and $s_2=d_2^2$, the criterion equivalent to $d_1<\tau d_2$ is $s_1<\tau^2s_2$, not $s_1<\tau s_2$. With $\tau=0,8$, directly comparing squares to 0,8 would be tolerating a distance ratio close to 0,894. This transformation is algebraically inferred for positive distances; it does not say which convention uses a particular API. Read the contract of the function and test a small known couple before reusing a threshold. The "second" neighbor must also come from the same set of candidates provided by the protocol; changing the base changes the measured ambiguity.
 
+**The second neighbor depends on the search population**: A ratio test compares distinctiveness within the descriptor population actually searched. Removing competing near-duplicate descriptors can make a match pass without changing its appearance. Conversely, a larger database can introduce legitimate close competitors. Record the database composition and nearest-neighbor approximation when transferring a threshold. If fewer than two valid neighbors exist, define a separate rejection or fallback policy; there is no measured second-neighbor ratio to apply.
+
 **Blocking errors**: Automatically keep the 20 distance match, reverse the ratio, or interpret acceptance as a physical truth.
-Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §7.1](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf).
+Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §7.1](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-SIFT-004 provenance::agent pole::B pole::E
 END
 
@@ -114,8 +122,10 @@ Reponse: **Expected answer**: SIFT explicitly normalizes local orientation and s
 
 **Analyze local deformation**: In the vicinity of a point, a regular projective transformation is linearized by a matrix $2\times2$ which can have two different singular values. A rotation and an isotropic scale only compensate for a part of it; the ratio of the singular values measures a local anisotropy. Example built: a disc observed more and more obliquely becomes an ellipse, even after returning its main axis to the right orientation. The described neighborhood therefore changes shape. Rectifying can help if the geometry is known, but estimating this rectification from the same difficult matches is not a free solution. The occlusion additionally removes information that no coordinate transformation restores.
 
+**Viewpoint normalization cannot recover occlusion**: Even a perfect local affine normalization cannot reconstruct the surface region hidden in one view. Separate anisotropic deformation of a visible patch from visibility loss and specular appearance changes when diagnosing viewpoint failures. A proposed controlled check uses a textured planar target over increasing tilt, records the common visible area, and evaluates correspondence only where the physical surface is jointly observable. Otherwise reduced overlap may be mistaken for descriptor failure.
+
 **Blocking errors**: announce a universal projective invariance or deduce that of the descriptor from that of the geometric model.
-Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, summary and §§5 – 6](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf).
+Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, summary and §§5 – 6](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-SIFT-005 provenance::agent pole::B pole::E
 END
 
@@ -127,7 +137,7 @@ START
 CV-Pilote
 ID: CV-SIFT-006
 Question: A repetitive facade produces many SIFT matches and a high inlier ratio, but localization is displaced by one window. What diagnosis should be proposed, and how can it be checked?
-Reponse: **Expected answer**: Repetition can produce consistent but semantically offset matches. Check match positions, coverage and points or clues independent of consensus; do not conclude from the number of players alone.
+Reponse: **Expected answer**: Repetition can produce consistent but semantically offset matches. Check match positions, coverage and points or clues independent of consensus; do not conclude from the number of inliers alone.
 
 **Further explanation**: inspect ratios and residuals, test distinctive zones or position constraint, and then validate the transformation on unused observations. A threshold drop can remove random outliers without resolving a geometrically consistent ambiguity. This is a case of proposed reasoning, not a measured experiment.
 
@@ -137,8 +147,10 @@ Reponse: **Expected answer**: Repetition can produce consistent but semantically
 
 **Ambiguity to several solutions**: A periodic pattern allows $H_0,H_1,\ldots$ candidate transformations that shift the alignment of a period while retaining small residuals on repeated windows. We must compare information that does not have this symmetry, or announce that the problem remains ambiguous. Then construct an acceptance rule including an absolute reference or a justified motion marker. A better score of a few inliers is not proof when all the observations are repeated. Examine several assumptions and their margin may be more informative than returning only the best model, provided you evaluate this rule on ambiguous reserved cases.
 
+**A geometric consensus can support the wrong period**: Construct a reference containing four identical windows and one unique sign. A one-window translation can fit most window features while misplacing the sign. Reserve that sign as independent evidence when testing the fitted transformation. If no nonperiodic evidence is available, the honest output is an ambiguity set or rejection according to the product contract. Tightening RANSAC residual thresholds cannot by itself distinguish two exactly periodic explanations.
+
 **Blocking errors**: affirm that a majority consensus guarantees the right window or prescribe more points without discriminating test.
-Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §7](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf).
+Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §7](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-SIFT-006 provenance::agent pole::B pole::E
 END
 
@@ -160,7 +172,9 @@ Reponse: **Expected answer**: use the same representative pairs and reference ge
 
 **Break down the causes of failure**: separately measure repeatability of detection, match accuracy, recall of useful matches and registration rate accepted to business tolerance. A ratio of players can increase simply because almost all matches have been withdrawn; you have to keep its denominator and coverage. The exhaustive cost between $n$ and $m$ descriptors of dimension $d$ is of the order of $nmd$ scalar operations; varying the quota of points therefore also changes the matcher and the budget RANSAC. Comparing a quality-cost boundary for multiple settings is more instructive than confronting two default parameters, without announcing a winner before the measurements.
 
+**Compare refusal as well as successful localization**: A pipeline that returns a pose on every image can have lower availability-adjusted quality than one that rejects unsupported cases. Define a success as both producing an estimate and meeting geometric tolerance, then separately report incorrect acceptances and justified refusals. Include feature extraction, matching, robust estimation and validation in timing. A faster descriptor can lose its advantage if its ambiguous matches repeatedly exhaust the geometry budget.
+
 **Blocking errors**: choose only the number of matches or compare times that do not include the same stages.
-Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §§6.2 – 6.4 and 8](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) ; [Rublee et al., §§4.4, 5.3 and 6.1](https://doi.org/10.1109/ICCV.2011.6126544).
+Source: [[40-features-matching/references/41-sift|reference note SIFT]] ; [Lowe, §§6.2 – 6.4 and 8](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf) ; [Rublee et al., §§4.4, 5.3 and 6.1](https://doi.org/10.1109/ICCV.2011.6126544). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-SIFT-007 provenance::agent pole::B pole::E
 END

@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -99,6 +99,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Coverage and causality of the defect**: Reserve views close to those of training mainly tests local interpolation, while more distant angles can reveal less constrained regions. Announce this angular distance and the visibility of the surfaces before talking about generalization. A controlled perturbation of the input poses makes it possible to distinguish sensitivity to calibration and coverage inadequacy, at still images. If the scene moves or the exhibition changes, a representation can absorb the inconsistency in artificial structures. Examine these factors separately before increasing the iterations; a better adjustment of the same rays does not constitute a new observation of the hidden faces.
 
 **Passages consulted for these developments**: [Mildenhall et al., NeRF](https://arxiv.org/html/2003.08934v2), §4, rendering and transmittance; dimensional calculation, gauge and project protocol.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-RENDU3D-001 — Anisotropy changes primitive support, not object identity
+
+A 3D Gaussian has covariance $\Sigma=R\operatorname{diag}(s_1^2,s_2^2,s_3^2)R^T$, defining oriented spatial support. Optimizing many such primitives and their appearance can represent a radiance field efficiently, but a primitive is not automatically one physical surface patch or semantic object. Likewise, NeRF density is a rendering quantity. Geometry extraction and measurement need explicit conventions and validation beyond the representation's rendering objective.
+
+### CV-RENDU3D-002 — View synthesis can hide a scale gauge
+
+If scene coordinates and camera centers are scaled by $a>0$, corresponding rays preserve their directions. For a NeRF-style continuous rendering integral parameterized by physical distance, density must scale by $1/a$ to preserve optical thickness. Similar images therefore do not by themselves choose absolute length. A metrology protocol needs a metric reference and independent surface/dimension errors; PSNR measures agreement of rendered pixel values under its image protocol.
+
+### CV-RENDU3D-003 — Holdout viewpoint distance is part of the test
+
+A held-out camera almost identical to a training view tests a different extrapolation regime from a camera viewing the object's previously hidden side. Report angular/positional separation and joint surface visibility, and check camera-pose accuracy independently where possible. A proposed ablation perturbs poses or excludes view sectors while keeping optimization settings fixed. This separates poor geometric support from an unsupported claim that more optimization iterations will fix every artifact.
+
+Consulted foundations: [NeRF](https://arxiv.org/html/2003.08934v2): §§3–4 position/direction-conditioned radiance and volume rendering; [3D Gaussian Splatting](https://arxiv.org/html/2308.04079v1): §§4–6 anisotropic primitives, density control and rasterization.
 
 ## Sources and flashcards
 

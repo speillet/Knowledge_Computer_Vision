@@ -22,8 +22,10 @@ Reponse: **Expected answer**: Two directions of variation constrain the movement
 
 **Link to the aperture problem**: The linearized luminance constant gives $I_xu+I_yv+I_t=0$, an equation for two displacement components. On an edge, the neighboring gradients are almost parallel, so stacking their equations does not add a second independent direction. A corner brings different gradient orientations and can make the local system invertible. This reasoning assumes a movement common to the patch and small variations between images. A window through two objects can have a well-conditioned tensor but no longer respect the single movement. The corner score should be read with this model, and not as a universal utility score for all estimators.
 
+**Local uncertainty follows the weakest direction**: Under an ideal independent equal-variance photometric model, the displacement covariance is approximately $\sigma_I^2M^{-1}$. If $M=\operatorname{diag}(100,1)$, uncertainty along the second direction is one hundred times the first in variance, or ten times in standard deviation. This is a local linearized result, not a guarantee of correct correspondence. A repeated corner can constrain small motion precisely while still matching a distant copy incorrectly.
+
 **Blocking errors**: Confound a strong single gradient and two independent stresses.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]] ; [OpenCV Harris, theory](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html) ; [OpenCV Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html) ; [OpenCV matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html).
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]] ; [OpenCV Harris, theory](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html) ; [OpenCV Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html) ; [OpenCV matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-MATCHING-001 provenance::agent pole::B pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: FAST locates points; BRIEF describes a patch in bi
 
 **Expected equivariance and invariance**: If an image is geometrically transformed by $T$, a repeatable detector should find the transformed positions $T(p)$; it should therefore not produce the same numerical coordinates. On the contrary, the descriptor aims at a comparable representation of the corresponding neighborhoods after the planned standardizations. Confusing these two properties misconstrues a rotation test: the coordinates should change, while the description should stay close enough. Too much invariance can also remove distinctive information and make several patches similar. The aim is not to make all descriptors identical under any transformation, but to keep discrimination in the field of variations useful.
 
+**Descriptor support can invalidate a detected point**: A detector can return a valid point close to an image boundary, yet a descriptor may lack enough neighborhood support there. Rotation or scale normalization can move required sample positions outside the image as well. Record which points survive description and how coordinates and orientations are retained. Comparing only detector counts can otherwise attribute descriptor-border exclusions to matching, even though no usable descriptor was ever produced.
+
 **Blocking errors**: Assign geometrically verified matches to a detector alone.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, FAST, Feature Detection](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html); [OpenCV 4.13.0, BRIEF, Theory](https://docs.opencv.org/4.13.0/dc/d7d/tutorial_py_brief.html); [OpenCV 4.13, Feature Matching, BF/FLANN, metrics and filters; Context7 check](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30.
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, FAST, Feature Detection](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html); [OpenCV 4.13.0, BRIEF, Theory](https://docs.opencv.org/4.13.0/dc/d7d/tutorial_py_brief.html); [OpenCV 4.13, Feature Matching, BF/FLANN, metrics and filters; Context7 check](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-MATCHING-002 provenance::agent pole::B pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Index and distance compatibility, neighbor recall,
 
 **Measuring the Cascade Effect**: on the same requests, keep successively the identity of the two neighbors, the decision of the ratio filter, the insider status and the reserved geometric error. This track allows you to locate where a search difference becomes a product error. If the index finds the exact neighbors but the registration changes, consider order of matches, separation of the ex æquo and randomness of the robust estimate. If neighbors differ, only increasing the budget or redoing the exact distances on additional candidates is a more targeted ablation. An identical recall average may still mask the loss of rare distinguishing points that are decisive for lifting a symmetry.
 
+**Approximation can change the robust solver budget**: If approximate search reduces the true inlier fraction, robust geometric estimation may need many more samples even when each match query becomes faster. Measure neighbor errors, accepted matches and geometric solver effort on the same image pairs. This proposed decomposition identifies whether the cost was saved in search and spent again in geometry, rather than assuming that a lower matching latency implies a faster reliable registration pipeline.
+
 **Blocking errors**: Evaluate only the request time or the number of matches.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); downstream protocol and effect on ratio: project reasonings.
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); downstream protocol and effect on ratio: project reasonings. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-MATCHING-003 provenance::agent pole::B pole::E
 END
 
@@ -91,7 +97,9 @@ Reponse: **Expected answer**: A geometric check adapted to the scene, with resid
 
 **Choosing the right residual**: for a $H$ homography sending the image A to B, $e_i=\|\pi(H\tilde p_i)-q_i\|_2$ is a transfer error in B pixels, with $\pi$ the homogeneous division. An epipolar geometry imposes another constraint, and PnP combines points 3D and calibrated projection. Reusing a threshold without announcing the residual changes what “inlier” means. The geometric test checks for compatibility conditional to the model; one symmetry can provide another set equally compatible. Adding an independent constraint is then a change in available information, while tightening the threshold only changes the tolerance of the same test.
 
+**Model compatibility is weaker than unique identity**: A planar repeated texture can support two different homographies with similarly small transfer errors. A physically meaningful residual rejects pairs inconsistent with a chosen model, but cannot resolve a symmetry that preserves the measurements. Independent appearance, a motion bound or another sensor can break that ambiguity when justified. Otherwise return competing hypotheses or refuse the registration instead of treating a large consensus as proof of absolute alignment.
+
 **Blocking errors**: Deduct the physical validity of the reciprocity of the nearest neighbors.
-Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); symmetry scenario and independent verification: project reasoning.
+Source: [[40-features-matching/references/43-detecteurs-matchers|Full reference]]; [OpenCV 4.13.0, Feature Matching, FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); symmetry scenario and independent verification: project reasoning. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-MATCHING-004 provenance::agent pole::B pole::E
 END

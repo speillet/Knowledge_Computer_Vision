@@ -22,8 +22,10 @@ Reponse: **Expected answer**: Calculate the centroid of scores in the window, an
 
 **Weighted iteration**: For $p(x,y)\ge0$ scores in window $W$, the current center displacement $c$ is $m(c)=\sum_Wp(x,y)(x,y)^T/\sum_Wp(x,y)-c$, in this uniform window model. A common multiplication of all scores by a positive constant does not change the centroid; adding a uniform mass can instead move it towards the geometric center of the window. This distinction explains why normalizing the histogram and changing its contrast are not always equivalent operations. The stop criterion measures a move or budget of iterations, without establishing that the found mode represents the original object.
 
+**Total mass and centroid convey different evidence**: Multiplying every nonnegative backprojection score in a window by the same positive constant leaves its centroid unchanged while changing total mass. A weak diffuse response can therefore point to the same centroid as a strong response. Record both support and mass under the chosen score normalization, with a distinct zero-mass outcome. A converged window position alone does not establish that the target remains visible.
+
 **Blocking errors**: Divide by zero mass; present the achieved mode as a guaranteed global maximum.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::algorithme cv_id::CV-MEANSHIFT-001 provenance::agent pole::C pole::D pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: The usual MeanShift moves a window of fixed size; 
 
 **Moments of extent**: Around the centroid, the matrix of normalized central moments $\begin{bmatrix}\mu_{20}&\mu_{11}\\\mu_{11}&\mu_{02}\end{bmatrix}/M_{00}$ describes the dispersion 2D of the mass. Its eigenvectors give main axes; their values inform the extent according to a window conversion convention. Close values make the orientation undetermined, as for an almost circular distribution. These quantities describe the backprojection in the image plane, not the physical axes 3D of the part. A distractor can change center, orientation and size simultaneously. The appearance mask should therefore be inspected before interpreting a suitable window as a reliable geometric measurement of the target.
 
+**Moment orientation becomes ambiguous for a round distribution**: If the two eigenvalues of the normalized second-moment matrix are nearly equal, its dominant axis is weakly defined. Small changes in scores can rotate the fitted ellipse greatly without much change in the underlying nearly circular distribution. Avoid interpreting that angle as stable object orientation or metric pose. A proposed validation separates center/scale tracking from orientation reliability on elongated and symmetric targets.
+
 **Blocking errors**: Confound box oriented 2D and orientation 3D; announce a reliable adaptation in any occlusion.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::comparaison cv_id::CV-MEANSHIFT-002 provenance::agent pole::C pole::D pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: The histogram model does not necessarily distingui
 
 **Identity missing from histogram**: A histogram retains color frequency and loses much of their spatial arrangement. Two different objects can therefore produce very similar distributions, even with a high backprojection mass. An ROI containing more pixels of the desired color can attract the window without being the target. Testing a background of the same color and then a textured distractor makes it possible to verify this hypothesis. Adding a spatial descriptor or detection changes the information used and requires a new evaluation; increasing the number of iterations does not restore the spatial relationships that the histogram model has deleted.
 
+**Convergence can strengthen a semantically wrong mode**: Two same-color parts can create two backprojection modes. MeanShift moves according to the local score mass, with no built-in physical identity label. More iterations can reduce numerical movement while converging to the wrong part. Test controlled distractors and inspect the mode structure before changing stopping criteria. A geometric motion limit or richer appearance model is a project intervention that needs its own measured tradeoff.
+
 **Blocking errors**: Assimilate convergence of MeanShift and good identity.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-MEANSHIFT-003 provenance::agent pole::C pole::D pole::E
 END
 

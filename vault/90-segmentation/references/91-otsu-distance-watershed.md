@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-MORPHO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -58,7 +58,7 @@ These constructed cases develop histogram, distance and role of markers. They ar
 
 **Question of work**: Why can an Otsu threshold that is optimal for the intensity histogram be poor for defect segmentation?
 
-**Reference Response**: The lens separates intensities according to variance, not business categories; lighting, imbalance and noise can dominate.
+**Reference Response**: The objective separates intensities according to variance, not business categories; lighting, imbalance and noise can dominate.
 
 **Reading the objective**: Otsu chooses a cut according to the weights and averages of the intensity groups. A score that separates two levels of brightness can especially distinguish shadow and illuminated area, while the defect crosses both. The optimum belongs to the statistical criterion chosen, not to a knowledge of the parts.
 
@@ -68,7 +68,7 @@ These constructed cases develop histogram, distance and role of markers. They ar
 
 **Question of work**: Why can high binary IoU hide failure of a watershed counting pipeline?
 
-**Reference Response**: Merging multiple objects can retain almost the entire top-tier region but lose the number and identity of instances.
+**Reference Response**: Merging multiple objects can retain almost the entire foreground region but lose the number and identity of instances.
 
 **Analytical example**: Two adjacent objects whose union is exactly predicted can give a perfect foreground mask. If the output has only one label for this union, the binary overlap is worth one while the counting of two objects fails. The metric does not contradict the failure: it measures another output.
 
@@ -111,6 +111,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Merger and fragmentation**: An actual instance predicted in three fragments and three actual instances predicted as a single region may have opposite counting errors but a very close foreground. Using a table of overlaps between real and predicted labels reveals one-to-many and many-to-one relationships. A one-on-one matching with a fixed threshold measures objects found according to an announced rule; it does not replace the analysis of mergers. Also report the image counting error with its sign, because a signed average can undo important overcounts and undercounts. The measure must keep these failure modes separate.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html), Theory and example of transform distance; size and metric analyses of the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-WATERSHED-001 — A histogram has no knowledge of where defects lie
+
+Two images with identical intensity histograms but different spatial arrangements receive the same Otsu objective. One can contain a coherent scratch and the other isolated speckles. This constructed permutation argument shows why histogram optimality cannot establish the desired spatial segmentation. Evaluate defect extent and connectivity after thresholding, and compare controlled illumination changes rather than selecting a threshold solely because its histogram classes look well separated.
+
+### CV-WATERSHED-002 — Markers encode the intended number of basins
+
+One marker per touching object supplies a separation hypothesis; two markers inside one physical object can instead split it. Distance maxima are only proxies for object centers and can multiply on elongated or irregular shapes. Inspect marker stability under small mask perturbations and object-size variation. A proposed protocol compares marker errors separately from boundary propagation, because a good foreground mask can still support the wrong instance partition.
+
+### CV-WATERSHED-003 — Labels must retain signed integer semantics
+
+The value $-1$ marks watershed boundaries in the documented output. Casting this map to an unsigned type before interpretation can turn that sentinel into a large positive number and make it look like an object label. Keep the signed label map separate from a display image and derive masks by explicit label rules. The background marker is a positive basin identifier; its number has no intrinsic semantic meaning outside the chosen contract.
+
+### CV-WATERSHED-004 — More markers can trade merges for splits
+
+Lowering a peak-selection threshold may recover a missing center in a small object while introducing several centers in a large one. A proposed sweep records both merged ground-truth instances and fragmented single instances, stratified by size and shape. Do not choose the setting from the count alone: one merge and one split can cancel numerically while both object identities remain wrong. Retain the overlap relationships needed to diagnose them.
+
+Consulted foundations: [OpenCV watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html): distance-transform markers, unknown regions and output boundaries; checked with Context7; [OpenCV Otsu](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html): within-class variance criterion.
 
 ## Sources and flashcards
 

@@ -22,8 +22,10 @@ Reponse: **Expected answer**: No: the design shares features between RPN and hea
 
 **Cost scales**: If the backbone produces a map of $H'\times W'\times C$ features, this extraction is shared. A head then processes $K$ regions reduced to a fixed spatial representation; its work grows with the number of proposals selected, according to the architecture. Increasing K can improve coverage while weighing down head and post-processing, without changing the backbone’s main cost. Measuring the recall of proposals before classification is therefore useful: a region never proposed will not be found by a better head. A poor final score may come from RPN coverage or from the decision on already correct regions.
 
+**Shared features do not make proposal count free**: After a shared backbone, increasing the retained proposal count still increases work in region pooling, per-region heads and downstream filtering. A project timing decomposition should therefore hold proposal limits fixed or report them explicitly when comparing two-stage detectors. Include crowded images where the retained population approaches its cap. A backbone-only benchmark misses the portion of cost that changes with the number of candidate regions.
+
 **Blocking errors**: Describe two steps as two mandatory complete backbones per region.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [Faster R-CNN, §3: sharing convolutions](https://arxiv.org/abs/1506.01497).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [Faster R-CNN, §3: sharing convolutions](https://arxiv.org/abs/1506.01497). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-001 provenance::agent pole::A pole::C pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: The family contains heterogeneous variants and rec
 
 **Versioned Decoding**: An anchor offset representation, edge distances, and distance distribution do not describe the same regression tensor. Box conversion requires sites or anchors, strides, activations, and conventions of the exact variant. An export can move this decoding in the graph and remove a Python step without changing its mathematical necessity. For a given revision, make a known output and then check decoded box and back into the original image. This interface test separates a decoder error from a drive difference, without claiming that a choice is shared by the entire YOLO family.
 
+**A checkpoint name needs an export contract**: Record repository and revision, checkpoint, preprocessing, tensor layout, box decoding and postprocessing together. Two implementations carrying the same family name can expose decoded boxes or raw regression tensors and may include different filtering stages in exported graphs. A proposed parity check compares intermediate and final outputs on the same images before interpreting deployment differences as an architectural property of YOLO.
+
 **Blocking errors**: Assign the original YOLO to all generations.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) ; [YOLOX, §2.1: anchor-free, decoupled head and assignment](https://arxiv.org/abs/2107.08430).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [YOLOv3, §2.1 : anchors](https://arxiv.org/abs/1804.02767) ; [YOLOX, §2.1: anchor-free, decoupled head and assignment](https://arxiv.org/abs/2107.08430). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-DETECTEURS-002 provenance::agent pole::A pole::C pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: It associates targets and queries to define superv
 
 **Cost of Matching**: For $y_i$ targets and $\hat y_j$ predictions, we look for an injective assignment minimizing $\sum_i C(y_i,\hat y_{\sigma(i)})$, where the cost combines class compatibility and geometry according to the formulation. Swap the order in which annotations are presented should not change the overall problem. Once the assignment is selected, the losses supervise the pairs selected and the lack of subject matter of the other requests. Discreet pair selection and differentiable loss calculation are two operations. The number of requests also limits the number of possible exits; a scene denser than this ability requires an explicit examination of this constraint.
 
+**Matching cost and optimized loss have different roles**: The Hungarian cost chooses which prediction supervises each target; the subsequent loss updates the model using those assignments, including no-object supervision for unmatched queries. Changing cost weights can change assignment discontinuously even if prediction tensors are unchanged. This assignment operates with annotations during training. It is not an inference algorithm for identifying and suppressing duplicate boxes, and does not require ground truth at deployment.
+
 **Blocking errors**: Describe the three mechanisms as a single interchangeable matching.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [DETR, §3.1, fig. 1 and equations 1 – 2](https://arxiv.org/abs/2005.12872); [Carion et al., DETR, §3.1, matching and supervision; project protocols and calculations](https://arxiv.org/html/2005.12872v3), see 2026-10-30.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [DETR, §3.1, fig. 1 and equations 1 – 2](https://arxiv.org/abs/2005.12872); [Carion et al., DETR, §3.1, matching and supervision; project protocols and calculations](https://arxiv.org/html/2005.12872v3), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::algorithme cv_id::CV-DETECTEURS-003 provenance::agent pole::A pole::C pole::E
 END
 
@@ -81,16 +87,18 @@ START
 CV-Pilote
 ID: CV-DETECTEURS-004
 Question: Track A — diagnosis: with checkpoint and images fixed, small-object AP falls when $1920\times1080$ images are resized to a $640\times640$ input with preserved aspect ratio and centered padding. Some objects originally measure $12\times9$ pixels. Which checks distinguish possible causes?
-Reponse: **Expected answer**: First check the return of boxes with resize and padding. Then measure their effective size and recall of these same objects before filtering, after score threshold, then after NMS possible. A GT covered before but after denotes a selection loss; if no correct candidate exists upstream, examine scale, features, and drive assignment.
+Reponse: **Expected answer**: First check the return of boxes with resize and padding. Then measure their effective size and recall of these same objects before filtering, after score threshold, then after NMS possible. A GT covered before a filtering stage but uncovered afterward indicates a selection loss; if no correct candidate exists upstream, examine scale, features, and drive assignment.
 
 **Further explanation**: The factor is $1/3$, the vertical padding 140 pixels per side, the object becomes $4\times3$. The reference note calculates a case where a perfect $0{,}8$ score box disappears in favor of a less well located $0{,}9$ score box. Keep classes, threshold IoU and original size strata to compare the recall. The small size alone does not prove a loss of information responsible for the failure.
 
 **Controllable Transformation**: in this ideal letterbox, $x'=x/3$ and $y'=y/3+140$; the reverse is $x=3x'$ and $y=3(y'-140)$. A one-pixel error in the grid already corresponds to three pixels in the original, under this convention. For an object that has become $4\times3$, a displacement of one pixel represents a significant fraction of its width or height and can cause the IoU to drop sharply. Check the rounding actually applied by preprocessing rather than assuming this exact pattern for any image. Comparing candidates before filtering then makes it possible to distinguish between sensitive location and deletion of an initially correct prediction.
 
+**The effective object can be only a few pixels**: With scale $640/1920=1/3$, a $12\times9$ px object becomes approximately $4\times3$ px before padding, and the resized image height is 360 px with 140 px padding above and below. A box-coordinate inversion can be tested independently of feature resolution. Even a correct inversion cannot restore details lost by sampling. Compare upstream candidate coverage on the same small-object subset before attributing the entire AP drop to NMS.
+
 **Blocking errors**: Forget to reverse padding, count duplicates as recall, or set thresholds on the test.
 
 **Criteria for correction of the case**: three discriminatory controls (geometry, scale, filtering), explicit assumptions and conditional conclusion. Case built; geometric calculation verified, no field observations.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; project diagnosis and calculations; [FPN, version 2, §3](https://arxiv.org/html/1612.03144v2); [Soft-NMS, §4](https://arxiv.org/html/1704.04503).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; project diagnosis and calculations; [FPN, version 2, §3](https://arxiv.org/html/1612.03144v2); [Soft-NMS, §4](https://arxiv.org/html/1704.04503). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-004 provenance::agent pole::A pole::C pole::E cas_pole::A::diagnostic
 END
 
@@ -112,8 +120,10 @@ Reponse: **Expected answer**: Hardware, backend/precision, resolution, batch, nu
 
 **Measurement under load**: note for each image arrival, beginning of service and decision available. Full latency includes queue wait and service; maximum throughput does not explain this wait when arrivals are irregular. Dense scenes can increase decoding and NMS while the backbone time remains close. Compare a distribution of number of candidates, then percentiles of delay and the rate of decisions too late. A high batch can dampen the engine but wait for several images before starting. The protocol must therefore reproduce the pace and processing policy of the product, in addition to the equipment announced.
 
+**Throughput and single-image latency are different measurements**: A batch can increase completed images per second while making each arriving image wait for batch formation. GPU kernels can also complete asynchronously with respect to host timing. Use an explicit start/end contract and appropriate synchronization or device events for the quantity measured. Report warmup, queueing and latency quantiles under realistic arrival rates; dividing batch time by batch size is not a measurement of request-to-result latency.
+
 **Blocking errors**: Compare FPS with different perimeters.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; Comparison protocol proposed by the project; calculation scopes discussed in [Faster R-CNN, §4.1](https://arxiv.org/abs/1506.01497).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; Comparison protocol proposed by the project; calculation scopes discussed in [Faster R-CNN, §4.1](https://arxiv.org/abs/1506.01497). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::evaluation cv_id::CV-DETECTEURS-005 provenance::agent pole::A pole::C pole::E
 END
 
@@ -135,8 +145,10 @@ Reponse: **Expected answer**: Hold the boxes containing the site and compatible 
 
 **Site and Level**: The four target distances verify $l=x-x_0$, $t=y-y_0$, $r=x_1-x$ and $b=y_1-y$. Eligibility by level is for $\max(l,t,r,b)$ in the cited formulation, not just on the box area. Two sites in the same box can therefore have different maximum distances. The "smaller area" rule sets out which boxes are still eligible; it does not allow an out of range box. To audit the assignment, count and view positives by object and level, keeping the exact edge conventions of the implementation. This can reveal a rare oversight without immediately blaming the loss.
 
+**The training location is not an object center requirement**: In the cited FCOS rule, an eligible location inside an assigned box predicts distances to its four edges; it need not coincide with the box center. Feature-pyramid range constraints and any center-sampling variant must be stated separately. A site inside two overlapping boxes can receive different targets after the tie-breaking rule. This makes annotation assignment a training policy, distinct from the decoder that reconstructs a box from distances.
+
 **Blocking errors**: Assign the target by NMS or assume that any indoor site is positive on all levels.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [FCOS, version 5, §§3.1 – 3.2](https://arxiv.org/html/1904.01355v5).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [FCOS, version 5, §§3.1 – 3.2](https://arxiv.org/html/1904.01355v5). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::algorithme cv_id::CV-DETECTEURS-006 provenance::agent pole::A pole::C pole::E
 END
 
@@ -158,8 +170,10 @@ Reponse: **Expected answer**: $(l,t,r,b)=(x-x_0,y-y_0,x_1-x,y_1-y)=(20,20,50,40)
 
 **Geometry of the site**: The given distances have sums $l+r=70$ and $t+b=60$, equal to the width and height of the box. The center of it is $(55,40)$, distinct from the $(40,30)$ site. The center-ness target described by FCOS is $\sqrt{\min(l,r)/\max(l,r)\;\min(t,b)/\max(t,b)}$, here $\sqrt{(20/50)(20/40)}=\sqrt{0,2}\simeq0,447$. It expresses a geometric centrality, not a guaranteed IoU of the predicted box. This reading links distance asymmetry, auxiliary target and ranking, while keeping separate the calculated target values and the actually learned outputs.
 
+**A site on the boundary has a zero distance**: Constructed boundary case: moving the site to $(20,30)$ on the same box gives distances $(0,20,70,40)$ px. Algebraic decoding still recovers the box, while the geometric centerness target becomes zero. Whether this boundary site is eligible depends on strict versus non-strict containment in the training implementation and any center-sampling rule. Separate that assignment convention from the distance formula, and test sites just inside and outside rather than inferring eligibility from nonnegative decoded lengths.
+
 **Blocking errors**: Confound these distances with center/width/height, express them in feature map cells or add 1 to the continuous coordinate differences.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [FCOS, version 5, §3.1, equation 1 and decoding](https://arxiv.org/html/1904.01355v5); project calculation.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [FCOS, version 5, §3.1, equation 1 and decoding](https://arxiv.org/html/1904.01355v5); project calculation. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::pratique cv_id::CV-DETECTEURS-007 provenance::agent pole::A pole::C pole::E
 END
 
@@ -181,8 +195,10 @@ Reponse: **Expected answer**: It multiplies the cross entropy by $(1-p_t)^\gamma
 
 **Contribution and gradient**: Comparing two examples of the same class with $p_t=0,99$ and $p_t=0,5$ gives, at $\gamma=2$, respective factors $10^{-4}$ and 0,25. The second is thus of much greater relative importance. The gradient does not correspond to that of a cross entropy multiplied by a fixed constant: the factor itself depends on $p_t$ and its derivative participates in the optimization. The numbers of positives, assignment rules and loss reduction in the lot still count. To interpret a workout, review these conventions before assigning an improvement or instability to the choice of $\gamma$ alone.
 
+**The logit gradient includes a second term**: For binary cross entropy with $p_t=\operatorname{sigmoid}(z_t)$ and no alpha factor, $FL=-(1-p_t)^\gamma\log p_t$ has derivative $\partial FL/\partial z_t=(1-p_t)^\gamma[\gamma p_t\log p_t-(1-p_t)]$. This project derivation follows the product and chain rules. At $\gamma=0$ it becomes $p_t-1$. Detaching the modulator drops the logarithmic term, so it is a different optimization rule even when the forward values are identical. The sign of $z_t$ must encode the correct binary target.
+
 **Blocking errors**: Confound $p_t$ with object probability for a negative, or say that the loss eliminates all negatives.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [Focal Loss, version 2, §§2 and 3.1 – 3.2, equation 5](https://arxiv.org/html/1708.02002v2).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [Focal Loss, version 2, §§2 and 3.1 – 3.2, equation 5](https://arxiv.org/html/1708.02002v2). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-008 provenance::agent pole::A pole::C pole::E
 END
 
@@ -204,8 +220,10 @@ Reponse: **Expected answer**: The intersection remains zero, so IoU remains zero
 
 **Information still limited**: For two disjoint boxes whose union and enclosing rectangle keep the same area, GIoU can remain constant in certain local directions. The additional term provides a signal in many cases without becoming a complete and perfectly conditioned measure of all movements. Edges where intersection or enclosing rectangle change also introduce regime changes in the derivative. A small perturbation test of each coordinate makes it possible to compare the variations of loss to the expected geometry. This analysis concerns the regression of valid boxes; it does not correct a bad target matching or a wrong class.
 
+**Enclosing geometry distinguishes some disjoint positions**: Constructed example: two unit boxes separated horizontally by a one-unit gap have enclosing area three and union area two, giving GIoU $=-1/3$. Increasing that gap to two units makes the enclosing area four and GIoU $=-1/2$. The IoU loss remains one in both cases while the generalized term changes. This does not promise a nonzero gradient in every possible local movement direction.
+
 **Blocking errors**: Claim that a non-overlay imposes GIoU null, or replace $C$ with the union of the two boxes.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [GIoU, version 2, §3.1 and algorithms 1 – 2](https://arxiv.org/html/1902.09630v2); project calculation.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [GIoU, version 2, §3.1 and algorithms 1 – 2](https://arxiv.org/html/1902.09630v2); project calculation. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::raisonnement cv_id::CV-DETECTEURS-009 provenance::agent pole::A pole::C pole::E
 END
 
@@ -227,8 +245,10 @@ Reponse: **Expected answer**: It combines the deep semantic representations brou
 
 **Recurrence of fusion**: note $M_l=L_l(C_l)+\operatorname{Upsample}(M_{l+1})$ the fused map of the descending path, then $P_l=\operatorname{Conv}_{3\times3}(M_l)$ the smoothed output of the level, where $C_l$ is the feature of the backbone at the $l$ level and $L_l$ the lateral projection of the channels. Spatial sizes and alignment must be compatible for addition. A mismatch error can keep tensor shapes valid while harming the location. The map therefore merges observed lateral information and a reassembled context; it does not create a high-resolution image. Linking the strides to the actual sizes of the objects helps to choose which outputs and which levels to analyze.
 
+**Upsampling adds locations, not recovered measurements**: A coarse feature map interpolated to a finer grid still derives from the same coarse samples. Lateral features supply separately computed finer spatial evidence, which is why the fusion differs from interpolation alone. Test thin or small objects at matched input resolution and training protocol when assessing that contribution. No feature-pyramid mechanism can recover a physical defect that acquisition and input resizing have already removed.
+
 **Blocking errors**: Assign new observed details to interpolation alone, or confuse FPN with pyramid of images.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [FPN, version 2, §3 and figure 3](https://arxiv.org/html/1612.03144v2).
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]] ; [FPN, version 2, §3 and figure 3](https://arxiv.org/html/1612.03144v2). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-010 provenance::agent pole::A pole::C pole::E
 END
 
@@ -240,7 +260,7 @@ START
 CV-Pilote
 ID: CV-DETECTEURS-011
 Question: Three independent cases each have one “car” GT instance, without ignore/crowd annotations. With TIDE thresholds $t_b=0{,}1$ and $t_f=0{,}5$, which error describes each FP: (a) “truck,” IoU $0{,}8$; (b) “car,” IoU $0{,}3$; (c) “car,” IoU $0{,}8$, with the GT already matched to a higher-score box?
-Reponse: **Expected answer**: (a) Classification: Sufficient localisation, bad class. (b) Location: good class, intermediate overlap. (c) Doubling: class and localisation sufficient, but the GT already has an associated detection.
+Reponse: **Expected answer**: (a) Classification: Sufficient localisation, bad class. (b) Location: good class, intermediate overlap. (c) Duplicate: class and localisation sufficient, but the GT already has an associated detection.
 
 **Further explanation**: TIDE also distinguishes between class/location combined error, background, and missed GT not already explained by classification/location. Orient checks to labels/classes, geometry or postprocessing as appropriate, without automatically inferring a cause. The number of FP alone does not measure the loss of AP: their score ranking also counts.
 
@@ -250,8 +270,10 @@ Reponse: **Expected answer**: (a) Classification: Sufficient localisation, bad c
 
 **Counted error and cause**: In the duplicate case, removing the first correct prediction could turn the second into TP without improving the object recall. This shows that the categories also depend on matching's ranking and rules. Conversely, correcting a class can retrieve a GT and simultaneously delete a FP according to the protocol. The oracle gains of several families do not necessarily add up as independent error numbers. For a real intervention, freeze the initial predictions, apply a precise correction and recalculate the complete metric. Diagnosis refers to a family of observed errors; the causal mechanism remains to be established.
 
+**An error category is not a causal diagnosis**: The same localization-type false positive can result from poor box regression, incorrect inverse resizing or an annotation convention mismatch. TIDE-style categories organize observed evaluation errors; identifying the cause requires intermediate outputs or controlled ablations. A duplicate category similarly depends on score ordering and prior matching. Keep the evaluator fixed when comparing interventions so changed category counts are not mistaken for proof of one internal failure mechanism.
+
 **Blocking errors**: Count (c) as a second TP, or assign (a) to a bad location.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [TIDE, version 2, §2.2: types and weighting of errors](https://arxiv.org/html/2008.08115v2); built cases of the project.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [TIDE, version 2, §2.2: types and weighting of errors](https://arxiv.org/html/2008.08115v2); built cases of the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-011 provenance::agent pole::A pole::C pole::E
 END
 
@@ -296,7 +318,9 @@ Reponse: **Expected answer**: No: there are five instances, two classes present,
 
 **Probability and contract of labels**: A softmax per box requires that the probabilities of the chosen categories share a total mass, which corresponds to an exclusive choice in this set. Independent sigmoids can represent multiple labels simultaneously, but do not automatically make "vehicle", "car" and exclusive categories consistent. The dataset of annotations and the rule of decision must specify these relationships. At the image scale, aggregating the presence of a category can lose the number of instances; three cars become a single presence indicator. Maintaining instance identities and their boxes avoids confusing scene classification with object detection.
 
+**Multiple instances and multiple valid labels are separate axes**: A single box can have several valid attributes such as car, red and damaged, while an image can contain many boxes each with one exclusive object class. The output schema should specify which labels describe an instance and which refer to the whole image. This determines loss and decision policy; the mere presence of two object categories does not force independent multilabel classification for every detection.
+
 **Blocking errors**: Confuse multiple objects in an image with multiple labels for an object, or limit output to one box per category.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [YOLov3, version 1, §§2.2 – 2.3](https://arxiv.org/html/1804.02767v1); [Torchvision 0.29, batched_nms: separation of categories](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html); examples of project contracts.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [YOLov3, version 1, §§2.2 – 2.3](https://arxiv.org/html/1804.02767v1); [Torchvision 0.29, batched_nms: separation of categories](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html); examples of project contracts. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-DETECTEURS-013 provenance::agent pole::A pole::C pole::E
 END

@@ -22,8 +22,10 @@ Reponse: **Expected answer**: The global initialization looks for a compatible z
 
 **Concrete local loop**: At iteration $k$, transform each source point by $T_k$, search for target neighbors, reject incompatible pairs, and then estimate a $\Delta T_k$ fix. With a correction expressed in the target coordinate frame, dial $T_{k+1}=\Delta T_kT_k$. A correction in the source coordinate frame consists of the other side: mixing these conventions produces a poor optimization trajectory. The rapprochement of the neighbors and the resolution of pose are two different steps. A good initialization facilitates physical associations, while a threshold that is too wide can accept foreign surfaces and a threshold that is too strict removes the constraints necessary for refinement.
 
+**Global initialization is also a hypothesis**: Repeated geometry can give a plausible global alignment to the wrong copy of a structure. ICP can then reduce local residuals while preserving that incorrect correspondence basin. Validate overlap extent and independently known landmarks after refinement, rather than accepting a lower ICP objective as confirmation of the initializer. In a proposed comparison, include large initial displacements and symmetric alternatives, and report rejected registrations as well as final errors.
+
 **Blocking errors**: Present ICP as a guaranteed global solver.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::algorithme cv_id::CV-ICP-001 provenance::agent pole::B pole::C
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: The component of the misalignment according to the
 
 **Linearization of the residual**: Put $s=Rp+t$ and apply a small disturbance to the left $s'\simeq s+\delta t+\delta\omega\times s$. The residual becomes $r'\simeq r+n^T\delta t+(s\times n)^T\delta\omega$. Its Jacobian is therefore a line of six components for the order translation then rotation. Stacking these lines directly shows the movements that the scene constrains. For all vertical normals, horizontal translations do not appear in this local model. This derivation assumes fixed matches and normals during the step; updating them to the next iteration makes the overall problem more complex than a single linear system.
 
+**A plane leaves tangential motion unpenalized**: For target normal $n=(0,0,1)^T$, the residual becomes the difference in height. Translating all transformed points parallel to the plane leaves it unchanged, as does rotation about the plane normal for an ideal infinite plane. A small point-to-plane residual can therefore coexist with substantial tangential pose error. This constructed nullspace example motivates inspecting normal diversity and the linearized system, not simply reducing the distance threshold.
+
 **Blocking errors**: Take this scalar for a complete 3D error in all directions.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-ICP-002 provenance::agent pole::B pole::C
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: overlap, threshold, distribution of matches and er
 
 **Effect of the threshold on statistics**: if the distances are $d_1,\ldots,d_m$, the RMSE is $\sqrt{\sum_i d_i^2/m}$. Removing all large distances can reduce it while greatly reducing $m$; the two experiments no longer focus on the same points. Also comparing the two directions source→target and target→source can reveal asymmetrical coverage, especially with different densities. An analysis by reserved physical regions prevents a dense area from dominating the score. These measurements complete the reference error of pose; they do not, on their own, remove the ambiguity of a perfectly symmetrical object.
 
+**The denominator can improve the score by exclusion**: Constructed example: retaining 10 close pairs with 1 mm error and rejecting 90 distant points yields 1 mm inlier RMSE but little evidence of whole-cloud alignment. Report accepted-pair fraction, the source/target direction of that fraction, coverage and threshold with RMSE. Evaluate pose error independently where possible. Changing the correspondence threshold changes both the accepted population and its conditional error, so two RMSE values are not automatically comparable.
+
 **Blocking errors**: Classify the pose to RMSE alone.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-ICP-003 provenance::agent pole::B pole::C
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: Threshold is a length in the unit of coordinates; 
 
 **residuals and covariance**: if all lengths are multiplied by $a$, a metric residual becomes $r'=ar$ and its covariance becomes $\Sigma'=a^2\Sigma$. The normalized residual $r^T\Sigma^{-1}r$ then remains invariant. A robust loss set in meters also requires a converted scale, unlike a loss applied after properly processed whitening. Absolute displacement or cost tolerances can change direction with units; relative criteria must be interpreted according to their exact definition. This reasoning makes it possible to distinguish a coherent unit change from a voluntary change in physical weighting in a registration or a merger of constraints.
 
+**Scale changes affect normal estimation too**: Converting meters to millimeters requires scaling correspondence thresholds, voxel size and normal-neighborhood radii by 1000. Unit normals remain dimensionless, but the neighborhoods used to estimate them change if their radius is left unchanged. Residual variance scales by $10^6$. Thus even when the transform translation is converted correctly, an inconsistent preprocessing radius can alter normals, matches and the convergence behavior.
+
 **Blocking errors**: Treat the threshold as a unitless number.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::pratique cv_id::CV-ICP-004 provenance::agent pole::B pole::C
 END
 
@@ -114,7 +122,9 @@ Reponse: **Expected answer**: It exploits reliable normals and a geometry that c
 
 **Where do the normals come from**: A current local estimator centers the neighbors, calculates their covariance matrix and takes the eigenvector of smallest eigenvalue as the plane normal. A neighborhood too small becomes sensitive to noise; too large, it mixes edges and curved surfaces. If eigenvalues do not distinguish a normal direction, the local surface is itself ambiguous. For the residual point-to-plane isolated square, reversing the sign of a normal does not change the cost; a consistent orientation may nevertheless be required by other steps such as descriptors or rejection rules. Compare the quality of pose with this provenance of the explained normals.
 
+**Normal reliability depends on neighborhood geometry**: For a local point covariance with eigenvalues $\lambda_1\le\lambda_2\le\lambda_3$, a well-separated small $\lambda_1$ supports a plane normal. If both first eigenvalues are small, the neighborhood is line-like and its normal direction is ambiguous; if all are comparable, a plane may be a poor model. These are geometry diagnostics rather than universal cutoffs. Neighborhood scale, range noise and mixed surfaces must be evaluated for the intended registration.
+
 **Blocking errors**: Announce universal domination of a variant.
-Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html).
+Source: [[60-vision-3d/references/62-recalage-global-icp|Full reference]] ; [Open3D 0.19.0, point-to-point and point-to-plane ICP](https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html) ; [Open3D 0.19.0, global registration FPFH/RANSAC](https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-ICP-005 provenance::agent pole::B pole::C
 END

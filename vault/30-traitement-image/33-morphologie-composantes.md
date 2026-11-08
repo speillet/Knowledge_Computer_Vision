@@ -45,8 +45,10 @@ Reponse: **Expected answer**: Two in 4 connectivity; one in 8.
 
 **Built labeling algorithm**: browse the mask; at each foreground pixel not yet visited, create a label and explore by queue or stack its eligible neighbors. All affected pixels receive the same label, then the path resumes on the remaining pixels. This definition directly links the number of components to the number of routes launched. A practical implementation can use multiple passes or union-find, without changing the connectivity defined. Beware of the return of a library that includes the background in its number of labels: two components of foreground then give three labels in total. The properties of holes and contact also require a coherent neighborhood convention between background and foreground.
 
+**Connectivity changes the object definition**: On a checkerboard of isolated diagonal foreground pixels, 8-connectivity can join a long chain that 4-connectivity separates. Neither choice is universally correct: the relevant physical contact and expected pixel sampling determine the convention. Use complementary background connectivity when analyzing holes to avoid ambiguous digital topology. Count foreground components separately from the background label returned by a labeling routine.
+
 **Blocking errors**: Announce a number without connectivity.
-Source: [[30-traitement-image/references/33-morphologie-composantes|Full reference]]; [OpenCV 4.13.0, connectedComponents, connectivity settings and labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html); countdown deducted from connectivity.
+Source: [[30-traitement-image/references/33-morphologie-composantes|Full reference]]; [OpenCV 4.13.0, connectedComponents, connectivity settings and labels](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html); countdown deducted from connectivity. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d03 famille::raisonnement cv_id::CV-MORPHO-002 provenance::agent pole::A pole::E
 END
 
@@ -68,7 +70,9 @@ Reponse: **Expected answer**: The structurer may have created a bridge; inspect 
 
 **Why the area filter is too late**: The area of a merged component essentially adds those of the two parts and the pixels of the bridge. It can therefore perfectly pass a minimum threshold, even when the count is false. Separately measuring the distance between borders before closing, the width of the bridge created and the maximum distance inside each part helps to choose a remedy. A marker watershed can use two reliable centers to provide separation, but bad markers can oversegment a single piece. In the evaluation, explicitly distinguish merge error, division error and boundary error: an average pixel score can remain good despite an object lost on counting.
 
+**Kernel scale should follow physical separation**: If the minimum legitimate gap is 0.2 mm and image resolution changes from 0.1 to 0.05 mm/px, the same physical gap changes from two to four pixels. Reusing an unchanged kernel therefore changes its physical action. A proposed sweep records both removal of isolated noise and merger of neighboring real parts as a function of kernel size and shape. Area filtering after merger cannot recover the lost instance boundary.
+
 **Blocking errors**: Take a related component for a guaranteed object.
-Source: [[30-traitement-image/references/33-morphologie-composantes|Full reference]]; [OpenCV 4.13.0, Morphological Transformations, §§1 – 4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html); bridge diagnosis built by the project.
+Source: [[30-traitement-image/references/33-morphologie-composantes|Full reference]]; [OpenCV 4.13.0, Morphological Transformations, §§1 – 4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html); bridge diagnosis built by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d03 famille::diagnostic cv_id::CV-MORPHO-003 provenance::agent pole::A pole::E
 END

@@ -22,8 +22,10 @@ Reponse: **Expected answer**: select $A$, delete $B$ because their intersection 
 
 **Selection is not transitive**: build three boxes of the same size with $A=(0,0,10,10)$, $B=(3,0,13,10)$ and $C=(6,0,16,10)$. The IoU $A/B$ and $B/C$ are worth $7/13>0,5$, but $A/C=4/16=0,25$. With decreasing scores A, B, C, NMS keeps A, deletes B then keeps C: B deleted does not in turn delete its neighbors. This distinguishes the greediness algorithm from a grouping into related components of the overlap graph. The result depends on the ranking and does not automatically look for the set of maximum score sum boxes.
 
+**A common geometric transform preserves IoU**: Translating all boxes together or scaling every x and y coordinate by common positive factors multiplies intersections and unions by the same area factor, preserving IoU. Hard NMS decisions should therefore agree under this constructed transform when scores, tie-breaking and numerical precision are held fixed. Clipping boxes to an image border is different: it can change relative areas and overlaps. This provides a geometry check independent of detector quality.
+
 **Blocking errors**: delete $C$ for the sole reason of its lower score, or treat the output as an average of $A$ and $B$.
-Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Soft-NMS, §4](https://arxiv.org/abs/1704.04503); [convention hard NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Soft-NMS, §4](https://arxiv.org/abs/1704.04503); [convention hard NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::algorithme cv_id::CV-NMS-001 provenance::agent pole::A pole::C pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: the score threshold filters predictions according 
 
 **Separate setting and measurement**: take a candidate with a score of 0,4, from IoU 0,8 with another prediction, but from IoU 0,6 with a score of GT. A score threshold at 0,5 discards it before any measurement; at an allowable score, a NMS at 0,7 can remove it; if it survives, it satisfies a localization requirement at 0,5 but not at 0,75, under the other rules of matching. These three comparisons relate to different objects. To assign a recall drop, keep counters after each step with constant evaluation protocol, rather than simultaneously changing the three thresholds.
 
+**AP requires the score-ranking information retained**: A high operational score cutoff may discard low-score true detections before the evaluator can sweep the precision-recall curve. Record whether AP is computed from the full retained prediction list or from a deployment-filtered list. The NMS threshold still compares predictions with predictions; the evaluation IoU still compares predictions with annotations. Sharing one threshold name or configuration field obscures which stage changed the measured recall ceiling.
+
 **Blocking errors**: Use the AP50 threshold to decide directly which predictions are suppressed between them, or say that NMS requires the GT.
-Source: [[80-detection-pose/references/81-nms|NMS reference]]; [NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html); [COCO](https://cocodataset.org/#detection-eval); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [NMS](https://docs.pytorch.org/vision/stable/generated/torchvision.ops.nms.html); [COCO](https://cocodataset.org/#detection-eval); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comprehension cv_id::CV-NMS-002 provenance::agent pole::A pole::C pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: The global NMS retains only the score candidate $0
 
 **Conflict of taxonomy built**: If the same instance receives the scores 0,8 for "vehicle" and 0,75 for "car", the two labels can be consistent in a hierarchical taxonomy but redundant in a single category contract. Set this policy before choosing deletion. With the same geometry, a person holding a bike and a part receiving two exclusive classes ask for different decisions. Separately testing interclass conflicts and neighbors of the same class helps to measure what class separation actually protects. The highest score does not indicate, by construction, whether two hypotheses share a physical identity.
 
+**Cross-class scores may not have a shared meaning**: Global NMS orders candidates from different classes by score. If those scores have different calibration or class priors, that ordering need not reflect which physical hypothesis is better. Class-separated NMS avoids cross-class suppression but leaves the taxonomy decision unresolved. A proposed validation includes overlapping legitimate classes and mutually exclusive labels on the same instance, with the annotation contract fixed before comparing the suppression policy.
+
 **Blocking errors**: Believe that NMS per class solves interclass confusions, or that NMS global knows the real identity of objects.
-Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Torchvision 0.29, batched_nms: description and threshold](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html), Consult the 2026-10-21; built case of the project; [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), Consult the 2026-10-30.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Torchvision 0.29, batched_nms: description and threshold](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html), Consult the 2026-10-21; built case of the project; [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), Consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-NMS-003 provenance::agent pole::A pole::C pole::E
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: instead of an immediate deletion beyond a overlap,
 
 **Calculated change in rank**: after selection of A, a box B with a score of 0,8 and IoU 0,8 becomes $0,8e^{-0,8^2/0,5}\simeq0,222$ for $\sigma=0,5$. A disjointed box C of score 0,5 remains at 0,5 and thus passes before B. With a final threshold of 0,25, B can be removed. This constructed case makes explicit the roles of the decay parameter and the score threshold. Reusing a selected threshold for initial scores without further validation can change the recall, since the values have been transformed by postprocessing.
 
+**The Gaussian parameter controls attenuation strength**: For fixed nonzero overlap $u$, the multiplier is $\exp(-u^2/\sigma)$. Increasing positive sigma weakens the penalty; as sigma tends to infinity the multiplier tends to one. As sigma approaches zero from above, nonzero overlap is strongly penalized, while zero overlap retains multiplier one. These limiting cases are derived checks of parameter meaning. They do not turn Soft-NMS into a calibrated probability model or settle the best deployment threshold.
+
 **Blocking errors**: Keep the old order despite the new scores or say that Soft-NMS can never remove from the box.
-Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Bodla et al., §4 penalties, §5 final threshold](https://arxiv.org/abs/1704.04503); [code original](https://github.com/bharatsingh430/soft-nms/blob/b8e69bdf8df2ad53025c9d198ded909b50471d4f/lib/nms/cpu_nms.pyx); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Bodla et al., §4 penalties, §5 final threshold](https://arxiv.org/abs/1704.04503); [code original](https://github.com/bharatsingh430/soft-nms/blob/b8e69bdf8df2ad53025c9d198ded909b50471d4f/lib/nms/cpu_nms.pyx); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::raisonnement cv_id::CV-NMS-004 provenance::agent pole::A pole::C pole::E
 END
 
@@ -114,8 +122,10 @@ Reponse: **Expected answer**: compare boxes, scores and classes before/after NMS
 
 **Deletion log**: For each candidate removed, keep their ID, the one in the box that deleted it, the classes, scores and the IoU calculated in the common coordinate frame. Then replaying the selection on the same predictions makes it possible to isolate the postprocessing without retraining the network. Measure the coverage of the GT with a defined matching, because two candidates on a GT are not two objects recalled. If a top-k precedes NMS, consider also the candidates lost there: increasing the threshold NMS does not recover a box eliminated by this upstream filter.
 
+**Coverage loss needs a one-to-one object interpretation**: Before and after NMS, use the same annotation-matching policy and distinguish unique covered objects from prediction count. Ten surviving boxes on one person are not ten recalled people. Conversely, removal of a duplicate may change counts without losing any object. A proposed replay should record which correct candidate was removed, its suppressor and whether another valid candidate still covers that annotation under the fixed evaluation protocol.
+
 **Blocking errors**: Change the threshold directly on the test set or confuse proposal error and deletion.
-Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Soft-NMS, §§1 and 4](https://arxiv.org/abs/1704.04503); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [Soft-NMS, §§1 and 4](https://arxiv.org/abs/1704.04503); [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-NMS-005 provenance::agent pole::A pole::C pole::E
 END
 

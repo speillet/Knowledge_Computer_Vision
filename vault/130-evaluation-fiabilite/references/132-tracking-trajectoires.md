@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-VIO", "CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -111,6 +111,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Interpolation and Time**: A trajectory sampled at different times of the reference requires a matching or announced interpolation. Interpolating a translation is different from directly interpolating the components of a rotation matrix, which can then leave $SO(3)$. A constant time shift produces a speed-dependent error and can be mistaken for a wrong trajectory. Testing a synthetic movement at known speed with an imposed offset allows to verify this signature. Also keep the number of poses excluded by time tolerance: a drop in error obtained by removing difficult segments does not measure the same coverage.
 
 **Passages consulted for these developments**: [Luiten et al., HOTA](https://arxiv.org/html/2009.07736v2), §5, threshold combination; inferred aggregation inequality; [Zhang–Scaramuzza](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf), §IV, ATE and relative error; RPE formula and time controls explained by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-METRIQUES-TEMPS-002 — The aggregation gap has an angle interpretation
+
+Set $u_k=\sqrt{D_k}$ and $v_k=\sqrt{A_k}$ across $n$ thresholds. The mean per-threshold geometric mean is $H=(u^Tv)/n$, while recombination of component means is $R=\|u\|\|v\|/n$. For nonzero vectors, $H=R\cos\phi$, where phi is their angle. Thus the recombination gap is $R(1-\cos\phi)$: different threshold profiles, not just different average component quality, create the discrepancy. This is an algebraic interpretation, not a feasibility claim about arbitrary benchmark profiles.
+
+### CV-METRIQUES-TEMPS-004 — Relative error depends on the interval
+
+A tracker may have low frame-to-frame relative error but accumulate substantial drift over long distances. Another system can exhibit a correction jump that improves globally aligned ATE while producing a large short-interval RPE. Evaluate relative error over declared time or distance intervals and report corrections or loop closures. The interval and whether future optimization was allowed are part of the metric, not minor implementation details.
+
+### CV-METRIQUES-TEMPS-005 — Missing poses should not disappear from the denominator
+
+If one tool silently drops difficult timestamps, its error over surviving matched poses may decrease while trajectory availability worsens. Align time association, tolerance and interpolation first, then report matched coverage and failures with error. A proposed fixture includes a deliberate gap and known time offset to test both tools' policies. Do not interpolate across an arbitrarily long outage and count the synthetic poses as equally observed estimates.
+
+Consulted foundations: [HOTA](https://arxiv.org/html/2009.07736v2): §5 DetA/AssA and threshold aggregation; [Sturm et al. trajectory evaluation](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf): §VII-A/B RPE and ATE definitions.
 
 ## Sources and flashcards
 

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-FLOT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -105,6 +105,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Permutation and reverse order**: An average $z=L^{-1}\sum_t f(I_t)$ aggregation is mathematically invariant to permutation; a good score obtained in this way can come from visual states or context, without encoding their order. Building pairs like take/pose an object, with close states but a different order, tests another property. check also that permutation does not create an unusual artifact that would cause the model to fall for the wrong reason. Comparing inversion, permutation and cadence by changing only one factor helps to support the use of time without assimilating any temporal sensitivity to a complete understanding of the scene.
 
 **Passages consulted for these developments**: algebraic complements and protocols built by the project; the previous references of the subject remain below, without new full validation of their claims.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-VIDEO-001 — Point identity is additional information across time
+
+A collection of independent per-frame point detections does not establish which observation belongs to the same physical point. Conversely, a continuous point track does not by itself assign an action label or its start/end times. Build evaluation around the output actually needed: visibility-aware trajectories, clip class or temporal intervals. Combining these modules is a system decision and requires checking their spatial and temporal interfaces.
+
+### CV-VIDEO-003 — Future context imposes a latency floor
+
+At 30 frames/s, using five future frames imposes at least about 167 ms of waiting before computation and transfer. The model may be appropriate for retrospective analysis but incompatible with a tighter online decision budget. A proposed comparison reports quality versus total output delay under a common information window, including whether later frames revise earlier outputs. Timing only the network call omits the cost of waiting for its input.
+
+### CV-VIDEO-004 — Order sensitivity should match the task labels
+
+Opening and closing a door can share many static frames while differing in order; recognizing a sport from a field may require much less temporal evidence. A proposed controlled set includes reverse-order pairs with changed labels and static-context baselines. Shuffle invariance alone is not proof of failure on an order-insensitive task, but a high shuffled score cannot establish that the model learned the dynamics needed for an order-sensitive decision.
+
+Consulted foundations: [CoTracker3](https://arxiv.org/html/2410.11831v1): point-track/visibility outputs, online and offline protocols.
 
 ## Sources and flashcards
 

@@ -22,8 +22,10 @@ Reponse: **Expected answer**: FAST detects candidates in a pyramid; a ranking, H
 
 **Calculate the orientation**: In a keypoint-centric patch, set the $m_{pq}=\sum_{x,y}x^py^qI(x,y)$ moments. The direction to the centroid is obtained by $\theta=\operatorname{atan2}(m_{01},m_{10})$ when these moments give an actionable direction. The pattern of comparisons is then rotated according to $\theta$ before the intensity readings. If the patch is almost symmetrical or noisy, a small disturbance can strongly change this orientation: the position can remain repeatable without the tests describing the same oriented neighborhood. The edges of the patch and the actual presence of the required pixels must also be managed, not silently supplemented by unrelated content.
 
+**Orientation quality can limit binary matching**: For a test point at patch radius $r$, a small orientation error $\delta\theta$ displaces the sampled location by approximately $r|\delta\theta|$ pixels. At $r=15$ px, a $5^\circ$ error moves it about 1.31 px. This constructed calculation explains why accurate keypoint location alone does not ensure stable oriented tests. Peripheral comparisons can cross edges after a modest angle error, especially in small or nearly symmetric patches.
+
 **Blocking errors**: Present ORB as only FAST, or say it directly provides a transformation between images.
-Source: [[40-features-matching/references/42-orb|reference note ORB]]; [Rublee et al., §§3 – 4](https://doi.org/10.1109/ICCV.2011.6126544); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [Rublee et al., §§3 – 4](https://doi.org/10.1109/ICCV.2011.6126544); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::algorithme cv_id::CV-ORB-001 provenance::agent pole::B pole::E pole::F
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Bytes store test results bit by bit. Hamming count
 
 **Computable version of Hamming**: for two binary suites $a,b$, $d_H(a,b)=\operatorname{popcount}(a\oplus b)$ adds the disagreements between tests. The operations are machine words or bytes, but the result does not depend on the numerical weight of the bits. A change in the placement of the same tests in the bytes therefore retains Hamming if applied to both descriptors; it can completely change L2 on the byte values. This reasoning gives a simple implementation check, without an image: build two patterns of which a single test differs in several positions. The expected distance remains one, which separates metric storage and metric representation.
 
+**A byte example exposes the wrong metric**: Compare byte values 0, 128 and 3 as packed test results. Relative to 0, Hamming distances are one bit for 128 and two bits for 3, while scalar numeric distances are 128 and 3. The ranking reverses. Casting these bytes to floating-point numbers preserves the incorrect numeric ranking. The problem is therefore semantic, not a limitation of integer storage or a need to normalize byte magnitudes.
+
 **Blocking errors**: justify L2 only by the presence of an array of bytes, or pretend that the two distances always rank neighbors in the same way.
-Source: [[40-features-matching/references/42-orb|reference note ORB]]; [OpenCV 4.13, matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), see 2026-10-30.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [OpenCV 4.13, matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-ORB-002 provenance::agent pole::B pole::E pole::F
 END
 
@@ -98,8 +102,10 @@ Reponse: **Expected answer**: Cross-checking requires mutual neighbors; the rati
 
 **Example of non-equivalent filter**: In a built-up distance matrix, request A can have candidates with distances 10 and 11; the former also prefers it to all other requests. The cross-check accepts it, while a ratio of 0,8 rejects it. A request B may have 10 and 30, but its best candidate prefers A: the ratio accepts it and reciprocity rejects it. These cases show that the two rules pose different questions. One can design an explicit combination, at the cost of additional calculations and reminders; it must define what to do with ex æquo and absent candidates, and then be geometrically validated.
 
+**Tie handling belongs to the acceptance rule**: Binary distances are discrete, so ties are common. If the first and second distances are equal and nonzero, a strict ratio threshold below one rejects the match. Mutual-nearest matching can instead depend on which tied candidate the implementation chooses. Neither deterministic tie-breaking nor mutuality supplies physical evidence. Include repeated patterns and exact distance ties in a proposed comparison so changes in candidate ordering do not appear to improve geometric reliability.
+
 **Blocking errors**: Present the tests as identical or as a geometric validation.
-Source: [[40-features-matching/references/42-orb|reference note ORB]]; [OpenCV BFMatcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), see 2026-10-30.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [OpenCV BFMatcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-ORB-004 provenance::agent pole::B pole::E pole::F
 END
 
@@ -144,7 +150,9 @@ Reponse: **Expected answer**: set variations and location tolerance, extract ORB
 
 **Establishing a concrete memory budget**: In the current OpenCV variant at 256 bits, a descriptor occupies 32 bytes; 2000 descriptors represent about 64 kB of raw data. This excludes keypoints, pyramid images, buffers, indexes, allocations, and program structures: this calculation is not a measure of memory peak. An exhaustive search between two sets of $n$ and $m$ points processes $nm$ pairs, even with a fast binary distance. Preparing behavior when there are no descriptors or too few pairs for the model prevents a speed optimization from turning a normal observation failure into an arbitrary result or execution error.
 
+**A memory estimate needs database lifetime**: A persistent database amortizes descriptor extraction and index construction differently from a one-shot pair comparison. Estimate storage as descriptor bytes times retained points and reference views, then add image pyramids, keypoint metadata and matcher working memory. A proposed benchmark should include cold initialization and steady-state queries, recording peak resident memory separately from raw descriptor size. Reducing the feature cap may save memory while removing the coverage needed for reliable registration.
+
 **Blocking errors**: Promise latency from the single article or ignore the failure rate to choose the fastest method.
-Source: [[40-features-matching/references/42-orb|reference note ORB]]; [Rublee et al., §§4 – 6](https://doi.org/10.1109/ICCV.2011.6126544); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30.
+Source: [[40-features-matching/references/42-orb|reference note ORB]]; [Rublee et al., §§4 – 6](https://doi.org/10.1109/ICCV.2011.6126544); [OpenCV 4.13, ORB, Theory and WTA_K](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html); [OpenCV 4.13, Feature Matching, Standards, Cross Check and KnnMatch; verified with Context7](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::conception cv_id::CV-ORB-006 provenance::agent pole::B pole::E pole::F
 END

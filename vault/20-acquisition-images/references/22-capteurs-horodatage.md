@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Elemental Observability**: for $H=\hat r^T$, the scalar measurement $z=Hv_{rel}+\epsilon$ constrains only one direction of a vector with three components. Its zero space has two dimensions: adding an orthogonal velocity to $\hat r$ leaves $z$ unchanged. A Cartesian velocity becomes conceivable with several independent directions and a model linking their observations to the same movement; three quasi-parallel measurements can remain very poorly conditioned. A rotation of coordinate frame gives $v'=Rv$ and $P'=RPR^T$ for a covariance $P$ and an exact rotation $R$. It re-expresses the available information without creating the two missing components; the uncertainty of the calibration may need to be added separately.
 
 **Passages consulted for these developments**: [Basler, Electronic Shutter Types](https://docs.baslerweb.com/electronic-shutter-types), Global and Rolling Shutter; [Zhang and Singh, LOAM](https://www.roboticsproceedings.org/rss10/p07.pdf), §§II and V, acquisition and distortion of movement; [TI TIDUF01](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf), §2.4.9, radial velocity.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-CAPTEURS-001 — Short exposure can coexist with large skew
+
+Constructed example: a sensor has a 20 ms first-to-last-row exposure-start offset and uses 0.1 ms exposure. At 1000 px/s horizontal image motion, each row has only 0.1 px blur, while top-to-bottom displacement is about 20 px. The image can therefore look locally sharp and globally sheared. Reducing exposure further does little to this shear; changing the readout timing or modeling per-row pose addresses a different part of the acquisition process.
+
+### CV-CAPTEURS-002 — Offset and drift need different corrections
+
+Model the clocks locally as $t_B=a t_A+b$: $b$ is offset and $a-1$ is fractional drift. A constructed 20 ppm drift accumulates 12 ms over ten minutes, corresponding to 24 mm at 2 m/s. A one-time offset calibration cannot remove this accumulating discrepancy. Record the time span of synchronization validation, and distinguish clock error from variable packet delivery latency before interpreting an apparent extrinsic shift.
+
+### CV-CAPTEURS-003 — Turning exposes a lever-arm timing error
+
+For rigid-body angular velocity $\omega$ and sensor lever arm $\ell$, the sensor velocity includes $\omega\times\ell$. A time error then induces an approximate displacement $(\omega\times\ell)\Delta t$ even when the body origin translates little. This explains why a calibration can look correct at rest and fail during turns. Use opposite turn directions and different speeds in a proposed check: timing-induced error changes with motion, while a fixed rigid-transform error follows another pattern.
+
+### CV-CAPTEURS-004 — Radial speed depends on relative motion
+
+A static wall can have nonzero measured Doppler when the radar platform moves. With line-of-sight unit vector $\hat r$, the ideal translational term is $\hat r^T(v_{target}-v_{sensor})$, with sign set by the sensor contract. Compensating ego motion requires the sensor velocity at its lever arm and measurement time. A zero Doppler value therefore does not prove a stationary object, and a nonzero value does not by itself prove independent object motion.
+
+Consulted foundations: [Basler shutter types](https://docs.baslerweb.com/electronic-shutter-types): Global Shutter and Rolling Shutter exposure timing; [Zhang and Singh, LOAM](https://www.roboticsproceedings.org/rss10/p07.pdf): §§II/V time-varying acquisition and motion compensation.
 
 ## Sources and flashcards
 

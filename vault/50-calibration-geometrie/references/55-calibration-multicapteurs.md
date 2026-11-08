@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-ZHANG", "CV-SE3", "CV-CAPTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -99,6 +99,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Order of temporal magnitude**: in a local rigid displacement model, the deviation of a point expressed in the same coordinate frame is of the order of $\delta p\simeq(v+\omega\times p)\delta t$, with speed $v$ in m/s, angular speed $\omega$ in rad/s and delay $\delta t$ in s. The sign depends on the sense of comparison. At 10 m/s, 20 ms already represent 20 cm of translation; the angular contribution increases with the lever arm. The image projection then adds its Jacobian and depends on the depth. This built-in calculation explains why testing multiple speeds, distances, and direction of rotation helps distinguish a delay from a constant extrinsic.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, calibration hand-eye](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), calibrateHandEye, coordinate frames, eye-in-hand and eye-to-hand chains and non-parallel axes; algebraic complements of the project; [Zhang–Singh, LOAM](https://www.roboticsproceedings.org/rss10/p07.pdf), context acquisition in motion; approximation speed, delay and lever arm deduced by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-MULTICALIB-001 — Pair order must change on both sides
+
+From $AX=XB$, reversing the same motion pair gives $A^{-1}X=XB^{-1}$. Inverting only one of the relative motions generally creates another equation with no common true solution. A constructed chain test should generate poses from known $X$ and a fixed target, then verify every relative pair before solving. This catches direction conventions independently of observation noise and the numerical hand-eye method.
+
+### CV-MULTICALIB-002 — Pure translations leave hand-eye translation unconstrained
+
+When $R_A=I$, the translation equation $(R_A-I)t_X=R_Xt_B-t_A$ has a zero left-hand coefficient. Such a motion can constrain the relation between observed translation vectors and rotation, but supplies no direct constraint on $t_X$ through this equation. Adding many pure-translation poses therefore does not replace informative rotations. Evaluate the stacked system's singular directions in the intended movement range.
+
+### CV-MULTICALIB-003 — Static and dynamic tests isolate different contracts
+
+A proposed validation sequence first checks static cross-sensor alignment, then repeats known translations and turns with the same extrinsics. Error proportional to speed or angular rate suggests a timing or deskew problem; persistent static offset instead directs attention toward the spatial chain or projection model. These are diagnostic tendencies, not proofs. Keep clock, timestamp reference and per-point acquisition conventions explicit before refitting a fixed transform.
+
+Consulted foundations: [OpenCV hand-eye](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): calibrateHandEye transformation directions and nonparallel-motion requirement; checked with Context7; [LOAM](https://www.roboticsproceedings.org/rss10/p07.pdf): motion distortion and acquisition time.
 
 ## Sources and flashcards
 

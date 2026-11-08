@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 7
+revision: 8
 tags: [cv/d13, evaluation, iou, ap]
 ---
 # IoU and AP — the COCO detection protocol
@@ -144,6 +144,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Prevalence and burden of false releases**: In a binary model, if the defects have a prevalence of $\pi$, a recall of $r$ and a false positive rate of $f$ among the conformants, the accuracy of the alerts is $r\pi/[r\pi+f(1-\pi)]$. For $\pi=0,001$, $r=0,99$ and $f=0,01$, it is about 9%. This constructed case explains why a small proportion of false positives can saturate the review when defects are rare. The benchmark AP does not directly provide this load: it requires the operating threshold, the actual frequencies and the costs of the errors useful to the product.
 
 **Passages consulted for these developments**: [COCO, pinned code](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), evaluateImg and accumulate; invariances and geometric/probabilistic examples built.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-IOU-AP-001 — Normalization must precede a shared geometric comparison
+
+Two boxes can each use valid xyxy coordinates while one is in normalized input space and the other in original pixels. Their numeric intersection then has no physical meaning. Convert both through the recorded resize/crop/padding transform before calculating overlap. A constructed identity test compares a box with its round-trip conversion and expects IoU one, subject to declared rounding and clipping. This detects coordinate-contract errors separately from localization quality.
+
+### CV-IOU-AP-002 — AP aggregation omits undefined categories according to protocol
+
+A category with no valid ground-truth instances does not have the same recall denominator as a present category with zero successful detections. The pinned evaluator uses undefined entries and excludes them in its summaries. Replacing those entries by zero changes the aggregate. Record the image/category subset and valid-category handling when comparing tools, rather than treating a change in mean AP as necessarily a change in detector predictions.
+
+### CV-IOU-AP-004 — The recall-grid endpoint changes the arithmetic
+
+For the front's precision envelope, recall levels 0.00 through 0.50 inclusive contribute 51 samples at precision one; 0.51 through 1.00 contribute 50 at two-thirds. Their mean is about 0.834983. Using only 50 lower samples or integrating a continuous curve yields another number. Keep discrete recall levels and envelope conventions explicit when reproducing an evaluator rather than describing every area-like summary as the same AP.
+
+### CV-IOU-AP-005 — Identical boxes are insufficient without identical filtering
+
+An evaluator can see different prediction lists because one path applies a higher score cutoff, a different category mapping or a different per-image detection cap. Compare the actual serialized results after all filters, then per-image TP/FP/ignore assignments before final aggregation. Record stable tie order when scores coincide. This proposed comparison finds the first disagreement instead of debugging the network from an aggregate metric discrepancy.
+
+### CV-IOU-AP-006 — Small objects have a smaller pixel-shift allowance
+
+For equal 10 px squares offset horizontally by one pixel, IoU is $9/11\approx0.818$; a two-pixel offset gives $8/12\approx0.667$. Thus a small preprocessing offset can preserve AP50 matching while breaking AP75 on this constructed object. Compare inverse coordinate transforms and residuals by object size before retraining. The same two-pixel shift has a different relative effect on a much larger box.
+
+Consulted foundations: [COCO evaluator](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py): evaluateImg, accumulate and Params at pinned commit.
 
 ## Sources and flashcards
 

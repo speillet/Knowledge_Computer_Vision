@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SE3", "CV-BEV", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -105,6 +105,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Equivalence of poses**: If $S$ belongs to the symmetry group of the model, the poses $T$ and $TS$ can represent the same observable object. A suitable error can minimize a geometric distance on these symmetries, instead of arbitrarily comparing two single matrices. The symmetry of the complete mesh and the indistinguishability of the only visible surfaces are not exactly the same notion; the protocol must specify the one it deals with. An observed marking may reduce the relevant group of symmetries. The validation must then take into account this new information and not maintain an equivalence tolerance that would hide an angle that has become effectively observable.
 
 **Passages consulted for these developments**: [BOP](https://bop.felk.cvut.cz/tasks/), Model-based 6D localization, pose definition and VSD/MSSD/MSPD errors; build boxes and project examples.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-POSE3D-001 — Pose alignment changes the meaning of an error
+
+Joint-position error after root alignment, rigid alignment or similarity alignment removes different parts of the prediction error. A similarity-aligned articulated pose can look accurate while having the wrong absolute scale or global orientation. State the alignment group and visibility policy alongside units. A 3D detection metric instead requires its own instance matching and box/class definitions; a shared word such as pose does not make the outputs comparable.
+
+### CV-POSE3D-002 — Dimension swaps can pass a center-only check
+
+Constructed example: a box with dimensions $(4,2,1)$ m and zero yaw occupies a different region from one with dimensions $(2,4,1)$ m, despite an identical center. A yaw convention change can partly hide that swap on selected examples. Compare all eight transformed corners against known axes and a non-square box. Include a nonzero yaw and explicit center-versus-bottom anchor so identity cases do not conceal interface errors.
+
+### CV-POSE3D-003 — Localization matching leaves other box errors to other metrics
+
+A prediction with the correct ground-plane center can pass a center-distance match while having poor dimensions, yaw or velocity. nuScenes reports additional true-positive error terms for such properties, so its AP should be interpreted within that full protocol. COCO box IoU incorporates extent overlap directly in matching. Neither score alone establishes suitability for collision geometry or fine pose control without a task-specific error tolerance.
+
+Consulted foundations: [BOP tasks](https://bop.felk.cvut.cz/tasks/): 6D localization and symmetry-aware VSD/MSSD/MSPD task definitions; [nuScenes evaluation](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md): center-distance matching and separate true-positive error terms.
 
 ## Sources and flashcards
 

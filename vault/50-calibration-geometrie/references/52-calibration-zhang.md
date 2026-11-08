@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-HOMOGRAPHIE"]
-revision: 7
+revision: 8
 tags: [cv/d05, calibration, zhang]
 ---
 # Camera calibration with a target — Zhang’s method
@@ -155,6 +155,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Moving from calibration to measurement on a plan**: with center world camera $C$, radius world direction $d$ and known plane $n^TX=h$, the intersection is $X=C+\lambda d$, where $\lambda=(h-n^TC)/(n^Td)$ if the denominator is non-zero. This geometry shows that a metric measurement also requires the plane or depth of the surface: intrinsics alone are not enough. Near a radius parallel to the plane, the intersection becomes very sensitive to noise. Propagating calibration, edge location and flatness errors in product tolerance, and then comparing to an independent reference. This calculation assumes a known flat surface and a properly dedistorted projection, without certifying a relief measurement.
 
 **Passages consulted for these developments**: [Zhang, TR98-71](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf), §§2 – 4 and Annex C, stresses, poses and degenerations; [OpenCV 4.13, Camera Calibration](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), projection and distortion model; Context7 verification.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-ZHANG-002 — Homogeneous scale is not another camera parameter
+
+In the ideal pinhole model with the usual last row of $K$, the homogeneous projection scale can be chosen as camera depth $Z_c$. It changes from point to point and disappears after dividing the first two coordinates by the third. Translation retains the target coordinate unit; focal lengths remain in pixels. Adding a common metric scale to target points and translation does not require multiplying the intrinsic matrix by that scale.
+
+### CV-ZHANG-003 — Different images can repeat the same constraint
+
+Pure translation of the planar target changes where it appears but preserves the orientation-based orthogonality constraints on intrinsics. Even an in-plane target rotation can leave its plane parallel and fail to add independent intrinsic information. Seek changes in plane normal, not merely a large image count or pixel displacement. Peripheral coverage still serves distortion estimation, so acquisition diversity has both orientation and image-position roles.
+
+### CV-ZHANG-004 — Low pixel RMS can coexist with metric scale bias
+
+Constructed case: a target square is entered as 20 mm but is actually 19.8 mm. Under ideal uniform scaling, recovered metric translations are biased by about $20/19.8-1\approx1.01\%$, while the same image projections can still fit well. A held-out image from that same wrongly scaled target does not independently verify absolute dimensions. Use a separate traceable distance relevant to the measurement geometry.
+
+### CV-ZHANG-005 — A transform chain avoids order mistakes
+
+For resize matrix $S$ followed by crop matrix $C$, the pixel transform is $A=CS$, so $K^{\prime}=CSK$. Reversing the order applies crop offsets in a different pixel unit. A constructed example with half-size resizing and a 20 px crop moves a principal point at 320 px to 140 px, whereas cropping 20 original pixels first gives 150 px. Include the actual pixel-center convention when implementing the transformation.
+
+### CV-ZHANG-006 — Parameter stability needs withheld acquisition groups
+
+Leave out whole target poses rather than a few corners from every pose when testing acquisition diversity. Corners within one image share pose and image-formation effects, so randomly withholding them can make validation look more independent than it is. Compare parameter shifts, radial residual maps and metric predictions over the omitted poses. This is a proposed robustness check; a stable estimate can still share a systematic target or lens-model bias.
+
+Consulted foundations: [Zhang calibration](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf): §§2–4 intrinsic constraints, refinement and degeneracy; [OpenCV calibration](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): pinhole and distortion conventions.
 
 ## Alternatives, sources and flashcards
 

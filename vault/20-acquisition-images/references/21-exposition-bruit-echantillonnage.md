@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Distinguish normalization and linearization**: Divide a value sRGB by 255 places it in a numeric range; this does not remove its transfer curve. For a normalized sRGB component $c>0,04045$, its relative linear value is $c_{lin}=((c+0,055)/1,055)^{2,4}$. Thus, $c=0,5$ represents about 0,214 in linear, and not 0,5. Applying this conversion to an already linear input would be another mistake. Document successively decoding, channel order, photometric transfer, resize and then standardization of the tensor. An equality of form or of minimum/maximum does not demonstrate the equality of the intermediate values or their physical sense.
 
 **Passages consulted for these developments**: [EMVA 1288 Linear 4.0](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf), §§2.4, 2.6 – 2.7, signal, SNR and saturation; [sRGB, ICC interpretation](https://www.w3.org/Graphics/Color/srgb), §§A.8 and B.1, transfer function and reverse.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-ACQUISITION-001 — Exposure chosen from a blur budget
+
+Invert the model before changing camera settings: a permitted blur of 1 px at 800 px/s requires $t_e\le1/800$ s, or 1.25 ms. More illumination can then restore signal while preserving this motion budget; digital gain cannot restore photons lost by shortening exposure. The velocity should be the largest relevant image velocity during acquisition, rather than a dataset average. Acceleration, rotation and depth variation require a more detailed exposure integral.
+
+### CV-ACQUISITION-002 — Read noise changes the value of additional light
+
+Constructed calculation: with read-noise standard deviation 5 electrons (variance 25 e⁻²), 25 signal electrons give $SNR=25/\sqrt{50}\approx3.54$; 50 electrons give $50/\sqrt{75}\approx5.77$, a factor 1.63. The improvement lies between the read-noise and shot-noise limits. These values assume unsaturated linear response and negligible quantization. Identify whether clipping occurs at sensor full well or after gain: both discard contrast, but their limiting stages and remedies differ.
+
+### CV-ACQUISITION-003 — Aliasing can survive apparently smooth output
+
+Consider a periodic input with spatial frequency just above the new Nyquist limit. Its sampled output can become a slowly varying false pattern, so visual smoothness after resizing does not establish correct sampling. A proposed check uses sinusoidal patterns at several phases and frequencies, keeping the requested output size fixed. Compare attenuation before decimation and the false low-frequency response afterward; merely changing interpolation names does not specify the effective prefilter.
+
+### CV-ACQUISITION-004 — An interface check needs a known stimulus
+
+Feed a constructed color chart with distinct red, green and blue regions and a grayscale ramp through the exact deployment decode path. Compare intermediate arrays with the training path before normalization and after it. A red/blue swap is visible in channel identity; a range error changes the ramp slope; clipping creates flat regions. Equal tensor shape and similar mean brightness cannot distinguish these failures. This is a proposed interface test, not a measured model result.
+
+Consulted foundations: [EMVA 1288 Linear 4.0](https://www.emva.org/wp-content/uploads/EMVA1288Linear_4.0Release.pdf): §§2.4–2.7 noise, SNR and saturation; [Parmar et al., aliased resizing](https://arxiv.org/abs/2104.11222): §§2–3 sampling and resize implementation dependence.
 
 ## Sources and flashcards
 

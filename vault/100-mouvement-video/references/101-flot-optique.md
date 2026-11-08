@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -105,6 +105,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **residual round trip**: note $F_{12}$ moving the 1 image to 2 and $F_{21}$ back. For a pixel $x$ of the first image, calculate $e(x)=\|F_{12}(x)+F_{21}(x+F_{12}(x))\|$ in pixels, only when the return sampling is valid. A trust rule can compare this residual to a tolerance dependent on movement and noise, to be validated on reserved data. A periodic texture can produce an erroneous translation and then its exact opposite: the zero residual then proves nothing on the real surface. Keep the visibility failure distinct from a simple large digital residual.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, Optical Flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html), Lucas-Kanade equation and system; grid compositions and changes deduced; [Teed–Deng, RAFT](https://arxiv.org/html/2003.12039v3), figure 1 and presentation of all-pair and updated correlations.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FLOT-001 — Brightness constancy is a model assumption
+
+A flashing light can change $I_t$ without any physical motion, while an edge translating along itself can produce almost no detectable intensity change. Both examples break a naive identification of brightness change with unique motion. Gradient diversity addresses local geometric observability; it does not repair a photometric model violated by lighting or reflections. A proposed diagnostic separates controlled illumination changes from known geometric translations.
+
+### CV-FLOT-002 — The timestamp interval belongs to each pair
+
+A fixed displacement of 4 px means 200 px/s at 20 ms but 80 px/s at 50 ms. Variable frame intervals therefore require pair-specific timestamps rather than a nominal frame rate. If timestamps refer to reception instead of exposure, packet jitter can create a spurious velocity variation. This is an image-plane average velocity under the temporal model; converting to object-space speed needs geometry and potentially ego-motion compensation.
+
+### CV-FLOT-003 — A correlation maximum is not yet the flow field
+
+For one pixel, several locations in a repeated pattern can have high feature correlation. A recurrent update combines lookup evidence with its current estimate and learned spatial context to refine the field. Taking an independent maximum from each correlation row would define another algorithm and can lose coherent motion. The architecture's dense output still requires evaluation at occlusions, boundaries and domain shifts rather than assuming correlation resolves every ambiguity.
+
+Consulted foundations: [OpenCV optical flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html): brightness constancy, Lucas–Kanade local system and pyramids; [RAFT](https://arxiv.org/html/2003.12039v3): §3 all-pairs correlation, lookup and recurrent updates.
 
 ## Sources and flashcards
 

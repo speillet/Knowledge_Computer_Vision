@@ -22,8 +22,10 @@ Reponse: **Expected answer**: They share scene, objects and conditions; the sepa
 
 **Data Dependency Graph**: Link images from the same acquisition, part, patient, or space zone, then assign groups to the split before creating tiles and augmentations. A validation tile that covers a training tile can directly transmit common textures and objects. The relevant size of a group depends on the generalization announced: new point of view, new object or new site are not the same tests. To estimate the uncertainty of a metric, resample coherent groups rather than all pixels or frames as if they were independent. The large number of files does not replace the diversity of acquisition units.
 
+**Derived samples inherit their source group**: Creating crops, augmentations or neighboring frames before a random split can place near copies of one source acquisition in both training and test. Assign the source group first and propagate its split to every derivative. A proposed audit checks acquisition, part/site/patient and temporal identifiers according to the deployment question. More test files then do not necessarily mean more independent evidence of transfer to unseen conditions.
+
 **Blocking errors**: Assimilate two different file names to two independent observations.
-Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; [Roberts et al., blocking summary and recommendations](https://doi.org/10.1111/ecog.02881); application to frames: project reasoning.
+Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; [Roberts et al., blocking summary and recommendations](https://doi.org/10.1111/ecog.02881); application to frames: project reasoning. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::pratique cv_id::CV-FIABILITE-001 provenance::agent pole::A pole::C pole::D pole::E pole::F
 END
 
@@ -68,8 +70,10 @@ Reponse: **Expected answer**: The test must remain a measure independent of the 
 
 **Test became development**: After several cycles where the errors of the same test guide the choices, this set brings information to the selection process, even without direct training on it. The best result selected among many essays then incorporates this adaptation. Keep for each cycle the version of the data, the decisions made and the validation used; provide for an independent evaluation after freezing of the selected version. A targeted set of difficult cases remains useful as a regression, but does not necessarily replace a representative test of frequency of errors in operation. Naming these uses separately makes it impossible to interpret a gain on an adaptive collection as a general proof.
 
+**An untouched test is consumed by repeated selection**: If the same test failures repeatedly guide prompt, threshold or dataset choices, the test becomes development evidence whether or not gradients were computed on it. A proposed workflow keeps active-learning selection in the training pool, uses validation for choices and reserves an independent final evaluation. When a benchmark has already influenced the design, report that history and obtain fresh evidence rather than relabeling the old score as unbiased.
+
 **Blocking errors**: Call final performance the best iteration result on the same test.
-Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; [Cawley – Talbot, summary/introduction: selection bias](https://www.jmlr.org/papers/v11/cawley10a.html); application to the annotation cycle: project reasoning.
+Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; [Cawley – Talbot, summary/introduction: selection bias](https://www.jmlr.org/papers/v11/cawley10a.html); application to the annotation cycle: project reasoning. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-FIABILITE-003 provenance::agent pole::A pole::C pole::D pole::E pole::F
 END
 
@@ -91,10 +95,12 @@ Reponse: **Expected answer**: check georeferencing, resolution/bands, labels and
 
 **Comparison plan**: cross known/new region and known/new season to separate as much as possible spatial and temporal novelty. check tapes, physical resolution, alignment and label policy in each box. A seasonal change can make an object really different or only its appearance different; the definition of the class must remain explicit. Examining paired areas helps to isolate the acquisition, but does not alone evaluate an area never seen before. Keeping the results per square and per class prevents a change in the proportion of easy terrain from artificially explaining the overall average. This plan remains a proposed protocol, not a measured remote sensing result.
 
+**Season and sensor can be confounded**: If all summer images come from one sensor and all winter images from another, a performance gap cannot be attributed uniquely to season. A proposed analysis seeks overlapping acquisition factors or controlled comparisons, then stratifies by site, band mapping, ground sampling distance, label policy and visible land-cover change. Geographic or temporal grouping must reflect deployment; shuffling nearby tiles does not isolate the source of the shift.
+
 **Blocking errors**: Mix the neighboring tiles of the two seasons to remove the gap of the test.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; Case built from project; [Roberts et al., spatial/temporal separation](https://doi.org/10.1111/ecog.02881).
+Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; Case built from project; [Roberts et al., spatial/temporal separation](https://doi.org/10.1111/ecog.02881). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::diagnostic cv_id::CV-FIABILITE-004 provenance::agent pole::A pole::C pole::D pole::E pole::F cas_pole::E::diagnostic
 END
 

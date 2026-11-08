@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: ["CV-CORNERS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -103,6 +103,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Connecting precision and robust cost**: for a minimum solver of size $s$ and a rate of inliers $w$, the nominal number of prints RANSAC with confidence $p$ is $N\ge\log(1-p)/\log(1-w^s)$ under independent and non-degenerate prints. A cheaper extraction but producing a lower $w$ can therefore greatly increase the cost of geometry. This calculation is an analytical model, not an exact latency prediction: stop, degeneration and repetition variants change the actual behavior. Also measure the time and memory for failures, where the maximum budget can be consumed, instead of only timing the easy pairs correctly registered.
 
 **Passages consulted for these developments**: [OpenCV 4.13, FAST](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html), non-maxima testing and removal segment; fallback after timeout of the author PDF; [Calonder et al. 2010, BRIEF](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf), §3, tests, smoothing and patterns; [OpenCV 4.13, ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), orientation and rBRIEF selection.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FAST-BRIEF-001 — The segment must wrap around the circle
+
+A bright arc spanning the last circle positions and the first ones is contiguous geometrically. A search that only checks a linear array can miss it, even though the intensity inequalities are correct. Conversely, counting bright samples without requiring adjacency admits separated fragments. These two constructed cases test the segment logic independently of threshold tuning or nonmaximum suppression, and avoid attributing a logical implementation error to detector sensitivity.
+
+### CV-FAST-BRIEF-002 — Hamming distance is invariant to a shared bit permutation
+
+If both descriptor strings undergo the same permutation of test positions, their Hamming distance is unchanged: the number of disagreements is preserved. Numeric byte distance generally changes because bit significance changes. This property provides a small constructed metric check. It does not allow independently permuting descriptors from different extractors; matching requires the same physical comparison at each corresponding bit position.
+
+### CV-FAST-BRIEF-003 — An oriented pattern has its own failure source
+
+ORB uses an estimated orientation to rotate the comparison pattern. This improves tolerance to in-plane rotation when the estimate is repeatable, but introduces instability if orientation fluctuates on a symmetric patch. A fixed BRIEF pattern has a different tradeoff. Compare known-angle compensation with estimated-angle compensation while holding locations fixed; the gap isolates orientation estimation from the descriptor's behavior under an ideally normalized patch.
+
+### CV-FAST-BRIEF-004 — Rotation near a boundary changes valid support
+
+An axis-aligned pattern may fit inside the image before rotation and extend beyond it afterward. Dropped descriptors or altered border sampling can then degrade matching even if the angle correction is correct. A proposed ablation keeps points well inside a margin large enough for the rotated support, then tests the original boundary population separately. This separates orientation failure from unavailable image content.
+
+### CV-FAST-BRIEF-005 — A faster front end can make geometry slower
+
+For homography samples of size four and nominal confidence 0.99, changing inlier fraction from 0.5 to 0.25 raises the ideal sample budget from about 72 to about 1177. This constructed calculation assumes independent nondegenerate samples and a fixed fraction. It explains why extraction latency alone is insufficient when replacing SIFT: ambiguous binary matches can transfer work to robust estimation and increase failure-path latency.
+
+Consulted foundations: [Rosten and Drummond](https://www.edwardrosten.com/work/rosten_2006_machine.pdf): segment test, learned decision tree and repeatability evaluation; [Calonder et al., BRIEF](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf): §3 smoothed intensity tests and Hamming matching.
 
 ## Sources and flashcards
 

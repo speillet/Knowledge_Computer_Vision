@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Plan factoriel minimal**: compare association A and B on the same detector D1, then repeat on D2 if we want to study their interaction. The four systems reveal whether an association gain depends on more complete boxes or differently distributed scores. Keep the validation settings separate from the final evaluation. Report loss and recovery events, because an average can hide that a method wins only on sequences without occlusion. The shared detection file must keep timestamps and frame order, including empty frames; removing them changes the time problem instead of only check upstream.
 
 **Passages consulted for these developments**: [Wojke et al., DeepSORT](https://arxiv.org/html/1703.07402v1), §2.2, equations 1 – 4 and gating; §2.4, descriptor; [Zhang et al., ByteTrack](https://arxiv.org/html/2110.06864v3), §3, two associations and creation; built protocols; [Bewley et al., SORT](https://arxiv.org/html/1602.00763v2), §3, estimation, association and cycle; state calculations, timelines and project protocols.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-ASSOCIATION-001 — An older covariance can make motion distance smaller
+
+An old uncorrected track may have large predicted covariance, giving a small Mahalanobis distance to many detections despite weak identity evidence. Appearance and the cascade alter how those candidates compete with recently observed tracks. A small normalized motion residual is therefore not equivalent to a close or trustworthy physical match. Evaluate crossings and long occlusions separately, with descriptor domain and crop quality held fixed.
+
+### CV-ASSOCIATION-002 — Birth and continuation use different evidence
+
+A weak box consistent with an existing predicted trajectory has temporal support that the same isolated weak box lacks. ByteTrack uses that distinction to recover some observations without starting an identity from every low-confidence detection. A proposed ablation keeps the detector and first-stage matches fixed, then measures recovered true continuations and false continuations from the second stage. The phrase every detection is not a guarantee that all low scores are retained.
+
+### CV-ASSOCIATION-003 — Some identities are visually unobservable
+
+If two parts are truly indistinguishable in the available crops, no appearance distance can recover their identity through an unobserved exchange on appearance alone. Motion constraints, process order or an additional marker may supply evidence if the application permits it. Distinguish this ambiguity from domain shift of a pedestrian-trained embedding using controlled same-part/different-part pairs. Retraining cannot be assumed to create a cue absent from the sensor data.
+
+### CV-ASSOCIATION-004 — Association changes can interact with score calibration
+
+Fixing detections must include coordinates, scores, timestamps, classes and ordering, since two-stage association and track creation may use the scores differently. An association method that improves with one detector's score distribution may not improve identically with another. Compare a factorial detector/association design when that interaction matters, and include full latency. A fixed detection count alone does not establish a controlled association comparison.
+
+Consulted foundations: [DeepSORT](https://arxiv.org/html/1703.07402v1): §§2.2–2.4 motion/appearance gates, cascade and descriptor; [ByteTrack](https://arxiv.org/html/2110.06864v3): §3 two-stage association and new-track creation.
 
 ## Sources and flashcards
 

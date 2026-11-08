@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -105,6 +105,22 @@ These explanations complement the mechanism associated with each question. Calcu
 **Bidirectional verification built**: Set $d_g(x)=x_g-x_d$ and a positive straight disparity $d_d(x_d)=x_g-x_d$ for the same point. A consistent pair must check $|d_g(x)-d_d(x-d_g(x))|<\tau$, subject to interpolation and visibility. If the right field uses the opposite sign, the equation changes in sum: the conventions must be explicit. This test rejects some inconsistencies, but two false matches on a repetitive texture can remain mutually compatible. Geometric validation, the distinction between holes and regularized values, and an independent reference remain necessary. The threshold $\tau$ is in pixels of disparity of the grid considered.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, stereo](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html), Basics, triangles and disparity; built-in uncertainty derivations and bidirectional testing.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-STEREO-002 — Small disparities produce asymmetric depth errors
+
+Constructed case: with $fB=200$ px·m, disparity $2\pm0.5$ px maps to depths from 80 to about 133.3 m around a nominal 100 m. The interval is asymmetric because inversion is nonlinear. Near zero disparity, a first-order standard deviation can be misleading and invalid disparities must remain invalid rather than being clamped into apparently finite obstacles. Report depth availability together with error over the relevant range.
+
+### CV-STEREO-004 — Rectification does not resolve an occluded pixel
+
+A foreground edge can reveal background in only one camera. The corresponding pixel then has no valid partner, regardless of how accurately epipolar lines are horizontal. A left/right consistency check can flag some failures, but repeated texture can produce consistent wrong pairs. Evaluate occlusion and low-texture masks separately, and distinguish raw matched depth from any later interpolation or completion used to fill unavailable regions.
+
+Consulted foundations: [OpenCV stereo](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html): rectified disparity/depth relationship; [OpenCV calib3d](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): stereoRectify Q matrix and reprojectImageTo3D disparity scaling.
 
 ## Sources and flashcards
 

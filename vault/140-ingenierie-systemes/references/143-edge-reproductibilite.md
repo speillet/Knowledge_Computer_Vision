@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-PIPELINE", "CV-QUANT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -105,6 +105,22 @@ These explanations complement the mechanism associated with each question. Calcu
 **Signatures temporelles**: A frequency drop correlated with a thermal rise supports a hypothesis of power or temperature limitation; continuous memory growth suggests another investigation; stable memory with increasing frame age may signal a queue overload. These correlations guide the trials without establishing a single cause. Replaying the same load over a sufficient period of time and changing one factor at a time makes it possible to compare start and steady speed. Also keep accurate, drops and outputs, because holding the rate by abandoning more images changes the service rendered. Validation is about complete sustainable behavior, not just about the time of the first network pass.
 
 **Passages consulted for these developments**: [NVIDIA TensorRT, benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), measurements and perimeter, consulted on the 2026-10-30; Amdahl, manifesto and signatures built by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-DEPLOIEMENT-003 — A reproducibility fixture should locate the first divergence
+
+Keep a versioned input fixture with decoded image properties, transformed coordinates and selected intermediate/final outputs under stated tolerances. When a deployment changes, compare these stages in order to distinguish decoding, preprocessing, inference and postprocessing discrepancies. Record runtime, device and relevant configuration with artifact hashes. Identical weights can still produce another system output when class mapping, threshold or coordinate inversion changes.
+
+### CV-DEPLOIEMENT-004 — Sustained validation needs time-correlated traces
+
+A proposed long-duration test logs frame arrival/output times, queue depth, temperature, clock frequency, memory and power/load indicators on a common time axis. A throughput drop correlated with throttling supports one diagnosis; monotonic memory growth or growing queues supports others. Repeat a controlled intervention before claiming causality. Report the warmup and sustained interval, since a short cold-device benchmark does not establish an hour-long operating point.
+
+Consulted foundations: [Amdahl 1967](https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf): unaccelerated fraction and speedup limit; [TensorRT benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html): measurement scope and deployment timing; documentation consulted 2026-11-08.
 
 ## Sources and flashcards
 

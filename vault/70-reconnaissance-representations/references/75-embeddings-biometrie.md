@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -93,6 +93,22 @@ These explanations complement the mechanism associated with each question. Calcu
 **Amount of evidence**: Under a simplified model of $n$ independent non-matte comparisons with probability of false correspondence $p$, observing zero error has probability $(1-p)^n$. The unilateral upper limit of 95% is then $1-0,05^{1/n}$, approximately $3/n$ for large $n$. Zero error on 1 000 comparisons thus remains compatible with a rate of around 0,003, and does not demonstrate a target of $10^{-6}$. Comparisons sharing the same identities are not necessarily independent; the uncertainty must respect the protocol. This constructed analysis explains why an excellent EER and a small test do not characterize the distribution tails at the target threshold.
 
 **Passages consulted for these developments**: [Deng et al., ArcFace](https://arxiv.org/html/1801.07698v4), §III-A, angular margin; binomial bound and system reasoning constructed.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-BIOMETRIE-001 — Identity similarity and presentation validity can disagree
+
+A high-quality photograph of an enrolled person can preserve identity cues while being an attack presentation. An identity embedding may correctly recognize those cues without solving the distinct presentation-validity task. A proposed system evaluation therefore separates bona fide matches, impostor matches and the defined attack types, then assesses the combined decision policy. A low identity error rate alone supplies no measured error rate for attacks absent from that benchmark.
+
+### CV-BIOMETRIE-002 — Low prevalence changes the fraction of accepted errors
+
+For genuine-attempt prevalence $\pi$, the fraction of accepted attempts that are false matches is $(1-\pi)FMR/[\pi(1-FNMR)+(1-\pi)FMR]$ under this constructed binary decision model. It differs from FMR, whose denominator is nonmate attempts. Thus the same matcher operating point can produce different accepted-error composition under a different traffic mix. Report the deployment scenario and uncertainty at the required threshold instead of relying on EER alone.
+
+Consulted foundations: [ArcFace](https://arxiv.org/html/1801.07698v4): §III-A normalized identity embeddings and angular margin; [NIST FRTE 1:1](https://pages.nist.gov/frvt/html/frvt11.html): verification operating points, FMR and FNMR.
 
 ## Sources and flashcards
 

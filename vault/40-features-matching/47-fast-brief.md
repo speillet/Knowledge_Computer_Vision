@@ -22,8 +22,10 @@ Reponse: **Expected answer**: A contiguous arc of circle neighbors must be entir
 
 **Build an unambiguous test**: For a circle of 16 neighbors, code each position as light, dark or similar to the center depending on the threshold. Look for a fairly long contiguous sequence, taking into account the connection between the last and the first position of the circle; a naive implementation can double the sequence to verify this connection. This description is a logical pseudocode, not a benchmark program. Rapid tests of a subset of positions may reject some candidates before the full test, depending on the variant. A lower threshold makes more differences compatible with an arc, but also changes the noise sensitivity; choose the threshold in the effective intensity unit.
 
+**The segment must wrap around the circle**: A bright arc spanning the last circle positions and the first ones is contiguous geometrically. A search that only checks a linear array can miss it, even though the intensity inequalities are correct. Conversely, counting bright samples without requiring adjacency admits separated fragments. These two constructed cases test the segment logic independently of threshold tuning or nonmaximum suppression, and avoid attributing a logical implementation error to detector sensitivity.
+
 **Blocking errors**: Count scattered neighbors; assign a binary descriptor to FAST alone.
-Source: [[40-features-matching/references/47-fast-brief|Full reference]]; [Rosten and Drummond 2006, §§2 – 3, test and learning segment](https://www.edwardrosten.com/work/rosten_2006_machine.pdf); [OpenCV 4.13, FAST, non-maxima testing and deletion segment; fallback after timeout of author PDF](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html), see 2026-10-30.
+Source: [[40-features-matching/references/47-fast-brief|Full reference]]; [Rosten and Drummond 2006, §§2 – 3, test and learning segment](https://www.edwardrosten.com/work/rosten_2006_machine.pdf); [OpenCV 4.13, FAST, non-maxima testing and deletion segment; fallback after timeout of author PDF](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::algorithme cv_id::CV-FAST-BRIEF-001 provenance::agent pole::B pole::C pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: The Hamming distance: XOR = 001100, so two differe
 
 **Stability of one bit**: The $b_j=\mathbf1[I_s(x_j)<I_s(y_j)]$ test is particularly fragile if the $I_s(y_j)-I_s(x_j)$ difference is close to zero. A low noise can then return the bit, even if the patch represents the same point. Smoothing reduces some fluctuations but can remove the distinctive detail. Adding highly correlated bits does not provide as much information as complementary comparisons. Hamming's distance does not tell what disagreements arise from noise, rotation, or other object: it is the data and protocol that determine its interpretation. A threshold relating to the number of bits is not automatically a match probability.
 
+**Hamming distance is invariant to a shared bit permutation**: If both descriptor strings undergo the same permutation of test positions, their Hamming distance is unchanged: the number of disagreements is preserved. Numeric byte distance generally changes because bit significance changes. This property provides a small constructed metric check. It does not allow independently permuting descriptors from different extractors; matching requires the same physical comparison at each corresponding bit position.
+
 **Blocking errors**: Use a distance L2 between integers encoding strings.
-Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [Calonder et al. 2010, §3, BRIEF tests and smoothing](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf).
+Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [Calonder et al. 2010, §3, BRIEF tests and smoothing](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-FAST-BRIEF-002 provenance::agent pole::B pole::C pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: FAST detects positions; BRIEF describes patches by
 
 **Separate learned and calculated parameters**: in a ORB assembly, the selection of binary comparisons aims at informative and little redundant tests on learning data; at the extraction of a new image, the orientation and answers of these tests are calculated around each point. This is not an online trained network on the observed part. A BRIEF with a fixed pattern can share the same storage without sharing this selection or the orientation compensation. To compare two strings, record the pattern, support, smoothing and sampling coordinates; the name of the detector does not identify the descriptor that was produced.
 
+**An oriented pattern has its own failure source**: ORB uses an estimated orientation to rotate the comparison pattern. This improves tolerance to in-plane rotation when the estimate is repeatable, but introduces instability if orientation fluctuates on a symmetric patch. A fixed BRIEF pattern has a different tradeoff. Compare known-angle compensation with estimated-angle compensation while holding locations fixed; the gap isolates orientation estimation from the descriptor's behavior under an ideally normalized patch.
+
 **Blocking errors**: Assign orientation or invariance of universal scale to FAST alone.
-Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [OpenCV 4.13, ORB, orientation and rBRIEF](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html).
+Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [OpenCV 4.13, ORB, orientation and rBRIEF](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-FAST-BRIEF-003 provenance::agent pole::B pole::C pole::E
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: The fixed BRIEF test pattern does not necessarily 
 
 **Compensation expected**: If a patch is rotated by $R_\theta$, the positions of the two readings of a test must undergo a consistent transformation, or the patch must be resampled in a canonical coordinate frame before comparison. The first strategy rotates the pattern, the second transforms the local image; their interpolations and edges may differ. With an exact known rotation, they give a discriminating experience to isolate the absence of orientation. With an estimated orientation, its noise becomes a new cause of binary disagreement. An improvement in this ablation does not demonstrate an invariance in perspective: anisotropic deformation is not compensated by a single angle.
 
+**Rotation near a boundary changes valid support**: An axis-aligned pattern may fit inside the image before rotation and extend beyond it afterward. Dropped descriptors or altered border sampling can then degrade matching even if the angle correction is correct. A proposed ablation keeps points well inside a margin large enough for the rotated support, then tests the original boundary population separately. This separates orientation failure from unavailable image content.
+
 **Blocking errors**: Conclude that FAST is necessarily at fault while his points are stable.
-Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [Calonder et al. 2010, §3, BRIEF tests and smoothing](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf).
+Source: [[40-features-matching/references/47-fast-brief|Full reference]] ; [Calonder et al. 2010, §3, BRIEF tests and smoothing](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-FAST-BRIEF-004 provenance::agent pole::B pole::C pole::E
 END
 
@@ -114,7 +122,9 @@ Reponse: **Expected answer**: Compare repeatability, quality of matches validate
 
 **Connecting precision and robust cost**: for a minimum solver of size $s$ and a rate of inliers $w$, the nominal number of prints RANSAC with confidence $p$ is $N\ge\log(1-p)/\log(1-w^s)$ under independent and non-degenerate prints. A cheaper extraction but producing a lower $w$ can therefore greatly increase the cost of geometry. This calculation is an analytical model, not an exact latency prediction: stop, degeneration and repetition variants change the actual behavior. Also measure the time and memory for failures, where the maximum budget can be consumed, instead of only timing the easy pairs correctly registered.
 
+**A faster front end can make geometry slower**: For homography samples of size four and nominal confidence 0.99, changing inlier fraction from 0.5 to 0.25 raises the ideal sample budget from about 72 to about 1177. This constructed calculation assumes independent nondegenerate samples and a fixed fraction. It explains why extraction latency alone is insufficient when replacing SIFT: ambiguous binary matches can transfer work to robust estimation and increase failure-path latency.
+
 **Blocking errors**: Choose on a published FPS without protocol; ignore cost after detection.
-Source: [[40-features-matching/references/47-fast-brief|Full reference]]; [Rosten and Drummond 2006, §§2 – 3, test and learning segment](https://www.edwardrosten.com/work/rosten_2006_machine.pdf); [Calonder et al. 2010, BRIEF, §3, tests, smoothing and patterns](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf), see 2026-10-30.
+Source: [[40-features-matching/references/47-fast-brief|Full reference]]; [Rosten and Drummond 2006, §§2 – 3, test and learning segment](https://www.edwardrosten.com/work/rosten_2006_machine.pdf); [Calonder et al. 2010, BRIEF, §3, tests, smoothing and patterns](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-FAST-BRIEF-005 provenance::agent pole::B pole::C pole::E
 END

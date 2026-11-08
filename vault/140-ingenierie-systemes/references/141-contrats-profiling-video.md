@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -111,6 +111,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Locate a drop by substitution**: Replacing decoding with prepared frames approximately retains the downstream work and tests a hypothesis of data provision. Replacing the network temporarily with a saved result tests another limit, provided you keep the cost of postprocessing and the number of candidates. These tests are not product performance: they isolate contributions. If the drop moves after correction, re-trace the entire track rather than adding the isolated gains. check also includes copy dependencies and involuntary serialization; low GPU usage may come from repeated short waits and not from a lack of network capacity.
 
 **Passages consulted for these developments**: [GStreamer, tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), limits and blocking; built flow calculations and protocols; [NVIDIA TensorRT, benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), scope of measurement; page lastest accessed the 2026-10-30, no new API command imposed.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-PIPELINE-002 — Buffer capacity buys time, not steady-state capacity
+
+With arrivals at 240 frames/s and service at 200, backlog grows by 40 frames/s under the front's no-drop model. An extra 400-frame buffer absorbs about ten seconds before filling. By then it represents about two seconds of service work at 200 frames/s. Backpressure or dropping changes the model and must be measured explicitly; allocating memory alone cannot make the sustained arrival rate feasible.
+
+### CV-PIPELINE-003 — Overlapped stages need a dependency trace
+
+Decode, transfer and inference can overlap across frames, so adding their separately timed durations can overstate throughput cost while still omitting queue age. Trace each frame's dependencies and the moment its result becomes usable. A host launch timestamp is not device completion. Distinguish an isolated synchronous latency benchmark from a pipelined load test, and report both when the system requires sustained streams and per-frame deadlines.
+
+### CV-PIPELINE-005 — Utilization alone does not identify the bottleneck
+
+A GPU can be idle because decode starves it, because the CPU waits on a transfer, or because a concurrency policy serializes work. A proposed controlled substitution replaces one stage at a time while retaining downstream input shapes and transfer requirements. Compare timeline gaps, queue depths and output age. Artificial inputs that bypass too much work can exaggerate a stage's apparent benefit, so state exactly which cost the substitution removes.
+
+Consulted foundations: [GStreamer queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html): queue limits, blocking, leaky behavior and current levels; [TensorRT benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html): scope of latency, throughput and host/device timing; documentation consulted 2026-11-08.
 
 ## Sources and flashcards
 

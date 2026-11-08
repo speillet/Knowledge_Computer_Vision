@@ -22,8 +22,10 @@ Reponse: **Expected answer**: It rejects local extreme values via order, while t
 
 **Linking the operation to the noise**: for a normalized linear filter $J(p)=\sum_q k_q I(p-q)$ and independent noises of variance $\sigma_n^2$, the output variance is $\sigma_n^2\sum_q k_q^2$. A uniform average of nine samples therefore divides it by nine, under these assumptions, but also mixes their signals. The median depends on the rank of the values: an isolated pulse can stay away from the central rank without drawing the result towards it. Noise correlations, edges and fine details change these tradeoffs. The Gaussian is separable: two convolutions 1D replace a convolution 2D for the same kernel produced, without making a median equivalent to this operation.
 
+**Robustness to impulses has a geometric price**: In a nine-value neighborhood with eight values of 10 and one impulse of 250, the median remains 10 while the mean becomes about 36.7. If the single high value is a genuine one-pixel bright defect, however, removing it is an error. The filter cannot identify which interpretation is correct from rank alone. This constructed counterexample connects the noise assumption directly to the smallest structure the inspection task must retain.
+
 **Blocking errors**: Advertise a better filter for all noises and tasks.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html); [OpenCV 4.13, Smoothing Images, Theory, Gaussian, Median and Bilateral Filter](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), see 2026-10-30.
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html); [OpenCV 4.13, Smoothing Images, Theory, Gaussian, Median and Bilateral Filter](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d03 famille::comparaison cv_id::CV-FILTRES-001 provenance::agent pole::A pole::B pole::E pole::F
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Divide the photometric sigma by 255, like the inte
 
 **Complete form and role of standardization**: for a pixel $p$, write $J(p)=\sum_q w_{pq}I(q)/\sum_q w_{pq}$, with $w_{pq}=\exp(-\|p-q\|^2/(2\sigma_s^2))\exp(-(I(p)-I(q))^2/(2\sigma_r^2))$. The first factor favors nearby neighbors, the second one those whose intensity resembles that of the center. The denominator adapts the sum of the weights to the local content; without it, an edge could simply darken the result by rejecting neighbors. The weights depend on the image: it is a non-linear operation, even if the output looks like an average. The noise of the central pixel also influences which neighbors will be considered similar; preserving a contour remains conditional.
 
+**Only affine intensity scaling preserves this ratio**: For $I^{\prime}=\alpha I+\beta$ with nonzero $\alpha$, intensity differences scale by $|\alpha|$, so preserving Gaussian range weights requires $\sigma_r^{\prime}=|\alpha|\sigma_r$. The offset cancels. A nonlinear gamma transform does not have one global scale factor for all differences, so adjusting a single sigma cannot generally reproduce the old weights. Also preserve the spatial sigma in the same pixel geometry; resizing changes that contract separately.
+
 **Blocking errors**: Treat all sigma as quantities without unity.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [Tomasi and Manduchi 1998, Bilateral Filtering, §§2 – 3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf); [OpenCV 4.13, Smoothing Images, Theory, Gaussian, Median and Bilateral Filter](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), see 2026-10-30.
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [Tomasi and Manduchi 1998, Bilateral Filtering, §§2 – 3](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf); [OpenCV 4.13, Smoothing Images, Theory, Gaussian, Median and Bilateral Filter](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d03 famille::raisonnement cv_id::CV-FILTRES-002 provenance::agent pole::A pole::B pole::E pole::F
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Measure defect recall and location error at releva
 
 **Make the compromise quantifiable**: $PSNR=10\log_{10}(L^2/MSE)$, with $L$ the maximum of the range announced and $MSE$ the average squared errors against a reference. Modifying $L$ or normalization without consistency changes the score. If a defect occupies a fraction $p$ of the pixels and undergoes an amplitude error $a$, its contribution to the MSE is only $pa^2$: it can remain small even if all its pixels are lost. Then measure the probability of detecting a defective part and the frequency of false alarms per part, with rules of association and constant thresholds. The reference to PSNR must itself be justified; a noisy image used as "clean" changes the problem.
 
+**A task metric needs the same operating point**: Compare preprocessing variants at a fixed false-alarm budget per inspected part, then measure defect recall by width, contrast and position. Holding an arbitrary detector score threshold fixed may confound preprocessing with changed score distributions. Use validation to choose thresholds and an untouched test set to estimate the resulting tradeoff. This proposed protocol distinguishes improved appearance from an operational improvement on the rare defects that matter.
+
 **Blocking errors**: Decide on the PSNR alone.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html); downstream protocol proposed by the project; [OpenCV 4.13, PSNR/SSIM, definition of PSNR; built scarcity example](https://docs.opencv.org/4.13.0/d5/dc4/tutorial_video_input_psnr_ssim.html), consult the 2026-10-30.
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]]; [OpenCV 4.12.0, Smoothing Images, Gaussian/Median/Bilateral Filter](https://docs.opencv.org/4.12.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html); downstream protocol proposed by the project; [OpenCV 4.13, PSNR/SSIM, definition of PSNR; built scarcity example](https://docs.opencv.org/4.13.0/d5/dc4/tutorial_video_input_psnr_ssim.html), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d03 famille::diagnostic cv_id::CV-FILTRES-003 provenance::agent pole::A pole::B pole::E pole::F
 END
 
@@ -91,7 +97,9 @@ Reponse: **Expected answer**: Decimation without filtering can fold high frequen
 
 **Building the Levels**: A Gaussian pyramid follows $I_{\ell+1}(x,y)=(G_\ell*I_\ell)(2x,2y)$ in an example of decimation by two. Coordinates are approximately converted by $p_0=2^\ell p_\ell$, respecting the exact pixel center conventions. A five-ray window at the $\ell=3$ level covers about forty pixels of radius in the initial image: its physical support has changed. This is useful for bringing back a large displacement in a local capture area, but it can mix objects or eliminate a fine structure. Propagate coordinates, descriptor radius, and geometric thresholds in the same system of units, rather than treating levels as independent images.
 
+**A coarse-level displacement changes its unit**: After three reductions by two, an 8 px full-resolution displacement is approximately 1 px at the coarse level. This helps a local matcher only if the relevant texture survives filtering and neighboring motions do not merge within the window. A 1 px localization error at that level also becomes about 8 px when transferred back. Pyramid depth therefore changes both capture range and localization precision; it cannot be chosen solely from maximum motion.
+
 **Blocking errors**: Confusing undersampling and controlled loss of information.
-Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]] ; [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html).
+Source: [[30-traitement-image/references/31-filtrage-gradients|Full reference]] ; [OpenCV 4.13.0, Image Pyramids, Gaussian Pyramid](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d03 famille::comprehension cv_id::CV-FILTRES-004 provenance::agent pole::A pole::B pole::E pole::F
 END

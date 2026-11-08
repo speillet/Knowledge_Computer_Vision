@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-CLIP", "CV-VIDEO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -105,6 +105,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Anchor tests built**: use a positive image, a comparable negative image and, if feasible, a variation where only the target object changes. Check if the assertions actually follow this variation and if the correction increases the refusal rather than the accuracy. A decrease in the number of false assertions obtained by never responding is not the same result as better recognition; report coverage of responses and risk of error among responses issued. These tests must respect the distribution of the images, because an artificial masking can introduce an artifact. Outputs must remain connected to the exact version of the input and prompt used.
 
 **Passages consulted for these developments**: [Li et al., BLIP-2](https://arxiv.org/html/2301.12597v2), §3.1, learned queries and cross attention; probabilistic models and built tests.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-VLM-001 — An action interface needs a state and timing contract
+
+A VLA output can encode commands in a learned action representation, but the controller still needs units, reference frames, frequency and validity limits. A plausible language description does not establish an executable command, and a valid command schema does not prove that the visual state was estimated correctly. Compare models at their declared outputs and evaluate any conversion into physical actions separately. No robotic execution is established by these notes.
+
+### CV-VLM-003 — Retrieval needs both event coverage and verification
+
+A proposed video index can use a cheap first stage to retrieve candidate intervals and a more expensive model to verify them. Measure missed events introduced by the retrieval stage separately from false descriptions introduced by verification. Include short events and temporally similar negatives, and account for sampling, decoding and prompt cost. An accurate verifier cannot recover an event never presented in its sampled candidate frames.
+
+### CV-VLM-004 — A counterfactual image pair can test visual dependence
+
+Construct paired inputs differing in one controlled object while keeping prompt and scene context fixed. Check whether the answer changes with the image and whether absence is acknowledged on a negative image. Preserve the actual decoded inputs and generation settings. This proposed diagnostic helps identify context-driven responses, but passing a few pairs does not certify grounding across the deployment distribution or eliminate hallucinations globally.
+
+Consulted foundations: [BLIP-2](https://arxiv.org/html/2301.12597v2): §3 Q-Former learned queries and frozen encoder/language-model bridge; [LLaVA](https://arxiv.org/html/2304.08485v2): §4 visual instruction tuning and limitations.
 
 ## Sources and flashcards
 

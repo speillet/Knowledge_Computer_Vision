@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -99,6 +99,22 @@ These explanations complement the mechanism associated with each question. Calcu
 **Model of order**: represent regions as nodes and relationships "must be read before" as edges allows to explain a partial order. Topological sorting produces a compatible order if these constraints are cycle-free; column rules, arrays, and inserts determine edges, not the confidence of the recognizer. A simple global sorting by height can intertwine two well-detected columns. To locate the fault, successively compare reference regions, reference transcriptions and reference order by replacing only one output at a time. This ablation identifies what each component brings to the final document error.
 
 **Passages consulted for these developments**: [OCR-D](https://ocr-d.de/en/spec/ocrd_eval.html), Text Evaluation, distance from Levenshtein, CER/WER; examples and built order model.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-OCR-001 — Field association can fail with perfect characters
+
+A two-column invoice can contain every digit correctly yet assign a unit price from one row to the quantity of another. Character accuracy alone then misses the extraction failure. A project evaluation can score field identity, normalized numeric value, row association and document-level acceptance separately. Define normalization for decimal separators and currency before testing, so a harmless formatting difference and a financially different amount do not receive the same interpretation.
+
+### CV-OCR-002 — Micro and macro CER answer different questions
+
+Constructed example: one 100-character document has zero edits and one one-character document has one edit. Micro CER is $1/101\approx0.99\%$, while the mean of document CERs is 50%. Both are well-defined but weight documents differently. Report the aggregation rule, empty-reference policy and text normalization. A CER above 100% is possible when insertions dominate; clipping it to 100% would erase real error magnitude.
+
+Consulted foundations: [OCR-D evaluation](https://ocr-d.de/en/spec/ocrd_eval.html): Text Evaluation, Levenshtein alignment, normalization and CER/WER.
 
 ## Sources and flashcards
 

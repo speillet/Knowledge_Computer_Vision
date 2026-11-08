@@ -22,8 +22,10 @@ Reponse: **Expected answer**: CER measures the editing of characters according t
 
 **Example of weighting**: A document of 2 000 characters with a substitution on the total amount may have a CER of 0,05% and remain unusable for accounting processing. A field metric can compare the numerical value after a predicted normalization of separators, currencies, and decimals; a document metric can require all the correct critical fields. Also keep the raw string and image region allows to distinguish recognition error, field association and normalization. Arithmetic checks between lines, taxes and totals provide additional consistency, without proving that a plausible value actually corresponds to that printed.
 
+**Field association can fail with perfect characters**: A two-column invoice can contain every digit correctly yet assign a unit price from one row to the quantity of another. Character accuracy alone then misses the extraction failure. A project evaluation can score field identity, normalized numeric value, row association and document-level acceptance separately. Define normalization for decimal separators and currency before testing, so a harmless formatting difference and a financially different amount do not receive the same interpretation.
+
 **Blocking errors**: Confounds near global text and correctly structured invoice.
-Source: [[70-reconnaissance-representations/references/74-ocr-documents|Full reference]]; [OCR-D, Text Evaluation, CER and WER, Viewed on 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html); invoice criteria proposed by the project.
+Source: [[70-reconnaissance-representations/references/74-ocr-documents|Full reference]]; [OCR-D, Text Evaluation, CER and WER, Viewed on 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html); invoice criteria proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-OCR-001 provenance::agent pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Yes: Inserts can exceed the number of reference ch
 
 **Calculation of distance**: Dynamic programming uses $D_{i,j}=\min(D_{i-1,j}+1,D_{i,j-1}+1,D_{i-1,j-1}+\mathbf1[a_i\ne b_j])$, with $D_{i,0}=i$ and $D_{0,j}=j$ edges. It looks for the minimum editing cost, not a simple count of different fixed-position characters. To aggregate several pages, the ratio $\sum_k(S_k+D_k+I_k)/\sum_kN_k$ weights by reference length, while the average of CER per page weights the pages as well. Both answer different questions. Defining Unicode units and processing empty references before this calculation avoids incompatible score comparisons.
 
+**Micro and macro CER answer different questions**: Constructed example: one 100-character document has zero edits and one one-character document has one edit. Micro CER is $1/101\approx0.99\%$, while the mean of document CERs is 50%. Both are well-defined but weight documents differently. Report the aggregation rule, empty-reference policy and text normalization. A CER above 100% is possible when insertions dominate; clipping it to 100% would erase real error magnitude.
+
 **Blocking errors**: Rotate arbitrarily to 1 without announcing another protocol.
-Source: [[70-reconnaissance-representations/references/74-ocr-documents|Full reference]]; [OCR-D, Text Evaluation, CER and WER, Viewed on 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html); classical convention with denominator N.
+Source: [[70-reconnaissance-representations/references/74-ocr-documents|Full reference]]; [OCR-D, Text Evaluation, CER and WER, Viewed on 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html); classical convention with denominator N. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-OCR-002 provenance::agent pole::E
 END
 

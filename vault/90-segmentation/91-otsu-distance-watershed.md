@@ -12,7 +12,7 @@ START
 CV-Pilote
 ID: CV-WATERSHED-001
 Question: Why can an Otsu threshold that is optimal for the intensity histogram be poor for defect segmentation?
-Reponse: **Expected answer**: The lens separates intensities according to variance, not business categories; lighting, imbalance and noise can dominate.
+Reponse: **Expected answer**: The objective separates intensities according to variance, not business categories; lighting, imbalance and noise can dominate.
 
 **Further explanation**: Test an annotated mask and defect size; compare local thresholding or other representation if hypothesis fails.
 
@@ -22,8 +22,10 @@ Reponse: **Expected answer**: The lens separates intensities according to varian
 
 **Computable criterion**: at threshold $t$, form the weights $\omega_0,\omega_1$ of the two groups and their averages $\mu_0,\mu_1$; Otsu maximizes $\omega_0\omega_1(\mu_0-\mu_1)^2$. Two very separate groups but one of which contains very few pixels may be less favored than a break explaining more about the overall variation. The criterion ignores positions: Spatially swapping pixels retains the histogram and threshold, but can destroy all objects. This built case shows why neither form, connectivity, nor business class are guaranteed. A default and size evaluation therefore necessarily completes the reading of the histogram.
 
+**A histogram has no knowledge of where defects lie**: Two images with identical intensity histograms but different spatial arrangements receive the same Otsu objective. One can contain a coherent scratch and the other isolated speckles. This constructed permutation argument shows why histogram optimality cannot establish the desired spatial segmentation. Evaluate defect extent and connectivity after thresholding, and compare controlled illumination changes rather than selecting a threshold solely because its histogram classes look well separated.
+
 **Blocking errors**: Deducing the semantic optimality of the optimum from a criterion of intensity.
-Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html).
+Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d09 famille::raisonnement cv_id::CV-WATERSHED-001 provenance::agent pole::A pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Build a mask, estimate centers/markers from distan
 
 **Choice of topography**: For a binary mask and a positive distance inside, the thick centers are maxima of $D$. A conceptual watershed on $-D$ transforms them into a minima; another variant can use a gradient image with fixed germs. These constructs are not automatically identical to the OpenCV API taking a color image. The distance to a discrete background also depends on the chosen metric. On anisotropic pixels, a distance in indices is not directly a physical distance: integrate the spacings if the shape or threshold should be interpreted in millimeters rather than pixels.
 
+**Markers encode the intended number of basins**: One marker per touching object supplies a separation hypothesis; two markers inside one physical object can instead split it. Distance maxima are only proxies for object centers and can multiply on elongated or irregular shapes. Inspect marker stability under small mask perturbations and object-size variation. A proposed protocol compares marker errors separately from boundary propagation, because a good foreground mask can still support the wrong instance partition.
+
 **Blocking errors**: Present the transform distance as a standalone instance segmentation.
-Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html).
+Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d09 famille::algorithme cv_id::CV-WATERSHED-002 provenance::agent pole::A pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Zero represents an area to be assigned; the alread
 
 **Example of a label table**: assign 1 to the certain background, 2 and 3 to the two object interiors, then 0 to the areas to be decided. After propagation, the positive labels designate the basins and $-1$ the borders according to the contract cited. The number 1 is therefore not universally the "object" class: it is here an identifier chosen for the background. Keep a dictionary between labels and physical meaning before producing a binary mask. If we replace all positive labels with a single one, we destroy precisely the distinction of instances that the initialization should bring, even if the global region remains unchanged.
 
+**Labels must retain signed integer semantics**: The value $-1$ marks watershed boundaries in the documented output. Casting this map to an unsigned type before interpretation can turn that sentinel into a large positive number and make it look like an object label. Keep the signed label map separate from a display image and derive masks by explicit label rules. The background marker is a positive basin identifier; its number has no intrinsic semantic meaning outside the chosen contract.
+
 **Blocking errors**: Assimilate 0 value to a permanently classified background.
-Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html).
+Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d09 famille::pratique cv_id::CV-WATERSHED-003 provenance::agent pole::A pole::E
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: Visualize markers: if there is only one common ger
 
 **Overall threshold and different sizes**: Select all pixels where $D>\alpha\max D$ can remove germs from small objects, because the global maximum belongs to the thickest. Two properly masked objects can receive a germ and none, respectively. Comparing an overall threshold to a maxima detection adapted to the expected sizes is a discriminating variation, without assuming that a local rule solves all cases. Smoothing and removing close maxima also alters the number of germs. Viewing their number per annotated instance before the watershed makes it possible to distinguish a loss of small object and a merger of neighboring markers.
 
+**More markers can trade merges for splits**: Lowering a peak-selection threshold may recover a missing center in a small object while introducing several centers in a large one. A proposed sweep records both merged ground-truth instances and fragmented single instances, stratified by size and shape. Do not choose the setting from the count alone: one merge and one split can cancel numerically while both object identities remain wrong. Retain the overlap relationships needed to diagnose them.
+
 **Blocking errors**: Validate instances on binary mask quality only.
-Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html).
+Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d09 famille::diagnostic cv_id::CV-WATERSHED-004 provenance::agent pole::A pole::E
 END
 
@@ -104,7 +112,7 @@ START
 CV-Pilote
 ID: CV-WATERSHED-005
 Question: Why can high binary IoU hide failure of a watershed counting pipeline?
-Reponse: **Expected answer**: Merging multiple objects can retain almost the entire top-tier region but lose the number and identity of instances.
+Reponse: **Expected answer**: Merging multiple objects can retain almost the entire foreground region but lose the number and identity of instances.
 
 **Further explanation**: Measure fusions/separations and matching protocol of objects, in addition to the global mask.
 

@@ -22,8 +22,10 @@ Reponse: **Expected answer**: The build cost and memory can exceed the gain on q
 
 **What does the index cost?**: a forest of kd-trees divides vectors by coordinates; a search follows promising regions and then explores other branches according to a budget. A hierarchical k-mean tree partitions rather by group centers. Stopping early explains both the labor economy and the lack of an accurate general neighbor guarantee. In the time model already built, the damping threshold checks $2+0,001N_q<0,003N_q$, so $N_q>1000$; at a thousand queries the costs are equal. This threshold depends entirely on the assumed costs. Any reconstruction, additional transfer or change in the budget must be reinstated before concluding that the index is of interest.
 
+**Amortization has an explicit break-even point**: Let index construction take $B$, exhaustive query time $E$, and indexed query time $A<E$. Ignoring updates, the index pays off only after $N_q>B/(E-A)$ queries. A rebuilt database resets that amortization. Memory and required neighbor recall can rule out an apparently favorable time comparison. This is a project cost model, so measure all three terms on the actual descriptor population and target hardware rather than treating an algorithm name as a latency estimate.
+
 **Blocking errors**: Compare only the query time excluding indexing.
-Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf).
+Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-FLANN-001 provenance::agent pole::B pole::E pole::F
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: No: storage does not define the metric. The usual 
 
 **Standardization and metric form a contract**: for real unit vectors $a,b$, $\|a-b\|_2^2=2-2a^Tb$ connects L2 and cosine similarity. This equivalence requires normalization and does not extend to bytes encoding ORB bits. Even for real vectors, changing their normalization after index construction can change neighbors and invalidate the setting. Keeping the extractor, its version/configuration, the dimension and the expected metric with the base makes it possible to detect these incompatibilities before the matching. A type conversion is sometimes necessary for an API; it must preserve the desired mathematical representation, and is not used to bypass an incompatible distance contract.
 
+**Metric compatibility survives no numeric cast**: A packed binary byte of 128 differs from zero in one test, while a byte of 3 differs in two tests. Float casting keeps numeric differences 128 and 3, reversing the Hamming ranking. A compatible binary index must operate on the intended test distance. Even then, verify its supported symbol semantics: ordinary Hamming support does not automatically establish correctness for ORB two-bit winner symbols requiring Hamming2.
+
 **Blocking errors**: Process bytes encoding multiple bits as L2 coordinates.
-Source: [[40-features-matching/references/48-flann|Full reference]]; [OpenCV 4.13, Feature Matching, BF and FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [Muja and Lowe 2009, §§3.1 – 3.3, structures, budget and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), see 2026-10-30.
+Source: [[40-features-matching/references/48-flann|Full reference]]; [OpenCV 4.13, Feature Matching, BF and FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [Muja and Lowe 2009, §§3.1 – 3.3, structures, budget and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-FLANN-002 provenance::agent pole::B pole::E pole::F
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: No: the second neighbor may have been missed. The 
 
 **Inverse case not to be forgotten**: Missing the best neighbor can also make the ratio less favorable or make another candidate accept; the search error does not have a single direction on the final decision. The call@1 measures only if the first exact neighbor is found. For a filter using two neighbors, also measure the recall of the set of the two best and the agreement of the filtering decision. Ex-æquo require a convention: several clues can have the same distance and make an identity comparison too severe. An exhaustive reference must therefore announce metric, numerical precision and equality rule, and then remain the same for all budgets evaluated.
 
+**A rank-gap bound can certify a ratio decision**: Constructed local bound: suppose the exact first distance is recovered and the returned second distance obeys $d_2\le\hat d_2\le(1+\varepsilon)d_2$. The measured ratio satisfies $r/(1+\varepsilon)\le\hat r\le r$, where $r=d_1/d_2$. Consequently $\hat r<\tau/(1+\varepsilon)$ guarantees $r<\tau$ under those assumptions, whereas merely $\hat r<\tau$ does not. Typical search budgets do not supply such a per-query guarantee; this derivation explains why empirical filter agreement remains necessary.
+
 **Blocking errors**: Interpret any smaller ratio as a gain in accuracy.
-Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf).
+Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-FLANN-003 provenance::agent pole::B pole::E pole::F
 END
 
@@ -81,7 +87,7 @@ START
 CV-Pilote
 ID: CV-FLANN-004
 Question: Which measurements help tune approximate-search effort without hiding degradation of the overall pipeline?
-Reponse: **Expected answer**: Measure recall of neighbors against an exact baseline, latency, memory, build, and number/quality of final inlays. Change one budget at a time on reserved data.
+Reponse: **Expected answer**: Measure recall of neighbors against an exact baseline, latency, memory, build, and number and quality of final geometric inliers. Change one budget at a time on reserved data.
 
 **Further explanation**: The call describes fidelity to the exact search; it is not the semantic precision of the matches. Repetitions of texture and erroneous geometric pattern remain possible even with exact neighbors.
 
@@ -91,7 +97,9 @@ Reponse: **Expected answer**: Measure recall of neighbors against an exact basel
 
 **Read a quality – cost curve**: an operating point dominates another if it retains at least the useful quality by costing less depending on the resources considered. Between undominated points, the choice depends on the budget and tolerance produced, not on a single universal score. Separating build time, query latency, memory, and update frequency from the base avoids masking a misplaced extra cost. Testing queries without a real match is also essential: a neighbor search will usually return someone even if the correct answer is "absent". The rejection of pairs and the geometric verification define this possibility of refusal, which the only recall of the neighbors does not measure.
 
+**Search effort should be selected on a frontier**: Sweep search effort on fixed validation queries and retain points that improve no resource without sacrificing useful registration quality. Include index construction, update frequency, query tail latency and peak memory. Test queries from a shifted acquisition regime separately, because an index tuned on easy descriptors can lose recall on a different distribution. Freeze the chosen configuration before final test evaluation rather than selecting effort from the best test-set registration score.
+
 **Blocking errors**: Assimilate the accuracy of the neighbor to the physical validity of the correspondence.
-Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf).
+Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-FLANN-004 provenance::agent pole::B pole::E pole::F
 END

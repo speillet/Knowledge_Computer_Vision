@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -111,6 +111,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Origin of multiple solutions**: With three known 3D points and three unit sighting directions, P3P looks for their positive $\lambda_i$ distances to the camera. The cosine law imposes $\|X_i-X_j\|^2=\lambda_i^2+\lambda_j^2-2\lambda_i\lambda_j\cos\alpha_{ij}$, where $\alpha_{ij}$ is the angle between the rays. This nonlinear system can admit several triangles of compatible rays. An additional observation then serves to separate them, according to the function chosen. This geometric derivation explains why “minimum three” and “pose unique” are not equivalent. Almost collinear points, their uncertainties and the solutions behind the camera must be controlled before refinement on more matches.
 
 **Passages consulted for these developments**: [OpenCV 4.13, calib3d](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), E/F, recoverPose and triangulatePoints; linear geometry deduced; [OpenCV 4.13, PnP](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html), pose computation methods and P3P; verified contract with Context7.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-EPIPOLAIRE-001 — The matrix relation fixes the coordinate contract
+
+For ideal undistorted pixel vectors $x_1,x_2$ and normalized rays $K_1^{-1}x_1,K_2^{-1}x_2$, $F=K_2^{-T}EK_1^{-1}$. Applying $E$ directly to raw distorted pixels generally violates both normalization and distortion assumptions. This derived relation also explains why changing image intrinsics by resizing changes the pixel-space fundamental matrix even when the physical relative pose and essential geometry remain the same.
+
+### CV-EPIPOLAIRE-002 — A cheirality choice does not establish metric scale
+
+Positive-depth tests can select among candidate essential-matrix decompositions, but multiplying a valid translation and all reconstructed points by the same positive factor preserves their projections and depth signs. A known baseline, metric object, or appropriately observable additional sensor can supply scale. Record which evidence supplies it; normalizing a recovered translation to unit length is a computational convention, not a one-meter measurement.
+
+### CV-EPIPOLAIRE-003 — The two problems fail for different missing evidence
+
+PnP needs 3D coordinates in a declared frame and unit; two-view triangulation needs known projection geometry and enough parallax. Supplying accurate 2D matches alone does not complete either contract. In a reconstruction pipeline, estimated points and poses can share errors, so validating one using only the other can be circular. Use held-out measurements or independent geometry when assessing absolute pose or depth accuracy.
+
+### CV-EPIPOLAIRE-004 — Depth error grows faster than disparity error
+
+In rectified stereo, $Z=fB/d$ gives $\sigma_Z\approx fB\sigma_d/d^2$. Doubling range while holding the same baseline, focal length and disparity uncertainty approximately quadruples depth standard deviation. This is a local first-order relation; near zero disparity its Gaussian approximation can be poor. A low image reprojection error and positive depth do not establish that a far triangulated point is useful for metric measurement.
+
+### CV-EPIPOLAIRE-005 — Minimal solutions need disambiguating observations
+
+A minimal P3P configuration can produce several poses satisfying the same three bearing constraints. Additional correspondences can rank them by reprojection and cheirality, provided their geometry is informative. A fourth point near a degenerate arrangement may still discriminate poorly. Match the mathematical minimal problem to the exact solver entry point and its versioned requirements rather than reducing an API call to the mnemonic number in its name.
+
+Consulted foundations: [OpenCV calib3d](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): essential/fundamental constraints, recoverPose and triangulatePoints; [OpenCV PnP](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html): pose direction and P3P solver point requirements.
 
 ## Sources and flashcards
 

@@ -22,8 +22,10 @@ Reponse: **Expected answer**: The fixed chain is $G_iXC_i=G_jXC_j$. By multiplyi
 
 **Consistent case generator**: choose rigid transformations $X$ and $Y$, then several poses robot $G_i$. Define synthetic observations by $C_i=X^{-1}G_i^{-1}Y$. We then have exactly $G_iXC_i=Y$ and the derived relative movements satisfy $AX-XB=0$ to the nearest numerical rounding. Then introducing noise on the observations makes it possible to study the sensitivity, but this test first verifies the algebra and conventions. It does not prove that the chosen movements make $X$ identifiable. Use rotations around distinct axes and non-zero translations to avoid a test that would mask product inversions or non-commutativity.
 
+**Pose pairing creates correlated relative motions**: All relative pairs derived from a small set of absolute poses are not independent observations: pairs sharing a pose share its error. Creating every possible pair can increase equation count without the equivalent number of independent measurements. Report the pairing scheme and evaluate held-out absolute-chain closure. This does not forbid pairwise solvers; it limits how their residual count or naive least-squares covariance should be interpreted.
+
 **Blocking errors**: Arbitrarily swap products; mix relative movements and absolute poses.
-Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-HANDEYE-001 provenance::agent pole::B pole::C pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Provide the poses gripper→base and calibration t
 
 **Verification of matrices**: a rotation block must satisfy $R^TR\simeq I$ and $\det R\simeq1$; the last homogeneous line is $(0,0,0,1)$. These conditions control a rigid transformation, not its physical meaning. To reverse it, use $T^{-1}=[R^T,-R^Tt;0,1]$, never the only negation of $t$ when $R$ is non-trivial. Convert all the translations in the same unit before the estimation: mixing meters and millimeters does not correct by a rotation convention. Finally, to distinguish a rotation represented in matrix, axis-angle vector or quaternion; the order of the components and the angle units belong to the interface contract.
 
+**A valid rigid matrix can still have wrong units**: A transform with translation in millimeters passes orthogonality, determinant and homogeneous-row checks just as one in meters does. A thousandfold unit mismatch is therefore not a rotation-validity failure. Use a known baseline or target displacement in the same physical chain to check scale, and synchronize paired robot/camera poses. Correct matrix dimensions alone do not establish that they describe the same acquisition or the expected frame direction.
+
 **Blocking errors**: Interpret the output as base→camera; use the poses robot upside down without adapting the chain.
-Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::pratique cv_id::CV-HANDEYE-002 provenance::agent pole::B pole::C pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: The number does not replace the diversity of movem
 
 **Diagnostic by stacked system**: after estimating $R_X$, stack the $R_{A_k}-I$ blocks to solve the translation. A small singular value of this matrix signals a direction where large variations in translation little change the equations. Its interpretation depends on the noise, the angles actually traveled and the units of the complete system; a simple number of conditions is not a physical certification. The rotation must also be observable, because its errors pass into the second member $R_Xt_{B_k}-t_{A_k}$. To estimate stability by resampling, select whole acquisitions or sequences rather than treating all their pairs as independent samples.
 
+**Tiny rotations provide weak translation leverage**: For a small relative rotation vector $\phi$, $R_A-I\approx[\phi]_\times$. Even when rotation axes vary, very small angles make the translation system coefficients small relative to observation noise. Acquire safe, sufficiently distinct motions with nonparallel axes and retained target visibility. Assess singular values after appropriate scaling and validate at the actual working volume; the minimum pose count establishes algebraic possibility, not useful metrological precision.
+
 **Blocking errors**: Assimilate all pairs of poses to as many independent observations.
-Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::conception cv_id::CV-HANDEYE-003 provenance::agent pole::B pole::C pole::E
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: Note $G_i$ the gripper→base transformation, $C_i
 
 **residual measurable closure**: between two reserved poses, form $E_{ij}=Y_j^{-1}Y_i$. The ideal is identity. Report the norm of its translation in the assembly unit and its angle of rotation, for example $\phi=\arccos(\operatorname{clip}((\operatorname{tr}R_E-1)/2,-1,1))$, in radians. Near digitally sensitive cases, a robust logarithmic representation is preferable. Do not add centimeters and degrees directly: a combined score requires scaling or explicit covariance. Compare these residuals according to speed and amplitude of rotation, then an error on the useful points, because the closure alone does not give the accuracy of the entire measuring chain.
 
+**Closure residuals need separate position and angle scales**: For each held-out pose, compute $Y_i=G_iXC_i$ and compare it with a common target-to-base estimate. Report translation deviation in a declared metric unit and rotation deviation as a geodesic angle. Combining them into one scalar requires an explicit weighting or covariance; adding meters to radians has no physical default. Dependence on robot orientation, time or target location can help isolate lever-arm, synchronization or lens-model errors.
+
 **Blocking errors**: Validate only on the appearance of X; correct a time error by arbitrarily adjusting the extrinsic.
-Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-HANDEYE-004 provenance::agent pole::B pole::C pole::E
 END
 

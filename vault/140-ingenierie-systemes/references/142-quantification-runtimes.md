@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-PIPELINE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -111,6 +111,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Memory and discontinuous thresholds**: For a tensor of $n$ values on $b$ bytes, raw storage is $nb$, but multiple copies, activations, and workspaces can coexist. Quantifying only the weights does not divide the whole memory peak by the same factor. On the quality side, a score that goes from 0,501 to 0,499 around a threshold 0,5 can remove a box despite a small numerical error. A change in rank can also change a NMS. Comparing both tensor errors, output after postprocessing and business metrics by size reveals these effects as the numerical error average masks.
 
 **Passages consulted for these developments**: [Jacob et al., quantification](https://arxiv.org/html/1712.05877v1), §3.1, quantification simulation and Algorithm 1; general comment on the substitution gradient without backend guarantee; [ONNX Runtime, quantization](https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html), Quantization Overview, Q/DQ and Quantization Debugging; numerical terminals and project scenarios, page consulted on the 2026-10-30.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-QUANT-001 — Fake quantization and actual execution have different contracts
+
+QAT can simulate quantization effects while storing and computing training quantities in floating point. The final runtime still needs an exported representation and kernels that implement the intended precision. A QAT checkpoint alone does not establish INT8 execution or latency. Compare original, simulated-quantized and deployed outputs on fixed inputs to locate whether a discrepancy originates in training approximation, conversion or backend execution.
+
+### CV-QUANT-002 — Outliers trade range against resolution
+
+For a fixed integer range, expanding the represented activation interval increases scale $s$, reducing clipping while making rounding coarser. Restricting the interval does the reverse. A small number of extreme activations can therefore degrade precision for the bulk if they determine the entire range. Inspect intermediate activation differences and critical output strata on held-out deployment-like images; a globally small tensor error need not preserve a threshold-sensitive detector decision.
+
+### CV-QUANT-004 — Amdahl bounds the useful acceleration
+
+If inference occupies 20% of a sequential pipeline and INT8 makes it twice as fast without overhead, total speedup is $1/(0.8+0.2/2)\approx1.11$. A conversion cost of 10% of the old total would erase that gain in this constructed model. Measure the accelerated fraction and added transfers or layout conversions before concluding that quantization failed numerically or that INT8 must improve the entire system.
+
+Consulted foundations: [ONNX Runtime quantization](https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html): static calibration, QDQ representation and quantization debugging; Context7 checked; [ONNX QuantizeLinear-21](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21): scale, zero point, rounding and saturation.
 
 ## Sources and flashcards
 

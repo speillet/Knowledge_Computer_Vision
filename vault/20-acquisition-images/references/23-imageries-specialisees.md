@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d02]
@@ -99,6 +99,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Define the unit of the test**: Ten thousand tiles from ten scenes do not represent ten thousand independent contexts. Build a table linking each tile to the scene, site, date, and footprint; assign groups to scores before any increase or extraction of patches. The normalization statistics learned and the choice of thresholds must follow the same separation. A geographical margin can help remove recoveries, without guaranteeing the independence of all acquisition factors. To compare two methods, also aggregate their deviations by representative group of the deployment: a result dominated by a very cut site can tell a story other than the average sites. This is a proposed protocol, not an audit of SpaceNet.
 
 **Passages consulted for these developments**: [DICOM PS3.3 2026d](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html), C.7.6.2, position, orientation and spacings; [Basler, GigE Line Scan](https://docs.baslerweb.com/line-scan-gige-use-cases), Case 1 b, trigger encoder; [SpaceNet7](https://www.spacenet.ai/sn7-challenge/), The Problem and The Data; geographical separation deduced by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-IMAGERIES-001 — A voxel step is not a fixed distance
+
+Constructed case: spacing is $(0.5,0.5,3)$ mm. One voxel along the third axis is six times farther than one voxel along the first; a displacement $(1,0,1)$ has physical length $\sqrt{0.5^2+3^2}\approx3.04$ mm. Applying HD95 to index coordinates would distort this geometry. Surface extraction and resampling can also change the sampled surface, so record both physical coordinates and the exact distance/percentile convention.
+
+### CV-IMAGERIES-002 — Speed changes alter geometry at fixed line rate
+
+At a fixed 5000 lines/s, increasing speed from 500 to 750 mm/s changes longitudinal sampling from 0.10 to 0.15 mm/line. A 30 mm part then occupies 200 rather than 300 lines. Reusing the original pixel-to-millimeter calibration produces a 20 mm estimate. Encoder triggering can preserve displacement per line within its supported range; dropped pulses or conveyor slip still require an independent geometric check.
+
+### CV-IMAGERIES-003 — A deployment question determines the split
+
+A geographic holdout tests transfer to new places; a later-date holdout at known places tests temporal transfer. Neither substitutes automatically for the other. A proposed protocol states the deployment question first, then groups samples by footprint, acquisition and site before preprocessing or model selection. Where multiple tiles share the same source imagery, confidence intervals should respect that grouping rather than treating every tile as an independent replication.
+
+Consulted foundations: [DICOM image plane](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.2.html): Image Position, Image Orientation and Pixel Spacing; [Basler line scan](https://docs.baslerweb.com/line-scan-gige-use-cases): Use Case 1b encoder-controlled line triggering.
 
 ## Sources and flashcards
 

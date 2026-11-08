@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: ["CV-SVD", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -67,7 +67,7 @@ These constructed cases develop graph, gauge and cost of an elimination. They ar
 
 **Question of work**: A factor graph is often described as a system's “SLAM.” What does it actually represent, and what must still be supplied or chosen to obtain a trajectory?
 
-**Reference Response**: it is a graph divided between variables (poses, bitters, bias) and factors (measurements, priors) that factorizes the density a posteriori. With Gaussian measurement models, the MAP becomes a nonlinear least square on residuals weighted by their covariance (Mahalanobis distance). It remains to provide the associations and loop closures coming from the front-end, the measurement models and their covariances, an initial estimate and an anchoring of the gauge. It is also necessary to choose the inference: batch optimization, iSAM2, robust losses.
+**Reference Response**: it is a graph divided between variables (poses, landmarks, biases) and factors (measurements, priors) that factorizes the density a posteriori. With Gaussian measurement models, the MAP becomes a nonlinear least square on residuals weighted by their covariance (Mahalanobis distance). It remains to provide the associations and loop closures coming from the front-end, the measurement models and their covariances, an initial estimate and an anchoring of the gauge. It is also necessary to choose the inference: batch optimization, iSAM2, robust losses.
 
 **Constructed example**: adding a distance factor does not have the same meaning as adding an absolute pose. The two connect variables according to different information and do not remove the same ambiguities. Check the contract for each factor before concluding that a graph contains "enough" constraints.
 
@@ -116,6 +116,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Why the elimination order matters**: Removing a variable transmits a constraint between the variables that remained related to it. These extra links fill in the triangular factors; their structure determines the size of the cliques and the paths affected by an update. A long loop can make a lot of constraints coupled without adding a lot of variables. The incremental reuses the work compatible with the new information, but cannot ignore the dependencies actually created. Relinearization thresholds refer to increments of different types: meters, radians or other parameters must have consistent tolerances. A single number without scaling convention does not represent the same accuracy for each state.
 
 **Passages consulted for these developments** : [GTSAM, Factor Graphs](https://gtsam.org/tutorials/intro.html), §§2.3–2.4, graph, Values and optimization; [Kaess et al. 2012, iSAM2](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf), §§3–4, elimination and relinearization; [Agarwal et al. 2013, DCS](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf), §§III – IV, equations 2 and 15.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FACTEURS-001 — Independent factors require independent evidence
+
+If the same relative-pose estimate is inserted twice as if the factors were independent, its information matrix is effectively doubled. The optimizer may return an apparently better-conditioned system while understating uncertainty. A graph can therefore be structurally valid and statistically wrong. Track measurement provenance when visual odometry, loop closure and a fused pose share observations; either model their correlation or state the independence approximation rather than hiding it in factor count.
+
+### CV-FACTEURS-002 — A disconnected graph needs more than one anchor
+
+Constructed case: two independent pose chains each contain only relative constraints. Anchoring a pose in the first chain removes its global gauge but leaves the second chain free. A solver failure after adding an anchor can therefore indicate disconnected components rather than an insufficient prior weight. Inspect connectivity and the expected gauge of every component before increasing damping. A numerical prior can make the matrix invertible while concealing an unobserved relationship between maps.
+
+### CV-FACTEURS-003 — A loop can win its own residual test
+
+A heavily weighted false loop can force its endpoints together, making its own optimized residual small while spreading strain across many odometry factors. Compare whitened residual changes over the affected graph, and evaluate relative transformations against evidence not used by that loop. A useful proposed test keeps the front-end candidates fixed and varies only loop acceptance or covariance, so changed geometry can be attributed to the disputed constraint rather than another association run.
+
+### CV-FACTEURS-004 — Convergence speed is a measured tradeoff
+
+DCS avoids adding one optimized switch variable per loop, but this does not establish faster convergence for every graph, initialization or implementation. Compare wall time, iteration count and recovered geometry on a controlled set of true and false loops. Also inspect true loops that start with a large residual: aggressive downweighting can reject the very constraint needed to correct drift. The scaling parameter is a robustness choice in whitened error units, not a universal probability threshold.
+
+### CV-FACTEURS-005 — A small update can still be globally expensive
+
+Adding one loop between distant parts of a trajectory can affect cliques on a long path to the root. Incremental inference therefore does not imply constant work per frame. Proposed profiling should separate factor insertion, relinearization, reordering, elimination and back-substitution, while recording the size of the affected tree. Otherwise a long-tail latency spike may be misdiagnosed as merely too many incoming measurements rather than a change in graph dependencies.
+
+Consulted foundations: [Kaess et al., iSAM2](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf): abstract accessible; detailed §§3–4 passage requests timed out; historical rules not freshly reverified; [Agarwal et al., DCS](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf): §IV dynamic covariance scaling; experimental convergence is dataset-specific.
 
 ## Sources and flashcards
 

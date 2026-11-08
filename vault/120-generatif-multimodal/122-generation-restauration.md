@@ -22,8 +22,10 @@ Reponse: **Expected answer**: Training learns a de-noise rule under a noise dist
 
 **Noise target**: In the current DDPM parameterization, draw a level $t$ and a noise $\epsilon$, build $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$, then minimize an error in predicting this noise. With this convention, an estimate of the clean image can be written $\hat x_0=(x_t-\sqrt{1-\bar\alpha_t}\epsilon_\theta(x_t,t))/\sqrt{\bar\alpha_t}$. This relationship alone is not a complete sampler: transitions, variances, levels traveled and conditioning remain to be defined. Other settings predict another target. Naming the one used avoids applying an output interpretation formula to the wrong tensor.
 
+**Fewer sampling steps change an inference procedure**: Training may sample individual noise levels to learn a denoiser, while generation repeatedly calls it according to a solver and schedule. Reducing sampling steps changes numerical approximation, latency and possibly output quality without necessarily changing the learned weights. A proposed comparison fixes checkpoint, conditioning, resolution and random seeds while varying the sampler. A training loss at sampled noise levels is not a direct measurement of final generation fidelity.
+
 **Blocking errors**: Assimilate the forward process of adding noise to the entire generation.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; [DDPM, equation 4 and algorithms 1 – 2](https://arxiv.org/abs/2006.11239); [Ho et al., DDPM, Algorithm 1 – 2 and §3.2, noise prediction; project algebraic inversion](https://arxiv.org/html/2006.11239v2), see 2026-10-30.
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; [DDPM, equation 4 and algorithms 1 – 2](https://arxiv.org/abs/2006.11239); [Ho et al., DDPM, Algorithm 1 – 2 and §3.2, noise prediction; project algebraic inversion](https://arxiv.org/html/2006.11239v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d12 famille::comprehension cv_id::CV-DIFFUSION-001 provenance::agent pole::A pole::D pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Reduce the spatial cost of the process at the cost
 
 **Spatial size check**: If the encoder reduces each image dimension by a factor of $f$, the latent grid has about $HW/f^2$ positions, with a different number of channels. This reduction alone does not predict time savings, as decoder, attention and iterations have their own costs. Note $\tilde x=D(E(x))$ and compare $x$ to $\tilde x$ isolates the reconstruction of the autoencoder before diffusion. Specially evaluate structures smaller than the effective compression support. A good average reconstruction can preserve the large shapes while modifying a rare detail that the product precisely seeks to measure.
 
+**The autoencoder gives a separate distortion baseline**: Before attributing a lost scratch to latent diffusion, inspect $D(E(x))$ for the same input under the autoencoder alone. If the critical structure is already absent, the representation introduces an information bottleneck before iterative generation. A proposed evaluation measures that reconstruction on defect size and contrast, then adds the denoising stage. More sampling iterations cannot be assumed to recover a detail the representation did not preserve.
+
 **Blocking errors**: Supposing compression without consequence on fidelity.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; [Latent Diffusion Models, §§3.1 – 3.2 and fig. 1: Perceptual compression and latent diffusion](https://arxiv.org/abs/2112.10752); [Rombach et al., Latent Diffusion, §3.1, compression and reconstruction; spatial balance and inverse problem deduced](https://arxiv.org/html/2112.10752v2), see 2026-10-30.
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; [Latent Diffusion Models, §§3.1 – 3.2 and fig. 1: Perceptual compression and latent diffusion](https://arxiv.org/abs/2112.10752); [Rombach et al., Latent Diffusion, §3.1, compression and reconstruction; spatial balance and inverse problem deduced](https://arxiv.org/html/2112.10752v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d12 famille::comparaison cv_id::CV-DIFFUSION-002 provenance::agent pole::A pole::D pole::E
 END
 

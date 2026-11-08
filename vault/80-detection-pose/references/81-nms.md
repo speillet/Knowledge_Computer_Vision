@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 8
+revision: 9
 tags: [cv/d08, detection, nms]
 ---
 # NMS — suppressing redundant detections
@@ -162,6 +162,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Condition of inclusion**: for $B\subset A$ and a strict deletion at threshold $\tau$, B can only be deleted by A if $|B|>\tau|A|$, provided that A is actually selected before it. At $\tau=0,5$, a contained box covering 4% of the large area therefore remains very far from the condition. Reversing the scores does not change the IoU, but changes the first box retained; with more candidates, it can change the whole greedy suite. This reasoning distinguishes the symmetry of the overlap measure and the algorithm's dependence on ranking.
 
 **Passages consulted for these developments**: [Bodla et al., Soft-NMS](https://arxiv.org/html/1704.04503v2), §4, selection and decay; geometric counterexamples constructed.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-NMS-001 — A common geometric transform preserves IoU
+
+Translating all boxes together or scaling every x and y coordinate by common positive factors multiplies intersections and unions by the same area factor, preserving IoU. Hard NMS decisions should therefore agree under this constructed transform when scores, tie-breaking and numerical precision are held fixed. Clipping boxes to an image border is different: it can change relative areas and overlaps. This provides a geometry check independent of detector quality.
+
+### CV-NMS-002 — AP requires the score-ranking information retained
+
+A high operational score cutoff may discard low-score true detections before the evaluator can sweep the precision-recall curve. Record whether AP is computed from the full retained prediction list or from a deployment-filtered list. The NMS threshold still compares predictions with predictions; the evaluation IoU still compares predictions with annotations. Sharing one threshold name or configuration field obscures which stage changed the measured recall ceiling.
+
+### CV-NMS-003 — Cross-class scores may not have a shared meaning
+
+Global NMS orders candidates from different classes by score. If those scores have different calibration or class priors, that ordering need not reflect which physical hypothesis is better. Class-separated NMS avoids cross-class suppression but leaves the taxonomy decision unresolved. A proposed validation includes overlapping legitimate classes and mutually exclusive labels on the same instance, with the annotation contract fixed before comparing the suppression policy.
+
+### CV-NMS-004 — The Gaussian parameter controls attenuation strength
+
+For fixed nonzero overlap $u$, the multiplier is $\exp(-u^2/\sigma)$. Increasing positive sigma weakens the penalty; as sigma tends to infinity the multiplier tends to one. As sigma approaches zero from above, nonzero overlap is strongly penalized, while zero overlap retains multiplier one. These limiting cases are derived checks of parameter meaning. They do not turn Soft-NMS into a calibrated probability model or settle the best deployment threshold.
+
+### CV-NMS-005 — Coverage loss needs a one-to-one object interpretation
+
+Before and after NMS, use the same annotation-matching policy and distinguish unique covered objects from prediction count. Ten surviving boxes on one person are not ten recalled people. Conversely, removal of a duplicate may change counts without losing any object. A proposed replay should record which correct candidate was removed, its suppressor and whether another valid candidate still covers that annotation under the fixed evaluation protocol.
+
+Consulted foundations: [Soft-NMS](https://arxiv.org/html/1704.04503v2): §4 greedy selection and score decay; §5 score filtering.
 
 ## Sources and flashcards
 

@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -56,7 +56,7 @@ These constructed cases develop neighbor recall, index ratio and damping. They a
 
 **Question of work**: Which measurements help tune approximate-search effort without hiding degradation of the overall pipeline?
 
-**Reference Response**: Measure recall of neighbors against an exact baseline, latency, memory, build, and number/quality of final inlays. Change one budget at a time on reserved data.
+**Reference Response**: Measure recall of neighbors against an exact baseline, latency, memory, build, and number and quality of final geometric inliers. Change one budget at a time on reserved data.
 
 **Separate three measures**: Neighbor recall compares the index to an exact search in a descriptor space; match accuracy compares pairs to a matching truth; geometric success judges the resulting transformation. These levels can diverge on repetitive textures or poorly distributed regions.
 
@@ -93,6 +93,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Read a quality – cost curve**: an operating point dominates another if it retains at least the useful quality by costing less depending on the resources considered. Between undominated points, the choice depends on the budget and tolerance produced, not on a single universal score. Separating build time, query latency, memory, and update frequency from the base avoids masking a misplaced extra cost. Testing queries without a real match is also essential: a neighbor search will usually return someone even if the correct answer is "absent". The rejection of pairs and the geometric verification define this possibility of refusal, which the only recall of the neighbors does not measure.
 
 **Passages consulted for these developments**: [Muja and Lowe 2009](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), §§3.1 – 3.3, structures, budget and configuration.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FLANN-001 — Amortization has an explicit break-even point
+
+Let index construction take $B$, exhaustive query time $E$, and indexed query time $A<E$. Ignoring updates, the index pays off only after $N_q>B/(E-A)$ queries. A rebuilt database resets that amortization. Memory and required neighbor recall can rule out an apparently favorable time comparison. This is a project cost model, so measure all three terms on the actual descriptor population and target hardware rather than treating an algorithm name as a latency estimate.
+
+### CV-FLANN-002 — Metric compatibility survives no numeric cast
+
+A packed binary byte of 128 differs from zero in one test, while a byte of 3 differs in two tests. Float casting keeps numeric differences 128 and 3, reversing the Hamming ranking. A compatible binary index must operate on the intended test distance. Even then, verify its supported symbol semantics: ordinary Hamming support does not automatically establish correctness for ORB two-bit winner symbols requiring Hamming2.
+
+### CV-FLANN-003 — A rank-gap bound can certify a ratio decision
+
+Constructed local bound: suppose the exact first distance is recovered and the returned second distance obeys $d_2\le\hat d_2\le(1+\varepsilon)d_2$. The measured ratio satisfies $r/(1+\varepsilon)\le\hat r\le r$, where $r=d_1/d_2$. Consequently $\hat r<\tau/(1+\varepsilon)$ guarantees $r<\tau$ under those assumptions, whereas merely $\hat r<\tau$ does not. Typical search budgets do not supply such a per-query guarantee; this derivation explains why empirical filter agreement remains necessary.
+
+### CV-FLANN-004 — Search effort should be selected on a frontier
+
+Sweep search effort on fixed validation queries and retain points that improve no resource without sacrificing useful registration quality. Include index construction, update frequency, query tail latency and peak memory. Test queries from a shifted acquisition regime separately, because an index tuned on easy descriptors can lose recall on a different distribution. Freeze the chosen configuration before final test evaluation rather than selecting effort from the best test-set registration score.
+
+Consulted foundations: [Muja and Lowe 2014](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_pami2014.pdf): §§2–3 approximate search, search budget and data-dependent index selection.
 
 ## Sources and flashcards
 

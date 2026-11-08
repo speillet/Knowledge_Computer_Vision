@@ -22,8 +22,10 @@ Reponse: **Expected answer**: An equation does not constrain two unknowns withou
 
 **Lucas – Kanade System**: stack the window gradients in a $A$ matrix with each row equal to $(I_x,I_y)$, and set $b=-I_t$. The least squares give $A^TA\,d=A^Tb$, with $d=(u,v)^T$. Two sufficiently informative eigenvalues of $A^TA$ are required to constrain both directions; an edge typically produces a weak direction. Expanding the window may bring new gradients, but possibly violates the assumption of shared motion by mixing two objects. A good selection of points therefore simultaneously seeks spatial information and neighborhood coherence, not just a large gradient amplitude.
 
+**Brightness constancy is a model assumption**: A flashing light can change $I_t$ without any physical motion, while an edge translating along itself can produce almost no detectable intensity change. Both examples break a naive identification of brightness change with unique motion. Gradient diversity addresses local geometric observability; it does not repair a photometric model violated by lighting or reflections. A proposed diagnostic separates controlled illumination changes from known geometric translations.
+
 **Blocking errors**: Saying that a high gradient guarantees two precise components.
-Source: [[100-mouvement-video/references/101-flot-optique|Full reference]]; [OpenCV, optical flow/Lucas–Kanade](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html); [RAFT, §§3.1 – 3.3](https://arxiv.org/abs/2003.12039); [Teed – Deng, RAFT, figure 1 and presentation of all-pair correlations and updates](https://arxiv.org/html/2003.12039v3), see 2026-10-30.
+Source: [[100-mouvement-video/references/101-flot-optique|Full reference]]; [OpenCV, optical flow/Lucas–Kanade](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html); [RAFT, §§3.1 – 3.3](https://arxiv.org/abs/2003.12039); [Teed – Deng, RAFT, figure 1 and presentation of all-pair correlations and updates](https://arxiv.org/html/2003.12039v3), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d10 famille::raisonnement cv_id::CV-FLOT-001 provenance::agent pole::B pole::C pole::D
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: No: it takes the time interval, for example 4 px a
 
 **Change of grid**: If the second string works on an image resized by $(s_x,s_y)$, the same displacement becomes $(s_xu,s_yv)$. To compare image speeds, first put the vectors in a common grid and then use the real acquisition intervals. A lost frame eventually doubles the interval, without the physical speed having doubled. In perspective, even a constant 3D translation produces depth-dependent image displacements; an apparent size variation can also change the field. The conversion pixels→meters therefore requires a scene and camera model, beyond a division by the nominal rate.
 
+**The timestamp interval belongs to each pair**: A fixed displacement of 4 px means 200 px/s at 20 ms but 80 px/s at 50 ms. Variable frame intervals therefore require pair-specific timestamps rather than a nominal frame rate. If timestamps refer to reception instead of exposure, packet jitter can create a spurious velocity variation. This is an image-plane average velocity under the temporal model; converting to object-space speed needs geometry and potentially ego-motion compensation.
+
 **Blocking errors**: Confound frame displacement and speed per second.
-Source: [[100-mouvement-video/references/101-flot-optique|Full reference]]; [OpenCV, optical flow/Lucas–Kanade](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html); [RAFT, §§3.1 – 3.3](https://arxiv.org/abs/2003.12039); [Teed – Deng, RAFT, figure 1 and presentation of all-pair correlations and updates](https://arxiv.org/html/2003.12039v3), see 2026-10-30.
+Source: [[100-mouvement-video/references/101-flot-optique|Full reference]]; [OpenCV, optical flow/Lucas–Kanade](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html); [RAFT, §§3.1 – 3.3](https://arxiv.org/abs/2003.12039); [Teed – Deng, RAFT, figure 1 and presentation of all-pair correlations and updates](https://arxiv.org/html/2003.12039v3), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d10 famille::pratique cv_id::CV-FLOT-002 provenance::agent pole::B pole::C pole::D
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Correlations represent cross-position compatibilit
 
 **Dimensions of Correlation**: for two feature maps $h\times w$, an all-peer compatibility connects each site of the first to each site of the second, $(hw)^2$ values before optimizations. The volume encodes candidate similarities, not a bijective assignment of pixels. Updates look at this volume around predicted positions and adjust the flow; multiple sources may target a nearby region, and occlusionss do not always offer a match. Separating memory from volume, cost per iteration, and number of iterations helps to understand the resolution compromise. The recurrence of refinement is not a guarantee of physical convergence or identity.
 
+**A correlation maximum is not yet the flow field**: For one pixel, several locations in a repeated pattern can have high feature correlation. A recurrent update combines lookup evidence with its current estimate and learned spatial context to refine the field. Taking an independent maximum from each correlation row would define another algorithm and can lose coherent motion. The architecture's dense output still requires evaluation at occlusions, boundaries and domain shifts rather than assuming correlation resolves every ambiguity.
+
 **Blocking errors**: Describe a recurring memory of refinement as a guaranteed re-identification.
-Source: [[100-mouvement-video/references/101-flot-optique|Full reference]]; [OpenCV, optical flow/Lucas–Kanade](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html); [RAFT, §§3.1 – 3.3](https://arxiv.org/abs/2003.12039); [Teed – Deng, RAFT, figure 1 and presentation of all-pair correlations and updates](https://arxiv.org/html/2003.12039v3), see 2026-10-30.
+Source: [[100-mouvement-video/references/101-flot-optique|Full reference]]; [OpenCV, optical flow/Lucas–Kanade](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html); [RAFT, §§3.1 – 3.3](https://arxiv.org/abs/2003.12039); [Teed – Deng, RAFT, figure 1 and presentation of all-pair correlations and updates](https://arxiv.org/html/2003.12039v3), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d10 famille::comparaison cv_id::CV-FLOT-003 provenance::agent pole::B pole::C pole::D
 END
 
