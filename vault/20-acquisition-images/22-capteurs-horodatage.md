@@ -22,8 +22,10 @@ Reponse: **Expected answer**: No: it reduces blur per line, but the lines can st
 
 **Time model by line**: write $t(y)=t_0+y\tau_r$, where $y$ is the line index, $\tau_r$ is the offset between exposure starts in seconds per line, and $t_0$ is the offset of the first line. For a constant horizontal translation $v_{px}$, the offset between first and last line is approximately $v_{px}(H-1)\tau_r$, with $H$ the height. It depends on the total scan time, distinct from the local drag $|v_{px}|t_e$. It is an ideal built-in model: reading direction, overlay modes and timestamp definition vary depending on the camera. Even a global shutter can transmit its lines successively while having exposed the pixels simultaneously.
 
+**Short exposure can coexist with large skew**: Constructed example: a sensor has a 20 ms first-to-last-row exposure-start offset and uses 0.1 ms exposure. At 1000 px/s horizontal image motion, each row has only 0.1 px blur, while top-to-bottom displacement is about 20 px. The image can therefore look locally sharp and globally sheared. Reducing exposure further does little to this shear; changing the readout timing or modeling per-row pose addresses a different part of the acquisition process.
+
 **Blocking errors**: Confound sharpness of each line and simultaneity of the whole image.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]] ; [Basler, Electronic Shutter Types, Rolling Shutter (v136, 2026-10-01)](https://docs.baslerweb.com/electronic-shutter-types#rolling-shutter).
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]] ; [Basler, Electronic Shutter Types, Rolling Shutter (v136, 2026-10-01)](https://docs.baslerweb.com/electronic-shutter-types#rolling-shutter). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d02 famille::comparaison cv_id::CV-CAPTEURS-001 provenance::agent pole::B pole::C pole::E pole::F
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: 0,10 m, before rotation and estimation effects.
 
 **Moving to an image measurement**: under perspective projection $u=f_xX/Z+c_x$, a small time error gives $\Delta u\approx f_x(v_XZ-Xv_Z)\Delta t/Z^2$. Here $X,Z$ are the camera coordinates in meters, $v_X,v_Z$ their derivatives in m/s, $f_x$ is in pixels and $c_x$ the main point. The derivative is local and here ignores the rotation; it shows why 0,10 m error world does not correspond to a universal number of pixels. For a target in the center, at 10 m, with $f_x=1000$ px and a transverse movement of 2 m/s, 50 ms give about 10 px. The sign depends on the relative movement and the direction of the shift.
 
+**Offset and drift need different corrections**: Model the clocks locally as $t_B=a t_A+b$: $b$ is offset and $a-1$ is fractional drift. A constructed 20 ppm drift accumulates 12 ms over ten minutes, corresponding to 24 mm at 2 m/s. A one-time offset calibration cannot remove this accumulating discrepancy. Record the time span of synchronization validation, and distinguish clock error from variable packet delivery latency before interpreting an apparent extrinsic shift.
+
 **Blocking errors**: Use this model for any rotating scene with no other assumptions.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]]; [Basler, Electronic Shutter Types, Rolling Shutter (v136, 2026-10-01)](https://docs.baslerweb.com/electronic-shutter-types#rolling-shutter); kinematic calculation $v\Delta t$ of the project.
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]]; [Basler, Electronic Shutter Types, Rolling Shutter (v136, 2026-10-01)](https://docs.baslerweb.com/electronic-shutter-types#rolling-shutter); kinematic calculation $v\Delta t$ of the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d02 famille::raisonnement cv_id::CV-CAPTEURS-002 provenance::agent pole::B pole::C pole::E pole::F
 END
 
@@ -68,10 +72,12 @@ Reponse: **Expected answer**: Check offsets/drift clocks, time per scan point, d
 
 **Chain of transformations to be explained**: if $T_{AB}$ transforms B to A, a point LiDAR $p_L$ acquired at $t_L$ can be brought to the camera of $t_C$ by $p_C=T_{CW}(t_C)T_{WL}(t_L)p_L$ in homogeneous coordinates. Under rigid mounting and consistent clocks, the fixed extrinsics are composed with the time-dependent poses. Implicitly replacing $t_L$ with $t_C$ removes the movement to be compensated and creates a structured error, especially in rotation or at great distance. The deskew requires the time of each point, an interpolated pose and an announced reference time. If objects move independently of the vehicle, the ego movement alone is not enough to make them static.
 
+**Turning exposes a lever-arm timing error**: For rigid-body angular velocity $\omega$ and sensor lever arm $\ell$, the sensor velocity includes $\omega\times\ell$. A time error then induces an approximate displacement $(\omega\times\ell)\Delta t$ even when the body origin translates little. This explains why a calibration can look correct at rest and fail during turns. Use opposite turn directions and different speeds in a proposed check: timing-induced error changes with motion, while a fixed rigid-transform error follows another pattern.
+
 **Blocking errors**: Fix permanently by fixed translation without examining the timestamps.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]]; [Zhang and Singh 2014, LOAM, §§II and V, motion distortion correction](https://www.roboticsproceedings.org/rss10/p07.pdf); camera survey – LiDAR built by the project.
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]]; [Zhang and Singh 2014, LOAM, §§II and V, motion distortion correction](https://www.roboticsproceedings.org/rss10/p07.pdf); camera survey – LiDAR built by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d02 famille::diagnostic cv_id::CV-CAPTEURS-003 provenance::agent pole::B pole::C pole::E pole::F cas_pole::C::diagnostic
 END
 
@@ -93,7 +99,9 @@ Reponse: **Expected answer**: It constrains the radial component relative to the
 
 **Elemental Observability**: for $H=\hat r^T$, the scalar measurement $z=Hv_{rel}+\epsilon$ constrains only one direction of a vector with three components. Its zero space has two dimensions: adding an orthogonal velocity to $\hat r$ leaves $z$ unchanged. A Cartesian velocity becomes conceivable with several independent directions and a model linking their observations to the same movement; three quasi-parallel measurements can remain very poorly conditioned. A rotation of coordinate frame gives $v'=Rv$ and $P'=RPR^T$ for a covariance $P$ and an exact rotation $R$. It re-expresses the available information without creating the two missing components; the uncertainty of the calibration may need to be added separately.
 
+**Radial speed depends on relative motion**: A static wall can have nonzero measured Doppler when the radar platform moves. With line-of-sight unit vector $\hat r$, the ideal translational term is $\hat r^T(v_{target}-v_{sensor})$, with sign set by the sensor contract. Compensating ego motion requires the sensor velocity at its lever arm and measurement time. A zero Doppler value therefore does not prove a stationary object, and a nonzero value does not by itself prove independent object motion.
+
 **Blocking errors**: Take a radial velocity for the three components of the movement.
-Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]] ; [Texas Instruments, TIDUF01 (2021), §2.4.9](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf).
+Source: [[20-acquisition-images/references/22-capteurs-horodatage|Full reference]] ; [Texas Instruments, TIDUF01 (2021), §2.4.9](https://www.ti.com/lit/ug/tiduf01/tiduf01.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d02 famille::comprehension cv_id::CV-CAPTEURS-004 provenance::agent pole::B pole::C pole::E pole::F
 END

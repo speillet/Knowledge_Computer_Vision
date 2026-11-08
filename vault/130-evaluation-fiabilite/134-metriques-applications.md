@@ -22,8 +22,10 @@ Reponse: **Expected answer**: Dice measures an overlap; HD95 a surface distance 
 
 **Link and difference of units**: for two non-empty binary masks under the same count, $Dice=2IoU/(1+IoU)$. These two overlaps are therefore linked for the same pair, while a surface distance uses the geometric positions of the borders and a unit of length. Aggregating the Dice per case is not necessarily equivalent to converting a global IoU by this formula, because the conversion is nonlinear and the weights change. HD95 also requires a precise convention of directions and percentile. The choice of metrics must thus announce both the quantity per pair and the level at which the averages are calculated.
 
+**A percentile deliberately ignores part of the tail**: HD95 summarizes a specified 95th percentile of surface distances, so a sufficiently small collection of extreme surface errors may lie outside its reported percentile. Dice can also remain high when a large region dominates. Include a maximum or task-specific local boundary check when a tiny outlying structure matters. State whether directed distances are pooled or their percentiles combined, because those conventions can produce different HD95 values.
+
 **Blocking errors**: Compare directly a number without a unit to a length.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [Metrics Reloaded, Semantic segmentation](https://doi.org/10.1038/s41592-023-02151-z) ; [Reinke et al., fig. 4a and 5c: overlap/borders and HD95](https://www.nature.com/articles/s41592-023-02150-0).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [Metrics Reloaded, Semantic segmentation](https://doi.org/10.1038/s41592-023-02151-z) ; [Reinke et al., fig. 4a and 5c: overlap/borders and HD95](https://www.nature.com/articles/s41592-023-02150-0). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::comparaison cv_id::CV-METRIQUES-APPLIQUEES-001 provenance::agent pole::A pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Background pixels or large defects dominate some a
 
 **Weighting by region**: A region-by-region overlap measure can assign to each annotated defect the fraction of its pixels found, and then average those fractions. A fault of 10 pixels then receives the same region weight as a fault of 1 000 pixels, unlike a pooling of all the defective pixels. This convention makes certain small regions visible without solving all the ambiguities of location. An area under a curve must specify the axis of false positives, its range and its normalization. Completing by decision by part and entirely missed defects retains the link with the actual load of rejects and business risks.
 
+**Pixel and part denominators imply different burdens**: One false-positive pixel per normal image and one entirely false detected part do not have the same operational meaning. Define how connected predictions become alarms and how alarms match real defects before reporting false positives per part. Stratify recall by defect size and type, retaining sample counts. This proposed protocol prevents a favorable background-dominated pixel aggregate from hiding missed critical regions or excessive review workload.
+
 **Blocking errors**: Compare AU-PRO with different ranges without reporting it.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [MVTec AD2 v1, evaluation protocol and fig. 4: PRO and weighting of regions](https://arxiv.org/abs/2503.21622v1).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [MVTec AD2 v1, evaluation protocol and fig. 4: PRO and weighting of regions](https://arxiv.org/abs/2503.21622v1). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-METRIQUES-APPLIQUEES-002 provenance::agent pole::A pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: No: Repeat measurements and vary relevant conditio
 
 **Dimensional propagation**: for a simplified flat measurement $L=s\,p$ with $p$ pixel length and $s$ scale in mm/px, $\delta L\simeq p\delta s+s\delta p$. Under centered independent errors, $\sigma_L^2\simeq p^2\sigma_s^2+s^2\sigma_p^2$; otherwise add covariances. A repeatable location in pixels can therefore coexist with a dominant scale bias. This calculation assumes a plane geometry and a scale adapted, not a perspective camera of any kind. Repeating the measurement and varying the conditions predicted by the study then makes it possible to estimate contributions that the only calibration RMS does not represent.
 
+**Repeatability does not establish absence of bias**: A fixed camera can repeatedly report 10.2 mm for a true 10.0 mm reference with very small dispersion. Repeatability is good in this constructed example while bias remains 0.2 mm. Vary the relevant operator, setup or environmental factors to study reproducibility, and compare with an independent dimensional reference. Low calibration RMS does not directly measure either component of the final measurement process.
+
 **Blocking errors**: Directly convert an adjustment pixel error into a millimeter warranty.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [NIST, 2.4.4.1 repeatability](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc441.htm), [2.4.4.2 reproducibility](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc442.htm), [2.4.4.3 stability](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc443.htm), [2.4.5 bias](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc45.htm).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [NIST, 2.4.4.1 repeatability](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc441.htm), [2.4.4.2 reproducibility](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc442.htm), [2.4.4.3 stability](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc443.htm), [2.4.5 bias](https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc45.htm). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::diagnostic cv_id::CV-METRIQUES-APPLIQUEES-003 provenance::agent pole::A pole::E
 END
 
@@ -91,7 +97,9 @@ Reponse: **Expected answer**: The chosen convention and its effect on the score/
 
 **Case table defined before measurement**: if both reference and prediction are empty, the denominator of Dice is zero and a convention is required. If only the prediction is empty with present reference, the overlap is zero; if only the reference is empty with present prediction, it is also zero, but the business error is a false positive rather than a missed object. A surface distance may lack a set of points in each of these cases. Keeping counters of these situations and announcing their inclusion or exclusion prevents a filtered epsilon or `NaN` from silently changing the evaluated population.
 
+**Empty-case policy can dominate a rare-object mean**: Constructed example: 99 empty cases and one missed positive produce a mean Dice of 0.99 if empty/empty receives one and the missed positive receives zero. The sole real object was still missed. Report positive-case performance, negative-case false alarms and the empty-case convention separately where relevant. A defined aggregation policy makes the number reproducible; it does not automatically make it suitable for the application decision.
+
 **Blocking errors**: Silently remove all empty cases to improve the average.
-Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [Reinke et al., P2.3 – P2.4 and P3.2: empty outputs/references and aggregation](https://www.nature.com/articles/s41592-023-02150-0).
+Source: [[130-evaluation-fiabilite/references/134-metriques-applications|Full reference]] ; [Reinke et al., P2.3 – P2.4 and P3.2: empty outputs/references and aggregation](https://www.nature.com/articles/s41592-023-02150-0). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::pratique cv_id::CV-METRIQUES-APPLIQUEES-004 provenance::agent pole::A pole::E
 END

@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -99,6 +99,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Why the area filter is too late**: The area of a merged component essentially adds those of the two parts and the pixels of the bridge. It can therefore perfectly pass a minimum threshold, even when the count is false. Separately measuring the distance between borders before closing, the width of the bridge created and the maximum distance inside each part helps to choose a remedy. A marker watershed can use two reliable centers to provide separation, but bad markers can oversegment a single piece. In the evaluation, explicitly distinguish merge error, division error and boundary error: an average pixel score can remain good despite an object lost on counting.
 
 **Passages consulted for these developments**: [OpenCV 4.13, Morphological Transformations](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html), §§1 – 4, erosion, dilation, opening and closing; [OpenCV 4.13, connectedComponents](https://docs.opencv.org/4.13.0/d3/dc0/group__imgproc__shape.html), connectivity and labels.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-MORPHO-001 — Idempotence is not a license to enlarge the kernel
+
+Applying a complete opening twice with the same ideal structuring element leaves the result unchanged. Applying two erosions followed by two dilations generally uses a larger effective support and can remove additional structures. This distinction matters when an implementation exposes an iteration parameter. Validate a thin bridge, a small hole and a border-touching object as separate constructed cases, because finite-image padding and anchors can change the ideal set behavior.
+
+### CV-MORPHO-002 — Connectivity changes the object definition
+
+On a checkerboard of isolated diagonal foreground pixels, 8-connectivity can join a long chain that 4-connectivity separates. Neither choice is universally correct: the relevant physical contact and expected pixel sampling determine the convention. Use complementary background connectivity when analyzing holes to avoid ambiguous digital topology. Count foreground components separately from the background label returned by a labeling routine.
+
+### CV-MORPHO-003 — Kernel scale should follow physical separation
+
+If the minimum legitimate gap is 0.2 mm and image resolution changes from 0.1 to 0.05 mm/px, the same physical gap changes from two to four pixels. Reusing an unchanged kernel therefore changes its physical action. A proposed sweep records both removal of isolated noise and merger of neighboring real parts as a function of kernel size and shape. Area filtering after merger cannot recover the lost instance boundary.
+
+Consulted foundations: [OpenCV morphology](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html): erosion, dilation, opening, closing and structuring elements.
 
 ## Sources and flashcards
 

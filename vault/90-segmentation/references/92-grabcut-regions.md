@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 4
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -99,6 +99,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Quality curve – interaction**: Set a common rule to place the initial rectangle, and then a budget for corrections or user time. Measure quality after zero, one, and then multiple interactions and keep the rate of images that do not reach the target to the maximum budget. Clicks are only comparable if their policy and accessible information are announced; a correction chosen with the reference mask constitutes a different oracle from a real operator. Compare also borders and small useful regions. This protocol gives an exploitable compromise curve, instead of an isolated optimization time obtained after a particularly favorable initialization.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, GrabCut](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html), Theory, models and cut-off; sub-problem/alternative distinction and project protocols.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-GRABCUT-001 — An exact subproblem does not give a global joint guarantee
+
+For fixed appearance parameters and suitable pairwise terms, a graph cut can optimize the binary labeling subproblem. GrabCut alternates that labeling with appearance-model updates, so the complete procedure remains dependent on initialization and constraints. A low energy at convergence does not prove the intended object was extracted. Compare mask quality and sensitivity to initial rectangles or scribbles on the same images, rather than treating solver convergence as task correctness.
+
+### CV-GRABCUT-002 — Iterations cannot override a forbidden label
+
+If a foreground limb lies outside the initialized rectangle and is fixed as definite background, another iteration cannot legitimately relabel it as foreground under that constraint. Enlarge or correct the initialization and distinguish definite from probable labels before tuning appearance parameters. A proposed diagnostic visualizes hard labels over the source image. The key evidence is feasibility under the constraints, not merely whether the excluded pixels look like the foreground color.
+
+### CV-GRABCUT-003 — Human effort belongs in the comparison budget
+
+Compare quality as a function of user interactions or annotation time under the same initialization rules, including difficult images that never reach tolerance. Similar foreground and background colors can require extra labels, and fine structures may need more careful correction. A faster optimization step is not necessarily a faster completed annotation. This is a proposed workflow benchmark; it needs recorded human actions and cannot be inferred from algorithm runtime alone.
+
+Consulted foundations: [OpenCV GrabCut](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html): appearance mixtures, iterative graph cut and definite/probable label semantics; checked with Context7.
 
 ## Sources and flashcards
 

@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-FILTRES", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -103,6 +103,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **check round trip built**: Following $p_t$ to $\hat p_{t+1}$, then following the latter to $\hat p_t$ gives a $e_{FB}=\|\hat p_t-p_t\|_2$ cycle error in pixels. A big error signals a useful inconsistency to reject; a small error can also come from the same bad pattern found in both directions. It must therefore complete a displacement reference, not replace it. Compare the fraction of valid points by keeping the occlusions in the balance sheet. If a setting rejects almost all the hard points, its average error on survivors can drop while degrading the availability of the registration. Reliable monitoring and refusal policy must be evaluated together.
 
 **Passages consulted for these developments**: [OpenCV 4.13, Harris](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), Theory, tensor and response; [OpenCV 4.13, Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html), Theory and selection goodFeaturesToTrack.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-CORNERS-001 — The error ellipse gives a quantitative comparison
+
+With equal unit photometric noise in the local linearized model, $M^{-1}$ for the first window is $\operatorname{diag}(0.01,1)$ and for the second is $\operatorname{diag}(0.05,0.05)$. The second window has a much smaller worst-direction variance despite lower total gradient energy. This constructed calculation explains choosing by the weakest direction. It assumes a shared local displacement and does not establish robustness to occlusion or an incorrect brightness model.
+
+### CV-CORNERS-002 — Contrast scaling changes the response power
+
+If all intensities are multiplied by $\alpha$, gradients scale by $\alpha$ and tensor eigenvalues by $\alpha^2$. Shi–Tomasi then scales by $\alpha^2$, whereas Harris scales by $\alpha^4$. A fixed absolute threshold therefore changes its meaning with intensity units, and the two scores cannot share a numerical threshold. Relative-to-maximum selection can cancel a uniform scale, but clipping and spatially varying illumination do not preserve this ideal relation.
+
+### CV-CORNERS-003 — A relative threshold can accept uniformly weak images
+
+If the best response in a blurred image is small, a fixed fraction of that response is also small. Thus qualityLevel does not provide an absolute guarantee of trackability. Record the best score and retained-score distribution as well as the returned count. minDistance may then exclude clustered candidates and maxCorners may truncate the survivors; increasing the cap cannot create strong points where the image lacks usable gradients.
+
+### CV-CORNERS-004 — Repeatability and identity need separate denominators
+
+Given a known image transformation, first count whether a detected point has a nearby detected counterpart in the visible transformed region. Then, among described points, measure whether matching chooses that counterpart rather than a repeated intersection. This proposed decomposition separates missed detections from wrong identities. Exclude points truly outside shared visibility from repeatability denominators, and report exclusions so a method cannot appear robust simply by discarding difficult regions.
+
+### CV-CORNERS-005 — Survivor-only error can reward excessive rejection
+
+Constructed comparison: method A retains 90 of 100 points with 1 px mean error; method B retains 10 with 0.5 px mean error. B has better conditional error but may fail to support the required geometry. Report survival and spatial coverage jointly with error, and count whether a valid transform is available. Forward/backward consistency is useful evidence, but repeated texture can generate a consistent wrong cycle in both directions.
+
+Consulted foundations: [OpenCV Harris](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html): structure tensor, eigenvalue interpretation and Harris response; [OpenCV tracking](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html): goodFeaturesToTrack quality and spacing contract.
 
 ## Sources and flashcards
 

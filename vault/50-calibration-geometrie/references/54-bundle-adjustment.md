@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SVD", "CV-EPIPOLAIRE", "CV-FACTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Example of missing information**: In a polynomial radial model, the effects of high-order coefficients grow with normalized radius powers. Observations near the center can hardly constrain these terms; different values then produce almost the same pixels observed but diverge at the edge. Unleashing these coefficients increases flexibility without adding informative data. The damping of LM limits the current resolution pitch: it is not automatically a physical priority on the final parameters. Justify the free parameters, check the directions with little stress and test the geometry where it will be used. A reserved validation must keep poses and really different areas, not just neighboring points of the same catches.
 
 **Passages consulted for these developments**: [Ceres, Solving Non-linear Least Squares](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), Schur complement trick and block systems; [Ceres, Covariance Estimation](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), Gauge Invariance and rank of Jacobian.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-BA-001 — Observation connectivity determines recoverable structure
+
+A landmark observed by only one camera supplies a bearing but no independent triangulated depth without another constraint. Many such observations can increase residual count without making the map fully observable. Inspect the camera-landmark graph and visibility geometry before interpreting a successful optimization as recovered 3D structure. More observations at identical bearings or with negligible baseline can leave nearly the same weak directions as the original system.
+
+### CV-BA-002 — Elimination creates camera-to-camera coupling
+
+If two cameras observe the same point, eliminating that point introduces a relation between their increments in the reduced camera system. Long feature tracks can therefore improve geometric constraints while increasing fill and computational coupling. Schur elimination preserves the linearized problem when its blocks are treated correctly; it does not make point uncertainty disappear or replace nonlinear relinearization. Recover point increments using the same linearization after solving the reduced system.
+
+### CV-BA-003 — A baseline prior adds evidence only if it is measured
+
+Fixing a baseline length to one removes a computational scale freedom, but it establishes meters only if that length is independently known in meters. A measured baseline prior has finite uncertainty and can influence both scale and its uncertainty. Report this distinction when comparing trajectories or map dimensions. Aligning reconstructions by a similarity transform can intentionally remove scale error for one metric while hiding it for a metric deployment requirement.
+
+### CV-BA-004 — A flexible lens can absorb another model error
+
+Unmodeled rolling shutter, target nonplanarity or imperfect associations can be partly absorbed by extra lens coefficients. Lower training reprojection cost then measures increased fitting freedom rather than a better physical lens model. A proposed comparison freezes acquisition and associations, varies model complexity, and evaluates held-out poses and radial regions. Inspect parameter stability and plausible projection behavior beyond the fitted radius before accepting the additional coefficients.
+
+Consulted foundations: [Ceres Schur solvers](https://ceres-solver.readthedocs.io/latest/nnls_solving.html#the-schur-complement-trick): block normal equations, point elimination and camera coupling; Context7 solver sources consulted; [Ceres covariance](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html): gauge invariance and Jacobian rank.
 
 ## Sources and flashcards
 

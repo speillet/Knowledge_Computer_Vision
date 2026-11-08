@@ -24,8 +24,10 @@ The reference and the unit must be chosen according to the information that the 
 
 **Define the comparative quantity**: An average 3D joint error can write $J^{-1}\sum_j\|\hat p_j-p_j\|$ in a length unit, with visible joints or all joints according to protocol. Allowing rigid alignment or similarity removes some errors and changes the evaluated question. A AP of boxes, it, depends on a threshold of matching and the ranking of the scores. A rigid object pose estimates $R,t$ of a known model, while a skeleton estimates several related points. Specifying these unknowns and allowed transformations avoids comparing two digits, one of which has precisely neutralized the defect as the other measures.
 
+**Pose alignment changes the meaning of an error**: Joint-position error after root alignment, rigid alignment or similarity alignment removes different parts of the prediction error. A similarity-aligned articulated pose can look accurate while having the wrong absolute scale or global orientation. State the alignment group and visibility policy alongside units. A 3D detection metric instead requires its own instance matching and box/class definitions; a shared word such as pose does not make the outputs comparable.
+
 **Blocking errors**: Assimilate any problem called pose to the same metric.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [CenterPoint, summary and §4](https://arxiv.org/abs/2006.11275); [OpenPose, summary and fig. 2](https://arxiv.org/abs/1611.08050); [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), see 2026-10-30.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [CenterPoint, summary and §4](https://arxiv.org/abs/2006.11275); [OpenPose, summary and fig. 2](https://arxiv.org/abs/1611.08050); [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::comparaison cv_id::CV-POSE3D-001 provenance::agent pole::A pole::C
 END
 
@@ -49,8 +51,10 @@ Comparing the corners after round trip makes it possible to verify this consiste
 
 **Construction of corners**: for a geometric center $c$, dimensions $(l,w,h)$ and rotation $R$, the eight corners are $c+R(\pm l/2,\pm w/2,\pm h/2)^T$. If the center is anchored to the ground, the vertical component must be adjusted before using this formula. Transforming corners between sensors is more general than keeping a simple yaw: an extrinsic with roll or pitch can produce a box that is no longer described by a rotation around the single vertical axis of the target coordinate frame. A test with all distinct dimensions and non-zero rotation makes visible permutations, angle sign and loss of information when converting to a simplified box.
 
+**Dimension swaps can pass a center-only check**: Constructed example: a box with dimensions $(4,2,1)$ m and zero yaw occupies a different region from one with dimensions $(2,4,1)$ m, despite an identical center. A yaw convention change can partly hide that swap on selected examples. Compare all eight transformed corners against known axes and a non-square box. Include a nonzero yaw and explicit center-versus-bottom anchor so identity cases do not conceal interface errors.
+
 **Blocking errors**: Retract without check the box convention.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; Diagnostic of conventions proposed by the project; [nuScenes, format and metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulted the 2026-10-20; [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), consulted the 2026-10-30.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; Diagnostic of conventions proposed by the project; [nuScenes, format and metrics](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), consulted the 2026-10-20; [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), consulted the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::pratique cv_id::CV-POSE3D-002 provenance::agent pole::A pole::C
 END
 
@@ -72,8 +76,10 @@ Reponse: **Expected answer**: The nuScenes association uses ground center distan
 
 **Counter-example of geometry**: A prediction may have the exact center but doubled dimensions and a wrong yaw. A matching per center distance can still accept it according to its threshold, while a volume overlap can be bad. The nuScenes protocol reports other errors to characterize size, orientation, and movement; these must be read with the AP. Conversely, a small metric offset represents a very different part of a pedestrian and a large vehicle. Thresholds and classes therefore define what the measure prefers. Check a few built boxes before interpreting an aggregate score change.
 
+**Localization matching leaves other box errors to other metrics**: A prediction with the correct ground-plane center can pass a center-distance match while having poor dimensions, yaw or velocity. nuScenes reports additional true-positive error terms for such properties, so its AP should be interpreted within that full protocol. COCO box IoU incorporates extent overlap directly in matching. Neither score alone establishes suitability for collision geometry or fine pose control without a task-specific error tolerance.
+
 **Blocking errors**: Transpose the IoU COCO thresholds to any 3D benchmark.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [nuScenes, Average Precision metric and nuScenes detection score](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), accessed on 2026-10-20; [COCO bbox](https://cocodataset.org/#detection-eval); [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), accessed on 2026-10-30.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [nuScenes, Average Precision metric and nuScenes detection score](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md), accessed on 2026-10-20; [COCO bbox](https://cocodataset.org/#detection-eval); [BOP, Model-based 6D localization, pose definition, and VSD/MSSD/MSPD errors; building boxes and project examples](https://bop.felk.cvut.cz/tasks/), accessed on 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::evaluation cv_id::CV-POSE3D-003 provenance::agent pole::A pole::C
 END
 
@@ -95,7 +101,9 @@ Reponse: **Expected answer**: Visual symmetry and the definition of pose/evaluat
 
 **Equivalence of poses**: If $S$ belongs to the symmetry group of the model, the poses $T$ and $TS$ can represent the same observable object. A suitable error can minimize a geometric distance on these symmetries, instead of arbitrarily comparing two single matrices. The symmetry of the complete mesh and the indistinguishability of the only visible surfaces are not exactly the same notion; the protocol must specify the one it deals with. An observed marking may reduce the relevant group of symmetries. The validation must then take into account this new information and not maintain an equivalence tolerance that would hide an angle that has become effectively observable.
 
+**Symmetry can be broken by observable texture**: A geometrically cylindrical object with an asymmetric printed mark may have observable axial rotation when the mark is visible. The same component may become ambiguous under occlusion or in depth-only data. Define the symmetry of the actual object appearance and sensing modality, rather than applying a shape-only symmetry universally. A symmetry-aware evaluation should excuse genuinely indistinguishable poses without erasing a meaningful alignment error on a marked component.
+
 **Blocking errors**: Declare any variation of a symmetrical angle as an observable error.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [BOP, VSD/MSSD/MSPD metrics and symmetries](https://bop.felk.cvut.cz/tasks/), see 2026-10-20; application to cylinder: project reasoning.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [BOP, VSD/MSSD/MSPD metrics and symmetries](https://bop.felk.cvut.cz/tasks/), see 2026-10-20; application to cylinder: project reasoning. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-POSE3D-004 provenance::agent pole::A pole::C
 END

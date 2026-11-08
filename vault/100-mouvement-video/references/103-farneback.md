@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-FLOT", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -103,6 +103,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Orders of magnitude**: With a spatial reduction of two at each level, a displacement of 32 px in the original image becomes 4 px after three reductions. A wide object of 6 px, on the other hand, occupies only 0,75 px before the effects of filtering and sampling: its own movement can disappear. Moving up the field requires resizing the grid and multiplying the components by the appropriate scaling factor. Interpolating only the array without adjusting the amplitude produces a contract defect. This constructed example explains the trade-off between capturing large displacement and preserving small structures, without setting an optimal universal number of levels.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, Optical Flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html), Dense Optical Flow; project specific quadratic derivations, original PDF inaccessible by timeout during this pass.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FARNEBACK-001 — Constant terms provide a consistency check
+
+For an exact translation of a quadratic polynomial, the constant coefficient must also satisfy $c_2=c_1+d^TAd-b_1^Td$. Recovering a displacement from linear coefficients alone does not test that full identity. A constructed polynomial can verify both relations without running a flow implementation. In real images, coefficient estimates and visibility violate the ideal translated-polynomial model, so agreement is an assumption-sensitive diagnostic rather than physical proof.
+
+### CV-FARNEBACK-002 — The equation is sensitive to coefficient scale and rank
+
+In the front, $2A=\operatorname{diag}(4,2)$ maps $(2,-1)^T$ to $(8,-2)^T$, directly checking the sign and factor of two. If the second diagonal entry approaches zero, an unchanged linear-coefficient error yields a large second displacement error. This mirrors the aperture problem: a numerical solution exists only with usable directional information. Regularization can select a result but adds an assumption rather than another observation.
+
+### CV-FARNEBACK-003 — Image array indices and vector components have different order
+
+An array element is indexed by row then column, while the returned flow components are horizontal then vertical displacement under the documented convention. In the front, negative vertical displacement moves toward a smaller row index when image y grows downward. A constructed translated dot or ramp is a useful direction check. Converting pixel displacement to velocity still requires actual frame timing; the array shape does not encode a physical speed unit.
+
+### CV-FARNEBACK-004 — Composing flows requires transporting the lookup point
+
+Constructed one-dimensional case: $F(x)=1$ and $B(y)=-y$. At $x=0$, evaluating the backward field at $x+F(x)=1$ gives a zero round-trip residual, while evaluating at zero gives residual one. The difference comes from sampling different surface positions, not merely from a sign convention. Interpolation and out-of-bounds handling must accompany the composition rule when the displaced location is noninteger or outside the valid image.
+
+### CV-FARNEBACK-005 — Coarse scales can mix motions across a thin object
+
+A small moving object and its differently moving background can contribute to the same coarse neighborhood after smoothing. The resulting local polynomial no longer describes one common translation, even when the displacement magnitude falls within the solver's capture range. Compare errors separately on interiors, boundaries and small objects when adding levels or enlarging windows. A lower global average flow error can conceal the disappearance of the task-critical object.
+
+Consulted foundations: [OpenCV dense flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html): Dense Optical Flow: polynomial neighborhood approximation; original Farnebäck equations are checked algebraically here.
 
 ## Sources and flashcards
 

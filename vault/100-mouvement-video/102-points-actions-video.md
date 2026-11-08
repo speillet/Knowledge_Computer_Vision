@@ -22,8 +22,10 @@ Reponse: **Expected answer**: CoTracker tracks points with visibility; classific
 
 **Axis of annotations**: A point path can be represented by $(x_t,y_t,v_t)$, where $v_t$ describes a visibility according to the protocol. A clip label is a category associated with a window; a time location provides at least one category and an interval $[t_d,t_f]$. Cutting a long video into tagged clips can give rough time cues, but does not automatically create precise boundaries. To compare systems, keep timestamps and match rules with actual events. A point followed on a person is neither a complete identity of the person nor an annotation of action without an additional definition.
 
+**Point identity is additional information across time**: A collection of independent per-frame point detections does not establish which observation belongs to the same physical point. Conversely, a continuous point track does not by itself assign an action label or its start/end times. Build evaluation around the output actually needed: visibility-aware trajectories, clip class or temporal intervals. Combining these modules is a system decision and requires checking their spatial and temporal interfaces.
+
 **Blocking errors**: Deducing the boundaries of an action from a single music video label.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [CoTracker, §3: trajectories and visibility](https://arxiv.org/abs/2307.07635); [TimeSformer, summary](https://arxiv.org/abs/2102.05095); label/interval distinction: project contract.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [CoTracker, §3: trajectories and visibility](https://arxiv.org/abs/2307.07635); [TimeSformer, summary](https://arxiv.org/abs/2102.05095); label/interval distinction: project contract. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d10 famille::comparaison cv_id::CV-VIDEO-001 provenance::agent pole::D
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: The event can occur entirely between two sampled f
 
 **Sampling phase**: In a constructed model where an event of duration $d<\Delta$ begins with a uniform phase with respect to a grid of steps $\Delta$, and where an instantaneous capture is sufficient, the probability that at least one sample falls into the event is $d/\Delta$. For 100 ms and a step of 1 s, it is 0,1 under these assumptions. This is not a predicted performance of a real model: exposure, visibility, and persistent clues change the problem. The calculation shows, however, why varying the phase is essential and why a demonstration where the event falls exactly on a frame does not validate a guaranteed recall.
 
+**Sampling phase creates a measurable miss probability**: Under an explicitly constructed model of instantaneous regular sampling every second and uniformly random event start phase, a 0.1 s event is sampled with probability 0.1 and missed with probability 0.9. This does not predict a real dataset without its event distribution and exposure model. To guarantee observing every event of a minimum duration, sampling and acquisition need a spacing condition appropriate to that duration, not a favorable average-case example.
+
 **Blocking errors**: Assuming that a larger model guarantees the recall of any short event.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Time counter-example built in the reference note: event between two sampled moments; [CoTracker, §3](https://arxiv.org/abs/2307.07635) for the context of discrete video inputs, without attribution of the counter-example to this article.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Time counter-example built in the reference note: event between two sampled moments; [CoTracker, §3](https://arxiv.org/abs/2307.07635) for the context of discrete video inputs, without attribution of the counter-example to this article. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d10 famille::raisonnement cv_id::CV-VIDEO-002 provenance::agent pole::D
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Not without specifying the available information a
 
 **Minimum time for context**: if an estimate for $t$ uses a frame at $t+h$, its availability cannot precede $t+h$, even before transfer and calculation. A latency measurement limited to the network pass would therefore omit at least this context delay. With sliding windows, specify which exits are temporary and which are revised afterwards. Evaluating the first decision and the final trajectory separately makes the comparison readable. A method can remain useful in line with an accepted deadline; the word causal, on the other hand, requires that each decision at the time in question uses only the observations already available according to the announced contract.
 
+**Future context imposes a latency floor**: At 30 frames/s, using five future frames imposes at least about 167 ms of waiting before computation and transfer. The model may be appropriate for retrospective analysis but incompatible with a tighter online decision budget. A proposed comparison reports quality versus total output delay under a common information window, including whether later frames revise earlier outputs. Timing only the network call omits the cost of waiting for its input.
+
 **Blocking errors**: Confound online word and lack of latency or future in any implementation.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [CoTracker, §3: sliding windows](https://arxiv.org/abs/2307.07635); [CoTracker3, introduction : variantes online/offline](https://arxiv.org/abs/2410.11831); latency comparison proposed by the project.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [CoTracker, §3: sliding windows](https://arxiv.org/abs/2307.07635); [CoTracker3, introduction : variantes online/offline](https://arxiv.org/abs/2410.11831); latency comparison proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d10 famille::evaluation cv_id::CV-VIDEO-003 provenance::agent pole::D
 END
 
@@ -91,7 +97,9 @@ Reponse: **Expected answer**: Compare to an image/context baseline, check labels
 
 **Permutation and reverse order**: An average $z=L^{-1}\sum_t f(I_t)$ aggregation is mathematically invariant to permutation; a good score obtained in this way can come from visual states or context, without encoding their order. Building pairs like take/pose an object, with close states but a different order, tests another property. check also that permutation does not create an unusual artifact that would cause the model to fall for the wrong reason. Comparing inversion, permutation and cadence by changing only one factor helps to support the use of time without assimilating any temporal sensitivity to a complete understanding of the scene.
 
+**Order sensitivity should match the task labels**: Opening and closing a door can share many static frames while differing in order; recognizing a sport from a field may require much less temporal evidence. A proposed controlled set includes reverse-order pairs with changed labels and static-context baselines. Shuffle invariance alone is not proof of failure on an order-insensitive task, but a high shuffled score cannot establish that the model learned the dynamics needed for an order-sensitive decision.
+
 **Blocking errors**: Deduct a temporal understanding of a global accuracy alone.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Controlled test proposed by the project; [TimeSformer, summary and architecture](https://arxiv.org/abs/2102.05095) for the temporal attention mechanism.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Controlled test proposed by the project; [TimeSformer, summary and architecture](https://arxiv.org/abs/2102.05095) for the temporal attention mechanism. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d10 famille::diagnostic cv_id::CV-VIDEO-004 provenance::agent pole::D
 END

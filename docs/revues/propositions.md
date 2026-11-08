@@ -17,3 +17,11 @@ implemented (for example, DLT became CV-SVD-005 and CV-SVD-006).
 | P-CV-SE3-01 | CV-SE3 | Transport covariance with the adjoint | Avoid mixing uncertainty coordinate frames | Reasoning | 1 card, 3 criteria | [Solà et al., §II-H](https://arxiv.org/abs/1812.01537) | pending |
 | P-CV-SEGMENTATION-01 | CV-SEGMENTATION | Calculate PQ for a small matching example | Make the panoptic metric operational | Evaluation | 1 card, TP/FP/FN and mean IoU | [Kirillov et al., §4](https://arxiv.org/abs/1801.00868) | pending |
 | P-CV-METRIQUES-TEMPS-01 | CV-METRIQUES-TEMPS | Calculate an ID switch's effect on IDF1 | Move from a qualitative distinction to a worked example | Reasoning | 1 card on a short sequence | [Ristani et al., identity metrics](https://arxiv.org/abs/1609.01775) | pending |
+
+## Review of 2026-11-08
+
+The [whole-vault enrichment pass](2026-11-08-enrichment/00-bilan.md#proposals-awaiting-decisions)
+retains the four proposals above as pending, in this priority order: innovation
+consistency, adjoint covariance transport, worked PQ and worked IDF1. Existing
+answers were deepened without creating cards. No acceptance, rejection or
+deferral is inferred from the request to improve the present cards.

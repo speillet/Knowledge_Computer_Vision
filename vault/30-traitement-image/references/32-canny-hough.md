@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Differentiating Vote and Adjustment Error**: a long texture provides a lot of points and therefore votes, even if it is not the desired structure. For a candidate, calculate in addition the normal distances $r_i=x_i\cos\theta+y_i\sin\theta-\rho$ on her support points, their longitudinal extent and the fraction of the positions actually covered. A very precise short line and a long discontinuous line do not have the same use. Also compare its relationship to other expected edges: parallelism, intersections or distances, if these properties are legitimate for the part. These validations are choices of the proposed pipeline; the accumulator score is not a calibrated probability of the presence of a business edge.
 
 **Passages consulted for these developments**: [OpenCV 4.13, Canny](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html), gradient, Non-maximum Suppression and Hysteresis Thresholding; [OpenCV 4.13, Hough](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html), How does it work; Standard and Probabilistic Hough.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-CANNY-HOUGH-001 — Weak chains need a surviving strong seed
+
+Constructed graph interpretation: a chain of pixels between the low and high thresholds survives only if its connected component reaches a strong pixel. A disconnected chain with identical gradient magnitudes is discarded. A single noise bridge can conversely connect an unwanted chain to a valid seed. Inspect nonmaximum-suppressed responses and connectivity before changing thresholds; increasing the high threshold changes the seeds, whereas increasing the low threshold can break the connecting path.
+
+### CV-CANNY-HOUGH-002 — The angle belongs to the normal
+
+For a vertical line $x=20$, one representation is $\rho=20$ px and $\theta=0$; for a horizontal line $y=30$, use $\rho=30$ px and $\theta=\pi/2$. These constructed checks prevent interpreting theta as the visible line direction. Moving the image origin changes rho even when the physical line is unchanged, so an ROI-local detection needs a coordinate conversion before comparison with full-image geometry.
+
+### CV-CANNY-HOUGH-003 — Disconnected support should not become one segment
+
+Two collinear 10 px edges separated by 100 px can vote for the same infinite line. Taking the extreme support projections would return a segment crossing a large unobserved gap. Separate longitudinal support clusters using an explicit gap tolerance, then assess whether an occlusion model justifies reconnecting them. A line fit and a segment-existence decision use related geometry but answer different questions.
+
+### CV-CANNY-HOUGH-004 — Normal consistency can reject texture support
+
+For a proposed line, compare its normal with local edge-gradient directions as well as perpendicular distances. Many texture pixels can lie close to the line while having incompatible orientations. This is a proposed verification feature, not a guarantee: corners, noisy gradients and thick edges require tolerance. Evaluate its effect on the target structure rather than treating a large accumulator peak as a probability or automatically raising the voting threshold.
+
+Consulted foundations: [OpenCV Canny](https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html): nonmaximum suppression and hysteresis; [OpenCV Hough](https://docs.opencv.org/4.13.0/d9/db0/tutorial_hough_lines.html): normal parameterization; standard versus probabilistic line outputs.
 
 ## Sources and flashcards
 

@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -99,6 +99,26 @@ These explanations complement the mechanism associated with each question. Calcu
 **Non-unique inverse problem**: If the acquisition is $y=Hx+n$, multiple high-resolution $x$ images can produce almost the same $y$ when $H$ loses high frequencies. For a detail $\delta$ such as $H\delta\simeq0$, $x$ and $x+\delta$ are difficult to distinguish from the measurement. The generative model then chooses with its learned preferences, without proof that the crack added or removed is real. Consistency $H\hat x\simeq y$ is useful but insufficient to validate the details of the poorly observed kernel. This derivation explains why keeping the raw measurement and a physical reference remains essential for inspection.
 
 **Passages consulted for these developments**: [Ho et al., DDPM](https://arxiv.org/html/2006.11239v2), Algorithm 1 – 2 and §3.2, noise prediction; algebraic reversal of the project; [Rombach et al., Latent Diffusion](https://arxiv.org/html/2112.10752v2), §3.1, compression and reconstruction; spatial balance and inverse problem deduced.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-DIFFUSION-001 — Fewer sampling steps change an inference procedure
+
+Training may sample individual noise levels to learn a denoiser, while generation repeatedly calls it according to a solver and schedule. Reducing sampling steps changes numerical approximation, latency and possibly output quality without necessarily changing the learned weights. A proposed comparison fixes checkpoint, conditioning, resolution and random seeds while varying the sampler. A training loss at sampled noise levels is not a direct measurement of final generation fidelity.
+
+### CV-DIFFUSION-002 — The autoencoder gives a separate distortion baseline
+
+Before attributing a lost scratch to latent diffusion, inspect $D(E(x))$ for the same input under the autoencoder alone. If the critical structure is already absent, the representation introduces an information bottleneck before iterative generation. A proposed evaluation measures that reconstruction on defect size and contrast, then adds the denoising stage. More sampling iterations cannot be assumed to recover a detail the representation did not preserve.
+
+### CV-DIFFUSION-003 — Measurement consistency does not imply unique reconstruction
+
+For an acquisition operator with a nontrivial nullspace, $H(x+\delta)=Hx$ whenever $H\delta=0$. A reconstructed crack difference in that nullspace can satisfy the same low-resolution observation. Validate task-critical geometry against independent high-resolution measurements and keep original observations available. A visually sharp result or small re-degradation error alone does not establish which of several measurement-consistent structures was physically present.
+
+Consulted foundations: [DDPM](https://arxiv.org/html/2006.11239v2): Algorithms 1–2 and §3 noise-prediction training versus reverse sampling; [Latent Diffusion](https://arxiv.org/html/2112.10752v2): §3.1 perceptual compression and §3.2 latent generation.
 
 ## Sources and flashcards
 

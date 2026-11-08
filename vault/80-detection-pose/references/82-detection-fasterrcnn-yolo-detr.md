@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -273,6 +273,66 @@ These explanations complement the mechanism associated with each question. Calcu
 **Probability and contract of labels**: A softmax per box requires that the probabilities of the chosen categories share a total mass, which corresponds to an exclusive choice in this set. Independent sigmoids can represent multiple labels simultaneously, but do not automatically make "vehicle", "car" and exclusive categories consistent. The dataset of annotations and the rule of decision must specify these relationships. At the image scale, aggregating the presence of a category can lose the number of instances; three cars become a single presence indicator. Maintaining instance identities and their boxes avoids confusing scene classification with object detection.
 
 **Passages consulted for these developments** : [Carion et al., DETR](https://arxiv.org/html/2005.12872v3), §3.1, matching and supervision; project protocols and calculations; [Tian et al., FCOS](https://arxiv.org/html/1904.01355v5), §3.3center-ness, equation 3 ; example calculated by project; [Lin et al., Focal Loss](https://arxiv.org/html/1708.02002v2), §3, modulation of the loss; factors and commentary on the gradient deduced; [Rezatofighi et al., GIoU](https://arxiv.org/html/1902.09630v2), Algorithme 1 and §3.1 ; example of built sensitivity; [Lin et al., FPN](https://arxiv.org/html/1612.03144v2), §3, flashcards Merged and Smoothed 3×3 outings, figure 3.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-DETECTEURS-001 — Shared features do not make proposal count free
+
+After a shared backbone, increasing the retained proposal count still increases work in region pooling, per-region heads and downstream filtering. A project timing decomposition should therefore hold proposal limits fixed or report them explicitly when comparing two-stage detectors. Include crowded images where the retained population approaches its cap. A backbone-only benchmark misses the portion of cost that changes with the number of candidate regions.
+
+### CV-DETECTEURS-002 — A checkpoint name needs an export contract
+
+Record repository and revision, checkpoint, preprocessing, tensor layout, box decoding and postprocessing together. Two implementations carrying the same family name can expose decoded boxes or raw regression tensors and may include different filtering stages in exported graphs. A proposed parity check compares intermediate and final outputs on the same images before interpreting deployment differences as an architectural property of YOLO.
+
+### CV-DETECTEURS-003 — Matching cost and optimized loss have different roles
+
+The Hungarian cost chooses which prediction supervises each target; the subsequent loss updates the model using those assignments, including no-object supervision for unmatched queries. Changing cost weights can change assignment discontinuously even if prediction tensors are unchanged. This assignment operates with annotations during training. It is not an inference algorithm for identifying and suppressing duplicate boxes, and does not require ground truth at deployment.
+
+### CV-DETECTEURS-004 — The effective object can be only a few pixels
+
+With scale $640/1920=1/3$, a $12\times9$ px object becomes approximately $4\times3$ px before padding, and the resized image height is 360 px with 140 px padding above and below. A box-coordinate inversion can be tested independently of feature resolution. Even a correct inversion cannot restore details lost by sampling. Compare upstream candidate coverage on the same small-object subset before attributing the entire AP drop to NMS.
+
+### CV-DETECTEURS-005 — Throughput and single-image latency are different measurements
+
+A batch can increase completed images per second while making each arriving image wait for batch formation. GPU kernels can also complete asynchronously with respect to host timing. Use an explicit start/end contract and appropriate synchronization or device events for the quantity measured. Report warmup, queueing and latency quantiles under realistic arrival rates; dividing batch time by batch size is not a measurement of request-to-result latency.
+
+### CV-DETECTEURS-006 — The training location is not an object center requirement
+
+In the cited FCOS rule, an eligible location inside an assigned box predicts distances to its four edges; it need not coincide with the box center. Feature-pyramid range constraints and any center-sampling variant must be stated separately. A site inside two overlapping boxes can receive different targets after the tie-breaking rule. This makes annotation assignment a training policy, distinct from the decoder that reconstructs a box from distances.
+
+### CV-DETECTEURS-007 — A site on the boundary has a zero distance
+
+Constructed boundary case: moving the site to $(20,30)$ on the same box gives distances $(0,20,70,40)$ px. Algebraic decoding still recovers the box, while the geometric centerness target becomes zero. Whether this boundary site is eligible depends on strict versus non-strict containment in the training implementation and any center-sampling rule. Separate that assignment convention from the distance formula, and test sites just inside and outside rather than inferring eligibility from nonnegative decoded lengths.
+
+### CV-DETECTEURS-008 — The logit gradient includes a second term
+
+For binary cross entropy with $p_t=\operatorname{sigmoid}(z_t)$ and no alpha factor, $FL=-(1-p_t)^\gamma\log p_t$ has derivative $\partial FL/\partial z_t=(1-p_t)^\gamma[\gamma p_t\log p_t-(1-p_t)]$. This project derivation follows the product and chain rules. At $\gamma=0$ it becomes $p_t-1$. Detaching the modulator drops the logarithmic term, so it is a different optimization rule even when the forward values are identical. The sign of $z_t$ must encode the correct binary target.
+
+### CV-DETECTEURS-009 — Enclosing geometry distinguishes some disjoint positions
+
+Constructed example: two unit boxes separated horizontally by a one-unit gap have enclosing area three and union area two, giving GIoU $=-1/3$. Increasing that gap to two units makes the enclosing area four and GIoU $=-1/2$. The IoU loss remains one in both cases while the generalized term changes. This does not promise a nonzero gradient in every possible local movement direction.
+
+### CV-DETECTEURS-010 — Upsampling adds locations, not recovered measurements
+
+A coarse feature map interpolated to a finer grid still derives from the same coarse samples. Lateral features supply separately computed finer spatial evidence, which is why the fusion differs from interpolation alone. Test thin or small objects at matched input resolution and training protocol when assessing that contribution. No feature-pyramid mechanism can recover a physical defect that acquisition and input resizing have already removed.
+
+### CV-DETECTEURS-011 — An error category is not a causal diagnosis
+
+The same localization-type false positive can result from poor box regression, incorrect inverse resizing or an annotation convention mismatch. TIDE-style categories organize observed evaluation errors; identifying the cause requires intermediate outputs or controlled ablations. A duplicate category similarly depends on score ordering and prior matching. Keep the evaluator fixed when comparing interventions so changed category counts are not mistaken for proof of one internal failure mechanism.
+
+### CV-DETECTEURS-012 — Annotation fixes must follow the declared policy
+
+A visually plausible detection can lie outside the annotation policy, for example an excluded tiny object or category boundary. Review the policy and an independently sampled set of disagreements before relabeling. If an omission is confirmed, record and version the dataset correction, then reevaluate all compared systems consistently. Editing labels only where one favored model disagrees would bias the comparison even if some individual corrections are valid.
+
+### CV-DETECTEURS-013 — Multiple instances and multiple valid labels are separate axes
+
+A single box can have several valid attributes such as car, red and damaged, while an image can contain many boxes each with one exclusive object class. The output schema should specify which labels describe an instance and which refer to the whole image. This determines loss and decision policy; the mere presence of two object categories does not force independent multilabel classification for every detection.
+
+Consulted foundations: [DETR](https://arxiv.org/html/2005.12872v3): §3.1 bipartite assignment and set loss; [FCOS](https://arxiv.org/html/1904.01355v5): §§3.1–3.3 target distances, level assignment and centerness; [Focal Loss](https://arxiv.org/html/1708.02002v2): §3.2 modulating factor; [GIoU](https://arxiv.org/html/1902.09630v2): §3 enclosing geometry; [FPN](https://arxiv.org/html/1612.03144v2): §3 lateral/top-down fusion; [TIDE](https://arxiv.org/html/2008.08115v2): §2.2 error taxonomy and annotation limitations; [Faster R-CNN](https://arxiv.org/html/1506.01497v3): §3 shared convolutional features.
 
 ## Sources and flashcards
 

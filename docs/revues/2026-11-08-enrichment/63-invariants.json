@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-08",
+  "subjects": 60,
+  "cards": 282,
+  "references": 60,
+  "ids_added": 0,
+  "ids_removed": 0,
+  "guids_changed": 0,
+  "questions_changed": 0,
+  "objectives_families_provenance_tags_decks_changes": 0,
+  "legacy_identity_comments_changed": 0,
+  "canonical_revisions_incremented_once": 60,
+  "expected_answers_corrected": [
+    "CV-SVD-004",
+    "CV-FACTEURS-001",
+    "CV-FACTEURS-004",
+    "CV-CANNY-HOUGH-002",
+    "CV-SIFT-006",
+    "CV-FLANN-004",
+    "CV-DETECTEURS-004",
+    "CV-DETECTEURS-011",
+    "CV-WATERSHED-001",
+    "CV-WATERSHED-005",
+    "CV-IOU-AP-004"
+  ],
+  "protected_expected_answers_unchanged": 271,
+  "before_words": {
+    "minimum": 253,
+    "median": 295.0,
+    "maximum": 406,
+    "total": 83780
+  },
+  "after_words": {
+    "minimum": 327,
+    "median": 372.0,
+    "maximum": 486,
+    "total": 105286
+  },
+  "anomalies": [],
+  "limitations": "No package rebuild, phone update, independent scientific validation or application-rendering test in this pass."
+}

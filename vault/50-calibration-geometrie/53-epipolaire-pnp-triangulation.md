@@ -22,8 +22,10 @@ Reponse: **Expected answer**: E acts on ideal normalized camera coordinates; F o
 
 **Constraint at a distance**: A point $\tilde p_1$ defines a line $l_2=F\tilde p_1$ in the 2 image. If $l_2=(a,b,c)$, the distance of $(u,v)$ to this line is $|au+bv+c|/\sqrt{a^2+b^2}$ when the denominator is non-zero. This normalization removes the arbitrary scale from the right, unlike the only product $\tilde p_2^TF\tilde p_1$. A Sampson residual or a symmetric error responds to other approximations and conventions. In the presence of distortion not removed, the corresponding places are generally no longer the lines of this ideal model; applying a pixel threshold to the wrong geometry can reject physically correct matches.
 
+**The matrix relation fixes the coordinate contract**: For ideal undistorted pixel vectors $x_1,x_2$ and normalized rays $K_1^{-1}x_1,K_2^{-1}x_2$, $F=K_2^{-T}EK_1^{-1}$. Applying $E$ directly to raw distorted pixels generally violates both normalization and distortion assumptions. This derived relation also explains why changing image intrinsics by resizing changes the pixel-space fundamental matrix even when the physical relative pose and essential geometry remain the same.
+
 **Blocking errors**: Apply E directly to raw pixels as a universal rule.
-Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions and variants](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html).
+Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions and variants](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-EPIPOLAIRE-001 provenance::agent pole::B pole::C
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: No: the two views alone give a direction and a rec
 
 **pose and cheirality**: The decomposition of an allowable essential provides several combinations of rotation and translation sign. Triangulating and then imposing positive depths in both cameras helps to choose a compatible solution, when noise levels and scene geometry permit. This selects a meaning, without measuring the norm of translation. In pure rotation, $t=0$ and $E=[t]_\times R$ cancels: the translation and the depths do not become observable by normalizing a vector from the noise. A very low parallax can produce a similar difficulty in practice. Always connect the scale to the measure that sets it and separate this problem from the selection of a pose among the candidates.
 
+**A cheirality choice does not establish metric scale**: Positive-depth tests can select among candidate essential-matrix decompositions, but multiplying a valid translation and all reconstructed points by the same positive factor preserves their projections and depth signs. A known baseline, metric object, or appropriately observable additional sensor can supply scale. Record which evidence supplies it; normalizing a recovered translation to unit length is a computational convention, not a one-meter measurement.
+
 **Blocking errors**: Present the unit norm of t as one meter.
-Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions and variants](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html).
+Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions and variants](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::comprehension cv_id::CV-EPIPOLAIRE-002 provenance::agent pole::B pole::C
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: PnP estimates the pose from 3D points and 2D obser
 
 **Write Linear Triangulation**: for a projection matrix $P$ whose rows are $P_1,P_2,P_3$ and an observation $(u,v)$, equations $(uP_3-P_1)X_h=0$ and $(vP_3-P_2)X_h=0$ constrain the homogeneous point $X_h\in\mathbb R^4$. Stacking them on multiple views produces a linear estimate, to be divided by its fourth component when it is valid. Observations and $P$ must both use ideal pixels, or both have compatible normalized coordinates. A nearly zero homogeneous component can indicate a point at a very great distance. A refinement of reprojection and controls of depth, parallax and visibility remain necessary; the linear solution does not certify the correspondence.
 
+**The two problems fail for different missing evidence**: PnP needs 3D coordinates in a declared frame and unit; two-view triangulation needs known projection geometry and enough parallax. Supplying accurate 2D matches alone does not complete either contract. In a reconstruction pipeline, estimated points and poses can share errors, so validating one using only the other can be circular. Use held-out measurements or independent geometry when assessing absolute pose or depth accuracy.
+
 **Blocking errors**: Reverse entries and unknowns without reporting it.
-Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions and variants](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html).
+Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV calib3d, E/F/recoverPose/triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) ; [OpenCV solvePnP, conventions and variants](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::comparaison cv_id::CV-EPIPOLAIRE-003 provenance::agent pole::B pole::C
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: With almost parallel rays, several large depths pr
 
 **Why reverse depth helps**: for a depth of $Z>0$, posing $\rho=1/Z$ places the far points near zero instead of an immense value. In an ideal stereo, $\rho=d/(fB)$ depends linearly on the disparity $d$, while $Z=fB/d$ becomes very sensitive near zero. A small uncertainty of $\rho$ can therefore correspond to a huge uncertainty of $Z$. This reparameterization facilitates certain representations without creating parallax or making the distance known. It should not be used to present a point almost infinitely as a precise metric depth. If the errors are large, the linear propagation and a symmetrical interval on $Z$ may themselves become inadequate.
 
+**Depth error grows faster than disparity error**: In rectified stereo, $Z=fB/d$ gives $\sigma_Z\approx fB\sigma_d/d^2$. Doubling range while holding the same baseline, focal length and disparity uncertainty approximately quadruples depth standard deviation. This is a local first-order relation; near zero disparity its Gaussian approximation can be poor. A low image reprojection error and positive depth do not establish that a far triangulated point is useful for metric measurement.
+
 **Blocking errors**: Deduct the 3D accuracy from the single residual pixel.
-Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]]; [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P and triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); low parallax sensitivity: geometric deduction of the project; [OpenCV 4.13, PnP, pose computation methods and P3P; verified contract with Context7](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html), consult the 2026-10-30.
+Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]]; [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P and triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); low parallax sensitivity: geometric deduction of the project; [OpenCV 4.13, PnP, pose computation methods and P3P; verified contract with Context7](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-EPIPOLAIRE-004 provenance::agent pole::B pole::C
 END
 
@@ -114,7 +122,9 @@ Reponse: **Expected answer**: The problem may have several solutions, configurat
 
 **Origin of multiple solutions**: With three known 3D points and three unit sighting directions, P3P looks for their positive $\lambda_i$ distances to the camera. The cosine law imposes $\|X_i-X_j\|^2=\lambda_i^2+\lambda_j^2-2\lambda_i\lambda_j\cos\alpha_{ij}$, where $\alpha_{ij}$ is the angle between the rays. This nonlinear system can admit several triangles of compatible rays. An additional observation then serves to separate them, according to the function chosen. This geometric derivation explains why “minimum three” and “pose unique” are not equivalent. Almost collinear points, their uncertainties and the solutions behind the camera must be controlled before refinement on more matches.
 
+**Minimal solutions need disambiguating observations**: A minimal P3P configuration can produce several poses satisfying the same three bearing constraints. Additional correspondences can rank them by reprojection and cheirality, provided their geometry is informative. A fourth point near a degenerate arrangement may still discriminate poorly. Match the mathematical minimal problem to the exact solver entry point and its versioned requirements rather than reducing an API call to the mnemonic number in its name.
+
 **Blocking errors**: Confounding theoretical minimum and API contract.
-Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV 4.13.0, solvePnP, pose computation methods and P3P](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html) ; [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P and triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/53-epipolaire-pnp-triangulation|Full reference]] ; [OpenCV 4.13.0, solvePnP, pose computation methods and P3P](https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html) ; [OpenCV 4.13.0, decomposeEssentialMat, recoverPose, solveP3P and triangulatePoints](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::pratique cv_id::CV-EPIPOLAIRE-005 provenance::agent pole::B pole::C
 END

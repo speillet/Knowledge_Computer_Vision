@@ -22,8 +22,10 @@ Reponse: **Expected answer**: Calibration estimates image formation parameters, 
 
 **What data raises what unknowns**: A calibration target plane of known geometry provides particular 3D coordinates, e.g. $(X,Y,0)$, and their 2D observations on several views. The calibration looks for common intrinsics and a pose per view; a new estimate of pose can then reuse these fixed intrinsics. A free homography between two images does not necessarily exploit the metric size of the squares and can align the plane without lifting the same unknowns. If the calibration target is printed at a bad uniform scale, the estimated translations follow this erroneous unit, while the pixel adjustment can remain almost identical. Metric validation therefore requires information independent of this alignment alone.
 
+**A known target scale fixes translation units**: If every target coordinate is multiplied by $s$, the same ideal image observations can be explained with translations multiplied by $s$ while intrinsics stay in pixels. A mistaken square size can therefore leave a low reprojection error and plausible focal lengths while corrupting metric distances. This constructed scale argument distinguishes image-formation calibration from independent verification of the physical target dimensions and the units used by subsequent pose estimation.
+
 **Blocking errors**: assimilate these three outputs or believe that a homography is always a complete calibration.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §§2 – 3](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §§2 – 3](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::comprehension cv_id::CV-ZHANG-001 provenance::agent pole::B pole::C pole::E
 END
 
@@ -46,8 +48,10 @@ $$K=\begin{bmatrix}f_x&\gamma&c_x\\0&f_y&c_y\\0&0&1\end{bmatrix}.$$ The focal le
 
 **Place distortion in the calculation**: after $X_c=RX_w+t$, place $x=X_c/Z_c$, $y=Y_c/Z_c$ and $r^2=x^2+y^2$. A simple polynomial radial model uses $x_d=x(1+k_1r^2+k_2r^4+\cdots)$ and the same for $y_d$; tangential terms are other contributions. The distorted coordinates are then converted into pixels by the intrinsics. The radial coefficients of this convention act on normalized coordinates, not directly over a distance in pixels. This separation explains why a crop changes the main point but not mechanically these coefficients. The validity of the division by $Z_c$ and the visibility of the point must also be checked; a projected number does not imply that a point is in front of the camera.
 
+**Homogeneous scale is not another camera parameter**: In the ideal pinhole model with the usual last row of $K$, the homogeneous projection scale can be chosen as camera depth $Z_c$. It changes from point to point and disappears after dividing the first two coordinates by the third. Translation retains the target coordinate unit; focal lengths remain in pixels. Adding a common metric scale to target points and translation does not require multiplying the intrinsic matrix by that scale.
+
 **Blocking errors**: Reverse the meaning of $R$ without transforming the formula, confuse meters and pixels or include any distortion in $K$ alone.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §2.1, equation 1](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §2.1, equation 1](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-ZHANG-002 provenance::agent pole::B pole::C pole::E
 END
 
@@ -69,8 +73,10 @@ Reponse: **Expected answer**: $H\sim K[r_1\ r_2\ t]$. With $B=K^{-T}K^{-1}$, the
 
 **Passing constraints to poses**: The linear constraints on the symmetric matrix $B$ are stacked to estimate its six elements to within a scale. After recovering an allowable $K$, columns $K^{-1}h_1$ and $K^{-1}h_2$ give directions of rotation to be normalized with a common scale; the third direction stems from their vector product. Noise generally prevents the resulting matrix from being exactly orthonormal: it must be brought back to $SO(3)$ before the joint refinement. This step is an initialization, not a final estimate of all the distortion. Views repeating the same orientation can leave the constraints almost dependent even if their individual homographies estimate themselves very well.
 
+**Different images can repeat the same constraint**: Pure translation of the planar target changes where it appears but preserves the orientation-based orthogonality constraints on intrinsics. Even an in-plane target rotation can leave its plane parallel and fail to add independent intrinsic information. Seek changes in plane normal, not merely a large image count or pixel displacement. Peripheral coverage still serves distortion estimation, so acquisition diversity has both orientation and image-position roles.
+
 **Blocking errors**: say that any two pictures are always enough or that simple translations make all intrinsics observable.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §§2.3, 3.1 and 4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §§2.3, 3.1 and 4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-ZHANG-003 provenance::agent pole::B pole::C pole::E
 END
 
@@ -92,8 +98,10 @@ Reponse: **Expected answer**: The RMS measures the adjustment of projections at 
 
 **Defining the RMS**: with $N$ observations 2D and residuals $e_i=(e_{xi},e_{yi})$, $RMS_{point}=\sqrt{\sum_i(e_{xi}^2+e_{yi}^2)/N}$. A mean per coordinate uses $2N$ at the denominator and is therefore $RMS_{point}/\sqrt2$. The average of the norms and the average of the RMS per view are still other statistics. A score announced without denominator can therefore be incomparable despite the same word RMS. Also present the maps of residuals and the quantiles, then a validation on views and reserved points. When the pose of a reserved view is to be estimated, separate the points that serve that pose from those that evaluate the set parameters.
 
+**Low pixel RMS can coexist with metric scale bias**: Constructed case: a target square is entered as 20 mm but is actually 19.8 mm. Under ideal uniform scaling, recovered metric translations are biased by about $20/19.8-1\approx1.01\%$, while the same image projections can still fit well. A held-out image from that same wrongly scaled target does not independently verify absolute dimensions. Use a separate traceable distance relevant to the measurement geometry.
+
 **Blocking errors**: achieve accuracy in millimetres from the RMS adjustment pixel alone.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]] ; [Zhang, §3.2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf) ; [OpenCV calibrateCamera](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]] ; [Zhang, §3.2](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf) ; [OpenCV calibrateCamera](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::evaluation cv_id::CV-ZHANG-004 provenance::agent pole::B pole::C pole::E
 END
 
@@ -115,8 +123,10 @@ Reponse: **Expected answer**: multiply focal lengths and skew by $a$ and transfo
 
 **Case of pixel centers**: If the tool sets the resize to $u'=a(u+1/2)-1/2$, the transformation also contains the translation $(a-1)/2$; the main point follows the same relationship before the crop. The $u'=au$ simple formula corresponds to another contract. These expressions are analytical cases: they do not describe all libraries. For a different scaling on both axes, multiply the relevant lines of $K$ respectively via the full pixel affine. The factor of the last homogeneous coordinate remains fixed at one per convention. Testing a round trip of multiple points is safer than inferring the affine from the final size of the array alone.
 
+**A transform chain avoids order mistakes**: For resize matrix $S$ followed by crop matrix $C$, the pixel transform is $A=CS$, so $K\prime=CSK$. Reversing the order applies crop offsets in a different pixel unit. A constructed example with half-size resizing and a 20 px crop moves a principal point at 320 px to 140 px, whereas cropping 20 original pixels first gives 150 px. Include the actual pixel-center convention when implementing the transformation.
+
 **Blocking errors**: keep $K$ identical after crop or indiscriminately multiply all distortion coefficients by $a$.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [OpenCV, camera model](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [Zhang, TR98-71, §§2 – 4 and Annex C, Constraints, poses and Degenerations](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [OpenCV, camera model](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [Zhang, TR98-71, §§2 – 4 and Annex C, Constraints, poses and Degenerations](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::pratique cv_id::CV-ZHANG-005 provenance::agent pole::B pole::C pole::E
 END
 
@@ -138,8 +148,10 @@ Reponse: **Expected answer**: Suspect an uninformative capture and a poorly cons
 
 **Linking acquisition and information**: If two columns of the Jacobian of the residuals are almost dependent, a variation of one parameter can compensate that of another. Small singular values and covariance correlations signal this coupling in the local approximation. Adding views that excite new directions can separate them better than adding twenty copies of a front view. Covering the edge helps constrain terms that grow with distance to the center, but requires well-located corners in that area. A flexible calibration target or systematically biased corners can produce a consistent fit to the wrong model: digital stability and physical adequacy are controlled separately.
 
+**Parameter stability needs withheld acquisition groups**: Leave out whole target poses rather than a few corners from every pose when testing acquisition diversity. Corners within one image share pose and image-formation effects, so randomly withholding them can make validation look more independent than it is. Compare parameter shifts, radial residual maps and metric predictions over the omitted poses. This is a proposed robustness check; a stable estimate can still share a systematic target or lens-model bias.
+
 **Blocking errors**: declare the calibration correct only because twenty images have been used or the RMS is weak.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-ZHANG-006 provenance::agent pole::B pole::C pole::E
 END
 
@@ -161,7 +173,9 @@ Reponse: **Expected answer**: define business tolerance, stable resolution/focus
 
 **Moving from calibration to measurement on a plan**: with center world camera $C$, radius world direction $d$ and known plane $n^TX=h$, the intersection is $X=C+\lambda d$, where $\lambda=(h-n^TC)/(n^Td)$ if the denominator is non-zero. This geometry shows that a metric measurement also requires the plane or depth of the surface: intrinsics alone are not enough. Near a radius parallel to the plane, the intersection becomes very sensitive to noise. Propagating calibration, edge location and flatness errors in product tolerance, and then comparing to an independent reference. This calculation assumes a known flat surface and a properly dedistorted projection, without certifying a relief measurement.
 
+**Measurement uncertainty includes the working plane**: A ray-plane intersection becomes sensitive when the ray is nearly parallel to the plane, because its depth contains division by $n^Td$. A precise camera calibration cannot remove uncertainty in the plane normal, plane height or the point's actual departure from that plane. Include these quantities in the dimensional error budget and test the real working distance and field position, rather than validating only corner reprojection on the calibration target.
+
 **Blocking errors**: blindly reuse the parameters after changing focus, or ignore the actual size of the calibration target.
-Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §§2 – 4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/52-calibration-zhang|reference note calibration]]; [Zhang, §§2 – 4](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [OpenCV 4.13, Camera Calibration, projection and distortion model; Context7 verification](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::conception cv_id::CV-ZHANG-007 provenance::agent pole::B pole::C pole::E
 END

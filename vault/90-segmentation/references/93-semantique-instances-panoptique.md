@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Physical scale of the defect**: The same boundary error of a voxel represents 0,5 mm on one axis and 3 mm on another if the spacings differ. Surface distances must therefore be calculated in the relevant physical geometry. An average per volume and an average per patient do not give the same weight to cases; also announce cases where the structure is absent. A test built with a large region and a small structure shows how an aggregated Dice can privilege the first. This analysis focuses on the technical metric and its assumptions, without inferring a clinical utility of a overlap value.
 
 **Passages consulted for these developments**: [Cheng et al., Mask2Former](https://arxiv.org/html/2112.01527v3), Introduction, distinction of tasks and annotations; representational calculations and constructed metrics.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-SEGMENTATION-001 — Instance IDs are local identities unless stated otherwise
+
+Two masks with identical geometry and class but permuted instance numbers represent the same per-image instance partition. Across video frames, however, stable identity is an additional tracking requirement. A panoptic image output therefore does not automatically establish temporally consistent IDs. State whether the evaluation concerns per-frame segmentation, video panoptic identity or object trajectories before interpreting label continuity as a property of the segmentation model.
+
+### CV-SEGMENTATION-002 — Semantic supervision cannot choose an instance partition
+
+If two touching parts share a class, both a merged mask and correctly separated instance masks produce the same semantic class at every foreground pixel. No semantic pixel loss can distinguish those two outputs from class labels alone. Extra instance supervision, shape assumptions or validated postprocessing must supply that information. Improving the semantic backbone may help boundary features, but it does not change the declared output contract by itself.
+
+### CV-SEGMENTATION-003 — Padding requires an explicit ignored-label policy
+
+A geometric augmentation can create output pixels with no source annotation. Assigning them an ordinary background class may teach a false label if the intended contract uses ignore regions. Transform image and mask with the same geometry while handling categorical interpolation, padding and ignore values explicitly. A constructed small labeled grid with a translation or rotation is a useful alignment check; smooth-looking overlays can conceal a one-pixel systematic shift.
+
+### CV-SEGMENTATION-004 — A small structure can vanish inside a favorable average
+
+Constructed example: deleting a tiny lesion has little influence on an overlap score dominated by a large organ, yet it can fail a lesion-detection requirement. Report the relevant structure-level sensitivity and physical boundary errors, with aggregation and empty-mask policy declared. Use patient or acquisition groups for external validation as appropriate. A score establishes performance only for the annotated output and sampled setting; it cannot independently establish usefulness for a different clinical decision.
+
+Consulted foundations: [Panoptic Segmentation](https://arxiv.org/html/1801.00868v3): §3 task format and §4 segment matching/PQ.
 
 ## Sources and flashcards
 

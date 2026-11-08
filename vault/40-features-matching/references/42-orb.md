@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 7
+revision: 8
 tags: [cv/d04, matching, orb]
 ---
 # ORB — detection and oriented binary descriptors
@@ -146,6 +146,38 @@ These explanations complement the mechanism associated with each question. Calcu
 **Establishing a concrete memory budget**: In the current OpenCV variant at 256 bits, a descriptor occupies 32 bytes; 2000 descriptors represent about 64 kB of raw data. This excludes keypoints, pyramid images, buffers, indexes, allocations, and program structures: this calculation is not a measure of memory peak. An exhaustive search between two sets of $n$ and $m$ points processes $nm$ pairs, even with a fast binary distance. Preparing behavior when there are no descriptors or too few pairs for the model prevents a speed optimization from turning a normal observation failure into an arbitrary result or execution error.
 
 **Passages consulted for these developments**: [OpenCV 4.13, ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html), Theory and WTA_K; [OpenCV 4.13, Feature Matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html), norms, cross-check and knnMatch; verified with Context7.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-ORB-001 — Orientation quality can limit binary matching
+
+For a test point at patch radius $r$, a small orientation error $\delta\theta$ displaces the sampled location by approximately $r|\delta\theta|$ pixels. At $r=15$ px, a $5^\circ$ error moves it about 1.31 px. This constructed calculation explains why accurate keypoint location alone does not ensure stable oriented tests. Peripheral comparisons can cross edges after a modest angle error, especially in small or nearly symmetric patches.
+
+### CV-ORB-002 — A byte example exposes the wrong metric
+
+Compare byte values 0, 128 and 3 as packed test results. Relative to 0, Hamming distances are one bit for 128 and two bits for 3, while scalar numeric distances are 128 and 3. The ranking reverses. Casting these bytes to floating-point numbers preserves the incorrect numeric ranking. The problem is therefore semantic, not a limitation of integer storage or a need to normalize byte magnitudes.
+
+### CV-ORB-003 — One symbol mismatch can contain two flipped bits
+
+For a two-bit winner symbol, comparing `00` with `11` should count one changed categorical outcome even though two individual bits differ. Standard bitwise Hamming and symbol-wise Hamming2 therefore disagree. Descriptors computed with different WTA_K values also encode different tests, so choosing Hamming2 does not make an old descriptor database compatible. Recompute both sides under the same extractor contract before evaluating a matcher change.
+
+### CV-ORB-004 — Tie handling belongs to the acceptance rule
+
+Binary distances are discrete, so ties are common. If the first and second distances are equal and nonzero, a strict ratio threshold below one rejects the match. Mutual-nearest matching can instead depend on which tied candidate the implementation chooses. Neither deterministic tie-breaking nor mutuality supplies physical evidence. Include repeated patterns and exact distance ties in a proposed comparison so changes in candidate ordering do not appear to improve geometric reliability.
+
+### CV-ORB-005 — A finer pyramid cannot undo the input sampling
+
+If a marking shrinks from six pixels across to one pixel, its internal pattern may no longer produce repeatable intensity comparisons. Adding pyramid levels only smooths and subsamples this already limited observation. Distinguish a detail outside the scale range from a detail below sensor resolution by comparing controlled distances at the original input resolution. Remedies can involve optics, resolution or target design rather than increasing the requested feature count.
+
+### CV-ORB-006 — A memory estimate needs database lifetime
+
+A persistent database amortizes descriptor extraction and index construction differently from a one-shot pair comparison. Estimate storage as descriptor bytes times retained points and reference views, then add image pyramids, keypoint metadata and matcher working memory. A proposed benchmark should include cold initialization and steady-state queries, recording peak resident memory separately from raw descriptor size. Reducing the feature cap may save memory while removing the coverage needed for reliable registration.
+
+Consulted foundations: [OpenCV ORB](https://docs.opencv.org/4.13.0/d1/d89/tutorial_py_orb.html): oriented intensity-centroid descriptor and WTA_K norm contract; checked with Context7.
 
 ## Sources and flashcards
 

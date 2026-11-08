@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -119,6 +119,38 @@ These explanations complement the mechanism associated with each question. Calcu
 **Origin of Joseph**: if the error before measurement is $e^-$ and the measurement noise $n$, the linear correction gives $e^+=(I-KH)e^- -Kn$. Taking the covariance and assuming their independence, the two crossed terms cancel each other out and we find the sum of Joseph. If measurement and prediction share the same information, these terms are no longer automatically zero: the stability of the algebraic form does not validate the statistical hypothesis. A square-root alternative propagates a covariance factor rather than $P$ directly; it improves the numerical properties in its frame, but requires a consistent implementation of prediction, correction, and reset. Adding an arbitrary diagonal to each failure can hide an invalid template.
 
 **Passages consulted for these developments**: [Solà, Quaternion kinematics](https://arxiv.org/html/1711.02508v1), §§5 – 6, status, correction and reset; Appendix E, noise integration; [Chin/JPL 2023](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf), §III-A, Joseph shape; square-root sections.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FUSION-001 — Curvature can change the propagated mean
+
+Constructed scalar example: let $x$ have mean zero and variance one, and propagate $f(x)=x^2$. The true output mean is one, whereas an EKF-style first-order mean propagation gives $f(0)=0$. Sigma points that reproduce the input second moment give weighted mean one for this quadratic. This illustrates one benefit of nonlinear moment propagation without ranking filters universally: other functions, noise models and computational budgets still require evaluation, and error-state coordinates address a different representation choice.
+
+### CV-FUSION-002 — Whitened innovation direction matters
+
+For innovation covariance $S=\operatorname{diag}(1,100)$ in squared measurement units, innovations $(3,0)^T$ and $(0,3)^T$ have scores 9 and 0.09. The same Euclidean error is surprising along one axis and expected along the other. This constructed example makes the covariance ellipse operational. Even a plausible score does not establish correct association: unrelated candidates can fall within the gate, especially when uncertainty is large.
+
+### CV-FUSION-003 — A zero correction gives a reset identity test
+
+When the injected orientation correction is exactly zero, the reset Jacobian must reduce to the identity and the reset alone must preserve $P$. This is distinct from the preceding measurement update, which may legitimately reduce uncertainty. Separate these two operations when inspecting a trace. For nonzero corrections, the first-order sign of the skew term depends on whether the orientation error is local or global; copying it across conventions changes the represented distribution.
+
+### CV-FUSION-004 — Latency can dominate the nominal observation rate
+
+Constructed example: at a constant angular speed of $90^\circ$/s, applying a camera update 50 ms late as though it were current introduces a $4.5^\circ$ temporal mismatch. Increasing the camera rate does not remove that mismatch. A delayed-state update or replay must also account for correlations with intervening IMU propagation. The required history length follows the observed latency distribution; a single mean delay is inadequate when jitter produces occasional much older measurements.
+
+### CV-FUSION-005 — Small errors are a maintained condition
+
+An error-state representation is a local approximation, so small errors must be maintained by initialization, prediction and timely corrections. A severely wrong initial orientation or a long visual outage can invalidate the linearization even though the nominal quaternion stays normalized. Normalize the representation and assess innovation consistency as different checks. Neither minimal coordinates nor a unit quaternion guarantees that the estimated attitude is near the true attitude.
+
+### CV-FUSION-006 — Symmetry repair is not positivity repair
+
+For a numerically asymmetric covariance, $(P+P^T)/2$ restores symmetry but can retain negative eigenvalues. Conversely, a valid positive-semidefinite covariance may be singular, so strict Cholesky can fail without a negative variance. Check the intended rank, eigenvalue scale and state constraints before adding diagonal jitter. Joseph form reduces cancellation in the update; it does not repair duplicated measurements, invalid noise covariances or an inconsistent error-state reset.
+
+Consulted foundations: [Solà, quaternion kinematics](https://arxiv.org/html/1711.02508v1): §5 error-state formulation, §6.3 reset, Appendix E noise integration.
 
 ## Sources and flashcards
 

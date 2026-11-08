@@ -22,8 +22,10 @@ Reponse: **Expected answer**: fix format, coordinate frame, unity, validity and 
 
 **Calculation of sides**: in continuous coordinates, the intersection width is $\max(0,\min(x_{2A},x_{2B})-\max(x_{1A},x_{1B}))$, and the height follows the same formula in $y$. Their product gives the intersected area. An invertible affine transformation applied to both regions multiplies their areas by the same absolute determinant and retains their geometric IoU. Warning: if a rotation is followed by the replacement of the regions by their encompassing rectangles aligned on the axes, the regions have been changed and this invariance no longer applies automatically. The form contract is as important as the contact information.
 
+**Normalization must precede a shared geometric comparison**: Two boxes can each use valid xyxy coordinates while one is in normalized input space and the other in original pixels. Their numeric intersection then has no physical meaning. Convert both through the recorded resize/crop/padding transform before calculating overlap. A constructed identity test compares a box with its round-trip conversion and expects IoU one, subject to declared rounding and clipping. This detects coordinate-contract errors separately from localization quality.
+
 **Blocking errors**: Calculate directly between different conventions or coordinate frames.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, format of results](https://cocodataset.org/#format-results); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, format of results](https://cocodataset.org/#format-results); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::pratique cv_id::CV-IOU-AP-001 provenance::agent pole::A pole::C pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: The IoU measures a region overlap. AP50 and AP75 e
 
 **Ranking and confidence**: a set of fixed predictions, without filtering depending on the score and with the same tie-breaking, a strictly increasing common transformation of the scores retains their order and therefore the AP of ranking. However, it can change the number of outputs at the digital production threshold. This shows why AP and calibration of scores are distinct. Conversely, a differently applied transformation between images can change the overall classification of a category and its AP. Keep the scope of the postprocessing and any prediction limits in this analysis: the upstream rules may invalidate the set hypothesis.
 
+**AP aggregation omits undefined categories according to protocol**: A category with no valid ground-truth instances does not have the same recall denominator as a present category with zero successful detections. The pinned evaluator uses undefined entries and excludes them in its summaries. Replacing those entries by zero changes the aggregate. Record the image/category subset and valid-category handling when comparing tools, rather than treating a change in mean AP as necessarily a change in detector predictions.
+
 **Blocking errors**: interpret AP50 as 50% accuracy or as the average of recoveries.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [protocole officiel COCO](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [protocole officiel COCO](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::comprehension cv_id::CV-IOU-AP-002 provenance::agent pole::A pole::C pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: the matching follows the protocol and the order of
 
 **Effect of a late duplicate**: for a single GT and a list TP then FP, the recall reaches 1 from the first detection and the interpolated accuracy can remain perfect on all levels of recall of this simple case. Duplicate is still a false positive if the operating threshold retains it. For TP, FP, TP on two GT, the duplicate appears before the recovery of the second object and can degrade part of the envelope. The position of the FP therefore explains its effect on the AP; it does not change its concrete cost in a counting or rejection system.
 
+**A late false positive need not reduce interpolated AP**: For one ordinary object, ranked predictions TP then duplicate FP already reach recall one at precision one. The maximum-right precision envelope can retain AP one even though a duplicate exists. This constructed case shows that AP does not count all false positives with the same penalty. An operational false-alarm count at a chosen threshold provides complementary evidence when duplicates affect downstream counting or tracking.
+
 **Blocking errors**: count each prediction sufficiently covering the same GT as a new TP.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py, evaluateImg L235](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L235); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py, evaluateImg L235](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L235); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::algorithme cv_id::CV-IOU-AP-003 provenance::agent pole::A pole::C pole::E
 END
 
@@ -81,7 +87,7 @@ START
 CV-Pilote
 ID: CV-IOU-AP-004
 Question: For two valid GT instances, one category, a fixed IoU threshold and no crowd/ignore annotations, ranked predictions are TP, duplicate FP, TP. How is AP interpolated over 101 recall levels calculated?
-Reponse: **Expected answer**: reminders $0,5;0,5;1$, details $1;0,5;2/3$. The maximum envelope to the right is 1 up to and including the 0,5 recall, then $2/3$. So $AP=(51+50\times2/3)/101\approx0,834983$.
+Reponse: **Expected answer**: recalls $0,5;0,5;1$, precisions $1;0,5;2/3$. The maximum envelope to the right is 1 up to and including the 0,5 recall, then $2/3$. So $AP=(51+50\times2/3)/101\approx0,834983$.
 
 **Further explanation**: The 101 levels are $0;0,01;\ldots;1$, so 51 levels are at most 0,5. Unreachable reminders receive zero; only one GT detected out of two would give $51/101$, despite an accuracy of 1 for detection alone. Example executed; this simplified calculation does not implement all COCO.
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: reminders $0,5;0,5;1$, details $1;0,5;2/3$. The ma
 
 **Algorithm of the envelope**: After stacking TP and FP, go through the accuracy from right to left and replace each value with the maximum between it and the next. For each recall requested, then take the first level reached to its right according to the rules of the evaluator, or zero if it is not reached. This procedure explains the 51 levels included up to 0,50 in the case built. It differs from an arbitrary trapezoidal integration of three points. Categories without valid GT and ignored annotations follow other rules, so a ranking example is not a complete COCO re-implementation.
 
+**The recall-grid endpoint changes the arithmetic**: For the front's precision envelope, recall levels 0.00 through 0.50 inclusive contribute 51 samples at precision one; 0.51 through 1.00 contribute 50 at two-thirds. Their mean is about 0.834983. Using only 50 lower samples or integrating a continuous curve yields another number. Keep discrete recall levels and envelope conventions explicit when reproducing an evaluator rather than describing every area-like summary as the same AP.
+
 **Blocking errors**: average only the three raw precisions or replace the 101 reminders with a single operating point.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py, accumulate L353](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L353); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py, accumulate L353](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L353); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::raisonnement cv_id::CV-IOU-AP-004 provenance::agent pole::A pole::C pole::E
 END
 
@@ -114,8 +122,10 @@ Reponse: **Expected answer**: align split/GT, categories, bbox or mask, coordina
 
 **The First Observable Disagreement**: compare first the sets of images and categories, then the ordered lists retained by image, then the statuses TP/FP/ignore at each threshold. If these elements are identical, then look for accumulation, interpolation and averages. This progress avoids debugging a final average when the tools have not evaluated the same objects. Keep fingerprints of GT files and results, parameters, and code version in the report. Two outputs displayed with the same AP label can come from different wrapper filters; only the trace of the actual inputs and the matches can accurately assign the deviation.
 
+**Identical boxes are insufficient without identical filtering**: An evaluator can see different prediction lists because one path applies a higher score cutoff, a different category mapping or a different per-image detection cap. Compare the actual serialized results after all filters, then per-image TP/FP/ignore assignments before final aggregation. Record stable tie order when scores coincide. This proposed comparison finds the first disagreement instead of debugging the network from an aggregate metric discrepancy.
+
 **Blocking errors**: Call any house calculation “COCO” without matching rules, or compare sets of different categories without reporting it.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py pinned](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [cocoeval.py pinned](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-IOU-AP-005 provenance::agent pole::A pole::C pole::E
 END
 
@@ -137,8 +147,10 @@ Reponse: **Expected answer**: Check location accuracy and coordinate propagation
 
 **Sensitivity to translation**: for two side squares $a$ horizontally offset from $\delta$ with $0\le\delta<a$, the IoU is $(a-\delta)/(a+\delta)$. To stay above a threshold $\tau$, you need $\delta<a(1-\tau)/(1+\tau)$ if the comparison is strict. At $\tau=0,75$, this represents about $0,143a$; an error of 2 px therefore strongly penalizes a box of 10 px side. This constructed calculation does not point to the cause, but justifies the analysis by size and the check of the pretreatment curves and offsets before a new drive.
 
+**Small objects have a smaller pixel-shift allowance**: For equal 10 px squares offset horizontally by one pixel, IoU is $9/11\approx0.818$; a two-pixel offset gives $8/12\approx0.667$. Thus a small preprocessing offset can preserve AP50 matching while breaking AP75 on this constructed object. Compare inverse coordinate transforms and residuals by object size before retraining. The same two-pixel shift has a different relative effect on a much larger box.
+
 **Blocking errors**: Take AP75 for a geometry-independent classification metric, or conclude a specific bug without inspection.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, metric definition](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, metric definition](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::diagnostic cv_id::CV-IOU-AP-006 provenance::agent pole::A pole::C pole::E
 END
 
@@ -160,7 +172,9 @@ Reponse: **Expected answer**: Review recall and false positives at operating thr
 
 **Prevalence and burden of false releases**: In a binary model, if the defects have a prevalence of $\pi$, a recall of $r$ and a false positive rate of $f$ among the conformants, the accuracy of the alerts is $r\pi/[r\pi+f(1-\pi)]$. For $\pi=0,001$, $r=0,99$ and $f=0,01$, it is about 9%. This constructed case explains why a small proportion of false positives can saturate the review when defects are rare. The benchmark AP does not directly provide this load: it requires the operating threshold, the actual frequencies and the costs of the errors useful to the product.
 
+**Operational burden depends on prevalence and throughput**: At prevalence 0.1%, recall 90% and false-positive rate 1% on normal parts, the constructed binary model gives about 90 true alarms and 999 false alarms per 100,000 parts, or roughly 8.3% precision. Good average ranking quality does not set this workload. Evaluate the chosen operating point with realistic prevalence, critical-defect strata and sample counts; class-mean AP alone does not determine production readiness.
+
 **Blocking errors**: Accept the system on its average or set the threshold after observing the results of the final test.
-Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, aggregations by category and size](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30.
+Source: [[130-evaluation-fiabilite/references/131-iou-ap-coco|IoU/AP reference]]; [COCO, aggregations by category and size](https://cocodataset.org/#detection-eval); [COCO, pinned code, valuateImg and accumulate; invariances and geometric/probability examples constructed](https://raw.githubusercontent.com/cocodataset/cocoapi/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-IOU-AP-007 provenance::agent pole::A pole::C pole::E
 END

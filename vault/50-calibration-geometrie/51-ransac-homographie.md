@@ -22,8 +22,10 @@ Reponse: **Expected answer**: suitable for points of the same plane, or pure cam
 
 **Regaining dependence on the plan**: In the coordinate frame of the first camera, let's assume the $n^TX=d$ plan, with $d\ne0$, and the camera change $X'=RX+t$. As $X$ is located on this plane, we can write $X'=(R+tn^T/d)X$, hence $H\sim K'(R+tn^T/d)K^{-1}$ for the ideal pixels. The sign changes if the equation of the plan is defined otherwise: announce the convention. If $t=0$, the plan term disappears and $H\sim K'RK^{-1}$ no longer depends on depth. This derivation explains the case of pure rotation and why the same movement with translation does not give a common homography to all planes.
 
+**Plane height changes the valid transform**: Constructed inspection case: a homography is calibrated on a conveyor plane while a raised component is imaged from a translated viewpoint. Its top surface need not follow the conveyor homography because it lies on a different plane. Residuals grouped by object height can distinguish this model mismatch from random matching noise. The correct intervention depends on whether the product needs planar position, top-surface measurement or full 3D geometry.
+
 **Blocking errors**: say that a homography always links any two photos or that more prints RANSAC removes the parallax.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [OpenCV, geometry of homography](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html).
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [OpenCV, geometry of homography](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::comparaison cv_id::CV-HOMOGRAPHIE-001 provenance::agent pole::B pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Four pairs provide the minimum stress only in the 
 
 **Link to DLT Rank**: Each pair brings two lines in a homogeneous system of nine coefficients. For four pairs, a $8\times9$ matrix must have rank eight in order to leave a single solution direction, corresponding to the projective scale. Dependent constraints enlarge the core: several homographs then satisfy the points provided. With more noise pairs, we are looking for a direction of small residual, but spectral separation and coverage remain important. An admissible homography must also be invertible; checking the behavior of the homogeneous division in the useful region avoids accepting a numerical matrix whose certain projections become infinite or extremely sensitive.
 
+**General position is more than a point count**: Four distinct source points can still be collinear, leaving transformations away from that line unconstrained. Nearly collinear points can yield a numerical solution whose extrapolation is highly unstable. Check independence in both images and inspect normalized system rank. A proposed perturbation check moves observations by a small plausible localization error and examines transferred points across the useful region; point count alone does not predict the effect.
+
 **Blocking errors**: Count nine independent degrees of freedom or claim that any four matches guarantee an actionable estimate.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]]; [OpenCV findHomography](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [OpenCV 4.13, Homography, Basic theory and Demo 3/5; plan and rotation models](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]]; [OpenCV findHomography](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [OpenCV 4.13, Homography, Basic theory and Demo 3/5; plan and rotation models](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-HOMOGRAPHIE-002 provenance::agent pole::B pole::E
 END
 
@@ -74,8 +78,10 @@ best_model = absent for each allowed test: choose four distinct pairs reject a m
 
 Absentee treatment is a normal exit if no permissible assumption satisfies the contract. The mask can change after refinement: keeping the original model without recalculation can mix two different states of the estimate. The order of the data, the possible seed and the budget are used to reproduce a result, without replacing its physical validation.
 
+**Refinement should refresh acceptance evidence**: After refitting on an initial consensus, recompute every residual with the refined model and the same declared threshold. The inlier mask can change because the fitted transformation changed. Preserve the model used to generate each mask so diagnostics remain reproducible. A larger consensus is useful evidence only when it retains spatial support and independent geometric accuracy; a coherent wrong periodic alignment can also increase its inlier count.
+
 **Blocking errors**: Evaluate the candidate only on the four points drawn or treat any consensus as ground truth.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [Fischler and Bolles, §II](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf).
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [Fischler and Bolles, §II](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::algorithme cv_id::CV-HOMOGRAPHIE-003 provenance::agent pole::B pole::E
 END
 
@@ -98,8 +104,10 @@ $$N=\left\lceil\frac{\log(1-0,99)}{\log(1-0,5^4)}\right\rceil=72.$$ Confidence c
 
 **Correcting the interpretation of a finished print**: If the set contains $I$ real inliers among $n$ pairs and if we draw four distinct indices uniformly, the exact all-inlier probability of a draw is $q=\binom I4/\binom n4$ when $I\ge4$. The term $w^4$ is a practical approximation, or the result of a model with replacement. If successive draws are independent, the confidence of at least one success is $1-(1-q)^N$. Repeating the same sample or using guided prints changes the analysis. Finally, “all-in” does not mean “sufficiently well conditioned”: an admissible and informative geometry remains necessary. These details are probability deductions, not a new warranty on RANSAC.
 
+**Nominal confidence is sensitive to the inlier estimate**: For four-point samples and confidence 0.99, an assumed inlier rate of 0.5 gives 72 draws, whereas 0.3 requires about 567. The budget can therefore be badly understated when the inlier fraction is guessed optimistically. Correlated matches and degenerate all-inlier samples further break the simple success model. Record a maximum iteration budget and a failure outcome rather than presenting the requested confidence as a probability that the returned homography is correct.
+
 **Blocking errors**: announce 99% probability that the pose is correct, without the assumptions of the calculation.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [Fischler and Bolles, §II](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf).
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [Fischler and Bolles, §II](https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-HOMOGRAPHIE-004 provenance::agent pole::B pole::E
 END
 
@@ -121,8 +129,10 @@ Reponse: **Expected answer**: The direct residual is measured in the destination
 
 **Local spread of uncertainty**: for $e=q-\pi(H\tilde p)$ and a $H$ considered fixed, independent noises of covariance $C_p,C_q$ give approximately $C_e=C_q+J_HC_pJ_H^T$, with $J_H$ the warp Jacobian at the source point. The reprojection noise can therefore vary depending on the position and deformation, even if the source noise is isotropic. A single threshold in pixels is a simplification to be validated; a whitened score uses a covariance consistent with the residual. If $H$ is estimated with these same points, this elementary covariance does not describe all the post-adjustment uncertainty. After an anisotropic resize, the two directions do not necessarily follow the same factor.
 
+**Anisotropic resizing changes a circular gate**: Under pixel scaling $D=\operatorname{diag}(a_x,a_y)$, a residual vector becomes $e\prime=De$. If $a_x\ne a_y$, an old circular Euclidean threshold maps to an ellipse, not another circle obtained by one scalar factor. Propagating the residual covariance gives $C\prime=DC D^T$ and preserves a correctly transformed Mahalanobis gate. This constructed relation explains why merely multiplying a pixel threshold by an average resize factor changes selection.
+
 **Blocking errors**: Treat the threshold as a unitless quantity or assume that changing the threshold repairs any parallax.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]]; [OpenCV findHomography](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [OpenCV 4.13, Homography, Basic theory and Demo 3/5; plan and rotation models](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html), see 2026-10-30.
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]]; [OpenCV findHomography](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html); [OpenCV 4.13, Homography, Basic theory and Demo 3/5; plan and rotation models](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::pratique cv_id::CV-HOMOGRAPHIE-005 provenance::agent pole::B pole::E
 END
 
@@ -144,8 +154,10 @@ Reponse: **Expected answer**: Examine spatial coverage, conditioning, and error 
 
 **Observe the area of validity**: distinguish between interpolation error in the middle of constraints and extrapolation error outside. A small variation in projective coefficients can leave a concentrated area almost unchanged, but move a distant corner strongly, especially if the homogeneous denominator becomes small. Project a mesh of the useful region to inspect continuity, orientation and complete deformation, in addition to the four corners. This check is a proposal of the project: a visually plausible deformation is not a proof of precision. An independent reference near the future measurement zone brings a constraint that the number of inliers of the initial corner alone does not provide.
 
+**Projective division amplifies extrapolation**: For $u=(h_1^T\tilde x)/(h_3^T\tilde x)$, small denominator values amplify changes in both coordinates and fitted coefficients. A homography may therefore be stable on the observed patch yet predict extreme positions farther away. Check denominator behavior and held-out transfer throughout the intended ROI. This is especially important when a small corner of a label supplies most matches but the measurement concerns the opposite edge.
+
 **Blocking errors**: declare the registration validated on the only percentage of inliers or automatically conclude a bug of the descriptor.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]]; [OpenCV 4.13.0, homographie, Basic theory](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html); coverage scenario and diagnostic protocol proposed by the project.
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]]; [OpenCV 4.13.0, homographie, Basic theory](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html); coverage scenario and diagnostic protocol proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-HOMOGRAPHIE-006 provenance::agent pole::B pole::E
 END
 
@@ -167,7 +179,9 @@ Reponse: **Expected answer**: test a parallax due to the different depths, there
 
 **Link to the disparity**: In a simple example of lateral translation between parallel cameras, the image displacement varies as $fB/Z$, with focal length $f$ in pixels, translation $B$ and depth $Z$ in the same unit. Two planes of depth $Z_1,Z_2$ therefore require displacements whose difference is $fB(1/Z_1-1/Z_2)$. This constructed case explains why the foreground can split up while the bottom aligns well. A local deformation or multi-plane assembly can reduce the visual artifact, but does not automatically provide a single metric reconstruction. Choose capture, model and success criterion according to the actual measurement or final image expected.
 
+**Parallax has a predictable depth trend**: Constructed case: with $f=800$ px and a 0.1 m lateral baseline, ideal disparity is 40 px at 2 m and 8 px at 10 m. A single depth-independent translation cannot align both. A homography fitting one plane leaves structured residuals elsewhere. Plotting residual direction and magnitude against scene regions or independent depth supports testing parallax before raising the threshold and absorbing a systematic model error as noise.
+
 **Blocking errors**: Promising that a sufficient RANSAC budget will remove relief effects under translation.
-Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [OpenCV, geometric conditions](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html).
+Source: [[50-calibration-geometrie/references/51-ransac-homographie|reference note]] ; [OpenCV, geometric conditions](https://docs.opencv.org/4.13.0/d9/dab/tutorial_homography.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-HOMOGRAPHIE-007 provenance::agent pole::B pole::E
 END

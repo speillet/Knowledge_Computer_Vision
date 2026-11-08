@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Building the Levels**: A Gaussian pyramid follows $I_{\ell+1}(x,y)=(G_\ell*I_\ell)(2x,2y)$ in an example of decimation by two. Coordinates are approximately converted by $p_0=2^\ell p_\ell$, respecting the exact pixel center conventions. A five-ray window at the $\ell=3$ level covers about forty pixels of radius in the initial image: its physical support has changed. This is useful for bringing back a large displacement in a local capture area, but it can mix objects or eliminate a fine structure. Propagate coordinates, descriptor radius, and geometric thresholds in the same system of units, rather than treating levels as independent images.
 
 **Passages consulted for these developments**: [OpenCV 4.13, Smoothing Images](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html), Theory, Gaussian, Median and Bilateral Filter; [OpenCV 4.13, PSNR/SSIM](https://docs.opencv.org/4.13.0/d5/dc4/tutorial_video_input_psnr_ssim.html), PSNR definition; built rarity example; [OpenCV 4.13, Image Pyramids](https://docs.opencv.org/4.13.0/d4/d1f/tutorial_pyramids.html), Gaussian Pyramid, filtering and decimation.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FILTRES-001 — Robustness to impulses has a geometric price
+
+In a nine-value neighborhood with eight values of 10 and one impulse of 250, the median remains 10 while the mean becomes about 36.7. If the single high value is a genuine one-pixel bright defect, however, removing it is an error. The filter cannot identify which interpretation is correct from rank alone. This constructed counterexample connects the noise assumption directly to the smallest structure the inspection task must retain.
+
+### CV-FILTRES-002 — Only affine intensity scaling preserves this ratio
+
+For $I\prime=\alpha I+\beta$ with nonzero $\alpha$, intensity differences scale by $|\alpha|$, so preserving Gaussian range weights requires $\sigma_r\prime=|\alpha|\sigma_r$. The offset cancels. A nonlinear gamma transform does not have one global scale factor for all differences, so adjusting a single sigma cannot generally reproduce the old weights. Also preserve the spatial sigma in the same pixel geometry; resizing changes that contract separately.
+
+### CV-FILTRES-003 — A task metric needs the same operating point
+
+Compare preprocessing variants at a fixed false-alarm budget per inspected part, then measure defect recall by width, contrast and position. Holding an arbitrary detector score threshold fixed may confound preprocessing with changed score distributions. Use validation to choose thresholds and an untouched test set to estimate the resulting tradeoff. This proposed protocol distinguishes improved appearance from an operational improvement on the rare defects that matter.
+
+### CV-FILTRES-004 — A coarse-level displacement changes its unit
+
+After three reductions by two, an 8 px full-resolution displacement is approximately 1 px at the coarse level. This helps a local matcher only if the relevant texture survives filtering and neighboring motions do not merge within the window. A 1 px localization error at that level also becomes about 8 px when transferred back. Pyramid depth therefore changes both capture range and localization precision; it cannot be chosen solely from maximum motion.
+
+Consulted foundations: [OpenCV smoothing](https://docs.opencv.org/4.13.0/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html): median/Gaussian/bilateral definitions; checked with Context7; [Tomasi and Manduchi](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf): §§2–3 spatial and range weighting.
 
 ## Sources and flashcards
 

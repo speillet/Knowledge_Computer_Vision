@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-REPRESENTATIONS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Measurable sensitivity**: For each reserved image, keep the winning label, its margin with the second candidate and the decision changes between predefined formulations. Report the rate of disagreement by class and field, in addition to the final accuracy. An average of several prompts must be set before the test and its costs incorporated into the protocol. Separate also the images of the same object or sequence between datasets: several very similar views can make the validation too favorable. These measures transform an impression of robustness to words into observable property, without selecting only the formulation that succeeds on each example after the fact.
 
 **Passages consulted for these developments**: [Radford et al., CLIP](https://arxiv.org/html/2103.00020v1), §2.3, symmetrical loss; §3.1, text classification; algebraic project counterexamples; [Zhai et al., SigLIP](https://arxiv.org/pdf/2303.15343), summary, objective per pair; HTML v4 version inaccessible, use of PDF.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-CLIP-001 — The vocabulary defines the available decision
+
+For an image of a wrench, a candidate set containing only cat and dog still produces a winner under argmax. Adding wrench changes the decision space without changing the image embedding. A project classifier therefore needs an explicit candidate vocabulary and a policy for none-of-the-above or uncertain cases, validated on representative negatives. Text/image similarity alone does not establish that every input belongs to one candidate class.
+
+### CV-CLIP-002 — Adding a candidate changes normalized confidence
+
+Constructed logits for two labels are $\log19$ and zero, yielding 0.95 for the first. Adding a third label with the same top logit changes that probability to $19/39\approx0.487$, although the first label's similarity to the image is unchanged. A threshold on candidate-softmax probability therefore depends on vocabulary composition. Validate confidence or rejection under the vocabulary changes the product actually permits.
+
+### CV-CLIP-003 — Pairwise loss does not imply calibrated deployment probabilities
+
+A sigmoid objective removes the shared softmax normalization across training pairs, but its score distribution still depends on training pair balance, bias/temperature and data distribution. Do not infer that an arbitrary sigmoid similarity is a calibrated probability that a class is physically present. Compare objectives through the task's fixed candidate and decision protocol, with held-out calibration evidence where probabilities are required.
+
+### CV-CLIP-004 — Prompt selection is part of model selection
+
+Trying many prompts and retaining the one with the best final test score leaks information from the evaluation set even if backbone weights never change. Keep prompt families, class vocabulary, ensembling and rejection thresholds within validation, then freeze them together. A proposed report includes per-class errors, unsupported-class inputs and prompt disagreement. It should also record whether the test images or near duplicates influenced any earlier selection step.
+
+Consulted foundations: [CLIP](https://arxiv.org/html/2103.00020v1): §2.3 contrastive training and §3.1 zero-shot classification; [SigLIP](https://arxiv.org/pdf/2303.15343): §3 pairwise sigmoid objective.
 
 ## Sources and flashcards
 

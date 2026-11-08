@@ -22,8 +22,10 @@ Reponse: **Expected answer**: No: the normalized radius is then $r_d=\theta$, wh
 
 **Local development**: $\tan\theta=\theta+\theta^3/3+O(\theta^5)$. The apparent equality near the axis comes from the first common order; the relative deviation grows approximately as $\theta^2/3$ for small angles. This development is not a reliable approximation to use without check near 90°. To reverse a calibrated fisheye projection, you need to find the angle from the polynomial $\theta_d(\theta)$, then form a radius; we do not simply replace $r_d$ with a pinhole coordinate. Check that this function remains invertible in the exploited domain: parameters adjusted over a small region can produce undesirable behavior in extrapolation.
 
+**Zero coefficients still leave an angular camera**: At $\theta=60^\circ=\pi/3$, the zero-coefficient fisheye radius is approximately 1.047, while the pinhole radius is $\tan60^\circ\approx1.732$. With the same focal scaling, that is a substantial off-axis difference despite both coefficient arrays being zero. These constructed numbers compare model families, not two estimates of lens quality. A distortion vector only has meaning together with its projection model.
+
 **Blocking errors**: Assimilate the fisheye coefficients to the first pinhole coefficients; conclude with an identical projection everywhere.
-Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
+Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::raisonnement cv_id::CV-FISHEYE-001 provenance::agent pole::B pole::C pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Add views covering the periphery and diversify ori
 
 **Sensitivity of coefficients**: in $\theta_d=\theta+\sum_{j=1}^4 k_j\theta^{2j+1}$, the derivative with respect to $k_j$ is $\theta^{2j+1}$. High-order terms therefore become very insensitive when all angles are small; thousands of center points can remain uninformative for $k_4$. This reading of the Jacobian explains the peripheral collection without prescribing a universal angle threshold. The high sensitivity at the edges is also not enough: the corners must be localizable and cover several directions and poses, in order to separate distortion, main center and orientation of the calibration target. The reserved residuals controls the generalization of the adjusted model.
 
+**Peripheral views need usable corner localization**: Wide radial coverage adds sensitivity to high-order angular coefficients, but extreme obliquity can also make target corners blurred, occluded or biased. Seek observations that are both informative and measurable, and inspect their localization rather than assuming that the farthest possible radius is always best. Hold out entire poses and peripheral sectors to distinguish genuine model support from fitting a small set of difficult edge observations.
+
 **Blocking errors**: Multiply only center front views; validate on adjustment images only.
-Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
+Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::conception cv_id::CV-FISHEYE-002 provenance::agent pole::B pole::C pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Map the residuals according to radius, position an
 
 **Pixel Error and Angular Error**: breaking down the residual image $e$ in a unitary radial direction $n_r$ and a tangent $n_t$ gives $e_r=n_r^Te$ and $e_t=n_t^Te$. Analyzing these components by crown, with headcount and distributions, reveals biases that the average norm mixes. In a single radial cut, $\delta r\simeq f\,(d\theta_d/d\theta)\delta\theta$: a pixel does not represent everywhere the same angular error if the derivative varies. Metric conversion still depends on the scene and its depth. This analysis is a diagnosis, not a certain identification of the optical or localization cause.
 
+**An average weights regions by observation count**: Constructed example: ninety central observations with 0.2 px error and ten peripheral ones with 2 px error give point RMS about 0.66 px. The average can conceal the region where the intended measurement fails. Report sample counts and residuals by radial bin and pose, then evaluate independent geometric quantities there. A uniform-looking global RMS does not imply uniform angular or metric accuracy across a wide field.
+
 **Blocking errors**: Conclude a correct calibration from a single RMS of learning.
-Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
+Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::diagnostic cv_id::CV-FISHEYE-003 provenance::agent pole::B pole::C pole::E
 END
 
@@ -91,8 +97,10 @@ Reponse: **Expected answer**: Use the model and the new matrix associated with t
 
 **Radius of exit**: for rectification to a pinhole model, a homogeneous pixel $\tilde u'$ gives a radius $q'=K_{\mathrm{new}}^{-1}\tilde u'$ in the rectified coordinate frame. If $R_{\mathrm{rect}}$ sends the raw camera rays to this coordinate frame, the corresponding raw ray is proportional to $R_{\mathrm{rect}}^Tq'$. The fisheye projection of this ray provides the position to be sampled in the source image: it is a reverse map construction. This transformation is usually unrefined. After an output crop, also adapt the main center; after a resize, adapt focal lengths and coordinates according to the pixel convention chosen. Pixels without a valid source do not create any geometric measurements.
 
+**Rectification rotation changes the ray frame**: If the remap uses $R_{rect}$ from raw camera coordinates to rectified camera coordinates, an output ray is proportional to $K_{new}^{-1}\tilde u\prime$ in the rectified frame. Returning it to the raw camera frame requires $R_{rect}^{-1}$ before applying the original camera pose. This derived chain separates output intrinsics from frame orientation. Using the new matrix with the old pose without that rotation can leave a systematic orientation error.
+
 **Blocking errors**: Reuse the raw distortion on an already rectified image without adaptation.
-Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
+Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::pratique cv_id::CV-FISHEYE-004 provenance::agent pole::B pole::C pole::E
 END
 
@@ -114,7 +122,9 @@ Reponse: **Expected answer**: No: `balance` changes the choice of output project
 
 **Density of information**: Keeping more field in a set number of pixels can reduce sampling of certain directions. The map derivative, a Jacobian $2\times2$ between output and source coordinates, locally describes stretching and anisotropy. When many output pixels interpolate almost the same source samples, their number does not measure an optical resolution gain. To compare two values of `balance`, keep the same calibrated parameters and measure the task on the common valid region, and then separately report the additional field. This protocol prevents a change in pixel population from being taken for an improvement in accuracy.
 
+**More visible field can mean fewer samples per angle**: For a fixed output image size, a wider chosen field spreads the available pixels across more directions. The apparent addition of scene content does not create extra measurements from the original sensor. Compare valid-pixel masks and local angular resolution at the same physical directions when choosing balance. Newly exposed borders can be invalid because remapping requests source coordinates outside the acquired image, not because calibration has become less accurate.
+
 **Blocking errors**: Assimilate increase of the displayed field and decrease of the calibration error.
-Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
+Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d05 famille::evaluation cv_id::CV-FISHEYE-005 provenance::agent pole::B pole::C pole::E
 END

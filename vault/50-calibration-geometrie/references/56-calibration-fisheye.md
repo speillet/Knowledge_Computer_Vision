@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-ZHANG", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -103,6 +103,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Density of information**: Keeping more field in a set number of pixels can reduce sampling of certain directions. The map derivative, a Jacobian $2\times2$ between output and source coordinates, locally describes stretching and anisotropy. When many output pixels interpolate almost the same source samples, their number does not measure an optical resolution gain. To compare two values of `balance`, keep the same calibrated parameters and measure the task on the common valid region, and then separately report the additional field. This protocol prevents a change in pixel population from being taken for an improvement in accuracy.
 
 **Passages consulted for these developments**: [OpenCV 4.13.0, fisheye](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html), Detailed Description, angular polynomial and rectification; sensitivities and protocols deduced by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-FISHEYE-001 — Zero coefficients still leave an angular camera
+
+At $\theta=60^\circ=\pi/3$, the zero-coefficient fisheye radius is approximately 1.047, while the pinhole radius is $\tan60^\circ\approx1.732$. With the same focal scaling, that is a substantial off-axis difference despite both coefficient arrays being zero. These constructed numbers compare model families, not two estimates of lens quality. A distortion vector only has meaning together with its projection model.
+
+### CV-FISHEYE-002 — Peripheral views need usable corner localization
+
+Wide radial coverage adds sensitivity to high-order angular coefficients, but extreme obliquity can also make target corners blurred, occluded or biased. Seek observations that are both informative and measurable, and inspect their localization rather than assuming that the farthest possible radius is always best. Hold out entire poses and peripheral sectors to distinguish genuine model support from fitting a small set of difficult edge observations.
+
+### CV-FISHEYE-003 — An average weights regions by observation count
+
+Constructed example: ninety central observations with 0.2 px error and ten peripheral ones with 2 px error give point RMS about 0.66 px. The average can conceal the region where the intended measurement fails. Report sample counts and residuals by radial bin and pose, then evaluate independent geometric quantities there. A uniform-looking global RMS does not imply uniform angular or metric accuracy across a wide field.
+
+### CV-FISHEYE-004 — Rectification rotation changes the ray frame
+
+If the remap uses $R_{rect}$ from raw camera coordinates to rectified camera coordinates, an output ray is proportional to $K_{new}^{-1}\tilde u\prime$ in the rectified frame. Returning it to the raw camera frame requires $R_{rect}^{-1}$ before applying the original camera pose. This derived chain separates output intrinsics from frame orientation. Using the new matrix with the old pose without that rotation can leave a systematic orientation error.
+
+### CV-FISHEYE-005 — More visible field can mean fewer samples per angle
+
+For a fixed output image size, a wider chosen field spreads the available pixels across more directions. The apparent addition of scene content does not create extra measurements from the original sensor. Compare valid-pixel masks and local angular resolution at the same physical directions when choosing balance. Newly exposed borders can be invalid because remapping requests source coordinates outside the acquired image, not because calibration has become less accurate.
+
+Consulted foundations: [OpenCV fisheye](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html): angular projection, remap/rectification and balance definition; checked with Context7.
 
 ## Sources and flashcards
 

@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -163,6 +163,50 @@ These explanations complement the mechanism associated with each question. Calcu
 **Limit of the pseudo-inverse**: undoing a singular direction to construct a pseudo-inverse does not demonstrate zero physical variance in that direction. An unfixed gauge describes a family of equivalent solutions; it is necessary to announce the coordinates or relative quantities in which an uncertainty makes sense. After a local reparameterization $y=g(x)$, the first-order propagation is $C_y\approx G C_xG^T$, $G=\partial g/\partial x$. Cross terms can then strongly influence a distance or a relative pose. Reading only the diagonal standard deviations loses these couplings. A local covariance resulting from a robust cost also requires announcing the chosen approximation convention, rather than automatically using the ordinary Gaussian formula.
 
 **Passages consulted for these developments**: [Ceres, Covariance Estimation](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html), Introduction, Gauge Invariance and Rank of the Jacobian; [Ceres, Solving Non-linear Least Squares](https://ceres-solver.readthedocs.io/latest/nnls_solving.html), Linearization, Trust Region and Linear Solvers.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-SVD-001 — A fit with arbitrarily unstable parameters
+
+Constructed example: let $A=\operatorname{diag}(1,10^{-6})$ and $b=(1,0)^T$. The least-squares solution is $(1,0)^T$. Perturb only the second observation by $10^{-6}$: the solution becomes $(1,1)^T$, while both fits have zero residual. Thus even an exact fit can move one parameter by one unit. These numbers assume compatible, fixed parameter units; rescaling a column changes the numerical condition number without supplying any missing measurement.
+
+### CV-SVD-002 — Choosing a solver by error budget
+
+A useful project decision is to compare $\kappa_2(A)\epsilon$ and $\kappa_2(A)^2\epsilon$, with machine precision $\epsilon$, to the tolerated relative numerical error. These are sensitivity indicators, not exact error predictions. For double precision and $\kappa_2(A)=10^8$, the second expression is of order one: explicitly forming normal equations can consume the useful precision. Solver success therefore needs a scaled residual and a stability check, rather than a successful Cholesky return alone.
+
+### CV-SVD-003 — Correlated measurements do not count twice
+
+For two unit-variance residuals with correlation $\rho$, take $C=\begin{bmatrix}1&\rho\\\rho&1\end{bmatrix}$. Along $r=(a,a)^T$, the weighted cost is $2a^2/(1+\rho)$; along $(a,-a)^T$, it is $2a^2/(1-\rho)$. As $\rho$ approaches one, common deviations carry almost one independent observation, while disagreement becomes very unlikely. This constructed example explains why dividing each component by its own standard deviation cannot replace full whitening when correlations matter.
+
+### CV-SVD-004 — A diagnostic requires competing explanations
+
+Refit the same normalized model after small coordinate perturbations and after removing candidate outliers, recording both parameter changes and predictions on spatially separated held-out points. Persistent variation along a weak singular direction supports poor geometric constraint; stabilization after rejecting independently suspicious matches supports contamination. Neither is a proof in isolation: outliers can form a coherent alternative model, and aggressive filtering can make coverage worse. A low residual histogram alone cannot distinguish these cases.
+
+### CV-SVD-005 — An invertible homography can have a zero last coefficient
+
+Constructed example: $H=\begin{bmatrix}1&0&1\\0&1&0\\1&0&0\end{bmatrix}$ has determinant $-1$ and $h_{33}=0$. For $x\ne0$, it maps $(x,y)$ to $((x+1)/x,y/x)$ and is a valid projective transform. An implementation that always normalizes by $h_{33}$ would reject or corrupt this solution despite its invertibility. Choose a valid homogeneous scale and check the projective denominator on the intended image region; invertible matrices can still send some finite points to infinity.
+
+### CV-SVD-006 — Normalization is not geometric evidence
+
+Consider four points lying almost on one line. Centering and scaling can make their coordinate magnitudes well behaved while leaving the near-collinearity intact. Normalization addresses numerical scale; it does not restore independent projective constraints. After denormalization, assess transfer errors and the location of held-out points in the original image. A small algebraic error in normalized coordinates is insufficient when extrapolation far from the observed support changes markedly under tiny perturbations.
+
+### CV-SVD-007 — Accepted steps need model agreement
+
+Define the local quadratic model $m(\delta)=\tfrac12\|r+J\delta\|^2$. When its predicted reduction is positive, compare it with the actual reduction using $\eta=[F(x)-F(x+\delta)]/[m(0)-m(\delta)]$. A negative ratio means the step increased the true cost despite a favorable prediction. This constructed interpretation explains shrinking the trust region and recomputing a step. The ratio does not certify global optimality, and its denominator requires care near termination.
+
+### CV-SVD-008 — A robust scale changes influence, not the residual unit
+
+For scalar residual magnitude $u$, the scaled Huber derivative with respect to $s=u^2$ is one when $|u|\le a$, then $a/|u|$. The corresponding residual influence saturates instead of growing indefinitely. A residual of $10a$ still exerts influence: it is downweighted, not deleted. For a whitened two-component residual, $a$ bounds the joint norm; interpreting it as a per-axis confidence interval would impose a different acceptance region.
+
+### CV-SVD-009 — More repeated data do not remove a gauge
+
+For independent repeated measurements with unchanged geometry, information adds and an observable standard deviation can decrease approximately as $1/\sqrt N$. But a direction that is exactly unobservable contributes zero information in every repetition, so repetition leaves it unobservable. Likewise, a shared calibration bias is not averaged away as independent noise. This distinction separates local covariance under an assumed model from the uncertainty of deploying that model on another camera or temperature regime.
+
+Consulted foundations: [Ceres covariance](https://ceres-solver.readthedocs.io/latest/nnls_covariance.html): Introduction, Gauge Invariance and Rank of the Jacobian; Context7 checked; [Ceres solving](https://ceres-solver.readthedocs.io/latest/nnls_solving.html): Trust Region Methods and Linear Solvers; [Ceres modeling](https://ceres-solver.readthedocs.io/latest/nnls_modeling.html): LossFunction and scaling.
 
 ## Sources and flashcards
 

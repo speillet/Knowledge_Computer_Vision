@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: ["CV-SE3", "CV-CAPTEURS", "CV-MULTICALIB"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -111,6 +111,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Testable Grid Contract**: accompany the tensor of its origin, its axes, its resolution, its terminals, its timestamp and its visibility mask. For a cell declared free, to be able to link the decision to observations that really forced this region. A constructed test places an obstacle behind a pallet, then changes the point of view: the cell must go from unknown to observed according to the new measurements, without considering the initial vacuum of the tensor as evidence. Also assess the shelf life of moving obstacles and the response to outdated data. These tests verify the semantics of the interface, beyond the average accuracy of the boxes.
 
 **Passages consulted for these developments**: [OctoMap](https://octomap.github.io/), Full 3D model, free/occupied/unknown space; [Li et al., BEVFormer](https://arxiv.org/html/2203.17270v2), §3.4, time history; transformations and tests derived by the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-BEV-001 — A pillar can encode height without retaining height cells
+
+A pillar encoder may include point heights and relative offsets in its learned features, so collapsing the grid's vertical axis does not mean all height information is absent. What changes is the explicit spatial organization and the bottleneck through which vertical structure is represented. Compare two objects stacked in the same horizontal cell as a constructed stress case, rather than concluding from the word BEV that every method preserves or discards the same information.
+
+### CV-BEV-002 — Repeated absence needs a visibility model
+
+If an opaque obstacle blocks a ray, repeated scans from the same viewpoint do not directly observe the region behind it. Treating every missing return as free would become more confident in an unsupported conclusion with each repetition. A proposed mapping check distinguishes traversed free space, a supported surface hit and unobserved space behind it. Sensor range, transparent materials and invalid returns require their own measurement assumptions.
+
+### CV-BEV-003 — An inside probability is not a signed distance
+
+A value from an occupancy classifier does not directly give meters to the nearest surface. A signed distance function additionally encodes distance under its modeling assumptions; a reconstructed implicit function need not be an exact distance field everywhere. Collision checking based on a distance margin therefore requires the right output contract and validation. Likewise, learned shape completion can suggest unseen geometry without converting it into a direct sensor observation.
+
+### CV-BEV-004 — Ego compensation does not make moving objects static
+
+Transforming historical points into the current ego frame corrects the platform's motion under the pose estimate. A moving pedestrian still changes position during the interval, so history can leave multiple positions or a blurred feature footprint. Distinguish ego-motion error from object-motion accumulation with static landmarks and independently moving targets. This proposed check prevents solving a dynamic-scene issue by repeatedly adjusting a fixed sensor extrinsic.
+
+### CV-BEV-005 — The output needs age and unknown-state semantics
+
+A warehouse planner needs to know when evidence was acquired and which cells were unobserved, rather than receiving an undated occupied/free bitmap alone. A project contract can carry frame, timestamp, validity, uncertainty and state-age limits with the geometry. Evaluate thin obstacles, low returns and temporary sensor loss under that contract. Detection AP alone does not measure whether missing or stale observations lead to inappropriate free-space decisions.
+
+Consulted foundations: [OctoMap](https://octomap.github.io/): explicit distinction between occupied, free and unknown space; [PointPillars](https://arxiv.org/pdf/1812.05784): §2 learned pillar encoding and pseudo-image representation; [Occupancy Networks](https://arxiv.org/html/1812.03828v1): §3 continuous inside/outside occupancy function.
 
 ## Sources and flashcards
 

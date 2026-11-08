@@ -22,8 +22,10 @@ Reponse: **Expected answer**: No: it summarizes measurements between keyframes i
 
 **Constraints between states**: with $R_i$ body→world, $p_i,v_i$ in world coordinates, $g$ in gravity acceleration and $\Delta t=t_j-t_i$, the ideal increments check $\Delta v_{ij}=R_i^T(v_j-v_i-g\Delta t)$ and $\Delta p_{ij}=R_i^T(p_j-p_i-v_i\Delta t-\tfrac12g\Delta t^2)$. They are expressed in the starting coordinate frame and must be compared with the pre-integrated IMU increments, with covariance and bias correction. These relationships make the additional states visible: positions, speeds, orientations and biases. Pre-integration is therefore a factor in joint estimation, not a replacement for these unknowns or the visual observations that constrain them.
 
+**Bias correction has a local validity range**: Preintegrated increments are computed around a chosen bias estimate. First-order bias Jacobians allow a nearby correction without reintegrating every IMU sample, but a large bias change can require reintegration. Retain the time interval and linearization bias with the factor. Summarizing measurements reduces repeated work; it does not make their covariance, gravity convention, timestamp alignment or bias dependence optional.
+
 **Blocking errors**: Describe pre-integration as a ready-made absolute pose.
-Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see 2026-10-30.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::comprehension cv_id::CV-VIO-001 provenance::agent pole::B pole::C
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: It adds a constraint on a revisited location and c
 
 **Relative constraint**: For poses $T_i,T_j$ sending local coordinate frames to the world, the predicted transformation from $j$ to $i$ is $T_i^{-1}T_j$. A loop provides a $Z_{ij}$ measurement of this relation; a possible residual is $\operatorname{Log}(Z_{ij}^{-1}T_i^{-1}T_j)$, depending on the conventions and the graph model. Its weighting reflects the accuracy of the verified measurement. Appearance detection alone does not provide this geometric accuracy. A graph can redistribute an inconsistency over many poses: a moderate final cost does not clear a false loop. Comparing before/after consistency and independent observations remains essential.
 
+**A corrected map can move discontinuously**: A loop closure may change the global optimized trajectory even when the current local motion estimate remains smooth. A system driving a controller or renderer should specify how it exposes local odometry and globally corrected poses, including the transform between them. This is a project interface choice. Evaluate both local continuity and long-term consistency; a lower globally aligned trajectory error does not by itself establish an acceptable real-time pose signal.
+
 **Blocking errors**: Guarantee an exact global position as soon as a loop is detected.
-Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [GTSAM, §4.1 Loop Closure Constraints, Viewed on 2026-10-20](https://gtsam.org/tutorials/intro.html); false loop: diagnosis of the project; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [GTSAM, §4.1 Loop Closure Constraints, Viewed on 2026-10-20](https://gtsam.org/tutorials/intro.html); false loop: diagnosis of the project; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-VIO-002 provenance::agent pole::B pole::C
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Without external reference, the global yaw can rem
 
 **Invariance and metric**: applying the same translation and rotation around gravity to the entire trajectory and the map retains the relative observations of a VIO without global reference. Changing the scale uniformly, however, modifies the predicted metric accelerations; the IMU can therefore constrain this scale when the movement provides the necessary information. Degenerate movement or misjudged biases can make this strain weak. For evaluation, document the freedoms withdrawn and keep an explicit metric check. An alignment Sim(3), which also adjusts the scale, is suitable for some monocular comparisons but can hide a scale error of a VIO declared metric.
 
+**Alignment can hide the error being diagnosed**: A similarity alignment can rescale a trajectory and remove a scale error from the reported position metric. If metric scale is a deployment requirement, evaluate with an alignment group that preserves that requirement and report the scale discrepancy separately. A free global yaw alignment removes a gauge choice under the stated sensor model; removing scale in an observable metric VIO instead conceals a potentially real estimation error.
+
 **Blocking errors**: To say that any VIO is always on an arbitrary scale like a visual monocular.
-Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); excitation condition: hypothesis of the inertial model; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); excitation condition: hypothesis of the inertial model; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-VIO-003 provenance::agent pole::B pole::C
 END
 
@@ -91,10 +97,12 @@ Reponse: **Expected answer**: Define coordinate frames/time, calibrate sensors a
 
 **Seniority budget of pose**: distinguish capture instant $t_c$, estimation availability $t_e$ and display instant $t_a$. A correct pose for $t_c$ comes already old from $t_a-t_c$ on the screen. The IMU propagation can predict up to $t_a$ under a motion model, with increasing uncertainty; it does not transform a future measurement into available observation. Measure the error at the time actually requested and report the time frames step by step with their percentiles. In a test built at 100°/s, 20 ms represents 2° of uncompensated rotation. This calculation directly links synchronization, prediction and visual stabilization requirement of the helmet.
 
+**A recent timestamp is part of pose quality**: Constructed latency case: at $180^\circ$/s head rotation, a pose 20 ms old differs by $3.6^\circ$ before prediction. A low offline trajectory error cannot establish acceptable display-time pose error. A proposed AR protocol measures pose age, prediction horizon, motion-to-estimate delay and failure recovery under fast rotation and visual dropout. It must distinguish causal estimates from trajectories improved later by smoothing or loop closure.
+
 **Blocking errors**: Promising a reliable metric pose without time calibration or evaluation protocol.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project protocol; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see the 2026-10-30.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project protocol; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::conception cv_id::CV-VIO-004 provenance::agent pole::B pole::C cas_pole::B::conception
 END
 
@@ -116,9 +124,11 @@ Reponse: **Expected answer**: Inspect texture/parallax, excitation, bias and syn
 
 **Drift due to bias, simplified case**: If a constant acceleration bias $b_a$ remains uncorrected in a fixed world direction, it produces approximately a speed error $b_at$ and position error $\tfrac12b_at^2$. A constant gyroscope bias produces an angular error of the order of $b_\omega t$; this error can also incorrectly orient gravity and contaminate translation. These constructed laws assume a simplified orientation and conditions, they do not predict a real trajectory. Looking for these time signatures in parallel with feature losses and loop corrections helps to propose discriminating essays rather than a single cause in view of the final plot.
 
+**Weak texture and weak excitation can coincide**: A long straight corridor can provide repetitive visual structure and nearly constant velocity. Both association ambiguity and weak inertial scale/bias information can then contribute to drift. Compare controlled turns and accelerations while logging track geometry, innovation behavior, initialization and timing. Evaluate without freely correcting metric scale. A single low-texture explanation is insufficient when synchronization or an incorrectly modeled bias can produce similar trajectory symptoms.
+
 **Blocking errors**: Correct by freely aligning the scale and then declare the VIO accurate.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project diagnosis; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project diagnosis; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d06 famille::diagnostic cv_id::CV-VIO-005 provenance::agent pole::B pole::C cas_pole::B::diagnostic
 END

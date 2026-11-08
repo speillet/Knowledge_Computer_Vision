@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-REPRESENTATIONS", "CV-ACQUISITION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -105,6 +105,30 @@ These explanations complement the mechanism associated with each question. Calcu
 **Translation in industrial load**: at a rate of $\lambda$ pieces/s and average processing time $T$ s/piece, a service capacity of less than $\lambda$ accumulates a queue even with a good detection score. For the point of operation, report false discharges among the conformants, missed defects among the defectives and number of batch checks. Zero defects missed on a small sample does not prove a zero rate: the size of the test and the diversity of defects limit the conclusion. Defining set-aside sets and critical cases before threshold setting connects the learning metrics to the actual process being evaluated.
 
 **Passages consulted for these developments**: [Defard et al., PaDiM](https://arxiv.org/html/2011.08785v1), §III-B, equation 1, covariance and regularization; geometric interpretation deduced; [Roth et al., PatchCore](https://arxiv.org/html/2106.08265v2), §3.2, Algorithm 1, gluton selection; scenarios and cost calculations of the project.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-ANOMALIES-001 — Registration is a stronger assumption for position statistics
+
+A nominal feature at one image location can move to another after a small part translation. A position-specific distribution may then score a normal part as unusual, while a location-flexible feature bank has a different sensitivity. Neither is universally preferable: excessive spatial flexibility can also overlook misplaced components. Test controlled shifts and missing/moved parts separately so tolerance to nuisance movement is not confused with tolerance to genuine assembly errors.
+
+### CV-ANOMALIES-002 — Nominal contamination can become a prototype
+
+A rare defective patch mistakenly included in nominal training may be selected by a farthest-point coreset because it lies far from the existing bank. Covering feature diversity is useful only after defining what belongs to nominal operation. Audit suspicious extreme training examples and compare held-out defect scores before increasing coreset size. The selection objective is coverage of supplied features, not verification that those features are defect-free.
+
+### CV-ANOMALIES-003 — A threshold shift can hide loss of separation
+
+After an illumination change, compare nominal and known-defect score distributions jointly. If both shift but remain separated, recalibration may restore an operating point; if they overlap more, moving the threshold alone trades missed defects against false rejections without recovering information. A paired acquisition protocol with the same parts helps distinguish this from changed defect prevalence. Freeze the revised policy before evaluating independent production batches.
+
+### CV-ANOMALIES-004 — Rare defects need operating-point evidence
+
+A high AUROC can coexist with unacceptable missed defects at the low false-rejection rate needed by production. Define that rate per part, not merely per pixel, and report recall by critical defect family with sample counts. Include full-cycle latency, memory-bank size and handling of camera changes. Nominal-only validation estimates false alarms under its sampled conditions; it cannot directly estimate recall of defect types never tested.
+
+Consulted foundations: [PatchCore](https://arxiv.org/html/2106.08265v2): §3 feature memory, coreset selection and scoring; [PaDiM](https://arxiv.org/pdf/2011.08785): §III position-specific Gaussian statistics and Mahalanobis distance.
 
 ## Sources and flashcards
 

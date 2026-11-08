@@ -22,8 +22,10 @@ Reponse: **Expected answer**: Template compares to an aligned reference; PatchCo
 
 **Geometry of distance**: In PaDiM, a direction of high nominal variance is less penalized by the Mahalanobis distance than a direction of low variance. Covariance is therefore not only used to change the global scale; it also represents correlations between features. When there are few observations relative to their size, regularizing $\Sigma$ for example with a diagonal term is necessary to avoid an unstable inversion, under a documented choice. A pixel template can be more interpretable but very sensitive to registration. Comparing the three approaches thus imposes of check both the spatial coordinate frame and the representation of the acceptable variations.
 
+**Registration is a stronger assumption for position statistics**: A nominal feature at one image location can move to another after a small part translation. A position-specific distribution may then score a normal part as unusual, while a location-flexible feature bank has a different sensitivity. Neither is universally preferable: excessive spatial flexibility can also overlook misplaced components. Test controlled shifts and missing/moved parts separately so tolerance to nuisance movement is not confused with tolerance to genuine assembly errors.
+
 **Blocking errors**: Describe these scores as universal probabilities of failure.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); baseline template defined by the project; [Defard et al., PaDiM, §III-B, equation 1, covariance and regularization; geometric interpretation deduced](https://arxiv.org/html/2011.08785v1), see the 2026-10-30.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); baseline template defined by the project; [Defard et al., PaDiM, §III-B, equation 1, covariance and regularization; geometric interpretation deduced](https://arxiv.org/html/2011.08785v1), see the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-ANOMALIES-001 provenance::agent pole::A pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: Reduce the bank by maintaining a useful representa
 
 **Greedy selection**: After a defined initialization, a hedging policy chooses the nominal point currently furthest from its neighbor in the subset already selected. It thus seeks to cover the space of features rather than to keep only the frequent examples. The paper uses a projection to speed up the selection; the approximation must remain distinguished from a perfect cover. With $m$ features of dimension $d$ stored on $b$ bytes, the bank alone costs about $mdb$ bytes, excluding indexes. Reducing $m$ acts directly on this storage, but searching, extracting, and transferring memory can limit full latency differently.
 
+**Nominal contamination can become a prototype**: A rare defective patch mistakenly included in nominal training may be selected by a farthest-point coreset because it lies far from the existing bank. Covering feature diversity is useful only after defining what belongs to nominal operation. Audit suspicious extreme training examples and compare held-out defect scores before increasing coreset size. The selection objective is coverage of supplied features, not verification that those features are defect-free.
+
 **Blocking errors**: Take the coreset for a set of supervised defects.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [PaDiM, §III](https://arxiv.org/abs/2011.08785); [Roth et al., PatchCore, §3.2, Algorithm 1, gluton selection; project cost scenarios and calculations](https://arxiv.org/html/2106.08265v2), see 2026-10-30.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [PaDiM, §III](https://arxiv.org/abs/2011.08785); [Roth et al., PatchCore, §3.2, Algorithm 1, gluton selection; project cost scenarios and calculations](https://arxiv.org/html/2106.08265v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-ANOMALIES-002 provenance::agent pole::A pole::E
 END
 
@@ -68,8 +72,10 @@ Reponse: **Expected answer**: Compare acquisition/preprocessing, registration an
 
 **Paired experience**: Pick up the same compliant parts before and after the light change and compare their scores by region. Then do the same for known defects. This makes it possible to study the displacement of the nominal and the separation between conformity and defect, instead of arbitrarily moving an overall threshold. If the two populations get closer, restoring the rate of false releases by increasing the threshold can greatly degrade the recall of defects. Documenting also exposure, saturation and white balance: a normalization of features does not recover visual information lost in saturated pixels. The result must be checked on other parts and lots.
 
+**A threshold shift can hide loss of separation**: After an illumination change, compare nominal and known-defect score distributions jointly. If both shift but remain separated, recalibration may restore an operating point; if they overlap more, moving the threshold alone trades missed defects against false rejections without recovering information. A paired acquisition protocol with the same parts helps distinguish this from changed defect prevalence. Freeze the revised policy before evaluating independent production batches.
+
 **Blocking errors**: Automatically label any score increase as a physical defect.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deducted by the project.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deducted by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-ANOMALIES-003 provenance::agent pole::A pole::E
 END
 
@@ -91,9 +97,11 @@ Reponse: **Expected answer**: Stabilize acquisition, define critical defects and
 
 **Translation in industrial load**: at a rate of $\lambda$ pieces/s and average processing time $T$ s/piece, a service capacity of less than $\lambda$ accumulates a queue even with a good detection score. For the point of operation, report false discharges among the conformants, missed defects among the defectives and number of batch checks. Zero defects missed on a small sample does not prove a zero rate: the size of the test and the diversity of defects limit the conclusion. Defining set-aside sets and critical cases before threshold setting connects the learning metrics to the actual process being evaluated.
 
+**Rare defects need operating-point evidence**: A high AUROC can coexist with unacceptable missed defects at the low false-rejection rate needed by production. Define that rate per part, not merely per pixel, and report recall by critical defect family with sample counts. Include full-cycle latency, memory-bank size and handling of camera changes. Nominal-only validation estimates false alarms under its sampled conditions; it cannot directly estimate recall of defect types never tested.
+
 **Blocking errors**: Validate only on nominal images or the average AUROC.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); industrial protocol proposed by the project.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); industrial protocol proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::conception cv_id::CV-ANOMALIES-004 provenance::agent pole::A pole::E cas_pole::E::conception
 END

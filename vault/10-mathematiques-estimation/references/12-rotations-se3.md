@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -121,6 +121,38 @@ These explanations complement the mechanism associated with each question. Calcu
 **Change of bases on both sides**: if $p'_c=B_c p_c$ and $p'_w=B_w p_w$, then a world matrix→camera becomes $T'_{cw}=B_cT_{cw}B_w^{-1}$, using homogeneous matrices $4\times4$. The kernel example changes only the camera base: $B_w=I$, hence the multiplication on the left. Changing the coordinate frame world also requires the second factor. This general rule avoids applying an "OpenGL conversion" without specifying which base changes. Camera coordinate conventions alone do not define clip space projection, depth buffer direction, or the origin of the framebuffer pixels: these additional contracts must be checked separately in the render.
 
 **Passages consulted for these developments**: [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537v9), §II-F, deputy; §II-H, covariances; appendices B and D; [Solà, Quaternion kinematics](https://arxiv.org/html/1711.02508v1), §§2.4 and 3.1, quaternion and conventions.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-SE3-001 — Composition checked by a round trip
+
+Use a constructed case with $R_{wc_1}=R_z(90^\circ)$, $t_{wc_1}=0$, $R_{wc_2}=I$ and $t_{wc_2}=(1,0,0)^T$ m. Camera 2's origin has coordinates $(0,-1,0)^T$ m in camera 1. Mapping it back with $T_{wc_1}$ must recover $(1,0,0)^T$ m. Nonzero translation and nonidentity rotation expose order errors that two identity poses cannot reveal.
+
+### CV-SE3-002 — The optical center does not project to an image pixel
+
+At $C_w=-R^Tt$, the camera-space point is exactly zero. Its perspective projection requires division by $Z_c=0$ and is undefined. Therefore verify the center using the rigid transform before perspective division, rather than checking a pixel coordinate. Conversely, a point on a viewing ray with positive camera depth projects correctly, but different depths share that pixel. This separates a valid pose-inversion test from an invalid projection test at the optical center.
+
+### CV-SE3-003 — The same perturbation produces the same point change
+
+For $y=Rp$ and a right perturbation, the first-order change is $\delta y=-R[p]_\times\delta\theta_L$. Under a left perturbation it is $\delta y=-[Rp]_\times\delta\theta_G$. Substituting $\delta\theta_G=R\delta\theta_L$ makes the two identical. A finite-difference test should therefore perturb the same physical rotation before comparing outputs. Equal numeric increment components in different frames generally represent different motions.
+
+### CV-SE3-004 — A round trip can preserve a shared mistake
+
+Two conversion routines that apply the same mistaken inverse can pass a round-trip test while both disagree with the sensor contract. Include an independently constructed axis-angle example, such as the Hamilton active rotation $q=(\sqrt2/2,0,0,\sqrt2/2)$ taking $e_x$ to $e_y$. Then compose two rotations about different axes. This second check exposes multiplication-order differences that testing one quaternion and its inverse may leave invisible.
+
+### CV-SE3-005 — Symmetry belongs to the evaluation contract
+
+The geodesic angle compares coordinate-frame orientations. If an object is physically indistinguishable after a half-turn, the raw angle may penalize an equivalent object pose; evaluating that application requires minimizing over its declared symmetry group. Do not silently apply this quotient to camera orientation, where a reversed optical axis is usually a real error. Parameterization invariance and task-specific symmetry invariance are separate properties of an evaluation measure.
+
+### CV-SE3-006 — Handedness and visibility are separate tests
+
+The matrix $M=\operatorname{diag}(1,-1,-1)$ preserves lengths and handedness because $M^TM=I$ and $\det M=1$. A camera-space point $(0,0,2)^T$ becomes $(0,0,-2)^T$: it remains in front according to each convention, despite the sign change of depth. A single-axis reflection also preserves lengths, so checking distances alone misses a handedness error. Use an oriented basis and a point with positive source-camera depth.
+
+Consulted foundations: [Solà et al., micro Lie theory](https://arxiv.org/html/1812.01537): §II-F adjoint, §II-H covariance and appendices B/D group operations.
 
 ## Sources and flashcards
 

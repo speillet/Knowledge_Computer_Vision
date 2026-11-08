@@ -22,8 +22,10 @@ Reponse: **Expected answer**: Estimate the background/object appearance patterns
 
 **Energy and Cut**: for a binary label $L_p$, a unary term can be linked to $-\log p(I_p\mid L_p)$ under the corresponding color mixture. A schematic neighbor term $w_{pq}\mathbf1[L_p\ne L_q]$ penalizes a boundary between similar pixels; high contrast can reduce $w_{pq}$. With fixed appearance parameters and for a compatible binary energy, the cutoff of the graph optimizes this sub-problem. Alternating with the estimation of the mixtures does not imply an overall joint optimum of all the unknowns. Defining the solved sub-problem prevents confusing the solver's warranty with the correctness of the object model used.
 
+**An exact subproblem does not give a global joint guarantee**: For fixed appearance parameters and suitable pairwise terms, a graph cut can optimize the binary labeling subproblem. GrabCut alternates that labeling with appearance-model updates, so the complete procedure remains dependent on initialization and constraints. A low energy at convergence does not prove the intended object was extracted. Compare mask quality and sensitivity to initial rectangles or scribbles on the same images, rather than treating solver convergence as task correctness.
+
 **Blocking errors**: Describe only a fixed color threshold.
-Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d09 famille::algorithme cv_id::CV-GRABCUT-001 provenance::agent pole::A pole::E
 END
 
@@ -45,8 +47,10 @@ Reponse: **Expected answer**: The initial zone and the safe background labels: a
 
 **Hard Constraint and Preference**: A certain label conceptually prohibits the other attribution, while a probable label lets the energy choose. If an actual part of the object is attached to the bottom, changing the appearance settings does not make this solution admissible. In a built test, only correct this constraint, and then compare iterations on the same initial saved state. An improvement locates a contract defect; a persistent exclusion may still come from close colors or regularization. Distinguishing the four states of the mask until the final decision avoids losing interaction information by prematurely binarizing the labels.
 
+**Iterations cannot override a forbidden label**: If a foreground limb lies outside the initialized rectangle and is fixed as definite background, another iteration cannot legitimately relabel it as foreground under that constraint. Enlarge or correct the initialization and distinguish definite from probable labels before tuning appearance parameters. A proposed diagnostic visualizes hard labels over the source image. The key evidence is feasibility under the constraints, not merely whether the excluded pixels look like the foreground color.
+
 **Blocking errors**: Assume that convergence must cancel out any erroneous constraint.
-Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d09 famille::diagnostic cv_id::CV-GRABCUT-002 provenance::agent pole::A pole::E
 END
 
@@ -68,7 +72,9 @@ Reponse: **Expected answer**: Labels added by the user can provide the missing i
 
 **Quality curve – interaction**: Set a common rule to place the initial rectangle, and then a budget for corrections or user time. Measure quality after zero, one, and then multiple interactions and keep the rate of images that do not reach the target to the maximum budget. Clicks are only comparable if their policy and accessible information are announced; a correction chosen with the reference mask constitutes a different oracle from a real operator. Compare also borders and small useful regions. This protocol gives an exploitable compromise curve, instead of an isolated optimization time obtained after a particularly favorable initialization.
 
+**Human effort belongs in the comparison budget**: Compare quality as a function of user interactions or annotation time under the same initialization rules, including difficult images that never reach tolerance. Similar foreground and background colors can require extra labels, and fine structures may need more careful correction. A faster optimization step is not necessarily a faster completed annotation. This is a proposed workflow benchmark; it needs recorded human actions and cannot be inferred from algorithm runtime alone.
+
 **Blocking errors**: Present a low computing time as the complete performance of the process.
-Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-GRABCUT-003 provenance::agent pole::A pole::E
 END

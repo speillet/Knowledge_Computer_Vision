@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SIFT", "CV-ORB", "CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -111,6 +111,34 @@ These explanations complement the mechanism associated with each question. Calcu
 **Compose the pretreatment matrices**: if $A$ and $B$ respectively send the original images to the network inputs and if $H_{net}$ connects these two inputs, the original homography is $H_{orig}=B^{-1}H_{net}A$. This relationship comes from the original path A→network A→network B→original B. It also deals with distinct horizontal and vertical factors or a crop expressed in a homogeneous affine. Padding pixels are not observations of the scene: their validity must be managed, rather than converted to image coordinates as if they were from a sensor. The subpixel positions and pixel center conventions finally require testing a digital round trip on known points.
 
 **Passages consulted for these developments**: [SuperPoint](https://arxiv.org/html/1712.07629v4), §§3 and 5, two heads and homographic adaptation; [LightGlue, official deposit](https://github.com/cvg/LightGlue), README Usage and Advanced configuration, calculation adaptation; [LoFTR](https://arxiv.org/html/2104.00680v1), §§3.1 – 3.4, context and bracket-to-fine.
+
+## Worked reasoning and boundary cases — 2026-11-08
+
+The following are constructed project deductions and proposed checks, not
+new empirical results. Each extends an existing recall objective; the concise
+expected answer on its card remains the grading target.
+
+### CV-MATCH-APPRIS-001 — Unmatched points are a necessary output
+
+An occluded keypoint has no valid partner in the other image. A matcher that forces every feature into a pair creates geometric outliers by construction. Evaluate both matched-pair accuracy and treatment of unmatched points, with overlap recorded. Contextual matching can use relations among features to resolve ambiguity, but those relations do not make invisible surface points observable or remove the need for a downstream geometric acceptance test.
+
+### CV-MATCH-APPRIS-002 — Detector-free does not mean confidence-free
+
+Dense coarse features still require selection of confident correspondences and visibility-compatible evidence. Low-texture regions may benefit from contextual information while remaining ambiguous under repetition or domain shift. A proposed evaluation partitions jointly visible points, occluded points and unmatched image regions. This prevents interpreting the number of returned pairs as full-image coverage or assuming that absent correspondences are failures of a guaranteed per-pixel flow estimator.
+
+### CV-MATCH-APPRIS-003 — Coordinate metadata is part of feature compatibility
+
+A learned matcher can consume point coordinates and image dimensions in addition to descriptor vectors. Replacing descriptors while keeping dimensions equal is only one possible mismatch; supplying positions in a cropped frame with the original image size can also change positional normalization. Verify descriptor preprocessing, point ordering, scale/orientation fields where applicable and coordinate metadata against the checkpoint contract. A successful forward pass checks tensor compatibility, not learned semantic compatibility.
+
+### CV-MATCH-APPRIS-004 — Adaptive computation needs latency distributions
+
+If difficult image pairs trigger more matching layers or retain more points, average runtime over easy pairs understates the operational tail. Benchmark by overlap, blur, repetition and input feature count, reporting both successful and failed registrations. Include extraction, device transfer and geometric validation. A lower median matcher time is useful only with the relevant tail latency and acceptance quality; the adaptive design makes those distributions part of the comparison.
+
+### CV-MATCH-APPRIS-005 — One landmark gives a preprocessing round trip
+
+Constructed example: resizing by one half and adding padding $(20,10)$ maps original point $(100,60)$ to $(70,40)$. Inversion must subtract padding before dividing by one half, recovering $(100,60)$. Dividing first and then subtracting padding gives the wrong point. Test each image independently, then compose the two preprocessing transforms around the network homography. The same ordering rule applies to cropping and anisotropic resizing.
+
+Consulted foundations: [LightGlue](https://arxiv.org/html/2306.13643v1): §3 contextual matching, matchability, adaptive depth/width; [SuperPoint](https://arxiv.org/html/1712.07629v4): §3 joint detection/description and §5 homographic adaptation; [LoFTR](https://arxiv.org/pdf/2104.00680): §3 coarse-to-fine correspondence pipeline.
 
 ## Sources and flashcards
 
