@@ -65,7 +65,13 @@ Questions, IDs, GUIDs, tags, decks and recall objectives remain protected.
 
 ## Follow-up
 
-Targeted verification of these resolutions follows the correction commit.
+Both axes checked correction commit
+`bc0193a82daf98b49917d7b64477e36fa2a7407d` and found no remaining introduced
+blocker in the targeted follow-up. Both re-executed the 59 numerical checks.
+The Spec axis independently counted the protected content/revision totals and
+confirmed that the two retained subjects match `main` exactly. This agreement
+between agents is not independent human scientific validation.
 
-Standards: 3 draft findings; worst was redundant material. Spec: 3 draft
-findings; worst was repeated explanations presented as additional depth.
+Standards: 3 draft findings resolved; worst was redundant material. Spec: 3
+draft findings resolved; worst was repeated explanations presented as additional
+depth. No remaining blocker identified in either targeted follow-up.
