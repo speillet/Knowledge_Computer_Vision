@@ -134,10 +134,6 @@ The value $-1$ marks watershed boundaries in the documented output. Casting this
 
 Lowering a peak-selection threshold may recover a missing center in a small object while introducing several centers in a large one. A proposed sweep records both merged ground-truth instances and fragmented single instances, stratified by size and shape. Do not choose the setting from the count alone: one merge and one split can cancel numerically while both object identities remain wrong. Retain the overlap relationships needed to diagnose them.
 
-### CV-WATERSHED-005 — Perfect foreground overlap can have the wrong count
-
-Constructed case: the union of two touching annotated objects is reproduced exactly as one predicted region. Binary IoU is one, yet the instance count is one instead of two. Splitting one true object into two regions can produce the same perfect union. Use instance matching and merge/split analysis alongside pixel overlap so a foreground success does not certify counting or individual-object measurements.
-
 Consulted foundations: [OpenCV watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html): distance-transform markers, unknown regions and output boundaries; checked with Context7; [OpenCV Otsu](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html): within-class variance criterion.
 
 ## Sources and flashcards

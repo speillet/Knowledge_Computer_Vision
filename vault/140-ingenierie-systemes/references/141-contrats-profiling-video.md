@@ -118,10 +118,6 @@ The following are constructed project deductions and proposed checks, not
 new empirical results. Each extends an existing recall objective; the concise
 expected answer on its card remains the grading target.
 
-### CV-PIPELINE-001 — Freshness has a capture-time denominator
-
-A fast service can process a backlog quickly while still returning decisions about old observations. Record output time minus capture time for every frame and distinguish it from network service duration. A receiving timestamp can exclude sensor buffering and transport, understating age. A proposed acceptance test includes an injected backlog and checks the freshness policy, not merely the sustained completed-frame count.
-
 ### CV-PIPELINE-002 — Buffer capacity buys time, not steady-state capacity
 
 With arrivals at 240 frames/s and service at 200, backlog grows by 40 frames/s under the front's no-drop model. An extra 400-frame buffer absorbs about ten seconds before filling. By then it represents about two seconds of service work at 200 frames/s. Backpressure or dropping changes the model and must be measured explicitly; allocating memory alone cannot make the sustained arrival rate feasible.
@@ -129,10 +125,6 @@ With arrivals at 240 frames/s and service at 200, backlog grows by 40 frames/s u
 ### CV-PIPELINE-003 — Overlapped stages need a dependency trace
 
 Decode, transfer and inference can overlap across frames, so adding their separately timed durations can overstate throughput cost while still omitting queue age. Trace each frame's dependencies and the moment its result becomes usable. A host launch timestamp is not device completion. Distinguish an isolated synchronous latency benchmark from a pipelined load test, and report both when the system requires sustained streams and per-frame deadlines.
-
-### CV-PIPELINE-004 — Tail latency should be measured for the whole path
-
-Adding per-stage p99 values does not generally yield end-to-end p99 because stage durations and queues can be correlated. A proposed eight-stream benchmark records capture-to-decision samples under the actual arrival pattern, including bursts, batching and sustained thermal load. Count dropped and late frames with the quality of their outputs. Hardware capacity is established for that measured operating point, not by multiplying an isolated model FPS number.
 
 ### CV-PIPELINE-005 — Utilization alone does not identify the bottleneck
 

@@ -324,10 +324,6 @@ A coarse feature map interpolated to a finer grid still derives from the same co
 
 The same localization-type false positive can result from poor box regression, incorrect inverse resizing or an annotation convention mismatch. TIDE-style categories organize observed evaluation errors; identifying the cause requires intermediate outputs or controlled ablations. A duplicate category similarly depends on score ordering and prior matching. Keep the evaluator fixed when comparing interventions so changed category counts are not mistaken for proof of one internal failure mechanism.
 
-### CV-DETECTEURS-012 — Annotation fixes must follow the declared policy
-
-A visually plausible detection can lie outside the annotation policy, for example an excluded tiny object or category boundary. Review the policy and an independently sampled set of disagreements before relabeling. If an omission is confirmed, record and version the dataset correction, then reevaluate all compared systems consistently. Editing labels only where one favored model disagrees would bias the comparison even if some individual corrections are valid.
-
 ### CV-DETECTEURS-013 — Multiple instances and multiple valid labels are separate axes
 
 A single box can have several valid attributes such as car, red and damaged, while an image can contain many boxes each with one exclusive object class. The output schema should specify which labels describe an instance and which refer to the whole image. This determines loss and decision policy; the mere presence of two object categories does not force independent multilabel classification for every detection.

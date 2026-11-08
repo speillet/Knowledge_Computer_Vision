@@ -72,9 +72,7 @@ Reponse: **Expected answer**: Detection/layout and assembly of the reading order
 
 **Model of order**: represent regions as nodes and relationships "must be read before" as edges allows to explain a partial order. Topological sorting produces a compatible order if these constraints are cycle-free; column rules, arrays, and inserts determine edges, not the confidence of the recognizer. A simple global sorting by height can intertwine two well-detected columns. To locate the fault, successively compare reference regions, reference transcriptions and reference order by replacing only one output at a time. This ablation identifies what each component brings to the final document error.
 
-**Layout errors need region and order annotations**: A proposed diagnostic evaluates recognized text within correctly matched line regions before assembling a document string. If local recognition is accurate and the assembled order is wrong, inspect column grouping and reading-order relations. The expected reading order can be a partial order for tables or marginal notes, so a single arbitrary concatenation may be a misleading reference. Preserve region identities when tracing an invoice field back to the source image.
-
 **Blocking errors**: Retrain only the recognizer without checking the regions.
-Source: [[70-reconnaissance-representations/references/74-ocr-documents|Full reference]]; [OCR-D, Text Evaluation, CER and WER, Viewed on 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html); assembly diagnosis deduced by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[70-reconnaissance-representations/references/74-ocr-documents|Full reference]]; [OCR-D, Text Evaluation, CER and WER, Viewed on 2026-10-20](https://ocr-d.de/en/spec/ocrd_eval.html); assembly diagnosis deduced by the project.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-OCR-003 provenance::agent pole::E
 END

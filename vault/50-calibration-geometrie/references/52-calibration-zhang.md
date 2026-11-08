@@ -162,10 +162,6 @@ The following are constructed project deductions and proposed checks, not
 new empirical results. Each extends an existing recall objective; the concise
 expected answer on its card remains the grading target.
 
-### CV-ZHANG-001 — A known target scale fixes translation units
-
-If every target coordinate is multiplied by $s$, the same ideal image observations can be explained with translations multiplied by $s$ while intrinsics stay in pixels. A mistaken square size can therefore leave a low reprojection error and plausible focal lengths while corrupting metric distances. This constructed scale argument distinguishes image-formation calibration from independent verification of the physical target dimensions and the units used by subsequent pose estimation.
-
 ### CV-ZHANG-002 — Homogeneous scale is not another camera parameter
 
 In the ideal pinhole model with the usual last row of $K$, the homogeneous projection scale can be chosen as camera depth $Z_c$. It changes from point to point and disappears after dividing the first two coordinates by the third. Translation retains the target coordinate unit; focal lengths remain in pixels. Adding a common metric scale to target points and translation does not require multiplying the intrinsic matrix by that scale.
@@ -180,15 +176,11 @@ Constructed case: a target square is entered as 20 mm but is actually 19.8 mm. U
 
 ### CV-ZHANG-005 — A transform chain avoids order mistakes
 
-For resize matrix $S$ followed by crop matrix $C$, the pixel transform is $A=CS$, so $K\prime=CSK$. Reversing the order applies crop offsets in a different pixel unit. A constructed example with half-size resizing and a 20 px crop moves a principal point at 320 px to 140 px, whereas cropping 20 original pixels first gives 150 px. Include the actual pixel-center convention when implementing the transformation.
+For resize matrix $S$ followed by crop matrix $C$, the pixel transform is $A=CS$, so $K^{\prime}=CSK$. Reversing the order applies crop offsets in a different pixel unit. A constructed example with half-size resizing and a 20 px crop moves a principal point at 320 px to 140 px, whereas cropping 20 original pixels first gives 150 px. Include the actual pixel-center convention when implementing the transformation.
 
 ### CV-ZHANG-006 — Parameter stability needs withheld acquisition groups
 
 Leave out whole target poses rather than a few corners from every pose when testing acquisition diversity. Corners within one image share pose and image-formation effects, so randomly withholding them can make validation look more independent than it is. Compare parameter shifts, radial residual maps and metric predictions over the omitted poses. This is a proposed robustness check; a stable estimate can still share a systematic target or lens-model bias.
-
-### CV-ZHANG-007 — Measurement uncertainty includes the working plane
-
-A ray-plane intersection becomes sensitive when the ray is nearly parallel to the plane, because its depth contains division by $n^Td$. A precise camera calibration cannot remove uncertainty in the plane normal, plane height or the point's actual departure from that plane. Include these quantities in the dimensional error budget and test the real working distance and field position, rather than validating only corner reprojection on the calibration target.
 
 Consulted foundations: [Zhang calibration](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf): §§2–4 intrinsic constraints, refinement and degeneracy; [OpenCV calibration](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): pinhole and distortion conventions.
 

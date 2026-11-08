@@ -159,10 +159,6 @@ Two boxes can each use valid xyxy coordinates while one is in normalized input s
 
 A category with no valid ground-truth instances does not have the same recall denominator as a present category with zero successful detections. The pinned evaluator uses undefined entries and excludes them in its summaries. Replacing those entries by zero changes the aggregate. Record the image/category subset and valid-category handling when comparing tools, rather than treating a change in mean AP as necessarily a change in detector predictions.
 
-### CV-IOU-AP-003 — A late false positive need not reduce interpolated AP
-
-For one ordinary object, ranked predictions TP then duplicate FP already reach recall one at precision one. The maximum-right precision envelope can retain AP one even though a duplicate exists. This constructed case shows that AP does not count all false positives with the same penalty. An operational false-alarm count at a chosen threshold provides complementary evidence when duplicates affect downstream counting or tracking.
-
 ### CV-IOU-AP-004 — The recall-grid endpoint changes the arithmetic
 
 For the front's precision envelope, recall levels 0.00 through 0.50 inclusive contribute 51 samples at precision one; 0.51 through 1.00 contribute 50 at two-thirds. Their mean is about 0.834983. Using only 50 lower samples or integrating a continuous curve yields another number. Keep discrete recall levels and envelope conventions explicit when reproducing an evaluator rather than describing every area-like summary as the same AP.
@@ -174,10 +170,6 @@ An evaluator can see different prediction lists because one path applies a highe
 ### CV-IOU-AP-006 — Small objects have a smaller pixel-shift allowance
 
 For equal 10 px squares offset horizontally by one pixel, IoU is $9/11\approx0.818$; a two-pixel offset gives $8/12\approx0.667$. Thus a small preprocessing offset can preserve AP50 matching while breaking AP75 on this constructed object. Compare inverse coordinate transforms and residuals by object size before retraining. The same two-pixel shift has a different relative effect on a much larger box.
-
-### CV-IOU-AP-007 — Operational burden depends on prevalence and throughput
-
-At prevalence 0.1%, recall 90% and false-positive rate 1% on normal parts, the constructed binary model gives about 90 true alarms and 999 false alarms per 100,000 parts, or roughly 8.3% precision. Good average ranking quality does not set this workload. Evaluate the chosen operating point with realistic prevalence, critical-defect strata and sample counts; class-mean AP alone does not determine production readiness.
 
 Consulted foundations: [COCO evaluator](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py): evaluateImg, accumulate and Params at pinned commit.
 

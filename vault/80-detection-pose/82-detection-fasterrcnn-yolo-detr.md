@@ -295,10 +295,8 @@ Reponse: **Expected answer**: Confronting the image with the annotation policy: 
 
 **check of annotations**: A sample of disagreements from multiple models and regions drawn independently of their scores. An audit limited to very confident predictions of a system may favor its own biases. For each case, keep image, inclusion rule, old label, arbitration and new version of the dataset. A crowd or ignore zone does not necessarily follow the same count as an isolated object; apply the rules of the exact evaluator before qualifying a FP. After correction, recalculate all comparisons and keep previous results as historical, without mixing metrics produced on two different ground truths.
 
-**Annotation fixes must follow the declared policy**: A visually plausible detection can lie outside the annotation policy, for example an excluded tiny object or category boundary. Review the policy and an independently sampled set of disagreements before relabeling. If an omission is confirmed, record and version the dataset correction, then reevaluate all compared systems consistently. Editing labels only where one favored model disagrees would bias the comparison even if some individual corrections are valid.
-
 **Blocking errors**: Remove annoying FPs from a single model, or automatically turn any confident detection into annotation.
-Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [TIDE, version 2, §3.4 and appendices D – E: ambiguous/missing annotations and ignored detections](https://arxiv.org/html/2008.08115v2); correction protocol proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[80-detection-pose/references/82-detection-fasterrcnn-yolo-detr|Full reference]]; [TIDE, version 2, §3.4 and appendices D – E: ambiguous/missing annotations and ignored detections](https://arxiv.org/html/2008.08115v2); correction protocol proposed by the project.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-DETECTEURS-012 provenance::agent pole::A pole::C pole::E
 END
 

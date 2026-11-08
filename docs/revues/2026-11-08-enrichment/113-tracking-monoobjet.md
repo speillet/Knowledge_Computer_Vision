@@ -2,41 +2,43 @@
 
 ## Overview
 
-2 cards reviewed in `approfondir` mode; all receive question-specific
-reasoning. Highest severity before correction: 0 blocking, 0 important, 0 minor, 2 no defect identified.
+2 cards reviewed in `approfondir` mode: 0 enriched and 2
+retained because their existing explanations already cover the proposed addition.
+Highest severity before correction: 0 blocking, 0 important, 0 minor, 2 no defect identified.
 Self-review: Agent Codex (`revue-cartes`). Editorial status: `redige`.
 
 ## Findings by card
 
 | Card | Accuracy: claim checked | Relevance | Gradability | Consistency | Severity | Action |
 | --- | --- | --- | --- | --- | --- | --- |
-| CV-SOT-001 | Independent target searches can collapse to one distractor: supported foundation; new case is a project deduction | distinguish SOT and MOT. | 2 recall criteria; 264 → 340 lexical words | Canonical explanation aligned; ID and front preserved | No defect identified | Developed independent target searches can collapse to one distractor |
-| CV-SOT-002 | Freezing adaptation preserves the model, not visibility: supported foundation; new case is a project deduction | understand a template drift. | 2 recall criteria; 280 → 357 lexical words | Canonical explanation aligned; ID and front preserved | No defect identified | Developed freezing adaptation preserves the model, not visibility |
+| CV-SOT-001 | Independent target searches can collapse to one distractor: retained explanation sufficient for this extension | distinguish SOT and MOT. | 2 recall criteria; 264 → 264 lexical words | ID/front preserved; canonical wording aligned | No defect identified | Retained; redundant draft addition removed |
+| CV-SOT-002 | Freezing adaptation preserves the model, not visibility: retained explanation sufficient for this extension | understand a template drift. | 2 recall criteria; 280 → 280 lexical words | ID/front preserved; canonical wording aligned | No defect identified | Retained; redundant draft addition removed |
 
 ## Reference findings and applied corrections
 
-Canonical revision 5 → 6; status and provenance preserved.
-Each new calculation, assumption and boundary case appears in the reference
-before the corresponding card. The additions follow the existing objectives
-and do not establish coverage of the whole subject.
+Canonical revision 5 retained; the original reference and cards
+already contain the mechanisms proposed in the draft. No redundant expansion is retained.
+The review does not establish exhaustive subject coverage.
+
 
 
 
 ## Sources
 
-- [SiamFC](https://arxiv.org/html/1606.09549v2) — §4 initialized target matching and tracking protocol. Consulted 2026-11-08.
-- [KCF](https://arxiv.org/html/1404.7584v1) — tracking pipeline and online model interpolation. Consulted 2026-11-08.
+- [SiamFC](https://arxiv.org/html/1606.09549v2) — §4 initialized target matching and tracking protocol. Accessed or attempted 2026-11-08, with failures qualified explicitly.
+- [KCF](https://arxiv.org/html/1404.7584v1) — tracking pipeline and online model interpolation. Accessed or attempted 2026-11-08, with failures qualified explicitly.
 
 ## Proposals
 
-No new ID is created in this pass. See the [proposal register](../propositions.md)
-and [overview](00-bilan.md) for pending complementary cards and decisions.
+No new ID is created. See the [proposal register](../propositions.md) and
+[overview](00-bilan.md) for the four existing pending decisions.
 
 ## Checks and limitations
 
-Scope-wide executed checks and identity/field comparisons are recorded in the
-[overview](00-bilan.md). The source assessment concerns the mechanisms and
-boundary cases identified above; it is not a fresh passage-by-passage
-certification of every retained historical paragraph or implementation claim.
-No CV experiment, hardware benchmark, independent review, learner mastery or
-AnkiDroid rendering is established. Export status: to republish with `paquet-anki`.
+Scope-wide checks and protected-field comparisons appear in the [overview](00-bilan.md).
+The evidence concerns the named mechanisms and corrections, not every retained
+historical sentence or implementation claim. [Pre-merge review](65-pre-merge-review.md)
+removed redundant draft additions and corrected two new wording inaccuracies.
+This is agent self-review, without independent scientific validation, learner
+mastery, a new CV experiment or AnkiDroid rendering. Export status:
+**to republish with `paquet-anki`**.

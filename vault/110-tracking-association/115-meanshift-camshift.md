@@ -97,9 +97,7 @@ Reponse: **Expected answer**: Keep the same histogram, frames, and initializatio
 
 **Two factors, four tests**: To distinguish adaptation and appearance, compare histogram H1 with fixed/adaptive window, then histogram H2 with the same two policies. Measure overlap, center error and initialization losses and identical sequences. The interaction can be important: an adaptive window benefits from a clean backprojection but encompasses more background with a poorly separated histogram. A change of binning modifies the trade-off between color discrimination and noise robustness; a low-saturation mask further changes the retained pixels. These choices must be recorded separately to make the result reproducible and attributable to the mechanism actually modified.
 
-**Factorial comparison reveals interactions**: If a new histogram helps only with an adaptive window, its benefit may depend on the changed spatial support rather than being an independent appearance improvement. Compare the four combinations of old/new histogram and fixed/adaptive window, keeping initialization and frame sequence identical. Report center error, overlap, scale response and loss rate together. This proposed experiment isolates main effects and their interaction without inferring causality from a single before/after run.
-
 **Blocking errors**: Simultaneously edit histogram, mask and tracker and assign the result to CamShift alone.
-Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[110-tracking-association/references/115-meanshift-camshift|Full reference]] ; [OpenCV 4.13, Meanshift and Camshift, Theory and Exit Contracts](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html).
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-MEANSHIFT-004 provenance::agent pole::C pole::D pole::E
 END

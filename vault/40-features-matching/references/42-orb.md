@@ -161,17 +161,9 @@ For a test point at patch radius $r$, a small orientation error $\delta\theta$ d
 
 Compare byte values 0, 128 and 3 as packed test results. Relative to 0, Hamming distances are one bit for 128 and two bits for 3, while scalar numeric distances are 128 and 3. The ranking reverses. Casting these bytes to floating-point numbers preserves the incorrect numeric ranking. The problem is therefore semantic, not a limitation of integer storage or a need to normalize byte magnitudes.
 
-### CV-ORB-003 — One symbol mismatch can contain two flipped bits
-
-For a two-bit winner symbol, comparing `00` with `11` should count one changed categorical outcome even though two individual bits differ. Standard bitwise Hamming and symbol-wise Hamming2 therefore disagree. Descriptors computed with different WTA_K values also encode different tests, so choosing Hamming2 does not make an old descriptor database compatible. Recompute both sides under the same extractor contract before evaluating a matcher change.
-
 ### CV-ORB-004 — Tie handling belongs to the acceptance rule
 
 Binary distances are discrete, so ties are common. If the first and second distances are equal and nonzero, a strict ratio threshold below one rejects the match. Mutual-nearest matching can instead depend on which tied candidate the implementation chooses. Neither deterministic tie-breaking nor mutuality supplies physical evidence. Include repeated patterns and exact distance ties in a proposed comparison so changes in candidate ordering do not appear to improve geometric reliability.
-
-### CV-ORB-005 — A finer pyramid cannot undo the input sampling
-
-If a marking shrinks from six pixels across to one pixel, its internal pattern may no longer produce repeatable intensity comparisons. Adding pyramid levels only smooths and subsamples this already limited observation. Distinguish a detail outside the scale range from a detail below sensor resolution by comparing controlled distances at the original input resolution. Remedies can involve optics, resolution or target design rather than increasing the requested feature count.
 
 ### CV-ORB-006 — A memory estimate needs database lifetime
 

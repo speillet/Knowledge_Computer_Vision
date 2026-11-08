@@ -189,10 +189,6 @@ For fixed nonzero overlap $u$, the multiplier is $\exp(-u^2/\sigma)$. Increasing
 
 Before and after NMS, use the same annotation-matching policy and distinguish unique covered objects from prediction count. Ten surviving boxes on one person are not ten recalled people. Conversely, removal of a duplicate may change counts without losing any object. A proposed replay should record which correct candidate was removed, its suppressor and whether another valid candidate still covers that annotation under the fixed evaluation protocol.
 
-### CV-NMS-006 — Containment and overlap use different denominators
-
-For a small box fully inside a large one, intersection-over-small-box equals one, but IoU equals the small-to-large area ratio. Replacing IoU by that containment score would therefore implement a different suppression policy. Test nested boxes representing a person and a small carried object, as well as nested duplicates of one object. Geometry alone does not decide which pair is redundant under the task taxonomy.
-
 Consulted foundations: [Soft-NMS](https://arxiv.org/html/1704.04503v2): §4 greedy selection and score decay; §5 score filtering.
 
 ## Sources and flashcards

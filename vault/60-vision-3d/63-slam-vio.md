@@ -72,10 +72,8 @@ Reponse: **Expected answer**: Without external reference, the global yaw can rem
 
 **Invariance and metric**: applying the same translation and rotation around gravity to the entire trajectory and the map retains the relative observations of a VIO without global reference. Changing the scale uniformly, however, modifies the predicted metric accelerations; the IMU can therefore constrain this scale when the movement provides the necessary information. Degenerate movement or misjudged biases can make this strain weak. For evaluation, document the freedoms withdrawn and keep an explicit metric check. An alignment Sim(3), which also adjusts the scale, is suitable for some monocular comparisons but can hide a scale error of a VIO declared metric.
 
-**Alignment can hide the error being diagnosed**: A similarity alignment can rescale a trajectory and remove a scale error from the reported position metric. If metric scale is a deployment requirement, evaluate with an alignment group that preserves that requirement and report the scale discrepancy separately. A free global yaw alignment removes a gauge choice under the stated sensor model; removing scale in an observable metric VIO instead conceals a potentially real estimation error.
-
 **Blocking errors**: To say that any VIO is always on an arbitrary scale like a visual monocular.
-Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); excitation condition: hypothesis of the inertial model; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); excitation condition: hypothesis of the inertial model; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), consult the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::raisonnement cv_id::CV-VIO-003 provenance::agent pole::B pole::C
 END
 
@@ -97,12 +95,10 @@ Reponse: **Expected answer**: Define coordinate frames/time, calibrate sensors a
 
 **Seniority budget of pose**: distinguish capture instant $t_c$, estimation availability $t_e$ and display instant $t_a$. A correct pose for $t_c$ comes already old from $t_a-t_c$ on the screen. The IMU propagation can predict up to $t_a$ under a motion model, with increasing uncertainty; it does not transform a future measurement into available observation. Measure the error at the time actually requested and report the time frames step by step with their percentiles. In a test built at 100°/s, 20 ms represents 2° of uncompensated rotation. This calculation directly links synchronization, prediction and visual stabilization requirement of the helmet.
 
-**A recent timestamp is part of pose quality**: Constructed latency case: at $180^\circ$/s head rotation, a pose 20 ms old differs by $3.6^\circ$ before prediction. A low offline trajectory error cannot establish acceptable display-time pose error. A proposed AR protocol measures pose age, prediction horizon, motion-to-estimate delay and failure recovery under fast rotation and visual dropout. It must distinguish causal estimates from trajectories improved later by smoothing or loop closure.
-
 **Blocking errors**: Promising a reliable metric pose without time calibration or evaluation protocol.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project protocol; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[60-vision-3d/references/63-slam-vio|Full reference]]; [Forster et al., §§V – VI, equations 31 – 34 and VI-C](https://dellaert.github.io/files/Forster16tro.pdf); [Zhang – Scaramuzza 2018, §III and Table I](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); project protocol; [Qin et al., VINS-Mono, §IV-B, preintegration and bias; §V-B, metric initialization; algebraic add-ins and project scenarios](https://arxiv.org/html/1708.03852v1), see the 2026-10-30.
 Tags: cv::pilote cv::d06 famille::conception cv_id::CV-VIO-004 provenance::agent pole::B pole::C cas_pole::B::conception
 END
 

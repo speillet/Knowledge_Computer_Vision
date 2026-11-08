@@ -118,10 +118,6 @@ With equal unit photometric noise in the local linearized model, $M^{-1}$ for th
 
 If all intensities are multiplied by $\alpha$, gradients scale by $\alpha$ and tensor eigenvalues by $\alpha^2$. Shi–Tomasi then scales by $\alpha^2$, whereas Harris scales by $\alpha^4$. A fixed absolute threshold therefore changes its meaning with intensity units, and the two scores cannot share a numerical threshold. Relative-to-maximum selection can cancel a uniform scale, but clipping and spatially varying illumination do not preserve this ideal relation.
 
-### CV-CORNERS-003 — A relative threshold can accept uniformly weak images
-
-If the best response in a blurred image is small, a fixed fraction of that response is also small. Thus qualityLevel does not provide an absolute guarantee of trackability. Record the best score and retained-score distribution as well as the returned count. minDistance may then exclude clustered candidates and maxCorners may truncate the survivors; increasing the cap cannot create strong points where the image lacks usable gradients.
-
 ### CV-CORNERS-004 — Repeatability and identity need separate denominators
 
 Given a known image transformation, first count whether a detected point has a nearby detected counterpart in the visible transformed region. Then, among described points, measure whether matching chooses that counterpart rather than a repeated intersection. This proposed decomposition separates missed detections from wrong identities. Exclude points truly outside shared visibility from repeatability denominators, and report exclusions so a method cannot appear robust simply by discarding difficult regions.

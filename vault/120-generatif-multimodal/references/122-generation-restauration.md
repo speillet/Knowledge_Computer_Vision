@@ -114,10 +114,6 @@ Training may sample individual noise levels to learn a denoiser, while generatio
 
 Before attributing a lost scratch to latent diffusion, inspect $D(E(x))$ for the same input under the autoencoder alone. If the critical structure is already absent, the representation introduces an information bottleneck before iterative generation. A proposed evaluation measures that reconstruction on defect size and contrast, then adds the denoising stage. More sampling iterations cannot be assumed to recover a detail the representation did not preserve.
 
-### CV-DIFFUSION-003 — Measurement consistency does not imply unique reconstruction
-
-For an acquisition operator with a nontrivial nullspace, $H(x+\delta)=Hx$ whenever $H\delta=0$. A reconstructed crack difference in that nullspace can satisfy the same low-resolution observation. Validate task-critical geometry against independent high-resolution measurements and keep original observations available. A visually sharp result or small re-degradation error alone does not establish which of several measurement-consistent structures was physically present.
-
 Consulted foundations: [DDPM](https://arxiv.org/html/2006.11239v2): Algorithms 1–2 and §3 noise-prediction training versus reverse sampling; [Latent Diffusion](https://arxiv.org/html/2112.10752v2): §3.1 perceptual compression and §3.2 latent generation.
 
 ## Sources and flashcards

@@ -2,7 +2,7 @@
   "date": "2026-11-08",
   "environment": "Python standard library",
   "scope": "constructed arithmetic only; no CV implementation run",
-  "passed": 56,
+  "passed": 59,
   "checks": [
     {
       "card": "CV-SVD-001",
@@ -255,9 +255,9 @@
     {
       "card": "CV-VIO-004",
       "quantity": "orientation age error, degrees",
-      "expression": "180*0.020",
-      "actual": 3.6,
-      "expected": 3.6,
+      "expression": "100*0.020",
+      "actual": 2.0,
+      "expected": 2,
       "tolerance": 1e-09
     },
     {
@@ -399,9 +399,9 @@
     {
       "card": "CV-IOU-AP-007",
       "quantity": "precision at low prevalence",
-      "expression": "90/(90+999)",
-      "actual": 0.08264462809917356,
-      "expected": 0.08264462809917356,
+      "expression": "99/(99+999)",
+      "actual": 0.09016393442622951,
+      "expected": 0.09016393442622951,
       "tolerance": 1e-09
     },
     {
@@ -448,6 +448,30 @@
       "card": "CV-DEPLOIEMENT-001",
       "quantity": "total time with overhead",
       "expression": "0.9+0.1/2+0.05",
+      "actual": 1.0,
+      "expected": 1,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-CANNY-HOUGH-002",
+      "quantity": "ROI vertical line full-image rho, px",
+      "expression": "20 + 100*cos(0) + 50*sin(0)",
+      "actual": 120.0,
+      "expected": 120,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-BA-002",
+      "quantity": "camera-pair connections from a five-camera track",
+      "expression": "5*(5-1)/2",
+      "actual": 10.0,
+      "expected": 10,
+      "tolerance": 1e-09
+    },
+    {
+      "card": "CV-BA-002",
+      "quantity": "camera-pair connection from a two-camera track",
+      "expression": "2*(2-1)/2",
       "actual": 1.0,
       "expected": 1,
       "tolerance": 1e-09

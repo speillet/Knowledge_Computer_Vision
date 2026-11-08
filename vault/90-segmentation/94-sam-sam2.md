@@ -22,10 +22,8 @@ Reponse: **Expected answer**: No: its central contract is the prompt-guided mask
 
 **Ambiguity of Prompt**: A point on a shirt may refer to the shirt, the person or a visible part of it. Multiple masks can be compatible with the same index; the choice depends on the contract of the task and additional information. The predicted quality score is used to rank proposals according to the model, without assigning a business category to the region. To compare two uses, freeze placement and number of prompts, policy of choice of mask and corrections allowed. Choosing a posteriori the best mask using the ground truth measures an oracle selection, different from the procedure actually available to the product.
 
-**A correct mask can still be the wrong requested object**: A point on a person's sleeve can support a sleeve mask or a whole-person mask depending on the intended granularity. High predicted mask quality does not resolve which output the user needs or attach a semantic category by itself. A proposed evaluation fixes the prompt policy and target granularity, then measures both mask accuracy and selection errors among plausible masks. This separates segmentation quality from task interpretation.
-
 **Blocking errors**: Confound object mask and business class.
-Source: [[90-segmentation/references/94-sam-sam2|Full reference]]; [SAM, §3 and proof of concept text-to-mask §7.5](https://arxiv.org/abs/2304.02643); [Kirillov et al., SAM, §2, ambiguity and conditioned task; §3, model; time protocols built without execution SAM 2](https://arxiv.org/html/2304.02643v1), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[90-segmentation/references/94-sam-sam2|Full reference]]; [SAM, §3 and proof of concept text-to-mask §7.5](https://arxiv.org/abs/2304.02643); [Kirillov et al., SAM, §2, ambiguity and conditioned task; §3, model; time protocols built without execution SAM 2](https://arxiv.org/html/2304.02643v1), see 2026-10-30.
 Tags: cv::pilote cv::d09 famille::comprehension cv_id::CV-SAM-001 provenance::agent pole::A pole::D
 END
 
@@ -47,10 +45,8 @@ Reponse: **Expected answer**: Memory and propagation of time-guided masks accord
 
 **Temporal state**: A stored spread depends on the history, not just the current image. Two sequences arriving at the same frame with different initializations can therefore produce different outputs. To diagnose identity confusion, keep initialization frame, prompts, corrections, path order, and memory update instants. Comparing a recovery with reset memory and the original continuation is a proposed ablation, with announced information budget. A reset using the right target given by a human should not be counted as stand-alone recovery. The quality of an outline and the permanence of the identity remain two separate properties.
 
-**History is part of the state being evaluated**: If an incorrect mask enters temporal memory, later frames can inherit its mistaken identity or extent. Logging only the final mask loses the evidence needed to distinguish current-image failure from propagated state. Preserve prompt timestamps, object identity assignments, memory reset events and output availability. Compare sequences with controlled initialization and occlusion events; a strong single-frame mask score does not quantify recovery after a long disappearance.
-
 **Blocking errors**: Assimilate spread of masklets and complete object tracking system.
-Source: [[90-segmentation/references/94-sam-sam2|Full reference]]; [SAM 2, §4: memory, prompts and masklets](https://arxiv.org/abs/2408.00714); [Kirillov et al., SAM, §2, ambiguity and conditioned task; §3, model; time protocols built without execution SAM 2](https://arxiv.org/html/2304.02643v1), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[90-segmentation/references/94-sam-sam2|Full reference]]; [SAM 2, §4: memory, prompts and masklets](https://arxiv.org/abs/2408.00714); [Kirillov et al., SAM, §2, ambiguity and conditioned task; §3, model; time protocols built without execution SAM 2](https://arxiv.org/html/2304.02643v1), see 2026-10-30.
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-SAM-002 provenance::agent pole::A pole::D
 END
 

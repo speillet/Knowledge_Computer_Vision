@@ -66,7 +66,7 @@ def main():
     check("CV-STEREO-002", "near bound, m", "200/2.5", 200 / 2.5, 80)
     check("CV-STEREO-002", "far bound, m", "200/1.5", 200 / 1.5, 133.33333333333334)
     check("CV-STEREO-003", "unconverted fixed-point depth scale", "20/320", 20 / 320, 1 / 16)
-    check("CV-VIO-004", "orientation age error, degrees", "180*0.020", 180 * 0.020, 3.6)
+    check("CV-VIO-004", "orientation age error, degrees", "100*0.020", 100 * 0.020, 2)
     check("CV-CLIP-002", "original softmax", "19/(19+1)", 19 / 20, 0.95)
     check("CV-CLIP-002", "softmax after competing top label", "19/(19+19+1)",
           19 / 39, 0.48717948717948717)
@@ -99,8 +99,8 @@ def main():
           (51 + 50 * (2 / 3)) / 101, 0.834983498349835)
     check("CV-IOU-AP-006", "one-pixel shift IoU", "9/11", 9 / 11, 0.8181818181818182)
     check("CV-IOU-AP-006", "two-pixel shift IoU", "8/12", 8 / 12, 2 / 3)
-    check("CV-IOU-AP-007", "precision at low prevalence", "90/(90+999)",
-          90 / 1089, 0.08264462809917356)
+    check("CV-IOU-AP-007", "precision at low prevalence", "99/(99+999)",
+          99 / 1098, 0.09016393442622951)
     check("CV-METRIQUES-TEMPS-002", "mean per-threshold HOTA example",
           "(sqrt(1*0.25)+sqrt(0.25*1))/2", (math.sqrt(0.25) + math.sqrt(0.25)) / 2, 0.5)
     check("CV-METRIQUES-TEMPS-002", "incorrect recombination example",
@@ -110,6 +110,12 @@ def main():
     check("CV-QUANT-004", "ideal total speedup", "1/(0.8+0.2/2)", 1 / (0.8 + 0.2 / 2), 10 / 9)
     check("CV-DEPLOIEMENT-001", "total time with overhead", "0.9+0.1/2+0.05",
           0.9 + 0.1 / 2 + 0.05, 1)
+    check("CV-CANNY-HOUGH-002", "ROI vertical line full-image rho, px",
+          "20 + 100*cos(0) + 50*sin(0)", 20 + 100 * math.cos(0) + 50 * math.sin(0), 120)
+    check("CV-BA-002", "camera-pair connections from a five-camera track",
+          "5*(5-1)/2", 5 * 4 / 2, 10)
+    check("CV-BA-002", "camera-pair connection from a two-camera track",
+          "2*(2-1)/2", 2 * 1 / 2, 1)
     print(json.dumps({"date": "2026-11-08", "environment": "Python standard library",
                       "scope": "constructed arithmetic only; no CV implementation run",
                       "passed": len(checks), "checks": checks}, indent=2))

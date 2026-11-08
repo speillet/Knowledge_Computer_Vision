@@ -114,10 +114,6 @@ A two-column invoice can contain every digit correctly yet assign a unit price f
 
 Constructed example: one 100-character document has zero edits and one one-character document has one edit. Micro CER is $1/101\approx0.99\%$, while the mean of document CERs is 50%. Both are well-defined but weight documents differently. Report the aggregation rule, empty-reference policy and text normalization. A CER above 100% is possible when insertions dominate; clipping it to 100% would erase real error magnitude.
 
-### CV-OCR-003 — Layout errors need region and order annotations
-
-A proposed diagnostic evaluates recognized text within correctly matched line regions before assembling a document string. If local recognition is accurate and the assembled order is wrong, inspect column grouping and reading-order relations. The expected reading order can be a partial order for tables or marginal notes, so a single arbitrary concatenation may be a misleading reference. Preserve region identities when tracing an invoice field back to the source image.
-
 Consulted foundations: [OCR-D evaluation](https://ocr-d.de/en/spec/ocrd_eval.html): Text Evaluation, Levenshtein alignment, normalization and CER/WER.
 
 ## Sources and flashcards

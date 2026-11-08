@@ -112,10 +112,6 @@ If the two eigenvalues of the normalized second-moment matrix are nearly equal, 
 
 Two same-color parts can create two backprojection modes. MeanShift moves according to the local score mass, with no built-in physical identity label. More iterations can reduce numerical movement while converging to the wrong part. Test controlled distractors and inspect the mode structure before changing stopping criteria. A geometric motion limit or richer appearance model is a project intervention that needs its own measured tradeoff.
 
-### CV-MEANSHIFT-004 — Factorial comparison reveals interactions
-
-If a new histogram helps only with an adaptive window, its benefit may depend on the changed spatial support rather than being an independent appearance improvement. Compare the four combinations of old/new histogram and fixed/adaptive window, keeping initialization and frame sequence identical. Report center error, overlap, scale response and loss rate together. This proposed experiment isolates main effects and their interaction without inferring causality from a single before/after run.
-
 Consulted foundations: [OpenCV MeanShift/CamShift](https://docs.opencv.org/4.13.0/d7/d00/tutorial_meanshift.html): backprojection centroid iteration and moment-based adaptive window.
 
 ## Sources and flashcards

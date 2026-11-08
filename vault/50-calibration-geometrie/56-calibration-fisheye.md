@@ -97,10 +97,8 @@ Reponse: **Expected answer**: Use the model and the new matrix associated with t
 
 **Radius of exit**: for rectification to a pinhole model, a homogeneous pixel $\tilde u'$ gives a radius $q'=K_{\mathrm{new}}^{-1}\tilde u'$ in the rectified coordinate frame. If $R_{\mathrm{rect}}$ sends the raw camera rays to this coordinate frame, the corresponding raw ray is proportional to $R_{\mathrm{rect}}^Tq'$. The fisheye projection of this ray provides the position to be sampled in the source image: it is a reverse map construction. This transformation is usually unrefined. After an output crop, also adapt the main center; after a resize, adapt focal lengths and coordinates according to the pixel convention chosen. Pixels without a valid source do not create any geometric measurements.
 
-**Rectification rotation changes the ray frame**: If the remap uses $R_{rect}$ from raw camera coordinates to rectified camera coordinates, an output ray is proportional to $K_{new}^{-1}\tilde u\prime$ in the rectified frame. Returning it to the raw camera frame requires $R_{rect}^{-1}$ before applying the original camera pose. This derived chain separates output intrinsics from frame orientation. Using the new matrix with the old pose without that rotation can leave a systematic orientation error.
-
 **Blocking errors**: Reuse the raw distortion on an already rectified image without adaptation.
-Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[50-calibration-geometrie/references/56-calibration-fisheye|Full reference]] ; [OpenCV 4.13, fisheye, Detailed Description and EstimateNewCameraMatrixForUndistortRectify](https://docs.opencv.org/4.13.0/db/d58/group__calib3d__fisheye.html).
 Tags: cv::pilote cv::d05 famille::pratique cv_id::CV-FISHEYE-004 provenance::agent pole::B pole::C pole::E
 END
 

@@ -126,14 +126,6 @@ Preintegrated increments are computed around a chosen bias estimate. First-order
 
 A loop closure may change the global optimized trajectory even when the current local motion estimate remains smooth. A system driving a controller or renderer should specify how it exposes local odometry and globally corrected poses, including the transform between them. This is a project interface choice. Evaluate both local continuity and long-term consistency; a lower globally aligned trajectory error does not by itself establish an acceptable real-time pose signal.
 
-### CV-VIO-003 — Alignment can hide the error being diagnosed
-
-A similarity alignment can rescale a trajectory and remove a scale error from the reported position metric. If metric scale is a deployment requirement, evaluate with an alignment group that preserves that requirement and report the scale discrepancy separately. A free global yaw alignment removes a gauge choice under the stated sensor model; removing scale in an observable metric VIO instead conceals a potentially real estimation error.
-
-### CV-VIO-004 — A recent timestamp is part of pose quality
-
-Constructed latency case: at $180^\circ$/s head rotation, a pose 20 ms old differs by $3.6^\circ$ before prediction. A low offline trajectory error cannot establish acceptable display-time pose error. A proposed AR protocol measures pose age, prediction horizon, motion-to-estimate delay and failure recovery under fast rotation and visual dropout. It must distinguish causal estimates from trajectories improved later by smoothing or loop closure.
-
 ### CV-VIO-005 — Weak texture and weak excitation can coincide
 
 A long straight corridor can provide repetitive visual structure and nearly constant velocity. Both association ambiguity and weak inertial scale/bias information can then contribute to drift. Compare controlled turns and accelerations while logging track geometry, innovation behavior, initialization and timing. Evaluate without freely correcting metric scale. A single low-texture explanation is insufficient when synchronization or an incorrectly modeled bias can produce similar trajectory symptoms.

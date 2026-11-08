@@ -72,10 +72,8 @@ Reponse: **Expected answer**: `qualityLevel` sets a threshold relative to the be
 
 **Read the selection as a suite of filters**: first calculate the quality map, retain the local maxima, eliminate insufficient scores, then consider the candidates in descending order respecting the minimum distance and budget. Therefore, the quota does not replace a quality threshold. In a built-in case, if the only good points are close, increasing the spacing can get a lot and leave less than the number requested; this is not necessarily a failure of the API. To limit concentration, a mask of interest or quotas by region are choices of system to compare, keeping the same notion of score and the same units of distance.
 
-**A relative threshold can accept uniformly weak images**: If the best response in a blurred image is small, a fixed fraction of that response is also small. Thus qualityLevel does not provide an absolute guarantee of trackability. Record the best score and retained-score distribution as well as the returned count. minDistance may then exclude clustered candidates and maxCorners may truncate the survivors; increasing the cap cannot create strong points where the image lacks usable gradients.
-
 **Blocking errors**: Read qualityLevel as a probability; convert minDistance to intensity.
-Source: [[40-features-matching/references/46-harris-shi-tomasi|Full reference]]; [OpenCV 4.13, Shi – Tomasi, Theory and goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html); [OpenCV 4.13, Harris, Theory, tensor and response](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[40-features-matching/references/46-harris-shi-tomasi|Full reference]]; [OpenCV 4.13, Shi – Tomasi, Theory and goodFeaturesToTrack](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html); [OpenCV 4.13, Harris, Theory, tensor and response](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), see 2026-10-30.
 Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-CORNERS-003 provenance::agent pole::B pole::C pole::E
 END
 

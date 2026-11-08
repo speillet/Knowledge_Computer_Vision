@@ -112,17 +112,9 @@ The following are constructed project deductions and proposed checks, not
 new empirical results. Each extends an existing recall objective; the concise
 expected answer on its card remains the grading target.
 
-### CV-STEREO-001 — Principal-point offsets change effective disparity
-
-If rectified principal points differ, $d=x_L-x_R=fB/Z+(c_{xL}-c_{xR})$. Hence use $Z=fB/[d-(c_{xL}-c_{xR})]$ under the same parallel-axis model. The simplified front explicitly assumes equal principal-point abscissas. A reprojection matrix from the actual rectification can encode the offset; substituting the mnemonic formula without checking that assumption introduces a systematic depth error.
-
 ### CV-STEREO-002 — Small disparities produce asymmetric depth errors
 
 Constructed case: with $fB=200$ px·m, disparity $2\pm0.5$ px maps to depths from 80 to about 133.3 m around a nominal 100 m. The interval is asymmetric because inversion is nonlinear. Near zero disparity, a first-order standard deviation can be misleading and invalid disparities must remain invalid rather than being clamped into apparently finite obstacles. Report depth availability together with error over the relevant range.
-
-### CV-STEREO-003 — A fixed-point mistake gives a predictable scale error
-
-If a stored disparity of 320 represents 20 px through a factor of 16, using 320 directly in $Z=fB/d$ produces one-sixteenth of the correct depth. Converting again after it has already been decoded produces the opposite error. Record representation at each interface and test one known plane at a measured distance. Invalid-value encoding and negative disparities depend on the matcher configuration and require its exact contract.
 
 ### CV-STEREO-004 — Rectification does not resolve an occluded pixel
 

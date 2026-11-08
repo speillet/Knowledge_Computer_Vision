@@ -118,10 +118,6 @@ For an exact translation of a quadratic polynomial, the constant coefficient mus
 
 In the front, $2A=\operatorname{diag}(4,2)$ maps $(2,-1)^T$ to $(8,-2)^T$, directly checking the sign and factor of two. If the second diagonal entry approaches zero, an unchanged linear-coefficient error yields a large second displacement error. This mirrors the aperture problem: a numerical solution exists only with usable directional information. Regularization can select a result but adds an assumption rather than another observation.
 
-### CV-FARNEBACK-003 — Image array indices and vector components have different order
-
-An array element is indexed by row then column, while the returned flow components are horizontal then vertical displacement under the documented convention. In the front, negative vertical displacement moves toward a smaller row index when image y grows downward. A constructed translated dot or ramp is a useful direction check. Converting pixel displacement to velocity still requires actual frame timing; the array shape does not encode a physical speed unit.
-
 ### CV-FARNEBACK-004 — Composing flows requires transporting the lookup point
 
 Constructed one-dimensional case: $F(x)=1$ and $B(y)=-y$. At $x=0$, evaluating the backward field at $x+F(x)=1$ gives a zero round-trip residual, while evaluating at zero gives residual one. The difference comes from sampling different surface positions, not merely from a sign convention. Interpolation and out-of-bounds handling must accompany the composition rule when the displaced location is noninteger or outside the valid image.

@@ -1,7 +1,7 @@
 {
   "date": "2026-11-08",
-  "markdown_files": 206,
-  "local_markdown_links_checked": 2453,
+  "markdown_files": 207,
+  "local_markdown_links_checked": 2440,
   "errors": [],
   "scope": "all vault Markdown plus new review reports and proposal register; vault wikilinks checked separately by check_vault.py"
 }

@@ -47,10 +47,8 @@ Reponse: **Expected answer**: Connect a visual encoder and a language model pre-
 
 **Goulot of representation**: learned queries query the features of the visual encoder by cross attention and produce an intermediate representation for the language model. They are not the free questions typed by the user. Limiting the number of vectors transmitted can reduce the cost of the interface while constraining the information available on small details. A frozen encoder and a frozen LLM can be linked by learned parameters without updating all their weights. The mechanism of the bridge and the learning protocol must therefore be described separately from the final behavior, which remains to be measured on the visual observations of the task.
 
-**Learned queries are a representation bottleneck**: Q-Former query vectors are learned model parameters that attend to visual features; they are not a list of user questions whose answers independently verify image facts. The representation passed to the language model is limited by the visual encoder and connector. If small text is not resolved at that input resolution, fluent downstream generation cannot guarantee its recovery. Evaluate sensitivity to crop and resolution using known text or object details.
-
 **Blocking errors**: Assign Q-Former to any multimodal model or assimilate it to a simple prompt.
-Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; [BLIP-2, §§3.1 – 3.3: Q-Former between visual encoder and frozen LLM](https://arxiv.org/abs/2301.12597); [Li et al., BLIP-2, §3.1, learned queries and cross attention; probabilistic models and built tests](https://arxiv.org/html/2301.12597v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[120-generatif-multimodal/references/121-vlm-grounding|Full reference]]; [BLIP-2, §§3.1 – 3.3: Q-Former between visual encoder and frozen LLM](https://arxiv.org/abs/2301.12597); [Li et al., BLIP-2, §3.1, learned queries and cross attention; probabilistic models and built tests](https://arxiv.org/html/2301.12597v2), see 2026-10-30.
 Tags: cv::pilote cv::d12 famille::comprehension cv_id::CV-VLM-002 provenance::agent pole::A pole::D
 END
 

@@ -185,7 +185,7 @@ For four-point samples and confidence 0.99, an assumed inlier rate of 0.5 gives 
 
 ### CV-HOMOGRAPHIE-005 — Anisotropic resizing changes a circular gate
 
-Under pixel scaling $D=\operatorname{diag}(a_x,a_y)$, a residual vector becomes $e\prime=De$. If $a_x\ne a_y$, an old circular Euclidean threshold maps to an ellipse, not another circle obtained by one scalar factor. Propagating the residual covariance gives $C\prime=DC D^T$ and preserves a correctly transformed Mahalanobis gate. This constructed relation explains why merely multiplying a pixel threshold by an average resize factor changes selection.
+Under pixel scaling $D=\operatorname{diag}(a_x,a_y)$, a residual vector becomes $e^{\prime}=De$. If $a_x\ne a_y$, an old circular Euclidean threshold maps to an ellipse, not another circle obtained by one scalar factor. Propagating the residual covariance gives $C^{\prime}=DC D^T$ and preserves a correctly transformed Mahalanobis gate. This constructed relation explains why merely multiplying a pixel threshold by an average resize factor changes selection.
 
 ### CV-HOMOGRAPHIE-006 — Projective division amplifies extrapolation
 

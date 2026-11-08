@@ -126,10 +126,6 @@ For a small relative rotation vector $\phi$, $R_A-I\approx[\phi]_\times$. Even w
 
 For each held-out pose, compute $Y_i=G_iXC_i$ and compare it with a common target-to-base estimate. Report translation deviation in a declared metric unit and rotation deviation as a geodesic angle. Combining them into one scalar requires an explicit weighting or covariance; adding meters to radians has no physical default. Dependence on robot orientation, time or target location can help isolate lever-arm, synchronization or lens-model errors.
 
-### CV-HANDEYE-005 — Write the new invariant before reusing a solver
-
-In eye-to-hand operation with a gripper-fixed target, the invariant is target-to-gripper, while camera-to-base is fixed. Re-derive this chain using named transformations and compare it with the solver's documented eye-to-hand formulation. An inverse of the previous camera-to-gripper result generally describes a different physical relationship. A constructed synthetic pose set with known fixed transforms is an effective contract check before collecting noisy robot data.
-
 Consulted foundations: [OpenCV calibrateHandEye](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): input/output frame directions, eye-in-hand/eye-to-hand equations and minimum motions; checked with Context7.
 
 ## Sources and flashcards

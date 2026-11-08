@@ -22,10 +22,8 @@ Reponse: **Expected answer**: No: the throughput does not guarantee the age of t
 
 **Age and waiting**: For a frame, note $t_c$ capture, $t_s$ start processing and $t_o$ output. The capture→exit delay is $(t_s-t_c)+(t_o-t_s)$: speeding up the calculation does not cancel an already accumulated wait. A receiving timestamp replaces only part of this contract if the transport or camera adds a delay. Check that the compared clocks are consistent and that the units are identical. Also measure the share of outputs exceeding the useful time; two systems with the same throughput can serve the product very differently depending on their queue and abandonment policy.
 
-**Freshness has a capture-time denominator**: A fast service can process a backlog quickly while still returning decisions about old observations. Record output time minus capture time for every frame and distinguish it from network service duration. A receiving timestamp can exclude sensor buffering and transport, understating age. A proposed acceptance test includes an injected backlog and checks the freshness policy, not merely the sustained completed-frame count.
-
 **Blocking errors**: Validate the product at the average SPF only.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Distinction of measures of the project; [TensorRT, Reported Performance Metrics](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) and [GStreamer, tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consult the 2026-10-20. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Distinction of measures of the project; [TensorRT, Reported Performance Metrics](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) and [GStreamer, tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consult the 2026-10-20.
 Tags: cv::pilote cv::d14 famille::comparaison cv_id::CV-PIPELINE-001 provenance::agent pole::C pole::E pole::F
 END
 
@@ -97,12 +95,10 @@ Reponse: **Expected answer**: Set freshness, drops and quality; profile each sta
 
 **Rafals and equity**: Eight cameras with the same average frame rate can deliver their frames simultaneously or in a staggered manner. The average bitrate remains 240 images/s, but queue peaks and delay per stream may change. Testing these two configurations, and then a momentarily more charged flow, reveals the effects of scheduling. An overall average can hide a rarely served stream or losses concentrated on a single camera. Report latency, seniority, drops and quality per stream, as well as aggregate. The p99 budget must be measured on the full path and a defined load, without mechanically adding the percentiles of the floors.
 
-**Tail latency should be measured for the whole path**: Adding per-stage p99 values does not generally yield end-to-end p99 because stage durations and queues can be correlated. A proposed eight-stream benchmark records capture-to-decision samples under the actual arrival pattern, including bursts, batching and sustained thermal load. Count dropped and late frames with the quality of their outputs. Hardware capacity is established for that measured operating point, not by multiplying an isolated model FPS number.
-
 **Blocking errors**: Sizing on an FPS isolated from the model or mechanically adding p99s.
 
 **Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Built sizing case of the project; [TensorRT benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) and [GStreamer tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consult the 2026-10-20. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Built sizing case of the project; [TensorRT benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) and [GStreamer tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consult the 2026-10-20.
 Tags: cv::pilote cv::d14 famille::conception cv_id::CV-PIPELINE-004 provenance::agent pole::C pole::E pole::F cas_pole::F::conception
 END
 

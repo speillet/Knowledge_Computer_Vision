@@ -112,14 +112,6 @@ The following are constructed project deductions and proposed checks, not
 new empirical results. Each extends an existing recall objective; the concise
 expected answer on its card remains the grading target.
 
-### CV-DEPLOIEMENT-001 — A small overhead can erase the ideal benefit
-
-For the front's accelerated fraction $f=0.1$ and speedup two, normalized execution time is 0.95. Adding an overhead of 0.05 of the original total returns it to one, eliminating the benefit. A larger overhead makes the system slower. These are sequential-model calculations; overlap and queueing require a measured pipeline. Use the model to identify what to profile, not to predict device latency without its assumptions.
-
-### CV-DEPLOIEMENT-002 — Sparse storage and sparse compute are different savings
-
-Compressing zero weights can reduce file size while inference first expands them into the same dense tensor shape and runs the same dense kernel. Conversely, structured channel removal can change operation dimensions if dependent layers are updated. Inspect the executed kernels and actual memory layout on the chosen backend. A pruning percentage describes model parameters; it does not establish the fraction of latency or peak memory removed.
-
 ### CV-DEPLOIEMENT-003 — A reproducibility fixture should locate the first divergence
 
 Keep a versioned input fixture with decoded image properties, transformed coordinates and selected intermediate/final outputs under stated tolerances. When a deployment changes, compare these stages in order to distinguish decoding, preprocessing, inference and postprocessing discrepancies. Record runtime, device and relevant configuration with artifact hashes. Identical weights can still produce another system output when class mapping, threshold or coordinate inversion changes.

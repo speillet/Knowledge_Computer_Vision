@@ -116,10 +116,6 @@ expected answer on its card remains the grading target.
 
 A collection of independent per-frame point detections does not establish which observation belongs to the same physical point. Conversely, a continuous point track does not by itself assign an action label or its start/end times. Build evaluation around the output actually needed: visibility-aware trajectories, clip class or temporal intervals. Combining these modules is a system decision and requires checking their spatial and temporal interfaces.
 
-### CV-VIDEO-002 — Sampling phase creates a measurable miss probability
-
-Under an explicitly constructed model of instantaneous regular sampling every second and uniformly random event start phase, a 0.1 s event is sampled with probability 0.1 and missed with probability 0.9. This does not predict a real dataset without its event distribution and exposure model. To guarantee observing every event of a minimum duration, sampling and acquisition need a spacing condition appropriate to that duration, not a favorable average-case example.
-
 ### CV-VIDEO-003 — Future context imposes a latency floor
 
 At 30 frames/s, using five future frames imposes at least about 167 ms of waiting before computation and transfer. The model may be appropriate for retrospective analysis but incompatible with a tighter online decision budget. A proposed comparison reports quality versus total output delay under a common information window, including whether later frames revise earlier outputs. Timing only the network call omits the cost of waiting for its input.

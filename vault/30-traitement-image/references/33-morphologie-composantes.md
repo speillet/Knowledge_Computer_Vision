@@ -106,10 +106,6 @@ The following are constructed project deductions and proposed checks, not
 new empirical results. Each extends an existing recall objective; the concise
 expected answer on its card remains the grading target.
 
-### CV-MORPHO-001 — Idempotence is not a license to enlarge the kernel
-
-Applying a complete opening twice with the same ideal structuring element leaves the result unchanged. Applying two erosions followed by two dilations generally uses a larger effective support and can remove additional structures. This distinction matters when an implementation exposes an iteration parameter. Validate a thin bridge, a small hole and a border-touching object as separate constructed cases, because finite-image padding and anchors can change the ideal set behavior.
-
 ### CV-MORPHO-002 — Connectivity changes the object definition
 
 On a checkerboard of isolated diagonal foreground pixels, 8-connectivity can join a long chain that 4-connectivity separates. Neither choice is universally correct: the relevant physical contact and expected pixel sampling determine the convention. Use complementary background connectivity when analyzing holes to avoid ambiguous digital topology. Count foreground components separately from the background label returned by a labeling routine.

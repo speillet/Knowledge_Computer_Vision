@@ -120,10 +120,6 @@ A nominal feature at one image location can move to another after a small part t
 
 A rare defective patch mistakenly included in nominal training may be selected by a farthest-point coreset because it lies far from the existing bank. Covering feature diversity is useful only after defining what belongs to nominal operation. Audit suspicious extreme training examples and compare held-out defect scores before increasing coreset size. The selection objective is coverage of supplied features, not verification that those features are defect-free.
 
-### CV-ANOMALIES-003 — A threshold shift can hide loss of separation
-
-After an illumination change, compare nominal and known-defect score distributions jointly. If both shift but remain separated, recalibration may restore an operating point; if they overlap more, moving the threshold alone trades missed defects against false rejections without recovering information. A paired acquisition protocol with the same parts helps distinguish this from changed defect prevalence. Freeze the revised policy before evaluating independent production batches.
-
 ### CV-ANOMALIES-004 — Rare defects need operating-point evidence
 
 A high AUROC can coexist with unacceptable missed defects at the low false-rejection rate needed by production. Define that rate per part, not merely per pixel, and report recall by critical defect family with sample counts. Include full-cycle latency, memory-bank size and handling of camera changes. Nominal-only validation estimates false alarms under its sampled conditions; it cannot directly estimate recall of defect types never tested.

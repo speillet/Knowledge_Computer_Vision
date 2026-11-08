@@ -101,9 +101,7 @@ Reponse: **Expected answer**: Visual symmetry and the definition of pose/evaluat
 
 **Equivalence of poses**: If $S$ belongs to the symmetry group of the model, the poses $T$ and $TS$ can represent the same observable object. A suitable error can minimize a geometric distance on these symmetries, instead of arbitrarily comparing two single matrices. The symmetry of the complete mesh and the indistinguishability of the only visible surfaces are not exactly the same notion; the protocol must specify the one it deals with. An observed marking may reduce the relevant group of symmetries. The validation must then take into account this new information and not maintain an equivalence tolerance that would hide an angle that has become effectively observable.
 
-**Symmetry can be broken by observable texture**: A geometrically cylindrical object with an asymmetric printed mark may have observable axial rotation when the mark is visible. The same component may become ambiguous under occlusion or in depth-only data. Define the symmetry of the actual object appearance and sensing modality, rather than applying a shape-only symmetry universally. A symmetry-aware evaluation should excuse genuinely indistinguishable poses without erasing a meaningful alignment error on a marked component.
-
 **Blocking errors**: Declare any variation of a symmetrical angle as an observable error.
-Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [BOP, VSD/MSSD/MSPD metrics and symmetries](https://bop.felk.cvut.cz/tasks/), see 2026-10-20; application to cylinder: project reasoning. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[80-detection-pose/references/84-detection-pose-3d|Full reference]]; [BOP, VSD/MSSD/MSPD metrics and symmetries](https://bop.felk.cvut.cz/tasks/), see 2026-10-20; application to cylinder: project reasoning.
 Tags: cv::pilote cv::d08 famille::diagnostic cv_id::CV-POSE3D-004 provenance::agent pole::A pole::C
 END

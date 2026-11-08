@@ -124,10 +124,6 @@ Constructed example: a box with dimensions $(4,2,1)$ m and zero yaw occupies a d
 
 A prediction with the correct ground-plane center can pass a center-distance match while having poor dimensions, yaw or velocity. nuScenes reports additional true-positive error terms for such properties, so its AP should be interpreted within that full protocol. COCO box IoU incorporates extent overlap directly in matching. Neither score alone establishes suitability for collision geometry or fine pose control without a task-specific error tolerance.
 
-### CV-POSE3D-004 — Symmetry can be broken by observable texture
-
-A geometrically cylindrical object with an asymmetric printed mark may have observable axial rotation when the mark is visible. The same component may become ambiguous under occlusion or in depth-only data. Define the symmetry of the actual object appearance and sensing modality, rather than applying a shape-only symmetry universally. A symmetry-aware evaluation should excuse genuinely indistinguishable poses without erasing a meaningful alignment error on a marked component.
-
 Consulted foundations: [BOP tasks](https://bop.felk.cvut.cz/tasks/): 6D localization and symmetry-aware VSD/MSSD/MSPD task definitions; [nuScenes evaluation](https://github.com/nutonomy/nuscenes-devkit/blob/master/python-sdk/nuscenes/eval/detection/README.md): center-distance matching and separate true-positive error terms.
 
 ## Sources and flashcards

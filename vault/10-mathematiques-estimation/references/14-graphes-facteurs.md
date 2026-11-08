@@ -143,7 +143,7 @@ DCS avoids adding one optimized switch variable per loop, but this does not esta
 
 Adding one loop between distant parts of a trajectory can affect cliques on a long path to the root. Incremental inference therefore does not imply constant work per frame. Proposed profiling should separate factor insertion, relinearization, reordering, elimination and back-substitution, while recording the size of the affected tree. Otherwise a long-tail latency spike may be misdiagnosed as merely too many incoming measurements rather than a change in graph dependencies.
 
-Consulted foundations: [Kaess et al., iSAM2](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf): §2 Gaussian model and §§3–4 elimination, relinearization and partial updates; [Agarwal et al., DCS](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf): §IV dynamic covariance scaling; experimental convergence is dataset-specific.
+Consulted foundations: [Kaess et al., iSAM2](https://www.cs.cmu.edu/~kaess/pub/Kaess12ijrr.pdf): abstract accessible; detailed §§3–4 passage requests timed out; historical rules not freshly reverified; [Agarwal et al., DCS](https://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/agarwal13icra.pdf): §IV dynamic covariance scaling; experimental convergence is dataset-specific.
 
 ## Sources and flashcards
 

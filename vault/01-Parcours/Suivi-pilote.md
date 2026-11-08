@@ -989,8 +989,8 @@ original dates and outcomes.
 
 ## Existing-card enrichment — 2026-11-08
 
-Agent Codex (`revue-cartes`, `approfondir`) reviewed and deepened the 282 existing
-cards with their 60 canonical references. The [scope and full overview](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/00-bilan.md)
+Agent Codex (`revue-cartes`, `approfondir`) reviewed the 282 existing
+cards, enriching 235 and retaining 47 already complete answers with their 60 canonical references. The [scope and full overview](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/00-bilan.md)
 record source passages, constructed examples, relevance, grading criteria and
 limits. This remains agent self-review; editorial status is `redige`.
 
@@ -1013,7 +1013,8 @@ limits. This remains agent self-review; editorial status is `redige`.
 
 ### Developments by subject
 
-Every row preserves questions, objectives, IDs and Anki identities. Numerical
+Every row preserves questions, objectives, IDs and Anki identities. Retained
+answers already cover the proposed extension; redundant drafts were removed. Numerical
 cases are constructed; suggested experiments remain unexecuted. Common checks:
 vault/catalogue/curriculum OK, 62 unit tests pass and identity comparison passes.
 
@@ -1058,7 +1059,7 @@ vault/catalogue/curriculum OK, 62 unit tests pass and identity comparison passes
 | 2026-11-08 | CV-OPENVOC, revision 7 | CV-OPENVOC-001 through CV-OPENVOC-003 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/83-detection-open-vocabulary.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-POSE3D, revision 7 | CV-POSE3D-001 through CV-POSE3D-004 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/84-detection-pose-3d.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-WATERSHED, revision 5 | CV-WATERSHED-001 through CV-WATERSHED-005 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/91-otsu-distance-watershed.md) | Agent Codex; self-review | to republish with paquet-anki |
-| 2026-11-08 | CV-GRABCUT, revision 5 | CV-GRABCUT-001 through CV-GRABCUT-003 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/92-grabcut-regions.md) | Agent Codex; self-review | to republish with paquet-anki |
+| 2026-11-08 | CV-GRABCUT, revision 4 (retained) | CV-GRABCUT-001 through CV-GRABCUT-003 | Existing explanation retained after review; no redundant addition; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/92-grabcut-regions.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-SEGMENTATION, revision 7 | CV-SEGMENTATION-001 through CV-SEGMENTATION-004 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/93-semantique-instances-panoptique.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-SAM, revision 7 | CV-SAM-001 through CV-SAM-003 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/94-sam-sam2.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-FLOT, revision 5 | CV-FLOT-001 through CV-FLOT-004 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/101-flot-optique.md) | Agent Codex; self-review | to republish with paquet-anki |
@@ -1066,7 +1067,7 @@ vault/catalogue/curriculum OK, 62 unit tests pass and identity comparison passes
 | 2026-11-08 | CV-FARNEBACK, revision 6 | CV-FARNEBACK-001 through CV-FARNEBACK-005 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/103-farneback.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-SORT, revision 8 | CV-SORT-001 through CV-SORT-008 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/111-sort.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-ASSOCIATION, revision 6 | CV-ASSOCIATION-001 through CV-ASSOCIATION-004 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/112-deepsort-bytetrack.md) | Agent Codex; self-review | to republish with paquet-anki |
-| 2026-11-08 | CV-SOT, revision 6 | CV-SOT-001 through CV-SOT-002 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/113-tracking-monoobjet.md) | Agent Codex; self-review | to republish with paquet-anki |
+| 2026-11-08 | CV-SOT, revision 5 (retained) | CV-SOT-001 through CV-SOT-002 | Existing explanation retained after review; no redundant addition; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/113-tracking-monoobjet.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-CORRELATION, revision 5 | CV-CORRELATION-001 through CV-CORRELATION-005 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/114-mosse-kcf.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-MEANSHIFT, revision 6 | CV-MEANSHIFT-001 through CV-MEANSHIFT-004 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/115-meanshift-camshift.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-VLM, revision 6 | CV-VLM-001 through CV-VLM-004 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/121-vlm-grounding.md) | Agent Codex; self-review | to republish with paquet-anki |
@@ -1080,8 +1081,11 @@ vault/catalogue/curriculum OK, 62 unit tests pass and identity comparison passes
 | 2026-11-08 | CV-QUANT, revision 6 | CV-QUANT-001 through CV-QUANT-005 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/142-quantification-runtimes.md) | Agent Codex; self-review | to republish with paquet-anki |
 | 2026-11-08 | CV-DEPLOIEMENT, revision 8 | CV-DEPLOIEMENT-001 through CV-DEPLOIEMENT-004 | Question-specific mechanisms, cases and limitations; [Subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-08-enrichment/143-edge-reproductibilite.md) | Agent Codex; self-review | to republish with paquet-anki |
 
-All 60 revisions increase once. Answer lengths are 327–486 lexical words,
-median 372, versus 253–406, median 295, before the pass. Four existing proposals
-remain pending; no new card is added. No independent scientific review, learner
-proficiency, hardware result or application rendering is claimed. No package is
-rebuilt: corrected cards require republication with `paquet-anki`.
+All 60 references were checked; 58 revisions increase once and two are retained.
+Answer lengths are 263–490 lexical words,
+median 366.5, versus 253–406, median 295, before the pass.
+The pre-merge review removed 47 redundant draft additions and refined three others.
+Four existing proposals remain pending; no new card is added. No independent
+scientific review, learner proficiency, hardware result or application rendering
+is claimed. No package is rebuilt: corrected cards require republication with
+`paquet-anki`.

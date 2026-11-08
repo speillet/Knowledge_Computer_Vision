@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 5
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -93,22 +93,6 @@ These explanations complement the mechanism associated with each question. Calcu
 **Memory of an update**: For an interpolated model $m_t=(1-\eta)m_{t-1}+\eta\hat m_t$, the contribution of an erroneous observation then persists with a $\eta(1-\eta)^k$ factor after $k$ correct updates, in this simplified scheme. A large $\eta$ adapts quickly but integrates more the first error; a small $\eta$ protects better and follows less quickly a legitimate change. This formula describes an interpolation model, not all tracker variants. Examining regions that are actually learned and freezing rules can test for contamination; a fixed template can still be wrong on a distractor without following that wrong learning loop.
 
 **Passages consulted for these developments**: [Bertinetto et al, SiamFC](https://arxiv.org/html/1606.09549v2), §4, unupdated template and confusions; interpolation and built multi-target cases.
-
-## Worked reasoning and boundary cases — 2026-11-08
-
-The following are constructed project deductions and proposed checks, not
-new empirical results. Each extends an existing recall objective; the concise
-expected answer on its card remains the grading target.
-
-### CV-SOT-001 — Independent target searches can collapse to one distractor
-
-Two initialized single-object trackers can both choose the same nearby person because neither enforces a shared one-to-one assignment. Running one tracker per initial person also leaves the problem of new arrivals and departures unspecified. A project MOT design must add those lifecycle and exclusivity rules where required. A strong single-target success score evaluates localization under its initialization protocol, not complete multi-object identity management.
-
-### CV-SOT-002 — Freezing adaptation preserves the model, not visibility
-
-Suspending template updates during a suspected occlusion can prevent contamination, but the target can still move outside the local search region. A recovery policy must then decide how to expand search or re-detect without accepting a distractor. Compare fixed-template and adaptive-template variants on the same occlusion sequences, recording false reacquisition and recovery time. A high similarity to an already contaminated template is circular evidence for continuing adaptation.
-
-Consulted foundations: [SiamFC](https://arxiv.org/html/1606.09549v2): §4 initialized target matching and tracking protocol; [KCF](https://arxiv.org/html/1404.7584v1): tracking pipeline and online model interpolation.
 
 ## Sources and flashcards
 

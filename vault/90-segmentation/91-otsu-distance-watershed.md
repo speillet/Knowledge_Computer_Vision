@@ -122,9 +122,7 @@ Reponse: **Expected answer**: Merging multiple objects can retain almost the ent
 
 **Merger and fragmentation**: An actual instance predicted in three fragments and three actual instances predicted as a single region may have opposite counting errors but a very close foreground. Using a table of overlaps between real and predicted labels reveals one-to-many and many-to-one relationships. A one-on-one matching with a fixed threshold measures objects found according to an announced rule; it does not replace the analysis of mergers. Also report the image counting error with its sign, because a signed average can undo important overcounts and undercounts. The measure must keep these failure modes separate.
 
-**Perfect foreground overlap can have the wrong count**: Constructed case: the union of two touching annotated objects is reproduced exactly as one predicted region. Binary IoU is one, yet the instance count is one instead of two. Splitting one true object into two regions can produce the same perfect union. Use instance matching and merge/split analysis alongside pixel overlap so a foreground success does not certify counting or individual-object measurements.
-
 **Blocking errors**: Confound semantic overlap and correct counting.
-Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[90-segmentation/references/91-otsu-distance-watershed|Full reference]] ; [OpenCV Otsu, theory](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html) ; [OpenCV watershed, markers and API](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html).
 Tags: cv::pilote cv::d09 famille::evaluation cv_id::CV-WATERSHED-005 provenance::agent pole::A pole::E
 END

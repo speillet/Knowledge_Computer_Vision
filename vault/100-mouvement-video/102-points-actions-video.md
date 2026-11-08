@@ -47,10 +47,8 @@ Reponse: **Expected answer**: The event can occur entirely between two sampled f
 
 **Sampling phase**: In a constructed model where an event of duration $d<\Delta$ begins with a uniform phase with respect to a grid of steps $\Delta$, and where an instantaneous capture is sufficient, the probability that at least one sample falls into the event is $d/\Delta$. For 100 ms and a step of 1 s, it is 0,1 under these assumptions. This is not a predicted performance of a real model: exposure, visibility, and persistent clues change the problem. The calculation shows, however, why varying the phase is essential and why a demonstration where the event falls exactly on a frame does not validate a guaranteed recall.
 
-**Sampling phase creates a measurable miss probability**: Under an explicitly constructed model of instantaneous regular sampling every second and uniformly random event start phase, a 0.1 s event is sampled with probability 0.1 and missed with probability 0.9. This does not predict a real dataset without its event distribution and exposure model. To guarantee observing every event of a minimum duration, sampling and acquisition need a spacing condition appropriate to that duration, not a favorable average-case example.
-
 **Blocking errors**: Assuming that a larger model guarantees the recall of any short event.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Time counter-example built in the reference note: event between two sampled moments; [CoTracker, §3](https://arxiv.org/abs/2307.07635) for the context of discrete video inputs, without attribution of the counter-example to this article. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Time counter-example built in the reference note: event between two sampled moments; [CoTracker, §3](https://arxiv.org/abs/2307.07635) for the context of discrete video inputs, without attribution of the counter-example to this article.
 Tags: cv::pilote cv::d10 famille::raisonnement cv_id::CV-VIDEO-002 provenance::agent pole::D
 END
 

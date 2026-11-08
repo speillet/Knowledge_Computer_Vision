@@ -72,10 +72,8 @@ Reponse: **Expected answer**: To $(x+4,y-2)$ in the second image. The displaceme
 
 **Transport relationship**: The front convention is written $I_1(x,y)\approx I_2(x+u(x,y),y+v(x,y))$ when photometry and visibility are compatible. To sample the second image on the grid of the first, we therefore use these destination positions. Creating a destination image by projecting all the source pixels can produce holes and collisions; it is not the same resampling operation. For vector $(4,-2)$, keep the mask of the positions reached out of field. This check sense distinguishes a valid displacement, a warp inversion and a simple display whose axes have been swapped.
 
-**Image array indices and vector components have different order**: An array element is indexed by row then column, while the returned flow components are horizontal then vertical displacement under the documented convention. In the front, negative vertical displacement moves toward a smaller row index when image y grows downward. A constructed translated dot or ramp is a useful direction check. Converting pixel displacement to velocity still requires actual frame timing; the array shape does not encode a physical speed unit.
-
 **Blocking errors**: Read (4,-2) as (line,column); announce a metric speed without scale.
-Source: [[100-mouvement-video/references/103-farneback|Full reference]] ; [OpenCV 4.13, Optical Flow, Dense Optical Flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[100-mouvement-video/references/103-farneback|Full reference]] ; [OpenCV 4.13, Optical Flow, Dense Optical Flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html).
 Tags: cv::pilote cv::d10 famille::pratique cv_id::CV-FARNEBACK-003 provenance::agent pole::B pole::C pole::D
 END
 

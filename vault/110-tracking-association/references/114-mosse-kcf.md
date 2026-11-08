@@ -120,15 +120,11 @@ A circular shift wraps one side of a patch onto the other, which can create an a
 
 ### CV-CORRELATION-003 — PSR is invariant to some response rescalings
 
-If the response map is transformed by $r\prime=ar+b$ with $a>0$ and the sidelobe region is unchanged, peak-minus-mean and standard deviation both scale by $a$, leaving PSR unchanged. A constant map instead has zero sidelobe standard deviation and requires a defined policy. This constructed relation explains why raw peak height and PSR measure different things, and why neither is a calibrated probability of correct identity.
+If the response map is transformed by $r^{\prime}=ar+b$ with $a>0$ and the sidelobe region is unchanged, peak-minus-mean and standard deviation both scale by $a$, leaving PSR unchanged. A constant map instead has zero sidelobe standard deviation and requires a defined policy. This constructed relation explains why raw peak height and PSR measure different things, and why neither is a calibrated probability of correct identity.
 
 ### CV-CORRELATION-004 — A learned distractor can make confidence self-reinforcing
 
 Once the update absorbs background appearance, later correlation peaks may look reliable relative to that altered model. Compare against a saved pre-occlusion model and inspect the update history before treating a high response as confirmation. A proposed intervention separates freezing updates from expanding search and reinitialization, since each changes a different mechanism. Evaluate false recovery as well as overlap after a successful reacquisition.
-
-### CV-CORRELATION-005 — Resets inject new localization information
-
-Reinitializing a failed tracker from a ground-truth box supplies information unavailable to an uninterrupted tracker. Report reset rules, skipped frames, failure definitions and whether reset frames enter the score. A high post-reset overlap can coexist with frequent failures. Compare uninterrupted success and reset-based robustness under their respective protocols rather than pooling the resulting numbers as though they described the same task.
 
 Consulted foundations: [KCF](https://arxiv.org/html/1404.7584v1): §IV circulant ridge regression and Appendix F MOSSE; [MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf): §§3.2–3.5 filter adaptation and PSR.
 

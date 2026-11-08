@@ -200,7 +200,7 @@ Define the local quadratic model $m(\delta)=\tfrac12\|r+J\delta\|^2$. When its p
 
 ### CV-SVD-008 — A robust scale changes influence, not the residual unit
 
-For scalar residual magnitude $u$, the scaled Huber derivative with respect to $s=u^2$ is one when $|u|\le a$, then $a/|u|$. The corresponding residual influence saturates instead of growing indefinitely. A residual of $10a$ still exerts influence: it is downweighted, not deleted. For a whitened two-component residual, $a$ bounds the joint norm; interpreting it as a per-axis confidence interval would impose a different acceptance region.
+For scalar residual magnitude $u$, the scaled Huber derivative with respect to $s=u^2$ is one when $|u|\le a$, then $a/|u|$. The corresponding residual influence saturates instead of growing indefinitely. A residual of $10a$ still exerts influence: it is downweighted, not deleted. For a whitened two-component residual, $a$ sets the transition radius for the joint norm; interpreting it as a per-axis confidence interval would impose a different acceptance region.
 
 ### CV-SVD-009 — More repeated data do not remove a gauge
 

@@ -2,12 +2,14 @@
 
 ## Result
 
-All **282 existing cards** receive a question-specific explanation, calculation,
-counterexample or diagnostic protocol. Their **60 canonical references** are
-aligned and each revision increases once, preserving `statut: redige`.
-The pass adds 21,506 lexical words to answers while keeping the finite expected
-answer separate from optional development. Length is an editorial signal, not
-proof of relevance or correctness.
+All **282 existing cards** were reviewed: **235 enriched** with
+question-specific reasoning and **47 retained** because their existing explanations
+already cover the proposed extension. All 60 references were checked for
+alignment; **58 revisions increase once**, while two already complete subjects
+(single-object tracking and GrabCut) retain their original content and revision.
+All keep `statut: redige`. The final additions contribute **17,997 lexical words** to
+answers, with the finite recall core separate from optional development. Length
+is an editorial signal, not proof of relevance or correctness.
 
 No card is added or removed. All IDs, derived Anki GUIDs, legacy synchronization
 comments, questions, objectives, families, provenance, tags and target decks
@@ -48,10 +50,11 @@ experiments are identified explicitly; no new empirical model result is claimed.
 
 | Lexical words per answer | Before | After |
 | --- | ---: | ---: |
-| Minimum | 253 | 327 |
-| Median | 295 | 372 |
-| Maximum | 406 | 486 |
+| Minimum | 253 | 263 |
+| Median | 295 | 366.5 |
+| Maximum | 406 | 490 |
 
+The [pre-merge review](65-pre-merge-review.md) removed redundant draft additions.
 The recall core is still sufficient for grading; the expanded explanations do
 not require verbatim recitation. Existing cards already contained substantial
 material, so additions target another mechanism, boundary case or decision
@@ -81,17 +84,17 @@ does not establish exhaustive coverage of computer vision.
 | --- | --- |
 | `python3 scripts/check_vault.py` | OK: 142 vault Markdown files, 60 references, 282 cards |
 | `python3 scripts/sync_catalog.py --check` | 19 generated documents, 0 stale |
-| `python3 scripts/learning_path.py` | OK: prerequisite order and answer-depth checks; minimum 327 words |
+| `python3 scripts/learning_path.py` | OK: prerequisite order and answer-depth checks; minimum 263 words |
 | `uv run --no-project --with genanki==0.13.1 python -m unittest discover -s tests` | 62 tests pass |
 | `inventaire_cartes.py vault` and comparison with starting inventory | 282 cards, no format/conversion/depth anomalies; no identity changes |
-| Protected fields and canonical metadata comparison | All invariants pass; 60 revisions incremented once |
-| `python3 docs/revues/2026-11-08-enrichment/62-numerical-checks.py` | 56 arithmetic checks pass |
-| Local Markdown-link audit | 2,453 local links checked; no missing file or heading |
+| Protected fields and canonical metadata comparison | All invariants pass; 58 changed references incremented once; 2 retained |
+| `python3 docs/revues/2026-11-08-enrichment/62-numerical-checks.py` | 59 arithmetic checks pass |
+| Local Markdown-link audit | 2,440 local links checked; no missing file or heading |
 | `git diff --check` | No whitespace errors |
 
 Detailed evidence: [protected-field comparison](63-invariants.json),
 [reproducible numerical checks](62-numerical-checks.py),
-[numerical results](62-numerical-results.json), and
+[numerical results](62-numerical-results.json),
 [source access and fallbacks](61-source-access.md), and
 [local-link audit](64-link-checks.json).
 
@@ -138,7 +141,7 @@ Detailed evidence: [protected-field comparison](63-invariants.json),
 | CV-OPENVOC | 3 | 6 → 7 | [83-detection-open-vocabulary](83-detection-open-vocabulary.md) |
 | CV-POSE3D | 4 | 6 → 7 | [84-detection-pose-3d](84-detection-pose-3d.md) |
 | CV-WATERSHED | 5 | 4 → 5 | [91-otsu-distance-watershed](91-otsu-distance-watershed.md) |
-| CV-GRABCUT | 3 | 4 → 5 | [92-grabcut-regions](92-grabcut-regions.md) |
+| CV-GRABCUT | 3 | 4 → 4 | [92-grabcut-regions](92-grabcut-regions.md) |
 | CV-SEGMENTATION | 4 | 6 → 7 | [93-semantique-instances-panoptique](93-semantique-instances-panoptique.md) |
 | CV-SAM | 3 | 6 → 7 | [94-sam-sam2](94-sam-sam2.md) |
 | CV-FLOT | 4 | 4 → 5 | [101-flot-optique](101-flot-optique.md) |
@@ -146,7 +149,7 @@ Detailed evidence: [protected-field comparison](63-invariants.json),
 | CV-FARNEBACK | 5 | 5 → 6 | [103-farneback](103-farneback.md) |
 | CV-SORT | 8 | 7 → 8 | [111-sort](111-sort.md) |
 | CV-ASSOCIATION | 4 | 5 → 6 | [112-deepsort-bytetrack](112-deepsort-bytetrack.md) |
-| CV-SOT | 2 | 5 → 6 | [113-tracking-monoobjet](113-tracking-monoobjet.md) |
+| CV-SOT | 2 | 5 → 5 | [113-tracking-monoobjet](113-tracking-monoobjet.md) |
 | CV-CORRELATION | 5 | 4 → 5 | [114-mosse-kcf](114-mosse-kcf.md) |
 | CV-MEANSHIFT | 4 | 5 → 6 | [115-meanshift-camshift](115-meanshift-camshift.md) |
 | CV-VLM | 4 | 5 → 6 | [121-vlm-grounding](121-vlm-grounding.md) |

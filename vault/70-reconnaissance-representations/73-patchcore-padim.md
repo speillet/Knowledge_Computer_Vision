@@ -72,10 +72,8 @@ Reponse: **Expected answer**: Compare acquisition/preprocessing, registration an
 
 **Paired experience**: Pick up the same compliant parts before and after the light change and compare their scores by region. Then do the same for known defects. This makes it possible to study the displacement of the nominal and the separation between conformity and defect, instead of arbitrarily moving an overall threshold. If the two populations get closer, restoring the rate of false releases by increasing the threshold can greatly degrade the recall of defects. Documenting also exposure, saturation and white balance: a normalization of features does not recover visual information lost in saturated pixels. The result must be checked on other parts and lots.
 
-**A threshold shift can hide loss of separation**: After an illumination change, compare nominal and known-defect score distributions jointly. If both shift but remain separated, recalibration may restore an operating point; if they overlap more, moving the threshold alone trades missed defects against false rejections without recovering information. A paired acquisition protocol with the same parts helps distinguish this from changed defect prevalence. Freeze the revised policy before evaluating independent production batches.
-
 **Blocking errors**: Automatically label any score increase as a physical defect.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deducted by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deducted by the project.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-ANOMALIES-003 provenance::agent pole::A pole::E
 END
 

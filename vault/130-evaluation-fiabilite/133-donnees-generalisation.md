@@ -47,10 +47,8 @@ Reponse: **Expected answer**: The first estimates geometry/optics; the second st
 
 **Reliability diagram**: first define the correct event, e.g. correct class and sufficiently precise location under a given matching. In score bins, compare the frequency of this event and average confidence with their numbers. A typical CDE averages the absolute differences weighted by the bin population; it depends on the binning and can hide subgroups. Geometric calibration compares projections to point measurements and estimates other parameters. A temperature transformation can change the scores without changing the order of the classes, while a change of intrinsics changes the geometry: these are two interventions of different nature.
 
-**Calibration needs a defined correctness event**: For a detector, correct class alone and correct class plus sufficient localization are different events. Matching, ignored annotations and score filtering alter which outcomes enter a reliability diagram. Declare that event and evaluate the operational prediction population. A score calibrated on source data need not stay calibrated on a new sensor; camera geometric calibration and probability calibration address distinct models even if both use the word calibration.
-
 **Blocking errors**: Use RMS of reprojection to validate a class probability.
-Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; [Guo et al., §2, equation 1: confidence calibration](https://proceedings.mlr.press/v70/guo17a.html); [Zhang, §2: Geometric calibration](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [Guo et al., calibration, §2, ECE and diagrams; detection protocol, splits and cover risk built](https://arxiv.org/html/1706.04599v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]]; [Guo et al., §2, equation 1: confidence calibration](https://proceedings.mlr.press/v70/guo17a.html); [Zhang, §2: Geometric calibration](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf); [Guo et al., calibration, §2, ECE and diagrams; detection protocol, splits and cover risk built](https://arxiv.org/html/1706.04599v2), see 2026-10-30.
 Tags: cv::pilote cv::d13 famille::comparaison cv_id::CV-FIABILITE-002 provenance::agent pole::A pole::C pole::D pole::E pole::F
 END
 
@@ -124,9 +122,7 @@ Reponse: **Expected answer**: The confidence displayed is not a proof of calibra
 
 **Risk and Coverage**: For a rule that denies scores below a threshold, coverage is the fraction of cases where a decision is issued; risk is the error among those decisions according to the protocol. One method can reduce the risk by refusing more, without improving the perception on the remaining cases. Compare risk-coverage curves and critical layers, with labels representative of the new sensor. A change in the distribution of features can serve as an alarm, but it does not directly give the error rate without reference. Check separately the entry contract and the relevance of the rule of refusal after change of domain.
 
-**Selective prediction needs both risk and coverage**: Raising a rejection threshold can lower error among accepted outputs while leaving almost no usable predictions. Report accepted coverage and conditional risk together, by relevant domain and class. If confidently wrong cases remain above the threshold, rejection based on raw confidence may not resolve the shift. Compare empirical calibration and error types on labeled new-sensor data before claiming the displayed confidence establishes reliability.
-
 **Blocking errors**: Take the softmax for a generalization guarantee.
-Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]] ; [Ovadia et al., summary and introduction: uncertainty and calibration under shift distribution](https://arxiv.org/abs/1906.02530). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[130-evaluation-fiabilite/references/133-donnees-generalisation|Full reference]] ; [Ovadia et al., summary and introduction: uncertainty and calibration under shift distribution](https://arxiv.org/abs/1906.02530).
 Tags: cv::pilote cv::d13 famille::diagnostic cv_id::CV-FIABILITE-005 provenance::agent pole::A pole::C pole::D pole::E pole::F
 END

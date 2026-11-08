@@ -122,10 +122,6 @@ Wide radial coverage adds sensitivity to high-order angular coefficients, but ex
 
 Constructed example: ninety central observations with 0.2 px error and ten peripheral ones with 2 px error give point RMS about 0.66 px. The average can conceal the region where the intended measurement fails. Report sample counts and residuals by radial bin and pose, then evaluate independent geometric quantities there. A uniform-looking global RMS does not imply uniform angular or metric accuracy across a wide field.
 
-### CV-FISHEYE-004 — Rectification rotation changes the ray frame
-
-If the remap uses $R_{rect}$ from raw camera coordinates to rectified camera coordinates, an output ray is proportional to $K_{new}^{-1}\tilde u\prime$ in the rectified frame. Returning it to the raw camera frame requires $R_{rect}^{-1}$ before applying the original camera pose. This derived chain separates output intrinsics from frame orientation. Using the new matrix with the old pose without that rotation can leave a systematic orientation error.
-
 ### CV-FISHEYE-005 — More visible field can mean fewer samples per angle
 
 For a fixed output image size, a wider chosen field spreads the available pixels across more directions. The apparent addition of scene content does not create extra measurements from the original sensor. Compare valid-pixel masks and local angular resolution at the same physical directions when choosing balance. Newly exposed borders can be invalid because remapping requests source coordinates outside the acquired image, not because calibration has become less accurate.

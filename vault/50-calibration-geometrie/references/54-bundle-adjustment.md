@@ -116,9 +116,9 @@ expected answer on its card remains the grading target.
 
 A landmark observed by only one camera supplies a bearing but no independent triangulated depth without another constraint. Many such observations can increase residual count without making the map fully observable. Inspect the camera-landmark graph and visibility geometry before interpreting a successful optimization as recovered 3D structure. More observations at identical bearings or with negligible baseline can leave nearly the same weak directions as the original system.
 
-### CV-BA-002 — Elimination creates camera-to-camera coupling
+### CV-BA-002 — A shared landmark can create a camera clique
 
-If two cameras observe the same point, eliminating that point introduces a relation between their increments in the reduced camera system. Long feature tracks can therefore improve geometric constraints while increasing fill and computational coupling. Schur elimination preserves the linearized problem when its blocks are treated correctly; it does not make point uncertainty disappear or replace nonlinear relinearization. Recover point increments using the same linearization after solving the reduced system.
+Constructed sparsity example: one landmark seen by $k$ cameras contributes to each of their pose blocks. Eliminating that landmark can create up to $k(k-1)/2$ pairwise off-diagonal camera-block connections, subject to rank and existing connections. A five-camera track can therefore connect ten camera pairs; a two-camera track connects one. Long tracks can improve geometric constraints while increasing reduced-system coupling. This counts a possible sparsity pattern, not independent measurements or a prediction of exact factorization time.
 
 ### CV-BA-003 — A baseline prior adds evidence only if it is measured
 

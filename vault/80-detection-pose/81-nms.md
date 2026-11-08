@@ -147,9 +147,7 @@ Reponse: **Expected answer**: No. The intersection has the area of B, 400, and t
 
 **Condition of inclusion**: for $B\subset A$ and a strict deletion at threshold $\tau$, B can only be deleted by A if $|B|>\tau|A|$, provided that A is actually selected before it. At $\tau=0,5$, a contained box covering 4% of the large area therefore remains very far from the condition. Reversing the scores does not change the IoU, but changes the first box retained; with more candidates, it can change the whole greedy suite. This reasoning distinguishes the symmetry of the overlap measure and the algorithm's dependence on ranking.
 
-**Containment and overlap use different denominators**: For a small box fully inside a large one, intersection-over-small-box equals one, but IoU equals the small-to-large area ratio. Replacing IoU by that containment score would therefore implement a different suppression policy. Test nested boxes representing a person and a small carried object, as well as nested duplicates of one object. Geometry alone does not decide which pair is redundant under the task taxonomy.
-
 **Blocking errors**: Give a IoU of 1 as soon as there is inclusion, or automatically remove any smaller box.
-Source: [[80-detection-pose/references/81-nms|NMS reference]]; [GIoU, version 2, §3, equation 1](https://arxiv.org/html/1902.09630v2); [Soft-NMS, §4 : hard NMS](https://arxiv.org/html/1704.04503); calculation of the project; [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[80-detection-pose/references/81-nms|NMS reference]]; [GIoU, version 2, §3, equation 1](https://arxiv.org/html/1902.09630v2); [Soft-NMS, §4 : hard NMS](https://arxiv.org/html/1704.04503); calculation of the project; [Bodla et al., Soft-NMS, §4, selection and decay; built geometric counterexamples](https://arxiv.org/html/1704.04503v2), consult the 2026-10-30.
 Tags: cv::pilote cv::d08 famille::raisonnement cv_id::CV-NMS-006 provenance::agent pole::A pole::C pole::E
 END

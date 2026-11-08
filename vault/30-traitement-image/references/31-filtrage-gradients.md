@@ -118,7 +118,7 @@ In a nine-value neighborhood with eight values of 10 and one impulse of 250, the
 
 ### CV-FILTRES-002 — Only affine intensity scaling preserves this ratio
 
-For $I\prime=\alpha I+\beta$ with nonzero $\alpha$, intensity differences scale by $|\alpha|$, so preserving Gaussian range weights requires $\sigma_r\prime=|\alpha|\sigma_r$. The offset cancels. A nonlinear gamma transform does not have one global scale factor for all differences, so adjusting a single sigma cannot generally reproduce the old weights. Also preserve the spatial sigma in the same pixel geometry; resizing changes that contract separately.
+For $I^{\prime}=\alpha I+\beta$ with nonzero $\alpha$, intensity differences scale by $|\alpha|$, so preserving Gaussian range weights requires $\sigma_r^{\prime}=|\alpha|\sigma_r$. The offset cancels. A nonlinear gamma transform does not have one global scale factor for all differences, so adjusting a single sigma cannot generally reproduce the old weights. Also preserve the spatial sigma in the same pixel geometry; resizing changes that contract separately.
 
 ### CV-FILTRES-003 — A task metric needs the same operating point
 

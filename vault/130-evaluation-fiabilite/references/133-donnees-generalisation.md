@@ -122,10 +122,6 @@ expected answer on its card remains the grading target.
 
 Creating crops, augmentations or neighboring frames before a random split can place near copies of one source acquisition in both training and test. Assign the source group first and propagate its split to every derivative. A proposed audit checks acquisition, part/site/patient and temporal identifiers according to the deployment question. More test files then do not necessarily mean more independent evidence of transfer to unseen conditions.
 
-### CV-FIABILITE-002 — Calibration needs a defined correctness event
-
-For a detector, correct class alone and correct class plus sufficient localization are different events. Matching, ignored annotations and score filtering alter which outcomes enter a reliability diagram. Declare that event and evaluate the operational prediction population. A score calibrated on source data need not stay calibrated on a new sensor; camera geometric calibration and probability calibration address distinct models even if both use the word calibration.
-
 ### CV-FIABILITE-003 — An untouched test is consumed by repeated selection
 
 If the same test failures repeatedly guide prompt, threshold or dataset choices, the test becomes development evidence whether or not gradients were computed on it. A proposed workflow keeps active-learning selection in the training pool, uses validation for choices and reserves an independent final evaluation. When a benchmark has already influenced the design, report that history and obtain fresh evidence rather than relabeling the old score as unbiased.
@@ -133,10 +129,6 @@ If the same test failures repeatedly guide prompt, threshold or dataset choices,
 ### CV-FIABILITE-004 — Season and sensor can be confounded
 
 If all summer images come from one sensor and all winter images from another, a performance gap cannot be attributed uniquely to season. A proposed analysis seeks overlapping acquisition factors or controlled comparisons, then stratifies by site, band mapping, ground sampling distance, label policy and visible land-cover change. Geographic or temporal grouping must reflect deployment; shuffling nearby tiles does not isolate the source of the shift.
-
-### CV-FIABILITE-005 — Selective prediction needs both risk and coverage
-
-Raising a rejection threshold can lower error among accepted outputs while leaving almost no usable predictions. Report accepted coverage and conditional risk together, by relevant domain and class. If confidently wrong cases remain above the threshold, rejection based on raw confidence may not resolve the shift. Compare empirical calibration and error types on labeled new-sensor data before claiming the displayed confidence establishes reliability.
 
 Consulted foundations: [Guo et al. calibration](https://proceedings.mlr.press/v70/guo17a.html): §2 confidence/calibration and reliability diagrams; [Cawley and Talbot](https://www.jmlr.org/papers/v11/cawley10a.html): model-selection overfitting and evaluation bias.
 

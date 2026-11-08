@@ -116,9 +116,9 @@ expected answer on its card remains the grading target.
 
 Constructed graph interpretation: a chain of pixels between the low and high thresholds survives only if its connected component reaches a strong pixel. A disconnected chain with identical gradient magnitudes is discarded. A single noise bridge can conversely connect an unwanted chain to a valid seed. Inspect nonmaximum-suppressed responses and connectivity before changing thresholds; increasing the high threshold changes the seeds, whereas increasing the low threshold can break the connecting path.
 
-### CV-CANNY-HOUGH-002 — The angle belongs to the normal
+### CV-CANNY-HOUGH-002 — Moving a Hough line from ROI to full-image coordinates
 
-For a vertical line $x=20$, one representation is $\rho=20$ px and $\theta=0$; for a horizontal line $y=30$, use $\rho=30$ px and $\theta=\pi/2$. These constructed checks prevent interpreting theta as the visible line direction. Moving the image origin changes rho even when the physical line is unchanged, so an ROI-local detection needs a coordinate conversion before comparison with full-image geometry.
+Let ROI coordinates satisfy $p_{full}=p_{ROI}+o$, with offset $o=(x_0,y_0)^T$ in full-image pixels. Substituting in $n^Tp=\rho$, where $n=(\cos\theta,\sin\theta)^T$, gives $\rho_{full}=\rho_{ROI}+x_0\cos\theta+y_0\sin\theta$; theta is unchanged by translation. For an ROI starting at $(100,50)$, its local vertical line $x=20$ has full-image rho 120 px. This project derivation assumes a translated crop without resize or rotation; those transformations require another normal/scale conversion.
 
 ### CV-CANNY-HOUGH-003 — Disconnected support should not become one segment
 

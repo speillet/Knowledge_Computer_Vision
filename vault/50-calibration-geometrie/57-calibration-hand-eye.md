@@ -122,9 +122,7 @@ Reponse: **Expected answer**: No: the fixed coordinate frames and the unknowns o
 
 **Explicit eye-to-hand channel**: If the camera is fixed in the base and the calibration target is attached to the gripper, note $G_i={}^bT_{g_i}$, $C_i={}^cT_{t_i}$, $X={}^bT_c$ and $Y={}^gT_t$. We have $G_iY=XC_i$, so $G_i^{-1}XC_i=Y$ constant. The shape becomes that of a hand-eye chain using the inverted robot poses, under these precise conventions, and the unknown now corresponds to camera→base. The equation justifies adaptation; reversing only an old exit does not justify it. If the calibration target is not attached to the gripper, this constancy of $Y$ disappears and observations and unknowns must be reformulated before any resolution.
 
-**Write the new invariant before reusing a solver**: In eye-to-hand operation with a gripper-fixed target, the invariant is target-to-gripper, while camera-to-base is fixed. Re-derive this chain using named transformations and compare it with the solver's documented eye-to-hand formulation. An inverse of the previous camera-to-gripper result generally describes a different physical relationship. A constructed synthetic pose set with known fixed transforms is an effective contract check before collecting noisy robot data.
-
 **Blocking errors**: Reuse the same inputs and reverse only the output.
-Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[50-calibration-geometrie/references/57-calibration-hand-eye|Full reference]] ; [OpenCV 4.13, CalibrateHandEye, coordinate frames, Equations and Minimum Movements](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html).
 Tags: cv::pilote cv::d05 famille::comparaison cv_id::CV-HANDEYE-005 provenance::agent pole::B pole::C pole::E
 END

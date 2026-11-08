@@ -126,17 +126,9 @@ QAT can simulate quantization effects while storing and computing training quant
 
 For a fixed integer range, expanding the represented activation interval increases scale $s$, reducing clipping while making rounding coarser. Restricting the interval does the reverse. A small number of extreme activations can therefore degrade precision for the bulk if they determine the entire range. Inspect intermediate activation differences and critical output strata on held-out deployment-like images; a globally small tensor error need not preserve a threshold-sensitive detector decision.
 
-### CV-QUANT-003 — Portable representation is not portable performance
-
-A valid ONNX graph specifies operations, but an execution provider may support only some subgraphs efficiently. Partition boundaries can introduce conversions, copies or synchronization that dominate a small model. A proposed parity/performance check records the optimized executed graph and provider assignments alongside output error and end-to-end latency. Equal model-file format and parameter count do not establish equal kernels, precision or preprocessing.
-
 ### CV-QUANT-004 — Amdahl bounds the useful acceleration
 
 If inference occupies 20% of a sequential pipeline and INT8 makes it twice as fast without overhead, total speedup is $1/(0.8+0.2/2)\approx1.11$. A conversion cost of 10% of the old total would erase that gain in this constructed model. Measure the accelerated fraction and added transfers or layout conversions before concluding that quantization failed numerically or that INT8 must improve the entire system.
-
-### CV-QUANT-005 — Near-threshold decisions can change after tiny perturbations
-
-A score moving from 0.501 to 0.499 crosses a threshold of 0.5 even though its absolute numeric change is small. Nearby box coordinates can likewise cross an IoU matching or NMS boundary. Compare task decisions and critical error strata in addition to tensor differences. Weight storage reduction also excludes activation buffers, workspaces and copies, so report whole-process peak memory rather than inferring it from parameter bit width.
 
 Consulted foundations: [ONNX Runtime quantization](https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html): static calibration, QDQ representation and quantization debugging; Context7 checked; [ONNX QuantizeLinear-21](https://onnx.ai/onnx/operators/onnx__QuantizeLinear.html#quantizelinear-21): scale, zero point, rounding and saturation.
 

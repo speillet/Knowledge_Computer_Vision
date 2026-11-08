@@ -72,9 +72,7 @@ Reponse: **Expected answer** Visual plausibility is not fidelity to critical obs
 
 **Non-unique inverse problem**: If the acquisition is $y=Hx+n$, multiple high-resolution $x$ images can produce almost the same $y$ when $H$ loses high frequencies. For a detail $\delta$ such as $H\delta\simeq0$, $x$ and $x+\delta$ are difficult to distinguish from the measurement. The generative model then chooses with its learned preferences, without proof that the crack added or removed is real. Consistency $H\hat x\simeq y$ is useful but insufficient to validate the details of the poorly observed kernel. This derivation explains why keeping the raw measurement and a physical reference remains essential for inspection.
 
-**Measurement consistency does not imply unique reconstruction**: For an acquisition operator with a nontrivial nullspace, $H(x+\delta)=Hx$ whenever $H\delta=0$. A reconstructed crack difference in that nullspace can satisfy the same low-resolution observation. Validate task-critical geometry against independent high-resolution measurements and keep original observations available. A visually sharp result or small re-degradation error alone does not establish which of several measurement-consistent structures was physically present.
-
 **Blocking errors**: Validate a dimensional measurement on a prettier image only.
-Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; Constructed case of the project: fidelity to a crack versus plausibility; [Latent Diffusion Models, §3.1 and fig. 1](https://arxiv.org/abs/2112.10752) documents the role of compression/reconstruction. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[120-generatif-multimodal/references/122-generation-restauration|Full reference]]; Constructed case of the project: fidelity to a crack versus plausibility; [Latent Diffusion Models, §3.1 and fig. 1](https://arxiv.org/abs/2112.10752) documents the role of compression/reconstruction.
 Tags: cv::pilote cv::d12 famille::diagnostic cv_id::CV-DIFFUSION-003 provenance::agent pole::A pole::D pole::E
 END

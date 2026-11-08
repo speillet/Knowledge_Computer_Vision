@@ -9,7 +9,7 @@
   "questions_changed": 0,
   "objectives_families_provenance_tags_decks_changes": 0,
   "legacy_identity_comments_changed": 0,
-  "canonical_revisions_incremented_once": 60,
+  "canonical_revisions_incremented_once": 58,
   "expected_answers_corrected": [
     "CV-SVD-004",
     "CV-FACTEURS-001",
@@ -31,11 +31,13 @@
     "total": 83780
   },
   "after_words": {
-    "minimum": 327,
-    "median": 372.0,
-    "maximum": 486,
-    "total": 105286
+    "minimum": 263,
+    "median": 366.5,
+    "maximum": 490,
+    "total": 101777
   },
   "anomalies": [],
-  "limitations": "No package rebuild, phone update, independent scientific validation or application-rendering test in this pass."
+  "limitations": "No package rebuild, phone update, independent scientific validation or application-rendering test in this pass.",
+  "cards_enriched": 235,
+  "cards_retained_already_complete": 47
 }

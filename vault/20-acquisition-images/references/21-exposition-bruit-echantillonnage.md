@@ -118,7 +118,7 @@ Invert the model before changing camera settings: a permitted blur of 1 px at 80
 
 ### CV-ACQUISITION-002 — Read noise changes the value of additional light
 
-Constructed calculation: with 25 electrons of read-noise variance, 25 signal electrons give $SNR=25/\sqrt{50}\approx3.54$; 50 electrons give $50/\sqrt{75}\approx5.77$, a factor 1.63. The improvement lies between the read-noise and shot-noise limits. These values assume unsaturated linear response and negligible quantization. Identify whether clipping occurs at sensor full well or after gain: both discard contrast, but their limiting stages and remedies differ.
+Constructed calculation: with read-noise standard deviation 5 electrons (variance 25 e⁻²), 25 signal electrons give $SNR=25/\sqrt{50}\approx3.54$; 50 electrons give $50/\sqrt{75}\approx5.77$, a factor 1.63. The improvement lies between the read-noise and shot-noise limits. These values assume unsaturated linear response and negligible quantization. Identify whether clipping occurs at sensor full well or after gain: both discard contrast, but their limiting stages and remedies differ.
 
 ### CV-ACQUISITION-003 — Aliasing can survive apparently smooth output
 

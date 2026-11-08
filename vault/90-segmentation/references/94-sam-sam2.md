@@ -106,14 +106,6 @@ The following are constructed project deductions and proposed checks, not
 new empirical results. Each extends an existing recall objective; the concise
 expected answer on its card remains the grading target.
 
-### CV-SAM-001 — A correct mask can still be the wrong requested object
-
-A point on a person's sleeve can support a sleeve mask or a whole-person mask depending on the intended granularity. High predicted mask quality does not resolve which output the user needs or attach a semantic category by itself. A proposed evaluation fixes the prompt policy and target granularity, then measures both mask accuracy and selection errors among plausible masks. This separates segmentation quality from task interpretation.
-
-### CV-SAM-002 — History is part of the state being evaluated
-
-If an incorrect mask enters temporal memory, later frames can inherit its mistaken identity or extent. Logging only the final mask loses the evidence needed to distinguish current-image failure from propagated state. Preserve prompt timestamps, object identity assignments, memory reset events and output availability. Compare sequences with controlled initialization and occlusion events; a strong single-frame mask score does not quantify recovery after a long disappearance.
-
 ### CV-SAM-003 — Causal inputs can still have delayed outputs
 
 A sliding-window model may use only frames observed up to time $t$ and still return its estimate after a long computation. Causality therefore restricts information access, while timeliness restricts availability; they are independent axes. A proposed comparison records the latest input timestamp, initial output timestamp and any later revision timestamp for each mask. Evaluate mask quality only at the deadline relevant to the application rather than treating a causal architecture as proof of an on-time response.

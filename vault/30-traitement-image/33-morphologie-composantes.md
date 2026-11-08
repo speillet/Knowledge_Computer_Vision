@@ -22,10 +22,8 @@ Reponse: **Expected answer**: The opening erodes then expands and can remove sma
 
 **Properties to know**: on ideal binary sets with the same structuring element, the opening is anti-extensive: its result is included in the initial foreground. The closure is extensive: it can be added. They are idempotent: applying a second time the complete operation with the same structuring element should no longer change the theoretical set obtained. Increasing the number of erosions and dilations on the other hand changes the effective support, and is not "repeat an identical opening". Finite images, edge values, and anchors must be consistent to find these properties in an implementation. Opening can break a thin bridge, closing can create a bridge; these topological changes can be decisive for counting objects.
 
-**Idempotence is not a license to enlarge the kernel**: Applying a complete opening twice with the same ideal structuring element leaves the result unchanged. Applying two erosions followed by two dilations generally uses a larger effective support and can remove additional structures. This distinction matters when an implementation exposes an iteration parameter. Validate a thin bridge, a small hole and a border-touching object as separate constructed cases, because finite-image padding and anchors can change the ideal set behavior.
-
 **Blocking errors**: Describe these operations as guaranteed semantic filters.
-Source: [[30-traitement-image/references/33-morphologie-composantes|Full reference]] ; [OpenCV 4.13.0, Morphological Transformations, §§1 – 4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[30-traitement-image/references/33-morphologie-composantes|Full reference]] ; [OpenCV 4.13.0, Morphological Transformations, §§1 – 4](https://docs.opencv.org/4.13.0/d9/d61/tutorial_py_morphological_ops.html).
 Tags: cv::pilote cv::d03 famille::comparaison cv_id::CV-MORPHO-001 provenance::agent pole::A pole::E
 END
 

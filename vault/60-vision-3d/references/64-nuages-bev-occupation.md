@@ -126,14 +126,6 @@ A pillar encoder may include point heights and relative offsets in its learned f
 
 If an opaque obstacle blocks a ray, repeated scans from the same viewpoint do not directly observe the region behind it. Treating every missing return as free would become more confident in an unsupported conclusion with each repetition. A proposed mapping check distinguishes traversed free space, a supported surface hit and unobserved space behind it. Sensor range, transparent materials and invalid returns require their own measurement assumptions.
 
-### CV-BEV-003 — An inside probability is not a signed distance
-
-A value from an occupancy classifier does not directly give meters to the nearest surface. A signed distance function additionally encodes distance under its modeling assumptions; a reconstructed implicit function need not be an exact distance field everywhere. Collision checking based on a distance margin therefore requires the right output contract and validation. Likewise, learned shape completion can suggest unseen geometry without converting it into a direct sensor observation.
-
-### CV-BEV-004 — Ego compensation does not make moving objects static
-
-Transforming historical points into the current ego frame corrects the platform's motion under the pose estimate. A moving pedestrian still changes position during the interval, so history can leave multiple positions or a blurred feature footprint. Distinguish ego-motion error from object-motion accumulation with static landmarks and independently moving targets. This proposed check prevents solving a dynamic-scene issue by repeatedly adjusting a fixed sensor extrinsic.
-
 ### CV-BEV-005 — The output needs age and unknown-state semantics
 
 A warehouse planner needs to know when evidence was acquired and which cells were unobserved, rather than receiving an undated occupied/free bitmap alone. A project contract can carry frame, timestamp, validity, uncertainty and state-age limits with the geometry. Evaluate thin obstacles, low returns and temporary sensor loss under that contract. Detection AP alone does not measure whether missing or stale observations lead to inappropriate free-space decisions.

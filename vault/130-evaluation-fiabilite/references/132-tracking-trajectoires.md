@@ -118,17 +118,9 @@ The following are constructed project deductions and proposed checks, not
 new empirical results. Each extends an existing recall objective; the concise
 expected answer on its card remains the grading target.
 
-### CV-METRIQUES-TEMPS-001 — Track IDs must be evaluated over time
+### CV-METRIQUES-TEMPS-002 — The aggregation gap has an angle interpretation
 
-Construct two sequences with exactly the same boxes, classes and scores: one keeps a person's ID and the other assigns a fresh ID every frame. Every per-image detection result is unchanged, while temporal associations differ. This isolates the recall objective without involving detector quality. Report the tracking protocol's matching and identity aggregation, including treatment of gaps and ignored regions, when comparing the resulting identity score.
-
-### CV-METRIQUES-TEMPS-002 — A counterexample exposes averaging order
-
-Take two constructed thresholds with $(DetA,AssA)=(1,0.25)$ and $(0.25,1)$. Per-threshold geometric means are both 0.5, so their mean is 0.5. The square root of the product of component means is instead 0.625. This difference comes entirely from aggregation order. It does not imply these arbitrary pairs are an observed tracker result; they demonstrate why a reconstruction from summarized components is not the original definition.
-
-### CV-METRIQUES-TEMPS-003 — A scale-two trajectory can vanish under similarity alignment
-
-For a constructed estimate $\hat p_i=2p_i$ with otherwise identical shape, a similarity can rescale positions by one half and remove the entire positional discrepancy. A rigid alignment cannot generally do so. Decide whether scale is a tolerated gauge or a required output before choosing alignment. For metric VIO, report scale error and an appropriate constrained alignment rather than using the best-looking aligned score.
+Set $u_k=\sqrt{D_k}$ and $v_k=\sqrt{A_k}$ across $n$ thresholds. The mean per-threshold geometric mean is $H=(u^Tv)/n$, while recombination of component means is $R=\|u\|\|v\|/n$. For nonzero vectors, $H=R\cos\phi$, where phi is their angle. Thus the recombination gap is $R(1-\cos\phi)$: different threshold profiles, not just different average component quality, create the discrepancy. This is an algebraic interpretation, not a feasibility claim about arbitrary benchmark profiles.
 
 ### CV-METRIQUES-TEMPS-004 — Relative error depends on the interval
 

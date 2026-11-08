@@ -116,10 +116,6 @@ expected answer on its card remains the grading target.
 
 A VLA output can encode commands in a learned action representation, but the controller still needs units, reference frames, frequency and validity limits. A plausible language description does not establish an executable command, and a valid command schema does not prove that the visual state was estimated correctly. Compare models at their declared outputs and evaluate any conversion into physical actions separately. No robotic execution is established by these notes.
 
-### CV-VLM-002 — Learned queries are a representation bottleneck
-
-Q-Former query vectors are learned model parameters that attend to visual features; they are not a list of user questions whose answers independently verify image facts. The representation passed to the language model is limited by the visual encoder and connector. If small text is not resolved at that input resolution, fluent downstream generation cannot guarantee its recovery. Evaluate sensitivity to crop and resolution using known text or object details.
-
 ### CV-VLM-003 — Retrieval needs both event coverage and verification
 
 A proposed video index can use a cheap first stage to retrieve candidate intervals and a more expensive model to verify them. Measure missed events introduced by the retrieval stage separately from false descriptions introduced by verification. Include short events and temporally similar negatives, and account for sampling, decoding and prompt cost. An accurate verifier cannot recover an event never presented in its sampled candidate frames.

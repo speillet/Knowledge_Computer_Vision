@@ -124,10 +124,6 @@ A fixed displacement of 4 px means 200 px/s at 20 ms but 80 px/s at 50 ms. Varia
 
 For one pixel, several locations in a repeated pattern can have high feature correlation. A recurrent update combines lookup evidence with its current estimate and learned spatial context to refine the field. Taking an independent maximum from each correlation row would define another algorithm and can lose coherent motion. The architecture's dense output still requires evaluation at occlusions, boundaries and domain shifts rather than assuming correlation resolves every ambiguity.
 
-### CV-FLOT-004 — Consistency can fail or succeed for different reasons
-
-A large forward/backward residual can indicate occlusion, interpolation error or inaccurate motion. A small residual can also arise when both directions choose the same wrong repeated pattern. Record whether the warped lookup is inside the image and observable before interpreting the check. This proposed diagnostic is a rejection signal with limitations, not a substitute for reference flow or independent tracking evidence.
-
 Consulted foundations: [OpenCV optical flow](https://docs.opencv.org/4.13.0/d4/dee/tutorial_optical_flow.html): brightness constancy, Lucas–Kanade local system and pyramids; [RAFT](https://arxiv.org/html/2003.12039v3): §3 all-pairs correlation, lookup and recurrent updates.
 
 ## Sources and flashcards
