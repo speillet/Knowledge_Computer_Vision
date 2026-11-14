@@ -14,18 +14,18 @@ ID: CV-VIDEO-001
 Question: How do CoTracker, video classification and temporal action localization differ?
 Reponse: **Expected answer**: CoTracker tracks points with visibility; classification labels a clip; localization also estimates time intervals.
 
-**Further explanation**: Neither targets nor metrics are interchangeable. Name the version and access to the future.
+**Further explanation**: Neither the targets nor the metrics are interchangeable. Name the model version and its access to future frames.
 
-**Contracts to distinguish**: A point path answers “where is this observation over time?” A music video label answers “what action characterizes this excerpt?”. A time interval adds a start and end estimate. One output may be correct for one of these contracts and insufficient for another.
+**Contracts to distinguish**: A point track answers "where is this observation over time?" A clip label answers "what action characterizes this excerpt?". A time interval adds a start and end estimate. One output may be correct for one of these contracts and insufficient for another.
 
-**Constructed example**: recognizing that a person sits in a clip does not necessarily provide the instant of contact with the chair. Following a garment point also does not automatically provide the action class. Define the useful output before choosing architecture and metric: point error, visibility, classification, or time boundaries. Specify the frames accessible to the model and the decision time. A performance obtained with the full clip does not validate an alarm to be triggered before the end of the event.
+**Constructed example**: Recognizing that a person sits down in a clip does not necessarily give the instant of contact with the chair. Tracking a point on a garment does not automatically give the action class either. Define the useful output before choosing the architecture and the metric: point error, visibility, classification or time boundaries. Specify the frames available to the model and the decision time. A performance obtained with the full clip does not validate an alarm that must fire before the end of the event.
 
-**Axis of annotations**: A point path can be represented by $(x_t,y_t,v_t)$, where $v_t$ describes a visibility according to the protocol. A clip label is a category associated with a window; a time location provides at least one category and an interval $[t_d,t_f]$. Cutting a long video into tagged clips can give rough time cues, but does not automatically create precise boundaries. To compare systems, keep timestamps and match rules with actual events. A point followed on a person is neither a complete identity of the person nor an annotation of action without an additional definition.
+**Annotation axes**: A point track can be represented by $(x_t,y_t,v_t)$, where $v_t$ describes visibility under the protocol. A clip label is a category associated with a window; temporal localization provides at least one category and an interval $[t_d,t_f]$. Cutting a long video into labeled clips can give rough temporal cues, but does not automatically create precise boundaries. To compare systems, keep the timestamps and the rules for matching predictions with actual events. A point tracked on a person is neither a complete identity of that person nor an action annotation without an additional definition.
 
 **Point identity is additional information across time**: A collection of independent per-frame point detections does not establish which observation belongs to the same physical point. Conversely, a continuous point track does not by itself assign an action label or its start/end times. Build evaluation around the output actually needed: visibility-aware trajectories, clip class or temporal intervals. Combining these modules is a system decision and requires checking their spatial and temporal interfaces.
 
-**Blocking errors**: Deducing the boundaries of an action from a single music video label.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [CoTracker, §3: trajectories and visibility](https://arxiv.org/abs/2307.07635); [TimeSformer, summary](https://arxiv.org/abs/2102.05095); label/interval distinction: project contract. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Deducing the boundaries of an action from a single clip label.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [Doersch et al. 2022, TAP-Vid, §3 task formulation and §4.3 metrics](https://arxiv.org/abs/2211.03726); [Karaev et al. 2024, CoTracker, §3 tracks and visibility](https://arxiv.org/abs/2307.07635); [Zhang et al. 2022, ActionFormer, §3 onset, offset and label](https://arxiv.org/abs/2202.07925). Added reasoning: project deduction; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d10 famille::comparaison cv_id::CV-VIDEO-001 provenance::agent pole::D
 END
 
@@ -39,47 +39,47 @@ ID: CV-VIDEO-002
 Question: A video is summarized with one frame per second. Why can detection of a 100 ms event not be guaranteed?
 Reponse: **Expected answer**: The event can occur entirely between two sampled frames.
 
-**Further explanation**: Test phases, cadence and windows with reference; the model cannot observe information never sampled directly.
+**Further explanation**: Test sampling phases, frame rates and windows against a reference; the model cannot observe information that was never sampled.
 
-**Exemple temporel**: if the observations are taken at the instants 0 s and 1 s, an event present only from 0,35 to 0,45 s does not appear in any frame retained. It may eventually leave clues before or after, but that would be another hypothesis than direct observation of the event.
+**Temporal example**: If the observations are taken at 0 s and 1 s, an event present only from 0.35 to 0.45 s appears in no retained frame. It may leave cues before or after, but using them is a different hypothesis from a direct observation of the event.
 
-**Proposed design**: Set the minimum useful event duration and delay tolerance, and then compare multiple sampling phases, not just a favorable video. Check if a cadence increase, window, or event trigger provides the necessary information. Memory and cost increase with processed observations. A more powerful time model can exploit the available data; it does not guarantee to reconstruct an invisible event without additional assumptions. The protocol must therefore separate observed event, inferred event and missed event.
+**Proposed design**: Set the minimum useful event duration and the delay tolerance, then compare several sampling phases, not just one favorable video. Check whether a higher frame rate, a window or an event trigger provides the necessary information. Memory and cost grow with the number of processed observations. A more powerful temporal model can exploit the available data; it cannot reconstruct an unseen event without additional assumptions. The protocol must therefore separate observed, inferred and missed events.
 
-**Sampling phase**: In a constructed model where an event of duration $d<\Delta$ begins with a uniform phase with respect to a grid of steps $\Delta$, and where an instantaneous capture is sufficient, the probability that at least one sample falls into the event is $d/\Delta$. For 100 ms and a step of 1 s, it is 0,1 under these assumptions. This is not a predicted performance of a real model: exposure, visibility, and persistent clues change the problem. The calculation shows, however, why varying the phase is essential and why a demonstration where the event falls exactly on a frame does not validate a guaranteed recall.
+**Sampling phase**: In a constructed model where an event of duration $d<\Delta$ starts at a uniformly distributed phase with respect to a sampling grid of step $\Delta$, and where an instantaneous capture is sufficient, the probability that at least one sample falls inside the event is $d/\Delta$. For 100 ms and a step of 1 s, it is 0.1 under these assumptions. This is not a predicted performance of a real model: exposure, visibility and persistent cues change the problem. The calculation shows, however, why varying the phase is essential and why a demonstration where the event falls exactly on a frame does not validate guaranteed recall.
 
 **Blocking errors**: Assuming that a larger model guarantees the recall of any short event.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Time counter-example built in the reference note: event between two sampled moments; [CoTracker, §3](https://arxiv.org/abs/2307.07635) for the context of discrete video inputs, without attribution of the counter-example to this article.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [Bertasius et al. 2021, TimeSformer, §4: 8 frames sampled at a rate of 1/32](https://arxiv.org/abs/2102.05095); [Feichtenhofer et al. 2019, SlowFast, §3.1 temporal stride of the Slow pathway](https://arxiv.org/abs/1812.03982). The counter-example and the $d/\Delta$ model are project constructions.
 Tags: cv::pilote cv::d10 famille::raisonnement cv_id::CV-VIDEO-002 provenance::agent pole::D
 END
 
 ## CV-VIDEO-003
 
-Objective: check causation and delay. Family: evaluation. Provenance: agent.
+Objective: Check causality and delay. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-VIDEO-003
 Question: A point tracker uses a window containing future frames. Can its output be compared directly with a zero-delay causal model?
-Reponse: **Expected answer**: Not without specifying the available information and the time to exit.
+Reponse: **Expected answer**: Not without specifying the available information and the output time.
 
-**Further explanation**: Evaluate same window, timestamps, visibility policy and decision time.
+**Further explanation**: Evaluate with the same window, timestamps, visibility policy and decision time.
 
-**Fairness of comparison**: A future frame can help solve a occlusion or an ambiguous movement. This information does not yet exist for a system that needs to respond immediately. An offline or windowed method can therefore accomplish a more informed task, at the cost of a delay.
+**Fairness of comparison**: A future frame can help resolve an occlusion or an ambiguous motion. This information does not yet exist for a system that must respond immediately. An offline or windowed method therefore solves a better-informed task, at the cost of a delay.
 
-**Protocol built**: For each output, note the instant of the estimated point, the last frame consumed and the instant of availability. Compare accuracy and delay with an identical policy of observations, or explicitly present the difference as a compromise. Include window wait, transfer, and calculation in latency. The term online can mean progressive processing of a stream without meaning zero delay. A good trajectory calculated after the event is not equivalent to a location early enough to drive another module. This distinction also applies to VIO valuations, smoothing and stock detection.
+**Constructed protocol**: For each output, record the time of the estimated point, the last frame consumed and the time the output becomes available. Compare accuracy and delay under an identical observation policy, or present the difference explicitly as a trade-off. Include the window wait, transfer and computation in the latency. The term online can mean progressive processing of a stream without meaning zero delay. A good trajectory computed after the event is not equivalent to a localization early enough to drive another module. The same distinction applies to VIO estimates, smoothing and action detection.
 
-**Minimum time for context**: if an estimate for $t$ uses a frame at $t+h$, its availability cannot precede $t+h$, even before transfer and calculation. A latency measurement limited to the network pass would therefore omit at least this context delay. With sliding windows, specify which exits are temporary and which are revised afterwards. Evaluating the first decision and the final trajectory separately makes the comparison readable. A method can remain useful in line with an accepted deadline; the word causal, on the other hand, requires that each decision at the time in question uses only the observations already available according to the announced contract.
+**Minimum delay for context**: If an estimate for $t$ uses a frame at $t+h$, it cannot be available before $t+h$, even before transfer and computation. A latency measurement limited to the network pass would therefore omit at least this context delay. With sliding windows, specify which outputs are provisional and which are revised afterwards. Evaluating the first decision and the final trajectory separately makes the comparison readable. A method can remain useful online within an accepted delay; the word causal, however, requires that each decision at a given time uses only the observations already available under the stated contract.
 
 **Future context imposes a latency floor**: At 30 frames/s, using five future frames imposes at least about 167 ms of waiting before computation and transfer. The model may be appropriate for retrospective analysis but incompatible with a tighter online decision budget. A proposed comparison reports quality versus total output delay under a common information window, including whether later frames revise earlier outputs. Timing only the network call omits the cost of waiting for its input.
 
-**Blocking errors**: Confound online word and lack of latency or future in any implementation.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [CoTracker, §3: sliding windows](https://arxiv.org/abs/2307.07635); [CoTracker3, introduction : variantes online/offline](https://arxiv.org/abs/2410.11831); latency comparison proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Equating the word online with zero latency and no use of future frames in every implementation.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [Karaev et al. 2024, CoTracker, abstract and §3.3 windowed inference](https://arxiv.org/abs/2307.07635); [Karaev et al. 2024, CoTracker3, §3 online and offline variants](https://arxiv.org/abs/2410.11831). The latency comparison is a project protocol; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d10 famille::evaluation cv_id::CV-VIDEO-003 provenance::agent pole::D
 END
 
 ## CV-VIDEO-004
 
-Objective: check the use of the time order. Family: diagnosis. Provenance: agent.
+Objective: Check the use of temporal order. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
@@ -87,17 +87,17 @@ ID: CV-VIDEO-004
 Question: A video classifier still recognizes an action after the frames are shuffled. What should be tested before claiming it understands temporal dynamics?
 Reponse: **Expected answer**: Compare to an image/context baseline, check labels and actions that actually require order.
 
-**Further explanation**: The scene or object may be sufficient for the score; use cases where the order distinguishes two events.
+**Further explanation**: The scene or an object may be enough for the score; use cases where the order distinguishes two events.
 
-**Alternative Hypothesis**: The presence of a tool, a decor or a characteristic posture can be enough to predict the label of the clip. Frame swapping preserves many of these clues. A high accuracy does not, therefore, alone allow to attribute the decision to the temporal order.
+**Alternative hypothesis**: The presence of a tool, a setting or a characteristic posture can be enough to predict the clip label. Shuffling frames preserves many of these cues. A high accuracy alone therefore does not allow attributing the decision to temporal order.
 
-**Proposed ablation**: Compare the model to an aggregation of image predictions, and then select cases where the same visual states in a different order correspond to different events. check sampling, labels, background and leakage between neighboring clips. If the performance remains the same on tasks that are really sensitive to order, look at the information used. A fall after permutation sustains a temporal dependence, but does not prove any form of causal understanding. Reasoning must remain tied to the tasks and controls performed, not just in the name of the architecture.
+**Proposed ablation**: Compare the model with an aggregation of image predictions, then select cases where the same visual states in a different order correspond to different events. Check sampling, labels, background and leakage between neighboring clips. If the performance stays the same on tasks that really depend on order, examine which information is used. A drop after permutation supports a temporal dependence, but does not prove any form of causal understanding. The reasoning must stay tied to the tasks and controls performed, not to the name of the architecture.
 
-**Permutation and reverse order**: An average $z=L^{-1}\sum_t f(I_t)$ aggregation is mathematically invariant to permutation; a good score obtained in this way can come from visual states or context, without encoding their order. Building pairs like take/pose an object, with close states but a different order, tests another property. check also that permutation does not create an unusual artifact that would cause the model to fall for the wrong reason. Comparing inversion, permutation and cadence by changing only one factor helps to support the use of time without assimilating any temporal sensitivity to a complete understanding of the scene.
+**Permutation and reverse order**: An average aggregation $z=L^{-1}\sum_t f(I_t)$ is mathematically invariant to permutation; a good score obtained this way can come from visual states or context without encoding their order. Building pairs such as picking up and putting down an object, with similar states in a different order, tests another property. Also check that permutation does not create an unusual artifact that makes the score drop for the wrong reason. Comparing reversal, permutation and frame rate while changing only one factor helps to establish the use of time, without equating any temporal sensitivity with a complete understanding of the scene.
 
 **Order sensitivity should match the task labels**: Opening and closing a door can share many static frames while differing in order; recognizing a sport from a field may require much less temporal evidence. A proposed controlled set includes reverse-order pairs with changed labels and static-context baselines. Shuffle invariance alone is not proof of failure on an order-insensitive task, but a high shuffled score cannot establish that the model learned the dynamics needed for an order-sensitive decision.
 
-**Blocking errors**: Deduct a temporal understanding of a global accuracy alone.
-Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; Controlled test proposed by the project; [TimeSformer, summary and architecture](https://arxiv.org/abs/2102.05095) for the temporal attention mechanism. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Inferring temporal understanding from global accuracy alone.
+Source: [[100-mouvement-video/references/102-points-actions-video|Full reference]]; [Bertasius et al. 2021, TimeSformer, §3: space-only attention degrades where strong temporal modeling is necessary](https://arxiv.org/abs/2102.05095); [Carreira and Zisserman 2017, I3D, §2.4 boring-video fixed point](https://arxiv.org/abs/1705.07750). The controlled test is a project proposal.
 Tags: cv::pilote cv::d10 famille::diagnostic cv_id::CV-VIDEO-004 provenance::agent pole::D
 END
