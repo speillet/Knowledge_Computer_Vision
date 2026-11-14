@@ -1,0 +1,754 @@
+{
+ "baseline": "git archive 76fda5a vault",
+ "command": "python3 tools/compare_protected.py <baseline>/vault vault --json <out>",
+ "summary": {
+  "errors": 102,
+  "cards_changed": 282,
+  "expected_changed": 154,
+  "refs_changed": 60,
+  "refs": 60
+ },
+ "allowed_differences": [
+  "CV-ACQUISITION-004: objective changed",
+  "CV-ASSOCIATION-002: objective changed",
+  "CV-ASSOCIATION-003: objective changed",
+  "CV-BA-002: objective changed",
+  "CV-BA-004: objective changed",
+  "CV-BEV-001: objective changed",
+  "CV-BEV-003: objective changed",
+  "CV-BEV-004: objective changed",
+  "CV-BEV-005: objective changed",
+  "CV-CANNY-HOUGH-003: objective changed",
+  "CV-CAPTEURS-001: objective changed",
+  "CV-CAPTEURS-003: objective changed",
+  "CV-CLIP-003: objective changed",
+  "CV-CORNERS-001: objective changed",
+  "CV-CORNERS-003: objective changed",
+  "CV-DEPLOIEMENT-001: objective changed",
+  "CV-DEPLOIEMENT-004: objective changed",
+  "CV-DETECTEURS-001: objective changed",
+  "CV-DETECTEURS-006: objective changed",
+  "CV-DETECTEURS-009: objective changed",
+  "CV-DETECTEURS-011: objective changed",
+  "CV-DETECTEURS-011: question changed",
+  "CV-DETECTEURS-013: objective changed",
+  "CV-DIFFUSION-001: objective changed",
+  "CV-DIFFUSION-002: objective changed",
+  "CV-DIFFUSION-003: objective changed",
+  "CV-ECC-003: objective changed",
+  "CV-EPIPOLAIRE-005: objective changed",
+  "CV-FACTEURS-003: objective changed",
+  "CV-FACTEURS-004: objective changed",
+  "CV-FARNEBACK-003: objective changed",
+  "CV-FAST-BRIEF-005: objective changed",
+  "CV-FIABILITE-005: objective changed",
+  "CV-FILTRES-002: objective changed",
+  "CV-FILTRES-003: objective changed",
+  "CV-FISHEYE-004: objective changed",
+  "CV-FLANN-004: objective changed",
+  "CV-FLOT-002: objective changed",
+  "CV-FLOT-003: objective changed",
+  "CV-FLOT-004: objective changed",
+  "CV-FUSION-002: objective changed",
+  "CV-FUSION-003: objective changed",
+  "CV-FUSION-004: objective changed",
+  "CV-FUSION-005: objective changed",
+  "CV-GRABCUT-002: objective changed",
+  "CV-HANDEYE-001: objective changed",
+  "CV-HANDEYE-002: objective changed",
+  "CV-HANDEYE-003: objective changed",
+  "CV-HOMOGRAPHIE-002: objective changed",
+  "CV-HOMOGRAPHIE-004: question changed",
+  "CV-HOMOGRAPHIE-005: objective changed",
+  "CV-IMAGERIES-002: objective changed",
+  "CV-IMAGERIES-003: objective changed",
+  "CV-IOU-AP-001: objective changed",
+  "CV-IOU-AP-007: objective changed",
+  "CV-METRIQUES-APPLIQUEES-001: objective changed",
+  "CV-METRIQUES-APPLIQUEES-002: objective changed",
+  "CV-METRIQUES-APPLIQUEES-004: objective changed",
+  "CV-MORPHO-003: objective changed",
+  "CV-MULTICALIB-001: objective changed",
+  "CV-MULTICALIB-003: objective changed",
+  "CV-NMS-001: question changed",
+  "CV-NMS-002: objective changed",
+  "CV-NMS-003: question changed",
+  "CV-NMS-006: question changed",
+  "CV-OCR-002: objective changed",
+  "CV-OPENVOC-002: objective changed",
+  "CV-ORB-006: objective changed",
+  "CV-PIPELINE-001: objective changed",
+  "CV-PIPELINE-002: objective changed",
+  "CV-PIPELINE-003: objective changed",
+  "CV-POSE3D-002: objective changed",
+  "CV-QUANT-004: objective changed",
+  "CV-RENDU3D-001: objective changed",
+  "CV-RENDU3D-002: objective changed",
+  "CV-RENDU3D-003: objective changed",
+  "CV-REPRESENTATIONS-002: objective changed",
+  "CV-REPRESENTATIONS-005: objective changed",
+  "CV-SAM-001: objective changed",
+  "CV-SAM-002: objective changed",
+  "CV-SAM-003: objective changed",
+  "CV-SE3-001: objective changed",
+  "CV-SE3-002: objective changed",
+  "CV-SE3-003: objective changed",
+  "CV-SE3-005: objective changed",
+  "CV-SEGMENTATION-002: objective changed",
+  "CV-SEGMENTATION-003: objective changed",
+  "CV-SORT-003: objective changed",
+  "CV-SORT-004: objective changed",
+  "CV-STEREO-002: objective changed",
+  "CV-SVD-005: objective changed",
+  "CV-SVD-006: objective changed",
+  "CV-SVD-007: objective changed",
+  "CV-VIDEO-003: objective changed",
+  "CV-VIDEO-004: objective changed",
+  "CV-VLM-001: objective changed",
+  "CV-VLM-002: objective changed",
+  "CV-VLM-003: objective changed",
+  "CV-VLM-004: objective changed",
+  "CV-WATERSHED-004: objective changed",
+  "CV-ZHANG-001: objective changed",
+  "CV-ZHANG-005: objective changed"
+ ],
+ "note": "Every listed difference is a logged objective-line retranslation (97) or a decimal-comma fix in a question (5); no other protected field changed.",
+ "references": {
+  "CV-SVD": {
+   "file": "10-mathematiques-estimation/references/11-moindres-carres-svd.md",
+   "revision": [
+    9,
+    10
+   ],
+   "changed": true
+  },
+  "CV-SE3": {
+   "file": "10-mathematiques-estimation/references/12-rotations-se3.md",
+   "revision": [
+    10,
+    11
+   ],
+   "changed": true
+  },
+  "CV-FUSION": {
+   "file": "10-mathematiques-estimation/references/13-kalman-ekf-eskf.md",
+   "revision": [
+    9,
+    10
+   ],
+   "changed": true
+  },
+  "CV-FACTEURS": {
+   "file": "10-mathematiques-estimation/references/14-graphes-facteurs.md",
+   "revision": [
+    10,
+    11
+   ],
+   "changed": true
+  },
+  "CV-FLOT": {
+   "file": "100-mouvement-video/references/101-flot-optique.md",
+   "revision": [
+    5,
+    6
+   ],
+   "changed": true
+  },
+  "CV-VIDEO": {
+   "file": "100-mouvement-video/references/102-points-actions-video.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-FARNEBACK": {
+   "file": "100-mouvement-video/references/103-farneback.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-SORT": {
+   "file": "110-tracking-association/references/111-sort.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-ASSOCIATION": {
+   "file": "110-tracking-association/references/112-deepsort-bytetrack.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-SOT": {
+   "file": "110-tracking-association/references/113-tracking-monoobjet.md",
+   "revision": [
+    5,
+    6
+   ],
+   "changed": true
+  },
+  "CV-CORRELATION": {
+   "file": "110-tracking-association/references/114-mosse-kcf.md",
+   "revision": [
+    5,
+    6
+   ],
+   "changed": true
+  },
+  "CV-MEANSHIFT": {
+   "file": "110-tracking-association/references/115-meanshift-camshift.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-VLM": {
+   "file": "120-generatif-multimodal/references/121-vlm-grounding.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-DIFFUSION": {
+   "file": "120-generatif-multimodal/references/122-generation-restauration.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-RENDU3D": {
+   "file": "120-generatif-multimodal/references/123-nerf-gaussian-splatting.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-IOU-AP": {
+   "file": "130-evaluation-fiabilite/references/131-iou-ap-coco.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-METRIQUES-TEMPS": {
+   "file": "130-evaluation-fiabilite/references/132-tracking-trajectoires.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-FIABILITE": {
+   "file": "130-evaluation-fiabilite/references/133-donnees-generalisation.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-METRIQUES-APPLIQUEES": {
+   "file": "130-evaluation-fiabilite/references/134-metriques-applications.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-PIPELINE": {
+   "file": "140-ingenierie-systemes/references/141-contrats-profiling-video.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-QUANT": {
+   "file": "140-ingenierie-systemes/references/142-quantification-runtimes.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-DEPLOIEMENT": {
+   "file": "140-ingenierie-systemes/references/143-edge-reproductibilite.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-ACQUISITION": {
+   "file": "20-acquisition-images/references/21-exposition-bruit-echantillonnage.md",
+   "revision": [
+    10,
+    11
+   ],
+   "changed": true
+  },
+  "CV-CAPTEURS": {
+   "file": "20-acquisition-images/references/22-capteurs-horodatage.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-IMAGERIES": {
+   "file": "20-acquisition-images/references/23-imageries-specialisees.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-FILTRES": {
+   "file": "30-traitement-image/references/31-filtrage-gradients.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-CANNY-HOUGH": {
+   "file": "30-traitement-image/references/32-canny-hough.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-MORPHO": {
+   "file": "30-traitement-image/references/33-morphologie-composantes.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-SIFT": {
+   "file": "40-features-matching/references/41-sift.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-ORB": {
+   "file": "40-features-matching/references/42-orb.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-MATCHING": {
+   "file": "40-features-matching/references/43-detecteurs-matchers.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-MATCH-APPRIS": {
+   "file": "40-features-matching/references/44-superpoint-lightglue-loftr.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-ECC": {
+   "file": "40-features-matching/references/45-recalage-ecc.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-CORNERS": {
+   "file": "40-features-matching/references/46-harris-shi-tomasi.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-FAST-BRIEF": {
+   "file": "40-features-matching/references/47-fast-brief.md",
+   "revision": [
+    5,
+    6
+   ],
+   "changed": true
+  },
+  "CV-FLANN": {
+   "file": "40-features-matching/references/48-flann.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-HOMOGRAPHIE": {
+   "file": "50-calibration-geometrie/references/51-ransac-homographie.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-ZHANG": {
+   "file": "50-calibration-geometrie/references/52-calibration-zhang.md",
+   "revision": [
+    8,
+    9
+   ],
+   "changed": true
+  },
+  "CV-EPIPOLAIRE": {
+   "file": "50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-BA": {
+   "file": "50-calibration-geometrie/references/54-bundle-adjustment.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-MULTICALIB": {
+   "file": "50-calibration-geometrie/references/55-calibration-multicapteurs.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-FISHEYE": {
+   "file": "50-calibration-geometrie/references/56-calibration-fisheye.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-HANDEYE": {
+   "file": "50-calibration-geometrie/references/57-calibration-hand-eye.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-STEREO": {
+   "file": "60-vision-3d/references/61-stereo-profondeur.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-ICP": {
+   "file": "60-vision-3d/references/62-recalage-global-icp.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-VIO": {
+   "file": "60-vision-3d/references/63-slam-vio.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-BEV": {
+   "file": "60-vision-3d/references/64-nuages-bev-occupation.md",
+   "revision": [
+    6,
+    7
+   ],
+   "changed": true
+  },
+  "CV-REPRESENTATIONS": {
+   "file": "70-reconnaissance-representations/references/71-representations-transfert.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-CLIP": {
+   "file": "70-reconnaissance-representations/references/72-clip-siglip.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-ANOMALIES": {
+   "file": "70-reconnaissance-representations/references/73-patchcore-padim.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-OCR": {
+   "file": "70-reconnaissance-representations/references/74-ocr-documents.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-BIOMETRIE": {
+   "file": "70-reconnaissance-representations/references/75-embeddings-biometrie.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-NMS": {
+   "file": "80-detection-pose/references/81-nms.md",
+   "revision": [
+    9,
+    10
+   ],
+   "changed": true
+  },
+  "CV-DETECTEURS": {
+   "file": "80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md",
+   "revision": [
+    10,
+    11
+   ],
+   "changed": true
+  },
+  "CV-OPENVOC": {
+   "file": "80-detection-pose/references/83-detection-open-vocabulary.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-POSE3D": {
+   "file": "80-detection-pose/references/84-detection-pose-3d.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-WATERSHED": {
+   "file": "90-segmentation/references/91-otsu-distance-watershed.md",
+   "revision": [
+    5,
+    6
+   ],
+   "changed": true
+  },
+  "CV-GRABCUT": {
+   "file": "90-segmentation/references/92-grabcut-regions.md",
+   "revision": [
+    4,
+    5
+   ],
+   "changed": true
+  },
+  "CV-SEGMENTATION": {
+   "file": "90-segmentation/references/93-semantique-instances-panoptique.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  },
+  "CV-SAM": {
+   "file": "90-segmentation/references/94-sam-sam2.md",
+   "revision": [
+    7,
+    8
+   ],
+   "changed": true
+  }
+ },
+ "expected_answers_changed": [
+  "CV-SVD-001",
+  "CV-SVD-002",
+  "CV-SVD-004",
+  "CV-SVD-006",
+  "CV-SVD-007",
+  "CV-SVD-008",
+  "CV-SVD-009",
+  "CV-SE3-002",
+  "CV-SE3-003",
+  "CV-SE3-004",
+  "CV-SE3-005",
+  "CV-SE3-006",
+  "CV-FUSION-001",
+  "CV-FUSION-002",
+  "CV-FUSION-003",
+  "CV-FUSION-004",
+  "CV-FUSION-005",
+  "CV-FUSION-006",
+  "CV-FACTEURS-001",
+  "CV-FACTEURS-003",
+  "CV-FACTEURS-004",
+  "CV-FACTEURS-005",
+  "CV-FLOT-001",
+  "CV-FLOT-002",
+  "CV-VIDEO-003",
+  "CV-FARNEBACK-005",
+  "CV-SORT-001",
+  "CV-SORT-003",
+  "CV-SORT-004",
+  "CV-SORT-005",
+  "CV-SORT-006",
+  "CV-SORT-007",
+  "CV-SORT-008",
+  "CV-ASSOCIATION-001",
+  "CV-ASSOCIATION-002",
+  "CV-ASSOCIATION-003",
+  "CV-SOT-002",
+  "CV-CORRELATION-002",
+  "CV-CORRELATION-003",
+  "CV-MEANSHIFT-003",
+  "CV-VLM-002",
+  "CV-VLM-003",
+  "CV-DIFFUSION-001",
+  "CV-IOU-AP-001",
+  "CV-IOU-AP-002",
+  "CV-IOU-AP-004",
+  "CV-IOU-AP-005",
+  "CV-METRIQUES-TEMPS-002",
+  "CV-METRIQUES-TEMPS-005",
+  "CV-PIPELINE-001",
+  "CV-PIPELINE-004",
+  "CV-QUANT-001",
+  "CV-QUANT-002",
+  "CV-QUANT-003",
+  "CV-QUANT-005",
+  "CV-DEPLOIEMENT-001",
+  "CV-DEPLOIEMENT-003",
+  "CV-ACQUISITION-001",
+  "CV-ACQUISITION-002",
+  "CV-ACQUISITION-004",
+  "CV-CAPTEURS-002",
+  "CV-CAPTEURS-003",
+  "CV-IMAGERIES-001",
+  "CV-FILTRES-001",
+  "CV-FILTRES-003",
+  "CV-CANNY-HOUGH-001",
+  "CV-CANNY-HOUGH-002",
+  "CV-CANNY-HOUGH-003",
+  "CV-CANNY-HOUGH-004",
+  "CV-MORPHO-001",
+  "CV-MORPHO-003",
+  "CV-SIFT-004",
+  "CV-SIFT-007",
+  "CV-ORB-004",
+  "CV-MATCHING-004",
+  "CV-MATCH-APPRIS-002",
+  "CV-MATCH-APPRIS-003",
+  "CV-ECC-001",
+  "CV-ECC-002",
+  "CV-ECC-003",
+  "CV-CORNERS-001",
+  "CV-CORNERS-005",
+  "CV-FAST-BRIEF-001",
+  "CV-FAST-BRIEF-004",
+  "CV-FLANN-001",
+  "CV-FLANN-002",
+  "CV-FLANN-004",
+  "CV-HOMOGRAPHIE-002",
+  "CV-HOMOGRAPHIE-003",
+  "CV-HOMOGRAPHIE-004",
+  "CV-HOMOGRAPHIE-006",
+  "CV-ZHANG-002",
+  "CV-ZHANG-004",
+  "CV-ZHANG-005",
+  "CV-ZHANG-006",
+  "CV-EPIPOLAIRE-005",
+  "CV-BA-001",
+  "CV-BA-004",
+  "CV-MULTICALIB-001",
+  "CV-MULTICALIB-003",
+  "CV-FISHEYE-002",
+  "CV-FISHEYE-003",
+  "CV-HANDEYE-001",
+  "CV-HANDEYE-003",
+  "CV-HANDEYE-004",
+  "CV-HANDEYE-005",
+  "CV-ICP-002",
+  "CV-ICP-003",
+  "CV-ICP-004",
+  "CV-ICP-005",
+  "CV-VIO-001",
+  "CV-VIO-003",
+  "CV-VIO-004",
+  "CV-BEV-001",
+  "CV-BEV-002",
+  "CV-BEV-003",
+  "CV-BEV-004",
+  "CV-BEV-005",
+  "CV-REPRESENTATIONS-002",
+  "CV-REPRESENTATIONS-004",
+  "CV-CLIP-002",
+  "CV-CLIP-003",
+  "CV-CLIP-004",
+  "CV-ANOMALIES-001",
+  "CV-ANOMALIES-002",
+  "CV-ANOMALIES-003",
+  "CV-ANOMALIES-004",
+  "CV-OCR-001",
+  "CV-OCR-002",
+  "CV-NMS-001",
+  "CV-NMS-002",
+  "CV-NMS-003",
+  "CV-NMS-004",
+  "CV-NMS-005",
+  "CV-NMS-006",
+  "CV-DETECTEURS-001",
+  "CV-DETECTEURS-004",
+  "CV-DETECTEURS-005",
+  "CV-DETECTEURS-006",
+  "CV-DETECTEURS-009",
+  "CV-DETECTEURS-010",
+  "CV-DETECTEURS-011",
+  "CV-DETECTEURS-012",
+  "CV-DETECTEURS-013",
+  "CV-OPENVOC-001",
+  "CV-POSE3D-003",
+  "CV-WATERSHED-001",
+  "CV-WATERSHED-004",
+  "CV-GRABCUT-001",
+  "CV-GRABCUT-002",
+  "CV-GRABCUT-003",
+  "CV-SEGMENTATION-003",
+  "CV-SEGMENTATION-004",
+  "CV-SAM-002"
+ ]
+}
