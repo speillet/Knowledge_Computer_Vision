@@ -108,7 +108,7 @@ The foreground mask covers all cells but watershed produces too many fragments o
 
 <details><summary>Reference answer and criteria</summary>
 
-View topography and germs, compare on copy with manual markers, check maxima parasites and morphological scale. Differentiate bad mask and oversegmentation of germs; validate by instances and sizes, without concluding from the only IoU foreground.
+Visualize the relief and the seeds, compare on a copy with manual markers, and check spurious maxima and the morphological scale. Distinguish a bad mask from over-segmentation caused by surplus seeds; validate per instance and per size, without concluding from foreground IoU alone.
 
 </details>
 

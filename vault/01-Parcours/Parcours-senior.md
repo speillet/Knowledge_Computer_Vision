@@ -87,7 +87,7 @@ Connect detector, descriptor, metric, matcher and geometric model.
 | 3.8 | [SuperPoint, LightGlue and LoFTR](../40-features-matching/references/44-superpoint-lightglue-loftr.md) | [5 cards](../40-features-matching/44-superpoint-lightglue-loftr.md) | [CV-SIFT](../40-features-matching/references/41-sift.md), [CV-ORB](../40-features-matching/references/42-orb.md), [CV-HOMOGRAPHIE](../50-calibration-geometrie/references/51-ransac-homographie.md) |
 | 3.9 | [Intensity-based registration and ECC](../40-features-matching/references/45-recalage-ecc.md) | [3 cards](../40-features-matching/45-recalage-ecc.md) | [CV-HOMOGRAPHIE](../50-calibration-geometrie/references/51-ransac-homographie.md) |
 
-**Proposed progression criterion**: register a plan with a baseline and a proposed protocol: coverage, errors on reserved points, full cost and repeat case.
+**Proposed progression criterion**: register a plane with a baseline and a proposed protocol: coverage, errors on held-out points, full cost and repeated case.
 
 ## 4. Calibrate and rebuild geometry
 
@@ -182,7 +182,7 @@ Evaluate system quality, memory, throughput, latency, and reproducibility compro
 | 9.1 | [PTQ, QAT, INT8/FP8 and runtimes](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | [5 cards](../140-ingenierie-systemes/142-quantification-runtimes.md) | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) |
 | 9.2 | [Edge deployment, compression and monitoring](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) | [4 cards](../140-ingenierie-systemes/143-edge-reproductibilite.md) | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md), [CV-QUANT](../140-ingenierie-systemes/references/142-quantification-runtimes.md) |
 
-**Proposed progression criterion**: Compare two versions on the same hardware target with reserved data, end-to-end p99, difficult cases and back-up procedure.
+**Proposed progression criterion**: Compare two versions on the same hardware target with held-out data, end-to-end p99, difficult cases and a rollback procedure.
 
 ## Three integration cases to assess transfer
 
