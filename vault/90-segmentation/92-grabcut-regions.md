@@ -12,41 +12,41 @@ START
 CV-Pilote
 ID: CV-GRABCUT-001
 Question: Which two main operations does GrabCut alternate?
-Reponse: **Expected answer**: Estimate the background/object appearance patterns and then optimize the labels via graph cut in the defined energy.
+Reponse: **Expected answer**: Estimate the background and foreground appearance models, then optimize the labels by graph cut on the defined energy.
 
-**Further explanation**: The safe and probable constraints of initialization have a distinct role; the process is not a generic semantic classifier.
+**Further explanation**: The definite and probable labels of the initialization play different roles; the process is not a generic semantic classifier.
 
-**Intuition of alternation**: Current labels give color examples for background and foreground; appearance patterns then influence the cost of each attribution. Relations between neighbors add a spatial preference. The new partition is used for a new estimate, within the constraints of the initialization.
+**Intuition of alternation**: Current labels give colour examples for background and foreground; the appearance models then set the cost of each assignment. Relations between neighbors add a spatial preference. The new partition is used for a new estimate, within the constraints of the initialization.
 
-**Example of limit**: If a part of the target looks like the bottom, its cost of appearance can favor the wrong region. A user indication can provide information that color alone does not provide. The process does not automatically name an object according to a taxonomy and a minimum of energy is not proof of business truth. Check initialization and safe labels before increasing iterations. To compare to a learned promptable method, also count interventions, failures and full cost, and not just the time of the last optimization.
+**Example of a limitation**: If a part of the target looks like the background, its appearance cost can favor the wrong label. A user indication can provide information that colour alone does not. The process does not name an object according to a taxonomy, and an energy minimum is not proof that the mask is correct for the application. Check the initialization and the definite labels before increasing iterations. To compare with a learned promptable method, also count interventions, failures and the full cost, not just the time of the last optimization.
 
-**Energy and Cut**: for a binary label $L_p$, a unary term can be linked to $-\log p(I_p\mid L_p)$ under the corresponding color mixture. A schematic neighbor term $w_{pq}\mathbf1[L_p\ne L_q]$ penalizes a boundary between similar pixels; high contrast can reduce $w_{pq}$. With fixed appearance parameters and for a compatible binary energy, the cutoff of the graph optimizes this sub-problem. Alternating with the estimation of the mixtures does not imply an overall joint optimum of all the unknowns. Defining the solved sub-problem prevents confusing the solver's warranty with the correctness of the object model used.
+**Energy and cut**: For a binary label $L_p$, a unary term can be set to $-\log p(I_p\mid L_p)$ under the corresponding colour mixture. A schematic neighbor term $w_{pq}\mathbf1[L_p\ne L_q]$ penalizes a boundary between similar pixels; high contrast reduces $w_{pq}$. With fixed appearance parameters and a graph-representable binary energy, the minimum cut solves this sub-problem exactly. Alternating with the estimation of the mixtures does not imply a joint global optimum over all the unknowns. Naming the sub-problem that is solved prevents confusing the solver's guarantee with the correctness of the object model used.
 
-**Blocking errors**: Describe only a fixed color threshold.
-Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+**Blocking errors**: Describing only a fixed colour threshold.
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [Rother et al. 2004, §3.1–§3.2, eqs. 7–11 and Fig. 3](https://www.microsoft.com/en-us/research/wp-content/uploads/2004/08/siggraph04-grabcut.pdf) ; [Boykov and Jolly 2001, §3 Theorem 1](https://www.csd.uwo.ca/~yboykov/Papers/iccv01.pdf) ; [OpenCV 4.13.0, grabcut.cpp L545–L598](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/grabcut.cpp#L545-L598).
 Tags: cv::pilote cv::d09 famille::algorithme cv_id::CV-GRABCUT-001 provenance::agent pole::A pole::E
 END
 
 ## CV-GRABCUT-002
 
-Objective: check is an initialization constraint. Family: diagnosis. Provenance: agent.
+Objective: Check an initialization constraint. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-GRABCUT-002
 Question: GrabCut consistently excludes part of an object despite more iterations. What should be checked first?
-Reponse: **Expected answer**: The initial zone and the safe background labels: a useful region can be made impossible by constraint.
+Reponse: **Expected answer**: The initial rectangle and the definite background labels: a needed part of the object can be made impossible by a hard constraint.
 
-**Further explanation**: Test a manual correction of labels on copy and then observe the mask; distinguish initialization and insufficient appearance.
+**Further explanation**: Test a manual correction of the labels on a copy, then observe the mask; distinguish a wrong initialization from an insufficient appearance model.
 
-**Causal chain**: A pixel imposed as a safe background is not one of the labels that optimization can freely transform into an object. If the initial rectangle excludes a part of the target, the procedure can perfectly comply with its contract while producing a truncated mask.
+**Causal chain**: A pixel imposed as definite background is not among the labels that the optimization can switch to foreground. If the initial rectangle excludes a part of the target, the procedure can comply perfectly with its contract while producing a truncated mask.
 
-**Verification built**: Overlay safe and probable labels on the image, and then fix only the wrong area on a copy. Keep other parameters and measure the effect. If this correction is not enough, compare the color distributions and the border, because several defects can coexist. An additional repetition of the same optimization does not replace correct initial information. This distinction between a false constraint and a model of insufficient appearance helps to choose the useful intervention: changing the starting mask, adding a clue or considering another mechanism rather than assuming a digital failure.
+**Constructed check**: Overlay the definite and probable labels on the image, then fix only the wrong area on a copy. Keep the other parameters and measure the effect. If this correction is not enough, compare the colour distributions and the boundary, because several defects can coexist. Repeating the same optimization does not replace correct initial information. Distinguishing a false constraint from an insufficient appearance model helps choose the useful intervention: changing the starting mask, adding a cue or considering another mechanism, rather than assuming a numerical failure.
 
-**Hard Constraint and Preference**: A certain label conceptually prohibits the other attribution, while a probable label lets the energy choose. If an actual part of the object is attached to the bottom, changing the appearance settings does not make this solution admissible. In a built test, only correct this constraint, and then compare iterations on the same initial saved state. An improvement locates a contract defect; a persistent exclusion may still come from close colors or regularization. Distinguishing the four states of the mask until the final decision avoids losing interaction information by prematurely binarizing the labels.
+**Hard constraint and preference**: A definite label forbids the other assignment, while a probable label lets the energy choose. If a real part of the object is assigned to definite background, changing the appearance settings does not make the correct solution admissible. In a constructed test, correct only this constraint, then compare iterations from the same saved initial state. An improvement locates a defect in the constraint; a persistent exclusion may still come from close colours or regularization. Keeping the four states of the mask until the final decision avoids losing interaction information by binarizing the labels too early.
 
-**Blocking errors**: Assume that convergence must cancel out any erroneous constraint.
-Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+**Blocking errors**: Assuming that convergence will undo any erroneous constraint.
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [Rother et al. 2004, §3.3, firm background labels](https://www.microsoft.com/en-us/research/wp-content/uploads/2004/08/siggraph04-grabcut.pdf) ; [OpenCV 4.13.0, grabcut.cpp L352–L363 and L526–L543, rectangle init and probable-only update](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/grabcut.cpp#L526-L543) ; [OpenCV 4.13.0, GrabCut tutorial source](https://github.com/opencv/opencv/blob/4.13.0/doc/py_tutorials/py_imgproc/py_grabcut/py_grabcut.markdown). Constructed checks: project deduction.
 Tags: cv::pilote cv::d09 famille::diagnostic cv_id::CV-GRABCUT-002 provenance::agent pole::A pole::E
 END
 
@@ -58,17 +58,17 @@ START
 CV-Pilote
 ID: CV-GRABCUT-003
 Question: When extracting an object whose colors resemble the background, why compare interaction cost and assumptions rather than optimization time alone?
-Reponse: **Expected answer**: Labels added by the user can provide the missing information; a quick fix can require a lot of corrections.
+Reponse: **Expected answer**: Labels added by the user can provide the missing information; a method that is fast per call can still require many corrections.
 
-**Further explanation**: Evaluate mask, number of corrections and robustness on reserved images; an optimum energy is not enough.
+**Further explanation**: Evaluate the mask, the number of corrections and robustness on held-out images; an energy optimum is not enough.
 
-**Cost actually paid**: A fast algorithm can require several retouches if its color model separates wrong target and background. A more expensive per-call method can reduce interaction; the opposite is also possible. The times must include the procedure necessary to achieve a defined quality.
+**Cost actually paid**: A fast algorithm can require several retouches if its colour model separates target and background poorly. A method that is more expensive per call can reduce interaction; the opposite is also possible. Times must include the whole procedure needed to reach a defined quality.
 
-**Proposed Protocol**: fix reserved images, a reset rule and a correction budget, then measure mask quality, number of interventions, total time and failure rate. Separately add a background closer to the target to test the appearance hypothesis. Keep unresolved cases in the balance sheet. An energy optimum indicates that the procedure has satisfied its model; it does not say that this model has enough information to distinguish the useful object. The comparison must therefore relate hypotheses of the method and human effort, without choosing only on the duration of the solver.
+**Proposed protocol**: Fix held-out images, a reset rule and a correction budget, then measure mask quality, number of interventions, total time and failure rate. Separately, make the background closer to the target in colour to test the appearance assumption. Keep unresolved cases in the results. An energy optimum indicates that the procedure has satisfied its model; it does not say that this model has enough information to distinguish the object of interest. The comparison must therefore weigh the method's assumptions against human effort, without choosing on solver duration alone.
 
-**Quality curve – interaction**: Set a common rule to place the initial rectangle, and then a budget for corrections or user time. Measure quality after zero, one, and then multiple interactions and keep the rate of images that do not reach the target to the maximum budget. Clicks are only comparable if their policy and accessible information are announced; a correction chosen with the reference mask constitutes a different oracle from a real operator. Compare also borders and small useful regions. This protocol gives an exploitable compromise curve, instead of an isolated optimization time obtained after a particularly favorable initialization.
+**Quality–interaction curve**: Set a common rule for placing the initial rectangle, then a budget of corrections or user time. Measure quality after zero, one and several interactions, and report the share of images that do not reach the target within the maximum budget. Clicks are comparable only if their policy and the information available to the clicker are stated; a correction chosen with the reference mask is a different oracle from a real operator. Also compare boundaries and small regions of interest. This protocol gives a usable trade-off curve instead of an isolated optimization time obtained after a particularly favorable initialization.
 
-**Blocking errors**: Present a low computing time as the complete performance of the process.
-Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [OpenCV GrabCut, theory and masks](https://docs.opencv.org/4.13.0/d8/d83/tutorial_py_grabcut.html).
+**Blocking errors**: Presenting a low computation time as the complete performance of the process.
+Source: [[90-segmentation/references/92-grabcut-regions|Full reference]] ; [Rother et al. 2004, §5, failure cases and interaction comparisons](https://www.microsoft.com/en-us/research/wp-content/uploads/2004/08/siggraph04-grabcut.pdf) ; [OpenCV 4.13.0, GrabCut tutorial source](https://github.com/opencv/opencv/blob/4.13.0/doc/py_tutorials/py_imgproc/py_grabcut/py_grabcut.markdown). Protocols: project constructions.
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-GRABCUT-003 provenance::agent pole::A pole::E
 END

@@ -18,20 +18,20 @@ Reponse: **Expected answer**: Semantic: class by pixel; instances: separate coun
 
 **Example of contract**: Two people who touch each other share the semantic label person but must have different instance IDs if you want to count them. A sky region is stuff in the usual panoptic contract and does not require the same separation into countable objects.
 
-**Consequences for data**: A class mask does not necessarily contain the boundary between two instances of the same class. A model trained on these labels alone therefore does not explicitly receive this information. Instance identifiers can be renumbered without changing the partition; their numeric value does not express a quantity to be interpolated. Also set ignored pixels and overlay policy before evaluation. A per-class overlap score, an instance score and PQ test different aspects: choose the one that corresponds to the requested deliverable, with additional measures if several properties count.
+**Consequences for data**: A class mask does not necessarily contain the boundary between two instances of the same class. A model trained on these labels alone therefore does not explicitly receive this information. Instance identifiers can be renumbered without changing the partition; their numeric value does not express a quantity to be interpolated. Also define ignored pixels and the overlap policy before evaluation. A per-class overlap score, an instance score and PQ test different aspects: choose the one that corresponds to the requested deliverable, with additional measures if several properties count.
 
-**Lost information**: From a partition of classified instances, we can often merge the IDs of the same class to produce a semantic map. The reverse is not determined: multiple instance partitions can have exactly the same map of classes. IDs are arbitrary, but the relationship "these pixels belong to the same object" is not. In panoptic segmentation, each valid pixel belongs to a segment according to the contract, which requires a rule to solve the possible overlaps of predicted masks. Evaluating only classes after merging can therefore hide a major error in the identity or number of segments.
+**Lost information**: From a partition of classified instances, the IDs of each class can be merged to produce a semantic map. The reverse is not determined: several instance partitions can have exactly the same class map. IDs are arbitrary, but the relation "these pixels belong to the same object" is not. In panoptic segmentation, each valid pixel belongs to one segment according to the contract, which requires a rule to resolve possible overlaps of predicted masks. Evaluating only classes after merging can therefore hide a major error in the identity or number of segments.
 
 **Instance IDs are local identities unless stated otherwise**: Two masks with identical geometry and class but permuted instance numbers represent the same per-image instance partition. Across video frames, however, stable identity is an additional tracking requirement. A panoptic image output therefore does not automatically establish temporally consistent IDs. State whether the evaluation concerns per-frame segmentation, video panoptic identity or object trajectories before interpreting label continuity as a property of the segmentation model.
 
-**Blocking errors**: Assimilate identical class and identical instance identity.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]]; [Panoptic Segmentation, §3: format, stuff/things and no overlap](https://arxiv.org/abs/1801.00868); [Cheng et al., Mask2Former, Introduction, distinction of tasks and annotations; representational calculations and constructed metrics](https://arxiv.org/html/2112.01527v3), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Equating the same class with the same instance identity.
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]] ; [Kirillov et al. 2019, §3, format, stuff and things, no overlap](https://arxiv.org/abs/1801.00868) ; [Cheng et al. 2022, Mask2Former, §3.1, masks and labels for every task](https://arxiv.org/abs/2112.01527). Added reasoning: project deduction.
 Tags: cv::pilote cv::d09 famille::comparaison cv_id::CV-SEGMENTATION-001 provenance::agent pole::A pole::E
 END
 
 ## CV-SEGMENTATION-002
 
-Objective: Detecting a bad job definition. Family: diagnosis. Provenance: agent.
+Objective: Detect a badly defined task. Family: diagnosis. Provenance: agent.
 
 START
 CV-Pilote
@@ -39,41 +39,41 @@ ID: CV-SEGMENTATION-002
 Question: A semantic model segments a pile of parts well but does not enable counting them. Is this necessarily a network failure?
 Reponse: **Expected answer**: No: output may not separate instances. Check task, labels, and metric before network capacity.
 
-**Further explanation**: Add a pipeline of instances or markers based on acquisition, and then evaluate mergers/separations.
+**Further explanation**: Depending on the acquisition, add an instance pipeline or markers, then evaluate merges and splits.
 
-**Why the output can be correct**: If the learning labels describe the whole subject of a class, merging pieces in contact can respect supervision. The network has not necessarily been trained to place a boundary between these instances. A task interface defect can therefore precede any capacity problem.
+**Why the output can be correct**: If the training labels describe only the extent of a class, merging touching parts can be consistent with the supervision. The network has not necessarily been trained to place a boundary between these instances. A defect in the task definition can therefore precede any capacity problem.
 
-**Proposed investigation**: Check annotations and expected output, and then examine if the image contains separation cues. Compare single components, markers, and instance methods on the same scenes, counting merges and fragments. Perfectly superimposed parts can also remain ambiguous in a single view. An improvement to mIoU does not automatically set the count: it can come from better background pixels or already easy regions. Linking the measurement to the number and positions of useful objects avoids chasing an indicator that does not represent the need.
+**Proposed investigation**: Check the annotations and the expected output, then examine whether the image contains separation cues. Compare connected components, markers and instance methods on the same scenes, counting merges and fragments. Perfectly superimposed parts can also remain ambiguous in a single view. An improvement in mIoU does not automatically fix the count: it can come from better background pixels or from regions that were already easy. Tying the measurement to the number and positions of the objects of interest avoids chasing an indicator that does not represent the need.
 
-**Test of information**: Compare two annotations with the same foreground union: a single region and two separate instances. A semantic loss per pixel receives the same classes in both cases and cannot distinguish these solutions by this supervision alone. A border index, distance field, or instance header can add a different target, if the data allows it to be annotated. For a classical baseline, markers provide a hypothesis of separation to be validated. Before choosing, check whether the occlusion makes certain objects invisible: a comprehensive count can then require another view or another sensor.
+**Information test**: Compare two annotations with the same foreground union: a single region and two separate instances. A per-pixel semantic loss receives the same classes in both cases and cannot distinguish these solutions from this supervision alone. A boundary cue, a distance field or an instance head can add a different target, if the data allows it to be annotated. For a classical baseline, markers provide a separation hypothesis to be validated. Before choosing, check whether occlusion makes some objects invisible: an exhaustive count may then require another view or another sensor.
 
-**Blocking errors**: Deduct the number of objects from a good mIoU.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]]; [Reinke et al., P1 et fig. 1/3: metric and problem category](https://www.nature.com/articles/s41592-023-02150-0); application to counting: reasoning of the project; [Cheng et al., Mask2Former, Introduction, distinction of tasks and annotations; representational calculations and constructed metrics](https://arxiv.org/html/2112.01527v3), consult the 2026-10-30.
+**Blocking errors**: Inferring the number of objects from a good mIoU.
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]] ; [Ronneberger et al. 2015, U-Net, §1 and §3, separation borders between touching cells](https://arxiv.org/abs/1505.04597) ; [Reinke et al. 2024, P1 and Figs. 1 and 3, metric and problem category](https://www.nature.com/articles/s41592-023-02150-0). Application to counting: project reasoning.
 Tags: cv::pilote cv::d09 famille::diagnostic cv_id::CV-SEGMENTATION-002 provenance::agent pole::A pole::E
 END
 
 ## CV-SEGMENTATION-003
 
-Objective: Propagating a dense increase. Family: practice. Provenance: agent.
+Objective: Propagate a dense augmentation. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-SEGMENTATION-003
 Question: Why must geometric image augmentation be applied differently, but consistently, to the class mask?
-Reponse: **Expected answer**: The geometry must remain aligned; the interpolation of the mask must preserve the discreet labels according to the contract.
+Reponse: **Expected answer**: The geometry must remain aligned; the interpolation of the mask must preserve the discrete labels according to the contract.
 
-**Further explanation**: check also void, crops/padding and reconstruction of the complete image. Continuous interpolation can create artificial labels.
+**Further explanation**: Also check void, crops and padding, and the reconstruction of the full image. Continuous interpolation can create artificial labels.
 
-**Two Types of Values**: an intensity can represent a continuous measure that is interpolated; a class ID represents a category. An average between 1 and 3 labels does not automatically mean the class 2. The spatial transformation must, however, place the class in the same place as the corresponding content in the image.
+**Two types of values**: An intensity can represent a continuous measurement that may be interpolated; a class ID represents a category. The average of labels 1 and 3 does not mean class 2. The spatial transformation must, however, place each class at the same location as the corresponding image content.
 
-**check**: Transform a simple image and mask whose border is known, display their overlay and examine the unique values of the mask obtained. Check ignored pixels and padding value. Distinguish this operation on discrete labels from a possible interpolation of logits or probabilities before decision, which concerns another representation. For the tile, check also returns the crop in the complete image. An alignment error can degrade the learning even if each file seems visually plausible taken separately, so consistency must be tested on the image – annotation pair.
+**Discriminating check**: Transform a simple image and mask whose boundary is known, display their overlay and examine the unique values of the resulting mask. Check the ignored pixels and the padding value. Distinguish this operation on discrete labels from a possible interpolation of logits or probabilities before the decision, which concerns another representation. For tiling, also check how each crop is placed back into the full image. An alignment error can degrade training even if each file looks plausible on its own, so consistency must be tested on the image–annotation pair.
 
-**Transforming the adapted representation**: for a geometric transformation $W$, image and annotation must use the same spatial correspondence, but an interpolation of discrete labels must retain the categorical contract. Interpolating real logits and then taking an argmax is another operation and usually does not switch with argmax and then interpolating labels. At crop borders, explicitly define the class or value ignores the padding. For an increase that destroys a region of the image, do not silently keep an annotation as if its content remains visible. A two-class synthetic mask and a void zone provides a simple witness of these invariants.
+**Transforming the appropriate representation**: For a geometric transformation $W$, image and annotation must use the same spatial correspondence, but the resampling of discrete labels must preserve the categorical contract. Interpolating real-valued logits and then taking an argmax is another operation, and it generally does not commute with taking the argmax and then interpolating labels. At crop borders, explicitly define the class or the ignore value of the padding. For an augmentation that destroys a region of the image, do not silently keep an annotation as if its content remained visible. A synthetic two-class mask with a void zone is a simple test case for these invariants.
 
 **Padding requires an explicit ignored-label policy**: A geometric augmentation can create output pixels with no source annotation. Assigning them an ordinary background class may teach a false label if the intended contract uses ignore regions. Transform image and mask with the same geometry while handling categorical interpolation, padding and ignore values explicitly. A constructed small labeled grid with a translation or rotation is a useful alignment check; smooth-looking overlays can conceal a one-pixel systematic shift.
 
-**Blocking errors**: Transform the image alone or smooth class IDs as intensities.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]]; Consequence of the discreet label contract of the reference note; [Panoptic Segmentation, §3: classes and IDs](https://arxiv.org/abs/1801.00868); [Cheng et al., Mask2Former, Introduction, distinction of tasks and annotations; representational calculations and constructed metrics](https://arxiv.org/html/2112.01527v3), consulted the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Transforming the image alone, or interpolating class IDs as intensities.
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]] ; [Kirillov et al. 2019, §3, classes, instance IDs and void](https://arxiv.org/abs/1801.00868) ; [torchvision v0.24.0, segmentation/_utils.py L28–L35, bilinear upsampling of logits](https://github.com/pytorch/vision/blob/v0.24.0/torchvision/models/segmentation/_utils.py#L28-L35). Discrete-label contract: project deduction.
 Tags: cv::pilote cv::d09 famille::pratique cv_id::CV-SEGMENTATION-003 provenance::agent pole::A pole::E
 END
 
@@ -85,19 +85,19 @@ START
 CV-Pilote
 ID: CV-SEGMENTATION-004
 Question: Why is high mean Dice insufficient to establish the usefulness of medical segmentation?
-Reponse: **Expected answer**: It measures an overlap according to protocol; external validation, borders, rare cases, physical units and intended use provide further evidence.
+Reponse: **Expected answer**: It measures an overlap according to protocol; external validation, boundaries, rare cases, physical units and intended use provide further evidence.
 
 **Further explanation**: Separate patients/sites and report empty cases or failures; no single score demonstrates a useful clinical decision.
 
-**Why the overlap is partial**: A large region can retain a strong Dice despite an error located on an important border. A small missed structure may also weigh little in some aggregations. The score must therefore be interpreted in its units, its level of aggregation and its empty conventions.
+**Why the overlap is partial**: A large region can retain a high Dice despite an error located on an important boundary. A small missed structure may also weigh little in some aggregations. The score must therefore be interpreted with its units, its level of aggregation and its conventions for empty masks.
 
-**Proposed technical evaluation**: separate patients and sites, measure boundaries in the appropriate physical geometry and retain rare or absent cases. Set the output effectively useful and an independent reference, and then examine the failures individually. An improvement on an internal validation may depend on the acquisition and not transfer to another site. These controls describe the technical validity of the model; they do not constitute medical advice or evidence of clinical utility. The senior reasoning keeps distinct segmentation performance, protocol reproducibility and consequence in the intended use.
+**Proposed technical evaluation**: Separate patients and sites, measure boundaries in the appropriate physical geometry and retain rare or absent cases. Define the output actually used and an independent reference, then examine the failures individually. An improvement on an internal validation may depend on the acquisition and not transfer to another site. These controls describe the technical validity of the model; they do not constitute medical advice or evidence of clinical utility. Senior reasoning keeps segmentation performance, protocol reproducibility and consequences in the intended use distinct.
 
-**Physical scale of the defect**: The same boundary error of a voxel represents 0,5 mm on one axis and 3 mm on another if the spacings differ. Surface distances must therefore be calculated in the relevant physical geometry. An average per volume and an average per patient do not give the same weight to cases; also announce cases where the structure is absent. A test built with a large region and a small structure shows how an aggregated Dice can privilege the first. This analysis focuses on the technical metric and its assumptions, without inferring a clinical utility of a overlap value.
+**Physical scale of the defect**: The same one-voxel boundary error represents 0.5 mm on one axis and 3 mm on another if the spacings differ. Surface distances must therefore be computed in the relevant physical geometry. An average per volume and an average per patient do not give the same weight to cases; also report cases where the structure is absent. A constructed test with a large region and a small structure shows how an aggregated Dice can favor the first. This analysis concerns the technical metric and its assumptions, without inferring clinical utility from an overlap value.
 
 **A small structure can vanish inside a favorable average**: Constructed example: deleting a tiny lesion has little influence on an overlap score dominated by a large organ, yet it can fail a lesion-detection requirement. Report the relevant structure-level sensitivity and physical boundary errors, with aggregation and empty-mask policy declared. Use patient or acquisition groups for external validation as appropriate. A score establishes performance only for the annotated output and sampled setting; it cannot independently establish usefulness for a different clinical decision.
 
-**Blocking errors**: Deducing clinical utility from the single internal benchmark.
-Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]]; [Reinke et al., P2.1 – P2.3, P3.2 and discussion](https://www.nature.com/articles/s41592-023-02150-0); external protocol/patients/sites proposed by the project; [Cheng et al., Mask2Former, Introduction, distinction of tasks and annotations; representational calculations and constructed metrics](https://arxiv.org/html/2112.01527v3), consult the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Inferring clinical utility from a single internal benchmark.
+Source: [[90-segmentation/references/93-semantique-instances-panoptique|Full reference]] ; [Reinke et al. 2024, P2.1–P2.3, P3.2 and discussion](https://www.nature.com/articles/s41592-023-02150-0) ; [Cordts et al. 2016, §3.1, dataset-level IoU and iIoU](https://arxiv.org/abs/1604.01685). External protocol by patient and site: project proposal.
 Tags: cv::pilote cv::d09 famille::evaluation cv_id::CV-SEGMENTATION-004 provenance::agent pole::A pole::E
 END

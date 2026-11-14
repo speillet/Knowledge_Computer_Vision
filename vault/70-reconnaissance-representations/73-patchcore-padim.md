@@ -12,19 +12,19 @@ START
 CV-Pilote
 ID: CV-ANOMALIES-001
 Question: Which tradeoffs distinguish golden-template inspection, PatchCore and PaDiM?
-Reponse: **Expected answer**: Template compares to an aligned reference; PatchCore uses a feature bank; PaDiM estimates covariance distributions by position.
+Reponse: **Expected answer**: The template compares with an aligned reference; PatchCore uses a bank of nominal patch features; PaDiM estimates a multivariate Gaussian (mean and covariance) per patch position.
 
-**Further explanation**: Choose according to nominal variability, alignment, memory and business evaluation; none knows about any possible defects.
+**Further explanation**: Choose according to nominal variability, alignment, memory and business evaluation; none of them models the possible defects.
 
-**Reading the assumptions**: A direct comparison to the template requires that legitimate geometric and photometric deviations are sufficiently controlled. A nominal patch bank looks for representative neighbors; a position distribution model otherwise represents variability and correlations. The word anomaly here designates a deviation from this reference, not a universal definition of the business defect.
+**Reading the assumptions**: A direct comparison with the template requires that legitimate geometric and photometric deviations are sufficiently controlled. A nominal patch bank looks for representative neighbors; a per-position distribution model instead represents variability and correlations. The word anomaly here designates a deviation from this reference, not a universal definition of the business defect.
 
-**Constructed example**: New lighting can move all features and increase scores without physically defective parts. On the contrary, a defect that is absent from the learning process may not be very visible in the representation. Compare methods on independent batches, critical defects and nominal variations, with full cost and decision threshold. A good score location still needs to be linked to a business tolerance. The choice depends on what is stable in the acquisition and what should be considered acceptable.
+**Constructed example**: New lighting can move all features and increase scores without physically defective parts. Conversely, a defect that is absent from the learning process may not be very visible in the representation. Compare methods on independent batches, critical defects and nominal variations, with full cost and decision threshold. A good score location still needs to be linked to a business tolerance. The choice depends on what is stable in the acquisition and what should be considered acceptable.
 
-**Geometry of distance**: In PaDiM, a direction of high nominal variance is less penalized by the Mahalanobis distance than a direction of low variance. Covariance is therefore not only used to change the global scale; it also represents correlations between features. When there are few observations relative to their size, regularizing $\Sigma$ for example with a diagonal term is necessary to avoid an unstable inversion, under a documented choice. A pixel template can be more interpretable but very sensitive to registration. Comparing the three approaches thus imposes of check both the spatial coordinate frame and the representation of the acceptable variations.
+**Geometry of distance**: In PaDiM, a direction of high nominal variance is less penalized by the Mahalanobis distance than a direction of low variance. Covariance is therefore not only used to change the global scale; it also represents correlations between features. When there are few observations relative to their dimension, regularizing $\Sigma$, for example with a diagonal term, is necessary to avoid an unstable inversion, under a documented choice. A pixel template can be more interpretable but very sensitive to registration. Comparing the three approaches therefore requires checking both the spatial coordinate frame and the representation of the acceptable variations.
 
 **Registration is a stronger assumption for position statistics**: A nominal feature at one image location can move to another after a small part translation. A position-specific distribution may then score a normal part as unusual, while a location-flexible feature bank has a different sensitivity. Neither is universally preferable: excessive spatial flexibility can also overlook misplaced components. Test controlled shifts and missing/moved parts separately so tolerance to nuisance movement is not confused with tolerance to genuine assembly errors.
 
-**Blocking errors**: Describe these scores as universal probabilities of failure.
+**Blocking errors**: Describing these scores as universal defect probabilities.
 Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); baseline template defined by the project; [Defard et al., PaDiM, §III-B, equation 1, covariance and regularization; geometric interpretation deduced](https://arxiv.org/html/2011.08785v1), see the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::comparaison cv_id::CV-ANOMALIES-001 provenance::agent pole::A pole::E
 END
@@ -37,20 +37,20 @@ START
 CV-Pilote
 ID: CV-ANOMALIES-002
 Question: What is the purpose of a coreset of nominal features in PatchCore?
-Reponse: **Expected answer**: Reduce the bank by maintaining a useful representation of its diversity, to limit memory and research.
+Reponse: **Expected answer**: Reduce the bank while keeping a useful representation of its diversity, to limit memory and nearest-neighbor search cost.
 
-**Further explanation**: Undersampling changes a hedging/cost trade-off; measuring defects and false releases, not just bank size.
+**Further explanation**: Subsampling trades coverage against cost; measure missed defects and false rejections, not just bank size.
 
-**Compromise of representation**: An exhaustive bank can contain many redundant patches. Selecting a representative subset reduces memory and neighbor calculation, but can remove rare nominal variations. A poorly represented compliant coin can then become artificially distant from the bank.
+**Representation tradeoff**: An exhaustive bank can contain many redundant patches. Selecting a representative subset reduces memory and neighbor calculation, but can remove rare nominal variations. A poorly represented conforming part can then become artificially distant from the bank.
 
-**Proposed ablation**: keep extractor, data and comparison threshold, then vary only the bank size or selection. Measure time, memory, false rejections by nominal condition and missed defects. Also check that the bank is not contaminated with coins misclassified as nominal. A coreset is an approximation of reference diversity, not a set of positive examples of defects. The reduced memory is a resource gain; its product utility still requires that the necessary coverage be retained at the chosen operating point.
+**Proposed ablation**: keep extractor, data and comparison threshold, then vary only the bank size or selection. Measure time, memory, false rejections by nominal condition and missed defects. Also check that the bank is not contaminated with parts wrongly labeled as nominal. A coreset is an approximation of reference diversity, not a set of positive examples of defects. The reduced memory is a resource gain; its usefulness in production still requires that the necessary coverage be retained at the chosen operating point.
 
-**Greedy selection**: After a defined initialization, a hedging policy chooses the nominal point currently furthest from its neighbor in the subset already selected. It thus seeks to cover the space of features rather than to keep only the frequent examples. The paper uses a projection to speed up the selection; the approximation must remain distinguished from a perfect cover. With $m$ features of dimension $d$ stored on $b$ bytes, the bank alone costs about $mdb$ bytes, excluding indexes. Reducing $m$ acts directly on this storage, but searching, extracting, and transferring memory can limit full latency differently.
+**Greedy selection**: After a defined initialization, a coverage policy chooses the nominal point currently farthest from its nearest neighbor in the already selected subset. It thus seeks to cover the feature space rather than to keep only the frequent examples. The paper uses a random projection to speed up the selection; the approximation must remain distinguished from a perfect cover. With $m$ features of dimension $d$ stored on $b$ bytes each, the bank alone costs about $mdb$ bytes, excluding indexes. Reducing $m$ acts directly on this storage, but search, feature extraction and memory transfers can limit full latency differently.
 
 **Nominal contamination can become a prototype**: A rare defective patch mistakenly included in nominal training may be selected by a farthest-point coreset because it lies far from the existing bank. Covering feature diversity is useful only after defining what belongs to nominal operation. Audit suspicious extreme training examples and compare held-out defect scores before increasing coreset size. The selection objective is coverage of supplied features, not verification that those features are defect-free.
 
 **Blocking errors**: Take the coreset for a set of supervised defects.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [PaDiM, §III](https://arxiv.org/abs/2011.08785); [Roth et al., PatchCore, §3.2, Algorithm 1, gluton selection; project cost scenarios and calculations](https://arxiv.org/html/2106.08265v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [PaDiM, §III](https://arxiv.org/abs/2011.08785); [Roth et al., PatchCore, §3.2, Algorithm 1, greedy selection; project cost scenarios and calculations](https://arxiv.org/html/2106.08265v2), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::raisonnement cv_id::CV-ANOMALIES-002 provenance::agent pole::A pole::E
 END
 
@@ -62,18 +62,18 @@ START
 CV-Pilote
 ID: CV-ANOMALIES-003
 Question: Anomaly scores rise for every part after an illumination change. What should be tested?
-Reponse: **Expected answer**: Compare acquisition/preprocessing, registration and feature distribution to nominal, then examine actually controlled parts.
+Reponse: **Expected answer**: Compare acquisition/preprocessing, registration and feature distribution with the nominal reference, then examine parts whose condition has been physically verified.
 
-**Further explanation**: Revise the reference or the light system after validation; changing the threshold alone can hide real defects.
+**Further explanation**: Revise the reference or the lighting system after validation; changing the threshold alone can hide real defects.
 
-**Diagnosis by Hypotheses**: The rise may correspond to a real product drift, a light change or a break in the pretreatment. The score alone does not separate these explanations because it measures a deviation from the learned reference.
+**Diagnosis by hypotheses**: The rise may correspond to a real product drift, a lighting change or a change in preprocessing. The score alone does not separate these explanations because it measures a deviation from the learned reference.
 
-**Survey built**: iron physically controlled parts under the two acquisitions, compare images and features with constant preprocessing, and then test the registration. Also look at small critical areas, not just the average score. If lighting is the cause, stabilize the acquisition or revise the nominal with independent validation. Increasing the threshold can cause alerts to disappear while masking a previously detectable defect. A correction must therefore be evaluated simultaneously on conformity and known defects, and its documented scope of validity. The absence of an alert after setting is not in itself a proof of resolution.
+**Constructed investigation**: image physically inspected parts under both acquisition setups, compare images and features with constant preprocessing, and then test the registration. Also look at small critical areas, not just the average score. If lighting is the cause, stabilize the acquisition or revise the nominal with independent validation. Increasing the threshold can cause alerts to disappear while masking a previously detectable defect. A correction must therefore be evaluated simultaneously on conforming parts and known defects, with its scope of validity documented. The absence of an alert after setting is not in itself a proof of resolution.
 
-**Paired experience**: Pick up the same compliant parts before and after the light change and compare their scores by region. Then do the same for known defects. This makes it possible to study the displacement of the nominal and the separation between conformity and defect, instead of arbitrarily moving an overall threshold. If the two populations get closer, restoring the rate of false releases by increasing the threshold can greatly degrade the recall of defects. Documenting also exposure, saturation and white balance: a normalization of features does not recover visual information lost in saturated pixels. The result must be checked on other parts and lots.
+**Paired experiment**: Image the same conforming parts before and after the lighting change and compare their scores by region. Then do the same for known defects. This makes it possible to study the displacement of the nominal population and the separation between conforming and defective parts, instead of arbitrarily moving a global threshold. If the two populations get closer, restoring the false-rejection rate by raising the threshold can greatly degrade defect recall. Also document exposure, saturation and white balance: a normalization of features does not recover visual information lost in saturated pixels. The result must be checked on other parts and batches.
 
-**Blocking errors**: Automatically label any score increase as a physical defect.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deducted by the project.
+**Blocking errors**: Automatically labeling any score increase as a physical defect.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deduced by the project.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-ANOMALIES-003 provenance::agent pole::A pole::E
 END
 
@@ -85,21 +85,21 @@ START
 CV-Pilote
 ID: CV-ANOMALIES-004
 Question: Track E — design: only a few defective images are available for a production line with a fixed cycle time. Which baseline and validation should be proposed?
-Reponse: **Expected answer**: Stabilize acquisition, define critical defects and tolerances, compare template/nominal anomaly then measure rejections and defects missed on independent batches and realistic variations.
+Reponse: **Expected answer**: Stabilize acquisition, define critical defects and tolerances, compare a template baseline with a nominal-only anomaly model, then measure false rejections and missed defects on independent batches and realistic variations.
 
-**Further explanation**: Provide for review of uncertain cases, full cost and tracking of drifts; no global rate replaces rare defects of need.
+**Further explanation**: Plan review of uncertain cases, full cost and drift monitoring; no global rate replaces evidence on the rare critical defects.
 
-**Proposed design**: distinguish a wrongly rejected part, a missed defect and a case subject to verification. Their cost is not the same. Stabilizing the image first and the registration makes the baseline interpretable; then choosing whether a single reference or a nominal distribution sufficiently represents acceptable variability.
+**Proposed design**: distinguish a wrongly rejected part, a missed defect and a case sent for verification. Their cost is not the same. Stabilizing the image and the registration first makes the baseline interpretable; then choose whether a single reference or a nominal distribution sufficiently represents acceptable variability.
 
-**Validation**: separate parts and batches between adjustment and test, cover even rare critical defects and realistic nominal disturbances. Measure the decision point, verification rate and full latency on the target line. A AUROC summarizes a ranking curve; it does not directly give the number of defects missed at the threshold exploited. Provide for the collection and review of new cases before modifying the reference, so as not to silently integrate a drift produced at the nominal.
+**Validation**: separate parts and batches between tuning and test, cover even rare critical defects and realistic nominal disturbances. Measure the operating point, verification rate and full latency on the target line. An AUROC summarizes a ranking curve; it does not directly give the number of defects missed at the threshold in use. Plan the collection and review of new cases before modifying the reference, so as not to silently integrate a product drift into the nominal reference.
 
-**Translation in industrial load**: at a rate of $\lambda$ pieces/s and average processing time $T$ s/piece, a service capacity of less than $\lambda$ accumulates a queue even with a good detection score. For the point of operation, report false discharges among the conformants, missed defects among the defectives and number of batch checks. Zero defects missed on a small sample does not prove a zero rate: the size of the test and the diversity of defects limit the conclusion. Defining set-aside sets and critical cases before threshold setting connects the learning metrics to the actual process being evaluated.
+**Translation into production load**: at a rate of $\lambda$ parts/s and a mean processing time of $T$ s/part, a service capacity below $\lambda$ builds up a queue even with a good detection score. At the operating point, report false rejections among conforming parts, missed defects among defective parts and the number of parts sent for verification per batch. Zero defects missed on a small sample does not prove a zero rate: the size of the test and the diversity of defects limit the conclusion. Defining held-out sets and critical cases before setting the threshold connects the learning metrics to the actual process being evaluated.
 
 **Rare defects need operating-point evidence**: A high AUROC can coexist with unacceptable missed defects at the low false-rejection rate needed by production. Define that rate per part, not merely per pixel, and report recall by critical defect family with sample counts. Include full-cycle latency, memory-bank size and handling of camera changes. Nominal-only validation estimates false alarms under its sampled conditions; it cannot directly estimate recall of defect types never tested.
 
 **Blocking errors**: Validate only on nominal images or the average AUROC.
 
-**Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
+**Grading criteria for the case**: explicit task and constraints, stated assumptions, justified choice, discriminating check, limit of the conclusion. Constructed case, without field observation.
 Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III, equations 1 – 2](https://arxiv.org/abs/2011.08785); industrial protocol proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d07 famille::conception cv_id::CV-ANOMALIES-004 provenance::agent pole::A pole::E cas_pole::E::conception
 END
