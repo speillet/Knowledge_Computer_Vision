@@ -41,7 +41,7 @@
         "CV-ECC"
       ],
       "objectif": "Connect detector, descriptor, metric, matcher and geometric model.",
-      "preuve": "register a plan with a baseline and a proposed protocol: coverage, errors on reserved points, full cost and repeat case."
+      "preuve": "register a plane with a baseline and a proposed protocol: coverage, errors on held-out points, full cost and repeated case."
     },
     {
       "id": "geometrie",
@@ -130,7 +130,7 @@
         "CV-DEPLOIEMENT"
       ],
       "objectif": "Evaluate system quality, memory, throughput, latency, and reproducibility compromises.",
-      "preuve": "Compare two versions on the same hardware target with reserved data, end-to-end p99, difficult cases and back-up procedure."
+      "preuve": "Compare two versions on the same hardware target with held-out data, end-to-end p99, difficult cases and a rollback procedure."
     }
   ]
 }

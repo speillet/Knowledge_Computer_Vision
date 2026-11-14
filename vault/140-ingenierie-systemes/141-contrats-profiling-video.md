@@ -6,30 +6,30 @@ TARGET DECK: CV::Pilote::140-ingenierie-systemes
 
 ## CV-PIPELINE-001
 
-Objective: separate latency flow and freshness. Family: comparison. Provenance: agent.
+Objective: Separate latency, throughput and freshness. Family: comparison. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-PIPELINE-001
 Question: A pipeline sustains 240 images/s but makes decisions on old frames. Does it necessarily meet its real-time requirement?
-Reponse: **Expected answer**: No: the throughput does not guarantee the age of the observation or the deadline by decision.
+Reponse: **Expected answer**: No: throughput guarantees neither the age of the observation nor the per-decision deadline.
 
-**Further explanation**: Measure capture timestamps to output, latency distribution, queue and drops under representative load.
+**Further explanation**: Measure the delay from capture timestamp to output, its distribution, queue depths and drops under representative load.
 
-**Two distinct quantities**: A bitrate counts outputs per second; the age of a frame compares its capture time to when its decision is available. A system can process a lot of images while accumulating a significant expectation before the calculation. The real-time term must therefore be linked to a defined useful time.
+**Two distinct quantities**: Throughput counts outputs per second; the age of a frame compares its capture time with the moment its decision is available. A system can process many images while accumulating a long wait before processing. The term real time must therefore be tied to a defined deadline.
 
-**Constructed example**: A queue already contains several seconds of images when the engine reaches its rated speed. The exits arrive regularly, but describe a past too old for downstream action. Measure wait and freshness, then choose a charging policy consistent with the need. Abandoning old frames can reduce frame age, but affects tracking and short events; processing all frames can preserve completeness by violating delay. The right compromise cannot be deduced from the FPS alone: it belongs to the product contract and must be tested under load.
+**Constructed example**: A queue already holds several seconds of images when the engine reaches its rated speed. The outputs arrive regularly but describe a past too old for downstream action. Measure waiting and freshness, then choose a load-shedding policy consistent with the need. Dropping old frames can reduce frame age but affects tracking and short events; processing every frame preserves completeness at the cost of the deadline. The right compromise cannot be deduced from the FPS alone: it belongs to the product contract and must be tested under load.
 
-**Age and waiting**: For a frame, note $t_c$ capture, $t_s$ start processing and $t_o$ output. The capture→exit delay is $(t_s-t_c)+(t_o-t_s)$: speeding up the calculation does not cancel an already accumulated wait. A receiving timestamp replaces only part of this contract if the transport or camera adds a delay. Check that the compared clocks are consistent and that the units are identical. Also measure the share of outputs exceeding the useful time; two systems with the same throughput can serve the product very differently depending on their queue and abandonment policy.
+**Age and waiting**: For a frame, write $t_c$ for capture, $t_s$ for the start of processing and $t_o$ for output. The capture-to-output delay is $(t_s-t_c)+(t_o-t_s)$: speeding up processing does not cancel a wait already accumulated. A reception timestamp covers only part of this delay when the camera or the transport adds its own. Check that the compared clocks are consistent and that the units are identical. Also measure the share of outputs that exceed the deadline; two systems with the same throughput can serve the product very differently depending on their queue and drop policy.
 
-**Blocking errors**: Validate the product at the average SPF only.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Distinction of measures of the project; [TensorRT, Reported Performance Metrics](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) and [GStreamer, tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consult the 2026-10-20.
+**Blocking errors**: Validating the product on average FPS alone.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; measurement distinction constructed by the project; [Yates and Kaul, arXiv 1608.08622, §I (definition of age)](https://arxiv.org/abs/1608.08622); [TensorRT 11.4.1, Reported Performance Metrics](https://docs.nvidia.com/deeplearning/tensorrt/11.4.1/performance/benchmarking.html) and [GStreamer, queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consulted 2026-11-14.
 Tags: cv::pilote cv::d14 famille::comparaison cv_id::CV-PIPELINE-001 provenance::agent pole::C pole::E pole::F
 END
 
 ## CV-PIPELINE-002
 
-Objective: reasoning on a video file. Family: reasoning. Provenance: agent.
+Objective: Reason about a video queue. Family: reasoning. Provenance: agent.
 
 START
 CV-Pilote
@@ -37,24 +37,24 @@ ID: CV-PIPELINE-002
 Question: What happens if sustained input at 240 images/s exceeds processing capacity at 200 images/s and no frames are dropped?
 Reponse: **Expected answer**: Delay and queue size increase in this model; a larger buffer only delays saturation.
 
-**Further explanation**: Choose capacity, admission or abandonment according to freshness/completeness and measure the actual behavior.
+**Further explanation**: Choose capacity, admission control or dropping according to the freshness or completeness requirement, and measure the actual behavior.
 
-**Analytical order of magnitude**: In the announced constant model, an additional forty frames accumulate every second. A buffer can absorb a temporary spike, but not a lasting overload without further change. Its ability alters when you run out of memory or when you block, not the sustainable capacity gap.
+**Analytical order of magnitude**: In the stated constant-rate model, forty additional frames accumulate every second. A buffer can absorb a temporary spike, but not a lasting overload without another change. Its size only changes when memory runs out or when the producer blocks; it does not change the sustained capacity gap.
 
-**Proposed action**: define whether the product favors all observations or their freshness, then compare load reduction, additional capacity, controlled admission and abandonment. Measure the effects on temporal errors and tracking losses. If a producer is blocked, also check what happens in the upstream camera or decoding buffers. A bounded queue alone does not guarantee good end-to-end latency. Stability is judged on the actual flow, its variations and the complete policy, not just on the setting of an isolated buffer.
+**Proposed action**: Define whether the product favors every observation or their freshness, then compare load reduction, additional capacity, admission control and dropping. Measure the effects on timing errors and tracking losses. If a producer is blocked, also check what happens in the upstream camera or decoder buffers. A bounded queue alone does not guarantee good end-to-end latency. Stability is judged on the actual arrival process, its variations and the complete policy, not just on the setting of an isolated buffer.
 
-**Growth of queue**: at constant rates and without blocking or abandonment, $Q(t)=Q(0)+(\lambda-\mu)t$ as long as the model remains applicable. An additional capacity buffer $C$ frames therefore absorbs approximately $C/(\lambda-\mu)$ seconds of overload before saturation. With a deficit of 40 frames/s, 400 places only give 10 s of margin. If the queue becomes bounded and blocks the producer, the delay can move upstream; if it drops, it is necessary to define which events and which frames are lost. This arithmetic distinguishes absorption from a temporary peak and insufficient capacity under sustained regime.
+**Queue growth**: At constant rates and without blocking or dropping, $Q(t)=Q(0)+(\lambda-\mu)t$ as long as the model applies. An additional buffer of capacity $C$ frames therefore absorbs about $C/(\lambda-\mu)$ seconds of overload before saturation. With a deficit of 40 frames/s, 400 slots give only 10 s of margin. If the queue is bounded and blocks the producer, the delay can move upstream; if it drops, the events and frames that are lost must be defined. This arithmetic separates absorbing a temporary peak from a capacity shortfall under sustained load.
 
 **Buffer capacity buys time, not steady-state capacity**: With arrivals at 240 frames/s and service at 200, backlog grows by 40 frames/s under the front's no-drop model. An extra 400-frame buffer absorbs about ten seconds before filling. By then it represents about two seconds of service work at 200 frames/s. Backpressure or dropping changes the model and must be measured explicitly; allocating memory alone cannot make the sustained arrival rate feasible.
 
-**Blocking errors**: Believing that increasing the tail solves the long-lasting flow deficit.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Analytical flow report of the project, 240−200 = 40 images/s of deficit; [GStreamer tail, block and leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consulted the 2026-10-20, describes the policies of a limited queue; [NVIDIA TensorRT, benchmarking, scope of measurement; page lastis consulted on 2026-10-30, no new API command imposed](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), consulted the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Believing that enlarging the queue solves a sustained throughput deficit.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; analytical flow calculation by the project, 240 − 200 = 40 images/s of deficit; [GStreamer queue, blocking and leaky](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), describing the policies of a bounded queue, consulted 2026-11-14; [NVIDIA TensorRT 11.4.1, Performance Benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/11.4.1/performance/benchmarking.html), scope of measurement, consulted 2026-11-14. Added reasoning: project deduction; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d14 famille::raisonnement cv_id::CV-PIPELINE-002 provenance::agent pole::C pole::E pole::F
 END
 
 ## CV-PIPELINE-003
 
-Objective: Set a complete benchmark. Family: practice. Provenance: agent.
+Objective: Define a complete benchmark. Family: practice. Provenance: agent.
 
 START
 CV-Pilote
@@ -62,18 +62,20 @@ ID: CV-PIPELINE-003
 Question: Why is GPU time reported by an inference engine insufficient to validate camera-to-decision latency?
 Reponse: **Expected answer**: Decoding, pre/postprocessing, transfers, queues and transmission may be excluded from this measure.
 
-**Further explanation**: Check version/options of the benchmark and measure the product perimeter; correctly synchronize asynchronous operations.
+**Further explanation**: Check the version and options of the benchmark, measure the product's scope, and synchronize asynchronous operations correctly.
 
-**Perimeter of measurement**: The engine can measure only part of the calculation, with entries already in memory or transfers excluded depending on the options. The real camera adds acquisition, transport, decoding and waiting. An asynchronous operation can also only be started when the stopwatch stops.
+**Measurement scope**: The engine may measure only part of the computation, with inputs already in memory or transfers excluded depending on the options. The real camera adds acquisition, transport, decoding and waiting. An asynchronous operation may also have only been launched, not completed, when the stopwatch stops.
 
-**Proposed Protocol**: associate each result with the capture time of its frame and measure to the useful output, with a clock or consistent synchronization. Also keep step-by-step measurements to locate the cost. Test load, batch size, objects and representative duration. Latency distribution and drops describe the service better than a single average kernel time. Benchmark tools are still useful for comparing a component; their options and versions define what they measure. It is therefore necessary to link their output to the contract of the product rather than implicitly attribute all the steps to it.
+**Proposed protocol**: Associate each result with the capture time of its frame and measure up to the usable output, with one clock or consistent synchronization. Also keep per-stage measurements to locate the cost. Test with representative load, batch size, object counts and duration. The latency distribution and drops describe the service better than a single average kernel time. Benchmark tools remain useful for comparing a component; their options and versions define what they measure. Their output must therefore be related to the product contract rather than implicitly credited with every stage.
 
-**Critical Path and Asynchronous**: covered steps do not contribute to the delay as a simple sum of their isolated durations. Tracing dependencies, launches, and real endings helps identify the path that determines the availability of the decision. A CPU stopwatch around an asynchronous GPU launch can measure above all the submission; a global synchronization added everywhere can, conversely, destroy the overlap that one wants to study. Choose the instrumentation according to the question, then confirm the end-to-end latency without artificially altering the pipeline. The component measurements and the product measurement complement each other, with an explicitly announced perimeter.
+**Critical path and asynchrony**: Overlapped stages do not contribute to the delay as a simple sum of their isolated durations. Tracing dependencies, launches and actual completions identifies the path that determines when the decision is available. A CPU stopwatch around an asynchronous GPU launch may mostly measure the submission; conversely, a global synchronization added everywhere can destroy the overlap one wants to study. Choose the instrumentation according to the question, then confirm the end-to-end latency without artificially altering the pipeline. Component measurements and the product measurement complement each other, each with an explicitly stated scope.
 
 **Overlapped stages need a dependency trace**: Decode, transfer and inference can overlap across frames, so adding their separately timed durations can overstate throughput cost while still omitting queue age. Trace each frame's dependencies and the moment its result becomes usable. A host launch timestamp is not device completion. Distinguish an isolated synchronous latency benchmark from a pipelined load test, and report both when the system requires sustained streams and per-frame deadlines.
 
-**Blocking errors**: Compare asynchronous GPU durations to contract-free user latency.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; [TensorRT, Measure End-to-End Performance, Metrics and Synchronized Measurements](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), accessed on 2026-10-20; [GStreamer, tail, limits and blocking; built flow calculations and protocols](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), accessed on 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Version-specific scope in TensorRT 11.4.1**: trtexec defines Host Latency as the sum of H2D latency, GPU compute time and D2H latency, and calls it the end-to-end latency of a single inference; since TensorRT 11.0 the H2D and D2H transfers are excluded by default, pre- and postprocessing are always outside it, and trtexec keeps one inference enqueued ahead, so its latency is measured under back-to-back load rather than camera-rate arrivals with queueing. "End-to-end" there means the engine call, not camera to decision.
+
+**Blocking errors**: Comparing asynchronous GPU durations with a user-facing latency whose measurement contract is undefined.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; [TensorRT 11.4.1, Performance Benchmarking: How trtexec Schedules Inferences and Reports Metrics, Inference Phase Flags, Advanced Performance Measurement Techniques](https://docs.nvidia.com/deeplearning/tensorrt/11.4.1/performance/benchmarking.html), consulted 2026-11-14; [PyTorch 2.11, CUDA semantics, asynchronous execution](https://docs.pytorch.org/docs/2.11/notes/cuda.html#asynchronous-execution); [GStreamer, queue, limits and blocking](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html). Constructed flow calculations and protocols: project deduction; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d14 famille::pratique cv_id::CV-PIPELINE-003 provenance::agent pole::C pole::E pole::F
 END
 
@@ -85,20 +87,20 @@ START
 CV-Pilote
 ID: CV-PIPELINE-004
 Question: Track F — design: process eight 1080p streams at 30 frames/s on an embedded module with a defined p99 latency budget. Which process makes the hardware choice verifiable?
-Reponse: **Expected answer**: Set freshness, drops and quality; profile each stage and then the full stream at 240 images/s; test batching/concurrency/queues and load/thermal scenarios before choosing material or optimization.
+Reponse: **Expected answer**: Set freshness, drop and quality requirements; profile each stage and then the full load of 240 images/s; test batching, concurrency, queues and load and thermal scenarios before choosing hardware or an optimization.
 
-**Further explanation**: Keep latency, throughput, memory and quality together. Provide an explicit overload rather than an infinite buffer; no product throughput is guaranteed here.
+**Further explanation**: Keep latency, throughput, memory and quality together. Plan an explicit overload policy rather than an unbounded buffer; no product throughput is guaranteed here.
 
-**Proposed sizing**: Start with a single-stream baseline to check contracts and instrumentation, and then increase the load up to eight simultaneous streams. Observe which resource and file saturate, keeping model, accuracy and thresholds. The aggregated throughput of 240 images/s does not tell if each stream receives a fair service.
+**Proposed sizing**: Start with a single-stream baseline to check contracts and instrumentation, then increase the load up to eight simultaneous streams. Observe which resource and which queue saturate, keeping the model, its precision and its thresholds fixed. The aggregate throughput of 240 images/s does not tell whether each stream receives fair service.
 
-**System criteria**: compare distributions by flow and age of observations with the decision budget. A global p99 can hide a disadvantaged stream; the sum of the p99 steps is not usually the p99 of the full path. Include thermal regime, peaks and restart in a documented protocol. These measures make it possible to choose an optimization that treats the actual loophole, rather than blindly oversizing or compressing the only network.
+**System criteria**: Compare per-stream distributions of latency and observation age with the decision budget. A global p99 can hide a disadvantaged stream; the sum of per-stage p99s is generally not the p99 of the full path, and an empirical per-stream p99 needs enough samples (one minute at 30 frames/s leaves only 18 values above it). Include thermal steady state, peaks and restarts in a documented protocol. These measurements make it possible to choose an optimization that treats the actual bottleneck, rather than blindly oversizing the hardware or compressing only the network.
 
-**Rafals and equity**: Eight cameras with the same average frame rate can deliver their frames simultaneously or in a staggered manner. The average bitrate remains 240 images/s, but queue peaks and delay per stream may change. Testing these two configurations, and then a momentarily more charged flow, reveals the effects of scheduling. An overall average can hide a rarely served stream or losses concentrated on a single camera. Report latency, seniority, drops and quality per stream, as well as aggregate. The p99 budget must be measured on the full path and a defined load, without mechanically adding the percentiles of the floors.
+**Bursts and fairness**: Eight cameras with the same average frame rate can deliver their frames simultaneously or staggered. The aggregate rate remains 240 frames/s, but queue peaks and per-stream delay may change. Testing both configurations, then a temporarily heavier-loaded stream, reveals scheduling effects. An overall average can hide a rarely served stream or losses concentrated on one camera. Report latency, frame age, drops and quality per stream as well as in aggregate. The p99 budget must be measured on the full path under a defined load, without mechanically adding the percentiles of the stages.
 
-**Blocking errors**: Sizing on an FPS isolated from the model or mechanically adding p99s.
+**Blocking errors**: Sizing from the model's isolated FPS, or adding per-stage p99s mechanically.
 
-**Criteria for correction of the case**: explicit task and constraints, announced assumptions, justified choice, discriminating verification, limit of the conclusion. Case built, without field observation.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Built sizing case of the project; [TensorRT benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html) and [GStreamer tail](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consult the 2026-10-20.
+**Grading criteria for the case**: explicit task and constraints, stated assumptions, justified choice, discriminating verification, limit of the conclusion. Constructed case, without field observation.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; sizing case constructed by the project; [Dean and Barroso 2013, The Tail at Scale, Component-Level Variability Amplified By Scale](https://www.barroso.org/publications/TheTailAtScale.pdf); [TensorRT 11.4.1, Performance Benchmarking](https://docs.nvidia.com/deeplearning/tensorrt/11.4.1/performance/benchmarking.html) and [GStreamer queue](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), consulted 2026-11-14.
 Tags: cv::pilote cv::d14 famille::conception cv_id::CV-PIPELINE-004 provenance::agent pole::C pole::E pole::F cas_pole::F::conception
 END
 
@@ -112,17 +114,19 @@ ID: CV-PIPELINE-005
 Question: GPU utilization is low while latency is high. Which measurements distinguish CPU decoding, transfers and queues?
 Reponse: **Expected answer**: Trace CPU/GPU time, H2D/D2H, waits and age of frames with representative load.
 
-**Further explanation**: Change one floor at a time and keep the same quality contract. An average occupation alone does not locate the cause.
+**Further explanation**: Change one stage at a time and keep the same quality contract. Average utilization alone does not locate the cause.
 
-**Interpretation of traces**: A low-busy GPU can wait for decoded images, copies, or a step-by-step dependency. A usage average masks the computational and waiting alternations; it does not directly say which component should be accelerated.
+**Interpretation of traces**: An underutilized GPU may be waiting for decoded images, for copies or for a dependency between stages. Average utilization hides the alternation of computing and waiting; it does not say which component should be accelerated.
 
-**Proposed ablation**: Instrument the timeline, then temporarily replace the decoding with prepared inputs or compare an isolated transfer, with an explicit measurement objective. Then reintroduce the complete chain to check the product gain. check also batch and file size, as reducing a cost can move the drop. The quality of the inputs and outputs must remain the same. This approach relates a hypothesis to a discriminating measurement and avoids modifying architecture or precision when the model constitutes only a fraction of the observed delay. The tests described are proposed, without any physical trace executed here.
+**Proposed ablation**: Instrument the timeline, then temporarily replace decoding with prepared inputs, or measure an isolated transfer, with an explicit measurement objective. Then reintroduce the complete chain to check the product gain. Also check batch size and queue size, because reducing one cost can move the bottleneck. The quality of inputs and outputs must remain the same. This approach ties a hypothesis to a discriminating measurement and avoids changing architecture or precision when the model accounts for only a fraction of the observed delay. The tests described are proposals; no hardware trace was executed here.
 
-**Locate a drop by substitution**: Replacing decoding with prepared frames approximately retains the downstream work and tests a hypothesis of data provision. Replacing the network temporarily with a saved result tests another limit, provided you keep the cost of postprocessing and the number of candidates. These tests are not product performance: they isolate contributions. If the drop moves after correction, re-trace the entire track rather than adding the isolated gains. check also includes copy dependencies and involuntary serialization; low GPU usage may come from repeated short waits and not from a lack of network capacity.
+**Locate a bottleneck by substitution**: Replacing decoding with prepared frames roughly preserves the downstream work and tests the hypothesis that input supply is the limit. Temporarily replacing the network with a saved result tests another limit, provided the postprocessing cost and the number of candidates are kept. These tests are not product performance: they isolate contributions. If the bottleneck moves after a fix, re-trace the entire path rather than adding up isolated gains. Also check copy dependencies and unintended serialization; low GPU utilization may come from repeated short waits rather than from a lack of network capacity.
+
+**Launch-bound case**: TensorRT 11.4.1 notes that when trtexec's Enqueue Time exceeds the GPU Compute Time, the GPU can be underutilized and throughput dominated by host-side overhead; CUDA graphs, enabled by default in trtexec and disabled with `--noCudaGraph`, reduce that overhead. A low utilization can therefore come from kernel launches rather than from decoding or copies; on a timeline this would appear as gaps between kernels while the host thread is busy launching them (project reading of the trace).
 
 **Utilization alone does not identify the bottleneck**: A GPU can be idle because decode starves it, because the CPU waits on a transfer, or because a concurrency policy serializes work. A proposed controlled substitution replaces one stage at a time while retaining downstream input shapes and transfer requirements. Compare timeline gaps, queue depths and output age. Artificial inputs that bypass too much work can exaggerate a stage's apparent benefit, so state exactly which cost the substitution removes.
 
-**Blocking errors**: Optimize the network without measuring the other steps.
-Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; Diagnosis proposed by the project; [TensorRT, Reported Performance Metrics and profiling](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/benchmarking.html), Consulted the 2026-10-20; [GStreamer, tail, limits and blocking; built flow calculations and protocols](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html), Consulted the 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Optimizing the network without measuring the other stages.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; diagnosis proposed by the project; [TensorRT 11.4.1, Performance Benchmarking: Reported Performance Metrics, Performance Profiling Tools and H2D/D2H Data Transfers](https://docs.nvidia.com/deeplearning/tensorrt/11.4.1/performance/benchmarking.html), consulted 2026-11-14; [GStreamer, queue, limits and blocking](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html). Constructed flow calculations and protocols: project deduction; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d14 famille::diagnostic cv_id::CV-PIPELINE-005 provenance::agent pole::C pole::E pole::F
 END

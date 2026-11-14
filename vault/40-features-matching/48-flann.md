@@ -12,20 +12,20 @@ START
 CV-Pilote
 ID: CV-FLANN-001
 Question: Why can a FLANN index be less attractive than exhaustive search for a small database used only once?
-Reponse: **Expected answer**: The build cost and memory can exceed the gain on queries. Compare $T_{construction}+N_qT_{requête}$ to the full cost for the actual number of queries, with the same recall goal.
+Reponse: **Expected answer**: The build cost and memory can exceed the gain on queries. Compare $T_{\text{construction}}+N_qT_{\text{query}}$ to the exhaustive cost for the actual number of queries, with the same recall goal.
 
-**Further explanation**: Structures suitable for large datasets do not guarantee a win on a small base or on a given material. A comparison should include database updates, transfers, and batch processing.
+**Further explanation**: Structures suited to large datasets do not guarantee a gain on a small database or on given hardware. A comparison should include database updates, transfers and batch processing. In OpenCV 4.13, the one-shot call `knnMatch(query, train, k)` builds a new index on every call; reuse requires `add`, `train()` once, then `knnMatch(query, k)`.
 
-**Example of amortized cost**: With 2 s of construction and 1 ms per query, a hundred queries cost about 2,1 s, while an exhaustive search at 3 ms each costs 0,3 s. For ten thousand queries on the same basis, the hypothetical costs become 12 s and 30 s. The values illustrate a calculation, without constituting a benchmark FLANN.
+**Example of amortized cost**: With 2 s of construction and 1 ms per query, a hundred queries cost about 2.1 s, while an exhaustive search at 3 ms each costs 0.3 s. For ten thousand queries on the same database, the hypothetical costs become 12 s and 30 s. The values illustrate a calculation; they are not a FLANN benchmark.
 
-**Interpretation**: The actual number of re-uses of the index and its period of validity decide the depreciation. A reconstructed base with each image can lose this advantage. Also compare the quality of the neighbors: reducing the time by accepting an insufficient recall is not a gain to constant objective. The choice depends on volume, material, batches and protocol.
+**Interpretation**: The actual number of reuses of the index and its period of validity decide the amortization. A database rebuilt for each image can lose this advantage. Also compare the quality of the neighbors: reducing the time by accepting insufficient recall is not a gain at constant objective. The choice depends on volume, hardware, batching and protocol.
 
-**What does the index cost?**: a forest of kd-trees divides vectors by coordinates; a search follows promising regions and then explores other branches according to a budget. A hierarchical k-mean tree partitions rather by group centers. Stopping early explains both the labor economy and the lack of an accurate general neighbor guarantee. In the time model already built, the damping threshold checks $2+0,001N_q<0,003N_q$, so $N_q>1000$; at a thousand queries the costs are equal. This threshold depends entirely on the assumed costs. Any reconstruction, additional transfer or change in the budget must be reinstated before concluding that the index is of interest.
+**What does the index cost?**: a forest of k-d trees divides vectors by coordinates; a search follows promising regions and then explores other branches according to a budget. A hierarchical k-means tree partitions by cluster centers instead. Stopping early explains both the saved work and the lack of a general exact-neighbor guarantee. In the time model above, the break-even condition is $2+0.001N_q<0.003N_q$, so $N_q>1000$; at a thousand queries the costs are equal. This threshold depends entirely on the assumed costs. Any rebuild, additional transfer or change of budget must be added back before concluding that the index is worthwhile.
 
 **Amortization has an explicit break-even point**: Let index construction take $B$, exhaustive query time $E$, and indexed query time $A<E$. Ignoring updates, the index pays off only after $N_q>B/(E-A)$ queries. A rebuilt database resets that amortization. Memory and required neighbor recall can rule out an apparently favorable time comparison. This is a project cost model, so measure all three terms on the actual descriptor population and target hardware rather than treating an algorithm name as a latency estimate.
 
-**Blocking errors**: Compare only the query time excluding indexing.
-Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Comparing only the query time, excluding index construction.
+Source: [[40-features-matching/references/48-flann|Full reference]]; [Muja and Lowe 2009, §3.3 cost with build-time and memory weights, eq. 1](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf); [OpenCV 4.13.0 matchers.cpp, one-shot knnMatch and train](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/src/matchers.cpp#L589-L598). Cost figures: project construction.
 Tags: cv::pilote cv::d04 famille::comparaison cv_id::CV-FLANN-001 provenance::agent pole::B pole::E pole::F
 END
 
@@ -37,20 +37,20 @@ START
 CV-Pilote
 ID: CV-FLANN-002
 Question: A FLANN matcher configured for SIFT vectors rejects ORB descriptors. Is converting them to floats sufficient for correct matching?
-Reponse: **Expected answer**: No: storage does not define the metric. The usual binary descriptors ORB compare to Hamming; converting their bytes to floats for L2 changes the direction of the distances. Choose a Hamming search, for example BF or a compatible LSH configuration.
+Reponse: **Expected answer**: No: storage does not define the metric. The usual binary descriptors ORB compare to Hamming; converting their bytes to floats for L2 changes the meaning of the distances. Choose a Hamming search, for example BF or a compatible LSH configuration.
 
-**Further explanation**: OpenCV 4.13 illustrates kd-tree for SIFT and LSH for ORB. For ORB WTA_K=3 or 4, check the need for Hamming2 and the actual matcher support; LSH is not a universal response to any variant.
+**Further explanation**: In OpenCV 4.13, a k-d tree index requires `CV_32F` data and an LSH index forces plain Hamming, with no Hamming2 option. For ORB with WTA_K=3 or 4, LSH therefore compares 2-bit symbols bit by bit; use brute force with Hamming2 or keep WTA_K=2. LSH is not a universal answer for every variant.
 
 **Counter-example of representation**: Two bytes that differ only by one bit of strong weight are close in Hamming but distant as numbers. Their conversion into floats maintains this numerical gap; it does not reconstruct the binary tests that the metric must compare.
 
-**Proposed diagnosis**: determine first which representation has actually been produced and how far its manufacturer is waiting. Then test a few pairs of descriptors with an exhaustive reference using this distance, then compare the envisaged index. A type exception is an interface index, not a permission to change the mathematical problem. A configuration that works for ORB standard still needs to be re-examined for a variant with different symbols; the support announced by the API and the final quality remain to be checked.
+**Proposed diagnosis**: first determine which representation was actually produced and which distance its extractor expects. Then test a few pairs of descriptors with an exhaustive reference using this distance, then compare the envisaged index. A type exception is an interface index, not a permission to change the mathematical problem. A configuration that works for ORB standard still needs to be re-examined for a variant with different symbols; the support announced by the API and the final quality remain to be checked.
 
-**Standardization and metric form a contract**: for real unit vectors $a,b$, $\|a-b\|_2^2=2-2a^Tb$ connects L2 and cosine similarity. This equivalence requires normalization and does not extend to bytes encoding ORB bits. Even for real vectors, changing their normalization after index construction can change neighbors and invalidate the setting. Keeping the extractor, its version/configuration, the dimension and the expected metric with the base makes it possible to detect these incompatibilities before the matching. A type conversion is sometimes necessary for an API; it must preserve the desired mathematical representation, and is not used to bypass an incompatible distance contract.
+**Normalization and metric form a contract**: for real unit vectors $a,b$, $\|a-b\|_2^2=2-2a^Tb$ connects L2 and cosine similarity. This equivalence requires normalization and does not extend to bytes encoding ORB bits. Even for real vectors, changing their normalization after index construction can change neighbors and invalidate the setting. Keeping the extractor, its version and configuration, the dimension and the expected metric with the database makes it possible to detect these incompatibilities before matching. A type conversion is sometimes necessary for an API; it must preserve the intended mathematical representation, and must not be used to bypass an incompatible distance contract.
 
 **Metric compatibility survives no numeric cast**: A packed binary byte of 128 differs from zero in one test, while a byte of 3 differs in two tests. Float casting keeps numeric differences 128 and 3, reversing the Hamming ranking. A compatible binary index must operate on the intended test distance. Even then, verify its supported symbol semantics: ordinary Hamming support does not automatically establish correctness for ORB two-bit winner symbols requiring Hamming2.
 
-**Blocking errors**: Process bytes encoding multiple bits as L2 coordinates.
-Source: [[40-features-matching/references/48-flann|Full reference]]; [OpenCV 4.13, Feature Matching, BF and FLANN based Matcher](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html); [Muja and Lowe 2009, §§3.1 – 3.3, structures, budget and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf), see 2026-10-30. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Treating bytes that encode several bits as L2 coordinates.
+Source: [[40-features-matching/references/48-flann|Full reference]]; [Muja and Lowe 2014, §3.3 binary features and Hamming](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_pami2014.pdf); [OpenCV 4.13.0 miniflann.cpp, type check and LSH distance](https://github.com/opencv/opencv/blob/4.13.0/modules/flann/src/miniflann.cpp#L330-L446). Byte counter-example: project deduction.
 Tags: cv::pilote cv::d04 famille::diagnostic cv_id::CV-FLANN-002 provenance::agent pole::B pole::E pole::F
 END
 
@@ -64,42 +64,42 @@ ID: CV-FLANN-003
 Question: The ratio of two matching distances becomes more favorable when the FLANN search budget is reduced. Does this prove the matches are better?
 Reponse: **Expected answer**: No: the second neighbor may have been missed. The ratio is then artificially smaller. Compare the two neighbors to an exact search on a sample and measure the geometric validation.
 
-**Further explanation**: A good call@1 alone does not guarantee a correct second neighbor. Keep the same distance convention or squared distance to apply a ratio threshold. Geometric confidence does not stem from the ratio alone.
+**Further explanation**: A good recall@1 alone does not guarantee a correct second neighbor. Keep the same distance convention or squared distance to apply a ratio threshold. Geometric confidence does not stem from the ratio alone.
 
-**Analytical example**: If the true distances of the two neighbors are 10 and 11, the ratio is about 0,91. A search that finds the first but misses the second can return 10 and 30, a ratio of about 0,33. The best candidate did not become more distinctive; the relevant competitor simply disappeared from the search.
+**Analytical example**: If the true distances of the two neighbors are 10 and 11, the ratio is about 0.91. A search that finds the first but misses the second can return 10 and 30, a ratio of about 0.33. The best candidate did not become more distinctive; the relevant competitor simply disappeared from the search.
 
-**check**: Compare the two rows on the same set of queries, then measure the effect on the accepted pairs and inliers. Maintain a consistent convention if an API returns squared distances: the threshold of the ratio must then be adapted. An approximation can be useful, but the budget is settled by measuring its effect on downstream reasoning, not just on its own duration.
+**Proposed check**: Compare the two rows on the same set of queries, then measure the effect on the accepted pairs and inliers. Maintain a consistent convention if an API returns squared distances: the threshold of the ratio must then be adapted. An approximation can be useful, but the budget is settled by measuring its effect on downstream reasoning, not just on its own duration.
 
-**Inverse case not to be forgotten**: Missing the best neighbor can also make the ratio less favorable or make another candidate accept; the search error does not have a single direction on the final decision. The call@1 measures only if the first exact neighbor is found. For a filter using two neighbors, also measure the recall of the set of the two best and the agreement of the filtering decision. Ex-æquo require a convention: several clues can have the same distance and make an identity comparison too severe. An exhaustive reference must therefore announce metric, numerical precision and equality rule, and then remain the same for all budgets evaluated.
+**The inverse case**: Missing the best neighbor can also make the ratio less favorable or let another candidate be accepted; a search error has no single direction of effect on the final decision. Recall@1 only measures whether the exact first neighbor is found. For a filter using two neighbors, also measure the recall of the set of the two best and the agreement of the filtering decision. Ties require a convention: several indices can share the same distance and make an identity comparison too severe. An exhaustive reference must therefore state its metric, numerical precision and equality rule, and then remain the same for all budgets evaluated.
 
 **A rank-gap bound can certify a ratio decision**: Constructed local bound: suppose the exact first distance is recovered and the returned second distance obeys $d_2\le\hat d_2\le(1+\varepsilon)d_2$. The measured ratio satisfies $r/(1+\varepsilon)\le\hat r\le r$, where $r=d_1/d_2$. Consequently $\hat r<\tau/(1+\varepsilon)$ guarantees $r<\tau$ under those assumptions, whereas merely $\hat r<\tau$ does not. Typical search budgets do not supply such a per-query guarantee; this derivation explains why empirical filter agreement remains necessary.
 
-**Blocking errors**: Interpret any smaller ratio as a gain in accuracy.
-Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Interpreting any smaller ratio as a gain in accuracy.
+Source: [[40-features-matching/references/48-flann|Full reference]]; [Muja and Lowe 2014, §2.1 time-bound approximate search](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_pami2014.pdf); [Lowe 2004, §7.1–§7.2](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf). Ratio distortion and bound: project deductions.
 Tags: cv::pilote cv::d04 famille::raisonnement cv_id::CV-FLANN-003 provenance::agent pole::B pole::E pole::F
 END
 
 ## CV-FLANN-004
 
-Objective: measure the recall time curve. Family: evaluation. Provenance: agent.
+Objective: Measure the time-recall curve. Family: evaluation. Provenance: agent.
 
 START
 CV-Pilote
 ID: CV-FLANN-004
 Question: Which measurements help tune approximate-search effort without hiding degradation of the overall pipeline?
-Reponse: **Expected answer**: Measure recall of neighbors against an exact baseline, latency, memory, build, and number and quality of final geometric inliers. Change one budget at a time on reserved data.
+Reponse: **Expected answer**: Measure recall of neighbors against an exact baseline, latency, memory, build, and number and quality of final geometric inliers. Change one budget at a time on held-out data.
 
-**Further explanation**: The call describes fidelity to the exact search; it is not the semantic precision of the matches. Repetitions of texture and erroneous geometric pattern remain possible even with exact neighbors.
+**Further explanation**: Recall describes fidelity to the exact search; it is not the semantic precision of the matches. Repetitions of texture and erroneous geometric pattern remain possible even with exact neighbors.
 
 **Separate three measures**: Neighbor recall compares the index to an exact search in a descriptor space; match accuracy compares pairs to a matching truth; geometric success judges the resulting transformation. These levels can diverge on repetitive textures or poorly distributed regions.
 
-**Proposed Decision Curve**: for several budgets, keep base and queries then report full time, memory, recall of the first two neighbors and errors of the final registration. Add the maintenance cost if the base changes. Choose an operating region that meets the constraints of the product, and then check it on a reserved lot. This result is not limited to maximising recall: exhaustive research can be unnecessarily expensive, but a very fast approximation can be insufficient.
+**Proposed decision curve**: For several budgets, keep the database and queries fixed, then report total time, memory, recall of the first two neighbors and errors of the final registration. Add the maintenance cost if the database changes. Choose an operating region that meets the product's constraints, then check it on a held-out batch. The goal is not to maximize recall: exhaustive search can be unnecessarily expensive, but a very fast approximation can be insufficient.
 
-**Read a quality – cost curve**: an operating point dominates another if it retains at least the useful quality by costing less depending on the resources considered. Between undominated points, the choice depends on the budget and tolerance produced, not on a single universal score. Separating build time, query latency, memory, and update frequency from the base avoids masking a misplaced extra cost. Testing queries without a real match is also essential: a neighbor search will usually return someone even if the correct answer is "absent". The rejection of pairs and the geometric verification define this possibility of refusal, which the only recall of the neighbors does not measure.
+**Read a quality–cost curve**: an operating point dominates another if it keeps at least the useful quality at lower cost for the resources considered. Between non-dominated points, the choice depends on the budget and the tolerance of the product, not on a single universal score. Separating build time, query latency, memory and database update frequency avoids hiding an extra cost. Testing queries without a real match is also essential: a neighbor search usually returns something even when the correct answer is "absent". Pair rejection and geometric verification provide this possibility of refusal, which neighbor recall alone does not measure.
 
 **Search effort should be selected on a frontier**: Sweep search effort on fixed validation queries and retain points that improve no resource without sacrificing useful registration quality. Include index construction, update frequency, query tail latency and peak memory. Test queries from a shifted acquisition regime separately, because an index tuned on easy descriptors can lose recall on a different distribution. Freeze the chosen configuration before final test evaluation rather than selecting effort from the best test-set registration score.
 
-**Blocking errors**: Assimilate the accuracy of the neighbor to the physical validity of the correspondence.
-Source: [[40-features-matching/references/48-flann|Full reference]] ; [Muja and Lowe 2009, §§2 – 3, approximate search and configuration](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf). Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
+**Blocking errors**: Equating neighbor accuracy with the physical validity of the correspondence.
+Source: [[40-features-matching/references/48-flann|Full reference]]; [Muja and Lowe 2009, §3 precision definition and §4.4 speed-up versus precision](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_visapp09.pdf); [Muja and Lowe 2014, §4](https://www.cs.ubc.ca/research/flann/uploads/FLANN/flann_pami2014.pdf). Decision curve: project construction.
 Tags: cv::pilote cv::d04 famille::evaluation cv_id::CV-FLANN-004 provenance::agent pole::B pole::E pole::F
 END
