@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -496,7 +496,7 @@ claimed as measured. Method properties remain tied to the sources below.
 
 ### Case linked to CV-SOT-002
 
-**Working question**: During occlusion, a distractor replaces the target in the tracker's template. Which mechanism can reinforce this error?
+**Working question**: During an occlusion, an adaptive single-object tracker moves its box onto a similar-looking object and keeps following it after the target reappears. Which mechanism can turn this momentary error into persistent drift?
 
 **Reference answer**: Updating the model on a wrongly associated observation can reinforce the distractor and increase drift.
 
@@ -518,7 +518,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 ### CV-SOT-002
 
-**Situation**: During occlusion, a distractor replaces the target in the tracker's template. Which mechanism can reinforce this error?
+**Situation**: During an occlusion, an adaptive single-object tracker moves its box onto a similar-looking object and keeps following it after the target reappears. Which mechanism can turn this momentary error into persistent drift?
 
 **Memory of one update**: For an interpolated model $m_t=(1-\eta)m_{t-1}+\eta\hat m_t$, the contribution of an erroneous observation still has weight $\eta(1-\eta)^k$ after $k$ correct updates, in this simplified scheme. A large $\eta$ adapts quickly but absorbs more of the error; a small $\eta$ protects the model better but follows a legitimate appearance change more slowly. This formula describes an interpolation model, not every tracker variant. Inspecting the regions actually used for updates and testing freeze rules can reveal contamination; a fixed template can still lock onto a distractor without going through this learning loop.
 
@@ -550,3 +550,4 @@ These explanations complement the mechanism associated with each question. Calcu
 - Method notes: [CV-CORRELATION](114-mosse-kcf.md), [CV-MEANSHIFT](115-meanshift-camshift.md). Multi-object tracking: [CV-SORT](111-sort.md), [CV-ASSOCIATION](112-deepsort-bytetrack.md). Identity and trajectory metrics: [CV-METRIQUES-TEMPS](../../130-evaluation-fiabilite/references/132-tracking-trajectoires.md).
 
 Drafted by agent, 2026-10-18. Revision 6, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/113-tracking-monoobjet.md).
+Revision 7, 2026-11-15: question of CV-SOT-002 reworded at the learner's request so that its front no longer hints at the answer, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/113-tracking-monoobjet.md).
