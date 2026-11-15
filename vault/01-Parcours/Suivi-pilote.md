@@ -11,7 +11,7 @@
 | Independent scientific validation | Not performed |
 | File controls and calculations | Executed locally, see evidence |
 | Official parser of the plugin | Tested by simulating Obsidian/Anki |
-| `.apkg` package and motor import | 282 notes, 14 subdecks, an SVG; identities and history kept in disposable collection the 2026-10-24 |
+| `.apkg` package and motor import | 294 notes, 14 subdecks, an SVG; identities and history kept in a disposable collection on 2026-10-24 and again on 2026-11-16; first release `anki-20261116-0021` |
 | Personal import and media on phone | Not tested |
 | Rendering Obsidian and AnkiDroid | Not verified in applications |
 | Initial/deferred recall and mastery | Not measured |
@@ -1316,3 +1316,29 @@ decided by the learner. Each subject report gives the passages read.
 No package is rebuilt: the twelve new notes and the two reworded questions reach the
 phone only through a new package built with `paquet-anki`. AnkiDroid and Obsidian
 rendering, learner proficiency and independent scientific review are not established.
+
+## Anki package publication — 2026-11-16
+
+Agent Claude Code (`paquet-anki`) built `CV-Pilote.apkg` from a clean `main`
+synchronized with `origin/main` at `498b6ae`, and published it, at the learner's
+request, as the repository's first release:
+[`anki-20261116-0021`](https://github.com/speillet/Knowledge_Computer_Vision/releases/tag/anki-20261116-0021).
+The stable link
+`https://github.com/speillet/Knowledge_Computer_Vision/releases/latest/download/CV-Pilote.apkg`
+redirects to this asset.
+
+- Build and verification (`build_apkg.py`, genanki 0.13.1): OK, **294 notes**, 294
+  cards, 14 subdecks, one media (`cv-sort-pipeline.svg`); the manifest records commit
+  `498b6ae` without a modified-tree suffix.
+- Changes: no earlier release exists. Compared with a package built from the vault at
+  `76fda5a` (before the 2026-11-14 and 2026-11-15 passes): 12 notes added (the cards of
+  the [2026-11-15 pass](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/00-bilan.md)),
+  282 modified, 0 removed.
+- Import simulation (`simulate_anki_import.py`, Python 3.12, `anki` 26.9.3, disposable
+  collection): result OK. An unchanged reimport kept notes and content; a content change
+  and a note-type style change were applied without duplicates, with note IDs and review
+  history preserved.
+
+Not yet observed: import on the learner's AnkiDroid version, phone rendering of
+MathJax, the SVG image, code and links, and reimport after real reviews. Record the
+AnkiDroid version and observations here after the first phone import.
