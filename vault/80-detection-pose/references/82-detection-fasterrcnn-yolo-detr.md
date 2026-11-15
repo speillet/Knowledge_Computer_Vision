@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 11
+revision: 12
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -359,8 +359,13 @@ sizes and sizes as log ratios, so a box and its anchor scaled together give the 
 $t$: the loss treats relative errors alike at every scale. Decoding inverts the
 mapping, $x=x_a+t_xw_a$ and $w=w_ae^{t_w}$. torchvision's `BoxCoder` multiplies the
 targets by weights $(1,1,1,1)$ in the RPN and RetinaNet and $(10,10,5,5)$ in the R-CNN
-head, and clamps $t_w,t_h$ at $\log(1000/16)$ before the exponential [_utils.py
-L122–L137, L183–L213; roi_heads.py L542–L544]. YOLOv3 decodes instead
+head, divides the network output by the same weights before decoding, and clamps
+$t_w,t_h$ at $\log(1000/16)$ after that division and before the exponential [_utils.py
+L103–L116, L122–L137, L183–L213; rpn.py L164; retinanet.py L470; roi_heads.py
+L542–L544]. Fast R-CNN normalizes its regression targets to zero mean and unit variance
+[Fast R-CNN, §2.3]; the fixed weights $(10,10,5,5)$ divide the targets by 0.1, 0.1, 0.2
+and 0.2 without mean subtraction. The weights are part of a trained head's output
+contract. YOLOv3 decodes instead
 $b_x=\sigma(t_x)+c_x$ and $b_w=p_we^{t_w}$ in grid units, where $(c_x,c_y)$ is the cell
 offset and $(p_w,p_h)$ the prior size: the sigmoid keeps the centre inside the
 responsible cell [YOLOv3, §2.1]. DETR predicts $(c_x,c_y,w,h)\in[0,1]^4$ directly,
@@ -374,11 +379,24 @@ $(130,120)$ and size $140\times80$.
 - The intersection is $104\times80=8320$ px² and the union $16384+11200-8320=19264$
   px², so IoU $=0.432$. The RPN labels this anchor neither positive ($>0.7$) nor
   negative ($<0.3$), and RetinaNet's rule ignores it too ($[0.4,0.5)$), unless it is
-  the best anchor of this box.
+  the best anchor of this box. That exception is stated for the RPN [Faster R-CNN,
+  §III-A2]; RetinaNet's §4 adapts the RPN rule with new thresholds without restating
+  it, and torchvision enables it for both [rpn.py L169–L173, retinanet.py L462–L467].
 - Eq. 2 gives $t=(0.234,\ 0.156,\ 0.090,\ -0.470)$; torchvision's R-CNN head regresses
   $(2.344,\ 1.563,\ 0.448,\ -2.350)$ for the same box.
 - Each tensor decoded with its own weights returns the box exactly. Decoded with the
   other coder's weights, a correct network output becomes a wrong box.
+- Second pair, where the two rules disagree (card CV-DETECTEURS-014, recomputed by
+  checks/82-detection-fasterrcnn-yolo-detr.py of the 2026-11-15 pass): the same anchor
+  and a ground truth $(36,60,196,156)$ of centre $(116,108)$ and size $160\times96$
+  intersect over $128\times96=12288$ px² for a union of 19456 px², IoU $\approx0.632$.
+  If another anchor overlaps this box more, the RPN ignores this one while RetinaNet
+  makes it a positive. Eq. 2 gives $t=(0.125,\ 0.0625,\ \log1.25,\ \log0.75)$ and the
+  R-CNN coder $(1.25,\ 0.625,\ 1.116,\ -1.438)$. Decoding the latter with $(1,1,1,1)$
+  moves the centre by $(160,80)$ px and scales the sizes by $1.25^5$ and $0.75^5$, about
+  $(64.7,164.8,455.3,195.2)$; decoding the former with $(10,10,5,5)$ leaves about
+  $(34.7,40.4,168.5,161.2)$, close to the anchor. Both errors vanish when $t=0$, so they
+  hide on proposals that already fit their objects.
 
 ### Distance targets: FCOS
 
@@ -624,7 +642,9 @@ Context7 was not available in this pass.
   box.
 - **Faster R-CNN defaults** [faster_rcnn.py L36–L40, L172–L200]: anchor sizes 32 to
   512 px, one size per FPN level, ratios 0.5, 1 and 2; RPN with 2000 / 2000 proposals
-  before / after NMS in training and 1000 / 1000 at test, NMS 0.7, IoU 0.7 / 0.3, 256
+  before / after NMS in training and 1000 / 1000 at test, NMS 0.7, IoU 0.7 / 0.3 (the
+  matcher counts IoU $\ge0.7$ as positive where the paper says "higher than 0.7", and
+  adds each box's highest-IoU anchors) [_utils.py L339–L345, L384–L416], 256
   anchors with 50% positives; head with IoU 0.5 / 0.5, 512 regions with 25% positives,
   score threshold 0.05, NMS 0.5 and 100 detections per image.
 - **RPN differences from the paper**: the pre-NMS top-n is taken per level and NMS runs
@@ -633,8 +653,9 @@ Context7 was not available in this pass.
   score threshold, removal of boxes with a side below 0.01 px, per-class NMS, then the
   top 100 [roi_heads.py L680–L735].
 - **RetinaNet defaults**: score threshold 0.05, NMS 0.5, 300 detections per image
-  (more than COCO's 100), IoU 0.5 / 0.4, top 1000 per level, anchors of 3 octave scales
-  and 3 ratios from 32 to 512 px [retinanet.py L51–L53, L430–L435].
+  (more than COCO's 100), IoU 0.5 / 0.4 with each box's highest-IoU anchors also
+  positive, top 1000 per level, anchors of 3 octave scales and 3 ratios from 32 to
+  512 px [retinanet.py L51–L53, L430–L435, L462–L467].
 - **FCOS**: matching as in worked example B. The ranking score is
   $\sqrt{\sigma(\text{class})\,\sigma(\text{centre-ness})}$ instead of the paper's
   product; the square root preserves the ranking, so AP is unchanged, but the default
@@ -1059,6 +1080,7 @@ Consulted foundations: [DETR](https://arxiv.org/html/2005.12872v3): §3.1 bipart
 - [Ge et al., YOLOX, arXiv HTML v2](https://arxiv.org/html/2107.08430v2): §2.1, paragraphs "Decoupled head", "Anchor-free" and "SimOTA".
 - [Wang et al., YOLOv10, arXiv HTML v2](https://arxiv.org/html/2405.14458v2): §1 (one-to-many assignment requires NMS), §3.1 (consistent dual assignments).
 - [Lin et al., FPN, arXiv HTML v2](https://arxiv.org/html/1612.03144v2): §1 (AR and AP gains), §3 and Figure 3 (top-down path, lateral $1\times1$, nearest-neighbour upsampling, $3\times3$ smoothing, $d=256$), §4.1 (anchors per level), §4.2 (eq. 1, RoI level).
+- [Girshick, Fast R-CNN, arXiv 1504.08083v2](https://arxiv.org/abs/1504.08083): §2.3, multi-task loss (regression targets normalized to zero mean and unit variance); PDF read on 2026-11-15.
 - [Lin et al., Focal Loss, arXiv HTML v2](https://arxiv.org/html/1708.02002v2): §3.2 (eq. 5, modulating factor), §3.3 (prior initialization), §3.4 (two-stage sampling), §4 (anchors and assignment), §4.1 (inference, normalization, $\gamma$, $\alpha$, $\pi$).
 - [Tian et al., FCOS, arXiv HTML v5](https://arxiv.org/html/1904.01355v5): §3.1 (location mapping, eq. 1, minimal-area rule), §3.2 (levels, $m_2$ to $m_7$), §3.3 (eq. 3, centre-ness), §4.1 (best possible recall, ambiguous samples, Tables 1–3).
 - [Zhang et al., ATSS, arXiv HTML v4](https://arxiv.org/html/1912.02424v4): §3.3 (essential difference, Table 2), §4.1 (Algorithm 1).
@@ -1077,17 +1099,19 @@ torchvision tag v0.29.0, read on GitHub:
 - [`faster_rcnn.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/faster_rcnn.py): default anchors (L36–L40), input and output contract (L47–L80), `num_classes` (L74), defaults (L172–L200).
 - [`transform.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/transform.py): scale factor and bilinear resize (L42–L71), batching and padding (L237–L255), `postprocess` (L257–L268), `resize_boxes` (L306–L319).
 - [`generalized_rcnn.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/generalized_rcnn.py): degenerate-box check (L98–L112).
-- [`rpn.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/rpn.py): per-level top-n (L231–L240), per-level NMS and post-NMS top-n (L276–L292).
+- [`rpn.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/rpn.py): box coder with weights $(1,1,1,1)$ and matcher with low-quality matches (L164–L173), anchor labels (L206–L225), per-level top-n (L231–L240), per-level NMS and post-NMS top-n (L276–L292).
 - [`roi_heads.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/roi_heads.py): box-coder weights (L542–L544), detection post-processing (L680–L735).
-- [`_utils.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/_utils.py): `BoxCoder` (L122–L137), decoding and clamp (L183–L213).
-- [`retinanet.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/retinanet.py): anchors (L51–L53), defaults (L430–L435).
+- [`_utils.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/_utils.py): `encode_boxes` with weights (L103–L116), `BoxCoder` (L122–L137), decoding with division by the weights and clamp (L183–L224), `Matcher` thresholds and highest-IoU matches (L313–L416).
+- [`retinanet.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/retinanet.py): anchors (L51–L53), defaults (L430–L435), matcher with low-quality matches and box coder (L462–L470).
 - [`fcos.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/fcos.py): defaults (L370–L381), matching with centre sampling and scale ranges (L455–L482), ranking score (L516–L519).
 - [`anchor_utils.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/anchor_utils.py): anchor centres at $ks$ (L101–L103).
 - [torchvision 0.29 `batched_nms`](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html): per-category suppression (card CV-DETECTEURS-013).
 
 ### Related flashcards and references
 
-- [Flashcards](../82-detection-fasterrcnn-yolo-detr.md): architecture and cost (CV-DETECTEURS-001, 002, 005), assignment and matching (003, 006, 007), losses and features (008, 009, 010), diagnosis (004, 011, 012) and the instance, class and label contract (013).
+- [Flashcards](../82-detection-fasterrcnn-yolo-detr.md): architecture and cost (CV-DETECTEURS-001, 002, 005), assignment and matching (003, 006, 007; 014, anchor labels, eq. 2 targets and box-coder weights), losses and features (008, 009, 010), diagnosis (004, 011, 012) and the instance, class and label contract (013).
 - Related references: [CV-NMS](81-nms.md), [CV-IOU-AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-OPENVOC](83-detection-open-vocabulary.md), [CV-POSE3D](84-detection-pose-3d.md), [CV-SEGMENTATION](../../90-segmentation/references/93-semantique-instances-panoptique.md).
 
 Drafted by agent, 2026-10-18; enriched on 2026-10-21 (cards CV-DETECTEURS-006 to 013, resolution protocol, size and aspect-ratio cases). Revision 11, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/82-detection-fasterrcnn-yolo-detr.md).
+Revision 12, 2026-11-15: CV-DETECTEURS-014 added after the learner accepted P-CV-DETECTEURS-01, and
+worked example A, the box coder and the torchvision matcher contracts aligned with it, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/82-detection-fasterrcnn-yolo-detr.md).

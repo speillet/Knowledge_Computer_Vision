@@ -80,3 +80,24 @@ Reponse: **Expected answer**: More parameters can overfit or reduce stability wh
 Source: [[40-features-matching/references/45-recalage-ecc|Full reference]]; [OpenCV 4.13.0, tracking.hpp L263–L269 and L321–L329: motion types and parameter counts](https://github.com/opencv/opencv/blob/4.13.0/modules/video/include/opencv2/video/tracking.hpp); [Baker and Matthews 2002, §2.4 cost in the number of parameters, §3.4 canonical-point error](https://www.ri.cmu.edu/pub_files/pub3/baker_simon_2002_3/baker_simon_2002_3.pdf); compromise between flexibility and stability deduced by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-ECC-003 provenance::agent pole::B pole::E
 END
+
+## CV-ECC-004
+
+Objective: state the direction of an ECC warp and warp the input accordingly. Family: practice. Provenance: agent.
+
+START
+CV-Pilote
+ID: CV-ECC-004
+Question: `cv2.findTransformECC(template, input, W, cv2.MOTION_AFFINE, criteria, None, 5)` converges on two images whose content differs by a pure translation: each feature appears 10 px further right in `input` than in `template`. Between which coordinate frames does `W` map, and in which direction? How must `input` be warped to overlay it on `template`, and what misalignment does `cv2.warpAffine(input, W, (w, h))` with default flags produce?
+Reponse: **Expected answer**: (1) `W` maps template pixel coordinates to input pixel coordinates, $(x',y')^\top=W\,(x,y,1)^\top$; here $W=\begin{bmatrix}1&0&10\\0&1&0\end{bmatrix}$. (2) To bring the input into the template frame, warp it with `WARP_INVERSE_MAP` (`flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP`), so that $\text{dst}(\mathbf x)=I(W\mathbf x)$. With default flags, `warpAffine` inverts $W$ first and samples $I(W^{-1}\mathbf x)$, which applies the motion a second time: the overlay is off by 20 px, twice the motion and worse than the unwarped input.
+
+**Further explanation**: ECC maximizes the correlation between $T(\mathbf x)$ and $I(W\mathbf x)$ over the template region, so the warp answers "where is this template pixel in the input?". OpenCV's own loop warps the input back with `INTER_LINEAR + WARP_INVERSE_MAP`, and the header advises the same flag to the caller. `warpAffine` without the flag treats `M` as the forward map from source to destination. Since $I(\mathbf z)=T(W^{-1}\mathbf z)$ at the solution, the default call returns $T(W^{-2}\mathbf x)$: the content moves by $2\mathbf t$ for a translation and by $2\theta$ for a rotation about a fixed centre. The same rule holds for a $3\times3$ homography with `warpPerspective`.
+
+**Mapping points rather than images**: a template corner $\mathbf p$ is found in the input at $W\mathbf p$ (`cv2.transform`). An input detection $\mathbf q$ maps into the template frame through $W^{-1}$, from `cv2.invertAffineTransform` or `np.linalg.inv` for a homography. In the example, an input detection at $(110,50)$ belongs at $(100,50)$ in the template; applying $W$ instead moves it to $(120,50)$.
+
+**Diagnosis**: the returned $\rho$ is computed on OpenCV's internal, correctly warped image, so a high $\rho$ cannot reveal a wrong warp call by the caller. Display $|T-\text{aligned}|$ or map a known landmark. A misalignment that grows with the estimated motion, and doubles it, points to the flag. The error vanishes only when $W$ is the identity, which explains why it often goes unnoticed on nearly aligned test pairs. Constructed example; recomputed in the check script of this pass.
+
+**Blocking errors**: Saying that `W` maps input coordinates to template coordinates. Assuming that `warpAffine` treats `M` as the destination-to-source map by default. Predicting only a sub-pixel or half-pixel error from the missing flag. Mapping input detections into the template frame with `W`.
+Source: [[40-features-matching/references/45-recalage-ecc|Full reference]]; [OpenCV 4.13.0, tracking.hpp L338–L359: ECC criterion, $x'=W(x,y,1)^\top$ and the advice to warp the input with WARP_INVERSE_MAP](https://github.com/opencv/opencv/blob/4.13.0/modules/video/include/opencv2/video/tracking.hpp#L338-L359); [OpenCV 4.13.0, ecc.cpp L514–L531: internal warps with WARP_INVERSE_MAP](https://github.com/opencv/opencv/blob/4.13.0/modules/video/src/ecc.cpp#L514-L531); [OpenCV 4.13.0, imgproc.hpp L2457–L2473 and L2491–L2507: warpAffine and warpPerspective inverse-map semantics](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/include/opencv2/imgproc.hpp#L2457-L2507). The 10 px example and the $W^{-2}$ derivation are project constructions.
+Tags: cv::pilote cv::d04 famille::pratique cv_id::CV-ECC-004 provenance::agent pole::B pole::E
+END

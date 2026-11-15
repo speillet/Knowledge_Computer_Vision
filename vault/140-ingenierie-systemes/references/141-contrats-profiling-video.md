@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -300,16 +300,29 @@ factor of $219/255=0.859$; the reverse mistake clips codes 0–15 and 236–255.
 scale is $r=\min(S/W,S/H)$, the content size is $(\mathrm{round}(rW),\mathrm{round}(rH))$
 and the padding is $p_x=(S-\mathrm{round}(rW))/2$, $p_y=(S-\mathrm{round}(rH))/2$. In
 continuous coordinates with the origin at the top-left corner of the first pixel,
-the forward map is $x'=rx+p_x$, $y'=ry+p_y$ and the inverse is $x=(x'-p_x)/r$,
-$y=(y'-p_y)/r$.
+the forward map is $x'=s_xx+p_x$, $y'=s_yy+p_y$ and the inverse is $x=(x'-p_x)/s_x$,
+$y=(y'-p_y)/s_y$, where $s_x$ and $s_y$ are the factors the resize actually applied.
+Called with an output size, OpenCV 4.13 `resize` derives them from the integer sizes,
+$s_x=\mathrm{round}(rW)/W$ [resize.cpp L4216–L4221]; called with `fx=fy=r` and no
+output size, its generic path samples with $r$ and only converts $rW$ to an integer
+for the output size [L4209–L4214, L4245]. Both equal $r$ when $rW$ and $rH$ are
+integers. The padding is removed before dividing: $y'/r-p_y$ instead leaves an offset
+of $p_y(1/r-1)$.
 
 *Worked example F* (constructed, recomputed): $1920\times1080$ into $640\times640$
 gives $r=1/3$, a $640\times360$ content and $p_y=140$, so 43.75% of the input is
 padding. A model box $(100,200,300,400)$ maps back to $(300,180,900,780)$; forgetting
-$p_y$ moves every box 420 px down. A stretch resize instead uses separate factors
-$S/W$ and $S/H$ and changes the aspect ratio the detector was trained on. An odd
-padding total needs a rounding rule, and implementations that split it differently
-disagree by one pixel.
+$p_y$ moves every box 420 px down. The box $(320,290,416,350)$ of card CV-PIPELINE-006
+maps back to $(960,450,1248,630)$, and to $(960,870,1248,1050)$ without $p_y$. That
+error is a constant vertical offset with correct sizes; content rows $y'\in[140,500]$
+land at $[420,1500]$, so no box reaches the top 420 rows and any coordinate whose true
+$y$ exceeds 660 px falls below the frame. A wrong scale has another signature, an
+error that grows with position: inverting this letterbox with the stretch factors 3
+and 1.6875 puts that box's $y_1$ and $y_2$ at 489.4 and 590.6. A stretch resize
+uses separate factors $S/W$ and $S/H$ and changes the aspect ratio the detector was
+trained on. An odd padding total needs a split rule: splitting 277 rows as 138 above
+and 139 below or the reverse moves every box by one input pixel, about $1/r$ source
+pixels.
 
 **Pixel centres.** An integer index $u$ denotes the pixel centre at $u+0.5$ in the
 continuous frame. OpenCV 4.13 `INTER_LINEAR` samples the source index $(d+0.5)s-0.5$
@@ -399,7 +412,8 @@ note; only the check script was run.
   These codes have no BT.709 variant: a BT.709 stream needs another converter.
 - **OpenCV 4.13.0 `resize`**: bilinear source index $(d+0.5)s-0.5$; nearest
   $\lfloor ds\rfloor$; `INTER_NEAREST_EXACT` "uses center pixel coordinate as Pillow
-  and scikit-images do" [resize.cpp].
+  and scikit-images do" [resize.cpp]. With an output size, the applied factor is the
+  ratio of integer sizes; with `fx` and `fy` alone, it is `fx` and `fy` [L4209–L4221].
 - **FFmpeg n7.1 `scale` filter**: `in_color_matrix` and `out_color_matrix` (`bt709`,
   `bt601` and others) and `in_range` and `out_range` (`full`, `limited`) override
   autodetection [doc/filters.texi].
@@ -618,7 +632,7 @@ Consulted foundations: [GStreamer queue](https://gstreamer.freedesktop.org/docum
 
 - [OpenCV 4.13.0, `modules/imgproc/doc/colors.markdown`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/doc/colors.markdown#L53-L78): RGB and YUV 4:2:x conversions, BT.601 limited-range formula.
 - [OpenCV 4.13.0, `modules/imgproc/src/color_yuv.simd.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/color_yuv.simd.hpp#L1018-L1041): fixed-point YUV420 to RGB constants.
-- [OpenCV 4.13.0, `modules/imgproc/src/resize.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/resize.cpp#L4096-L4103): bilinear source index (L4101); nearest neighbour `resizeNN` (L1122–L1135); `resizeNN_bitexact` centre convention (L1267–L1282).
+- [OpenCV 4.13.0, `modules/imgproc/src/resize.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/resize.cpp#L4096-L4103): bilinear source index (L4101); nearest neighbour `resizeNN` (L1122–L1135); `resizeNN_bitexact` centre convention (L1267–L1282); applied scale from the output size or from `fx`, `fy` (L4209–L4221) and call to the generic implementation (L4245).
 - [FFmpeg n7.1, `doc/filters.texi`, `scale` filter](https://github.com/FFmpeg/FFmpeg/blob/n7.1/doc/filters.texi#L21075-L21139): `in_color_matrix`, `out_color_matrix`, `in_range`, `out_range`.
 - [GStreamer `queue` element](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html): blocking, `leaky`, `max-size-*` defaults, `current-level-*`, `overrun` and `underrun`; unversioned page.
 - [NVIDIA Video Codec SDK 13.0, NVDEC Video Decoder API Programming Guide](https://docs.nvidia.com/video-technologies/video-codec-sdk/13.0/nvdec-video-decoder-api-prog-guide/index.html): output surface formats, YUV output and post-processing, `ulNumDecodeSurfaces`, engine independence.
@@ -629,7 +643,9 @@ Consulted foundations: [GStreamer queue](https://gstreamer.freedesktop.org/docum
 
 ### Related flashcards and references
 
-- [Flashcards](../141-contrats-profiling-video.md): CV-PIPELINE-001 (throughput, latency and freshness), CV-PIPELINE-002 (queue under sustained overload), CV-PIPELINE-003 (benchmark scope), CV-PIPELINE-004 (sizing eight streams under a p99 budget), CV-PIPELINE-005 (locating a bottleneck by trace).
+- [Flashcards](../141-contrats-profiling-video.md): CV-PIPELINE-001 (throughput, latency and freshness), CV-PIPELINE-002 (queue under sustained overload), CV-PIPELINE-003 (benchmark scope), CV-PIPELINE-004 (sizing eight streams under a p99 budget), CV-PIPELINE-005 (locating a bottleneck by trace), CV-PIPELINE-006 (letterbox inverse and a forgotten padding term).
 - Sibling notes: [CV-QUANT](142-quantification-runtimes.md), [CV-DEPLOIEMENT](143-edge-reproductibilite.md). Timing of sensors: [CV-CAPTEURS](../../20-acquisition-images/references/22-capteurs-horodatage.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/141-contrats-profiling-video.md).
+Revision 9, 2026-11-15: CV-PIPELINE-006 added after the learner accepted P-CV-PIPELINE-02, and the
+letterbox maps aligned with it (applied scale, order of the inverse, symptom of a forgotten padding term), by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/141-contrats-profiling-video.md).

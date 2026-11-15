@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SE3", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -137,12 +137,19 @@ constrained pose.
   into basins differs for each shape [§V].
 - **Geometric constraint.** The point-to-plane system constrains a motion only if some
   normals or torque arms oppose it. Gelfand et al. list shapes that leave motions
-  unconstrained when aligned with a copy of themselves: two planes leave two in-plane
-  translations and the rotation about the normal free, and their Fig. 3 shows a
-  familiar shape for each combination of free motions [§2.2]. By the same reasoning
-  (project deduction), a tunnel leaves the translation along its axis free, a
-  cylinder also the rotation about its axis, and a sphere its three rotations. These
-  are rank deficiencies: the cost is flat along them.
+  unconstrained when aligned with a copy of themselves. Their simplest example, "two
+  planes", is one planar surface aligned with another: it leaves the two in-plane
+  translations and the rotation about the normal free [§2.2]. Their Fig. 3 shows a
+  familiar shape for each combination: plane (2 translations, 1 rotation), sphere
+  (3 rotations), cylinder (1 rotation, 1 translation), cone (1 rotation) and a profile
+  extruded along a line (1 translation); a helix, with one free screw motion, is
+  mentioned but not drawn [§2.2, Fig. 3]. A scene made of two *non-parallel* planes,
+  such as a floor and a wall, is a different case: only the translation along their
+  intersection line stays free (worked example B). A straight corridor of constant,
+  non-circular cross-section is an extrusion and leaves only the translation along its
+  axis free; a circular tunnel is a cylinder and also frees the rotation about its axis
+  (application to these scenes: project deduction, worked example E). These are rank
+  deficiencies: the cost is flat along them.
 - **Symmetry.** A part with a discrete symmetry has several isolated minima with the
   same cost. This is not a rank deficiency, so the eigenvalue check below does not
   reveal it; only an asymmetric feature or a prior can.
@@ -245,12 +252,24 @@ a millimeter-level error that later iterations must remove, and steps of tens of
 degrees are not meaningful.
 
 **Which motions are constrained.** The matrix $W=\sum_i a_ia_i^T$ is the
-"covariance matrix" of Gelfand et al.: an eigenvector with a small eigenvalue is a
-screw motion along which the meshes can slide with little increase of error, and the
-condition number $\lambda_{\max}/\lambda_{\min}$ measures stability [Gelfand et al.,
-§2.2, §3.1]. Rotation columns of $a_i$ carry the lever arm $p_i$ in length units,
-translation columns do not, so the authors first move the centroid to the origin and
-scale the points to a mean distance of 1 before comparing eigenvalues.
+"covariance matrix" $C$ of Gelfand et al. [eq. 4]. Moving the source by a small
+$x=(\delta\omega;\delta t)$ from the optimum raises the error by $\Delta E=x^TWx$
+[eq. 5], so each eigenvalue is the cost of a unit motion along its eigenvector: an
+eigenvector with a small eigenvalue is a screw motion along which the meshes can slide
+with little increase of error, and the condition number
+$c=\lambda_{\max}/\lambda_{\min}$ measures stability [Gelfand et al., §2.2, §3.1].
+Rotation columns of $a_i$ carry the lever arm $p_i$ in length units, translation
+columns do not, so the authors first move the centroid to the origin and scale the
+points to a mean distance of 1 before comparing eigenvalues; this equalizes the
+displacement a point can contribute by "torque" and by "force" [§3.1]. Centring and
+scaling are an invertible change of coordinates, $W'=MWM^T$, so they preserve the rank
+and an exactly free direction; they change every ratio between eigenvalues, which is
+what a noisy, merely ill-conditioned scene must be judged on (project deduction,
+worked example E). The paper gives no universal threshold: it reports a condition
+number of 66.1 for two noisy planar patches with grooves, on which uniform sampling
+failed to align the grooves, and 3.7 after its covariance-based selection of 30% of
+the points [§5, Figs. 4–5]. Adding uniformly sampled points does not help, since they
+are as likely to come from the flat areas as from the constraining features [§2.2].
 
 *Worked example B (constructed, recomputed by checks/62-recalage-global-icp.py).*
 Sample a $4\times4$ grid on each face of a corner of size 1 m:
@@ -263,6 +282,25 @@ Sample a $4\times4$ grid on each face of a corner of size 1 m:
 - the full corner has a condition number of 32.7 in meters but $1.13\times10^7$ in
   millimeters, while the normalized version gives 5.34 in both. A raw condition
   number therefore mixes geometry and units.
+
+*Worked example E (constructed, recomputed by the check script of the 2026-11-15
+pass; CV-ICP-006).* A corridor along $x$, 10 m long, 2 m wide and 2.5 m high (floor,
+ceiling, two walls), sampled every 0.1 m (9,494 points):
+
+- normalized, $W$ has one eigenvalue exactly 0 with the pure translation $t_x$ as its
+  eigenvector; the rotation about the axis comes next at 0.098 of the largest
+  eigenvalue, constrained by the lever arms of the floor, ceiling and walls;
+- floor plus one wall of the same corridor gives the same single free direction,
+  $n_1\times n_2$, the intersection line;
+- two door jambs facing along the corridor (42 points) make the smallest eigenvalue
+  non-zero: normalized $c\approx125$, with an eigenvector whose $t_x$ component still
+  exceeds 0.999.
+  A 5 cm slide along $x$ raises $E$ by 0.105 m², a 5 cm vertical slide by 10.6 m²;
+- without normalization, the same scan gives $c=4{,}456$ in meters with the origin at
+  the entrance and $4.4\times10^9$ in millimeters. In a map frame whose origin lies
+  100 m behind and 50 m beside the entrance, the weakest eigenvector is a rotation
+  about that distant origin almost cancelled by a translation ($|t_x|<0.01$), not the
+  corridor slide.
 
 **FPFH.** For a point pair $(p_i,p_j)$ with normals $(n_i,n_j)$, Rusu et al. build a
 Darboux frame $u=n_i$, $v=(p_j-p_i)\times u$, $w=u\times v$ and compute three angular
@@ -482,7 +520,7 @@ Rusinkiewicz and Levoy, do not give variability.
 | Symptom | Possible causes | Discriminating check | Conditional remedy |
 | --- | --- | --- | --- |
 | Low inlier RMSE, low fitness, wrong pose | Threshold too tight; ICP converged on one corner of the overlap | Fitness in both directions; residual map over the whole overlap; held-out landmarks | Coarse-to-fine thresholds from the global stage's error; better initialization; report overlap (CV-ICP-003) |
-| High fitness and low RMSE, pose shifted along a plane, corridor or axis | Degenerate geometry; motion in the nullspace of $W$ | Eigenvalues of the normalized $W$ at the final pose (example B) | Normal-space sampling; odometry or IMU prior on the free directions; report the free directions instead of a pose |
+| High fitness and low RMSE, pose shifted along a plane, corridor or axis | Degenerate geometry; motion in the nullspace of $W$ | Eigenvalues of the normalized $W$ at the final pose (examples B and E; CV-ICP-006) | Normal-space sampling; odometry or IMU prior on the free directions; report the free directions instead of a pose |
 | Part registered upside down or rotated by its symmetry | Several isolated minima with equal cost | Compare the best hypotheses of the global stage; check an asymmetric feature | Asymmetric landmarks, fixture constraints or an explicit ambiguity flag |
 | RANSAC result varies between runs or is wrong | Low descriptor inlier ratio $w$; budget too small | Measure $w$ against a reference; compute $k$ (example C) | Mutual filter, retuned radii, larger budget, maximum-clique pruning (TEASER++) |
 | Few or meaningless FPFH matches | Radius inconsistent with voxel size or density; noisy normals; different sensors | Feature-distance histogram of true versus random pairs; normal quality on planes | Retune $v$ and radii together; equalize density |
@@ -617,7 +655,7 @@ Consulted foundations: [Open3D 0.19 ICP](https://www.open3d.org/docs/0.19.0/tuto
 - [Besl and McKay 1992, "A Method for Registration of 3-D Shapes", IEEE TPAMI 14(2)](https://doi.org/10.1109/34.121791): abstract and §I (data and model shapes, outliers removed beforehand), eqs. 22–26 (closed-form quaternion solution), §IV-A (algorithm, costs, termination), §IV-B (convergence theorem, eqs. 31–35, observed iteration counts), §V (basins of attraction and initial registrations). Read in the scanned copy hosted by Stanford's CS164 course.
 - [Rusinkiewicz and Levoy 2001, "Efficient Variants of the ICP Algorithm", 3DIM](https://www.cs.princeton.edu/~smr/papers/fasticp/fasticp_paper.pdf): §1 (six-stage taxonomy), §2 and §2.1 (methodology, test scenes, ground-truth error), §3.1–§3.5 (selection, matching, weighting, rejection, metrics and minimization; Figs. 2–3, 13, 15–16), §4 (high-speed combination, 30 ms).
 - [Low 2004, "Linear Least-Squares Optimization for Point-to-Plane ICP", UNC TR04-004](https://www.comp.nus.edu.sg/~lowkl/publications/lowk_point-to-plane_icp_techrep.pdf): §2 eq. 1 (objective), §3 eqs. 4–8 (small-angle linear system).
-- [Gelfand, Ikemoto, Rusinkiewicz and Levoy 2003, "Geometrically Stable Sampling for the ICP Algorithm", 3DIM](https://graphics.stanford.edu/papers/stabicp/stabicp.pdf): §2 (6×6 covariance matrix for point-to-plane), §2.1 (error minimization and covariance matrix), §2.2 (two planes, eigenvectors of small eigenvalues, Fig. 3), §3.1 (condition number, normalization).
+- [Gelfand, Ikemoto, Rusinkiewicz and Levoy 2003, "Geometrically Stable Sampling for the ICP Algorithm", 3DIM](https://graphics.stanford.edu/papers/stabicp/stabicp.pdf): §2 (6×6 covariance matrix for point-to-plane), §2.1 (error minimization, covariance matrix eq. 4, error increase eq. 5), §2.2 (two planes, eigenvectors of small eigenvalues, uniform points do not help; Fig. 3 shapes read on the rendered page), §3.1 (screw motions, condition number, normalization), §5 with Figs. 4–6 (condition numbers 66.1 and 26.9 before, 3.7 and 4.1 after covariance sampling).
 - [Rusu, Blodow and Beetz 2009, "Fast Point Feature Histograms (FPFH) for 3D Registration", ICRA](https://www.cvl.iis.u-tokyo.ac.jp/class2016/2016w/papers/6.3DdataProcessing/Rusu_FPFH_ICRA2009.pdf): §II-A eq. 1 (Darboux frame and angles), §III (FPFH, eq. 4, $O(nk)$, $2r$ support, decorrelated histograms), §IV (SAC-IA).
 - [Yang, Shi and Carlone 2020, "TEASER: Fast and Certifiable Point Cloud Registration", arXiv 2001.07715](https://arxiv.org/html/2001.07715): abstract, §I (RANSAC runtime and outliers), §V-A and §V-B (TIMs and TRIMs), §VI-D (maximum clique), §XI introduction (hardware), §XI-B (benchmarks, timing), §XI-E and Fig. 11 caption (3DMatch symmetric failure).
 - Chen and Medioni 1992 (point-to-plane, normal shooting): not re-read; cited through Rusinkiewicz and Levoy §3.2 and §3.5 and through Low §1.
@@ -633,7 +671,9 @@ Consulted foundations: [Open3D 0.19 ICP](https://www.open3d.org/docs/0.19.0/tuto
 
 ### Related flashcards and references
 
-- [Flashcards](../62-recalage-global-icp.md): CV-ICP-001 (global initialization and refinement), CV-ICP-002 (point-to-plane residual), CV-ICP-003 (misleading consensus), CV-ICP-004 (units), CV-ICP-005 (choosing a variant).
+- [Flashcards](../62-recalage-global-icp.md): CV-ICP-001 (global initialization and refinement), CV-ICP-002 (point-to-plane residual), CV-ICP-003 (misleading consensus), CV-ICP-004 (units), CV-ICP-005 (choosing a variant), CV-ICP-006 (degenerate geometry from the normalized $6\times6$ matrix).
 - Related references: [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-SVD](../../10-mathematiques-estimation/references/11-moindres-carres-svd.md), [CV-HOMOGRAPHIE](../../50-calibration-geometrie/references/51-ransac-homographie.md), [CV-FACTEURS](../../10-mathematiques-estimation/references/14-graphes-facteurs.md), [CV-VIO](63-slam-vio.md), [CV-BEV](64-nuages-bev-occupation.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/62-recalage-global-icp.md).
+Revision 9, 2026-11-15: CV-ICP-006 added after the learner accepted P-CV-ICP-02, the Fig. 3 shapes and
+the stability matrix aligned with Gelfand et al., and worked example E added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/62-recalage-global-icp.md).

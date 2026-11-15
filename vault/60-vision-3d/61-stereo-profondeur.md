@@ -99,3 +99,24 @@ Reponse: **Expected answer**: No: it simplifies search geometry; texture, repeti
 Source: [[60-vision-3d/references/61-stereo-profondeur|Full reference]]; [Hirschmüller 2008, §2.2 and §2.3, eq. 15](https://www.cvlibs.net/projects/autonomous_vision_survey/literature/Hirschmueller2008PAMI.pdf); [OpenCV 4.13.0, `stereosgbm.cpp` L945–L960, left–right check](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/stereosgbm.cpp#L945-L960). Constructed cases: project deductions.
 Tags: cv::pilote cv::d06 famille::comparaison cv_id::CV-STEREO-004 provenance::agent pole::B pole::C
 END
+
+## CV-STEREO-005
+
+Objective: explain the SGM smoothness penalties P1 and P2. Family: algorithm. Provenance: agent.
+
+START
+CV-Pilote
+ID: CV-STEREO-005
+Question: OpenCV 4.13 `StereoSGBM` runs on grayscale images with `blockSize=5`, and the header's suggested penalties give `P1=200` and `P2=800`. Between two neighbouring pixels on an aggregation path, what does each penalty charge for, and which scene geometry is each meant to accommodate? Why must `P2` not be smaller than `P1`? In a warehouse scene with small speckle blobs and 6 px wide shelving uprights, what changes in the disparity map as `P2` is swept over 250, 800 and 3200 with `P1=200`?
+Reponse: **Expected answer**: (1) `P1` is added when the disparity changes by exactly one pixel between neighbours; `P2` when it changes by more than one pixel, whatever the size of the jump. `P1` lets slanted or curved surfaces, whose disparity drifts one pixel at a time, pass at low cost; `P2` charges a depth discontinuity once, independently of its height, so object boundaries survive instead of being penalized in proportion to the jump. (2) The penalty must not decrease with the size of the change. In the path recursion, the term $\min_iL_r(p-r,i)+P_2$ also covers $d\pm1$; if $P_2<P_1$, `P1` never acts and every change, even of one pixel, costs `P2`, so slopes are priced like discontinuities. (3) Raising `P2` makes every jump dearer: small speckle blobs are absorbed into their surroundings, but narrow structures whose matching evidence cannot pay for entering and leaving them are erased into the background. In the constructed toy, blobs survive at 250 and vanish at 800; the uprights survive at 800 and vanish at 3200.
+
+**Further explanation**: Hirschmüller's energy adds, for each neighbour $q$ of $p$, $P_1$ if $|D_p-D_q|=1$ and $P_2$ if $|D_p-D_q|>1$. Each path cost follows $L_r(p,d)=C(p,d)+\min(L_r(p-r,d),L_r(p-r,d\pm1)+P_1,\min_iL_r(p-r,i)+P_2)-\min_kL_r(p-r,k)$, and the path costs are summed over at least eight directions in the paper, five in OpenCV's default mode. He adapts $P_2=P_2'/|I_{bp}-I_{bq}|$ to place jumps at intensity edges, yet requires $P_2\ge P_1$ in every case. OpenCV states that the algorithm requires $P_2>P_1$ and, in every mode, silently replaces $P_2$ by $\max(P_2,P_1+1)$: `P2=150` with `P1=200` becomes 201, without an error. Its aggregation loops use a constant $P_2$.
+
+**Units**: the penalties are in the units of the matching cost. OpenCV sums Birchfield–Tomasi pixel costs over the block, hence the suggestions $8cb^2$ and $32cb^2$ for $c$ channels and block size $b$. Changing `blockSize` or the number of channels without rescaling the penalties changes the smoothing.
+
+**Single-path arithmetic**: on one horizontal path, a structure $w$ pixels wide with a per-pixel cost advantage $\Delta$ is kept only if $w\Delta>2P_2$. With $w=6$ and $\Delta=400$: $2400>1600$ at $P_2=800$, but $2400<6400$ at 3200. Paths running along the upright pay no jump, so the summed cost keeps it longer than one path predicts: in the toy, horizontal paths alone already lose it at 1600, while the eight-direction sum keeps it there.
+
+**Blocking errors**: Describing `P2` as growing with the size of the jump. Assigning discontinuities to `P1` and slopes to `P2`. Expecting a larger `P2` only to remove noise. Keeping the same penalties after changing `blockSize` or the number of channels.
+Source: [[60-vision-3d/references/61-stereo-profondeur|Full reference]]; [Hirschmüller 2008, §2.2, eqs. 11–14: penalties, path recursion, P2 adapted to the intensity gradient and the requirement on P1 and P2](https://www.cvlibs.net/projects/autonomous_vision_survey/literature/Hirschmueller2008PAMI.pdf); [OpenCV 4.13.0, `calib3d.hpp` L3723–L3729, P1 and P2 and their suggested values](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp#L3723-L3729); [OpenCV 4.13.0, `stereosgbm.cpp` L500, correction of P2, and L676–L811, aggregation with constant P2](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/stereosgbm.cpp#L500). Toy scene, single-path arithmetic and blob and upright results: project constructions recomputed in the check script of this pass.
+Tags: cv::pilote cv::d06 famille::algorithme cv_id::CV-STEREO-005 provenance::agent pole::B pole::C
+END

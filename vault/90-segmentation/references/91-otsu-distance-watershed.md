@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-MORPHO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -264,13 +264,31 @@ pixel $y$ reached from a labeled 4-neighbor $x$ enters queue
 $$\delta(x,y)=\max_{c\in\{B,G,R\}}\,|I_c(x)-I_c(y)|\in\{0,\dots,255\},$$
 
 and a pixel taken out of the queue whose labeled 4-neighbors carry two different labels
-becomes $-1$ and does not propagate [segmentation.cpp, L151–L159, L265–L293]. The relief
-is therefore a local colour difference defined on pairs of neighboring pixels, not the
-pixel values. Passing a scaled distance map as the image would flood its local
-differences, close to constant on a slope, rather than $-D$ itself (project deduction
-from the code). Flooding $-D$, whose dams Beucher and Meyer call the thalweg lines of
-the distance function [§VI.B], needs an implementation that takes an arbitrary relief,
-such as scikit-image's `watershed`, which labels "lowest value points" first.
+becomes $-1$ and does not propagate [segmentation.cpp, L151–L159, L265–L293]. Initially,
+each unknown pixel that touches a marker enters with its smallest difference to an
+adjacent marker pixel [L183–L223]; the lowest non-empty queue is always served first,
+first in, first out within a level [L239–L259]; a newly labeled pixel pushes its
+unlabeled 4-neighbors with their difference to it [L295–L323]. The image must be
+`CV_8UC3` [L161]. The relief is therefore a local colour difference defined on pairs of
+neighboring pixels, close to an edge strength, not the pixel values.
+
+Consequences for the distance pipeline (project deduction from the code, recomputed in
+worked example D). In the tutorial call `cv.watershed(img, markers)`, $D$ decides only
+the markers, hence the number of objects; the dams inside the unknown band follow the
+colour differences of `img`. An internal colour edge can attract a dam away from the
+neck, and between touching objects of the same colour the priorities tie at 0, so the
+FIFO arrival order places the dam. Beucher and Meyer turned to the distance function
+because overlapping grains offer "no contrast criterion", and segmented them by the
+thalweg lines, "the watershed lines of the inverted distance function" [§VI.B]; the
+tutorial keeps markers from $D$ but floods a contrast criterion, and itself notes that
+some touching coins are separated properly and some are not [tutorial, L132–L136].
+Passing a scaled distance map as the image does not restore $-D$: OpenCV would flood the
+differences of $D$ between neighbors, about constant along a straight slope but near 0
+across the saddle between two maxima, so the neck becomes the cheapest crossing.
+Flooding $-D$ needs an implementation that takes an arbitrary real-valued relief, such as
+scikit-image's `watershed`, whose `image` holds the values "where the lowest value points
+are labeled first" and whose docstring example calls `watershed(-distance, markers,
+mask=image)` [_watershed.py, L99–L100, L183–L208].
 
 ### Worked example A: Otsu and a small dark defect
 
@@ -310,6 +328,32 @@ that seed but then requires $d\ge1.6R$, 24 px for two 15 px disks. No single glo
 $\alpha$ serves both cases, which motivates a maxima rule adapted to the expected sizes.
 On the pixel grid, $D$ values differ from this idealization by about one pixel and by
 the chamfer error.
+
+### Worked example D: the relief that `cv::watershed` floods
+
+Constructed scene, recomputed by the check script of the 2026-11-15 pass on a line-by-line
+Python port of `cv::watershed` 4.13.0 (CV-WATERSHED-006). Two grey coins (BGR 60) of
+radius 20 and 14 px, centres 30 px apart, lie on a light background (BGR 230); markers
+follow the tutorial, with $\alpha=0.7$ and the exact Euclidean $D$. The maxima are 20.02
+and 14.04 px, so the small coin keeps a one-pixel seed (threshold 14.02), and the neck,
+the saddle of $D$ on the centre line, is 9.0 px.
+
+- Uniform coins: the port and a priority flood of $-D$ (lowest first, ties by entry
+  time) put the dam at the neck; no pixel of the large coin changes label.
+- A dark rim (BGR 0) 2 px wide at radius 15–17 px inside the large coin changes neither
+  $D$ nor the markers. The small coin's label crosses the uniform contact at priority 0
+  and runs round the large coin's outer ring before the large coin's marker crosses the
+  rim at priority 60: 235 of the large coin's 1,216 own pixels (19%) receive the small
+  coin's label. The $-D$ flood is unchanged.
+- $D$ scaled to 0–255 and passed as the image: neighbor differences are 12–13 along the
+  slopes and 0 across the saddle; 899 of the 1,216 pixels receive the small coin's label.
+
+The scene, the colours and the rim are constructions. In the same pass, the installed
+`cv2.watershed` of OpenCV 4.11.0, whose `watershed` function is identical to 4.13.0's,
+returned exactly the port's labels in all three cases, `cv2.distanceTransform` with
+`DIST_MASK_PRECISE` matched $D$ within $10^{-6}$ px, and scikit-image 0.25.2's
+`watershed(-D, seeds, mask=fg)` returned exactly the $-D$ flood's labels (executed
+cross-check recorded in the 2026-11-15 report).
 
 ## Parameters and tuning
 
@@ -458,7 +502,7 @@ treated.
 | Small objects missing | Global $\alpha\max D$ above their own maximum; opening removed them | Compare object radius with $\alpha\max D$; inspect the mask after opening | Per-size rule, smaller opening, separate pass for small objects |
 | Mask includes background or misses objects in one image area | Illumination gradient; histogram not bimodal; wrong polarity | Histogram, $\eta^*$ and $t^*$ per image tile | Flat-field correction, adaptive threshold, region of interest, polarity fix |
 | $t^*$ jumps between images of the same product | Class weights cross a switching point (example A) | Log $t^*$ and class weights per image | Region of interest, calibrated fixed threshold or another criterion |
-| Counts right but boundaries misplaced | Flat relief between touching objects; FIFO tie-breaking | Compare dams from the colour image and from $-D$ with the same markers | Flood $-D$ or a gradient image, or a compact watershed |
+| Counts right but boundaries misplaced | Flat relief between touching objects; FIFO tie-breaking; an internal colour edge attracting the dam (example D) | Compare dams from the colour image and from $-D$ with the same markers | Flood $-D$ or a gradient image, or a compact watershed |
 | Labels wrong after saving or display | $-1$ cast to an unsigned type; image frame set to $-1$ | Check the dtype and count $-1$ pixels on the frame | Keep `int32` and map $-1$ explicitly |
 | Seeds on the image border, merged border objects | Image border not treated as background by the distance transform | Plot $D$ along the border | Exclude border-touching objects from measurement |
 
@@ -586,15 +630,17 @@ Consulted foundations: [OpenCV watershed](https://docs.opencv.org/4.13.0/d3/db4/
 ### Implementation sources
 
 - [OpenCV 4.13.0, `modules/imgproc/include/opencv2/imgproc.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/include/opencv2/imgproc.hpp): `DistanceTypes` and `ThresholdTypes` (L303–L334), `threshold` (L3108–L3134), `watershed` (L3474–L3498), `distanceTransform` (L3586–L3655), `connectedComponents` (L4038–L4039).
-- [OpenCV 4.13.0, `modules/imgproc/src/segmentation.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/segmentation.cpp): `watershed` (L88–L326): queues and constants (L93–L107), colour difference (L151–L159), type checks (L161–L162), image frame and negative inputs (L179–L193), no-marker exit (L225–L233), labeling and dams (L265–L293), propagation (L295–L323).
+- [OpenCV 4.13.0, `modules/imgproc/src/segmentation.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/segmentation.cpp): `watershed` (L88–L326): queues and constants (L93–L107), colour difference (L151–L159), type checks (L161–L162), image frame and negative inputs (L179–L193), initial queue entries (L183–L223), no-marker exit (L225–L233), queue service (L239–L259), labeling and dams (L265–L293), propagation (L295–L323).
 - [OpenCV 4.13.0, `modules/imgproc/src/thresh.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/thresh.cpp): `getThreshVal_Otsu` (L1183–L1275), Otsu type check and dispatch (L1630–L1640).
 - [OpenCV 4.13.0, `modules/imgproc/src/distransform.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/distransform.cpp): border initialized as far, not as background, in the 3×3 chamfer pass (L74–L95).
-- [OpenCV 4.13.0, watershed tutorial source](https://github.com/opencv/opencv/blob/4.13.0/doc/py_tutorials/py_imgproc/py_watershed/py_watershed.markdown) and [thresholding tutorial source](https://github.com/opencv/opencv/blob/4.13.0/doc/py_tutorials/py_imgproc/py_thresholding/py_thresholding.markdown): pipeline, $0.7\max D$ rule, label shift, Gaussian filtering before Otsu. The rendered pages ([watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html), [thresholding](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html)) returned HTTP 403 in this pass.
-- [scikit-image 0.25.2, `skimage/segmentation/_watershed.py`](https://github.com/scikit-image/scikit-image/blob/v0.25.2/skimage/segmentation/_watershed.py): signature and parameters (L86–L130), queue order and markers from distance maxima (L145–L165).
+- [OpenCV 4.13.0, watershed tutorial source](https://github.com/opencv/opencv/blob/4.13.0/doc/py_tutorials/py_imgproc/py_watershed/py_watershed.markdown) and [thresholding tutorial source](https://github.com/opencv/opencv/blob/4.13.0/doc/py_tutorials/py_imgproc/py_thresholding/py_thresholding.markdown): pipeline, $0.7\max D$ rule, label shift, Gaussian filtering before Otsu; in the watershed tutorial, the intensity-as-altitude theory (L14–L19) and the call on the colour image with its partial success (L132–L136). The rendered pages ([watershed](https://docs.opencv.org/4.13.0/d3/db4/tutorial_py_watershed.html), [thresholding](https://docs.opencv.org/4.13.0/d7/d4d/tutorial_py_thresholding.html)) returned HTTP 403 in this pass.
+- [scikit-image 0.25.2, `skimage/segmentation/_watershed.py`](https://github.com/scikit-image/scikit-image/blob/v0.25.2/skimage/segmentation/_watershed.py): signature and parameters (L86–L130), `image` flooded lowest values first (L99–L100), queue order and markers from distance maxima (L145–L165), docstring example flooding `-distance` within a mask (L183–L208).
 
 ### Related flashcards and references
 
-- [Flashcards](../91-otsu-distance-watershed.md): CV-WATERSHED-001 (Otsu objective), CV-WATERSHED-002 (marker pipeline), CV-WATERSHED-003 (background versus unknown), CV-WATERSHED-004 (diagnosing a merge), CV-WATERSHED-005 (instance-level evaluation).
+- [Flashcards](../91-otsu-distance-watershed.md): CV-WATERSHED-001 (Otsu objective), CV-WATERSHED-002 (marker pipeline), CV-WATERSHED-003 (background versus unknown), CV-WATERSHED-004 (diagnosing a merge), CV-WATERSHED-005 (instance-level evaluation), CV-WATERSHED-006 (the relief `cv::watershed` floods).
 - Related references: [CV-MORPHO](../../30-traitement-image/references/33-morphologie-composantes.md), [CV-GRABCUT](92-grabcut-regions.md), [CV-SEGMENTATION](93-semantique-instances-panoptique.md), [CV-SAM](94-sam-sam2.md).
 
 Drafted by agent, 2026-10-18. Revision 6, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/91-otsu-distance-watershed.md).
+Revision 7, 2026-11-15: CV-WATERSHED-006 added after the learner accepted P-CV-WATERSHED-01, the
+OpenCV relief paragraph corrected and developed, and worked example D added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/91-otsu-distance-watershed.md).

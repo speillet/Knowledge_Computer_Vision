@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 9
+revision: 10
 tags: [cv/d13, evaluation, iou, ap]
 ---
 # IoU and AP — the COCO detection protocol
@@ -330,11 +330,24 @@ scores are below every retained score keeps all earlier $(R_i,P_i)$ points and a
 ones at equal or higher recall; each $\tilde P$ is a maximum over a superset, so no
 $q_m$ decreases (project derivation). With three objects, the list TP, FP, TP gives
 $AP=56/101\approx0.554$; appending FP, TP gives $76.4/101\approx0.756$; appending only
-FPs leaves 0.554. This explains why benchmark submissions use a very low score threshold
-and the full cap: LVIS reports, for Mask R-CNN R50-FPN on LVIS v0.5 val with 300
-detections per image, 15.7 AP at a 0.05 score threshold and 20.8 at 0.001
-[Gupta et al., App. B, Table 3a]. The deployed output at a fixed threshold is unchanged
-by that tail.
+FPs leaves 0.554. The condition is that every added detection scores below every
+detection already evaluated in its category, across images. Lowering a global score
+threshold guarantees it: pycocotools keeps each image's 100 highest-scoring detections
+per category and matches them greedily in score order [L153–L154, L259–L260,
+L272–L296], so additions beyond the cap are dropped without displacing old detections,
+and greedy NMS removes only boxes that overlap a higher-scoring kept box [torchvision
+`ops/boxes.py` L25–L27]. Raising a per-image cap is not covered: a detection cut from
+one image can outscore detections kept in others. With image A holding a TP at 0.95
+and an FP at 0.90 and image B a TP at 0.50, one detection per image gives TP, TP and
+$AP=1$, two give TP, FP, TP and $AP\approx0.835$ (card CV-IOU-AP-008, recomputed by
+checks/131-iou-ap-coco.py of the 2026-11-15 pass). This explains why benchmark
+submissions use a very low score threshold. LVIS reports, for Mask R-CNN R50-FPN on
+LVIS v0.5 val with its own evaluator, mask AP 14.8 with 100 detections per image at a
+0.05 score threshold, 15.7 with 300, and 20.8 with 300 at 0.001 [Gupta et al., App. B,
+Table 3a]: a measured gain from the larger cap, not a guaranteed one. The deployed
+output at a fixed threshold is unchanged by that tail: in the card's example, AP rises
+from $51/101$ to $63.5/101$ while precision $2/3$ and recall $1/2$ at the deployed
+threshold stay the same.
 
 ## Parameters and tuning
 
@@ -381,7 +394,8 @@ for any number compared with published results.
   describes the rule as choosing the detection with the highest overlap; the VOC text
   and the pinned COCO code both assign in decreasing score order.
 - **Tail behavior.** FPs ranked after the last TP never change AP, and a low-score tail
-  cannot lower it (example D). AP says nothing about the operating threshold.
+  cannot lower it (example D); a larger per-image cap can, when the detections it adds
+  outscore those kept in other images. AP says nothing about the operating threshold.
 - **Macro-averaging.** Categories, thresholds and recall levels weigh equally. A rare
   but critical category can be hidden by many easy ones, and a rare category's AP is
   noisy: LVIS returns only the overall AP partly because tail categories have "few
@@ -477,8 +491,9 @@ wide intervals for categories with few objects [Gupta et al., §2.3].
   several points, as in LVIS Table 3a, while precision and recall at the deployed
   threshold are identical by construction. A gain of that kind is not a better product.
 - **Measurement limits**: one split, one seed; the per-image cap can bind after the
-  change and then alters the comparison; interpolated AP and its 101 levels are a
-  convention, not the area of a continuous curve.
+  change, dropping the additions beyond it, which limits the gain without lowering AP
+  (example D); interpolated AP and its 101 levels are a convention, not the area of a
+  continuous curve.
 
 ## Failure modes and diagnosis
 
@@ -642,12 +657,12 @@ Consulted foundations: [COCO evaluator](https://github.com/cocodataset/cocoapi/b
 - [cocoapi `PythonAPI/pycocotools/cocoeval.py` at `8c9bcc3`][code]: parameter docstring L22–L52, `_prepare` L84–L119, `evaluate` L121–L161, `computeIoU` L163–L190, `computeOks` L192–L233, `evaluateImg` L235–L313, `accumulate` L315–L420, `summarize` L422–L493, `Params` L498–L534. Read again on 2026-11-14.
 - [cocoapi `PythonAPI/pycocotools/coco.py` at `8c9bcc3`](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/coco.py#L305-L364): `loadRes` L305–L364.
 - [cocoapi `common/maskApi.c` at `8c9bcc3`][mask]: `rleIou` L77–L96, `bbIou` L109–L120 (crowd union = detection area).
-- [torchvision `ops/boxes.py` at `v0.29.0`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/ops/boxes.py#L279-L436): `box_area` L279–L311, `_box_inter_union` L314–L347, `box_iou` L350–L405, `generalized_box_iou` L409–L436.
+- [torchvision `ops/boxes.py` at `v0.29.0`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/ops/boxes.py#L279-L436): `box_area` L279–L311, `_box_inter_union` L314–L347, `box_iou` L350–L405, `generalized_box_iou` L409–L436; `nms` docstring L20–L42 (removes lower-scoring boxes overlapping a higher-scoring one).
 - [NumPy 1.24.0 release notes](https://github.com/numpy/numpy/blob/v1.24.0/doc/source/release/1.24.0-notes.rst): expired deprecation of `np.float` and related aliases.
 
 ### Related flashcards and references
 
-- [Flashcards IoU/AP](../131-iou-ap-coco.md): CV-IOU-AP-001 to CV-IOU-AP-007.
+- [Flashcards IoU/AP](../131-iou-ap-coco.md): CV-IOU-AP-001 to CV-IOU-AP-007; CV-IOU-AP-008 (low-score tail, per-image cap and the deployed operating point).
 - Constructed examples A–D and the greedy-matching case are recomputed by checks/131-iou-ap-coco.py in the review directory of 2026-11-14.
 
 [cocodoc]: https://cocodataset.org/#detection-eval
@@ -657,3 +672,5 @@ Consulted foundations: [COCO evaluator](https://github.com/cocodataset/cocoapi/b
 [mask]: https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/common/maskApi.c
 
 Drafted by agent, 2026-10-18. Revision 9, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/131-iou-ap-coco.md).
+Revision 10, 2026-11-15: CV-IOU-AP-008 added after the learner accepted P-CV-IOU-AP-01, and worked
+example D aligned with it (condition of the tail argument, per-image cap counterexample), by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/131-iou-ap-coco.md).

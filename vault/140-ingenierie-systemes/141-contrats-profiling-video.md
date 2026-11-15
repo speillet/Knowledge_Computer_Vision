@@ -130,3 +130,24 @@ Reponse: **Expected answer**: Trace CPU/GPU time, H2D/D2H, waits and age of fram
 Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; diagnosis proposed by the project; [TensorRT 11.4.1, Performance Benchmarking: Reported Performance Metrics, Performance Profiling Tools and H2D/D2H Data Transfers](https://docs.nvidia.com/deeplearning/tensorrt/11.4.1/performance/benchmarking.html), consulted 2026-11-14; [GStreamer, queue, limits and blocking](https://gstreamer.freedesktop.org/documentation/coreelements/queue.html). Constructed flow calculations and protocols: project deduction; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d14 famille::diagnostic cv_id::CV-PIPELINE-005 provenance::agent pole::C pole::E pole::F
 END
+
+## CV-PIPELINE-006
+
+Objective: Map a detector box back through a letterbox and recognize a forgotten padding term. Family: reasoning. Provenance: agent.
+
+START
+CV-Pilote
+ID: CV-PIPELINE-006
+Question: A $1920\times1080$ camera frame is resized with its aspect ratio preserved, then padded equally on both sides to the $640\times640$ input of a detector. The detector returns the box $(x_1,y_1,x_2,y_2)=(320,290,416,350)$ in input pixels, as continuous coordinates with the origin at the top-left corner of the first pixel. Which scale and padding did the preprocessing apply, and where is the box in the source frame? If the postprocessing omits the padding from the inverse map, what pattern do the overlays show on the source frames?
+Reponse: **Expected answer**: (1) Scale: $r=\min(640/1920,\,640/1080)=1/3$, so the content occupies $640\times360$. (2) Padding: $p_x=0$ and $p_y=(640-360)/2=140$ rows above and below. Forgetting it moves every box down by $p_y/r=420$ source pixels: a constant vertical offset, identical for all boxes, with correct widths, heights and $x$. (3) Inverse: $x=(x'-p_x)/r$ and $y=(y'-p_y)/r$, hence $(960,450,1248,630)$; without the padding term the overlay reads $(960,870,1248,1050)$.
+
+**Further explanation**: The forward map is $x'=rx+p_x$, $y'=ry+p_y$; the inverse removes the padding in input pixels before dividing by the scale. Reversing that order, $y=y'/r-p_y$, leaves $p_y(1/r-1)=280$ px of offset. The scale to invert is the one actually applied on each axis: when `cv2.resize` receives an output size, it computes the factor from the integer sizes, content over source, which equals $r$ here because $1920/3$ and $1080/3$ are integers. An odd padding total needs a recorded split rule; half an input pixel is 1.5 source pixels at $r=1/3$.
+
+**Pixel-centre convention**: In this frame, index $u$ denotes the pixel centre $u+0.5$. OpenCV's bilinear resize samples source index $(d+0.5)s-0.5$ for destination index $d$ and scale $s=1/r$, which is the continuous map above written for centres. Box corners therefore map without half-pixel terms, while an integer index such as a keypoint row maps as $u=(u'+0.5-p_y)/r-0.5$: row 290 returns to 451, not 450. Dropping the half-pixel terms shifts indices by $(1/r-1)/2=1$ source pixel, negligible for boxes but visible on keypoints and masks.
+
+**Diagnosis**: With the padding forgotten, content rows $y'\in[140,500]$ land at $[420,1500]$. No box ever appears in the top 420 rows, and any box coordinate whose true $y$ exceeds 660 px lands below the 1080 px edge, where clipping squashes the box or a validity filter may drop it. A forgotten or wrong scale has another signature: an error that grows with position and changes box sizes. Inverting this letterboxed input with the stretch factors 3 and 1.6875, for instance, puts $y_1$ and $y_2$ at 489.4 and 590.6 instead of 450 and 630. Pass a synthetic frame with a known box through the whole path and compare. Constructed example; recomputed in the check script of this pass.
+
+**Blocking errors**: Taking $r=\max(640/1920,\,640/1080)$, which would crop instead of pad. Dividing by $r$ before subtracting the padding. Placing the padding on the $x$ axis. Expecting the forgotten padding to change box sizes. Blaming the detector for the 420 px offset.
+Source: [[140-ingenierie-systemes/references/141-contrats-profiling-video|Full reference]]; [OpenCV 4.13.0, resize.cpp L4096–L4103: bilinear source index $(d+0.5)s-0.5$](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/resize.cpp#L4096-L4103); [OpenCV 4.13.0, resize.cpp L4216–L4221: scale computed from the destination and source sizes](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/resize.cpp#L4216-L4221). The letterbox maps, the box, the offsets and the diagnostic signatures are project constructions.
+Tags: cv::pilote cv::d14 famille::raisonnement cv_id::CV-PIPELINE-006 provenance::agent pole::C pole::E pole::F
+END

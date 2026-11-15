@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 9
+revision: 10
 tags: [cv/d11, tracking, sort]
 ---
 # SORT — multi-object tracking with motion and association
@@ -196,6 +196,20 @@ $d\le0.538\,w$: the prediction error must stay below about half the box width.
   IoU 0.2: every frame creates a new track, none is ever confirmed.
 - Halving the frame rate doubles the displacement per frame: 12 px/frame (IoU 0.43)
   becomes 24 px/frame (IoU 0.11) for the same box.
+- A newborn track predicts exactly its birth box: the code sets only the first four state
+  components from the box (L114) and filterpy starts the state at zero (filterpy L397),
+  so $x^-=Fx$ leaves the box unchanged whatever $P_0$, $Q$ and $R$. The overlap its first
+  association sees is therefore the IoU between two consecutive detections, a check that
+  also covers diagonal motion, which is stricter: a shift of $0.4w$ on both axes gives
+  IoU 0.22.
+- What fails is the birth, not the speed. In a port of the pinned update loop (check
+  script of the 2026-11-15 pass, CV-SORT-009), a 16 px box moving 10 px/frame (IoU 0.23)
+  creates 20 tracks in 20 frames and is output only during the start-up exception of
+  `min_hits`, under IDs 1, 2 and 3. At twice the frame rate (5 px/frame, IoU 0.52) one ID
+  holds; born at 5 px/frame and accelerating by 0.5 px/frame$^2$ to 10 px/frame, the box
+  also keeps one ID, because the first match sets the velocity to 0.9988 of the observed
+  displacement (example A). `iou_threshold=0.2` admits the 10 px/frame birth but widens the
+  gate for every pair.
 
 ### Worked example C: life cycle of the pinned code
 
@@ -313,7 +327,7 @@ tracker speed excludes detection.
 | New ID after a short occlusion | Track expired (`max_age`); detector missed the object | Per-frame log of detections, ages and deletions around the gap | Longer `max_age` if gaps are short and scenes sparse; appearance re-identification ([CV-ASSOCIATION](112-deepsort-bytetrack.md)) |
 | Box disappears for three frames after one missed detection | Probation restarts with `hit_streak` | Output log versus internal tracks (example C) | Accept, lower `min_hits`, or output predicted boxes with an explicit status |
 | IDs swap at crossings | Geometric ambiguity; no appearance | IoU matrix at the crossing frames; competing admissible pairs | Appearance cost, motion gating, or camera placement that reduces overlaps |
-| Small fast objects never confirmed | Zero initial velocity and IoU budget (example B) | Displacement per frame divided by width for the missed births | Higher frame rate, centre-distance cost, or a motion prior |
+| Small fast objects never confirmed | Zero initial velocity and IoU budget (example B) | Displacement per frame divided by width, or IoU between consecutive detections, for the missed births (CV-SORT-009) | Higher frame rate, centre-distance cost, or a motion prior |
 | Many short tracks on false positives | Detector threshold too low; `min_hits` too small | Track length histogram; FP tracks versus detector FP | Raise threshold, longer probation |
 | ID instability after the frame rate drops | Per-frame model and lifetimes | Same detections replayed at both frame rates | Rescale parameters in seconds; explicit $\Delta t$ in $F$ and $Q$ |
 | Tracks drift with a moving camera | Constant-velocity model ignores ego-motion [§3.2] | Background flow or IMU against track velocities | Compensate camera motion before association |
@@ -470,14 +484,16 @@ Consulted foundations: [SORT implementation](https://github.com/abewley/sort/blo
 ### Implementation sources
 
 - [abewley/sort at commit 2236dff, `sort.py`][code]: solver (L36–L44), IoU (L47–L63), box conversions (L66–L91), `KalmanBoxTracker` and noise settings (L94–L151), association (L154–L196), `Sort.update` life cycle (L199–L253), command-line defaults (L255–L269).
-- [rlabbe/filterpy at commit 5df4e09, `kalman_filter.py`](https://github.com/rlabbe/filterpy/blob/5df4e095fac07684a05c495bd72d3424f7c68c9c/filterpy/kalman/kalman_filter.py): default `P`, `Q`, `R` (L397–L403).
+- [rlabbe/filterpy at commit 5df4e09, `kalman_filter.py`](https://github.com/rlabbe/filterpy/blob/5df4e095fac07684a05c495bd72d3424f7c68c9c/filterpy/kalman/kalman_filter.py): default `x` (zero), `P`, `Q`, `R` (L397–L403), Joseph-form covariance update (L553–L554).
 
 ### Related flashcards and references
 
-- [Flashcards SORT](../111-sort.md): CV-SORT-001 to 008.
+- [Flashcards SORT](../111-sort.md): CV-SORT-001 to 008; CV-SORT-009 (fast small object never confirmed: zero velocity at birth and the IoU budget).
 - [CV-ASSOCIATION](112-deepsort-bytetrack.md), [CV-SOT](113-tracking-monoobjet.md), [CV-FUSION](../../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md), [CV-METRIQUES-TEMPS](../../130-evaluation-fiabilite/references/132-tracking-trajectoires.md).
 
 Drafted by agent, 2026-10-18. Revision 9, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/111-sort.md).
+Revision 10, 2026-11-15: CV-SORT-009 added after the learner accepted P-CV-SORT-01, and worked example B
+extended with the birth mechanism and its check, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/111-sort.md).
 
 [paper]: https://arxiv.org/abs/1602.00763
 [code]: https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py

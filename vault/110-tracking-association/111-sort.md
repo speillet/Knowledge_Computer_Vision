@@ -210,3 +210,24 @@ Reponse: **Expected answer**: Measure acquisition, detection, NMS, transfers and
 Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Bewley et al. 2016, SORT, §4.3 runtime of the tracking component](https://arxiv.org/abs/1602.00763). Added reasoning: project deduction; consulted passages are recorded in the canonical reference.
 Tags: cv::pilote cv::d11 famille::evaluation cv_id::CV-SORT-008 provenance::agent pole::C pole::D pole::E
 END
+
+## CV-SORT-009
+
+Objective: diagnose a fast small object that never keeps a SORT identity. Family: diagnosis. Provenance: agent.
+
+START
+CV-Pilote
+ID: CV-SORT-009
+Question: The reference SORT implementation (defaults `max_age=1`, `min_hits=3`, `iou_threshold=0.3`) tracks pedestrians about 30 px wide and a ball whose boxes are 16 px wide. At 30 frames/s the ball moves about 10 px horizontally per frame and is detected in every frame. Pedestrians keep stable IDs, but the log shows a new internal track for the ball at every frame, and after the first frames SORT never returns it. Explain the mechanism, state the condition under which it occurs for a horizontal motion, and give a check that confirms it from the stored detections alone.
+Reponse: **Expected answer**: (1) An unmatched detection starts a new track from its box with zero velocity and a large velocity variance, so the track's first prediction is exactly its birth box. Its first association therefore compares two consecutive detections, and the velocity is learned only after that first match. (2) For equal boxes of width $w$ shifted horizontally by $d$, $\mathrm{IoU}=(w-d)/(w+d)$, and $\mathrm{IoU}\ge0.3$ requires $d\le0.538\,w$. Here $d/w=0.625$ and $\mathrm{IoU}=6/26=0.23$: the pair is rejected, a new track is born every frame, and each one dies before reaching `min_hits`. (3) Compute, for the failing births, the per-frame displacement of the detection divided by its width, or directly the IoU between consecutive detections, which also covers diagonal motion. Values above 0.538, or an IoU below 0.3, confirm the diagnosis; values well below point to another cause.
+
+**Further explanation**: The paper initializes a new tracker "with the velocity set to zero" and a large velocity covariance. The code sets only the first four state components from the box, and filterpy starts the state at zero. The constant-velocity prediction $x^-=Fx$ then leaves the box unchanged. $Q$, $R$ and $P_0$ cannot help this first match. After it, the centre gain of 0.9999 and the velocity gain of 0.9988 make the velocity almost exactly the observed displacement. What fails is the birth, not the speed. The budget scales with the box: the same 10 px would be a third of a pedestrian's width but is 0.625 of the ball's.
+
+**Constructed example** (recomputed by this pass's check script on a port of the pinned code): at 30 frames/s the ball yields 20 tracks in 20 frames. It is output only in the first three frames, under IDs 1, 2 and 3, through the start-up exception of `min_hits`. At 60 frames/s, 5 px per frame, the IoU is 11/21 = 0.52 and one ID holds throughout. A ball born at 5 px per frame that accelerates by 0.5 px per frame² to 10 px per frame keeps ID 1. A diagonal shift of $0.4w$ on both axes already gives IoU 0.22.
+
+**Remedies and their cost**: a higher frame rate; a centre-distance gate or a velocity prior at birth; or `iou_threshold=0.2`, which admits this birth but widens the gate for every pair.
+
+**Blocking errors**: Blaming the detector although the ball is detected in every frame. Raising `max_age`, which keeps stale zero-velocity tracks alive longer without matching them. Lowering `min_hits`, which at best displays a new ID per frame. Retuning $Q$ or $R$. Applying the 0.538 bound to diagonal motion.
+Source: [[110-tracking-association/references/111-sort|SORT reference]]; [Bewley et al. 2016, SORT, §3.3 IoU assignment and minimum IoU, §3.4 zero initial velocity and probation](https://arxiv.org/abs/1602.00763); [SORT code at 2236dff, KalmanBoxTracker init L99–L121 and predict L133–L145](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L99-L145); [SORT code at 2236dff, associate_detections_to_trackers L154–L196](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L154-L196); [SORT code at 2236dff, defaults, output and deletion L200–L253](https://github.com/abewley/sort/blob/2236dff5019565958b84df7d871d41cc1db58ac7/sort.py#L200-L253); [filterpy KalmanFilter defaults, L397–L403](https://github.com/rlabbe/filterpy/blob/5df4e095fac07684a05c495bd72d3424f7c68c9c/filterpy/kalman/kalman_filter.py#L397-L403). The ball and pedestrian scenes and their numbers are project constructions, recomputed in the check script of this pass.
+Tags: cv::pilote cv::d11 famille::diagnostic cv_id::CV-SORT-009 provenance::agent pole::C pole::D pole::E
+END
