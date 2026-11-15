@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -183,7 +183,15 @@ $\operatorname{vec}(R_X)$ and $t_X$ from Kronecker products, followed by project
 rotation [L574–L626]. *Daniilidis*: each motion pair contributes a $6\times8$ block in dual
 quaternion coordinates; the solution lies in the span of the last two right singular
 vectors of the stacked $6K\times8$ matrix, fixed by two quadratic constraints
-[L631–L722]. Horaud and Dornaika's nonlinear method also solves both jointly [§5].
+[L631–L722]. Horaud and Dornaika's nonlinear method also solves both jointly [§5]: of the
+two approaches they state, rotation then translation, or a second one in which "rotation
+and translation are estimated simultaneously", the second is nonlinear but "provides the
+most stable solution".
+OpenCV's documentation classes `TSAI`, `PARK` and `HORAUD` as separable and `ANDREFF` and
+`DANIILIDIS` as simultaneous [calib3d.hpp, L2234–L2243]; the separable implementations all
+solve the translation with the estimated rotation fixed [calibration_handeye.cpp, L353–L376,
+L425–L447, L520–L538]. OpenCV's Andreff returns the translation of the joint linear solve and
+projects only the rotation block onto a rotation afterwards [L617–L624].
 
 **Closure residual.** For held-out poses, $E_{ij}=Y_j^{-1}Y_i$ should be the identity;
 report its rotation angle $\phi=\arccos\big((\operatorname{tr}R_E-1)/2\big)$ in degrees and
@@ -196,6 +204,22 @@ amplified about 11.5 times by 5° motions and 1.9 times by 30° motions. A 0.1°
 $R_X$ with a 0.5 m camera translation perturbs $R_Xt_B$ by 0.87 mm, which a 30° motion
 turns into about 1.7 mm of error in $t_X$: in a separable solver, rotation errors become
 translation errors.
+
+*Worked example C: why the separable translation is biased (constructed, recomputed by the
+2026-11-15 check script `checks/57-calibration-hand-eye.py` of the accepted-proposals
+report).* The translation part of $AX=XB$ is $R_At_X+t_A=R_Xt_B+t_X$. With
+$\hat R_X\approx(I+[\delta]_\times)R_X$, the right-hand side gains $\delta\times(R_Xt_B)$, of
+norm at most $\|\delta\|\,\|t_B\|$: the lever arm is the camera translation between
+stations. A separable solver keeps $\hat R_X$ fixed, so this term enters every equation as
+data; it is a systematic error shared by all equations, not independent noise. With
+$\|t_B\|=0.3$ m and a $0.2^\circ$ error, the perturbation is 1.05 mm; dividing by
+$2\sin(\theta/2)$ gives 3.0 mm on $t_X$ for one $20^\circ$ motion and 1.05 mm for one
+$60^\circ$ motion, and 1.74 mm against 0.55 mm for a two-motion case with an error about a
+third axis. The Tsai filter keeps both angles, so nothing warns the user (CV-HANDEYE-006).
+A joint linear system such as Andreff's stacks nine dimensionless rotation rows and three
+translation rows whose terms all carry the length unit [L599–L617]: changing metres to
+millimetres multiplies the translation rows by 1000 and therefore changes the weighting of
+noisy data (project deduction, row scaling recomputed).
 
 ## Parameters and tuning
 
@@ -224,7 +248,10 @@ held-out closure and task error, then repeat on a second session.
   almost identically while the simultaneous nonlinear method "provides more accurate
   results in all the situations"; they conclude that decoupling rotation and translation
   "introduces a bias", and report, for 4 motions, translation errors of 4% for the
-  nonlinear method against 6.5% for the separable ones [§6].
+  nonlinear method against 6.5% for the separable ones [§6]. The mechanism is the
+  propagation of the rotation error through $R_Xt_B$ (worked example C); Horaud and
+  Dornaika also note that the decoupled linear problem "becomes ill-conditioned" in the
+  presence of errors [§3].
 - **Correlated pairs.** OpenCV forms all $N(N-1)/2$ pairs $i<j$ [L279–L322]; a naive
   covariance that treats them as independent is optimistic.
 - **Frame of the result.** $X$ is constant; ${}^bT_c=G_iX$ changes with every robot pose.
@@ -297,9 +324,13 @@ with an independent reference is needed for absolute accuracy.
 
 ## Alternatives and applications
 
-- **Prefer a simultaneous or nonlinear method** (Daniilidis, Andreff, or a joint
-  refinement of $X$ and $Y$) when translation accuracy matters, since decoupling biases
-  the estimate in Horaud and Dornaika's simulations [§6].
+- **Prefer a joint nonlinear refinement**, started from a separable estimate, when
+  translation accuracy matters, rotations are small or camera translations long (worked
+  example C): in Horaud and Dornaika's simulations, decoupling biased the estimate and their
+  joint nonlinear method was more accurate than both separable methods [§6]. The linear
+  simultaneous solvers (Daniilidis, Andreff) avoid fixing the rotation before the
+  translation, but they postdate that comparison and were not part of it; compare them on
+  held-out closure.
 - **Prefer a separable method** for a quick initialization or when rotation alone is
   needed.
 - **Prefer robot–world–hand–eye** when the target-to-base transform is also unknown and
@@ -411,12 +442,14 @@ Consulted foundations: [OpenCV calibrateHandEye](https://docs.opencv.org/4.13.0/
 ### Implementation sources
 
 - [OpenCV 4.13.0, `modules/calib3d/include/opencv2/calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp): `solvePnP` output direction (L1031–L1032), `HandEyeCalibrationMethod` (L640–L647), `calibrateHandEye` documentation, chains and minimum motions (L2210–L2358), `calibrateRobotWorldHandEye` (L2361–L2505).
-- [OpenCV 4.13.0, `modules/calib3d/src/calibration_handeye.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/calibration_handeye.cpp): minimal quaternion helper (L25–L66), Tsai with motion filter and failure path (L275–L384), Park (L386–L453), Andreff (L574–L626), Daniilidis (L631–L722), input checks and output copy (L724–L820).
+- [OpenCV 4.13.0, `modules/calib3d/src/calibration_handeye.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/calibration_handeye.cpp): minimal quaternion helper (L25–L66), Tsai with motion filter and failure path (L275–L384), Park (L386–L453), Horaud (L455–L540), Andreff (L574–L626), Daniilidis (L631–L722), input checks and output copy (L724–L820).
 - [OpenCV 4.13 calib3d documentation](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): rendered page consulted in earlier passes; HTTP 403 in this pass.
 
 ### Related flashcards and references
 
-- [Flashcards](../57-calibration-hand-eye.md): CV-HANDEYE-001 (deriving $AX=XB$), CV-HANDEYE-002 (API contract), CV-HANDEYE-003 (informative motions), CV-HANDEYE-004 (closure test), CV-HANDEYE-005 (eye-in-hand versus eye-to-hand).
+- [Flashcards](../57-calibration-hand-eye.md): CV-HANDEYE-001 (deriving $AX=XB$), CV-HANDEYE-002 (API contract), CV-HANDEYE-003 (informative motions), CV-HANDEYE-004 (closure test), CV-HANDEYE-005 (eye-in-hand versus eye-to-hand), CV-HANDEYE-006 (separable versus simultaneous solvers and translation bias).
 - Neighbouring references: [CV-MULTICALIB](55-calibration-multicapteurs.md), [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-ZHANG](52-calibration-zhang.md).
 
 Drafted by Agent Codex, 2026-10-24. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/57-calibration-hand-eye.md).
+Revision 8, 2026-11-15: CV-HANDEYE-006 added after the learner accepted P-CV-HANDEYE-01, and
+worked example C and the separable/simultaneous classification added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/57-calibration-hand-eye.md).

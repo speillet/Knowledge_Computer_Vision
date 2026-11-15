@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 9
+revision: 10
 tags: [cv/d05, geometrie, ransac, matching]
 ---
 # RANSAC for homography estimation
@@ -333,14 +333,18 @@ Read in the 4.13.0 header and sources on GitHub, because docs.opencv.org returne
 - `findHomography(src, dst, method=0, ransacReprojThreshold=3, mask, maxIters=2000,
   confidence=0.995)`; `USAC_*` methods are delegated to the USAC framework
   [calib3d.hpp L782–L853; fundam.cpp L363–L365].
-- Exactly four points, or method 0, give a direct DLT with all points marked inliers
-  [fundam.cpp L401–L405].
+- Exactly four points, or method 0, start from a direct DLT on all pairs with a mask of
+  ones [fundam.cpp L401–L405]. With exactly four points, that is the result.
 - RANSAC: `createRANSACPointSetRegistrator(cb, 4, threshold, confidence, maxIters)`;
   samples are drawn with up to 10,000 attempts to pass `checkSubset`
   [fundam.cpp L407; ptsetreg.cpp L104–L158, L206–L215].
-- After a robust fit with more than four points (except RHO): refit on inliers,
-  Levenberg–Marquardt with 10 iterations, scaling to $h_{33}=1$, then a new mask over all
-  input points with $e_i^2\le t^2$ [fundam.cpp L415–L452].
+- With more than four points and any method except RHO, method 0 included: refit on
+  the inliers (robust methods only; method 0 keeps all pairs), Levenberg–Marquardt with
+  10 iterations, scaling to $h_{33}=1$, then a new mask over all input points with
+  $e_i^2\le t^2$ [fundam.cpp L415–L452]. For method 0, this mask can therefore mark
+  outliers that still weighed fully in the fit. The recomputation appeared in 4.12.0
+  ([opencv#26742](https://github.com/opencv/opencv/pull/26742)); in 4.11.0, method 0
+  returned a mask of ones.
 
 ```python
 # Illustrative, not executed. OpenCV 4.13 Python binding.
@@ -559,6 +563,7 @@ Consulted foundations: [OpenCV projective geometry](https://docs.opencv.org/4.13
 - [Flashcards](../51-ransac-homographie.md): CV-HOMOGRAPHIE-001 to -007.
 
 Drafted by agent, 2026-10-18. Revision 9, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/51-ransac-homographie.md).
+Revision 10, 2026-11-15: `findHomography` method-0 mask behaviour corrected against OpenCV 4.13.0 `fundam.cpp` L401–L452 while writing CV-MATCHING-005, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/51-ransac-homographie.md).
 
 [ransac]: https://www.sri.com/wp-content/uploads/2021/12/ransac-publication.pdf
 [tutorial]: https://github.com/opencv/opencv/blob/4.13.0/doc/tutorials/features2d/homography/homography.markdown

@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -130,10 +130,16 @@ diagnose degeneracy.
   [L2761–L2769]. PnP, in contrast, inherits the unit of the 3-D points.
 - **Pure rotation.** With $t=0$, $E=0$: the translation direction and all depths are
   unobservable, and a homography $KRK^{-1}$ explains the matches
-  ([CV-HOMOGRAPHIE](51-ransac-homographie.md)).
+  ([CV-HOMOGRAPHIE](51-ransac-homographie.md)). Every $[e]_\times R$ then satisfies all
+  constraints, so the eight-point system loses rank as in the planar case, and any $E$ or
+  unit $t$ returned by a solver is set by noise; the rotation stays observable through
+  $K^{-1}HK=R$ (worked example F).
 - **Planar scene.** If every point lies on one plane, the matches are explained by a
   homography and the eight-point system for $F$ loses rank: ten coplanar points give rank 6
-  instead of 8 (worked example D).
+  instead of 8 (worked example D). $E$ itself exists when $t\neq0$ and the five-point solver
+  can return it, but planar data can admit a second exact solution, a twofold ambiguity that
+  ORB-SLAM reports "if all points of a planar scene are closer to one of the camera centers"
+  [Mur-Artal et al. 2015, §II-B].
 - **PnP configurations.** Three points give up to four solutions; `solvePnP` needs four
   points in general, and exactly four for its P3P variants, the fourth "used to retain the
   best solution" [L1057–L1059]; collinear or nearly collinear points leave the pose poorly
@@ -241,8 +247,11 @@ conditioning in depth.
 Constructed example, recomputed by checks/53-epipolaire-pnp-triangulation.py. Ten points
 in general position give an eight-point design matrix of rank 8, so $F$ is unique up to
 scale. The same ten points moved onto one plane give rank 6: a three-dimensional family of
-matrices satisfies all constraints. A homography, or the essential matrix with known
-intrinsics, is the appropriate model for such data.
+matrices satisfies all constraints. The family is $[e]_\times H$ for every $e$, where $H$ is
+the homography induced by the plane. A homography is the appropriate model for such data.
+With known intrinsics, the five-point solver still returns $E$, but the linear eight-point
+estimate of $E$ on normalized coordinates has the same rank 6, and the plane admits a second
+essential matrix that fits every match (worked example F).
 
 ### Worked example E: linear triangulation
 
@@ -251,6 +260,42 @@ $P_1=K_1[I\mid0]$ and $P_2=K_2[R\mid t]$, the null vector of the $4\times4$ syst
 the two observations, divided by its fourth component, returns the 3-D point to within
 $10^{-6}$. With noise, this linear solution minimizes an algebraic error and is a starting
 point for refinement by reprojection error.
+
+### Worked example F: test a homography before relative pose
+
+Constructed example, recomputed by the 2026-11-15 check script
+`checks/53-epipolaire-pnp-triangulation.py` of the accepted-proposals report. With $f=800$ px
+and principal point $(640,360)$: pair A is a $10^\circ$ rotation about the vertical axis with
+$t=0$; pair B is a $0.2$ m sideways translation 1.5 m above a floor, $n=(0,1,0)$, $d=1.5$ m.
+
+- Pair A: $E=0$; pixels obey $p_2\sim KRK^{-1}p_1$ at every depth from 2.2 m to 7.5 m;
+  $[e]_\times R$ fits every match for any direction $e$; the design matrix of 12 matches has
+  rank 6; $K^{-1}HK$ returns the $10^\circ$ rotation.
+- Pair B: $E=[t]_\times R$ has singular values $0.2,0.2,0$; the floor induces
+  $H_n=R+tn^\top/d$ and $[t]_\times H_n=[t]_\times R$ since $[t]_\times t=0$; every
+  $[e]_\times H$ fits the floor matches; the design matrix has rank 6 on the floor and rank 8
+  for the same motion over a non-planar scene.
+- Second solution in pair B: decomposing $H_n$ gives a second $(R',t',n')$ whose
+  $E'=[t']_\times R'$ is a valid essential matrix and fits every floor match exactly. Here
+  $n'^\top x_1$ changes sign across the floor, so part of the floor falls behind camera 1 for
+  either sign and cheirality removes the twin; it survives in the configurations ORB-SLAM
+  describes.
+
+Why the homography must be tested first: an epipolar constraint confines a match to a line,
+one residual dimension; a homography confines it to a point, two dimensions. Data explained by
+a homography are explained by a whole family of fundamental matrices with as many inliers, so
+an inlier count cannot reveal the degeneracy. ORB-SLAM computes $H$ (normalized DLT) and $F$
+(eight-point) in parallel inside RANSAC with the same samples, scores both with symmetric
+transfer errors, thresholds $T_H=5.99$ and $T_F=3.84$ (a $\chi^2$ test at 95%; two and one
+degrees of freedom, recomputed by the script), and selects the homography when
+$R_H=S_H/(S_H+S_F)>0.45$, "which adequately captures the planar and low parallax cases". It
+then triangulates the eight homography or four essential-matrix motion hypotheses and does not
+initialize without a clear winner [Mur-Artal et al. 2015, §IV steps 2–4, eqs. 1–3]. Torr's
+statistical model selection (GRIC), which ORB-SLAM cites, was not opened in this pass. In
+OpenCV, `decomposeHomographyMat` returns up to four solutions, two of which positive depth can
+remove [calib3d.hpp L3444–L3488]. Keeping only the rotation of pair A and postponing
+initialization until the camera translates is a project decision consistent with ORB-SLAM's
+delay.
 
 ## Parameters and tuning
 
@@ -478,15 +523,18 @@ Consulted foundations: [OpenCV calib3d](https://docs.opencv.org/4.13.0/d9/d0c/gr
 ### Scientific sources
 
 - [Lepetit, Moreno-Noguer and Fua 2009, "EPnP: An Accurate O(n) Solution to the PnP Problem", IJCV](https://infoscience.epfl.ch/record/160138/files/top.pdf): abstract and §1 (control points, $n\ge4$, planar and non-planar, Gauss–Newton refinement).
-- Epipolar constraint, decomposition, scale ambiguity, planar degeneracy, linear triangulation and depth uncertainty: derivations of this note, recomputed by the check script of the subject report; the textbook treatment (Hartley and Zisserman) and Nistér's five-point paper were not accessible in this pass.
+- [Mur-Artal, Montiel and Tardós 2015, "ORB-SLAM: a Versatile and Accurate Monocular SLAM System", IEEE T-RO, arXiv 1502.00956v2](https://arxiv.org/abs/1502.00956): §II-B (planar twofold ambiguity, model selection) and §IV steps 1–5, eqs. 1–4 (parallel homography and fundamental matrix, thresholds, selection ratio, hypothesis triangulation).
+- Epipolar constraint, decomposition, scale ambiguity, planar and pure-rotation degeneracy, linear triangulation and depth uncertainty: derivations of this note, recomputed by the check scripts of the 2026-11-14 and 2026-11-15 subject reports; the textbook treatment (Hartley and Zisserman), Nistér's five-point paper and Torr's model-selection papers were not accessible.
 
 ### Implementation sources
 
-- [OpenCV 4.13.0, `calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp): `SolvePnPMethod` (L563–L585), `FM_*` (L634–L637), `solvePnP` (L1000–L1076), `solvePnPRansac` (L1123–L1128), `solveP3P` (L1140–L1172), `findFundamentalMat` (L2540–L2605), `findEssentialMat` (L2608–L2750), `decomposeEssentialMat` (L2753–L2771), `recoverPose` (L2773–L2960), `triangulatePoints` (L2986–L3012).
+- [OpenCV 4.13.0, `calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp): `SolvePnPMethod` (L563–L585), `FM_*` (L634–L637), `solvePnP` (L1000–L1076), `solvePnPRansac` (L1123–L1128), `solveP3P` (L1140–L1172), `findFundamentalMat` (L2540–L2605), `findEssentialMat` (L2608–L2750), `decomposeEssentialMat` (L2753–L2771), `recoverPose` (L2773–L2960), `triangulatePoints` (L2986–L3012), `decomposeHomographyMat` and `filterHomographyDecompByVisibleRefpoints` (L3444–L3495).
 
 ### Related flashcards and references
 
-- [Flashcards](../53-epipolaire-pnp-triangulation.md): CV-EPIPOLAIRE-001 to -005.
+- [Flashcards](../53-epipolaire-pnp-triangulation.md): CV-EPIPOLAIRE-001 to -005, CV-EPIPOLAIRE-006 (pure rotation, planar scene and homography-first model selection).
 - Related references: [CV-HOMOGRAPHIE](51-ransac-homographie.md), [CV-ZHANG](52-calibration-zhang.md), [CV-BA](54-bundle-adjustment.md), [CV-STEREO](../../60-vision-3d/references/61-stereo-profondeur.md), [CV-VIO](../../60-vision-3d/references/63-slam-vio.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/53-epipolaire-pnp-triangulation.md).
+Revision 9, 2026-11-15: CV-EPIPOLAIRE-006 added after the learner accepted P-CV-EPIPOLAIRE-01,
+worked example D corrected and worked example F added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/53-epipolaire-pnp-triangulation.md).

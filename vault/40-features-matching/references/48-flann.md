@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -104,8 +104,9 @@ curve.
   set's structure and the desired precision [2009, §3.3].
 - **Amortization.** Building pays off only over enough queries (worked example A).
 - **Static database.** An index built on one set must be rebuilt or extended when the
-  set changes; OpenCV's matcher retrains when descriptors are added
-  [matchers.cpp L1160–L1176].
+  set changes; after any `add`, OpenCV's matcher rebuilds the whole index from all
+  stored descriptors at the next `train()` or match, with no incremental insertion
+  [matchers.cpp L423–L470, L1113–L1176].
 - **Metric fixed at build time.** The index structure, the distance and the descriptor
   normalization form one contract; changing any of them invalidates the index.
 
@@ -191,7 +192,7 @@ $2/(0.003-0.001)=1{,}000$ queries. In OpenCV, `matcher.knnMatch(query, train, k)
 an empty matcher, adds `train` and builds a new index on every call (matchers.cpp
 L589–L598, L1389–L1405), so frame-to-frame matching through this call never amortizes
 anything. To reuse an index, `add` the database once, `train()`, then call
-`knnMatch(query, k)`.
+`knnMatch(query, k)` (card CV-FLANN-005).
 
 ### Worked example B: a missed competitor flatters the ratio
 
@@ -276,13 +277,29 @@ $T$ trees or tables:
 ### OpenCV 4.13 contracts
 
 Read in the 4.13.0 sources on GitHub (docs.opencv.org returned HTTP 403 during this
-pass). No code was executed for this note.
+pass). No code was executed for this note, except the index-reuse timing check below
+(OpenCV 4.11.0, 2026-11-15 report).
 
 - `FlannBasedMatcher(indexParams = KDTreeIndexParams(), searchParams = SearchParams())`;
   masks are not supported [features2d.hpp L1290–L1306].
 - `train()` builds a `flann::Index` on the merged train descriptors, and rebuilds it
   when descriptors were added [matchers.cpp L1160–L1176]; the one-shot `knnMatch(query,
   train, k)` builds a fresh index each call [L589–L598, L1389–L1405].
+- Index reuse in detail. The one-shot overloads of `match`, `knnMatch` and `radiusMatch`
+  are `const`; the train set passed to them "is not added to the train descriptors
+  collection stored in the class object" [features2d.hpp L1053–L1115]. They match
+  through an empty clone [matchers.cpp L579–L609], so even a matcher trained beforehand
+  ignores its own index when called this way. The overloads without a train argument
+  call `train()` themselves [L647–L661], so an explicit `train()` only moves the build
+  before the first query and lets it be timed. `add` increases a descriptor count;
+  `train()` rebuilds when the count exceeds the merged set, copying every stored
+  descriptor into one matrix and building a new index [L423–L470, L1113–L1176].
+- Indices: each `DMatch` carries `imgIdx`, the batch's position in the stored
+  collection, and `trainIdx`, the row inside that batch [L1407–L1429].
+- A project timing check on OpenCV 4.11.0, whose `matchers.cpp` is identical to 4.13.0,
+  confirmed these paths on random float descriptors (2026-11-15 report): one-shot calls
+  cost about as much as `add` and `train()` together, stored-index calls a few percent
+  of that, and the first call after adding ten rows cost a full rebuild.
 - `flann::Index::build`: element type checked against the distance; LSH forces
   `FLANN_DIST_HAMMING`; supported distances include L2, L1 and Hamming
   [miniflann.cpp L330–L338, L388–L446].
@@ -345,7 +362,8 @@ recall measured on easy queries may not hold on a shifted acquisition regime.
 | "Unsupported format" when matching ORB with the default matcher | k-d tree (L2) index on `CV_8U` data | Index type and descriptor type | LSH or hierarchical clustering index, or `BFMatcher(NORM_HAMMING)` |
 | Matches fine after casting ORB bytes to float, but poor geometry | L2 on byte values instead of Hamming | Compare with Hamming brute force on a sample | Keep Hamming (card CV-FLANN-002) |
 | More matches pass the ratio test after reducing the budget | Missed second neighbors (example B) | Ratio decisions against exact search | Raise the budget; certify with a margin |
-| FLANN slower than brute force | Index rebuilt per call (example A) or small database | Time `train()` separately | `add` once and reuse, or brute force |
+| FLANN slower than brute force | Index rebuilt per call (example A) or small database | Time `train()` separately; a per-call time that hardly moves with `checks` points to the build | `add` once, `train()`, then `knnMatch(query, k)` (card CV-FLANN-005), or brute force |
+| Latency spikes after map updates | Each `add` triggers a full rebuild at the next match | Spike size against `train()` time; update frequency | Batch appends; build a second matcher off the query path and swap it in |
 | Poor recall with ORB `WTA_K` 3 or 4 | LSH uses plain Hamming, not Hamming2 | `defaultNorm()` of the extractor | `WTA_K=2` with LSH, or brute force with Hamming2 |
 | Recall drops in the field | Distribution shift; autotuned on other data | Recall@2 on field samples | Re-tune on representative data |
 | Results change between runs | Randomized trees and key bits | Repeat builds with fixed data | Fix seeds where possible; report spread |
@@ -464,7 +482,8 @@ Consulted foundations: [Muja and Lowe 2014](https://www.cs.ubc.ca/research/flann
 ### Implementation sources
 
 - [OpenCV 4.13.0, `features2d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/include/opencv2/features2d.hpp#L1290-L1306): `FlannBasedMatcher`.
-- [OpenCV 4.13.0, `features2d/src/matchers.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/src/matchers.cpp#L1101-L1441): one-shot `knnMatch` (L589–L598), constructor, `add` and `train` (L1101–L1176), `clone` (L1389–L1405), distance conversion and `knnMatchImpl` (L1407–L1441).
+- [OpenCV 4.13.0, `features2d/src/matchers.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/src/matchers.cpp#L1101-L1441): one-shot `knnMatch` (L589–L598), constructor, `add` and `train` (L1101–L1176), `clone` (L1389–L1405), distance conversion and `knnMatchImpl` (L1407–L1441); descriptor merge (L423–L470), one-shot `match` and `radiusMatch` (L579–L609), stored-collection `knnMatch` calling `train()` (L647–L661).
+- [OpenCV 4.13.0, `features2d.hpp` L1044–L1138](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/include/opencv2/features2d.hpp#L1044-L1138): `train()` and the one-shot and stored-collection matching overloads.
 - [OpenCV 4.13.0, `flann/miniflann.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/flann/include/opencv2/flann/miniflann.hpp#L100-L163): index and search parameters.
 - [OpenCV 4.13.0, `flann/src/miniflann.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/flann/src/miniflann.cpp#L330-L446): type check and distance selection.
 - [OpenCV 4.13.0, `flann/dist.h`](https://github.com/opencv/opencv/blob/4.13.0/modules/flann/include/opencv2/flann/dist.h#L237-L240): `L2` is the squared Euclidean distance.
@@ -473,7 +492,9 @@ Consulted foundations: [Muja and Lowe 2014](https://www.cs.ubc.ca/research/flann
 
 ### Related flashcards and references
 
-- [Flashcards](../48-flann.md): CV-FLANN-001 to 004.
+- [Flashcards](../48-flann.md): CV-FLANN-001 to 004, CV-FLANN-005 (restructuring `FlannBasedMatcher` calls to reuse the index).
 - [CV-MATCHING](43-detecteurs-matchers.md), [CV-SIFT](41-sift.md), [CV-ORB](42-orb.md), [CV-FAST-BRIEF](47-fast-brief.md).
 
 Drafted by Agent Codex, 2026-10-24. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/48-flann.md).
+Revision 8, 2026-11-15: CV-FLANN-005 added after the learner accepted P-CV-FLANN-01, and
+the index-reuse and rebuild contract developed, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/48-flann.md).

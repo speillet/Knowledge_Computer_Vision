@@ -4,7 +4,7 @@ Movement, appearance, assignment and life cycle of the tracks.
 
 | Subject | Reference | Flashcards | Career tracks |
 | --- | --- | ---: | --- |
-| [SORT — multi-object tracking with motion and association](111-sort.md) | [Read](references/111-sort.md) | 8 | C, D, E |
+| [SORT — multi-object tracking with motion and association](111-sort.md) | [Read](references/111-sort.md) | 9 | C, D, E |
 | [DeepSORT, ByteTrack and multi-object association](112-deepsort-bytetrack.md) | [Read](references/112-deepsort-bytetrack.md) | 4 | C, D, E |
 | [Single-object tracking: correlation, Siamese networks and MeanShift](113-tracking-monoobjet.md) | [Read](references/113-tracking-monoobjet.md) | 2 | C, D, E |
 | [MOSSE and KCF — tracking with correlation filters](114-mosse-kcf.md) | [Read](references/114-mosse-kcf.md) | 5 | C, D, E, F |

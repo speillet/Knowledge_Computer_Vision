@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -50,8 +50,13 @@ every template pixel is implicitly matched through the motion model.
   dimensionless; the projective terms $h_{31},h_{32}$ in 1/pixel.
 
 To display or use the aligned input in the template frame, warp the input with
-`WARP_INVERSE_MAP`, as the header recommends; warping without that flag applies the
-inverse motion.
+`WARP_INVERSE_MAP`, as the header recommends [tracking.hpp L353–L359], so that
+$\text{dst}(\mathbf x)=I(W\mathbf x)$. Without that flag, `warpAffine` and
+`warpPerspective` invert the matrix first [imgproc.hpp L2457–L2507] and return
+$T(W^{-2}\mathbf x)$ at the solution: the estimated motion is applied a second time, so
+a 10 px translation leaves a 20 px misalignment, worse than no warp at all. Points
+follow the same rule: a template point $\mathbf p$ lies at $W\mathbf p$ in the input,
+and an input detection maps into the template frame through $W^{-1}$ (CV-ECC-004).
 
 **Role in a pipeline.** Sub-pixel refinement after a coarse alignment (a homography
 from features and RANSAC, a mechanical prior, the previous frame); template tracking
@@ -512,12 +517,14 @@ Consulted foundations: [OpenCV findTransformECC](https://docs.opencv.org/4.13.0/
 
 - [OpenCV 4.13.0, `modules/video/include/opencv2/video/tracking.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/video/include/opencv2/video/tracking.hpp): motion types (L263–L269), `computeECC` (L271–L308), `findTransformECC` and its overload (L314–L375), `findTransformECCWithMask` (L377–L420).
 - [OpenCV 4.13.0, `modules/video/src/ecc.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/video/src/ecc.cpp): Jacobians (L50–L188), warp update (L230–L287), `computeECC` (L291–L335), `findTransformECCWithMask` setup, masks and loop (L337–L612), overloads (L614–L630).
-- [OpenCV 4.13.0, `modules/imgproc/include/opencv2/imgproc.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/include/opencv2/imgproc.hpp): Gaussian kernel standard deviation from its size (L1458–L1470), `phaseCorrelate` (L3016–L3068).
+- [OpenCV 4.13.0, `modules/imgproc/include/opencv2/imgproc.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/include/opencv2/imgproc.hpp): Gaussian kernel standard deviation from its size (L1458–L1470), `phaseCorrelate` (L3016–L3068), `warpAffine` and `warpPerspective` with and without `WARP_INVERSE_MAP` (L2457–L2507).
 - [OpenCV 4.13 Video Tracking module page](https://docs.opencv.org/4.13.0/dc/d6b/group__video__track.html): retained link from earlier passes, not re-read (HTTP 403).
 
 ### Related flashcards and references
 
-- [Flashcards](../45-recalage-ecc.md): CV-ECC-001 (ECC versus features and RANSAC), CV-ECC-002 (validation on a repetitive pattern), CV-ECC-003 (choice of motion model).
+- [Flashcards](../45-recalage-ecc.md): CV-ECC-001 (ECC versus features and RANSAC), CV-ECC-002 (validation on a repetitive pattern), CV-ECC-003 (choice of motion model), CV-ECC-004 (warp direction and `WARP_INVERSE_MAP`).
 - Related references: [CV-HOMOGRAPHIE](../../50-calibration-geometrie/references/51-ransac-homographie.md), [CV-MATCH-APPRIS](44-superpoint-lightglue-loftr.md), [CV-FLOT](../../100-mouvement-video/references/101-flot-optique.md), [CV-ICP](../../60-vision-3d/references/62-recalage-global-icp.md).
 
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/45-recalage-ecc.md).
+Revision 8, 2026-11-15: CV-ECC-004 added after the learner accepted P-CV-ECC-01, and the
+warp-direction paragraph aligned with it, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/45-recalage-ecc.md).

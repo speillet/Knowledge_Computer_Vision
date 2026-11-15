@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -210,9 +210,23 @@ RANSAC threshold changes neither count; adding non-periodic evidence does.
 Constructed example, recomputed by checks/43-detecteurs-matchers.py. With OpenCV's
 `findHomography` defaults ($p=0.995$, `maxIters=2000`, $s=4$) the required samples are
 83 at $w=0.5$, 1,354 at $w=0.25$ and 10,464 at $w=0.15$. In the last case the cap of 2,000
-iterations reaches only $1-(1-0.15^4)^{2000}=0.637$ confidence. A cheaper but less
-distinctive front end that lowers $w$ can therefore turn a reliable registration into
-a coin flip without any error message.
+iterations reaches only $1-(1-0.15^4)^{2000}=0.637$ confidence, about one all-inlier
+sample expected in the whole budget; with these defaults the cap binds whenever
+$w<0.227$. OpenCV then returns the best hypothesis found, reports neither the cap nor
+the confidence reached, and raises no error [ptsetreg.cpp L55–L75, L203–L253].
+
+The 0.637 is the nominal guarantee under independent uniform sampling, not a predicted
+success rate. OpenCV redraws minimal samples with collinear points or inconsistent
+orientations before they count as iterations [fundam.cpp L74–L106; ptsetreg.cpp
+L104–L158, L206–L215], which discards many contaminated samples. In a project check on
+synthetic data (OpenCV 4.11.0, whose RANSAC loop and homography callback are identical in
+4.13.0; see the 2026-11-15 report), 289 of 300 sets of 400 pairs with $w=0.15$ were
+registered within 5 px over a 640×480 frame, 150 of 300 at $w=0.10$ and 38 of 300 at
+$w=0.075$, against nominal confidences of 0.637, 0.181 and 0.061. A cheaper but less
+distinctive front end that lowers $w$ therefore removes the guarantee first, then the
+result, still without any error message (card CV-MATCHING-005). The nominal values of
+this paragraph are recomputed by the 2026-11-15 checks/43-detecteurs-matchers.py; the
+success counts are measurements on synthetic data, not a prediction for real images.
 
 ## Parameters and tuning
 
@@ -278,7 +292,8 @@ $T=T_\text{det}+T_\text{desc}+T_\text{match}+T_\text{filter}+T_\text{geom}$:
 ### OpenCV 4.13 contracts
 
 Read in the 4.13.0 headers on GitHub (docs.opencv.org returned HTTP 403 during this
-pass). No code was executed for this note.
+pass). No code was executed for this note, except the synthetic `findHomography` check
+of example C (OpenCV 4.11.0, 2026-11-15 report).
 
 - `DescriptorMatcher::match` returns one `DMatch` per query; `knnMatch` returns up to
   $k$ matches per query in increasing distance; masks restrict permissible pairs
@@ -294,6 +309,22 @@ pass). No code was executed for this note.
   confidence=0.995)`: method 0 is plain least squares; RANSAC, LMeDS and RHO are
   robust; minimal subsets of four pairs, collinear ones discarded; LM refinement;
   empty matrix on failure [calib3d.hpp L776–L844].
+- What "failure" means in the 4.13.0 code: an exception only for malformed input, such as
+  fewer than four pairs or an unknown method; an empty matrix only when no model can be
+  computed [fundam.cpp L374–L413, L448–L462]. Method 0 fits a normalized DLT to all
+  pairs, then refines it with Levenberg–Marquardt on all of them; robust methods refit
+  on the inliers before the same refinement [L401–L434]. For more than four pairs and
+  every method except RHO, the returned mask is then recomputed against the refined
+  model at `ransacReprojThreshold`, method 0 included [L415–L446]. This recomputation
+  first appeared in 4.12.0 ([opencv#26742](https://github.com/opencv/opencv/pull/26742));
+  in 4.11.0 method 0 returned a mask of ones.
+- RANSAC loop: the generator has a fixed seed, so the same input in the same order gives
+  the same result [ptsetreg.cpp L171]; the iteration count starts at `maxIters` and
+  `RANSACUpdateNumIters` only lowers it, returning the cap itself when the required
+  count would exceed it [L55–L75, L166, L228–L234]. A hypothesis is kept when it has
+  more inliers than the best so far and at least four [L228]; a minimal sample fits its
+  own four pairs, so a model is returned even on pure clutter, and nothing reports
+  whether the requested confidence was reached [L238–L253].
 
 ## Evaluation and controlled variation
 
@@ -322,8 +353,9 @@ pass). No code was executed for this note.
   RANSAC at 3 px, `maxIters=2000`, confidence 0.995.
 - **Controlled variation**: the same descriptors, `BFMatcher(NORM_L2, crossCheck=true)`
   with $k=1$ and no ratio test.
-- **Measurements**: precision and recall of pairs before RANSAC, inlier ratio, RANSAC
-  iterations used, registration success and held-out error, spatial coverage.
+- **Measurements**: precision and recall of pairs before RANSAC, inlier ratio, required
+  RANSAC iterations $N(\hat w)$ against the cap (the API does not return the iterations
+  used), registration success and held-out error, spatial coverage.
 - **Expected effect (hypothesis)**: mutual matching keeps more repeated-pattern pairs
   (higher recall, lower precision, example A), which can lower $w$ and push RANSAC
   toward its iteration cap (example C).
@@ -342,8 +374,8 @@ rankings depend on their datasets.
 | Many detections, few good matches | Descriptor not distinctive or wrong norm | Distance histograms of true and false pairs; `defaultNorm()` against the matcher norm | Correct norm; more distinctive descriptor |
 | Good exact matches, worse with FLANN | Approximate search misses neighbors or uses an unsuitable index | Neighbor recall against exact search on a sample | Index type and search budget ([FLANN](48-flann.md)) |
 | High inlier count, wrong placement | Periodic or symmetric scene (example B) | Residual on a held-out distinctive point | Non-periodic evidence, priors, multi-hypothesis output |
-| RANSAC fails intermittently | Low inlier ratio against the iteration cap (example C) | Inlier ratio per pair; iterations used | Better filtering; raise `maxIters`; guided sampling |
-| Homography from `findHomography` is poor with outliers | Default method 0 (least squares) | Check the `method` argument | Use `RANSAC`, `RHO` or `USAC` |
+| RANSAC fails intermittently | Low inlier ratio against the iteration cap (example C) | Inlier count and $\hat w$ from the mask; $N(\hat w)$ against `maxIters` (`findHomography` does not return the iterations used); result on permuted input | Better filtering; raise `maxIters`; guided sampling |
+| Homography from `findHomography` is poor with outliers | Default method 0 (least squares) | Check the `method` argument; a mask is returned by method 0 too, and is all ones in 4.11.0 | Use `RANSAC`, `RHO` or `USAC` |
 | Descriptor rows misaligned with keypoints | Extractor dropped or duplicated keypoints | Lengths of keypoint and descriptor lists after `compute` | Use the returned keypoint list |
 | Good on validation, poor in the field | Different acquisition (scale, light, blur) | Stage-wise metrics on field samples | Re-tune per stage; extend validation data |
 
@@ -470,13 +502,17 @@ Consulted foundations: [OpenCV Harris](https://docs.opencv.org/4.13.0/dc/d0d/tut
 
 - [OpenCV 4.13.0, `features2d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/features2d/include/opencv2/features2d.hpp#L1060-L1306): AKAZE (L850–L897), `DescriptorMatcher::match` and `knnMatch` (L1060–L1100), `BFMatcher` (L1255–L1280), `FlannBasedMatcher` (L1290–L1306).
 - [OpenCV 4.13.0, `calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp#L776-L844): `findHomography`.
+- [OpenCV 4.13.0, `calib3d/src/fundam.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/fundam.cpp#L74-L463): minimal-sample checks (L74–L106), normalized DLT (L125–L189), `findHomography` input errors, dispatch, refinement, recomputed mask and empty result (L357–L463); [4.11.0 version](https://github.com/opencv/opencv/blob/4.11.0/modules/calib3d/src/fundam.cpp#L401-L447) without the recomputed mask.
+- [OpenCV 4.13.0, `calib3d/src/ptsetreg.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/ptsetreg.cpp#L55-L254): `RANSACUpdateNumIters` (L55–L75), sample redraws (L104–L158), RANSAC loop, fixed seed and returned hypothesis (L160–L254).
 - [OpenCV 4.13.0, `core/types.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/core/include/opencv2/core/types.hpp#L848-L860): `DMatch`.
 - [OpenCV 4.13.0, `core/base.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/core/include/opencv2/core/base.hpp#L180-L205): norms.
 - OpenCV 4.13 pages ([FAST](https://docs.opencv.org/4.13.0/df/d0c/tutorial_py_fast.html), [BRIEF](https://docs.opencv.org/4.13.0/dc/d7d/tutorial_py_brief.html), [AKAZE class](https://docs.opencv.org/4.13.0/d8/d30/classcv_1_1AKAZE.html), [Harris](https://docs.opencv.org/4.13.0/dc/d0d/tutorial_py_features_harris.html), [Shi–Tomasi](https://docs.opencv.org/4.13.0/d4/d8c/tutorial_py_shi_tomasi.html), [matching](https://docs.opencv.org/4.13.0/dc/dc3/tutorial_py_matcher.html)): retained links, not re-read in this pass (HTTP 403).
 
 ### Related flashcards and references
 
-- [Flashcards](../43-detecteurs-matchers.md): CV-MATCHING-001 to 004.
+- [Flashcards](../43-detecteurs-matchers.md): CV-MATCHING-001 to 004, CV-MATCHING-005 (silent `findHomography` failures: default method and iteration cap).
 - Method notes: [CV-CORNERS](46-harris-shi-tomasi.md), [CV-FAST-BRIEF](47-fast-brief.md), [CV-SIFT](41-sift.md), [CV-ORB](42-orb.md), [CV-FLANN](48-flann.md), [CV-MATCH-APPRIS](44-superpoint-lightglue-loftr.md); geometry: [CV-HOMOGRAPHIE](../../50-calibration-geometrie/references/51-ransac-homographie.md), [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/43-detecteurs-matchers.md).
+Revision 9, 2026-11-15: CV-MATCHING-005 added after the learner accepted P-CV-MATCHING-02,
+worked example C qualified and the `findHomography` contract extended, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/43-detecteurs-matchers.md).

@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SIFT", "CV-ORB", "CV-HOMOGRAPHIE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d04]
@@ -602,7 +602,7 @@ result is claimed as measured. Method properties remain tied to the sources belo
 
 ### Case linked to CV-MATCH-APPRIS-005
 
-**Working question**: After padding is added, matches look visually correct but the homography is biased. What should be tested?
+**Working question**: After a change in image preprocessing, matches look correct when drawn on the network inputs, but the homography estimated in the original images is biased. What should be tested first?
 
 **Reference answer**: The conversion of positions from the coordinate frame of the network to each real image, including resize and offsets.
 
@@ -642,7 +642,7 @@ These explanations complement the mechanism associated with each question. Calcu
 
 ### CV-MATCH-APPRIS-005
 
-**Situation**: After padding is added, matches look visually correct but the homography is biased. What should be tested?
+**Situation**: After a change in image preprocessing, matches look correct when drawn on the network inputs, but the homography estimated in the original images is biased. What should be tested first?
 
 **Compose the preprocessing matrices**: if $A$ and $B$ respectively send the original images to the network inputs and if $H_{net}$ connects these two inputs, the original homography is $H_{orig}=B^{-1}H_{net}A$. This relationship follows the path original A → network A → network B → original B. It also handles distinct horizontal and vertical factors, or a crop written as a homogeneous affine transform. Padding pixels are not observations of the scene: their validity must be managed, rather than converted to image coordinates as if they came from the sensor. Finally, subpixel positions and pixel-centre conventions require a numerical round trip on known points.
 
@@ -697,3 +697,4 @@ Consulted foundations: [LightGlue](https://arxiv.org/html/2306.13643v1): §3 con
 - Classical front end: [CV-SIFT](41-sift.md), [CV-ORB](42-orb.md), [CV-MATCHING](43-detecteurs-matchers.md), [CV-FLANN](48-flann.md). Geometry: [CV-HOMOGRAPHIE](../../50-calibration-geometrie/references/51-ransac-homographie.md), [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md). Dense alternatives: [CV-ECC](45-recalage-ecc.md), [CV-FLOT](../../100-mouvement-video/references/101-flot-optique.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/44-superpoint-lightglue-loftr.md).
+Revision 9, 2026-11-15: question of CV-MATCH-APPRIS-005 reworded at the learner's request so that its front no longer hints at the answer, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/44-superpoint-lightglue-loftr.md).

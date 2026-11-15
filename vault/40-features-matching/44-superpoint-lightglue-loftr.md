@@ -113,7 +113,7 @@ Objective: check the coordinates of the matching. Family: diagnosis. Provenance:
 START
 CV-Pilote
 ID: CV-MATCH-APPRIS-005
-Question: After padding is added, matches look visually correct but the homography is biased. What should be tested?
+Question: After a change in image preprocessing, matches look correct when drawn on the network inputs, but the homography estimated in the original images is biased. What should be tested first?
 Reponse: **Expected answer**: The conversion of positions from the coordinate frame of the network to each real image, including resize and offsets.
 
 **Further explanation**: Check a known point and the residuals scale before accusing the matcher.

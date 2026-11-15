@@ -34,7 +34,7 @@ Objective: understand a template drift. Family: diagnosis. Provenance: agent.
 START
 CV-Pilote
 ID: CV-SOT-002
-Question: During occlusion, a distractor replaces the target in the tracker's template. Which mechanism can reinforce this error?
+Question: During an occlusion, an adaptive single-object tracker moves its box onto a similar-looking object and keeps following it after the target reappears. Which mechanism can turn this momentary error into persistent drift?
 Reponse: **Expected answer**: Updating the model on a wrongly associated observation can reinforce the distractor and increase drift.
 
 **Further explanation**: Test freezing under uncertainty, the loss policy and resets on held-out sequences.

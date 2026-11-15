@@ -33,24 +33,24 @@ fields retain their spelling to preserve links and review history.
 ## Current coverage
 
 <!-- cv-catalog:start -->
-**60 reference notes and 282 flashcards**, spanning 14 of 14 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
+**60 reference notes and 294 flashcards**, spanning 14 of 14 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
 
 | Topic | Reference notes | Flashcards |
 | --- | ---: | ---: |
 | [Mathematics and estimation](vault/10-mathematiques-estimation/00-index.md) | 4 | 26 |
 | [Image formation and acquisition](vault/20-acquisition-images/00-index.md) | 3 | 11 |
 | [Classical image processing](vault/30-traitement-image/00-index.md) | 3 | 11 |
-| [Features, matching and registration](vault/40-features-matching/00-index.md) | 8 | 39 |
-| [Calibration and multiview geometry](vault/50-calibration-geometrie/00-index.md) | 7 | 36 |
-| [3D vision](vault/60-vision-3d/00-index.md) | 4 | 19 |
+| [Features, matching and registration](vault/40-features-matching/00-index.md) | 8 | 42 |
+| [Calibration and multiview geometry](vault/50-calibration-geometrie/00-index.md) | 7 | 38 |
+| [3D vision](vault/60-vision-3d/00-index.md) | 4 | 21 |
 | [Recognition and representations](vault/70-reconnaissance-representations/00-index.md) | 5 | 18 |
-| [Detection and pose](vault/80-detection-pose/00-index.md) | 4 | 26 |
-| [Segmentation](vault/90-segmentation/00-index.md) | 4 | 15 |
+| [Detection and pose](vault/80-detection-pose/00-index.md) | 4 | 27 |
+| [Segmentation](vault/90-segmentation/00-index.md) | 4 | 16 |
 | [Motion and video](vault/100-mouvement-video/00-index.md) | 3 | 13 |
-| [Tracking and association](vault/110-tracking-association/00-index.md) | 5 | 23 |
+| [Tracking and association](vault/110-tracking-association/00-index.md) | 5 | 24 |
 | [Generative and multimodal vision](vault/120-generatif-multimodal/00-index.md) | 3 | 10 |
-| [Data, evaluation and reliability](vault/130-evaluation-fiabilite/00-index.md) | 4 | 21 |
-| [Vision systems engineering](vault/140-ingenierie-systemes/00-index.md) | 3 | 14 |
+| [Data, evaluation and reliability](vault/130-evaluation-fiabilite/00-index.md) | 4 | 22 |
+| [Vision systems engineering](vault/140-ingenierie-systemes/00-index.md) | 3 | 15 |
 <!-- cv-catalog:end -->
 
 ## Local validation

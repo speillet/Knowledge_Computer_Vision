@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -180,13 +180,32 @@ depth error grows with the square of depth. *Worked example B (constructed, reco
 checks/61-stereo-profondeur.py)*: $fB=200$ px·m and $\sigma_d=0.5$ px give 0.25 m at 10 m
 and 1 m at 20 m; the $1/16$ px quantum of OpenCV's output alone represents 0.78 m at 50 m.
 
+**Why $P_2\ge P_1$, and what $P_2$ does.** The penalty must not decrease with the size of the
+change. In the path recursion, $\min_iL_r(p-r,i)+P_2$ also covers $d\pm1$: if $P_2<P_1$,
+$P_1$ never acts, every change costs $P_2$ and slopes are priced like discontinuities.
+Hirschmüller requires $P_2\ge P_1$ even when $P_2$ is adapted to the intensity gradient,
+$P_2=P_2'/|I_{bp}-I_{bq}|$ [§2.2]; OpenCV states "requires P2 > P1" [calib3d.hpp,
+L3723–L3729] and, in every mode, silently replaces $P_2$ by $\max(P_2,P_1+1)$
+[stereosgbm.cpp, L500, L977–L978, L1229–L1230, L1639]; its aggregation loops use a constant
+$P_2$ [L676–L811]. The penalties are in the units of the matching cost, which OpenCV sums
+over the block [L558–L655]: hence the suggestions $8cb^2$ and $32cb^2$. *Worked example F
+(constructed, recomputed by the 2026-11-15 check script `checks/61-stereo-profondeur.py` of
+the accepted-proposals report)*: on one path, a structure $w$ px wide with a per-pixel cost
+advantage $\Delta$ survives only if $w\Delta>2P_2$, the price of entering and leaving it;
+with $w=6$ and $\Delta=400$ it survives at $P_2=800$ and 1000 and is lost at 1300. In an
+eight-direction toy SGM ($40\times30$ px, 40 disparities, $P_1=200$), 3×3 speckle blobs survive
+at $P_2=250$ and vanish at 800, while a 6 px wide full-height upright survives at 800 and 1600
+and vanishes at 3200. Horizontal paths alone already lose it at 1600; vertical paths, which
+run along it without any jump, keep it even at 3200. If $P_1>P_2$, the path costs equal those
+obtained with $P_1=P_2$ (CV-STEREO-005).
+
 ## Parameters and tuning
 
 | Parameter (OpenCV 4.13 `StereoSGBM`) | Values in the source | Effect | Interactions and what to watch |
 | --- | --- | --- | --- |
 | `minDisparity`, `numDisparities` | Default 0 and 16; `numDisparities` divisible by 16 [calib3d.hpp, L3717–L3720] | Depth range: $Z_{\min}=fB/(\text{min}+\text{num}-1)$ | Cost and memory grow linearly with `numDisparities` |
 | `blockSize` | Odd, "normally … 3..11" [L3721–L3722] | Matching window | Larger windows smooth and fatten foreground edges |
-| `P1`, `P2` | Suggested $8\,c\,b^2$ and $32\,c\,b^2$ for $c$ channels and block size $b$; "requires P2 > P1" [L3723–L3729]; when 0 the code uses 2 and $\max(5,P_1+1)$ [stereosgbm.cpp, L500] | Smoothness of slopes and of jumps | Too large $P_2$ erases thin structures; too small leaves noise |
+| `P1`, `P2` | Suggested $8\,c\,b^2$ and $32\,c\,b^2$ for $c$ channels and block size $b$; "requires P2 > P1" [L3723–L3729]; the code replaces a non-positive `P1` by 2 and uses $\max(P_2,P_1+1)$, with 5 for a non-positive `P2`, so a `P2` not larger than `P1` is silently raised to $P_1+1$ [stereosgbm.cpp, L500] | Smoothness of slopes and of jumps | Too large $P_2$ erases narrow structures; too small leaves speckle (worked example F); rescale both with `blockSize` and channels |
 | `uniquenessRatio` | "5-15 range" [L3735–L3737] | Rejects ambiguous minima | Raises invalid density on repetitive texture |
 | `disp12MaxDiff` | Header: non-positive disables the check [L3730–L3731]; code in `MODE_SGBM` uses 1 when non-positive [stereosgbm.cpp, L499, L945–L960] | Left–right consistency tolerance | Documentation and code disagree; set an explicit positive value |
 | `preFilterCap` | Clips the x-derivative before the Birchfield–Tomasi cost [L3732–L3734] | Robustness to gain differences | Low values lose contrast |
@@ -216,7 +235,8 @@ of resolution, baseline or lens.
   [§2.2, §2.3].
 - **Discontinuity preservation.** A constant $P_2$ for every jump larger than one pixel
   preserves discontinuities; adapting $P_2$ to the intensity gradient places them at
-  intensity edges [§2.2].
+  intensity edges [§2.2]. OpenCV's `StereoSGBM` keeps $P_2$ constant [stereosgbm.cpp,
+  L676–L811].
 - **Uniqueness, not correctness.** The left–right check removes occlusions and many
   mismatches, but two wrong matches on periodic texture can be mutually consistent (card
   CV-STEREO-004).
@@ -404,12 +424,14 @@ Consulted foundations: [OpenCV stereo](https://docs.opencv.org/4.13.0/dd/d53/tut
 ### Implementation sources
 
 - [OpenCV 4.13.0, `modules/calib3d/include/opencv2/calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp): `stereoRectify` parameters and Q (L2030–L2130), `reprojectImageTo3D` (L3060–L3097), `StereoMatcher` (L3499–L3530), `StereoSGBM` description, parameters and `create` (L3671–L3756).
-- [OpenCV 4.13.0, `modules/calib3d/src/stereosgbm.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/stereosgbm.cpp): parameter fallbacks and invalid value (L490–L510), uniqueness, subpixel and left–right check (L905–L960), `compute` (L2208–L2232).
+- [OpenCV 4.13.0, `modules/calib3d/src/stereosgbm.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/stereosgbm.cpp): parameter fallbacks and invalid value (L490–L510), the same penalty fallbacks in the other modes (L977–L978, L1229–L1230, L1639), block sums of Birchfield–Tomasi costs (L558–L655), path aggregation with constant $P_2$ (L676–L811), uniqueness, subpixel and left–right check (L905–L960), `compute` (L2208–L2232).
 - [OpenCV 4.13 StereoSGBM](https://docs.opencv.org/4.13.0/d2/d85/classcv_1_1StereoSGBM.html), [calib3d](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html) and [depth-map tutorial](https://docs.opencv.org/4.13.0/dd/d53/tutorial_py_depthmap.html): rendered pages consulted in earlier passes; HTTP 403 in this pass.
 
 ### Related flashcards and references
 
-- [Flashcards](../61-stereo-profondeur.md): CV-STEREO-001 (rectified depth), CV-STEREO-002 (uncertainty with range), CV-STEREO-003 (fixed-point output), CV-STEREO-004 (rectification versus matching).
+- [Flashcards](../61-stereo-profondeur.md): CV-STEREO-001 (rectified depth), CV-STEREO-002 (uncertainty with range), CV-STEREO-003 (fixed-point output), CV-STEREO-004 (rectification versus matching), CV-STEREO-005 (SGM penalties P1 and P2).
 - Neighbouring references: [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md), [CV-MULTICALIB](../../50-calibration-geometrie/references/55-calibration-multicapteurs.md), [CV-BEV](64-nuages-bev-occupation.md).
 
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/61-stereo-profondeur.md).
+Revision 8, 2026-11-15: CV-STEREO-005 added after the learner accepted P-CV-STEREO-01, the
+P2 fallback in the parameter table corrected and worked example F added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/61-stereo-profondeur.md).
