@@ -1,6 +1,6 @@
 # Pilot Tracking: Evidence and Limitations
 
-**Lot courant**: 60 reference notes, 298 flashcards, 14 themes and six business areas. **Drafting**: Agent. **Review client**: AnkiDroid, confirmed by the learner the 2026-10-18. An absence of result means “not executed”, never “successful”.
+**Lot courant**: 64 reference notes, 318 flashcards, 15 themes and six business areas. **Drafting**: Agent. **Review client**: AnkiDroid, confirmed by the learner the 2026-10-18. An absence of result means “not executed”, never “successful”.
 
 ## Condition of lot
 
@@ -1380,3 +1380,35 @@ No package is rebuilt: the four new notes reach the phone only through a new pac
 built with `paquet-anki`; release `anki-20261116-0021` contains the 294 earlier notes.
 AnkiDroid and Obsidian rendering, learner proficiency and independent scientific review
 are not established.
+
+## Photogrammetry domain — 2026-11-16
+
+At the learner's request ("une partie importante sur la photogrammétrie"), a domain 15,
+`150-photogrammetrie` (`d15`), is added with its own index, Anki subdeck
+`CV::Pilote::150-photogrammetrie` and learning-path stage `photogrammetrie`, after the
+geometry stage. The learner chose all four contexts (pipeline core, aerial and drone,
+satellite, close-range) and eight subjects of about five cards, delivered in batches. The
+validator now derives the allowed domains from `scripts/vault_sections.json` instead of a
+hard-coded `d01`–`d14` range, with two unit tests. See the [scope record](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-photogrammetry/00-cadrage.md).
+
+Batch 1 adds four references at revision 1 and 20 cards: 298 → 318 cards, 60 → 64
+references, no existing card or ID changed. Subagents wrote each subject from a shared brief;
+the coordinating agent (Claude Code) recomputed every card's numbers and corrected one budget
+before delivery (CV-AEROTRIANGULATION-002 counted one of two boresight axes). Claims were
+checked against open primary papers, standards, agency documents and versioned code; every
+constructed number is recomputed by a stdlib script. This remains agent self-review;
+editorial status is `redige`.
+
+### Cards added — batch 1
+
+| Date | Reference and revision | Added IDs | Families | Responsible and review status | Checks | Export status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-16 | CV-COLINEARITE, revision 1 | CV-COLINEARITE-001 to 005 | practice, reasoning, diagnosis, design, evaluation | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-photogrammetry/151-colinearite-autocalibration.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison, anchors and recomputation scripts pass | to publish with paquet-anki |
+| 2026-11-16 | CV-SFM, revision 1 | CV-SFM-001 to 005 | comparison, reasoning, algorithm, diagnosis, evaluation | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-photogrammetry/152-sfm-incrementale-globale.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison, anchors and recomputation scripts pass | to publish with paquet-anki |
+| 2026-11-16 | CV-GEODESIE, revision 1 | CV-GEODESIE-001 to 005 | understanding, practice, reasoning, algorithm, diagnosis | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-photogrammetry/153-systemes-reference.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison, anchors and recomputation scripts pass | to publish with paquet-anki |
+| 2026-11-16 | CV-AEROTRIANGULATION, revision 1 | CV-AEROTRIANGULATION-001 to 005 | evaluation, reasoning, diagnosis, design, comparison | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-photogrammetry/154-aerotriangulation-georeferencement.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison, anchors and recomputation scripts pass | to publish with paquet-anki |
+
+Batch 2 (CV-MVS, CV-ORTHO, CV-SATELLITE, CV-PLANIFICATION) follows. No package is rebuilt:
+the new subdeck reaches the phone only through a package built with `paquet-anki`.
+AnkiDroid and Obsidian rendering, learner proficiency and independent scientific review are
+not established.
