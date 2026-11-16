@@ -26,7 +26,7 @@ vault/
 └── 99-Ressources/
 ```
 
-The fourteen themes each have an index and reference notes. The [Summary](../vault/00-Accueil.md) exposes this state and the inventory describes the gaps. `scripts/vault_sections.json` associates each file with its domain, title and introduction, and serves as the controller.
+The fifteen themes each have an index and reference notes; domain 15, photogrammetry, was added on 2026-11-16 at the learner's request. The [Summary](../vault/00-Accueil.md) exposes this state and the inventory describes the gaps. `scripts/vault_sections.json` associates each file with its domain, title and introduction, and serves as the controller.
 
 ## Add a reference note and its flashcards
 
@@ -42,4 +42,4 @@ Guides, indexes, and references do not contain any start markers on an isolated 
 
 Preserve the pedagogical ID, its tag and the digital comment Anki if it exists. Fix Markdown links, wikilinks from the root, media paths and target deck. The change of path does not create a new concept or identity. The move and change of deck must still be observed on a real note already revised before declaring the preserved history.
 
-The 47 flashcards of the initial batch retained their identifiers and texts during the reclassification. The current catalog includes 60 reference notes and 298 flashcards in the 14 themes. `python3 scripts/sync_catalog.py` updates index, home, inventory and business paths; `--check` detects outdated navigation without writing.
+The 47 flashcards of the initial batch retained their identifiers and texts during the reclassification. The current catalog includes 64 reference notes and 318 flashcards in the 15 themes. `python3 scripts/sync_catalog.py` updates index, home, inventory and business paths; `--check` detects outdated navigation without writing.

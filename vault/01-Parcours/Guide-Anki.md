@@ -11,7 +11,7 @@ uv run --no-project --with genanki==0.13.1 python scripts/build_apkg.py
 python3 scripts/build_apkg.py --verifier dist/CV-Pilote.apkg
 ```
 
-Copy `dist/CV-Pilote.apkg` to the phone and then open the file with AnkiDroid, or select it from its **Importer** menu. The package contains one note per vault card (298 since 2026-11-16; release `anki-20261116-0021` contains 294, packages built before 2026-11-15 contain 282), one flashcard per note, 14 subdecks and the SVG image. The manifest `dist/CV-Pilote-manifest.json` allows to compare two constructions. Creating a public release is a separate operation from merging a PR: no release download links are guaranteed before publication.
+Copy `dist/CV-Pilote.apkg` to the phone and then open the file with AnkiDroid, or select it from its **Importer** menu. The package contains one note per vault card (318 with the photogrammetry domain added on 2026-11-16; release `anki-20261116-0021` contains 294 notes in 14 subdecks, packages built before 2026-11-15 contain 282), one flashcard per note, 15 subdecks and the SVG image. The manifest `dist/CV-Pilote-manifest.json` allows to compare two constructions. Creating a public release is a separate operation from merging a PR: no release download links are guaranteed before publication.
 
 Reimport a newer package with the update of notes and note types if newer, without importing any learning progress. Identities come from educational IDs: keep these IDs, `modelId` and the structure of the model. Disposable collection trials retain the history after a response correction and a CSS change. They do not prove the behavior of the installed version of AnkiDroid: try first on a test deck.
 

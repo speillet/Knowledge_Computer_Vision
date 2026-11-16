@@ -61,6 +61,18 @@
       "preuve": "Separate error from coordinate frame, wrong scale, lack of parallax and overadjustment, and then choose a useful independent observation."
     },
     {
+      "id": "photogrammetrie",
+      "titre": "Measure the terrain and objects from images",
+      "sujets": [
+        "CV-COLINEARITE",
+        "CV-SFM",
+        "CV-GEODESIE",
+        "CV-AEROTRIANGULATION"
+      ],
+      "objectif": "Link the photogrammetric camera model, image orientation, reference systems and ground control to an accuracy that can be stated and checked.",
+      "preuve": "For a drone block georeferenced with control points, separate internal precision from checkpoint accuracy and name two systematic errors that the residuals of the control points cannot reveal."
+    },
+    {
       "id": "perception",
       "titre": "Linking representations, tasks and metrics",
       "sujets": [
