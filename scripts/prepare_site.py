@@ -7,6 +7,7 @@ Only website/content/ and website/static/vault/ are replaced by this script.
 import argparse
 import base64
 from collections import defaultdict
+import html
 import json
 from pathlib import Path
 import re
@@ -60,6 +61,27 @@ def front_matter(title, source=None, **params):
     if source:
         data["source"] = "vault/" + source.as_posix()
     return json.dumps(data, ensure_ascii=False, indent=2) + "\n\n"
+
+
+def fold(summary, body, ident, *, css_class="kv-fold", is_open=False):
+    """Use the reference site's collapsible layout with Markdown-safe blank lines."""
+    attribute = " open" if is_open else ""
+    return "\n".join([
+        f'<details class="{css_class}" id="{ident}"{attribute}>',
+        f'<summary><span class="kv-fold-title">{summary}</span>'
+        '<span class="kv-chevron" aria-hidden="true"></span></summary>',
+        '<div class="kv-fold-body">', "", body.strip(), "", "</div>", "</details>", "",
+    ])
+
+
+def topic_tile(source, title, cards, objectives):
+    points = "".join(f"<li>{html.escape(objective)}</li>" for objective in objectives)
+    return (
+        f'<li class="kv-tile"><a class="kv-tile-title" href="{ref(source)}">'
+        f'{html.escape(title)}</a><span class="kv-tile-meta">{cards} flashcards</span>'
+        f'<details class="kv-tile-more"><summary>{len(objectives)} points covered</summary>'
+        f'<ul class="kv-points kv-small">{points}</ul></details></li>'
+    )
 
 
 def convert_links(markdown, source, vault, pages):
@@ -125,6 +147,7 @@ def stage(vault, website):
     by_file = defaultdict(list)
     for card in cards:
         by_file[card["file"].relative_to(vault)].append(card)
+    objectives_by_file = {}
 
     # Generate everything in memory before replacing previous staged pages.
     generated = {}
@@ -139,12 +162,20 @@ def stage(vault, website):
             params.update(cards=len(file_cards), count_text=f"{len(file_cards)} flashcards",
                           description=f"{len(file_cards)} flashcards with detailed answers and sources.")
             reference = source.parent / "references" / source.name
-            blocks = [f"[Read the reference note]({ref(reference)}) · {len(file_cards)} flashcards.\n",
-                      "Answer each question before expanding it. Compare your reasoning with the expected answer and blocking errors.\n",
-                      "{{< card-tools >}}\n"]
             objectives = HEADER.findall(text)
             if len(objectives) != len(file_cards):
                 raise ValueError(f"{source}: recall objectives do not match cards")
+            objectives_by_file[source] = [objective for objective, _family, _provenance in objectives]
+            points = "".join(f"<li>{html.escape(objective)}</li>" for objective in objectives_by_file[source])
+            blocks = [
+                '<div class="kv-meta not-prose">'
+                f'<a class="kv-chip" href="#flashcards"><b>{len(file_cards)}</b> flashcards</a>'
+                f'<a class="kv-chip" href="{ref(reference)}">Read the reference note</a></div>',
+                fold(f'What this topic covers <span class="kv-count">{len(objectives)}</span>',
+                     f'<ul class="kv-points not-prose">{points}</ul>', "what-this-topic-covers", css_class="kv-fold kv-covers"),
+                "{{< card-tools >}}",
+                '## Flashcards {#flashcards}\n\n<div class="kv-cards">',
+            ]
             search = [title]
             for card, (objective, _family, _provenance) in zip(file_cards, objectives):
                 fields = card["fields"]
@@ -157,6 +188,7 @@ def stage(vault, website):
                 blocks.extend([opening, convert(fields["Reponse"]),
                                "\n**Sources:** " + convert(fields["Source"]), "{{< /flashcard >}}\n"])
                 search.extend([objective, fields["Question"], fields["Reponse"], fields["Source"]])
+            blocks.append("</div>")
             params["search"] = "\n".join(search)
             body = "\n\n".join(blocks)
         else:
@@ -171,17 +203,32 @@ def stage(vault, website):
         folder = Path(section["dossier"])
         topics = sorted(source for source in by_file if source.parent == folder)
         total = sum(len(by_file[source]) for source in topics)
-        rows = ["| Topic | Flashcards | Reference |", "| --- | ---: | --- |"]
+        tiles = []
         for source in topics:
             title, _ = heading_and_body((vault / folder / "references" / source.name).read_text(encoding="utf-8"))
-            rows.append(f"| [{title}]({ref(source)}) | {len(by_file[source])} | [Read]({ref(folder / 'references' / source.name)}) |")
-        intro = f"{section['description']}\n\n{len(topics)} topics · {total} flashcards.\n\n"
+            tiles.append(topic_tile(source, title, len(by_file[source]), objectives_by_file[source]))
+        intro = (
+            "{{< lead >}}\n" + section["description"] + "\n{{< /lead >}}\n\n"
+            '<div class="kv-stats not-prose">'
+            f'<div class="kv-stat"><b>{len(topics)}</b><span>topics</span></div>'
+            f'<div class="kv-stat"><b>{total}</b><span>cards</span></div></div>\n\n'
+            "## Before you start {#before-you-start}\n\n"
+            f"Use the [senior curriculum]({ref(Path('01-Parcours/Parcours-senior.md'))}) "
+            "to check prerequisites and choose a learning sequence.\n\n"
+            f"[Read the complete reference notes]({ref(folder / 'references/_index.md')}).\n\n"
+            '<div id="go-further"></div>\n\n## All topics {#all-topics}\n'
+        )
         generated[folder / "_index.md"] = front_matter(
-            section["titre"], folder / "00-index.md", domain=True, number=index,
-            weight=index, description=section["description"]) + intro + "\n".join(rows) + "\n"
+            section["titre"], folder / "00-index.md", domain=True, number=folder.name.split("-", 1)[0],
+            weight=index, description=section["description"]) + intro
         generated[folder / "references/_index.md"] = front_matter("Reference notes", weight=10000) + (
             f"Complete explanations for [{section['titre']}]({ref(folder / '00-index.md')}).\n")
-        catalog.extend([f"## [{section['titre']}]({ref(folder / '00-index.md')})\n", intro, "\n".join(rows), ""])
+        summary = (f'<span class="kv-num">{folder.name.split("-", 1)[0]}</span>'
+                   f'{html.escape(section["titre"])} <span class="kv-count">{len(topics)}</span>')
+        body = (f'<p class="kv-domain-intro">{html.escape(section["description"])} '
+                f'<a href="{ref(folder / "00-index.md")}">Open the domain →</a></p>\n\n'
+                '<ul class="kv-tiles not-prose">\n' + "\n".join(tiles) + "\n</ul>")
+        catalog.append(fold(summary, body, "domain-" + section["domaine"], css_class="kv-fold kv-domain", is_open=index == 1))
     generated[Path("catalog.md")] = front_matter("Topic catalog") + "\n".join(catalog)
     generated[Path("01-Parcours/_index.md")] = front_matter("Learning guides") + "Curriculum, prerequisites, career tracks and review guidance.\n"
 

@@ -1,6 +1,9 @@
 {{- with resources.Get "lib/katex/katex.min.css" | fingerprint "sha512" -}}
 <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
 {{- end -}}
+{{- with resources.Get "css/reader.css" | minify | fingerprint "sha512" -}}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end -}}
 {{- range resources.Match "lib/katex/fonts/*" -}}
   {{- .Publish -}}
 {{- end -}}

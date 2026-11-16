@@ -1,6 +1,9 @@
 [goldmark.renderer]
   unsafe = true
 
+[goldmark.parser.attribute]
+  block = true
+
 [goldmark.extensions.passthrough]
   enable = true
   [goldmark.extensions.passthrough.delimiters]

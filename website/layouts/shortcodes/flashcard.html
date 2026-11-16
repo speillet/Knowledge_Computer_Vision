@@ -6,6 +6,6 @@
   <div class="kv-a">
     <p class="kv-objective"><strong>Recall objective:</strong> {{ .Get "objective" }}</p>
     {{ .Page.RenderString (dict "display" "block") .Inner }}
-    <p class="kv-card-id"><a href="#{{ .Get "id" | lower }}" aria-label="Link to card {{ .Get "id" }}">{{ .Get "id" }}</a></p>
+    <p class="kv-meta"><a href="#{{ .Get "id" | lower }}" aria-label="Link to card {{ .Get "id" }}">{{ .Get "id" }}</a></p>
   </div>
 </details>

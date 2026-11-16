@@ -1,0 +1,5 @@
+/* CV content support; the presentation stylesheet is copied from AI Engineering. */
+.kv-tools[hidden] { display: none; }
+.kv-q { min-width: 0; overflow-wrap: anywhere; }
+.katex-display { overflow-x: auto; overflow-y: hidden; padding-block: 0.25rem; }
+.prose table { display: block; overflow-x: auto; }
