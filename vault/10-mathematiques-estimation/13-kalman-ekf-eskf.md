@@ -139,3 +139,24 @@ Reponse: **Expected answer**: the simple form $P\leftarrow(I-KH)P$ is not guaran
 Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Full reference]]; [Solà, Quaternion kinematics, §6.1, equations 274 – 276 and note 26](https://arxiv.org/abs/1711.02508); [Chin/JPL 2023, §III-A, equation 14](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf); [OpenCV 4.13.0, `kalman.cpp` L106–L132](https://github.com/opencv/opencv/blob/4.13.0/modules/video/src/kalman.cpp#L106-L132); [FilterPy 1.4.5, `KalmanFilter.update`](https://github.com/rlabbe/filterpy/blob/1.4.5/filterpy/kalman/kalman_filter.py#L491-L565); discriminating test proposed by the project. Added reasoning: project deduction; consulted passages are recorded in the canonical reference for 2026-11-08.
 Tags: cv::pilote cv::d01 famille::diagnostic cv_id::CV-FUSION-006 provenance::agent pole::B pole::C
 END
+
+## CV-FUSION-007
+
+Objective: Evaluate innovation consistency beyond mean NIS. Family: evaluation. Provenance: agent.
+
+START
+CV-Pilote
+ID: CV-FUSION-007
+Question: Two constructed camera-filter traces contain four dimensionless, two-dimensional innovations, already whitened in a fixed common basis. A repeats $(\sqrt{2},0)$ four times; B is $(1,1),(1,-1),(-1,1),(-1,-1)$. Every squared norm, hence every NIS, equals 2, the nominal expected value for this dimension. Can either trace establish consistency, and which diagnostics should precede that conclusion?
+Reponse: **Expected answer**: Three criteria: (1) matching mean NIS to dimension 2 does not establish zero mean, correct covariance, Gaussian marginals or temporal whiteness; (2) A has nonzero sample mean $(\sqrt{2},0)$, whereas B is sample-centered but four observations cannot certify the model; (3) inspect component means/covariance, temporal autocorrelation and distribution/tails on representative pre-gate innovations under the declared model assumptions, rather than accepting either trace from its NIS average.
+
+**Further explanation**: With innovation $\nu_k$ and predicted covariance $S_k=L_kL_k^T\succ0$, whitening gives $e_k=L_k^{-1}\nu_k$ and $\mathrm{NIS}_k=\nu_k^TS_k^{-1}\nu_k=\|e_k\|^2$. These scalars are dimensionless. Correct zero-mean Gaussian marginal innovations give $e_k\sim\mathcal N(0,I_2)$ and $\mathrm{NIS}_k\sim\chi_2^2$, whose expectation is 2. Temporal independence is a separate assumption for sequence-based tests; a single-epoch chi-square law alone does not establish it.
+
+The constructed traces expose information discarded by the norm. For a random vector with finite second moments, $\mathbb E\|e\|^2=\operatorname{tr}(\operatorname{Cov}(e))+\|\mathbb E e\|^2$. Consequently, too little centered variance can compensate for bias. A's empirical centered variance is zero, although its squared norms look nominal. B has balanced signs; if its four-vector pattern were repeated indefinitely, that periodic structure would still violate a white Gaussian innovation model. Do not interpret four samples as a statistically conclusive failure or success test.
+
+Use longer representative traces and account for sample size, temporal dependence and operating regimes when interpreting the diagnostics. Keeping only accepted updates after a NIS gate truncates the distribution and can manufacture reassuring averages. For $m=2$ and the 95% gate $-2\ln0.05\approx5.99$, a correct filter's accepted NIS values average about 1.68; if the true innovation covariance is $1.4\,S$, the ungated mean is 2.8, yet the accepted values average about 2.00 while 11.8% of updates are rejected instead of 5% (constructed calculation). Check the preselection population and the rejection rate, or derive a reference law for the selection mechanism. In real camera fusion, bias, timing mismatch, unmodeled dynamics or covariance miscalibration are candidate explanations for an anomaly; none follows uniquely from this toy calculation. The fixed-basis assumption also matters when comparing component means across time.
+
+**Blocking errors**: declaring both filters consistent because their mean NIS equals 2; certifying B solely because its sample mean is zero; applying the unconditional chi-square reference to a sample selected by its own NIS gate.
+Source: [[10-mathematiques-estimation/references/13-kalman-ekf-eskf|Full reference]]; [Gamse et al. 2014, §2.2.2, equations 7–10, and §3.4.2, innovation distribution checks](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/); whitening, moment identity, trace counterexamples and gate calculation are constructed project deductions, recomputed by the 2026-11-16 check script.
+Tags: cv::pilote cv::d01 famille::evaluation cv_id::CV-FUSION-007 provenance::agent pole::B pole::C
+END

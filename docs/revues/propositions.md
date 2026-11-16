@@ -13,10 +13,10 @@ implemented (for example, DLT became CV-SVD-005 and CV-SVD-006).
 
 | ID | Reference | Proposal | Gap addressed | Family or section | Review cost | Intended primary source | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| P-CV-FUSION-01 | CV-FUSION | Check NIS and biased residuals | Distinguish small residuals from consistent covariance | Evaluation | 1 card, 3 criteria | [Gamse et al., §§2.2.2 and 3.4](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/) | pending |
-| P-CV-SE3-01 | CV-SE3 | Transport covariance with the adjoint | Avoid mixing uncertainty coordinate frames | Reasoning | 1 card, 3 criteria | [Solà et al., §II-H](https://arxiv.org/abs/1812.01537) | pending |
-| P-CV-SEGMENTATION-01 | CV-SEGMENTATION | Calculate PQ for a small matching example | Make the panoptic metric operational | Evaluation | 1 card, TP/FP/FN and mean IoU | [Kirillov et al., §4](https://arxiv.org/abs/1801.00868) | pending |
-| P-CV-METRIQUES-TEMPS-01 | CV-METRIQUES-TEMPS | Calculate an ID switch's effect on IDF1 | Move from a qualitative distinction to a worked example | Reasoning | 1 card on a short sequence | [Ristani et al., identity metrics](https://arxiv.org/abs/1609.01775) | pending |
+| P-CV-FUSION-01 | CV-FUSION | Check NIS and biased residuals | Distinguish small residuals from consistent covariance | Evaluation | 1 card, 3 criteria | [Gamse et al., §§2.2.2 and 3.4](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/) | completed (2026-11-16): CV-FUSION-007 |
+| P-CV-SE3-01 | CV-SE3 | Transport covariance with the adjoint | Avoid mixing uncertainty coordinate frames | Reasoning | 1 card, 3 criteria | [Solà et al., §II-H](https://arxiv.org/abs/1812.01537) | completed (2026-11-16): CV-SE3-007 |
+| P-CV-SEGMENTATION-01 | CV-SEGMENTATION | Calculate PQ for a small matching example | Make the panoptic metric operational | Evaluation | 1 card, TP/FP/FN and mean IoU | [Kirillov et al., §4](https://arxiv.org/abs/1801.00868) | completed (2026-11-16): CV-SEGMENTATION-005 |
+| P-CV-METRIQUES-TEMPS-01 | CV-METRIQUES-TEMPS | Calculate an ID switch's effect on IDF1 | Move from a qualitative distinction to a worked example | Reasoning | 1 card on a short sequence | [Ristani et al., identity metrics](https://arxiv.org/abs/1609.01775) | completed (2026-11-16): CV-METRIQUES-TEMPS-006 |
 | P-CV-SVD-01 | CV-SVD | Explain, from the SVD of the scaled Jacobian, why LM damping leaves a weakly determined parameter combination near its initial value, and name the check that separates "converged" from "not moved" | No card connects damping to the singular spectrum; CV-SVD-007 trains the GN/LM mechanism, CV-SVD-001 the sensitivity relation, neither the stagnation diagnosis | Reasoning; Mathematics, LM as a spectral filter | 1 card, 3 criteria (filter factor $\sigma_i^2/(\sigma_i^2+\lambda)$; minimizer unchanged by damping; restart from a different initialization or inspect $v_i$) | [Triggs et al. 2000, §4.2](https://inria.hal.science/inria-00548290); [Ceres 2.2.0 nnls_solving, Levenberg–Marquardt](https://github.com/ceres-solver/ceres-solver/blob/2.2.0/docs/source/nnls_solving.rst) | pending |
 | P-CV-SE3-02 | CV-SE3 | Explain why the same 6-vector increment yields different poses under the $SE(3)$ exponential, $T(3)\times SO(3)$ and a composite $\langle\mathbb R^3,SO(3)\rangle$ chart, and which of them change Jacobians at first order | No card trains the $SE(3)$ exponential ($V(\theta)\rho\neq$ translation) or chart differences between libraries (GTSAM `GTSAM_POSE3_EXPMAP`, Ceres product manifolds) | Reasoning; Mathematics, worked example B | 1 card, 3 criteria (screw versus chained motion; same Jacobian at $\tau=0$ for the first two; global translation increment for the composite) | [Solà et al., §IV and App. D-B, eq. 172–174](https://arxiv.org/html/1812.01537v9); [GTSAM 4.2 Pose3.cpp L211–L223](https://github.com/borglab/gtsam/blob/4.2/gtsam/geometry/Pose3.cpp) | pending |
 | P-CV-FUSION-02 | CV-FUSION | Convert an IMU datasheet noise density and an Allan-deviation random walk into the discrete impulse covariances of an ESKF at a given IMU rate, and predict the effect of skipping the conversion | No card trains building $Q$ from sensor specifications; CV-FUSION-004 covers timing, not units | Practice; Mathematics, worked example B | 1 card, 3 criteria ($\sigma/\sqrt{\Delta t}$ and $\sigma_b\sqrt{\Delta t}$; impulse variance $\sigma^2\Delta t$; underestimate by $\sqrt{\text{rate}}$) | [Solà, §5.4.2 eq. 262–265 and App. E eq. 433–440](https://arxiv.org/html/1711.02508v1); [Kalibr wiki, IMU Noise Model](https://github.com/ethz-asl/kalibr/wiki/IMU-Noise-Model) | pending |
@@ -132,6 +132,14 @@ consistency, adjoint covariance transport, worked PQ and worked IDF1. Existing
 answers were deepened without creating cards. No acceptance, rejection or
 deferral is inferred from the request to improve the present cards.
 
+## Learner decision of 2026-11-09
+
+The learner explicitly selected “Ajouter les quatre cartes proposées” after
+the enrichment PR was merged. All four registered proposals are accepted.
+The [addition scope](2026-11-09-four-proposals/00-cadrage.md) records their
+distinct recall objectives and protected existing identities. Publication of
+an Anki package is a separate operation.
+
 ## Review of 2026-11-14
 
 The [reference-deepening pass](2026-11-14-reference-depth/00-bilan.md#proposals-awaiting-decisions)
@@ -166,3 +174,18 @@ pending items of the 2026-11-14 pass:
   retired.
 - **Left pending:** the other 98 proposals, 94 from 2026-11-14 and the four
   earlier ones. No rejection or deferral is inferred.
+
+## Completion of 2026-11-16
+
+The four proposals accepted on 2026-11-09 are completed:
+CV-FUSION-007 (innovation consistency beyond mean NIS), CV-SE3-007 (adjoint
+transport of a pose covariance through a lever arm), CV-SEGMENTATION-005
+(worked PQ with explicit matching and SQ/RQ decomposition) and
+CV-METRIQUES-TEMPS-006 (global identity counts and IDF1 after a fragmentation);
+see the [overview](2026-11-09-four-proposals/00-bilan.md).
+
+The 2026-11-09 decision stayed in an unmerged branch until this date. The
+2026-11-14 and 2026-11-15 sections above were written without it, which is why
+they describe these four proposals as pending; they are left as written. The
+94 proposals of 2026-11-14 that the learner left pending on 2026-11-15 remain
+pending.

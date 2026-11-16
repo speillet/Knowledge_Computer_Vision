@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -112,7 +112,8 @@ frames is not part of an image segmentation output (appendix of CV-SEGMENTATION-
 gives $0/0$ for per-image IoU or Dice: the aggregation must say whether such images are
 skipped or scored. Instance predictions overlap, so PQ cannot be computed before their
 overlaps are resolved [Kirillov et al., §7]. A group (crowd) region is excluded from
-matching, and unmatched predictions mostly inside it are not false positives [§4.2].
+matching, and an unmatched prediction with more than half of its pixels in a group region
+of its own class is not a false positive [§4.2].
 
 ## Procedure
 
@@ -188,8 +189,31 @@ $$\mathrm{PQ}=\frac{\sum_{(p,g)\in TP}\mathrm{IoU}(p,g)}{|TP|+\tfrac12|FP|+\tfra
 
 where RQ "is the familiar F1 score"; PQ is averaged over classes, "insensitive to class
 imbalance", and "all segments receive equal importance regardless of their area". Void
-pixels of the ground truth are removed from predicted segments before matching [§4.2].
-PQ is dimensionless in $[0,1]$.
+pixels of the ground truth are removed from predicted segments before matching, and an
+unmatched prediction whose fraction of void pixels exceeds the matching threshold is not
+a false positive [§4.2]. SQ and RQ "are not independent since SQ is measured only over matched
+segments" [§4.2]. PQ is dimensionless in $[0,1]$.
+
+The strict inequality is what the uniqueness proof needs: two disjoint predictions can
+each reach exactly 0.5 with one segment, for example a 2-pixel segment split into two
+1-pixel predictions, so a "$\ge0.5$" rule would no longer give a unique matching (project
+derivation from the proof of Theorem 1, recomputed by the script cited in worked example A).
+
+*Evaluator conventions.* The COCO panoptic evaluator, panopticapi `evaluation.py` at
+commit `7bb4655`, implements these rules as follows. It builds the joint histogram of
+ground-truth and predicted segment ids (L110–L116), skips crowd ground truth and pairs of
+different categories, computes $\mathrm{IoU}=|p\cap g|/(|p|+|g|-|p\cap g|-|p\cap\mathrm{void}|)$
+and counts every pair above 0.5 as a TP, with no assignment step, which Theorem 1 makes
+safe (L121–L138). Unmatched non-crowd ground truth is an FN, and crowd segments are
+ignored (L141–L149). An unmatched prediction is ignored when its void pixels plus its
+pixels in the crowd segment of its own category exceed half its area: one sum where the
+paper states two rules (L151–L163); the code keeps one crowd segment per category and
+image (L147). IoU sums and counts are accumulated per category over all images (L78–L163,
+L178–L180); PQ, SQ and
+RQ are computed per category, categories without any TP, FP or FN are skipped, and each
+of the three is averaged separately over all categories, things and stuff (L49–L73,
+L221–L224). The averaged PQ is therefore not the product of the averaged SQ and RQ; the
+paper reports class averages with "PQ=SQ×RQ per class" [§6, Table 1 caption].
 
 ### Boundary IoU
 
@@ -219,6 +243,19 @@ Then TP = 2, FP = 2, FN = 1, SQ = 0.75, RQ = 2/3.5 = 0.571 and PQ = 0.429. A *ro
 segment matched at IoU 0.95 has PQ 0.95, and the class mean is 0.689: one stuff segment
 weighs as much as every car together, and the 0.45-overlap car counts as one FP and one
 FN, not as a partial success.
+
+Card CV-SEGMENTATION-005 starts from pixel counts and adds the evaluator conventions
+(constructed, recomputed by checks/93-semantique-instances-panoptique.py of the
+2026-11-09 four-proposals pass). One image is the whole evaluation set. Car ground truth
+$g_1,g_2,g_3$ covers 90, 60 and 60 px, car predictions $p_1$ to $p_4$ 90, 90, 60 and 30 px;
+the overlaps are 80, 45 and 40 px, 30 px of $p_2$ are void and $p_4$ lies on road. The
+IoUs are $80/100=0.8$, $45/75=0.6$ once the void pixels leave the union (0.43 if they
+stay) and $40/80=0.5$, which does not match. Car: TP = 2, FP = 2, FN = 1, SQ = 0.7,
+RQ = 4/7 = 0.571, PQ = 0.4. With road matched at IoU 0.9, the evaluator reports PQ 0.65,
+SQ 0.8 and RQ 0.786; the product 0.629 of the last two is not PQ. Matching at
+$\ge0.5$ would give car PQ 0.543, keeping void pixels 0.229, and pooling both categories
+into one count 0.511. If $p_3$ reached IoU 0.55, car SQ would fall to 0.65 while PQ rose to
+0.557; removing only the 30-pixel $p_4$ would raise car PQ to 0.467.
 
 ### Worked example B: aggregation and Dice
 
@@ -262,8 +299,9 @@ or AP according to the deliverable, never on the test split.
 - **Format relations.** Panoptic ⇒ semantic is lossless (merge ids); semantic ⇒ instance
   is underdetermined; instance ⇒ panoptic needs a rule that discards or trims segments
   [Kirillov et al., §3, §7].
-- **Matching is unique above 0.5** for non-overlapping segments (Theorem 1); with
-  overlapping instance predictions, as in AP evaluation, scores and a greedy rule decide.
+- **Matching is unique above 0.5** for non-overlapping segments (Theorem 1), strictly
+  above: at exactly 0.5 two disjoint predictions can tie; with overlapping instance
+  predictions, as in AP evaluation, scores and a greedy rule decide.
 - **What metrics reward.** Dataset-level IoU favors large regions [Cordts et al., §3.1];
   PQ gives every segment equal weight, so small hallucinated segments hurt it much more
   than IoU (G-RMI "hallucinates many small patches", which "only slightly affects IoU"
@@ -472,7 +510,7 @@ Consulted foundations: [Panoptic Segmentation](https://arxiv.org/html/1801.00868
 
 ### Scientific sources
 
-- [Kirillov et al. 2019, "Panoptic Segmentation"](https://arxiv.org/abs/1801.00868): §2 (amodal task excluded), §3 (format, stuff and things, relation to semantic and instance segmentation, confidence scores), §4.1 Theorem 1, §4.2 eqs. 1–2 (PQ, SQ, RQ, void and group labels), §5 (datasets), §7 (NMS-like overlap resolution, things over stuff, G-RMI example).
+- [Kirillov et al. 2019, "Panoptic Segmentation"](https://arxiv.org/abs/1801.00868): §2 (amodal task excluded), §3 (format, stuff and things, relation to semantic and instance segmentation, confidence scores), §4.1 Theorem 1, §4.2 eqs. 1–2 (PQ, SQ, RQ, void and group labels), §5 (datasets), §6 Table 1 caption (class averages, PQ = SQ × RQ per class), §7 (NMS-like overlap resolution, things over stuff, G-RMI example).
 - [Long, Shelhamer and Darrell 2015, "Fully Convolutional Networks for Semantic Segmentation"](https://arxiv.org/abs/1411.4038): §3.3 (in-network upsampling), §4.1–§4.2 (FCN-32s, -16s, -8s; Table 2), §5 "Metrics".
 - [Ronneberger, Fischer and Brox 2015, "U-Net"](https://arxiv.org/abs/1505.04597): §1 (overlap-tile, mirroring, weighted loss for touching cells), §2 (architecture, unpadded convolutions, tile sizes), §3 eqs. 1–2 ($w_0=10$, $\sigma\approx5$ px), Figs. 1–3.
 - [Chen et al. 2018, "Encoder-Decoder with Atrous Separable Convolution" (DeepLabv3+)](https://arxiv.org/abs/1802.02611): abstract, §3.1 eq. 1, output stride, decoder; §4.4 trimap experiment; Table 5.
@@ -487,10 +525,14 @@ Consulted foundations: [Panoptic Segmentation](https://arxiv.org/html/1801.00868
 
 - [torchvision v0.24.0, `torchvision/models/detection/mask_rcnn.py`](https://github.com/pytorch/vision/blob/v0.24.0/torchvision/models/detection/mask_rcnn.py): input and output contract (L26–L69), resize defaults (L170–L171).
 - [torchvision v0.24.0, `torchvision/models/segmentation/_utils.py`](https://github.com/pytorch/vision/blob/v0.24.0/torchvision/models/segmentation/_utils.py): bilinear upsampling of `out` and `aux` logits (L28–L35).
+- [panopticapi `panopticapi/evaluation.py` at `7bb4655`](https://github.com/cocodataset/panopticapi/blob/7bb4655548f98f3fedc07bf37e9040a992b054b0/panopticapi/evaluation.py): per-category PQ, SQ, RQ and their separate averages (L49–L73), joint histogram (L110–L116), matching with void removed from the union and crowd skipped (L121–L138), FN (L141–L149), void and crowd rule for unmatched predictions (L151–L163), All, Things and Stuff averages (L221–L224). Read on 2026-11-16.
 
 ### Related flashcards and references
 
-- [Flashcards](../93-semantique-instances-panoptique.md): CV-SEGMENTATION-001 (output contracts), CV-SEGMENTATION-002 (counting failure from the task definition), CV-SEGMENTATION-003 (label-preserving augmentation), CV-SEGMENTATION-004 (limits of Dice).
+- [Flashcards](../93-semantique-instances-panoptique.md): CV-SEGMENTATION-001 (output contracts), CV-SEGMENTATION-002 (counting failure from the task definition), CV-SEGMENTATION-003 (label-preserving augmentation), CV-SEGMENTATION-004 (limits of Dice); CV-SEGMENTATION-005 (PQ from segment matching, void handling and the SQ/RQ decomposition).
+- Constructed examples A–C and the cost figures are recomputed by checks/93-semantique-instances-panoptique.py in the review directory of 2026-11-14; the pixel-count version of example A by the script of the same name in the 2026-11-09 four-proposals directory.
 - Related references: [CV-WATERSHED](91-otsu-distance-watershed.md), [CV-GRABCUT](92-grabcut-regions.md), [CV-SAM](94-sam-sam2.md), [CV-IOU-AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-METRIQUES-APPLIQUEES](../../130-evaluation-fiabilite/references/134-metriques-applications.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/93-semantique-instances-panoptique.md).
+Revision 9, 2026-11-16: CV-SEGMENTATION-005 added after the learner accepted P-CV-SEGMENTATION-01, and the panoptic quality
+section extended with the panopticapi conventions, the strict-threshold tie and the card's worked example, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/93-semantique-instances-panoptique.md).

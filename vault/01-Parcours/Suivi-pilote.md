@@ -1,6 +1,6 @@
 # Pilot Tracking: Evidence and Limitations
 
-**Lot courant**: 60 reference notes, 294 flashcards, 14 themes and six business areas. **Drafting**: Agent. **Review client**: AnkiDroid, confirmed by the learner the 2026-10-18. An absence of result means “not executed”, never “successful”.
+**Lot courant**: 60 reference notes, 298 flashcards, 14 themes and six business areas. **Drafting**: Agent. **Review client**: AnkiDroid, confirmed by the learner the 2026-10-18. An absence of result means “not executed”, never “successful”.
 
 ## Condition of lot
 
@@ -1342,3 +1342,41 @@ redirects to this asset.
 Not yet observed: import on the learner's AnkiDroid version, phone rendering of
 MathJax, the SVG image, code and links, and reimport after real reviews. Record the
 AnkiDroid version and observations here after the first phone import.
+
+## Proposals accepted on 2026-11-09 — completed 2026-11-16
+
+On 2026-11-09 the learner accepted the four proposals that were then registered:
+P-CV-FUSION-01, P-CV-SE3-01, P-CV-SEGMENTATION-01 and P-CV-METRIQUES-TEMPS-01. That
+session drafted CV-FUSION-007 without delivering it. On 2026-11-16 Agent Claude Code
+(`revue-cartes`, `ajouter`) resumed the work on `main` at `6cef833` and wrote the four
+cards: 294 → 298 cards, no ID removed, existing expected answers unchanged. Claims were
+checked against primary papers and versioned code, and every number is a constructed
+example recomputed by a stdlib script. See the [scope record](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/00-cadrage.md) and the
+[overview](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/00-bilan.md). This remains agent self-review; editorial status is `redige`.
+
+### Cards added
+
+| Date | Reference and revision | Added ID | Proposal | Family | Recall objective | Responsible and review status | Checks | Export status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-16 | CV-FUSION, revision 11 | CV-FUSION-007 | P-CV-FUSION-01 | evaluation | Mean NIS equal to $m$ hides bias and temporal structure; a gate can make an overconfident filter look nominal | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/13-kalman-ekf-eskf.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+| 2026-11-16 | CV-SE3, revision 12 | CV-SE3-007 | P-CV-SE3-01 | reasoning | $\Sigma_c=\mathrm{Ad}_{T_{cb}}\Sigma_b\mathrm{Ad}_{T_{cb}}^T$ through a 0.5 m lever arm: 5.39 mm, correlation 0.93, camera-axis tangent translation | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/12-rotations-se3.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+| 2026-11-16 | CV-SEGMENTATION, revision 9 | CV-SEGMENTATION-005 | P-CV-SEGMENTATION-01 | evaluation | Matching at IoU $>0.5$ with void removed, per-category SQ, RQ and PQ, separate averages | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/93-semantique-instances-panoptique.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+| 2026-11-16 | CV-METRIQUES-TEMPS, revision 8 | CV-METRIQUES-TEMPS-006 | P-CV-METRIQUES-TEMPS-01 | reasoning | Global identity mapping; $\mathrm{IDF1}=1-\min(a,b)/20$ set by the shorter piece, while MOTA counts one switch | Agent Claude Code; self-review ([report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/132-tracking-trajectoires.md)) | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+
+### Correction log for this pass
+
+Reference statements corrected while verifying the new cards. Each subject report gives
+the passages read. CV-FUSION needed no correction of published text.
+
+| Date | Reference and revision | Affected ID | Defect and source | Correction | Responsible and review status | Checks | Export status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-16 | CV-SE3, revision 12 | CV-SE3-007 | Worked example A said a 0.01 rad yaw "implies 5 mm of camera-position uncertainty"; the lever-arm term adds in variance, giving 5.39 mm with the 2 mm body term (recomputed); [report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/12-rotations-se3.md) | "Adds, in quadrature, 5 mm of standard deviation along $y$, correlated with the yaw" | Agent Claude Code; self-review | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+| 2026-11-16 | CV-SE3, revision 12 | None | An assumption called first-order *transport* inaccurate for large uncertainties; adjoint transport by a known transformation is exact (Solà et al., arXiv 1812.01537v9, §II-F, eq. 65 and 177); [report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/12-rotations-se3.md) | "First-order propagation" inaccurate, adjoint transport exact | Agent Claude Code; self-review | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | Not concerned |
+| 2026-11-16 | CV-SEGMENTATION, revision 9 | CV-SEGMENTATION-005 | Unmatched predictions "mostly inside" a group region were said not to be false positives; the rule is more than half their pixels in a group region of their own class (Kirillov et al., §4.2; panopticapi `evaluation.py` at 7bb4655 L155–L162); [report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/93-semantique-instances-panoptique.md) | Rule stated; the code's summed void and crowd fraction added | Agent Claude Code; self-review | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+| 2026-11-16 | CV-SEGMENTATION, revision 9 | CV-SEGMENTATION-005 | The void rule omitted that unmatched predictions whose void fraction exceeds the matching threshold are not false positives (Kirillov et al., §4.2); [report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/93-semantique-instances-panoptique.md) | Second void rule added | Agent Claude Code; self-review | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+| 2026-11-16 | CV-METRIQUES-TEMPS, revision 8 | CV-METRIQUES-TEMPS-006 | The IDF1 edge cost was described as "the frames where the two detections do not match"; it counts the pair's false-negative and false-positive frames, including frames where one trajectory is absent, with extra nodes for unmatched identities (Ristani et al., §3.3, eq. 3–4); [report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/132-tracking-trajectoires.md) | Cost stated precisely; fragment-duration paragraph added to worked example A | Agent Claude Code; self-review | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |
+
+No package is rebuilt: the four new notes reach the phone only through a new package
+built with `paquet-anki`; release `anki-20261116-0021` contains the 294 earlier notes.
+AnkiDroid and Obsidian rendering, learner proficiency and independent scientific review
+are not established.
