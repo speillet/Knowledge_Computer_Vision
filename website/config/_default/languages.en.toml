@@ -1,0 +1,11 @@
+disabled = false
+locale = "en"
+label = "English"
+weight = 1
+title = "Computer Vision"
+
+[params]
+  copyright = "© { year } Computer Vision knowledge vault: flashcards and reference notes."
+  displayName = "EN"
+  isoCode = "en"
+  description = "Detailed computer vision flashcards, reference notes and a senior engineering curriculum."

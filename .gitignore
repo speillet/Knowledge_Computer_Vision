@@ -15,4 +15,11 @@ __pycache__/
 .venv/
 dist/
 
+# Generated Hugo content, output and build state.
+website/content/
+website/static/vault/
+website/resources/
+website/.hugo_build.lock
+site/
+
 # Skills in .agents/skills and templates in .specify remain versionable.

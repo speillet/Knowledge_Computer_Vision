@@ -1,0 +1,11 @@
+<details class="kv-card" id="{{ .Get "id" | lower }}">
+  <summary>
+    <span class="kv-q">{{ .Page.RenderString (dict "display" "inline") (.Get "question" | base64Decode) }}</span>
+    <span class="kv-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="kv-a">
+    <p class="kv-objective"><strong>Recall objective:</strong> {{ .Get "objective" }}</p>
+    {{ .Page.RenderString (dict "display" "block") .Inner }}
+    <p class="kv-card-id"><a href="#{{ .Get "id" | lower }}" aria-label="Link to card {{ .Get "id" }}">{{ .Get "id" }}</a></p>
+  </div>
+</details>

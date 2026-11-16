@@ -1,0 +1,44 @@
+[[main]]
+  name = "Start here"
+  pageRef = "/01-Parcours/Pre-requis"
+  weight = 10
+
+[[main]]
+  name = "Curriculum"
+  pageRef = "/01-Parcours/Parcours-senior"
+  weight = 20
+
+[[main]]
+  name = "Catalog"
+  pageRef = "/catalog"
+  weight = 30
+
+[[main]]
+  name = "Career tracks"
+  pageRef = "/01-Parcours/Poles-metiers"
+  weight = 40
+
+[[main]]
+  name = "Anki"
+  pageRef = "/01-Parcours/Guide-Anki"
+  weight = 50
+
+[[main]]
+  name = "GitHub"
+  url = "https://github.com/speillet/Knowledge_Computer_Vision"
+  weight = 60
+
+[[footer]]
+  name = "Inventory"
+  pageRef = "/01-Parcours/Inventaire"
+  weight = 10
+
+[[footer]]
+  name = "Integration cases"
+  pageRef = "/01-Parcours/Cas-transfert"
+  weight = 20
+
+[[footer]]
+  name = "Validation record"
+  pageRef = "/01-Parcours/Suivi-pilote"
+  weight = 30

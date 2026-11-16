@@ -1,0 +1,19 @@
+baseURL = "https://speillet.github.io/Knowledge_Computer_Vision/"
+theme = "blowfish"
+defaultContentLanguage = "en"
+publishDir = "../site"
+disablePathToLower = true
+enableRobotsTXT = true
+enableEmoji = false
+summaryLength = 0
+disableKinds = ["taxonomy", "term", "rss"]
+
+[pagination]
+  pagerSize = 200
+
+[outputs]
+  home = ["HTML", "JSON"]
+  section = ["HTML"]
+
+[sitemap]
+  changefreq = "weekly"

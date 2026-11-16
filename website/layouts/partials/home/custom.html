@@ -1,0 +1,36 @@
+{{- $domains := sort (where site.Sections "Params.domain" true) "Weight" -}}
+{{- $topics := 0 -}}{{- $cards := 0 -}}
+{{- range $domains -}}
+  {{- range .RegularPages -}}
+    {{- $topics = add $topics 1 -}}{{- $cards = add $cards (int .Params.cards) -}}
+  {{- end -}}
+{{- end -}}
+<article class="kv-home not-prose">
+  <h1>{{ site.Title }}</h1>
+  <p class="kv-home-lead">{{ site.Params.description }}</p>
+  <p class="kv-home-links">
+    <a href="{{ relref . "/01-Parcours/Pre-requis.md" }}">Start here</a>
+    <a href="{{ relref . "/01-Parcours/Parcours-senior.md" }}">Senior curriculum</a>
+    <a href="{{ relref . "/catalog.md" }}">Topic catalog</a>
+    <a href="{{ relref . "/01-Parcours/Guide-Anki.md" }}">Review with Anki</a>
+  </p>
+  <p class="kv-home-figures">{{ $topics }} reference notes · {{ $cards }} flashcards · {{ len $domains }} domains</p>
+  <h2>How to use it</h2>
+  <ul class="kv-uses">
+    <li><strong>Learn.</strong> Follow the curriculum and open a reference note for assumptions, equations, worked examples and limitations.</li>
+    <li><strong>Recall.</strong> Read a question, formulate your answer, then expand it to compare with the grading criteria and full explanation.</li>
+    <li><strong>Review.</strong> Use the Anki export guide for spaced repetition. The website provides a reading view and keeps no review schedule.</li>
+  </ul>
+  <h2 id="domains">Domains</h2>
+  <ol class="kv-domain-list">
+    {{- range $domains -}}
+    {{- $count := 0 -}}{{- range .RegularPages -}}{{- $count = add $count (int .Params.cards) -}}{{- end -}}
+    <li>
+      <a class="kv-domain-link" href="{{ .RelPermalink }}"><span class="kv-num">{{ .Params.number }}</span>{{ .Title }}</a>
+      <span class="kv-domain-meta">{{ len .RegularPages }} topics · {{ $count }} cards</span>
+      <p>{{ .Description }}</p>
+    </li>
+    {{- end -}}
+  </ol>
+  <p class="kv-home-note">Content is agent-authored. Device import, recall and personal mastery remain learner validation steps.</p>
+</article>
