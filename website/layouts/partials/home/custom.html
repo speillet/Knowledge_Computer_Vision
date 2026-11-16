@@ -6,31 +6,48 @@
   {{- end -}}
 {{- end -}}
 <article class="kv-home not-prose">
-  <h1>{{ site.Title }}</h1>
-  <p class="kv-home-lead">{{ site.Params.description }}</p>
-  <p class="kv-home-links">
-    <a href="{{ relref . "/01-Parcours/Pre-requis.md" }}">Start here</a>
-    <a href="{{ relref . "/01-Parcours/Parcours-senior.md" }}">Senior curriculum</a>
-    <a href="{{ relref . "/catalog.md" }}">Topic catalog</a>
-    <a href="{{ relref . "/01-Parcours/Guide-Anki.md" }}">Review with Anki</a>
-  </p>
-  <p class="kv-home-figures">{{ $topics }} reference notes · {{ $cards }} flashcards · {{ len $domains }} domains</p>
-  <h2>How to use it</h2>
-  <ul class="kv-uses">
-    <li><strong>Learn.</strong> Follow the curriculum and open a reference note for assumptions, equations, worked examples and limitations.</li>
-    <li><strong>Recall.</strong> Read a question, formulate your answer, then expand it to compare with the grading criteria and full explanation.</li>
-    <li><strong>Review.</strong> Use the Anki export guide for spaced repetition. The website provides a reading view and keeps no review schedule.</li>
-  </ul>
-  <h2 id="domains">Domains</h2>
+  <section class="kv-hero" aria-labelledby="home-title">
+    <div class="kv-hero-copy">
+      <p class="kv-eyebrow">The knowledge vault</p>
+      <h1 id="home-title">Computer<br>Vision<span class="kv-title-dot">.</span></h1>
+      <p class="kv-home-lead">From image formation to production systems. Detailed reference notes and flashcards for computer vision engineers.</p>
+      <div class="kv-home-links">
+        <a class="kv-primary-link" href="{{ relref . "/catalog.md" }}">Explore the cards <span aria-hidden="true">↗</span></a>
+        <a class="kv-secondary-link" href="{{ relref . "/01-Parcours/Parcours-senior.md" }}">Follow the curriculum <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <dl class="kv-home-figures" aria-label="The collection">
+      <div><dt>Reference notes</dt><dd>{{ $topics }}</dd></div>
+      <div><dt>Flashcards</dt><dd>{{ $cards }}</dd></div>
+      <div><dt>Domains</dt><dd>{{ printf "%02d" (len $domains) }}</dd></div>
+    </dl>
+  </section>
+  <section class="kv-workflow" aria-label="How to use the vault">
+    <ol class="kv-uses">
+      <li><span class="kv-step-label">01 / Learn</span><p>Understand the method, its assumptions and its limits. <a href="{{ relref . "/01-Parcours/Pre-requis.md" }}">Start with the foundations</a>.</p></li>
+      <li><span class="kv-step-label">02 / Recall</span><p>Answer a question, then unfold the explanation and compare your reasoning.</p></li>
+      <li><span class="kv-step-label">03 / Review</span><p>Build a lasting practice with spaced repetition. <a href="{{ relref . "/01-Parcours/Guide-Anki.md" }}">Review with Anki</a>.</p></li>
+    </ol>
+  </section>
+  <div class="kv-section-heading">
+    <div><p class="kv-eyebrow">The collection</p><h2 id="domains">Explore the domains<span class="kv-heading-count">{{ printf "%02d" (len $domains) }}</span></h2></div>
+    <a class="kv-directory-link" href="{{ relref . "/catalog.md" }}">View the full catalog <span aria-hidden="true">↗</span></a>
+  </div>
   <ol class="kv-domain-list">
     {{- range $domains -}}
     {{- $count := 0 -}}{{- range .RegularPages -}}{{- $count = add $count (int .Params.cards) -}}{{- end -}}
     <li>
-      <a class="kv-domain-link" href="{{ .RelPermalink }}"><span class="kv-num">{{ .Params.number }}</span>{{ .Title }}</a>
-      <span class="kv-domain-meta">{{ len .RegularPages }} topics · {{ $count }} cards</span>
-      <p>{{ .Description }}</p>
+      <a class="kv-domain-link" href="{{ .RelPermalink }}">
+        <span class="kv-num">{{ printf "%02d" (int .Params.number) }}</span>
+        <span class="kv-domain-body">
+          <strong class="kv-domain-title">{{ .Title }}</strong>
+          <span class="kv-domain-description">{{ .Description }}</span>
+          <span class="kv-domain-meta">{{ len .RegularPages }} topics <span aria-hidden="true">/</span> {{ $count }} cards</span>
+        </span>
+        <span class="kv-domain-arrow" aria-hidden="true">↗</span>
+      </a>
     </li>
     {{- end -}}
   </ol>
-  <p class="kv-home-note">Content is agent-authored. Device import, recall and personal mastery remain learner validation steps.</p>
+  <p class="kv-home-note">Agent-authored learning material. Check your understanding through recall and practice.</p>
 </article>
