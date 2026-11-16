@@ -1,6 +1,6 @@
 # Computer vision — understand, choose, diagnose
 
-**60 reference notes and 298 flashcards**, spanning 14 of 14 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
+**64 reference notes and 318 flashcards**, spanning 15 of 15 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
 
 This curriculum targets an engineer already comfortable with ML/DL. Reference notes explain concepts; flashcards train recall with explicit grading criteria. Coverage of a topic does not imply in-depth coverage of all its variants.
 
@@ -32,5 +32,6 @@ This curriculum targets an engineer already comfortable with ML/DL. Reference no
 | [Generative and multimodal vision](120-generatif-multimodal/00-index.md) | 3 | 10 |
 | [Data, evaluation and reliability](130-evaluation-fiabilite/00-index.md) | 4 | 23 |
 | [Vision systems engineering](140-ingenierie-systemes/00-index.md) | 3 | 15 |
+| [Photogrammetry](150-photogrammetrie/00-index.md) | 4 | 20 |
 
 One directory per topic, with flashcards in that directory and reference notes in `references/`, following the layout of [Knowledge_AI_Engineering](https://github.com/speillet/Knowledge_AI_Engineering). Python examples live outside the vault and state their limitations.

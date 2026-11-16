@@ -37,7 +37,7 @@ Track-specific cases, with answers and grading criteria in each card:
 
 ## B — Geometric Vision & Spatial AI
 
-30 associated reference notes, 158 flashcards; device import unverified, mastery unmeasured.
+34 associated reference notes, 178 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |
@@ -71,6 +71,10 @@ Track-specific cases, with answers and grading criteria in each card:
 | Farnebäck — dense optical flow through polynomial expansion | operational use | [Reference](../100-mouvement-video/references/103-farneback.md) · [Flashcards](../100-mouvement-video/103-farneback.md) |
 | NeRF, 3D Gaussian Splatting and reconstruction | overview | [Reference](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) · [Flashcards](../120-generatif-multimodal/123-nerf-gaussian-splatting.md) |
 | Evaluating identities, trajectories and 3D localization | operational use | [Reference](../130-evaluation-fiabilite/references/132-tracking-trajectoires.md) · [Flashcards](../130-evaluation-fiabilite/132-tracking-trajectoires.md) |
+| Collinearity, orientations and photogrammetric self-calibration | in-depth study | [Reference](../150-photogrammetrie/references/151-colinearite-autocalibration.md) · [Flashcards](../150-photogrammetrie/151-colinearite-autocalibration.md) |
+| Structure from Motion: incremental and global pipelines | in-depth study | [Reference](../150-photogrammetrie/references/152-sfm-incrementale-globale.md) · [Flashcards](../150-photogrammetrie/152-sfm-incrementale-globale.md) |
+| Reference systems for photogrammetry: datums, projections and heights | operational use | [Reference](../150-photogrammetrie/references/153-systemes-reference.md) · [Flashcards](../150-photogrammetrie/153-systemes-reference.md) |
+| Aerotriangulation and georeferencing: ground control, GNSS/IMU and accuracy | in-depth study | [Reference](../150-photogrammetrie/references/154-aerotriangulation-georeferencement.md) · [Flashcards](../150-photogrammetrie/154-aerotriangulation-georeferencement.md) |
 
 Track-specific cases, with answers and grading criteria in each card:
 
@@ -79,7 +83,7 @@ Track-specific cases, with answers and grading criteria in each card:
 
 ## C — Robotics & Autonomous Perception
 
-33 associated reference notes, 184 flashcards; device import unverified, mastery unmeasured.
+34 associated reference notes, 189 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |
@@ -116,6 +120,7 @@ Track-specific cases, with answers and grading criteria in each card:
 | Data splits, annotations, score calibration and drift | operational use | [Reference](../130-evaluation-fiabilite/references/133-donnees-generalisation.md) · [Flashcards](../130-evaluation-fiabilite/133-donnees-generalisation.md) |
 | Data contracts, profiling and video pipelines | in-depth study | [Reference](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) · [Flashcards](../140-ingenierie-systemes/141-contrats-profiling-video.md) |
 | Edge deployment, compression and monitoring | operational use | [Reference](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) · [Flashcards](../140-ingenierie-systemes/143-edge-reproductibilite.md) |
+| Structure from Motion: incremental and global pipelines | in-depth study | [Reference](../150-photogrammetrie/references/152-sfm-incrementale-globale.md) · [Flashcards](../150-photogrammetrie/152-sfm-incrementale-globale.md) |
 
 Track-specific cases, with answers and grading criteria in each card:
 
@@ -153,7 +158,7 @@ Track-specific cases, with answers and grading criteria in each card:
 
 ## E — Applied Computer Vision
 
-38 associated reference notes, 189 flashcards; device import unverified, mastery unmeasured.
+41 associated reference notes, 204 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |
@@ -195,6 +200,9 @@ Track-specific cases, with answers and grading criteria in each card:
 | Metrics for segmentation, inspection and applications | operational use | [Reference](../130-evaluation-fiabilite/references/134-metriques-applications.md) · [Flashcards](../130-evaluation-fiabilite/134-metriques-applications.md) |
 | Data contracts, profiling and video pipelines | in-depth study | [Reference](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) · [Flashcards](../140-ingenierie-systemes/141-contrats-profiling-video.md) |
 | Edge deployment, compression and monitoring | operational use | [Reference](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) · [Flashcards](../140-ingenierie-systemes/143-edge-reproductibilite.md) |
+| Collinearity, orientations and photogrammetric self-calibration | in-depth study | [Reference](../150-photogrammetrie/references/151-colinearite-autocalibration.md) · [Flashcards](../150-photogrammetrie/151-colinearite-autocalibration.md) |
+| Reference systems for photogrammetry: datums, projections and heights | operational use | [Reference](../150-photogrammetrie/references/153-systemes-reference.md) · [Flashcards](../150-photogrammetrie/153-systemes-reference.md) |
+| Aerotriangulation and georeferencing: ground control, GNSS/IMU and accuracy | in-depth study | [Reference](../150-photogrammetrie/references/154-aerotriangulation-georeferencement.md) · [Flashcards](../150-photogrammetrie/154-aerotriangulation-georeferencement.md) |
 
 Track-specific cases, with answers and grading criteria in each card:
 

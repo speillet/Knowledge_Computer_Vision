@@ -14,6 +14,7 @@ MODEL = "CV-Pilote"
 DECK_ROOT = "CV::Pilote"
 SECTIONS = json.loads((Path(__file__).with_name("vault_sections.json")).read_text(encoding="utf-8"))
 SECTION_BY_FOLDER = {section["dossier"]: section for section in SECTIONS}
+DOMAINS = {section["domaine"] for section in SECTIONS}
 FIELDS = ["ID", "Question", "Reponse", "Source"]
 FAMILIES = {"comprehension", "raisonnement", "algorithme", "comparaison",
             "diagnostic", "pratique", "evaluation", "conception"}
@@ -104,8 +105,8 @@ def check_vault(root):
             fail(path, 'incomplete reference metadata')
         if parse_poles(meta.get("poles", "")) is None:
             fail(path, 'reference career tracks must be unique letters A–F in a nonempty list')
-        if not re.fullmatch(r"d(?:0[1-9]|1[0-4])", meta.get("domaine", "")):
-            fail(path, 'domain must be between d01 and d14')
+        if meta.get("domaine") not in DOMAINS:
+            fail(path, 'domain must be one of the domains in vault_sections.json')
         if meta.get("domaine") != SECTION_BY_FOLDER[path.parent.parent.name]["domaine"]:
             fail(path, 'reference domain differs from topic directory')
         if meta.get("provenance") not in {"agent", "apprenant", "mixte"}:

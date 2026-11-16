@@ -38,7 +38,7 @@ fields retain their spelling to preserve links and review history.
 ## Current coverage
 
 <!-- cv-catalog:start -->
-**60 reference notes and 298 flashcards**, spanning 14 of 14 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
+**64 reference notes and 318 flashcards**, spanning 15 of 15 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
 
 | Topic | Reference notes | Flashcards |
 | --- | ---: | ---: |
@@ -56,6 +56,7 @@ fields retain their spelling to preserve links and review history.
 | [Generative and multimodal vision](vault/120-generatif-multimodal/00-index.md) | 3 | 10 |
 | [Data, evaluation and reliability](vault/130-evaluation-fiabilite/00-index.md) | 4 | 23 |
 | [Vision systems engineering](vault/140-ingenierie-systemes/00-index.md) | 3 | 15 |
+| [Photogrammetry](vault/150-photogrammetrie/00-index.md) | 4 | 20 |
 <!-- cv-catalog:end -->
 
 ## Local validation

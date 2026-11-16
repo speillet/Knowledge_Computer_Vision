@@ -1,6 +1,6 @@
 # Senior curriculum: understand, verify, integrate
 
-This curriculum orders the 60 existing subjects. Directories classify
+This curriculum orders the 64 existing subjects. Directories classify
 content by topic; their numbers do not prescribe review order. The 119
 open topics for further study in the [inventory](Inventaire.md) remain to be written.
 
@@ -107,80 +107,93 @@ Distinguish intrinsic, pose, depth, extrinsic and joint optimization.
 
 **Proposed progression criterion**: Separate error from coordinate frame, wrong scale, lack of parallax and overadjustment, and then choose a useful independent observation.
 
-## 5. Linking representations, tasks and metrics
+## 5. Measure the terrain and objects from images
+
+Link the photogrammetric camera model, image orientation, reference systems and ground control to an accuracy that can be stated and checked.
+
+| Order | Subject and reference | Flashcards | Declared prerequisites |
+| --- | --- | --- | --- |
+| 5.1 | [Collinearity, orientations and photogrammetric self-calibration](../150-photogrammetrie/references/151-colinearite-autocalibration.md) | [5 cards](../150-photogrammetrie/151-colinearite-autocalibration.md) | [CV-ZHANG](../50-calibration-geometrie/references/52-calibration-zhang.md), [CV-BA](../50-calibration-geometrie/references/54-bundle-adjustment.md) |
+| 5.2 | [Structure from Motion: incremental and global pipelines](../150-photogrammetrie/references/152-sfm-incrementale-globale.md) | [5 cards](../150-photogrammetrie/152-sfm-incrementale-globale.md) | [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md), [CV-BA](../50-calibration-geometrie/references/54-bundle-adjustment.md), [CV-MATCHING](../40-features-matching/references/43-detecteurs-matchers.md) |
+| 5.3 | [Reference systems for photogrammetry: datums, projections and heights](../150-photogrammetrie/references/153-systemes-reference.md) | [5 cards](../150-photogrammetrie/153-systemes-reference.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) |
+| 5.4 | [Aerotriangulation and georeferencing: ground control, GNSS/IMU and accuracy](../150-photogrammetrie/references/154-aerotriangulation-georeferencement.md) | [5 cards](../150-photogrammetrie/154-aerotriangulation-georeferencement.md) | [CV-BA](../50-calibration-geometrie/references/54-bundle-adjustment.md), [CV-MULTICALIB](../50-calibration-geometrie/references/55-calibration-multicapteurs.md), [CV-SFM](../150-photogrammetrie/references/152-sfm-incrementale-globale.md), [CV-GEODESIE](../150-photogrammetrie/references/153-systemes-reference.md) |
+
+**Proposed progression criterion**: For a drone block georeferenced with control points, separate internal precision from checkpoint accuracy and name two systematic errors that the residuals of the control points cannot reveal.
+
+## 6. Linking representations, tasks and metrics
 
 Comparing task contracts and their errors, without taking up the entire ML/DL general curriculum.
 
 | Order | Subject and reference | Flashcards | Declared prerequisites |
 | --- | --- | --- | --- |
-| 5.1 | [Visual representations, ViT, Swin, ConvNeXt and DINOv2](../70-reconnaissance-representations/references/71-representations-transfert.md) | [5 cards](../70-reconnaissance-representations/71-representations-transfert.md) | [Conventions](Pre-requis.md) |
-| 5.2 | [CLIP, SigLIP and text-based recognition](../70-reconnaissance-representations/references/72-clip-siglip.md) | [4 cards](../70-reconnaissance-representations/72-clip-siglip.md) | [CV-REPRESENTATIONS](../70-reconnaissance-representations/references/71-representations-transfert.md) |
-| 5.3 | [Inspection: golden templates, PatchCore and PaDiM](../70-reconnaissance-representations/references/73-patchcore-padim.md) | [4 cards](../70-reconnaissance-representations/73-patchcore-padim.md) | [CV-REPRESENTATIONS](../70-reconnaissance-representations/references/71-representations-transfert.md), [CV-ACQUISITION](../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) |
-| 5.4 | [OCR and document understanding](../70-reconnaissance-representations/references/74-ocr-documents.md) | [3 cards](../70-reconnaissance-representations/74-ocr-documents.md) | [Conventions](Pre-requis.md) |
-| 5.5 | [Biometric recognition, ArcFace and PAD](../70-reconnaissance-representations/references/75-embeddings-biometrie.md) | [2 cards](../70-reconnaissance-representations/75-embeddings-biometrie.md) | [Conventions](Pre-requis.md) |
-| 5.6 | [IoU and AP — the COCO detection protocol](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) | [8 cards](../130-evaluation-fiabilite/131-iou-ap-coco.md) | [Conventions](Pre-requis.md) |
-| 5.7 | [NMS — suppressing redundant detections](../80-detection-pose/references/81-nms.md) | [6 cards](../80-detection-pose/81-nms.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) |
-| 5.8 | [Detection: Faster R-CNN, YOLO families and DETR](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) | [14 cards](../80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-NMS](../80-detection-pose/references/81-nms.md) |
-| 5.9 | [Open-vocabulary detection and grounding](../80-detection-pose/references/83-detection-open-vocabulary.md) | [3 cards](../80-detection-pose/83-detection-open-vocabulary.md) | [CV-CLIP](../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-DETECTEURS](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) |
-| 5.10 | [Semantic, instance and panoptic segmentation](../90-segmentation/references/93-semantique-instances-panoptique.md) | [5 cards](../90-segmentation/93-semantique-instances-panoptique.md) | [Conventions](Pre-requis.md) |
-| 5.11 | [Otsu, distance transforms and watershed](../90-segmentation/references/91-otsu-distance-watershed.md) | [6 cards](../90-segmentation/91-otsu-distance-watershed.md) | [CV-MORPHO](../30-traitement-image/references/33-morphologie-composantes.md) |
-| 5.12 | [GrabCut, regions and appearance models](../90-segmentation/references/92-grabcut-regions.md) | [3 cards](../90-segmentation/92-grabcut-regions.md) | [Conventions](Pre-requis.md) |
-| 5.13 | [SAM, SAM 2 and prompted video segmentation](../90-segmentation/references/94-sam-sam2.md) | [3 cards](../90-segmentation/94-sam-sam2.md) | [CV-SEGMENTATION](../90-segmentation/references/93-semantique-instances-panoptique.md) |
-| 5.14 | [Metrics for segmentation, inspection and applications](../130-evaluation-fiabilite/references/134-metriques-applications.md) | [4 cards](../130-evaluation-fiabilite/134-metriques-applications.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-SEGMENTATION](../90-segmentation/references/93-semantique-instances-panoptique.md) |
+| 6.1 | [Visual representations, ViT, Swin, ConvNeXt and DINOv2](../70-reconnaissance-representations/references/71-representations-transfert.md) | [5 cards](../70-reconnaissance-representations/71-representations-transfert.md) | [Conventions](Pre-requis.md) |
+| 6.2 | [CLIP, SigLIP and text-based recognition](../70-reconnaissance-representations/references/72-clip-siglip.md) | [4 cards](../70-reconnaissance-representations/72-clip-siglip.md) | [CV-REPRESENTATIONS](../70-reconnaissance-representations/references/71-representations-transfert.md) |
+| 6.3 | [Inspection: golden templates, PatchCore and PaDiM](../70-reconnaissance-representations/references/73-patchcore-padim.md) | [4 cards](../70-reconnaissance-representations/73-patchcore-padim.md) | [CV-REPRESENTATIONS](../70-reconnaissance-representations/references/71-representations-transfert.md), [CV-ACQUISITION](../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) |
+| 6.4 | [OCR and document understanding](../70-reconnaissance-representations/references/74-ocr-documents.md) | [3 cards](../70-reconnaissance-representations/74-ocr-documents.md) | [Conventions](Pre-requis.md) |
+| 6.5 | [Biometric recognition, ArcFace and PAD](../70-reconnaissance-representations/references/75-embeddings-biometrie.md) | [2 cards](../70-reconnaissance-representations/75-embeddings-biometrie.md) | [Conventions](Pre-requis.md) |
+| 6.6 | [IoU and AP — the COCO detection protocol](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) | [8 cards](../130-evaluation-fiabilite/131-iou-ap-coco.md) | [Conventions](Pre-requis.md) |
+| 6.7 | [NMS — suppressing redundant detections](../80-detection-pose/references/81-nms.md) | [6 cards](../80-detection-pose/81-nms.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) |
+| 6.8 | [Detection: Faster R-CNN, YOLO families and DETR](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) | [14 cards](../80-detection-pose/82-detection-fasterrcnn-yolo-detr.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-NMS](../80-detection-pose/references/81-nms.md) |
+| 6.9 | [Open-vocabulary detection and grounding](../80-detection-pose/references/83-detection-open-vocabulary.md) | [3 cards](../80-detection-pose/83-detection-open-vocabulary.md) | [CV-CLIP](../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-DETECTEURS](../80-detection-pose/references/82-detection-fasterrcnn-yolo-detr.md) |
+| 6.10 | [Semantic, instance and panoptic segmentation](../90-segmentation/references/93-semantique-instances-panoptique.md) | [5 cards](../90-segmentation/93-semantique-instances-panoptique.md) | [Conventions](Pre-requis.md) |
+| 6.11 | [Otsu, distance transforms and watershed](../90-segmentation/references/91-otsu-distance-watershed.md) | [6 cards](../90-segmentation/91-otsu-distance-watershed.md) | [CV-MORPHO](../30-traitement-image/references/33-morphologie-composantes.md) |
+| 6.12 | [GrabCut, regions and appearance models](../90-segmentation/references/92-grabcut-regions.md) | [3 cards](../90-segmentation/92-grabcut-regions.md) | [Conventions](Pre-requis.md) |
+| 6.13 | [SAM, SAM 2 and prompted video segmentation](../90-segmentation/references/94-sam-sam2.md) | [3 cards](../90-segmentation/94-sam-sam2.md) | [CV-SEGMENTATION](../90-segmentation/references/93-semantique-instances-panoptique.md) |
+| 6.14 | [Metrics for segmentation, inspection and applications](../130-evaluation-fiabilite/references/134-metriques-applications.md) | [4 cards](../130-evaluation-fiabilite/134-metriques-applications.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md), [CV-SEGMENTATION](../90-segmentation/references/93-semantique-instances-panoptique.md) |
 
 **Proposed progression criterion**: Diagnose a small missed object and an incorrect boundary by separating acquisition, annotation, learning, postprocessing, and evaluation.
 
-## 6. Track movement and identities
+## 7. Track movement and identities
 
 Distinguish between apparent displacement, filtered state, visibility, association and identity.
 
 | Order | Subject and reference | Flashcards | Declared prerequisites |
 | --- | --- | --- | --- |
-| 6.1 | [Kalman, EKF, UKF and ESKF for sensor fusion](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) | [7 cards](../10-mathematiques-estimation/13-kalman-ekf-eskf.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) |
-| 6.2 | [Optical flow: Lucas–Kanade, Farnebäck and RAFT](../100-mouvement-video/references/101-flot-optique.md) | [4 cards](../100-mouvement-video/101-flot-optique.md) | [CV-MATCHING](../40-features-matching/references/43-detecteurs-matchers.md) |
-| 6.3 | [Farnebäck — dense optical flow through polynomial expansion](../100-mouvement-video/references/103-farneback.md) | [5 cards](../100-mouvement-video/103-farneback.md) | [CV-FLOT](../100-mouvement-video/references/101-flot-optique.md), [CV-SVD](../10-mathematiques-estimation/references/11-moindres-carres-svd.md) |
-| 6.4 | [Point tracking, actions and video understanding](../100-mouvement-video/references/102-points-actions-video.md) | [4 cards](../100-mouvement-video/102-points-actions-video.md) | [CV-FLOT](../100-mouvement-video/references/101-flot-optique.md) |
-| 6.5 | [Single-object tracking: correlation, Siamese networks and MeanShift](../110-tracking-association/references/113-tracking-monoobjet.md) | [2 cards](../110-tracking-association/113-tracking-monoobjet.md) | [Conventions](Pre-requis.md) |
-| 6.6 | [MOSSE and KCF — tracking with correlation filters](../110-tracking-association/references/114-mosse-kcf.md) | [5 cards](../110-tracking-association/114-mosse-kcf.md) | [CV-SOT](../110-tracking-association/references/113-tracking-monoobjet.md), [CV-FILTRES](../30-traitement-image/references/31-filtrage-gradients.md) |
-| 6.7 | [MeanShift and CamShift — tracking an appearance distribution](../110-tracking-association/references/115-meanshift-camshift.md) | [4 cards](../110-tracking-association/115-meanshift-camshift.md) | [CV-SOT](../110-tracking-association/references/113-tracking-monoobjet.md), [CV-ACQUISITION](../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) |
-| 6.8 | [SORT — multi-object tracking with motion and association](../110-tracking-association/references/111-sort.md) | [9 cards](../110-tracking-association/111-sort.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) |
-| 6.9 | [DeepSORT, ByteTrack and multi-object association](../110-tracking-association/references/112-deepsort-bytetrack.md) | [4 cards](../110-tracking-association/112-deepsort-bytetrack.md) | [CV-SORT](../110-tracking-association/references/111-sort.md) |
+| 7.1 | [Kalman, EKF, UKF and ESKF for sensor fusion](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md) | [7 cards](../10-mathematiques-estimation/13-kalman-ekf-eskf.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) |
+| 7.2 | [Optical flow: Lucas–Kanade, Farnebäck and RAFT](../100-mouvement-video/references/101-flot-optique.md) | [4 cards](../100-mouvement-video/101-flot-optique.md) | [CV-MATCHING](../40-features-matching/references/43-detecteurs-matchers.md) |
+| 7.3 | [Farnebäck — dense optical flow through polynomial expansion](../100-mouvement-video/references/103-farneback.md) | [5 cards](../100-mouvement-video/103-farneback.md) | [CV-FLOT](../100-mouvement-video/references/101-flot-optique.md), [CV-SVD](../10-mathematiques-estimation/references/11-moindres-carres-svd.md) |
+| 7.4 | [Point tracking, actions and video understanding](../100-mouvement-video/references/102-points-actions-video.md) | [4 cards](../100-mouvement-video/102-points-actions-video.md) | [CV-FLOT](../100-mouvement-video/references/101-flot-optique.md) |
+| 7.5 | [Single-object tracking: correlation, Siamese networks and MeanShift](../110-tracking-association/references/113-tracking-monoobjet.md) | [2 cards](../110-tracking-association/113-tracking-monoobjet.md) | [Conventions](Pre-requis.md) |
+| 7.6 | [MOSSE and KCF — tracking with correlation filters](../110-tracking-association/references/114-mosse-kcf.md) | [5 cards](../110-tracking-association/114-mosse-kcf.md) | [CV-SOT](../110-tracking-association/references/113-tracking-monoobjet.md), [CV-FILTRES](../30-traitement-image/references/31-filtrage-gradients.md) |
+| 7.7 | [MeanShift and CamShift — tracking an appearance distribution](../110-tracking-association/references/115-meanshift-camshift.md) | [4 cards](../110-tracking-association/115-meanshift-camshift.md) | [CV-SOT](../110-tracking-association/references/113-tracking-monoobjet.md), [CV-ACQUISITION](../20-acquisition-images/references/21-exposition-bruit-echantillonnage.md) |
+| 7.8 | [SORT — multi-object tracking with motion and association](../110-tracking-association/references/111-sort.md) | [9 cards](../110-tracking-association/111-sort.md) | [CV-IOU-AP](../130-evaluation-fiabilite/references/131-iou-ap-coco.md) |
+| 7.9 | [DeepSORT, ByteTrack and multi-object association](../110-tracking-association/references/112-deepsort-bytetrack.md) | [4 cards](../110-tracking-association/112-deepsort-bytetrack.md) | [CV-SORT](../110-tracking-association/references/111-sort.md) |
 
 **Proposed progression criterion**: Reconstruct the chronology of a loss of track after occlusion and propose an ablation that separates detector, expiration and association.
 
-## 7. Integrate time and space in 3D
+## 8. Integrate time and space in 3D
 
 Compose calibration, movement, spatial representations and temporal validation.
 
 | Order | Subject and reference | Flashcards | Declared prerequisites |
 | --- | --- | --- | --- |
-| 7.1 | [SLAM, VIO, IMU preintegration and loop closure](../60-vision-3d/references/63-slam-vio.md) | [5 cards](../60-vision-3d/63-slam-vio.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-FUSION](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md), [CV-FACTEURS](../10-mathematiques-estimation/references/14-graphes-facteurs.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) |
-| 7.2 | [Point clouds, BEV and occupancy representations](../60-vision-3d/references/64-nuages-bev-occupation.md) | [5 cards](../60-vision-3d/64-nuages-bev-occupation.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-CAPTEURS](../20-acquisition-images/references/22-capteurs-horodatage.md), [CV-MULTICALIB](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) |
-| 7.3 | [3D detection, object pose and articulated pose](../80-detection-pose/references/84-detection-pose-3d.md) | [4 cards](../80-detection-pose/84-detection-pose-3d.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-BEV](../60-vision-3d/references/64-nuages-bev-occupation.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) |
-| 7.4 | [Evaluating identities, trajectories and 3D localization](../130-evaluation-fiabilite/references/132-tracking-trajectoires.md) | [6 cards](../130-evaluation-fiabilite/132-tracking-trajectoires.md) | [CV-VIO](../60-vision-3d/references/63-slam-vio.md), [CV-SORT](../110-tracking-association/references/111-sort.md) |
+| 8.1 | [SLAM, VIO, IMU preintegration and loop closure](../60-vision-3d/references/63-slam-vio.md) | [5 cards](../60-vision-3d/63-slam-vio.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-FUSION](../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md), [CV-FACTEURS](../10-mathematiques-estimation/references/14-graphes-facteurs.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) |
+| 8.2 | [Point clouds, BEV and occupancy representations](../60-vision-3d/references/64-nuages-bev-occupation.md) | [5 cards](../60-vision-3d/64-nuages-bev-occupation.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-CAPTEURS](../20-acquisition-images/references/22-capteurs-horodatage.md), [CV-MULTICALIB](../50-calibration-geometrie/references/55-calibration-multicapteurs.md) |
+| 8.3 | [3D detection, object pose and articulated pose](../80-detection-pose/references/84-detection-pose-3d.md) | [4 cards](../80-detection-pose/84-detection-pose-3d.md) | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-BEV](../60-vision-3d/references/64-nuages-bev-occupation.md), [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) |
+| 8.4 | [Evaluating identities, trajectories and 3D localization](../130-evaluation-fiabilite/references/132-tracking-trajectoires.md) | [6 cards](../130-evaluation-fiabilite/132-tracking-trajectoires.md) | [CV-VIO](../60-vision-3d/references/63-slam-vio.md), [CV-SORT](../110-tracking-association/references/111-sort.md) |
 
 **Proposed progression criterion**: Set an alignment group that does not hide a metric error, and then check a merge offset appearing in rotation.
 
-## 8. Interpreting generative and multimodal models
+## 9. Interpreting generative and multimodal models
 
 Distinguish between likeness, generation, localization, reconstruction and fidelity of observations.
 
 | Order | Subject and reference | Flashcards | Declared prerequisites |
 | --- | --- | --- | --- |
-| 8.1 | [VLMs, grounding and the vision–action boundary](../120-generatif-multimodal/references/121-vlm-grounding.md) | [4 cards](../120-generatif-multimodal/121-vlm-grounding.md) | [CV-CLIP](../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-VIDEO](../100-mouvement-video/references/102-points-actions-video.md) |
-| 8.2 | [VAEs, GANs and diffusion for generation and restoration](../120-generatif-multimodal/references/122-generation-restauration.md) | [3 cards](../120-generatif-multimodal/122-generation-restauration.md) | [Conventions](Pre-requis.md) |
-| 8.3 | [NeRF, 3D Gaussian Splatting and reconstruction](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | [3 cards](../120-generatif-multimodal/123-nerf-gaussian-splatting.md) | [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) |
+| 9.1 | [VLMs, grounding and the vision–action boundary](../120-generatif-multimodal/references/121-vlm-grounding.md) | [4 cards](../120-generatif-multimodal/121-vlm-grounding.md) | [CV-CLIP](../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-VIDEO](../100-mouvement-video/references/102-points-actions-video.md) |
+| 9.2 | [VAEs, GANs and diffusion for generation and restoration](../120-generatif-multimodal/references/122-generation-restauration.md) | [3 cards](../120-generatif-multimodal/122-generation-restauration.md) | [Conventions](Pre-requis.md) |
+| 9.3 | [NeRF, 3D Gaussian Splatting and reconstruction](../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md) | [3 cards](../120-generatif-multimodal/123-nerf-gaussian-splatting.md) | [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md) |
 
 **Proposed progression criterion**: Explain why a plausible exit may be wrong, and then define an appropriate reference and assessment as needed.
 
-## 9. Deploy and monitor the entire chain
+## 10. Deploy and monitor the entire chain
 
 Evaluate system quality, memory, throughput, latency, and reproducibility compromises.
 
 | Order | Subject and reference | Flashcards | Declared prerequisites |
 | --- | --- | --- | --- |
-| 9.1 | [PTQ, QAT, INT8/FP8 and runtimes](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | [5 cards](../140-ingenierie-systemes/142-quantification-runtimes.md) | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) |
-| 9.2 | [Edge deployment, compression and monitoring](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) | [4 cards](../140-ingenierie-systemes/143-edge-reproductibilite.md) | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md), [CV-QUANT](../140-ingenierie-systemes/references/142-quantification-runtimes.md) |
+| 10.1 | [PTQ, QAT, INT8/FP8 and runtimes](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | [5 cards](../140-ingenierie-systemes/142-quantification-runtimes.md) | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) |
+| 10.2 | [Edge deployment, compression and monitoring](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) | [4 cards](../140-ingenierie-systemes/143-edge-reproductibilite.md) | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md), [CV-QUANT](../140-ingenierie-systemes/references/142-quantification-runtimes.md) |
 
 **Proposed progression criterion**: Compare two versions on the same hardware target with held-out data, end-to-end p99, difficult cases and a rollback procedure.
 

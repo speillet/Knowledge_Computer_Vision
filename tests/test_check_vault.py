@@ -133,6 +133,18 @@ class VaultContract(unittest.TestCase):
         self.note.write_text(NOTE.replace("domaine: d04", "domaine: d05"), encoding="utf-8")
         self.assert_error('reference domain differs')
 
+    def test_reference_domain_must_be_configured(self):
+        for value in ["d00", "d16", "d4", "x04"]:
+            with self.subTest(value=value):
+                self.note.write_text(NOTE.replace("domaine: d04", f"domaine: {value}"), encoding="utf-8")
+                self.assert_error('domain must be one of the domains')
+
+    def test_every_configured_domain_is_accepted(self):
+        from scripts.check_vault import SECTIONS
+        self.assertIn("d15", {section["domaine"] for section in SECTIONS})
+        self.assertEqual(len({section["domaine"] for section in SECTIONS}), len(SECTIONS))
+        self.assertEqual(len({section["dossier"] for section in SECTIONS}), len(SECTIONS))
+
     def test_root_scan_rejects_start_examples_in_guides(self):
         (self.root / "Guide.md").write_text("```text\nSTART\nCV-Pilote\nEND\n```\n", encoding="utf-8")
         self.assert_error("START block outside")

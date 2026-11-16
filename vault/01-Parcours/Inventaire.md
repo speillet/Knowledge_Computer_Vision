@@ -1,6 +1,6 @@
 # Coverage inventory
 
-**60 reference notes and 298 flashcards**, spanning 14 of 14 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
+**64 reference notes and 318 flashcards**, spanning 15 of 15 topics. Agent-authored content; actual device import, recall and personal mastery remain unvalidated.
 
 Each entry below identifies a canonical reference note for a method, pipeline, comparison or protocol. Depth applies to that subject; mentioning a method in a comparison does not constitute full coverage. Competencies and sources are detailed in each reference.
 
@@ -122,6 +122,14 @@ V0 = priority gaps; V1 = career-track foundations; V2 = further study. Drafted c
 | CV-PIPELINE — Data contracts, profiling and video pipelines / pipeline | V0 / in-depth study | C, E, F | [Conventions](Pre-requis.md) | [Reference](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) · [6 cards](../140-ingenierie-systemes/141-contrats-profiling-video.md) | drafted, device import unverified; mastery unmeasured |
 | CV-QUANT — PTQ, QAT, INT8/FP8 and runtimes / method | V1 / operational use | A, F | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md) | [Reference](../140-ingenierie-systemes/references/142-quantification-runtimes.md) · [5 cards](../140-ingenierie-systemes/142-quantification-runtimes.md) | drafted, device import unverified; mastery unmeasured |
 | CV-DEPLOIEMENT — Edge deployment, compression and monitoring / pipeline | V1 / operational use | A, C, E, F | [CV-PIPELINE](../140-ingenierie-systemes/references/141-contrats-profiling-video.md), [CV-QUANT](../140-ingenierie-systemes/references/142-quantification-runtimes.md) | [Reference](../140-ingenierie-systemes/references/143-edge-reproductibilite.md) · [4 cards](../140-ingenierie-systemes/143-edge-reproductibilite.md) | drafted, device import unverified; mastery unmeasured |
+## 15 — Photogrammetry
+
+| Entry / type | Priority / depth | Career tracks | Prerequisites | Artifacts, competencies and sources | Status |
+| --- | --- | --- | --- | --- | --- |
+| CV-COLINEARITE — Collinearity, orientations and photogrammetric self-calibration / method | V1 / in-depth study | B, E | [CV-ZHANG](../50-calibration-geometrie/references/52-calibration-zhang.md), [CV-BA](../50-calibration-geometrie/references/54-bundle-adjustment.md) | [Reference](../150-photogrammetrie/references/151-colinearite-autocalibration.md) · [5 cards](../150-photogrammetrie/151-colinearite-autocalibration.md) | drafted, device import unverified; mastery unmeasured |
+| CV-SFM — Structure from Motion: incremental and global pipelines / pipeline | V1 / in-depth study | B, C | [CV-EPIPOLAIRE](../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md), [CV-BA](../50-calibration-geometrie/references/54-bundle-adjustment.md), [CV-MATCHING](../40-features-matching/references/43-detecteurs-matchers.md) | [Reference](../150-photogrammetrie/references/152-sfm-incrementale-globale.md) · [5 cards](../150-photogrammetrie/152-sfm-incrementale-globale.md) | drafted, device import unverified; mastery unmeasured |
+| CV-GEODESIE — Reference systems for photogrammetry: datums, projections and heights / method | V1 / operational use | B, E | [CV-SE3](../10-mathematiques-estimation/references/12-rotations-se3.md) | [Reference](../150-photogrammetrie/references/153-systemes-reference.md) · [5 cards](../150-photogrammetrie/153-systemes-reference.md) | drafted, device import unverified; mastery unmeasured |
+| CV-AEROTRIANGULATION — Aerotriangulation and georeferencing: ground control, GNSS/IMU and accuracy / method | V1 / in-depth study | B, E | [CV-BA](../50-calibration-geometrie/references/54-bundle-adjustment.md), [CV-MULTICALIB](../50-calibration-geometrie/references/55-calibration-multicapteurs.md), [CV-SFM](../150-photogrammetrie/references/152-sfm-incrementale-globale.md), [CV-GEODESIE](../150-photogrammetrie/references/153-systemes-reference.md) | [Reference](../150-photogrammetrie/references/154-aerotriangulation-georeferencement.md) · [5 cards](../150-photogrammetrie/154-aerotriangulation-georeferencement.md) | drafted, device import unverified; mastery unmeasured |
 
 ## Open topics for further study
 
