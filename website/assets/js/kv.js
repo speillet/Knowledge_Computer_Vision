@@ -1,12 +1,7 @@
 // Enhance native details: controls, direct card links and complete printed answers.
 (() => {
   "use strict";
-  document.querySelectorAll(".kv-navigation nav a").forEach((link) => {
-    if (link.origin === location.origin && link.pathname === location.pathname) {
-      link.setAttribute("aria-current", "page");
-    }
-  });
-  const cards = () => document.querySelectorAll("details.kv-card");
+  const cards = () => document.querySelectorAll("details.kv-card, details.kv-fold");
   document.querySelectorAll("[data-kv-tools]").forEach((tools) => { tools.hidden = false; });
   document.querySelectorAll("[data-kv-expand]").forEach((button) => button.addEventListener("click", () => {
     cards().forEach((card) => { card.open = true; });

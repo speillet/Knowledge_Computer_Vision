@@ -1,53 +1,35 @@
+{{- /* The AI Engineering home layout, populated with the computer vision vault. */ -}}
 {{- $domains := sort (where site.Sections "Params.domain" true) "Weight" -}}
-{{- $topics := 0 -}}{{- $cards := 0 -}}
-{{- range $domains -}}
-  {{- range .RegularPages -}}
-    {{- $topics = add $topics 1 -}}{{- $cards = add $cards (int .Params.cards) -}}
-  {{- end -}}
-{{- end -}}
+{{- $topics := 0 }}{{ $cards := 0 -}}
+{{- range $domains }}{{ range .RegularPages -}}
+  {{- $topics = add $topics 1 }}{{ $cards = add $cards (int .Params.cards) -}}
+{{- end }}{{ end -}}
 <article class="kv-home not-prose">
-  <section class="kv-hero" aria-labelledby="home-title">
-    <div class="kv-hero-copy">
-      <p class="kv-eyebrow">The knowledge vault</p>
-      <h1 id="home-title">Computer<br>Vision<span class="kv-title-dot">.</span></h1>
-      <p class="kv-home-lead">From image formation to production systems. Detailed reference notes and flashcards for computer vision engineers.</p>
-      <div class="kv-home-links">
-        <a class="kv-primary-link" href="{{ relref . "/catalog.md" }}">Explore the cards <span aria-hidden="true">↗</span></a>
-        <a class="kv-secondary-link" href="{{ relref . "/01-Parcours/Parcours-senior.md" }}">Follow the curriculum <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-    <dl class="kv-home-figures" aria-label="The collection">
-      <div><dt>Reference notes</dt><dd>{{ $topics }}</dd></div>
-      <div><dt>Flashcards</dt><dd>{{ $cards }}</dd></div>
-      <div><dt>Domains</dt><dd>{{ printf "%02d" (len $domains) }}</dd></div>
-    </dl>
-  </section>
-  <section class="kv-workflow" aria-label="How to use the vault">
-    <ol class="kv-uses">
-      <li><span class="kv-step-label">01 / Learn</span><p>Understand the method, its assumptions and its limits. <a href="{{ relref . "/01-Parcours/Pre-requis.md" }}">Start with the foundations</a>.</p></li>
-      <li><span class="kv-step-label">02 / Recall</span><p>Answer a question, then unfold the explanation and compare your reasoning.</p></li>
-      <li><span class="kv-step-label">03 / Review</span><p>Build a lasting practice with spaced repetition. <a href="{{ relref . "/01-Parcours/Guide-Anki.md" }}">Review with Anki</a>.</p></li>
-    </ol>
-  </section>
-  <div class="kv-section-heading">
-    <div><p class="kv-eyebrow">The collection</p><h2 id="domains">Explore the domains<span class="kv-heading-count">{{ printf "%02d" (len $domains) }}</span></h2></div>
-    <a class="kv-directory-link" href="{{ relref . "/catalog.md" }}">View the full catalog <span aria-hidden="true">↗</span></a>
-  </div>
+  <h1>{{ site.Title }}</h1>
+  <p class="kv-home-lead">{{ site.Params.description }}</p>
+  <p class="kv-home-links">
+    <a href="{{ relref . "/01-Parcours/Pre-requis.md" }}">Start here</a>
+    <a href="#domains">Domains</a>
+    <a href="{{ relref . "/catalog.md" }}">Topic catalog</a>
+    <a href="{{ site.Params.anki }}">Anki package</a>
+  </p>
+  <p class="kv-home-figures">{{ $topics }}&nbsp;topics · {{ lang.FormatNumber 0 $cards }}&nbsp;cards · {{ len $domains }}&nbsp;domains</p>
+
+  <h2>How to use it</h2>
+  <ul class="kv-uses">
+    <li id="learn"><strong>Learn.</strong> Follow the curriculum through the domains, from image formation to vision systems: <a href="{{ relref . "/01-Parcours/Parcours-senior.md" }}">learning paths</a>.</li>
+    <li id="practice"><strong>Practice.</strong> Answer the flashcards and work through the <a href="{{ relref . "/01-Parcours/Cas-transfert.md" }}">integration cases</a> to check your reasoning.</li>
+    <li id="review-with-anki"><strong>Review.</strong> Use spaced repetition with Anki: <a href="{{ relref . "/01-Parcours/Guide-Anki.md" }}">review with Anki</a>.</li>
+  </ul>
+
+  <h2 id="domains">Domains</h2>
   <ol class="kv-domain-list">
-    {{- range $domains -}}
-    {{- $count := 0 -}}{{- range .RegularPages -}}{{- $count = add $count (int .Params.cards) -}}{{- end -}}
+    {{- range $domains }}
+    {{- $count := 0 }}{{ range .RegularPages }}{{ $count = add $count (int .Params.cards) }}{{ end }}
     <li>
-      <a class="kv-domain-link" href="{{ .RelPermalink }}">
-        <span class="kv-num">{{ printf "%02d" (int .Params.number) }}</span>
-        <span class="kv-domain-body">
-          <strong class="kv-domain-title">{{ .Title }}</strong>
-          <span class="kv-domain-description">{{ .Description }}</span>
-          <span class="kv-domain-meta">{{ len .RegularPages }} topics <span aria-hidden="true">/</span> {{ $count }} cards</span>
-        </span>
-        <span class="kv-domain-arrow" aria-hidden="true">↗</span>
-      </a>
+      <a class="kv-domain-link" href="{{ .RelPermalink }}"><span class="kv-num">{{ .Params.number }}</span>{{ .Title }}</a><span class="kv-domain-meta">{{ len .RegularPages }}&nbsp;topics · {{ $count }}&nbsp;cards</span>
+      <p>{{ .Description }}</p>
     </li>
-    {{- end -}}
+    {{- end }}
   </ol>
-  <p class="kv-home-note">Agent-authored learning material. Check your understanding through recall and practice.</p>
 </article>

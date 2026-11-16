@@ -1,3 +1,5 @@
+# Blowfish options: https://blowfish.page/docs/configuration/#theme-parameters
+# Plain scheme in website/assets/css/schemes/obsidian.css; the appearance follows the system.
 colorScheme = "obsidian"
 logo = "img/logo.svg"
 defaultAppearance = "light"
@@ -10,6 +12,8 @@ smartTOC = true
 highlightCurrentMenuArea = true
 description = "Detailed computer vision flashcards, reference notes and a senior engineering curriculum."
 repository = "https://github.com/speillet/Knowledge_Computer_Vision"
+anki = "https://github.com/speillet/Knowledge_Computer_Vision/releases/latest/download/CV-Pilote.apkg"
+releases = "https://github.com/speillet/Knowledge_Computer_Vision/releases"
 
 [header]
   layout = "basic"
@@ -37,12 +41,14 @@ repository = "https://github.com/speillet/Knowledge_Computer_Vision"
   showEdit = true
   showHeadingAnchors = true
   showPagination = true
+  invertPagination = false
   showReadingTime = false
   showReadingProgress = false
   showTableOfContents = true
   showRelatedContent = false
   showTaxonomies = false
   showWordCount = false
+  showZenMode = false
 
 [list]
   showHero = false
@@ -52,6 +58,9 @@ repository = "https://github.com/speillet/Knowledge_Computer_Vision"
   showCards = false
   orderByWeight = true
   groupByYear = false
+  cardView = true
+  cardViewScreenWidth = false
+  constrainItemsWidth = false
 
 [sitemap]
   excludedKinds = ["taxonomy", "term"]

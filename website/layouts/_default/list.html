@@ -1,4 +1,6 @@
-{{- /* Keep the vault's tables, then list child pages not already linked in the content. */ -}}
+{{- /* Blowfish list layout without its grid of cards. Domain pages list every topic after
+  their "All topics" heading; other sections list only the pages their content does not
+  already link, so no page loses its way in. */ -}}
 {{ define "main" }}
   {{ .Scratch.Set "scope" "list" }}
   {{ $enableToc := .Params.showTableOfContents | default (site.Params.list.showTableOfContents | default false) }}
@@ -26,11 +28,15 @@
     <div class="min-w-0 min-h-0 max-w-prose w-full">
       {{ .Content }}
       {{- $pages := .Pages.ByWeight }}
-      {{- $unlinked := slice }}
-      {{- range $pages }}{{ if not (in $.Content (printf "href=\"%s\"" .RelPermalink)) }}{{ $unlinked = $unlinked | append . }}{{ end }}{{ end }}
-      {{- with $unlinked }}
-      <h2 id="other-pages">{{ if $.Params.domain }}Reference library{{ else }}Other pages{{ end }}</h2>
-      {{ partial "kv-page-list.html" . }}
+      {{- if .Params.domain }}
+        {{ partial "kv-page-list.html" .RegularPages.ByWeight }}
+      {{- else }}
+        {{- $unlinked := slice }}
+        {{- range $pages }}{{ if not (in $.Content .RelPermalink) }}{{ $unlinked = $unlinked | append . }}{{ end }}{{ end }}
+        {{- with $unlinked }}
+        <h2 id="other-pages">Other pages</h2>
+        {{ partial "kv-page-list.html" . }}
+        {{- end }}
       {{- end }}
     </div>
   </section>

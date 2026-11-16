@@ -4,7 +4,7 @@
   weight = 10
 
 [[main]]
-  name = "Curriculum"
+  name = "Paths"
   pageRef = "/01-Parcours/Parcours-senior"
   weight = 20
 
@@ -14,8 +14,8 @@
   weight = 30
 
 [[main]]
-  name = "Career tracks"
-  pageRef = "/01-Parcours/Poles-metiers"
+  name = "Practice"
+  pageRef = "/01-Parcours/Cas-transfert"
   weight = 40
 
 [[main]]
@@ -24,21 +24,27 @@
   weight = 50
 
 [[main]]
+  identifier = "github"
   name = "GitHub"
-  url = "https://github.com/speillet/Knowledge_Computer_Vision"
   weight = 60
+  url = "https://github.com/speillet/Knowledge_Computer_Vision"
 
 [[footer]]
-  name = "Inventory"
-  pageRef = "/01-Parcours/Inventaire"
+  name = "Map of content"
+  pageRef = "/"
   weight = 10
 
 [[footer]]
-  name = "Integration cases"
-  pageRef = "/01-Parcours/Cas-transfert"
+  name = "Guides"
+  pageRef = "/01-Parcours"
   weight = 20
 
 [[footer]]
-  name = "Validation record"
-  pageRef = "/01-Parcours/Suivi-pilote"
+  name = "Reference"
+  pageRef = "/01-Parcours/Inventaire"
   weight = 30
+
+[[footer]]
+  name = "Contributing"
+  url = "https://github.com/speillet/Knowledge_Computer_Vision/blob/main/CONTRIBUTING.md"
+  weight = 40

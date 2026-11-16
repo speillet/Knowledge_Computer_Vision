@@ -85,21 +85,30 @@ deployment must be verified separately from a successful local build.
 These are website and local repository checks. They do not validate learner
 recall, scientific coverage, Obsidian behavior or Anki device rendering.
 
-## Visual refinement acceptance criteria
+## Match the AI Engineering site
 
-- Replace the eye symbol with an original violet shard built from flat SVG
-  facets, drawing on the visual direction of Obsidian's crystal mark. Use the
-  same asset for the header and the fingerprinted favicon.
-- Give the home page a clear typographic hierarchy, a prominent entry into
-  the cards, compact collection counts and an ordered domain directory.
-- Use neutral text, restrained violet accents, square corners and visible
-  rules. Keep the reading view spacious, with clear question/answer boundaries.
-- Preserve navigation, search, card anchors, complete learning content and
-  keyboard access. Verify desktop and narrow mobile layouts in both appearances.
+The learner's request of 17 November 2026 supersedes the previous visual
+refinement: use exactly the logo and layout of the published
+[AI Engineering website](https://speillet.github.io/Knowledge_AI_Engineering/).
+Its source is commit `d1686b7383d11fcfd8523b0dd73dbf342ebd60fe`.
 
-Visual refinement checks on 16 November 2026: the complete build and all 159
-pages passed the link check. Chrome checks passed at 320, 390, 768, 900, 1024
-and 1440 px in light and dark appearances, including menu switching, mobile
-menu navigation, keyboard-operated cards, square borders and the new SVG
-favicon. Search, answer controls, card links, equations and Mermaid rendering
-also passed without JavaScript errors or failed resource requests.
+- Copy its header logo, favicon SVG, raster icons, color scheme and custom CSS
+  without alteration. Keep only Computer Vision names in the web manifest.
+- Use the same Blowfish header, source-link presentation, home-page structure,
+  domain topic lists, collapsible catalog and expandable question layout.
+- Adapt titles, counts, navigation targets and learning text to this vault.
+  Retain complete reference notes, objectives, answers, sources and card IDs.
+- Keep CV-specific equation rendering and overflow handling separate from the
+  shared stylesheet. Do not introduce alternate branding or a new visual style.
+- Compare the published reference and the generated site in the browser,
+  including logo assets, computed styles and desktop/mobile appearances.
+
+Validation on 17 November 2026: the custom stylesheet, color scheme, logo,
+favicon SVG and raster icons match the reference bytes. The compiled main
+CSS filename matches the live reference site's complete fingerprint.
+Browser comparisons passed for home, header, domain lists, catalog and
+question components in light and dark appearances at 1440 and 390 px.
+Search, answer controls, keyboard operation, direct card links, equations and
+Mermaid rendering passed. All 298 card anchors are present, all 159 HTML
+pages pass link checks, and the Python suite reports 69 passed and two
+unrelated Anki package tests skipped because `genanki` is unavailable.
