@@ -1,0 +1,10 @@
+<div class="main-menu kv-header">
+  <a class="kv-brand" href="{{ site.Home.RelPermalink }}">
+    <span class="logo" aria-hidden="true">{{ (resources.Get site.Params.logo).Content | safeHTML }}</span>
+    <span class="kv-brand-name">{{ site.Title }}</span>
+  </a>
+  <div class="kv-navigation">
+    <div class="kv-desktop-menu">{{ partial "header/components/desktop-menu.html" . }}</div>
+    <div class="kv-mobile-menu">{{ partial "header/components/mobile-menu.html" . }}</div>
+  </div>
+</div>

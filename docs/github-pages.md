@@ -84,3 +84,22 @@ deployment must be verified separately from a successful local build.
 
 These are website and local repository checks. They do not validate learner
 recall, scientific coverage, Obsidian behavior or Anki device rendering.
+
+## Visual refinement acceptance criteria
+
+- Replace the eye symbol with an original violet shard built from flat SVG
+  facets, drawing on the visual direction of Obsidian's crystal mark. Use the
+  same asset for the header and the fingerprinted favicon.
+- Give the home page a clear typographic hierarchy, a prominent entry into
+  the cards, compact collection counts and an ordered domain directory.
+- Use neutral text, restrained violet accents, square corners and visible
+  rules. Keep the reading view spacious, with clear question/answer boundaries.
+- Preserve navigation, search, card anchors, complete learning content and
+  keyboard access. Verify desktop and narrow mobile layouts in both appearances.
+
+Visual refinement checks on 16 November 2026: the complete build and all 159
+pages passed the link check. Chrome checks passed at 320, 390, 768, 900, 1024
+and 1440 px in light and dark appearances, including menu switching, mobile
+menu navigation, keyboard-operated cards, square borders and the new SVG
+favicon. Search, answer controls, card links, equations and Mermaid rendering
+also passed without JavaScript errors or failed resource requests.
