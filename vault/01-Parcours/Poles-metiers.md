@@ -4,7 +4,7 @@ Career tracks overlay the topic structure; a shared reference note retains one d
 
 ## A — Deep Learning & Image Understanding
 
-21 associated reference notes, 100 flashcards; device import unverified, mastery unmeasured.
+21 associated reference notes, 101 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |
@@ -37,7 +37,7 @@ Track-specific cases, with answers and grading criteria in each card:
 
 ## B — Geometric Vision & Spatial AI
 
-30 associated reference notes, 155 flashcards; device import unverified, mastery unmeasured.
+30 associated reference notes, 158 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |
@@ -79,7 +79,7 @@ Track-specific cases, with answers and grading criteria in each card:
 
 ## C — Robotics & Autonomous Perception
 
-33 associated reference notes, 181 flashcards; device import unverified, mastery unmeasured.
+33 associated reference notes, 184 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |
@@ -124,7 +124,7 @@ Track-specific cases, with answers and grading criteria in each card:
 
 ## D — Multimodal AI & Video Intelligence
 
-17 associated reference notes, 72 flashcards; device import unverified, mastery unmeasured.
+17 associated reference notes, 73 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |
@@ -153,7 +153,7 @@ Track-specific cases, with answers and grading criteria in each card:
 
 ## E — Applied Computer Vision
 
-38 associated reference notes, 188 flashcards; device import unverified, mastery unmeasured.
+38 associated reference notes, 189 flashcards; device import unverified, mastery unmeasured.
 
 | Subject | Reference target depth | Artifacts |
 | --- | --- | --- |

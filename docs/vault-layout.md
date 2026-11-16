@@ -42,4 +42,4 @@ Guides, indexes, and references do not contain any start markers on an isolated 
 
 Preserve the pedagogical ID, its tag and the digital comment Anki if it exists. Fix Markdown links, wikilinks from the root, media paths and target deck. The change of path does not create a new concept or identity. The move and change of deck must still be observed on a real note already revised before declaring the preserved history.
 
-The 47 flashcards of the initial batch retained their identifiers and texts during the reclassification. The current catalog includes 60 reference notes and 294 flashcards in the 14 themes. `python3 scripts/sync_catalog.py` updates index, home, inventory and business paths; `--check` detects outdated navigation without writing.
+The 47 flashcards of the initial batch retained their identifiers and texts during the reclassification. The current catalog includes 60 reference notes and 298 flashcards in the 14 themes. `python3 scripts/sync_catalog.py` updates index, home, inventory and business paths; `--check` detects outdated navigation without writing.

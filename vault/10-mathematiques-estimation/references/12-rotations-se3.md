@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 11
+revision: 12
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -92,8 +92,23 @@ its rotation increment is the same 0.01 rad, and its translation increment is
 $[-t_{bc}]_\times\theta=(0,0.005,0)$ m, i.e. 5 mm along the camera's $y$ axis. The
 exact displacement of the camera origin agrees to first order; the remaining
 second-order term is 25 µm. A yaw uncertainty of 0.01 rad on the body therefore
-implies 5 mm of camera-position uncertainty, a cross term that a block-by-block
-rotation of the covariance would miss.
+adds, in quadrature, 5 mm of camera-position standard deviation along $y$, correlated
+with the yaw: a cross term that a block-by-block rotation of the covariance would miss.
+
+The covariance follows (card CV-SE3-007; recomputed by
+docs/revues/2026-11-09-four-proposals/checks/12-rotations-se3.py). For
+$\Sigma_b=\operatorname{diag}(\sigma_\rho^2I_3,\sigma_\theta^2I_3)$ with $\sigma_\rho=2$ mm and
+$\sigma_\theta=0.01$ rad, the camera tangent is $\rho_c=(\rho_x,\ \rho_y+0.5\,\theta_z,\ \rho_z-0.5\,\theta_y)$,
+$\theta_c=\theta_b$, and $\Sigma_c=\mathrm{Ad}_{T_{cb}}\Sigma_b\mathrm{Ad}_{T_{cb}}^T$ has translation
+standard deviations of 2 mm along the arm and $\sqrt{4\cdot10^{-6}+2.5\cdot10^{-5}}$ m
+$\approx5.39$ mm along $y$ and $z$, an unchanged rotation block, and
+$\operatorname{cov}(\rho_y,\theta_z)=+5\cdot10^{-5}$ m·rad, $\operatorname{cov}(\rho_z,\theta_y)=-5\cdot10^{-5}$
+m·rad (correlations $\pm0.93$). Knowing the yaw exactly would bring $\sigma_y$ back to 2 mm.
+Using $\mathrm{Ad}_{T_{bc}}$ instead keeps these variances but flips both signs, which the
+physical check above exposes: a positive yaw moves the camera toward $+y$. The
+translation block is expressed in camera axes; in world axes the camera-position
+covariance is $R_{wc}\Sigma_{c,\rho\rho}R_{wc}^T$ to first order [eq. 182 with $p=0$, eq. 55],
+that is 5.39, 2 and 5.39 mm along world $x$, $y$, $z$ when $R_{wc}=R_z(90^\circ)$.
 
 ## Prerequisites and competencies
 
@@ -123,7 +138,8 @@ rotation errors with a parameterization-independent metric.
 - **First-order perturbations.** Jacobians and the tangent-space Gaussian
   $\mathcal N(\bar X,\Sigma)$ rely on $f(X\oplus\tau)\approx f(X)\oplus J\tau$ for small
   $\tau$ [Solà et al., eq. 43, §II-H]. Uncertainties of tens of degrees make
-  first-order transport inaccurate (project deduction).
+  first-order propagation inaccurate (project deduction); transport through the
+  adjoint by a known transformation remains exact (see Mathematics).
 - **Logarithm range.** The rotation angle from the trace lies in $[0,\pi]$. The matrix
   logarithm $\theta(R-R^T)^\vee/(2\sin\theta)$ [eq. 135] has a vanishing denominator at
   $\theta=0$ (handled by a small-angle expansion) and at $\theta=\pi$, where
@@ -221,6 +237,23 @@ horizontal plane, ${}^E\Sigma=\operatorname{diag}(\sigma_\phi^2,\sigma_\theta^2,
 [§II-H]. General propagation through $f$ uses $\Sigma_Y\approx J\Sigma_XJ^T$ with
 Jacobians defined on the manifold [eq. 55]. Worked example A applies the $SE(3)$ adjoint
 to a lever arm.
+
+For a frame rigidly attached through a known $T_{bc}$, this transport is exact rather than
+linearized: $X\operatorname{Exp}(\tau)X^{-1}=\operatorname{Exp}(\mathrm{Ad}_X\tau)$ [§II-F, derivation
+before eq. 29] gives $\bar T_{wb}\operatorname{Exp}(\tau_b)T_{bc}=\bar T_{wc}\operatorname{Exp}(\mathrm{Ad}_{T_{cb}}\tau_b)$
+for any $\tau_b$, and $\mathrm{Ad}_{T_{cb}}=\mathrm{Ad}_{T_{bc}}^{-1}$ is the Jacobian of $T_{wb}T_{bc}$ with
+respect to $T_{wb}$ [eq. 33, 65, 177]. In general
+$\rho_c=R_{bc}^T(\rho_b+\theta_b\times t_{bc})$ and $\theta_c=R_{bc}^T\theta_b$. The Jacobian with
+respect to $T_{bc}$ is the identity [eq. 66, 178], so an independent extrinsic covariance
+adds unchanged, to first order. Approximation enters when a tangent translation is read
+as a displacement, because the origin moves by $V(\theta)\rho$ [eq. 172], and in nonlinear
+propagation [eq. 55]. A left (global) increment is the same for every frame rigidly
+attached to the body, since $\mathrm{Ad}_{T_{wc}}\mathrm{Ad}_{T_{cb}}=\mathrm{Ad}_{T_{wb}}$ [eq. 34]; its
+translation part moves the point at the world origin, not the body or camera origin.
+For the camera of worked example A placed at $t_{wc}=(100,0,0)$ m with
+$R_{wc}=R_z(90^\circ)$, that block shows about 1 m of standard deviation along world $y$
+and $z$, while the camera position is known to a few millimetres (project derivations,
+recomputed by the same script).
 
 ### $SE(3)$ exponential versus composite parameterizations
 
@@ -409,6 +442,7 @@ bias and noise.
 | Rotations compose correctly in one order only | Hamilton versus JPL, or active versus passive | Compose two non-commuting quarter turns in both libraries | Convert the algebra, not only the storage order |
 | Jacobians pass finite differences in each library but disagree | Left versus right perturbation; block order; half-angle tangent | Apply the same physical perturbation and compare point changes | Transport with the adjoint; reorder blocks; rescale by 2 |
 | Covariance looks too small in position after transport | Rotation applied block by block, lever arm forgotten | Compare with $\mathrm{Ad}_T\Sigma\mathrm{Ad}_T^T$ (worked example A) | Use the full adjoint |
+| Position–rotation correlation of the wrong sign after transport | Adjoint of the extrinsic instead of its inverse | Perturb the body yaw: the camera must move along $\theta\times t_{bc}$ | Use $\mathrm{Ad}_{T_{cb}}=\mathrm{Ad}_{T_{bc}}^{-1}$ |
 | Scene upside down or behind the camera in the renderer | OpenCV versus OpenGL axes; single-axis flip | A point in front must stay in front; $\det M=+1$ | $M=\operatorname{diag}(1,-1,-1)$ on the correct side |
 | Error angle 0 for small but non-zero errors, or NaN | arccos of a rounded or out-of-range trace | Compare with the atan2 form (worked example C) | Clamp the argument; use atan2 or the quaternion form |
 | Large Euler-angle errors on an almost correct pose | Gimbal lock near pitch ±90° | Geodesic angle of $R^T\hat R$ | Report geodesic angles; avoid Euler angles in interfaces |
@@ -538,7 +572,7 @@ Consulted foundations: [Solà et al., micro Lie theory](https://arxiv.org/html/1
 
 ### Scientific sources
 
-- [Solà, Deray and Atchuthan, A micro Lie theory for state estimation in robotics, arXiv 1812.01537v9](https://arxiv.org/html/1812.01537v9): §II-E eq. 25–28 (right and left plus and minus), §II-F eq. 29–34 and the $SE(3)$ adjoint example, §II-G eq. 41–43 and the rotation-action example, §II-H eq. 51–55 (covariances on manifolds), §IV ($SE(n)$ versus $T(n)\times SO(n)$ versus composites), App. B eq. 131–151 ($S^3$ and $SO(3)$), App. D eq. 168–183 ($SE(3)$).
+- [Solà, Deray and Atchuthan, A micro Lie theory for state estimation in robotics, arXiv 1812.01537v9](https://arxiv.org/html/1812.01537v9): §II-E eq. 25–28 (right and left plus and minus), §II-F eq. 29–34 and the $SE(3)$ adjoint example, §II-G eq. 41–43 and the rotation-action example, §II-H eq. 51–55 (covariances on manifolds), §III-B eq. 61–66 (inverse and composition Jacobians), §IV ($SE(n)$ versus $T(n)\times SO(n)$ versus composites), App. B eq. 131–151 ($S^3$ and $SO(3)$), App. D eq. 168–183 ($SE(3)$).
 - [Solà, Quaternion kinematics for the error-state Kalman filter, arXiv 1711.02508v1](https://arxiv.org/html/1711.02508v1): §2.4.6 eq. 110–112 (double cover), §2.7 eq. 124–128 (SLERP), §3.1 eq. 140–143 and Table 2 (Hamilton versus JPL), §3.1.1 (component order, Eigen).
 - [Zhou, Barnes, Lu, Yang and Li 2019, On the Continuity of Rotation Representations in Neural Networks, arXiv 1812.07035](https://arxiv.org/abs/1812.07035): abstract (discontinuity in four or fewer dimensions; continuous 5-D and 6-D representations).
 
@@ -548,16 +582,19 @@ Consulted foundations: [Solà et al., micro Lie theory](https://arxiv.org/html/1
 - [Eigen 3.4, `Quaternion` class](https://libeigen.gitlab.io/eigen/docs-3.4/classEigen_1_1Quaternion.html): constructor argument order and storage order; [Eigen 3.4.0, `Umeyama.h`](https://gitlab.com/libeigen/eigen/-/blob/3.4.0/Eigen/src/Geometry/Umeyama.h#L136-L143): determinant correction (L136–L143).
 - [SciPy 1.18.0, `Rotation.from_quat`](https://docs.scipy.org/doc/scipy-1.18.0/reference/generated/scipy.spatial.transform.Rotation.from_quat.html): scalar-last default, `scalar_first`, normalization, double-cover subset.
 - [Ceres Solver 2.2.0, `docs/source/nnls_modeling.rst`](https://github.com/ceres-solver/ceres-solver/blob/2.2.0/docs/source/nnls_modeling.rst): `QuaternionManifold` and `EigenQuaternionManifold` (L1567–L1645); [`internal/ceres/manifold.cc`](https://github.com/ceres-solver/ceres-solver/blob/2.2.0/internal/ceres/manifold.cc#L27-L60): `QuaternionPlusImpl` (L27–L60).
-- [GTSAM 4.2, `gtsam/geometry/Pose3.h`](https://github.com/borglab/gtsam/blob/4.2/gtsam/geometry/Pose3.h): `Expmap`, `AdjointMap` (L138–L160), `ChartAtOrigin`, `ComputeQforExpmapDerivative`, `wedge` (L206–L236); [`Pose3.cpp`](https://github.com/borglab/gtsam/blob/4.2/gtsam/geometry/Pose3.cpp): `AdjointMap` (L57–L63), `ChartAtOrigin::Retract` (L211–L223); [`cmake/HandleGeneralOptions.cmake`](https://github.com/borglab/gtsam/blob/4.2/cmake/HandleGeneralOptions.cmake#L19): `GTSAM_POSE3_EXPMAP` default (L19).
+- [GTSAM 4.2, `gtsam/geometry/Pose3.h`](https://github.com/borglab/gtsam/blob/4.2/gtsam/geometry/Pose3.h): `Expmap`, `AdjointMap` (L138–L160), `ChartAtOrigin`, `ComputeQforExpmapDerivative`, `wedge` (L206–L236); [`Pose3.cpp`](https://github.com/borglab/gtsam/blob/4.2/gtsam/geometry/Pose3.cpp): `AdjointMap` (L57–L63), `ChartAtOrigin::Retract` (L211–L223), `translation` Jacobian $[0_3,R]$ in rotation-first order (L308–L310); [`cmake/HandleGeneralOptions.cmake`](https://github.com/borglab/gtsam/blob/4.2/cmake/HandleGeneralOptions.cmake#L19): `GTSAM_POSE3_EXPMAP` default (L19).
 - [Sophus 1.22.10, `sophus/se3.hpp`](https://github.com/strasdat/Sophus/blob/1.22.10/sophus/se3.hpp#L237-L254): `SE3::log` ordering (L237–L254); [`sophus/so3.hpp`](https://github.com/strasdat/Sophus/blob/1.22.10/sophus/so3.hpp#L282): small-angle branch (L282).
 - [REP 103, commit 6fbda48](https://github.com/ros-infrastructure/rep/blob/6fbda48350825b28aec74609b29c7ee18c8e619a/rep-0103.rst): Coordinate Frame Conventions, Axis Orientation, Suffix Frames, Rotation Representation.
 - [Khronos, gluLookAt, Description](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml): retained from the 2026-10-23 pass, not re-read.
 
 ### Related flashcards and references
 
-- [Flashcards](../12-rotations-se3.md): CV-SE3-001 to CV-SE3-006.
+- [Flashcards](../12-rotations-se3.md): CV-SE3-001 to CV-SE3-006; CV-SE3-007 (lever-arm covariance transport and the meaning of the tangent translation).
 - Consumers of these conventions: [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md), [CV-BA](../../50-calibration-geometrie/references/54-bundle-adjustment.md), [CV-MULTICALIB](../../50-calibration-geometrie/references/55-calibration-multicapteurs.md), [CV-HANDEYE](../../50-calibration-geometrie/references/57-calibration-hand-eye.md), [CV-VIO](../../60-vision-3d/references/63-slam-vio.md), [CV-FUSION](13-kalman-ekf-eskf.md), [CV-FACTEURS](14-graphes-facteurs.md).
 
 The constructed cases are reasoning of the project; no image, video or hardware result is claimed as measured.
 
 Drafted by agent, 2026-10-18. Revisions 3 and 4: self-review `revue-cartes` by Agent Claude Code on 2026-10-23, corrections and enrichments accepted by the learner, without independent validation. Revision 11, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/12-rotations-se3.md).
+Revision 12, 2026-11-16: CV-SE3-007 added after the learner accepted P-CV-SE3-01, and worked
+example A and the covariance-transport paragraph extended with it (exact adjoint transport,
+world-axis reading, global increments), by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/12-rotations-se3.md).

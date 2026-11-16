@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 10
+revision: 11
 prerequis: ["CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d01]
@@ -187,8 +187,9 @@ prediction, stochastic model and observation, without saying which. The 95% quan
 recomputed by checks/13-kalman-ekf-eskf.py, are 3.84 ($m=1$), 5.99 ($m=2$), 7.81
 ($m=3$) and 9.49 ($m=4$); DeepSORT gates at 9.4877 for its four-dimensional measurement
 [Wojke et al. 2017, §2.2]. Over a sequence, NIS values that are too often high indicate
-an overconfident filter, too often low an underconfident one (project reasoning; the
-pending proposal P-CV-FUSION-01 covers its card).
+an overconfident filter, too often low an underconfident one (project reasoning). A
+nominal mean NIS does not close the question: bias, temporal structure and gating can
+hide behind it, as the CV-FUSION-007 worked example below shows.
 
 ### Unscented transform
 
@@ -524,6 +525,53 @@ For a numerically asymmetric covariance, $(P+P^T)/2$ restores symmetry but can r
 
 Consulted foundations: [Solà, quaternion kinematics](https://arxiv.org/html/1711.02508v1): §5 error-state formulation, §6.3 reset, Appendix E noise integration.
 
+## Approved worked example — CV-FUSION-007 — 2026-11-09
+
+For an innovation $\nu_k$ with predicted positive-definite covariance
+$S_k=L_kL_k^T$, define the dimensionless whitened innovation
+$e_k=L_k^{-1}\nu_k$. Then $\mathrm{NIS}_k=e_k^Te_k$. With a correctly
+specified zero-mean Gaussian innovation, its marginal distribution is
+$\chi_m^2$, where $m$ is the measurement dimension, and its expectation is
+$m$. Temporal whiteness is a separate sequence property; it is not required
+merely to state this one-epoch marginal law. Gamse et al. list zero mean,
+whiteness, Gaussianity and the predicted covariance as properties of the
+innovation sequence, and use the per-epoch NIS to test $H_0:\mathbb E(\nu_k)=0$
+(§2.2.2, eq. 7–10). Their application checks normality with probability
+plots and reports means and standard deviations (§3.4.2); it does not test
+whiteness. These assumptions must be checked rather than inferred from a
+favorable average.
+
+**Constructed counterexample**: in a fixed common whitening basis, take four
+two-dimensional innovations. Trace A repeats $(\sqrt{2},0)$ four times;
+trace B is $(1,1),(1,-1),(-1,1),(-1,-1)$. Both have NIS exactly 2 at every
+epoch. A has sample mean $(\sqrt{2},0)$, while B has sample mean zero.
+Neither trace certifies consistency: four centered observations do not
+establish Gaussianity or temporal whiteness, and indefinitely repeating B
+would introduce deterministic temporal structure. For any random vector
+with finite second moments,
+$\mathbb E\|e\|^2=\operatorname{tr}(\operatorname{Cov}(e))+\|\mathbb E e\|^2$.
+Thus bias can be offset by insufficient centered variance without changing
+mean NIS. This identity and the two traces are project deductions, not
+measurements from a camera or results reported by the paper.
+
+A proposed diagnostic protocol examines component means, covariance,
+temporal autocorrelation and distribution/tails over representative
+innovations, with declared uncertainty and model assumptions. Retain
+pre-gate innovations: truncating the population by rejecting large NIS
+changes its reference distribution. **Constructed gate example**: for $m=2$,
+$\mathrm{NIS}\sim\chi_2^2$ is exponential with mean 2. With the 95% gate
+$c=-2\ln0.05\approx5.99$, the accepted values of a correct filter average
+about 1.68, not 2. If the true innovation covariance is $1.4\,S$, the NIS
+is $1.4$ times a $\chi_2^2$ variable, with mean 2.8, yet the accepted values
+average about 2.00 while 11.8% of updates are rejected instead of 5%. The
+accepted mean looks nominal; the rejection rate and the pre-gate population
+reveal the overconfidence. These values follow from
+$\mathbb E[X\mid X\le t]=2-t\,e^{-t/2}/(1-e^{-t/2})$ for $X\sim\chi_2^2$
+(project derivation). With a changing whitening basis,
+interpret component statistics only after making their coordinate meaning
+consistent. An anomaly identifies a model-checking problem, not uniquely
+its physical cause. See [CV-FUSION-007](../13-kalman-ekf-eskf.md#cv-fusion-007).
+
 ## Sources and flashcards
 
 ### Scientific sources
@@ -531,7 +579,7 @@ Consulted foundations: [Solà, quaternion kinematics](https://arxiv.org/html/171
 - [Solà, Quaternion kinematics for the error-state Kalman filter, arXiv 1711.02508v1](https://arxiv.org/html/1711.02508v1): §5.1 (benefits of the ESKF), §5.2 (cycle), §5.4.2 eq. 261–265 (error kinematics and noise impulses), §5.4.3 eq. 266–271 (state vectors, prediction), §6 and §6.1 eq. 272–276 with note 26 (update forms), §6.1.1 eq. 278–281 (correction Jacobian), §6.2 eq. 282–283 (injection), §6.3 eq. 284–288 and §6.3.1 eq. 289–294 (reset), §7.3.3 (reset with global angular errors), Appendix E eq. 425–440 (integration of noise and perturbations).
 - [Julier and Uhlmann 1997, A New Extension of the Kalman Filter to Nonlinear Systems, SPIE 3068](https://doi.org/10.1117/12.280797): §3, eq. 12–14 and properties 1–5 (sigma points, accuracy orders, choice of $\kappa$). Publisher's version paywalled; read on a [Berkeley course copy](https://www.cs.berkeley.edu/~pabbeel/cs287-fa13/optreadings/JulierUhlmann-UKF.pdf).
 - [Chin 2023, Square-Root Formulas for Kalman Filter, Information Filter, and RTS Smoother, JPL IPN Progress Report 42-233](https://ipnpr.jpl.nasa.gov/progress_report/42-233/42-233A-orig.pdf): §I (square-root filters), §II eq. 5–10 (standard filter, optimal linear estimator, round-off in covariance differences), §III-A eq. 14 (Joseph stabilized form and its cost).
-- [Gamse, Nobakht-Ersi and Sharifi 2014, Statistical Process Control of a Kalman Filter Model, Sensors 14(10)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/): §2.2.2 eq. 5–10 (innovation test), §3.4.2 ($m=3$, $\alpha=0.05$, threshold 7.815); quoted in the 2026-10-23 report, not re-read.
+- [Gamse, Nobakht-Ersi and Sharifi 2014, Statistical Process Control of a Kalman Filter Model, Sensors 14(10)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4239867/): §2.2.2 eq. 5–10 (innovation properties, NIS, test of $H_0:\mathbb E(\nu_k)=0$ per epoch), §3.4.2 ($m=3$, $\alpha=0.05$, threshold 7.815; normal probability plots, means and standard deviations, no whiteness test); re-read 2026-11-16 for CV-FUSION-007.
 - [Wojke, Bewley and Paulus 2017, DeepSORT, §2.2](https://arxiv.org/abs/1703.07402): $\chi^2$ gate 9.4877 for a four-dimensional measurement; quoted in the 2026-10-23 report, not re-read.
 
 ### Implementation sources
@@ -542,9 +590,9 @@ Consulted foundations: [Solà, quaternion kinematics](https://arxiv.org/html/171
 
 ### Related flashcards and references
 
-- [Flashcards](../13-kalman-ekf-eskf.md): CV-FUSION-001 to CV-FUSION-006.
+- [Flashcards](../13-kalman-ekf-eskf.md): CV-FUSION-001 to CV-FUSION-007.
 - Related references: [CV-SE3](12-rotations-se3.md), [CV-SVD](11-moindres-carres-svd.md), [CV-FACTEURS](14-graphes-facteurs.md), [CV-SORT](../../110-tracking-association/references/111-sort.md), [CV-VIO](../../60-vision-3d/references/63-slam-vio.md), [CV-CAPTEURS](../../20-acquisition-images/references/22-capteurs-horodatage.md).
 
 The constructed cases and the proposed protocol are reasoning of the project; no filter run, image, video or hardware result is claimed as measured.
 
-Drafted by agent, 2026-10-18. Revisions 3 and 4: self-review `revue-cartes` by Agent Claude Code on 2026-10-23, corrections and enrichments accepted by the learner, without independent validation. Revision 10, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/13-kalman-ekf-eskf.md).
+Drafted by agent, 2026-10-18. Revisions 3 and 4: self-review `revue-cartes` by Agent Claude Code on 2026-10-23, corrections and enrichments accepted by the learner, without independent validation. Revision 10, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/13-kalman-ekf-eskf.md). Revision 11, 2026-11-16: worked example and card CV-FUSION-007 added from the proposal accepted on 2026-11-09, Gamse et al. re-read, numbers recomputed by a stdlib script (Agent Claude Code, `revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/13-kalman-ekf-eskf.md).
