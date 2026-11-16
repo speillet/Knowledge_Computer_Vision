@@ -30,7 +30,7 @@ The temporary choice of the plugin makes it possible to prepare the files of the
 - [Data Model](data-model.md): Subjects, reference notes, flashcards and separate evidence.
 - [Contrat Markdown–Anki](contracts/obsidian-anki.md): format and identity.
 - [Validation Guide](quickstart.md): local controls and application testing.
-- `vault/01-Parcours/Inventaire.md` keeps visible the fourteen domains and gaps; only entries with artifacts are written.
+- `vault/01-Parcours/Inventaire.md` keeps visible the domains of `scripts/vault_sections.json` (fifteen since 2026-11-16) and gaps; only entries with artifacts are written.
 
 ## Structure retenue
 
