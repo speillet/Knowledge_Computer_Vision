@@ -1,0 +1,17 @@
+{{- /* Search index for Blowfish: the full text of every page. Topics provide their own text
+  (summary, questions, answers and sources) so the labels of the page controls stay out. */ -}}
+{{- $index := slice -}}
+{{- range .Site.Pages -}}
+  {{- if and (not .Params.excludeFromSearch) (in (slice "page" "section") .Kind) -}}
+    {{- $section := .Site.GetPage "section" .Section -}}
+    {{- $index = $index | append (dict
+      "title" (.Title | safeJS)
+      "section" ($section.Title | safeJS)
+      "summary" (.Summary | plainify | htmlUnescape | truncate 300 | safeJS)
+      "content" (.Params.search | default (.Plain | htmlUnescape) | safeJS)
+      "permalink" .RelPermalink
+      "type" .Type
+    ) -}}
+  {{- end -}}
+{{- end -}}
+{{- $index | jsonify -}}

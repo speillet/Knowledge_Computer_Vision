@@ -7,6 +7,11 @@ The reference notes and flashcards cover classical and modern foundations in
 English, with original technical terms, explained equations, comparisons and
 diagnostic reasoning. Current totals appear in the catalogue below.
 
+The Hugo/Blowfish [reading website](https://speillet.github.io/Knowledge_Computer_Vision/)
+provides domain navigation, search, reference notes and expandable flashcard
+answers. It deploys from `main` after GitHub Pages is configured to use GitHub
+Actions. See the [website guide](docs/github-pages.md) for setup and local preview.
+
 Open [`vault/`](vault/00-Accueil.md) as a vault in Obsidian and start from its
 home page. The [export guide](vault/01-Parcours/Guide-Anki.md) explains how to
 build an `.apkg` package for **AnkiDroid**. Creation and updates are tested in a

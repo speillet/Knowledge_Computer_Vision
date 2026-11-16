@@ -1,0 +1,57 @@
+colorScheme = "obsidian"
+logo = "img/logo.svg"
+defaultAppearance = "light"
+autoSwitchAppearance = true
+enableSearch = true
+enableCodeCopy = true
+enableStructuredBreadcrumbs = true
+disableImageOptimization = true
+smartTOC = true
+highlightCurrentMenuArea = true
+description = "Detailed computer vision flashcards, reference notes and a senior engineering curriculum."
+repository = "https://github.com/speillet/Knowledge_Computer_Vision"
+
+[header]
+  layout = "basic"
+
+[footer]
+  showMenu = true
+  showCopyright = true
+  showThemeAttribution = true
+  showAppearanceSwitcher = true
+  showScrollToTop = false
+
+[homepage]
+  layout = "custom"
+  showRecent = false
+
+[article]
+  showDate = false
+  showViews = false
+  showLikes = false
+  showDateUpdated = false
+  showAuthor = false
+  showHero = false
+  showBreadcrumbs = true
+  showDraftLabel = false
+  showEdit = true
+  showHeadingAnchors = true
+  showPagination = true
+  showReadingTime = false
+  showReadingProgress = false
+  showTableOfContents = true
+  showRelatedContent = false
+  showTaxonomies = false
+  showWordCount = false
+
+[list]
+  showHero = false
+  showBreadcrumbs = true
+  showSummary = true
+  showTableOfContents = true
+  showCards = false
+  orderByWeight = true
+  groupByYear = false
+
+[sitemap]
+  excludedKinds = ["taxonomy", "term"]
