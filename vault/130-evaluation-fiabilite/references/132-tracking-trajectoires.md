@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-VIO", "CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -226,9 +226,12 @@ to another object.
 ### Identity metrics
 
 With a bipartite graph between true trajectories $\tau$ and computed trajectories
-$\gamma$, an edge cost counting the frames where the two detections do not match
-(IoU below $\Delta$ in the image, or more than 1 m apart on the ground plane), and the
-minimum-cost one-to-one solution [Ristani et al., §3.3, eqs. 3–5, §3.4, eqs. 6–11]:
+$\gamma$, plus one false-negative node per true and one false-positive node per
+computed trajectory, an edge cost counting the false-negative and false-positive frames
+the pair would incur, that is, the frames of either trajectory that the other does not
+match (absent, IoU below $\Delta$ in the image, or more than 1 m apart on the ground
+plane), and the minimum-cost one-to-one solution [Ristani et al., §3.3, eqs. 3–5, §3.4,
+eqs. 6–11]:
 
 $$
 \mathrm{IDP}=\frac{IDTP}{IDTP+IDFP},\quad
@@ -285,6 +288,25 @@ reward trackers that correct their own association mistakes" [§9.1, problem 5].
 HOTA reward the correction. In the gap scenario, HOTA's association score drops even
 though no identity is wrong, because FNA$(c)$ includes the missed detections of B (eq. 11):
 the components are not independent.
+
+**Duration of a fragment** (card CV-METRIQUES-TEMPS-006). Starting A's new ID at frame
+$k$ ($2\le k\le10$) instead of frame 6 leaves CLEAR MOT with one mismatch and MOTA 0.95,
+but IDF1 becomes $1-\min(k-1,\,11-k)/20$: 0.95 when either piece is a single frame
+($k=2$ or 10), 0.80 for $k=5$ or 7, 0.75 for $k=6$. The global mapping keeps A's longer piece;
+every frame of the shorter piece counts once in IDFN (A unexplained) and once in IDFP
+(the unmatched ID unexplained). Only per-pair frame counts enter the edge costs, so for
+given piece lengths the cost depends neither on when the switch happens nor on how many
+switches produced the pieces. A one-frame relabel inside the track (ID 3 in frame 5 only,
+then ID 1 again) costs two mismatches, MOTA 0.90, but leaves IDF1 at 0.95: MOTA and IDF1
+rank it and a six-frame fragment in opposite orders. Both papers state this as a design
+choice. CLEAR MOT counts a mismatch "once at the time frames where a change in
+object-hypothesis mappings is made", because with a sequence-level best mapping "the time
+frame at which the swap occurs drastically influences the value output by such an error
+measure" [Bernardin and Stiefelhagen, §2.1.2, Fig. 2(c)]. Ristani et al. charge the
+frames that the most favorable mapping leaves unexplained, so one fragmentation and seven
+fragmentations can both cost 33% of a trajectory [§3.1, Fig. 1]. Constructed cases,
+recomputed by checks/132-tracking-trajectoires.py in the review directory
+2026-11-09-four-proposals.
 
 ### Trajectory errors
 
@@ -600,8 +622,8 @@ Consulted foundations: [HOTA](https://arxiv.org/html/2009.07736v2): §5 DetA/Ass
 
 ### Scientific sources
 
-- [Bernardin and Stiefelhagen 2008, CLEAR MOT metrics, EURASIP JIVP](https://doi.org/10.1155/2008/246309): §2.1.3 mapping procedure, §2.2 eqs. 1–5 and Fig. 3, §4 threshold discussion.
-- [Ristani et al. 2016, identity measures (IDF1)](https://arxiv.org/abs/1609.01775): §3.3 eqs. 3–5, §3.4 eqs. 6–11, §3.5 comparison with CLEAR MOT.
+- [Bernardin and Stiefelhagen 2008, CLEAR MOT metrics, EURASIP JIVP](https://doi.org/10.1155/2008/246309): §2.1.2 and Fig. 2(c) mismatches counted once per mapping change, §2.1.3 mapping procedure, §2.2 eqs. 1–5 and Fig. 3, §4 threshold discussion.
+- [Ristani et al. 2016, identity measures (IDF1)](https://arxiv.org/abs/1609.01775): §3.1 and Fig. 1 frame-based penalty versus event counts, §3.3 eqs. 3–5, §3.4 eqs. 6–11, §3.5 comparison with CLEAR MOT.
 - [Luiten et al. 2021, HOTA](https://arxiv.org/abs/2009.07736) (arXiv HTML v2): §3 task and matching, §4.1–4.3 MOTA, IDF1, Track-mAP, §5 eqs. 10–16, §6 eqs. 17–21 and scenarios, §9.1–9.2 problems with MOTA and IDF1.
 - [Sturm et al. 2012, TUM RGB-D benchmark](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf): §VI time delays and `associate.py`, §VII-A eqs. 1–3 (RPE), §VII-B eqs. 4–5 (ATE) and the ATE/RPE correlation remark.
 - [Zhang and Scaramuzza 2018, trajectory evaluation tutorial](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf): §III-A ambiguities, §III-C eq. 13 and Table I alignment groups, §IV-A ATE, §IV-B eqs. 25–26 and Table II.
@@ -618,7 +640,9 @@ Consulted foundations: [HOTA](https://arxiv.org/html/2009.07736v2): §5 DetA/Ass
 
 ### Related flashcards and references
 
-- [Related flashcards](../132-tracking-trajectoires.md): CV-METRIQUES-TEMPS-001 to CV-METRIQUES-TEMPS-005.
-- Constructed examples A–C are recomputed by checks/132-tracking-trajectoires.py in the review directory of 2026-11-14.
+- [Related flashcards](../132-tracking-trajectoires.md): CV-METRIQUES-TEMPS-001 to CV-METRIQUES-TEMPS-005; CV-METRIQUES-TEMPS-006 (identity counts and IDF1 after a fragmentation, by its duration).
+- Constructed examples A–C are recomputed by checks/132-tracking-trajectoires.py in the review directory of 2026-11-14; the fragment-duration case and the IDF1 and MOTA rows of example A by checks/132-tracking-trajectoires.py in the review directory 2026-11-09-four-proposals.
 
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/132-tracking-trajectoires.md).
+Revision 8, 2026-11-16: CV-METRIQUES-TEMPS-006 added after the learner accepted P-CV-METRIQUES-TEMPS-01, worked
+example A extended with the duration of a fragment, and the IDF1 edge cost stated precisely, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/132-tracking-trajectoires.md).
