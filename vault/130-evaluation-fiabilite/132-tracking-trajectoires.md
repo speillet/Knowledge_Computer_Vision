@@ -11,22 +11,31 @@ Objective: Separate detection and identity. Family: evaluation. Provenance: agen
 START
 CV-Pilote
 ID: CV-METRIQUES-TEMPS-001
-Question: How can two systems have identical frame-by-frame AP but different tracking quality?
-Reponse: **Expected answer**: Boxes/classes can be identical while IDs are exchanged or fragmented; AP does not measure this continuity.
+Question: How can two systems have identical frame-by-frame average precision (AP) but different tracking quality?
+Reponse: **Expected answer**: Boxes and classes can be identical in every frame while the identities (IDs) are exchanged or fragmented over time; AP (average precision) scores each frame independently and does not measure this continuity.
 
-**Reading the diagram**: ![One switch: per-frame versus global matching](../99-Ressources/cv-metriques-temps-id-switch.svg) Both panels show the same output: two perfectly placed objects over eight frames, with A handed from track 1 to a new track 3 at frame 6. Per-frame matching finds 16 true positives, so AP and the detection counts see nothing; MOTA charges the switch once, $1-1/16\approx0.94$. IDF1 first pairs identities once for the whole sequence, A with track 1 and B with track 2, then counts what that pairing leaves unexplained: A's last 3 frames are identity false negatives (IDFN) and track 3's 3 detections identity false positives (IDFP), so $\mathrm{IDF1}=26/32\approx0.81$.
+**Key terms**:
 
-**Further explanation**: Use metrics and association diagnostics under identical sequence protocol.
+- AP (average precision): per-frame detection score; it ignores track IDs.
+- ID: the track label a tracker attaches to a box.
+- TP, FN, FP: true positives (matched boxes), false negatives (missed ground-truth boxes), false positives (extra boxes).
+- IDSW (identity switch): a matched object whose predicted ID differs from the one it had at its previous match.
+- MOTA (multiple object tracking accuracy) $=1-(\mathrm{FN}+\mathrm{FP}+\mathrm{IDSW})/\mathrm{GT}$, with GT the number of ground-truth boxes.
+- IDF1 (identity F1): share of detections explained by one fixed pairing of true and predicted identities for the whole sequence; IDTP counts the detections the pairing explains, IDFN the ground-truth detections and IDFP the predicted detections it leaves unexplained.
 
-**Constructed example**: Keep the boxes and classes of two pedestrians exactly, but exchange their IDs in the middle of the video. Spatial associations to the GT can remain identical in each frame for detection evaluation. Temporal continuity becomes false.
+**Further explanation**: A detection score asks, frame by frame, "is there a box on the right object?". A tracker must also keep the same label on the same object over time. If two pedestrians' IDs are exchanged in the middle of a video, every frame still holds a perfect box, so AP does not change, yet a people counter or a trajectory analysis would mix two people's histories. Identity metrics count this error in different ways: MOTA counts switch *events*, while IDF1 counts the *frames* whose identity is wrong under one global pairing.
 
-**Choice of metrics**: Examine detection, association, fragmentation and disappearances under a declared sequence protocol. An identity metric requires its own association and aggregation rules; a count of ID switches cannot replace all other aspects of tracking. Compare the same sequences, ignored periods and detections when looking for the contribution of association. The result may also depend on the outputs emitted during track losses. This distinction explains why the learning path introduces IoU before SORT, and then returns to temporal metrics after defining the tracker's responsibilities.
+**Step by step** (project construction, the case drawn in the diagram): ![One switch: per-frame versus global matching](../99-Ressources/cv-metriques-temps-id-switch.svg) Two pedestrians A and B are perfectly boxed in 8 frames. B keeps ID 2; A has ID 1 in frames 1–5 and a new ID 3 in frames 6–8.
 
-**Decomposition of tracking errors**: A missing box on the right target is a detection error, while a correct box with a wrong ID is an association error under the protocol. Fragmentation splits one true identity into several predicted tracks; a merge links several objects to one track. A simple number of switches does not necessarily describe their duration or all these relationships. Building the same boxes with several ID schemes lets you check what each metric penalizes. Presenting components and temporal examples helps explain a tracker's gain instead of ranking two systems on a single scalar.
+1. Per-frame matching: 2 objects × 8 frames = 16 ground-truth boxes, all matched, so 16 TP and FN = FP = 0. AP and the detection counts see no error.
+2. MOTA: the only error is A's switch at frame 6, so IDSW = 1 and $\mathrm{MOTA}=1-(0+0+1)/16=15/16\approx0.94$.
+3. IDF1 pairing: keep, for the whole sequence, the pairing that explains the most frames. A–1 explains 5 frames (A–3 only 3) and B–2 explains 8, so IDTP $=5+8=13$.
+4. Unexplained frames: A's frames 6–8 have no paired ID (IDFN = 3), and the 3 boxes of ID 3 belong to no pair (IDFP = 3).
+5. Score: $\mathrm{IDF1}=\frac{2\,\mathrm{IDTP}}{2\,\mathrm{IDTP}+\mathrm{IDFP}+\mathrm{IDFN}}=\frac{26}{26+3+3}=\frac{26}{32}\approx0.81$.
+6. Move the switch: at frame 8 the new piece lasts 1 frame, IDTP $=7+8=15$, IDFN = IDFP = 1 and IDF1 $=30/32\approx0.94$; at frame 5 both pieces last 4 frames, IDTP $=4+8=12$ and IDF1 $=24/32=0.75$, the minimum. MOTA stays at 0.94: it counts one event, whereas IDF1 measures "how long the tracker correctly identifies targets" [Ristani et al., §3.3].
+7. Isolate association: replay the evaluation with every matched prediction relabelled with its ground-truth ID. The boxes, hence AP, do not change; IDSW falls to 0, so MOTA becomes MODA (the same formula without IDSW), here 1, and IDF1 becomes 1. The gap between the original and replayed scores is the share due to association.
 
-**Events versus frames** (constructed example, recomputed in the check script of this pass): move the same takeover to frame 8 and MOTA stays at 0.94, because it still counts one event, while IDF1 rises to $30/32\approx0.94$; at frame 5 IDF1 falls to its minimum, 0.75. An event count charges a trajectory split over $n$ frames between 1 and $n-1$ errors regardless of how long each part lasts, whereas IDF1 measures how long the tracker identifies targets correctly [Ristani et al., §3.1, §3.3]. HOTA's authors list MOTA's indifference to how well predicted and true trajectories align as its sixth problem [§9.1].
-
-**Diagnosis**: To attribute a gap to association, replay the evaluation with every matched prediction relabelled with the ID of its ground-truth object. The boxes, hence AP and the detection counts, do not change. When the per-frame matches stay the same, as they normally do, IDSW falls to zero, MOTA becomes MODA and the identity scores reach the ceiling that detection alone allows. The distance between the original and the replayed scores is the share of association errors, which a single MOTA value mixes with detection.
+**Limits**: Identity scores are comparable only on the same sequences, ignored regions and outputs during track losses. With missed or extra boxes, IDFN and IDFP also absorb detection errors; the relabelled replay isolates association only while the per-frame matches stay the same. A switch count alone describes neither how long errors last nor fragmentations (one true identity split over several IDs) and merges (several objects under one ID).
 
 **Blocking errors**: Deducing identity quality from AP alone.
 Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Luiten et al., HOTA, §4.1 (IDSW), §4.2 (IDF1 matching), §5 (association scores TPA, FNA, FPA) and §9.1, problem 6](https://arxiv.org/abs/2009.07736); [Ristani et al., §3.1 (event-based penalties) and §3.3, truth-to-result match](https://arxiv.org/abs/1609.01775); [TrackEval `clear.py` at 12c8791, L62–L97 (IDSW against the last matched ID)](https://github.com/JonathonLuiten/TrackEval/blob/12c8791b303e0a0b50f753af204249e622d0281a/trackeval/metrics/clear.py#L62-L97). Swapped-ID case, takeover example, diagram and relabelled replay: project constructions.
@@ -40,18 +49,28 @@ Objective: Comply with the HOTA aggregation. Family: reasoning. Provenance: agen
 START
 CV-Pilote
 ID: CV-METRIQUES-TEMPS-002
-Question: Why does calculating sqrt(mean DetA × mean AssA) not necessarily reproduce HOTA?
-Reponse: **Expected answer**: The reference calculates the root of the product at each threshold and then averages these scores; the two operations do not commute in general.
+Question: HOTA (higher order tracking accuracy) combines a detection accuracy, DetA, and an association accuracy, AssA. Why does calculating sqrt(mean DetA × mean AssA) not necessarily reproduce HOTA?
+Reponse: **Expected answer**: HOTA takes the square root of DetA × AssA at each localization threshold, then averages these per-threshold scores; averaging DetA and AssA first and taking the root afterwards changes the result in general, because the two operations do not commute.
 
-**Further explanation**: Keep matching conventions, ignore rules and localization; a formula summary is not the whole evaluator.
+**Key terms**:
 
-**Analytical counterexample**: Take two thresholds with pairs $(DetA,AssA)=(1,0)$ and $(0,1)$. The root of the product is zero at each threshold, so their average is zero. The averages of the components are each 0.5; the root of their product is then 0.5. The order of operations does change the result. This case shows an algebraic property, without constituting a HOTA benchmark.
+- Localization threshold $\alpha$: minimum similarity, usually box IoU (intersection over union), for a predicted and a true detection to match; HOTA uses the 19 values 0.05, 0.10, …, 0.95.
+- TP, FN, FP at $\alpha$: matched pairs, unmatched ground-truth detections, unmatched predictions.
+- DetA (detection accuracy) at $\alpha$: $\mathrm{DetA}_\alpha=|\mathrm{TP}|/(|\mathrm{TP}|+|\mathrm{FN}|+|\mathrm{FP}|)$.
+- AssA (association accuracy) at $\alpha$: mean, over the TPs, of how much each one's true trajectory and predicted trajectory overlap (1 when they coincide).
+- $\mathrm{HOTA}_\alpha=\sqrt{\mathrm{DetA}_\alpha\cdot\mathrm{AssA}_\alpha}$, and HOTA is the mean of $\mathrm{HOTA}_\alpha$ over the 19 thresholds.
 
-**Practical consequence**: Keep the values at the level where the protocol combines them, and then use the reference code and its parameters. Different matching, class or ignore rules can also modify components before aggregation. A summarized formula helps to interpret the balance between detection and association; it does not replace the whole definition. Comparing a hand-built figure with an official tool therefore requires reproducing the same inputs and all relevant conventions. The reference implementation also differs from the paper's per-threshold matching: it runs one assignment per frame and filters it at each threshold.
+**Further explanation**: A geometric mean such as $\sqrt{D\cdot A}$ is high only when both factors are high together. HOTA applies it at each threshold, so a threshold where detection is good but association poor scores low. Averaging the components first lets one threshold that is good at detection compensate for another that is good at association, although no single threshold was good at both: the recombined number is too optimistic.
 
-**Mean of components and their covariation**: For nonnegative $D_k,A_k$, Cauchy–Schwarz gives $\frac1n\sum_k\sqrt{D_kA_k}\le\sqrt{(\frac1n\sum_kD_k)(\frac1n\sum_kA_k)}$. Reconstructing the score from the averaged components can therefore overestimate the mean of the per-threshold combinations. Equality requires proportional profiles, that is, the same ratio $D_k/A_k$ at every threshold, with zero components handled separately. This algebraic property applies at the aggregation level considered; other averages over classes or sequences have their own conventions. The numerical counterexample of the flashcard demonstrates this order of operations, without claiming to represent feasible components of a particular benchmark.
+**Step by step** (analytical counterexample, project construction):
 
-**The aggregation gap has an angle interpretation**: Set $u_k=\sqrt{D_k}$ and $v_k=\sqrt{A_k}$ across $n$ thresholds. The mean per-threshold geometric mean is $H=(u^Tv)/n$, while recombination of component means is $R=\|u\|\|v\|/n$. For nonzero vectors, $H=R\cos\phi$, where $\phi$ is their angle. Thus the recombination gap is $R(1-\cos\phi)$: different threshold profiles, not just different average component quality, create the discrepancy. This is an algebraic interpretation, not a feasibility claim about arbitrary benchmark profiles.
+1. Take two thresholds whose components are $(\mathrm{DetA},\mathrm{AssA})=(1,0)$ and $(0,1)$.
+2. HOTA's order, root then mean: $\sqrt{1\cdot0}=0$ and $\sqrt{0\cdot1}=0$, so HOTA $=(0+0)/2=0$.
+3. Reverse order, mean then root: mean DetA $=(1+0)/2=0.5$, mean AssA $=(0+1)/2=0.5$, so $\sqrt{0.5\cdot0.5}=0.5$.
+4. Same components, 0 versus 0.5: the order of operations changes the result. This algebraic case is not a realistic benchmark profile.
+5. General case: the mean of the roots never exceeds the root of the means (Cauchy–Schwarz inequality, derived in the reference), so recombining averaged components can only overestimate HOTA; the two agree when $\mathrm{DetA}_\alpha/\mathrm{AssA}_\alpha$ is the same at every threshold.
+
+**Limits**: Compare values at the level where the protocol combines them, with the reference code (TrackEval) and its parameters. Matching, class and ignore rules change the components before aggregation, and TrackEval runs one assignment per frame and filters it at each threshold, unlike the paper's separate matching per threshold. Averages over classes or sequences follow their own conventions.
 
 **Blocking errors**: Freely swapping the mean and the square root.
 Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Luiten et al., HOTA, §5 eqs. 13–16 (HOTA per threshold, then mean over 19 thresholds) and §6 eqs. 18–21](https://arxiv.org/abs/2009.07736); [TrackEval `hota.py` at 12c8791, L66–L97 and L166–L173](https://github.com/JonathonLuiten/TrackEval/blob/12c8791b303e0a0b50f753af204249e622d0281a/trackeval/metrics/hota.py#L66-L173). Counterexample, Cauchy–Schwarz bound and angle reading: project derivations.
@@ -65,22 +84,30 @@ Objective: choose a trajectory alignment. Family: evaluation. Provenance: agent.
 START
 CV-Pilote
 ID: CV-METRIQUES-TEMPS-003
-Question: Why can Sim(3) alignment be inappropriate when evaluating VIO that is supposed to recover metric scale?
-Reponse: **Expected answer**: Adjusts the scale and can therefore hide a metric error that the system had to avoid.
+Question: Why can Sim(3) alignment be inappropriate when evaluating visual-inertial odometry (VIO) that is supposed to recover metric scale?
+Reponse: **Expected answer**: A Sim(3) alignment fits a scale factor as well as a rotation and a translation, so it can cancel a metric scale error that the VIO had to avoid; the score then no longer tests the metric scale.
 
-**Further explanation**: The alignment group must follow the gauge freedoms and the evaluation objective; with gravity fixing roll and pitch, a free 3D rotation can also mask tilt errors.
+**Key terms**:
 
-**Example of hidden error**: A trajectory twice as large can be visually superimposed on the reference if the alignment freely adjusts the scale. The score after this registration then no longer tests the metric scale that the system had to provide. It may be correct for another, scale-free task.
+- VIO (visual-inertial odometry): pose estimation from a camera and an IMU (inertial measurement unit: gyroscope and accelerometer).
+- ATE (absolute trajectory error): RMS (root mean square) of the position residuals after aligning the estimate on the ground truth.
+- RPE (relative pose error): error of the relative motion over an interval.
+- Alignment groups: Sim(3) = rotation + translation + scale (7 degrees of freedom, DoF); SE(3) = rotation + translation (6 DoF); 4-DoF = yaw (rotation about gravity) + translation.
+- Gauge freedom: a transformation of the whole trajectory that leaves every sensor measurement unchanged, so the system cannot observe it (card CV-VIO-003).
 
-**Proposed protocol**: Declare the legitimate gauge freedoms before observing the results and keep an independent physical reference. Separate arbitrary global translation, global yaw and relative drift over time. If gravity provides an absolute direction under the system's assumptions, a fully free 3D rotation can also remove an error that should be measured. The choice is not to look for the transformation giving the best-looking trajectory: it defines which errors are deliberately excluded from the score. Report this transformation and justify it by the information actually available.
+**Further explanation**: Alignment should remove only what the system cannot know: where the world origin is and, for a VIO, which way it initially faced (yaw). Everything the sensors observe must stay in the error. The accelerometer senses gravity and metric acceleration, so a VIO observes scale, roll and pitch: aligning them away hides real errors. A trajectory twice as large as the truth overlays perfectly once a free scale is allowed.
 
-**Permitted transformation**: A similarity, written $p'=sRp+t$, has a scale freedom $s$ absent from a rigid transformation. If a metric estimate is everywhere $\hat p=2p$, choosing $s=1/2$ removes this error entirely in an ideal case. For a system whose only unobservable quantities are a global origin and a global yaw, the alignment must preserve the other physical information you want to test. Document the fitted parameters and, if useful, report the estimated scale factor as a separate diagnostic. Do not confuse correcting the coordinate frame with correcting a property that the system was supposed to provide.
+**Step by step** (worked example B of the reference, project construction):
 
-**Why 4 DoF for an inertial system**: Transforming all states by a scale $s$ and a rotation $R$ leaves the preintegrated IMU measurements unchanged only when $s=1$ and $R^Tg=g$, that is, for a rotation about gravity, because the accelerometer senses gravity and metric acceleration in the body frame [Zhang and Scaramuzza, §III-A, eqs. 11–12]. With a translation, that yaw rotation makes up the 4 unobservable degrees of freedom; scale, roll and pitch are outputs of the estimator and must stay in the error.
+1. Why 4 DoF: scaling all states by $s$ and rotating them by $R$ leaves the preintegrated IMU measurements unchanged only if $s=1$ and $R^\top g=g$, a rotation about gravity [Zhang and Scaramuzza, §III-A, eqs. 11–12]. With the 3 translations, that yaw gives the 4 unobservable DoF.
+2. Ground truth: 11 poses 1 m apart on a 10 m line, $x_i=0,\dots,10$ m, centroid 5 m, offsets $u_i=x_i-5$ from −5 to 5 m.
+3. Spread of the offsets: $\sum u_i^2=2(1+4+9+16+25)=110$, so their RMS is $\sqrt{110/11}=\sqrt{10}\approx3.16$ m.
+4. Inject a 2% scale error, $\hat x_i=1.02\,x_i$. A 4-DoF or SE(3) alignment cannot rescale: the best translation matches the centroids and leaves residuals $0.02\,u_i$, so ATE $=0.02\sqrt{10}\approx0.063$ m.
+5. A Sim(3) alignment chooses $s=1/1.02\approx0.98$: every residual becomes 0 and ATE $=0$. The error has left the score; only the fitted scale still shows it.
+6. Tilt: a 1° pitch of the whole trajectory leaves $\sqrt{10}\cdot2\sin0.5°\approx0.055$ m after the 4-DoF alignment, but 0 after SE(3), whose free rotation removes it.
+7. Relative errors still expose the scale error: over 1 m the estimate moves 1.02 m (RPE 0.02 m), over 5 m it moves 5.10 m (RPE 0.10 m).
 
-**Constructed example** (worked example B of the reference, recomputed in the check script of this pass): eleven ground-truth poses 1 m apart on a 10 m line. A 2% scale error leaves residuals $0.02\,u_i$ around the centroid, where the offsets $u_i$ have an RMS of $\sqrt{10}$ m, so the ATE is $0.02\sqrt{10}\approx0.063$ m after a 4-DoF or SE(3) alignment and 0 after Sim(3). A 1° pitch tilt gives 0.055 m after the 4-DoF alignment and 0 after SE(3). The same scale error yields an RPE of 0.02 m over 1 m and 0.10 m over 5 m, so relative errors still expose it.
-
-**Diagnosis**: A large ATE drop from the 4-DoF to the Sim(3) alignment, with a fitted scale away from 1 (about 0.98 here), signals a scale error in a system declared metric. The remedy is scale observability (IMU excitation, stereo baseline, calibration), not a more permissive alignment.
+**Limits**: The right group depends on the sensor: a monocular camera cannot observe scale, so Sim(3) is legitimate there, while a stereo system calls for SE(3) and a VIO declared metric for the 4-DoF group [Zhang and Scaramuzza, §III-A, Table I]. Declare the group before seeing the results and report the fitted parameters; the Sim(3) scale is a useful diagnostic (0.98 here). Remedy a scale error with scale observability (IMU excitation, stereo baseline, calibration), not with a more permissive alignment.
 
 **Blocking errors**: Optimizing the alignment to get the best score without justification.
 Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Zhang and Scaramuzza 2018, §III-A eqs. 11–12 (ambiguities, yaw-only transformation for inertial sensors), §III-C eq. 13 and Table I (alignment groups)](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); [Sturm et al. 2012, §VII-B (ATE after least-squares alignment)](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf). Scale and tilt examples: project constructions.
@@ -94,18 +121,28 @@ Objective: distinguish ATE and RPE. Family: comparison. Provenance: agent.
 START
 CV-Pilote
 ID: CV-METRIQUES-TEMPS-004
-Question: Do ATE and RPE answer exactly the same question?
-Reponse: **Expected answer**: ATE evaluates a trajectory after alignment; RPE evaluates relative displacements at defined intervals.
+Question: Do the absolute trajectory error (ATE) and the relative pose error (RPE) answer exactly the same question?
+Reponse: **Expected answer**: No. ATE evaluates the whole trajectory after one global alignment; RPE evaluates the relative displacements over a defined interval.
 
-**Further explanation**: Specify the interval in time or distance, the aggregation, translation versus rotation and the handling of failures; path length and loop closures influence the interpretation.
+**Key terms**:
 
-**Reading two time scales**: A trajectory can keep fairly precise local displacements while accumulating a global drift. Conversely, a loop-closure correction can improve the overall overlay without making each local motion accurate. The two measures therefore probe complementary properties.
+- Pose $T_i$: rotation and translation that map the body frame to the world frame at time $i$, an element of SE(3), the group of 3D rigid motions; $\hat T_i$ is its estimate.
+- ATE (absolute trajectory error): RMS (root mean square) of the position residuals after aligning the whole estimate on the ground truth.
+- RPE (relative pose error): error of the relative motion between times $i$ and $j$; the interval is set in frames, seconds or meters.
+- Drift: error that accumulates with the distance or time travelled.
 
-**Proposed evaluation**: Set the displacement interval, the time association and the unit, then report translation and rotation separately. For an RPE, short and long intervals do not represent the same difficulty. For an ATE, the alignment group removes certain ambiguities and must be declared. Keep lost segments and availability: a method that stops producing output on difficult cases should not appear perfect by measuring only easy portions. The numbers are read with the length, motion and coverage of the sequence, not as universal quality constants.
+**Further explanation**: ATE asks "after the best overlay, how far is each estimated position from the truth?": one number for the global shape of the trajectory. RPE asks "over each window, did the sensor move by the right amount?": local accuracy and drift. A trajectory can have precise local motions but accumulate a slow global drift (small short-interval RPE, large ATE), while a loop-closure jump can improve the global overlay and create one large local error.
 
-**Explicit relative error**: For body-to-world poses $T_i$ (ground truth) and $\hat T_i$ (estimate), form $E_{ij}=(T_i^{-1}T_j)^{-1}(\hat T_i^{-1}\hat T_j)$. The ideal is the identity. Report the translation norm and the rotation angle with the chosen interval $i,j$. A common global transformation of the coordinate frame cancels out in relative displacements, while drift between instants persists. An interval fixed in frames is not a fixed interval in seconds if the frame rate varies. This formula and its conventions must accompany the name RPE for a result to be interpretable and reproducible.
+**Step by step**:
 
-**Relative error depends on the interval**: A tracker may have low frame-to-frame relative error but accumulate substantial drift over long distances. Another system can exhibit a correction jump that improves globally aligned ATE while producing a large short-interval RPE. Evaluate relative error over declared time or distance intervals and report corrections or loop closures. The interval and whether future optimization was allowed are part of the metric, not minor implementation details.
+1. Relative motion of the truth from $i$ to $j$: $T_i^{-1}T_j$; of the estimate: $\hat T_i^{-1}\hat T_j$.
+2. Relative error: $E_{ij}=(T_i^{-1}T_j)^{-1}(\hat T_i^{-1}\hat T_j)$; it is the identity when the estimated motion is right.
+3. Report its translation norm (meters) and its rotation angle (degrees) separately, with the interval.
+4. RPE needs no alignment: if the estimate is expressed in another world frame, $\hat T_i\mapsto S\hat T_i$, then $(S\hat T_i)^{-1}(S\hat T_j)=\hat T_i^{-1}S^{-1}S\hat T_j=\hat T_i^{-1}\hat T_j$, so $S$ cancels.
+5. ATE first fits one alignment $S$ to the whole trajectory, then takes the RMS of the translations of the residual poses $T_i^{-1}S\hat T_i$ [Sturm et al., §VII-B].
+6. The interval matters (worked example B of the reference): a 2% scale error gives an RPE of 0.02 m over 1 m and 0.10 m over 5 m.
+
+**Limits**: An interval fixed in frames is not a fixed duration if the frame rate varies. Keep lost segments and report coverage: a method that stops producing output on difficult parts must not look perfect. State whether future optimization (loop closure) was allowed, and read the numbers with the sequence's length, motion and coverage, not as universal quality constants.
 
 **Blocking errors**: Comparing numbers without protocol, unit or interval.
 Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Sturm et al. 2012, §VII-A eqs. 1–3 (RPE) and §VII-B eqs. 4–5 (ATE)](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf); [Zhang and Scaramuzza 2018, §IV and Table II](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf). Frame invariance and interval cases: project deductions.
@@ -122,15 +159,27 @@ ID: CV-METRIQUES-TEMPS-005
 Question: Two tools report different trajectory errors for the same poses. What should be checked?
 Reponse: **Expected answer**: Time association, interpolation, pose conventions, alignment, intervals and the handling of lost or missing poses.
 
-**Further explanation**: Replay a small known case, then the same file and version; do not attribute the deviation immediately to the estimator. The tools' defaults also differ in the reported statistic: the TUM `evaluate_rpe.py` prints a mean translational error by default, whereas the paper defines an RMSE.
+**Key terms**:
 
-**Reproducible investigation**: First check the timestamps and how many poses were actually associated. Then check the direction (camera→world or world→camera), translation units and the rotation convention. Replay a known synthetic trajectory with a global translation and then with a scale error to observe what each tool removes.
+- Time association: pairing each estimated pose with the ground-truth pose closest in time, within a tolerance (0.02 s by default in `evaluate_ate.py`, a tool of the TUM RGB-D benchmark from the Technical University of Munich).
+- Interpolation: computing a pose at a timestamp that falls between two samples.
+- Pose convention: direction of the transform (camera→world or world→camera), translation unit and rotation format.
+- ATE and RPE: absolute trajectory error (after a global alignment) and relative pose error (over an interval).
+- RMSE (root mean square error) versus mean error: two different aggregates of the same residuals.
 
-**Fair comparison**: Keep the files and versions, the alignment group, interpolation and RPE interval, as well as the handling of missing poses. Two tools can both display "ATE" while differing in these choices. A protocol difference is not in itself an estimator error. Once the conventions are aligned, the remaining deviations warrant a closer inspection of the calculation. The trace must allow another engineer to reproduce the same set of compared poses and the same quantity, not just an image of superimposed trajectories.
+**Further explanation**: A trajectory error is the output of a pipeline: pair poses in time, express them in one convention, align, compute residuals, aggregate. Two tools that disagree on the same poses usually differ in one stage of this pipeline, not in the estimator. The diagnosis therefore walks the pipeline from its first stage, then replays a case whose answer is known.
 
-**Interpolation and time**: A trajectory sampled at times different from the reference requires a declared association or interpolation. Interpolating a translation differs from interpolating the components of a rotation matrix directly, which can leave $SO(3)$. A constant time shift produces a speed-dependent error and can be mistaken for a wrong trajectory. Testing a synthetic motion at known speed with an imposed offset verifies this signature. Also report the number of poses excluded by the time tolerance: an error reduction obtained by removing difficult segments does not measure the same coverage.
+**Decision procedure**:
 
-**Missing poses should not disappear from the denominator**: If one tool silently drops difficult timestamps, its error over surviving matched poses may decrease while trajectory availability worsens. Align time association, tolerance and interpolation first, then report matched coverage and failures with error. A proposed fixture includes a deliberate gap and known time offset to test both tools' policies. Do not interpolate across an arbitrarily long outage and count the synthetic poses as equally observed estimates.
+1. Count the poses each tool actually associated and compare timestamps and tolerances; a constant time offset produces an error proportional to speed.
+2. Check the pose direction, the translation unit and the rotation convention.
+3. Check the interpolation: interpolating the entries of rotation matrices can leave SO(3), the set of rotation matrices, so rotations need their own interpolation.
+4. Check the alignment group and the RPE interval.
+5. Check the reported statistic: the TUM `evaluate_rpe.py` prints a mean translational error by default, whereas the paper defines an RMSE.
+6. Check how missing poses are handled and report coverage: a tool that drops difficult timestamps lowers its error while availability worsens.
+7. Replay a small synthetic trajectory through both tools, with a known global translation, then a known scale error, a time offset and a gap: what each tool removes reveals its policy.
+
+**Limits**: A protocol difference is not an estimator error; only the deviations that remain once the conventions are aligned warrant inspecting the calculation. Do not interpolate across a long outage and count the synthetic poses as observed estimates. Keep the files, versions and settings so that another engineer can reproduce the same set of compared poses.
 
 **Blocking errors**: Comparing only the "ATE" name displayed by the tools.
 Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Sturm et al. 2012, §VI (time delays, `associate.py`) and §VII (RPE, ATE)](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf); [TUM RGB-D tools page, `evaluate_ate.py` and `evaluate_rpe.py` options](https://cvg.cit.tum.de/data/datasets/rgbd-dataset/tools); [Zhang and Scaramuzza 2018, §§III–IV](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf). Diagnostic order and fixtures: project protocol.
@@ -144,14 +193,31 @@ Objective: Calculate global identity counts and IDF1 after a trajectory fragment
 START
 CV-Pilote
 ID: CV-METRIQUES-TEMPS-006
-Question: Two pedestrians A and B are visible in all 10 frames of a clip. Every predicted box overlaps its own pedestrian above the matching IoU threshold and never the other one, and there is no missed or extra box. B keeps predicted ID 2 throughout. Tracker X labels A with ID 1 in frames 1–8 and with a new ID 3 in frames 9–10; tracker Y labels A with ID 1 in frames 1–4 and with ID 3 in frames 5–10. For each tracker, compute IDTP, IDFN, IDFP and IDF1, and give the number of identity switches and the MOTA that CLEAR MOT reports. What sets the IDF1 cost of a single fragmentation?
-Reponse: **Expected answer**: (1) IDF1 first fixes one one-to-one mapping between whole true and predicted identities for the entire sequence, the one that explains the most frames (equivalently, the minimum IDFN + IDFP); a predicted ID left unmatched counts entirely as false positives. B maps to ID 2 in both cases. In X, A maps to ID 1 (8 frames against 2); in Y, A maps to ID 3 (6 frames against 4), not to its first ID. (2) X: $IDTP=8+10=18$, $IDFN=IDFP=2$, $\mathrm{IDF1}=2\cdot18/(2\cdot18+2+2)=0.90$. Y: $IDTP=6+10=16$, $IDFN=IDFP=4$, $\mathrm{IDF1}=32/40=0.80$. (3) Each frame of the shorter piece counts once in IDFN (A unexplained) and once in IDFP (the unmatched ID unexplained), so here $\mathrm{IDF1}=1-\min(a,b)/20$ for pieces of $a$ and $b$ frames, 20 being the number of ground-truth detections: the cost grows with the length of the shorter piece, down to $\mathrm{IDF1}=0.75$ for a 5/5 split. CLEAR MOT counts one mismatch for each tracker, at the frame where the mapping changes, so $\mathrm{MOTA}=1-1/20=0.95$ for both.
+Question: Two pedestrians A and B are visible in all 10 frames of a clip. Every predicted box overlaps its own pedestrian above the matching intersection-over-union (IoU) threshold and never the other one, and there is no missed or extra box. B keeps predicted ID 2 throughout. Tracker X labels A with ID 1 in frames 1–8 and with a new ID 3 in frames 9–10; tracker Y labels A with ID 1 in frames 1–4 and with ID 3 in frames 5–10. For each tracker, compute the identity true positives, false negatives and false positives (IDTP, IDFN, IDFP) and the identity F1 score (IDF1), and give the number of identity switches and the multiple object tracking accuracy (MOTA) that CLEAR MOT reports. What sets the IDF1 cost of a single fragmentation?
+Reponse: **Expected answer**: (1) IDF1 first fixes one one-to-one pairing between whole true and predicted identities for the entire sequence, the one that explains the most frames; a predicted ID left unpaired counts entirely as false positives. B pairs with ID 2 in both cases; A pairs with ID 1 in X, but with ID 3 in Y, not with its first ID. (2) X: IDTP 18, IDFN = IDFP = 2, IDF1 0.90. Y: IDTP 16, IDFN = IDFP = 4, IDF1 0.80. (3) The cost is set by the length of the shorter piece: each of its frames counts once in IDFN and once in IDFP, so here $\mathrm{IDF1}=1-\min(a,b)/20$ for pieces of $a$ and $b$ frames, down to 0.75 for a 5/5 split. (4) CLEAR MOT counts one switch for each tracker, at the frame where the ID changes: $\mathrm{MOTA}=1-1/20=0.95$ for both.
 
-**Further explanation**: Ristani et al. build a bipartite graph between true and computed trajectories, add a false-negative node for each true trajectory and a false-positive node for each computed one, and give the pair $(\tau,\gamma)$ the false-negative frames of $\tau$ plus the false-positive frames of $\gamma$; the minimum-cost one-to-one solution defines IDTP, IDFN and IDFP. In Y, mapping A to ID 1 costs the 6 unexplained frames of A plus the 6 detections of the unmatched ID 3, total 12; mapping A to ID 3 costs $4+4=8$, the minimum. The paper calls this mapping the most favorable to the tracker. TrackEval at 12c8791 solves the same assignment on a padded cost matrix and computes IDF1 as $IDTP/(IDTP+0.5\,IDFP+0.5\,IDFN)$.
+**Key terms**:
 
-**Duration, not timing or event count**: Only per-pair frame counts enter the costs, so moving the switch frame moves IDF1 between 0.95 (a one-frame piece at either end) and 0.75 (a 5/5 split, worked example A of the reference), always with one CLEAR mismatch and MOTA 0.95. A one-frame relabel inside the track (ID 3 in frame 5 only, then ID 1 again) gives two mismatches and MOTA 0.90, but IDF1 0.95: the two metrics rank it and tracker Y in opposite orders. Ristani et al. illustrate the same point: one fragmentation and seven fragmentations can both cost 33% of a trajectory.
+- IoU (intersection over union): area of overlap of two boxes divided by the area of their union.
+- IDTP: detections explained by the chosen pairing; IDFN: ground-truth detections it leaves unexplained; IDFP: predicted detections it leaves unexplained.
+- $\mathrm{IDF1}=2\,\mathrm{IDTP}/(2\,\mathrm{IDTP}+\mathrm{IDFP}+\mathrm{IDFN})$; IDP $=\mathrm{IDTP}/(\mathrm{IDTP}+\mathrm{IDFP})$ and IDR $=\mathrm{IDTP}/(\mathrm{IDTP}+\mathrm{IDFN})$ are identity precision and recall.
+- CLEAR MOT: the metric family of MOTA, $\mathrm{MOTA}=1-(\mathrm{FN}+\mathrm{FP}+\mathrm{IDSW})/\mathrm{GT}$, with FN missed boxes, FP extra boxes, IDSW identity switches and GT ground-truth boxes.
+- Fragmentation: one true identity split over several predicted IDs, here into two pieces of $a$ and $b$ frames.
 
-**Opposite design choices**: Bernardin and Stiefelhagen count a mismatch once, where the object-hypothesis mapping changes, and treat the segments in between as correct, because with a sequence-level best mapping the frame at which a swap occurs strongly changes the value. IDF1 accepts that dependence to measure for how many frames the tracker is right about who is where; MOTA counts identity-change events. With missed or extra boxes, IDFN and IDFP also absorb detection errors, and IDP and IDR, equal to IDF1 here, separate. Constructed examples, recomputed by the check script of this pass.
+**Further explanation**: IDF1 asks "for how many frames is the tracker right about who is who?". The evaluator picks the pairing most favorable to the tracker, then charges every frame that this pairing cannot explain, twice: once as a ground-truth frame without its paired ID (IDFN) and once as a predicted box whose ID is paired with nobody (IDFP) [Ristani et al., §3.1, §3.3]. A fragment therefore costs in proportion to its length. CLEAR MOT instead charges one error at the frame where the ID changes, whatever the lengths [Bernardin and Stiefelhagen, §2.1.2].
+
+**Step by step**:
+
+1. Totals: 2 pedestrians × 10 frames = 20 ground-truth detections, and 20 predicted boxes.
+2. B always has ID 2: the pair B–2 explains 10 frames for both trackers.
+3. X: A has ID 1 in 8 frames and ID 3 in 2, so A pairs with ID 1. IDTP $=8+10=18$; A's 2 frames under ID 3 give IDFN = 2, and the 2 boxes of the unpaired ID 3 give IDFP = 2.
+4. $\mathrm{IDF1}(X)=2\cdot18/(2\cdot18+2+2)=36/40=0.90$.
+5. Y: A has ID 1 in 4 frames and ID 3 in 6. Pairing A with ID 1 leaves $6+6=12$ frames unexplained; pairing A with ID 3 leaves $4+4=8$, the minimum, so A pairs with ID 3.
+6. IDTP $=6+10=16$ and IDFN = IDFP = 4, so $\mathrm{IDF1}(Y)=32/40=0.80$.
+7. General case: with pieces of $a$ and $b$ frames, IDTP $=20-\min(a,b)$ and IDFN = IDFP $=\min(a,b)$, so $\mathrm{IDF1}=2(20-\min(a,b))/40=1-\min(a,b)/20$.
+8. MOTA: each tracker changes A's ID once, so IDSW = 1 and FN = FP = 0, giving $\mathrm{MOTA}=1-1/20=0.95$ for both.
+
+**Limits**: Only per-pair frame counts enter the costs, so IDF1 ignores when the switch happens and how many switches produced the pieces. A one-frame relabel inside the track (ID 3 in frame 5 only, then ID 1 again) gives two switches and MOTA 0.90, but IDF1 0.95: MOTA and IDF1 rank it and tracker Y in opposite orders. With missed or extra boxes, IDFN and IDFP also absorb detection errors, and IDP and IDR, equal to IDF1 here, separate.
 
 **Blocking errors**: Expecting the same IDF1 for X and Y because each has one switch, or a fixed IDF1 drop per switch. Mapping A to its first ID in Y (IDF1 0.70) or to both IDs (IDF1 1). Judging identity frame by frame against the previous frame instead of under one global mapping. Counting the misidentified frames only in IDFN (36/38 for X).
 Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Ristani et al. 2016, §3.1 and Fig. 1, §3.3 eqs. 3–5, §3.4 eqs. 6–11](https://arxiv.org/abs/1609.01775); [Bernardin and Stiefelhagen 2008, §2.1.2 and Fig. 2(c), §2.1.3, §2.2 eq. 2](https://doi.org/10.1155/2008/246309); [TrackEval `identity.py` at 12c8791, L52–L85 and L134](https://github.com/JonathonLuiten/TrackEval/blob/12c8791b303e0a0b50f753af204249e622d0281a/trackeval/metrics/identity.py#L52-L134). Sequences, graph costs and the one-fragment IDF1 formula: project constructions.
