@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-HOMOGRAPHIE"]
-revision: 9
+revision: 10
 tags: [cv/d05, calibration, zhang]
 ---
 # Camera calibration with a target — Zhang’s method
@@ -26,7 +26,12 @@ implemented, with a richer distortion model, by OpenCV's `calibrateCamera`
 the intrinsic parameters shared by all views, the lens distortion and one pose of the
 target per view. Calibration differs from pose estimation of an already calibrated
 camera and from registration between images; it does not calibrate the probabilistic
-scores of a detector [Zhang §§2–3][zhang].
+scores of a detector [Zhang §§2–3][zhang]. Counted for 10 views of a $9\times6$-corner
+target (constructed, recomputed by the 2026-11-16 check script; CV-ZHANG-001): Zhang's
+model estimates $5+2+6\times10=67$ parameters from $2\times10\times54=1080$ residuals; a pose
+with fixed intrinsics estimates 6 parameters from the 108 residuals of one view; a
+registering homography estimates 8 parameters from at least four correspondences and maps
+pixels to pixels without a metric unit.
 
 **Data contract (OpenCV 4.13)** [calib3d.hpp L1606–L1743]:
 
@@ -109,7 +114,11 @@ calibration, and validate it for the intended measurement.
 - **Target.** Planar, rigid and dimensionally known. Zhang studies random noise on the
   model points and systematic spherical or cylindrical non-planarity, which simulates "a
   printed pattern [...] attached to a soft book cover" [§5.3]; errors in the model
-  propagate into the estimates.
+  propagate into the estimates. Systematic non-planarity degrades them more than random
+  errors on the model points, cylindrical bending more than spherical, and the result
+  "seems still usable in practice" below about 3% of non-planarity, measured as the
+  maximum $z$ displacement over the pattern size (10% is 2.5 cm on his 25 cm pattern)
+  [§5.3.2]. That criterion concerns the intrinsics, not a metrology tolerance.
 - **Camera.** Fixed intrinsics during the capture (no refocusing or zoom), a projection
   that a pinhole plus distortion describes, and image noise that is independent and
   identically distributed, the assumption under which the refinement is a maximum
@@ -177,6 +186,10 @@ projection is ideal, before distortion.
 $B=K^{-\top}K^{-1}$ and $\mathbf h_i$ the columns of $H$,
 
 $$\mathbf h_1^\top B\,\mathbf h_2=0,\qquad \mathbf h_1^\top B\,\mathbf h_1=\mathbf h_2^\top B\,\mathbf h_2 .$$
+
+Zhang counts them: "a homography has 8 degrees of freedom and there are 6 extrinsic
+parameters", so one view gives only 2 constraints on the intrinsics [§2.3]. A single
+homography can therefore register the plane without separating $K$ from the pose.
 
 $B$ is symmetric, so it has six entries $\mathbf b=(B_{11},B_{12},B_{22},B_{13},B_{23},B_{33})$.
 Writing $\mathbf h_i^\top B\mathbf h_j=\mathbf v_{ij}^\top\mathbf b$, each view gives
@@ -252,6 +265,15 @@ leaving the pixel fit unchanged. For a camera 1000 mm above a measured plane, a 
 2 mm above that plane, seen 200 mm off-axis, is displaced laterally by
 $2\times200/1000=0.4$ mm when measured with the plane-intersection model. Intrinsics alone
 do not make a camera a metrology instrument: the measured surface must be known.
+
+*Error budget for a length (constructed, recomputed by the 2026-11-16 check script;
+CV-ZHANG-007).* With $f=2000$ px at 1000 mm, one pixel spans 0.5 mm on the plane; locating
+each edge to 0.1 px contributes 0.05 mm per edge, about 0.07 mm on a 50 mm length if the two
+edge errors are independent. A target printed at 99.7% scale and used to locate the
+measurement plane scales every intersection by $1/0.997$, so the length reads 0.15 mm long. A
+top face 2 mm above the calibrated plane reads $50\times1000/998\approx50.10$ mm. Against a
+±0.1 mm tolerance, resolution, the measured target and the measured surface height decide
+the result; adding views lowers none of these three terms.
 
 ## Parameters and tuning
 
@@ -510,6 +532,9 @@ Consulted foundations: [Zhang calibration](https://www.microsoft.com/en-us/resea
 - Related references: [CV-HOMOGRAPHIE](51-ransac-homographie.md), [CV-EPIPOLAIRE](53-epipolaire-pnp-triangulation.md), [CV-FISHEYE](56-calibration-fisheye.md), [CV-MULTICALIB](55-calibration-multicapteurs.md), [CV-HANDEYE](57-calibration-hand-eye.md).
 
 Drafted by agent, 2026-10-18. Revision 9, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/52-calibration-zhang.md).
+Revision 10, 2026-11-16: the homography counting argument, the unknowns of calibration, pose and
+registration, Zhang's non-planarity results and a length error budget added while deepening
+CV-ZHANG-001 and CV-ZHANG-007, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/52-calibration-zhang.md).
 
 [zhang]: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf
 [opencv]: https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp

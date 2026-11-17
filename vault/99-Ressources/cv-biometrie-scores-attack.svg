@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 530" role="img" aria-labelledby="bioatk-title bioatk-desc">
+  <title id="bioatk-title">Matcher scores of impostors, genuine users and presentation attacks</title>
+  <desc id="bioatk-desc">Constructed Gaussian cosine-similarity distributions, drawn to scale: impostor (nonmated) comparisons with mean 0.15 and standard deviation 0.12, genuine (mated, bona fide) comparisons with mean 0.62 and 0.12, and attacks, prints or replays of the enrolled person compared with that person's template, with mean 0.57 and 0.13. At the threshold 0.40, a comparison matches when its score is at or above it: FMR, the impostor area at or above 0.40, is 1.9%; FNMR, the genuine area below 0.40, is 3.3%; the matcher accepts 90% of the attacks. Moving the threshold to 0.78, where only 5% of attacks pass, would reject 91% of genuine users.</desc>
+  <defs>
+    <pattern id="bioatk-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#b91c1c" stroke-width="2.2"/></pattern>
+  </defs>
+  <rect width="540" height="530" rx="12" fill="#f8fafc"/>
+  <text x="270" y="32" font-family="sans-serif" font-size="18" font-weight="bold" fill="#0f172a" text-anchor="middle">One matcher threshold, three populations</text>
+  <text x="270" y="56" font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">constructed scores, drawn to scale; match if s ≥ τ</text>
+  <path d="M60,330 H500" stroke="#334155" stroke-width="2" fill="none"/>
+  <g font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">
+    <line x1="77.6" y1="330" x2="77.6" y2="336" stroke="#334155" stroke-width="2"/><text x="77.6" y="356">−0.2</text>
+    <line x1="148" y1="330" x2="148" y2="336" stroke="#334155" stroke-width="2"/><text x="148" y="356">0</text>
+    <line x1="218.4" y1="330" x2="218.4" y2="336" stroke="#334155" stroke-width="2"/><text x="218.4" y="356">0.2</text>
+    <line x1="288.8" y1="330" x2="288.8" y2="336" stroke="#334155" stroke-width="2"/><text x="288.8" y="356">0.4</text>
+    <line x1="359.2" y1="330" x2="359.2" y2="336" stroke="#334155" stroke-width="2"/><text x="359.2" y="356">0.6</text>
+    <line x1="429.6" y1="330" x2="429.6" y2="336" stroke="#334155" stroke-width="2"/><text x="429.6" y="356">0.8</text>
+    <line x1="500" y1="330" x2="500" y2="336" stroke="#334155" stroke-width="2"/><text x="500" y="356">1</text>
+  </g>
+  <text x="280" y="380" font-family="sans-serif" font-size="16" fill="#0f172a" text-anchor="middle">cosine similarity s with the claimed template</text>
+  <path id="bioatk-fmr" d="M288.8,306.47 L292.32,310.29 L295.84,313.6 L299.36,316.45 L302.88,318.88 L306.4,320.94 L309.92,322.67 L313.44,324.11 L316.96,325.3 L320.48,326.28 L324,327.07 L327.52,327.71 L331.04,328.22 L334.56,328.63 L338.08,328.95 L341.6,329.2 L345.12,329.4 L348.64,329.55 L352.16,329.66 L355.68,329.75 L359.2,329.82 L359.2,330 L288.8,330 Z" fill="#0369a1" fill-opacity="0.45"/>
+  <path id="bioatk-fnmr" d="M218.4,329.55 L221.92,329.4 L225.44,329.2 L228.96,328.95 L232.48,328.63 L236,328.22 L239.52,327.71 L243.04,327.07 L246.56,326.28 L250.08,325.3 L253.6,324.11 L257.12,322.67 L260.64,320.94 L264.16,318.88 L267.68,316.45 L271.2,313.6 L274.72,310.29 L278.24,306.47 L281.76,302.1 L285.28,297.16 L288.8,291.61 L288.8,330 L218.4,330 Z" fill="#15803d" fill-opacity="0.45"/>
+  <path id="bioatk-acc" d="M288.8,249.09 L292.32,240.79 L295.84,232.22 L299.36,223.46 L302.88,214.6 L306.4,205.74 L309.92,196.99 L313.44,188.46 L316.96,180.28 L320.48,172.56 L324,165.41 L327.52,158.96 L331.04,153.3 L334.56,148.53 L338.08,144.73 L341.6,141.97 L345.12,140.3 L348.64,139.74 L352.16,140.3 L355.68,141.97 L359.2,144.73 L362.72,148.53 L366.24,153.3 L369.76,158.96 L373.28,165.41 L376.8,172.56 L380.32,180.28 L383.84,188.46 L387.36,196.99 L390.88,205.74 L394.4,214.6 L397.92,223.46 L401.44,232.22 L404.96,240.79 L408.48,249.09 L412,257.05 L415.52,264.61 L419.04,271.74 L422.56,278.39 L426.08,284.56 L429.6,290.22 L433.12,295.39 L436.64,300.06 L440.16,304.25 L443.68,307.99 L447.2,311.29 L450.72,314.2 L454.24,316.73 L457.76,318.92 L461.28,320.8 L464.8,322.41 L468.32,323.78 L471.84,324.93 L475.36,325.89 L478.88,326.69 L482.4,327.35 L485.92,327.89 L489.44,328.33 L492.96,328.68 L496.48,328.97 L500,329.2 L500,330 L288.8,330 Z" fill="url(#bioatk-hatch)" fill-opacity="0.55"/>
+  <path id="bioatk-imp" d="M60,329.2 L63.52,328.95 L67.04,328.63 L70.56,328.22 L74.08,327.71 L77.6,327.07 L81.12,326.28 L84.64,325.3 L88.16,324.11 L91.68,322.67 L95.2,320.94 L98.72,318.88 L102.24,316.45 L105.76,313.6 L109.28,310.29 L112.8,306.47 L116.32,302.1 L119.84,297.16 L123.36,291.61 L126.88,285.42 L130.4,278.6 L133.92,271.15 L137.44,263.08 L140.96,254.44 L144.48,245.26 L148,235.63 L151.52,225.63 L155.04,215.38 L158.56,204.98 L162.08,194.59 L165.6,184.35 L169.12,174.41 L172.64,164.95 L176.16,156.13 L179.68,148.1 L183.2,141.02 L186.72,135.02 L190.24,130.22 L193.76,126.72 L197.28,124.59 L200.8,123.88 L204.32,124.59 L207.84,126.72 L211.36,130.22 L214.88,135.02 L218.4,141.02 L221.92,148.1 L225.44,156.13 L228.96,164.95 L232.48,174.41 L236,184.35 L239.52,194.59 L243.04,204.98 L246.56,215.38 L250.08,225.63 L253.6,235.63 L257.12,245.26 L260.64,254.44 L264.16,263.08 L267.68,271.15 L271.2,278.6 L274.72,285.42 L278.24,291.61 L281.76,297.16 L285.28,302.1 L288.8,306.47 L292.32,310.29 L295.84,313.6 L299.36,316.45 L302.88,318.88 L306.4,320.94 L309.92,322.67 L313.44,324.11 L316.96,325.3 L320.48,326.28 L324,327.07 L327.52,327.71 L331.04,328.22 L334.56,328.63 L338.08,328.95 L341.6,329.2 L345.12,329.4 L348.64,329.55 L352.16,329.66 L355.68,329.75 L359.2,329.82 L362.72,329.87 L366.24,329.9 L369.76,329.93 L373.28,329.95 L376.8,329.96" fill="none" stroke="#0369a1" stroke-width="3"/>
+  <path id="bioatk-gen" d="M200.8,329.9 L204.32,329.87 L207.84,329.82 L211.36,329.75 L214.88,329.66 L218.4,329.55 L221.92,329.4 L225.44,329.2 L228.96,328.95 L232.48,328.63 L236,328.22 L239.52,327.71 L243.04,327.07 L246.56,326.28 L250.08,325.3 L253.6,324.11 L257.12,322.67 L260.64,320.94 L264.16,318.88 L267.68,316.45 L271.2,313.6 L274.72,310.29 L278.24,306.47 L281.76,302.1 L285.28,297.16 L288.8,291.61 L292.32,285.42 L295.84,278.6 L299.36,271.15 L302.88,263.08 L306.4,254.44 L309.92,245.26 L313.44,235.63 L316.96,225.63 L320.48,215.38 L324,204.98 L327.52,194.59 L331.04,184.35 L334.56,174.41 L338.08,164.95 L341.6,156.13 L345.12,148.1 L348.64,141.02 L352.16,135.02 L355.68,130.22 L359.2,126.72 L362.72,124.59 L366.24,123.88 L369.76,124.59 L373.28,126.72 L376.8,130.22 L380.32,135.02 L383.84,141.02 L387.36,148.1 L390.88,156.13 L394.4,164.95 L397.92,174.41 L401.44,184.35 L404.96,194.59 L408.48,204.98 L412,215.38 L415.52,225.63 L419.04,235.63 L422.56,245.26 L426.08,254.44 L429.6,263.08 L433.12,271.15 L436.64,278.6 L440.16,285.42 L443.68,291.61 L447.2,297.16 L450.72,302.1 L454.24,306.47 L457.76,310.29 L461.28,313.6 L464.8,316.45 L468.32,318.88 L471.84,320.94 L475.36,322.67 L478.88,324.11 L482.4,325.3 L485.92,326.28 L489.44,327.07 L492.96,327.71 L496.48,328.22 L500,328.63" fill="none" stroke="#15803d" stroke-width="3"/>
+  <path id="bioatk-atk" d="M165.6,329.94 L169.12,329.91 L172.64,329.88 L176.16,329.84 L179.68,329.79 L183.2,329.72 L186.72,329.64 L190.24,329.52 L193.76,329.38 L197.28,329.2 L200.8,328.97 L204.32,328.68 L207.84,328.33 L211.36,327.89 L214.88,327.35 L218.4,326.69 L221.92,325.89 L225.44,324.93 L228.96,323.78 L232.48,322.41 L236,320.8 L239.52,318.92 L243.04,316.73 L246.56,314.2 L250.08,311.29 L253.6,307.99 L257.12,304.25 L260.64,300.06 L264.16,295.39 L267.68,290.22 L271.2,284.56 L274.72,278.39 L278.24,271.74 L281.76,264.61 L285.28,257.05 L288.8,249.09 L292.32,240.79 L295.84,232.22 L299.36,223.46 L302.88,214.6 L306.4,205.74 L309.92,196.99 L313.44,188.46 L316.96,180.28 L320.48,172.56 L324,165.41 L327.52,158.96 L331.04,153.3 L334.56,148.53 L338.08,144.73 L341.6,141.97 L345.12,140.3 L348.64,139.74 L352.16,140.3 L355.68,141.97 L359.2,144.73 L362.72,148.53 L366.24,153.3 L369.76,158.96 L373.28,165.41 L376.8,172.56 L380.32,180.28 L383.84,188.46 L387.36,196.99 L390.88,205.74 L394.4,214.6 L397.92,223.46 L401.44,232.22 L404.96,240.79 L408.48,249.09 L412,257.05 L415.52,264.61 L419.04,271.74 L422.56,278.39 L426.08,284.56 L429.6,290.22 L433.12,295.39 L436.64,300.06 L440.16,304.25 L443.68,307.99 L447.2,311.29 L450.72,314.2 L454.24,316.73 L457.76,318.92 L461.28,320.8 L464.8,322.41 L468.32,323.78 L471.84,324.93 L475.36,325.89 L478.88,326.69 L482.4,327.35 L485.92,327.89 L489.44,328.33 L492.96,328.68 L496.48,328.97 L500,329.2" fill="none" stroke="#b91c1c" stroke-width="3" stroke-dasharray="8 5"/>
+  <line x1="288.8" y1="96" x2="288.8" y2="330" stroke="#0f172a" stroke-width="2.5"/>
+  <text x="288.8" y="88" font-family="sans-serif" font-size="16" font-weight="bold" fill="#0f172a" text-anchor="middle">τ = 0.40</text>
+  <text x="280.8" y="112" font-family="sans-serif" font-size="14" fill="#334155" text-anchor="end">reject</text>
+  <text x="296.8" y="112" font-family="sans-serif" font-size="14" fill="#334155">accept</text>
+  <g font-family="sans-serif" font-size="16">
+    <text x="63.52" y="97.88" fill="#0369a1">impostors</text>
+    <text x="63.52" y="115.88" fill="#0369a1">(nonmated)</text>
+    <text x="496.48" y="97.88" fill="#15803d" text-anchor="end">genuine</text>
+    <text x="496.48" y="115.88" fill="#15803d" text-anchor="end">(mated, bona fide)</text>
+  </g>
+  <g font-family="sans-serif" font-size="16" font-weight="bold">
+    <text x="313.44" y="300" fill="#0369a1">FMR</text>
+    <text x="264.16" y="300" fill="#15803d" text-anchor="end">FNMR</text>
+  </g>
+  <g font-family="sans-serif" font-size="16">
+    <text x="62" y="422" fill="#0369a1">FMR = 1.9%: impostor comparisons with s ≥ τ</text>
+    <text x="62" y="448" fill="#15803d">FNMR = 3.3%: genuine comparisons with s &lt; τ</text>
+    <text x="62" y="474" fill="#b91c1c">attack (print of the enrolled face): 90% pass τ</text>
+    <text x="62" y="500" fill="#0f172a">τ = 0.78 stops 95% of attacks, rejects 91% of genuine</text>
+  </g>
+  <rect x="24" y="409" width="28" height="14" fill="#0369a1" fill-opacity="0.45" stroke="#0369a1" stroke-width="2"/>
+  <rect x="24" y="435" width="28" height="14" fill="#15803d" fill-opacity="0.45" stroke="#15803d" stroke-width="2"/>
+  <rect x="24" y="461" width="28" height="14" fill="url(#bioatk-hatch)" fill-opacity="0.55"/>
+  <line x1="24" y1="468" x2="52" y2="468" stroke="#b91c1c" stroke-width="3" stroke-dasharray="8 5"/>
+  <line x1="38" y1="485" x2="38" y2="503" stroke="#0f172a" stroke-width="2.5"/>
+  <g>
+  </g>
+</svg>

@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-SOT", "CV-ACQUISITION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -282,6 +282,21 @@ counts and similarity surfaces rather than benchmark scores [§5].
 box; a ±2σ box is systematically larger than a tight annotation of a uniform blob; the
 results depend on the scenes' colour statistics more than on the algorithm.
 
+*Worked example C (constructed, recomputed by the 2026-11-16 check script).* The box of
+example B, $46.2\times23.1$ px around a uniformly weighted $40\times20$ px blob, has an
+IoU of 0.75 with a tight annotation even when perfectly centred, $(\sqrt{12}/4)^2$ in the
+continuous limit, while a fixed MeanShift window of the right size scores 1. On a
+sequence without scale change, the adaptive arm therefore loses about 0.25 IoU by box
+convention alone. Report centre error and the box-to-target area ratio beside IoU, or
+calibrate a box factor on frames without distractors (project recipe), before reading an
+IoU difference as an effect of adaptation. For the second factor, a $2\times2$ design
+with constructed mean IoU on the scale-change sequence of 0.48 (histogram H1, fixed
+window), 0.60 (H1, CamShift), 0.56 (H2, fixed) and 0.62 (H2, CamShift) shows how a joint
+change misleads: switching both at once gains 0.14, but adaptation is worth 0.12 with H1
+and 0.06 with H2 (main effect 0.09), the histogram 0.08 with a fixed window and 0.02
+with CamShift (main effect 0.05), and the interaction is $-0.06$. Since
+$0.14=0.12+0.02=0.08+0.06$, the single comparison cannot split the gain.
+
 ## Failure modes and diagnosis
 
 | Symptom | Possible causes | Discriminating check | Conditional remedy |
@@ -405,3 +420,5 @@ Consulted foundations: [OpenCV 4.13.0, `camshift.cpp`](https://github.com/opencv
 - [CV-SOT](113-tracking-monoobjet.md) for the comparison; [CV-CORRELATION](114-mosse-kcf.md) for template-based tracking.
 
 Drafted by Agent Codex, 2026-10-24. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/115-meanshift-camshift.md).
+Revision 8, 2026-11-16: worked example C (IoU ceiling of the ±2σ box and the reading of a 2 × 2 design)
+added while deepening CV-MEANSHIFT-004, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/115-meanshift-camshift.md).

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 660" role="img" aria-labelledby="ep-title ep-desc">
+  <title id="ep-title">Epipolar geometry: the match of p1 lies on the line F p1</title>
+  <desc id="ep-desc">Two cameras with centres C1 and C2, two units apart on the baseline, both turned 55 degrees inwards. A 3D point X projects to p1 in image 1 and to p2 in image 2. The plane through C1, C2 and X is the epipolar plane. The baseline pierces image 1 at the epipole e1, the image of C2, and image 2 at the epipole e2, the image of C1. A second point X prime on the same ray from C1 projects to p2 prime in image 2: every point of that ray projects onto the epipolar line l2 equals F p1, which passes through e2, p2 and p2 prime. In pixels the constraint is p2 transpose F p1 equals 0; in normalized coordinates x equals K inverse p it is x2 transpose E x1 equals 0, with F equal to K2 inverse transpose E K1 inverse. Orthographic view of a constructed configuration, drawn to scale.</desc>
+  <defs>
+    <marker id="ep-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#334155"/></marker>
+  </defs>
+  <rect width="540" height="660" rx="12" fill="#f8fafc"/>
+  <text x="270" y="30" font-family="sans-serif" font-size="18" font-weight="bold" fill="#0f172a" text-anchor="middle">Epipolar geometry: point → line</text>
+
+  <!-- epipolar plane C1 C2 X -->
+  <polygon id="ep-plane" points="80,350 460,350 279.5,138.9" fill="#7c3aed" fill-opacity="0.10" stroke="none"/>
+
+  <!-- image planes (rectangles 2w x 2h at focal distance f, orthographic view) -->
+  <polygon id="ep-image1" points="103.3,356.1 212.3,421.9 212.3,297.9 103.3,232.1" fill="#e0f2fe" fill-opacity="0.85" stroke="#0369a1" stroke-width="2"/>
+  <polygon id="ep-image2" points="327.7,421.9 436.7,356.1 436.7,232.1 327.7,297.9" fill="#e0f2fe" fill-opacity="0.85" stroke="#0369a1" stroke-width="2"/>
+
+  <!-- rays -->
+  <g stroke="#334155" stroke-width="1.5" fill="none">
+    <line x1="80" y1="350" x2="343.3" y2="71.3"/>
+    <line x1="460" y1="350" x2="279.5" y2="138.9"/>
+    <line x1="460" y1="350" x2="343.3" y2="71.3" stroke-dasharray="5 4"/>
+  </g>
+  <!-- baseline -->
+  <line id="ep-baseline" x1="80" y1="350" x2="460" y2="350" stroke="#0f172a" stroke-width="2.5"/>
+
+  <!-- epipolar lines: l2 = F p1 in image 2, l1 = F^T p2 in image 1 -->
+  <line id="ep-l2" x1="327.7" y1="369.9" x2="436.7" y2="236.9" stroke="#b91c1c" stroke-width="3"/>
+  <line id="ep-l1" x1="212.3" y1="369.9" x2="103.3" y2="236.9" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+
+  <!-- points -->
+  <circle id="ep-C1" cx="80" cy="350" r="5" fill="#0f172a"/>
+  <circle id="ep-C2" cx="460" cy="350" r="5" fill="#0f172a"/>
+  <circle id="ep-X" cx="279.5" cy="138.9" r="5.5" fill="#0f172a"/>
+  <circle id="ep-Xp" cx="343.3" cy="71.3" r="5" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
+  <circle id="ep-p1" cx="142.1" cy="284.3" r="5" fill="#15803d"/>
+  <circle id="ep-p2" cx="400.8" cy="280.7" r="5" fill="#15803d"/>
+  <circle id="ep-p2p" cx="420.8" cy="256.3" r="4.5" fill="#f8fafc" stroke="#15803d" stroke-width="2"/>
+  <circle id="ep-e1" cx="196" cy="350" r="5" fill="#b91c1c"/>
+  <circle id="ep-e2" cx="344" cy="350" r="5" fill="#b91c1c"/>
+
+  <!-- labels -->
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="58" y="374">C<tspan font-size="12" dy="4">1</tspan></text>
+    <text x="470" y="374">C<tspan font-size="12" dy="4">2</tspan></text>
+    <text x="250" y="132">X</text>
+    <text x="356" y="68">X′</text>
+    <text x="270" y="378" font-size="14" fill="#334155" text-anchor="middle">baseline</text>
+    <text x="262" y="262" font-size="14" fill="#7c3aed" text-anchor="middle">epipolar</text>
+    <text x="262" y="280" font-size="14" fill="#7c3aed" text-anchor="middle">plane</text>
+    <text x="112" y="420" font-size="14" fill="#0369a1">image 1</text>
+    <text x="372" y="420" font-size="14" fill="#0369a1">image 2</text>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#15803d">
+    <text x="114" y="282">p<tspan font-size="12" dy="4">1</tspan></text>
+    <text x="412" y="288">p<tspan font-size="12" dy="4">2</tspan></text>
+    <text x="446" y="262">p<tspan font-size="12" dy="4">2</tspan><tspan dy="-4">′</tspan></text>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#b91c1c">
+    <text x="190" y="340">e<tspan font-size="12" dy="4">1</tspan></text>
+    <text x="352" y="375">e<tspan font-size="12" dy="4">2</tspan></text>
+    <text x="82" y="246">l<tspan font-size="12" dy="4">1</tspan></text>
+    <text x="452" y="232">l<tspan font-size="12" dy="4">2</tspan><tspan dx="5" dy="-4">= F p</tspan><tspan font-size="12" dy="4">1</tspan></text>
+  </g>
+
+  <!-- equations -->
+  <rect x="20" y="446" width="500" height="196" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="36" y="474">pixels:</text>
+    <text x="150" y="474">p<tspan font-size="12" dy="4">2</tspan><tspan font-size="12" dy="-11">T</tspan><tspan dx="4" dy="7">F p</tspan><tspan font-size="12" dy="4">1</tspan><tspan dx="5" dy="-4">= 0</tspan></text>
+    <text x="36" y="504">normalized:</text>
+    <text x="150" y="504">x<tspan font-size="12" dy="4">2</tspan><tspan font-size="12" dy="-11">T</tspan><tspan dx="4" dy="7">E x</tspan><tspan font-size="12" dy="4">1</tspan><tspan dx="5" dy="-4">= 0,  x = K</tspan><tspan font-size="12" dy="-7">−1</tspan><tspan dy="7">p</tspan></text>
+    <text x="150" y="534">F = K<tspan font-size="12" dy="4">2</tspan><tspan font-size="12" dy="-11">−T</tspan><tspan dx="4" dy="7">E K</tspan><tspan font-size="12" dy="4">1</tspan><tspan font-size="12" dy="-11">−1</tspan></text>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#334155">
+    <text x="36" y="566">X and X′ share the ray of p<tspan font-size="12" dy="4">1</tspan><tspan dy="-4">, so p</tspan><tspan font-size="12" dy="4">2</tspan><tspan dx="5" dy="-4">and p</tspan><tspan font-size="12" dy="4">2</tspan><tspan dy="-4">′ lie on l</tspan><tspan font-size="12" dy="4">2</tspan><tspan dy="-4">.</tspan></text>
+    <text x="36" y="592">e<tspan font-size="12" dy="4">2</tspan><tspan dx="5" dy="-4">is the image of C</tspan><tspan font-size="12" dy="4">1</tspan><tspan dy="-4">; every epipolar line meets it.</tspan></text>
+    <text x="36" y="624" font-size="14">Constructed configuration, orthographic view, to scale.</text>
+  </g>
+</svg>

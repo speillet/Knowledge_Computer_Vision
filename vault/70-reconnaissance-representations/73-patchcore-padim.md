@@ -72,8 +72,14 @@ Reponse: **Expected answer**: Compare acquisition/preprocessing, registration an
 
 **Paired experiment**: Image the same conforming parts before and after the lighting change and compare their scores by region. Then do the same for known defects. This makes it possible to study the displacement of the nominal population and the separation between conforming and defective parts, instead of arbitrarily moving a global threshold. If the two populations get closer, restoring the false-rejection rate by raising the threshold can greatly degrade defect recall. Also document exposure, saturation and white balance: a normalization of features does not recover visual information lost in saturated pixels. The result must be checked on other parts and batches.
 
-**Blocking errors**: Automatically labeling any score increase as a physical defect.
-Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1 – 3.3](https://arxiv.org/abs/2106.08265); acquisition diagnosis deduced by the project.
+**Why every score rises**: both deep methods score a patch by its distance to nominal features, PatchCore to the nearest bank feature and PaDiM in units of each position's training covariance, where a direction that never varied in training is amplified by $1/\sqrt{\epsilon}=10$ (reference, example C). A lighting change absent from training moves the features of every patch, and the image score, a maximum over patches, rises with them [PatchCore, §3.3; PaDiM, §III-C].
+
+**Discriminating signature** (project deduction): on a verified conforming part imaged under both setups, compare the distribution of patch scores, not only the image maximum. An acquisition shift raises the median patch score with the maximum, over the whole map; a real defect raises a localized group of patches and leaves the median in place.
+
+**Constructed threshold trap** (Gaussian scores for illustration, recomputed in the check script of this pass): good parts score $\mathcal N(1.0,0.2^2)$ and defects $\mathcal N(2.0,0.3^2)$; $\tau=1.465$ rejects 1% of good parts and catches 96.3% of defects. The new lighting moves good parts to $\mathcal N(1.5,0.2^2)$, so 57% are rejected, and defects only to $\mathcal N(2.2,0.3^2)$. Raising $\tau$ to 1.965 restores 1% false rejections, but recall falls to 78%.
+
+**Blocking errors**: Automatically labeling any score increase as a physical defect. Restoring the false-rejection rate by raising the threshold without measuring defect recall under the new acquisition.
+Source: [[70-reconnaissance-representations/references/73-patchcore-padim|Full reference]]; [Roth et al., PatchCore, §§3.1–3.3, image score as the maximum patch distance](https://arxiv.org/abs/2106.08265); [Defard et al., PaDiM, §III-C, image score as the maximum of the map; §IV-B, $\epsilon=0.01$](https://arxiv.org/abs/2011.08785); acquisition diagnosis, the median-versus-maximum signature and the threshold example constructed by the project.
 Tags: cv::pilote cv::d07 famille::diagnostic cv_id::CV-ANOMALIES-003 provenance::agent pole::A pole::E
 END
 

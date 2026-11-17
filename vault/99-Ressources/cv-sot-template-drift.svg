@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 580" role="img" aria-labelledby="sd-title sd-desc">
+  <title id="sd-title">How an occlusion becomes drift</title>
+  <desc id="sd-desc">Constructed toy model drawn to scale: a linear template mixes the target and a similar distractor, with distractor share s. During a 10-frame occlusion the box sits on the distractor and each update moves s toward 1 at rate eta. With eta = 0.075, s reaches 0.54 after 10 frames; it crossed 0.5 after 8.9 updates, its half-life, so the distractor now answers more strongly than the returning target, the tracker stays on it and s keeps rising to 0.96 by frame 40. With eta = 0.02, s reaches only 0.18, the target wins when it reappears and s decays to 0.10 by frame 40. With updates gated during the occlusion, s stays 0.</desc>
+  <defs>
+    <marker id="sd-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#334155"/></marker>
+  </defs>
+  <rect width="540" height="580" rx="12" fill="#f8fafc"/>
+  <text x="270" y="34" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">How an occlusion becomes drift</text>
+  <text x="270" y="60" font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">distractor share s of the template, toy model</text>
+
+  <!-- occlusion band: frames 0 to 10, x = 70 + 11 k -->
+  <rect x="70" y="92" width="110" height="318" fill="#7c3aed" fill-opacity="0.10"/>
+  <text x="125" y="114" font-family="sans-serif" font-size="16" fill="#7c3aed" text-anchor="middle">occluded</text>
+
+  <!-- axes: s = 0 at y = 410, s = 1 at y = 110 (300 px per unit); the x axis is drawn 10 px lower -->
+  <g stroke="#334155" stroke-width="2" fill="none">
+    <line x1="70" y1="420" x2="70" y2="96" marker-end="url(#sd-arrow)"/>
+    <line x1="70" y1="420" x2="522" y2="420" marker-end="url(#sd-arrow)"/>
+    <line x1="64" y1="110" x2="70" y2="110"/><line x1="64" y1="260" x2="70" y2="260"/><line x1="64" y1="410" x2="70" y2="410"/>
+    <line x1="70" y1="420" x2="70" y2="426"/><line x1="180" y1="420" x2="180" y2="426"/><line x1="290" y1="420" x2="290" y2="426"/>
+    <line x1="400" y1="420" x2="400" y2="426"/><line x1="510" y1="420" x2="510" y2="426"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#334155">
+    <text x="58" y="116" text-anchor="end">1</text>
+    <text x="58" y="266" text-anchor="end">0.5</text>
+    <text x="58" y="416" text-anchor="end">0</text>
+    <text x="70" y="444" text-anchor="middle">0</text><text x="180" y="444" text-anchor="middle">10</text>
+    <text x="290" y="444" text-anchor="middle">20</text><text x="400" y="444" text-anchor="middle">30</text>
+    <text x="510" y="444" text-anchor="middle">40</text>
+    <text x="290" y="468" text-anchor="middle">frames since the occlusion began</text>
+  </g>
+
+  <!-- tipping point s = 0.5 -->
+  <line x1="70" y1="260" x2="510" y2="260" stroke="#334155" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <g font-family="sans-serif" font-size="16" fill="#334155" text-anchor="end">
+    <text x="508" y="252">distractor wins</text>
+    <text x="508" y="282">target wins</text>
+  </g>
+
+  <!-- curves -->
+  <polyline id="sd-gated" fill="none" stroke="#0369a1" stroke-width="3" points="70,410 510,410"/>
+  <polyline id="sd-eta0075" fill="none" stroke="#b91c1c" stroke-width="3" points="70,410.0 81,387.5 92,366.7 103,347.4 114,329.6 125,313.2 136,297.9 147,283.8 158,270.8 169,258.7 180,247.6 191,237.3 202,227.7 213,218.9 224,210.7 235,203.2 246,196.2 257,189.7 268,183.7 279,178.2 290,173.1 301,168.4 312,164.0 323,159.9 334,156.2 345,152.7 356,149.5 367,146.6 378,143.8 389,141.3 400,138.9 411,136.8 422,134.8 433,132.9 444,131.2 455,129.6 466,128.1 477,126.8 488,125.5 499,124.3 510,123.3"/>
+  <polyline id="sd-eta002" fill="none" stroke="#15803d" stroke-width="3" points="70,410.0 81,404.0 92,398.1 103,392.4 114,386.7 125,381.2 136,375.8 147,370.4 158,365.2 169,360.1 180,355.1 191,356.2 202,357.3 213,358.3 224,359.4 235,360.4 246,361.4 257,362.4 268,363.3 279,364.2 290,365.2 301,366.1 312,366.9 323,367.8 334,368.6 345,369.5 356,370.3 367,371.1 378,371.9 389,372.6 400,373.4 411,374.1 422,374.8 433,375.5 444,376.2 455,376.9 466,377.5 477,378.2 488,378.8 499,379.5 510,380.1"/>
+
+  <!-- values at the end of the occlusion and the crossing -->
+  <circle cx="180" cy="247.6" r="5" fill="#b91c1c"/>
+  <circle cx="180" cy="355.1" r="5" fill="#15803d"/>
+  <circle cx="167.8" cy="260" r="6" fill="none" stroke="#0f172a" stroke-width="2"/>
+  <g font-family="sans-serif" font-size="16" font-weight="bold">
+    <text x="172" y="236" fill="#b91c1c" text-anchor="end">0.54</text>
+    <text x="172" y="344" fill="#15803d" text-anchor="end">0.18</text>
+  </g>
+  <line x1="214" y1="300" x2="174" y2="266" stroke="#0f172a" stroke-width="1.5"/>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="218" y="312">0.5 after 8.9 updates:</text>
+    <text x="218" y="332">the half-life at η = 0.075</text>
+  </g>
+
+  <!-- curve labels -->
+  <g font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="end">
+    <text x="508" y="112" fill="#b91c1c">η = 0.075: stays on it</text>
+    <text x="508" y="364" fill="#15803d">η = 0.02: returns</text>
+    <text x="508" y="402" fill="#0369a1">update gated</text>
+  </g>
+
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="16" y="502">Template = (1 − s)·target + s·distractor.</text>
+    <text x="16" y="526">The distractor answers more strongly iff s &gt; 0.5;</text>
+    <text x="16" y="550">each update made on it then raises s again.</text>
+  </g>
+</svg>

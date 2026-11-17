@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 520" role="img" aria-labelledby="title desc">
+  <title id="title">Same throughput, different freshness</title>
+  <desc id="desc">Two pipelines receive the same frames and emit one result per frame period, so their throughput is equal. Pipeline A outputs each result half a period after capture; pipeline B outputs it two and a half periods after capture because frames wait in a queue. The lower plot shows the age of the newest result: a sawtooth rising from the latency to the latency plus one period. Only A stays below the deadline.</desc>
+  <defs>
+    <marker id="pa-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#334155"/></marker>
+  </defs>
+  <rect width="540" height="520" rx="12" fill="#f8fafc"/>
+  <text x="270" y="34" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">Same throughput, different freshness</text>
+
+  <!-- lanes -->
+  <g font-family="sans-serif" font-size="17" fill="#0f172a">
+    <text x="16" y="86">capture</text>
+    <text x="16" y="156">output A</text>
+    <text x="16" y="226">output B</text>
+  </g>
+  <g stroke="#94a3b8" stroke-width="2">
+    <line x1="110" y1="80" x2="525" y2="80"/>
+    <line x1="110" y1="150" x2="525" y2="150"/>
+    <line x1="110" y1="220" x2="525" y2="220"/>
+  </g>
+  <!-- capture ticks every 60 px = one period 1/X -->
+  <g fill="#0369a1">
+    <circle cx="130" cy="80" r="6"/><circle cx="190" cy="80" r="6"/><circle cx="250" cy="80" r="6"/>
+    <circle cx="310" cy="80" r="6"/><circle cx="370" cy="80" r="6"/><circle cx="430" cy="80" r="6"/><circle cx="490" cy="80" r="6"/>
+  </g>
+  <!-- outputs A: latency half a period -->
+  <g fill="#15803d">
+    <rect x="154" y="144" width="12" height="12"/><rect x="214" y="144" width="12" height="12"/><rect x="274" y="144" width="12" height="12"/>
+    <rect x="334" y="144" width="12" height="12"/><rect x="394" y="144" width="12" height="12"/><rect x="454" y="144" width="12" height="12"/><rect x="514" y="144" width="12" height="12"/>
+  </g>
+  <!-- outputs B: latency two and a half periods -->
+  <g fill="#b91c1c">
+    <rect x="274" y="214" width="12" height="12"/><rect x="334" y="214" width="12" height="12"/>
+    <rect x="394" y="214" width="12" height="12"/><rect x="454" y="214" width="12" height="12"/><rect x="514" y="214" width="12" height="12"/>
+  </g>
+  <!-- latency of the first frame, as brackets from its capture time -->
+  <line x1="130" y1="88" x2="130" y2="246" stroke="#0369a1" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <g stroke="#334155" stroke-width="1.5">
+    <line x1="130" y1="170" x2="160" y2="170"/><line x1="160" y1="164" x2="160" y2="176"/>
+    <line x1="130" y1="240" x2="280" y2="240"/><line x1="280" y1="234" x2="280" y2="246"/>
+  </g>
+  <text x="168" y="178" font-family="sans-serif" font-size="16" fill="#334155">L<tspan font-size="12" dy="4">A</tspan></text>
+  <text x="122" y="266" font-family="sans-serif" font-size="16" fill="#334155">L<tspan font-size="12" dy="4">B</tspan><tspan dx="5" dy="-4">= queue wait + service</tspan></text>
+  <!-- equal spacing brace -->
+  <g stroke="#334155" stroke-width="1.5">
+    <line x1="400" y1="240" x2="400" y2="252"/><line x1="460" y1="240" x2="460" y2="252"/><line x1="400" y1="246" x2="460" y2="246"/>
+  </g>
+  <text x="430" y="272" font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">1/X in both</text>
+
+  <!-- age plot -->
+  <text x="16" y="306" font-family="sans-serif" font-size="17" fill="#0f172a">age of the newest result, Δ(t) = t − u(t)</text>
+  <g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#pa-arrow)">
+    <line x1="110" y1="480" x2="528" y2="480"/>
+    <line x1="110" y1="480" x2="110" y2="318"/>
+  </g>
+  <text x="520" y="502" font-family="sans-serif" font-size="16" fill="#334155" text-anchor="end">time</text>
+  <!-- deadline at two periods: 480 - 2*36 = 408 -->
+  <line x1="110" y1="408" x2="525" y2="408" stroke="#7c3aed" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="118" y="400" font-family="sans-serif" font-size="16" fill="#7c3aed">deadline</text>
+  <!-- A sawtooth: from L=0.5 to 1.5 periods; 1 period = 36 px vertical, 60 px horizontal -->
+  <polyline fill="none" stroke="#15803d" stroke-width="3" points="160,462 220,426 220,462 280,426 280,462 340,426 340,462 400,426 400,462 460,426 460,462 520,426 520,462"/>
+  <!-- B sawtooth: from 2.5 to 3.5 periods -->
+  <polyline fill="none" stroke="#b91c1c" stroke-width="3" points="280,390 340,354 340,390 400,354 400,390 460,354 460,390 520,354 520,390"/>
+  <g font-family="sans-serif" font-size="17" font-weight="bold">
+    <text x="132" y="452" fill="#15803d">A</text>
+    <text x="250" y="380" fill="#b91c1c">B</text>
+  </g>
+  <text x="290" y="342" font-family="sans-serif" font-size="16" fill="#b91c1c">from L<tspan font-size="12" dy="4">B</tspan><tspan dx="5" dy="-4">to L</tspan><tspan font-size="12" dy="4">B</tspan><tspan dx="5" dy="-4">+ 1/X</tspan></text>
+</svg>

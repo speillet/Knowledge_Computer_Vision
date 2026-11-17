@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-SOT", "CV-FILTRES"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -307,6 +307,25 @@ trackers that do not follow scale [KCF, §VIII-B]. Attribute subsets such as occ
 and non-rigid deformation are reported separately [§VIII-D]. That choice favors
 scale-blind filters; an overlap-based comparison can rank them differently.
 
+*Worked example C (constructed, recomputed by the 2026-11-16 check script): one failure
+under two protocols.* On a 300-frame sequence, tracker A overlaps the target at IoU 0.70
+but loses it for good at frame 101; tracker B never fails and overlaps at 0.60. In
+one-pass evaluation, which runs from the ground-truth first box to the end without reset
+[Wu et al., §4], A's mean overlap is $0.70\times100/300\approx0.23$ and its success rate at
+IoU 0.5 is 1/3, against 0.60 and 1 for B. Under VOT's protocol, a failure is declared when
+the overlap drops to zero, the tracker is re-initialized 5 frames later and the 10
+following burn-in frames are excluded from accuracy [Kristan et al., §3.1]: A's accuracy
+becomes about 0.70 with one failure, B's 0.60 with none. The accuracy ranking flips, and
+only the failure count shows A's loss. Had A failed at frame 281, its one-pass mean
+overlap would be 0.65, above B; Kristan et al. note that counting the frames after a
+failure penalizes early failures far more than late ones [§2.1]. In their thought
+experiment, a tracker of true overlap $\mu_A$ that fails with probability $p$ at a
+uniformly placed critical point has an expected one-pass overlap of $\mu_A(1-p/2)$,
+whereas re-initialization recovers $\mu_A$ with lower variance [§3.2.1, eqs. 5–8]. The
+success-plot AUC that OTB uses for ranking approximately equals the mean overlap over
+all frames, because integrating $\mathbb 1[o>t]$ over $t\in[0,1]$ gives $o$ (project
+derivation): the protocols differ in which frames enter the mean, not in the overlap.
+
 **Proposed baseline and controlled variation (not executed).**
 
 - *Data*: held-out sequences from the deployment domain with occlusions, crossings
@@ -450,6 +469,8 @@ Consulted foundations: [KCF](https://arxiv.org/html/1404.7584v3): §IV circulant
 
 - [Bolme et al. 2010, MOSSE](https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf): abstract; §3 introduction (eq. 1); §3.1 preprocessing; §3.2 eqs. 3–5 and $\sigma=2$; §3.3 regularization and Fig. 4; §3.4 initialization and eqs. 10–12; §3.5 PSR; §4.2 scale and orientation; §4.3 timing.
 - [Henriques et al. 2015, KCF](https://arxiv.org/html/1404.7584v3): §IV-A to §IV-E (eqs. 1–12, complexity, relation to MOSSE); §V-B and §V-C (Theorem 1, eqs. 16–22); §VI-A to §VI-C (eqs. 23–30); §VII-A and §VII-B (eqs. 31–32); §VIII-A (pipeline, Algorithm 1); §VIII-B (precision metric); §VIII-C (Table I, timing); Appendix A-A, A-F and Table II.
+- [Wu, Lim and Yang 2013, OTB](https://openaccess.thecvf.com/content_cvpr_2013/papers/Wu_Online_Object_Tracking_2013_CVPR_paper.pdf): §4, one-pass evaluation, precision and success plots, AUC ranking (worked example C).
+- [Kristan et al. 2016, VOT evaluation methodology](https://arxiv.org/abs/1503.01313): §2.1 (distortion from frames after a failure), §3.1 (accuracy, robustness, re-initialization after 5 frames, 10 burn-in frames), §3.2.1 eqs. 5–8 (estimators with and without re-initialization) (worked example C).
 
 ### Implementation sources
 
@@ -463,3 +484,5 @@ Consulted foundations: [KCF](https://arxiv.org/html/1404.7584v3): §IV circulant
 - [CV-SOT](113-tracking-monoobjet.md) for the comparison and protocols; [CV-MEANSHIFT](115-meanshift-camshift.md) for color-distribution tracking.
 
 Drafted by Agent Codex, 2026-10-24. Revision 6, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/114-mosse-kcf.md).
+Revision 7, 2026-11-16: worked example C (one failure under one-pass and reset protocols) added while
+deepening CV-CORRELATION-005, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/114-mosse-kcf.md).

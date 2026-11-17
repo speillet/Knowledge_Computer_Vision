@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 752" role="img" aria-labelledby="mt-title mt-desc">
+  <title id="mt-title">One identity switch, counted two ways</title>
+  <desc id="mt-desc">Constructed example: two ground-truth objects A and B over 8 frames, every predicted box perfectly placed. Object B keeps predicted ID 2 throughout; object A has ID 1 in frames 1 to 5 and a new ID 3 in frames 6 to 8. Top panel, per-frame matching as in CLEAR MOT: 16 true positives, no miss, no false positive and one identity switch at frame 6, so MOTA is 1 minus 1/16, about 0.94, while detection alone is perfect. Bottom panel, the global one-to-one ID matching of IDF1 pairs A with track 1 (5 shared frames) and B with track 2 (8 frames); the pair A with track 3 (3 frames) is left out. 13 detections are explained (IDTP), A's last 3 frames are identity false negatives and track 3's 3 detections identity false positives, so IDF1 is 26/32, about 0.81.</desc>
+  <rect width="540" height="752" rx="12" fill="#f8fafc"/>
+  <text x="270" y="34" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">One identity switch, counted two ways</text>
+  <text x="270" y="60" font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">2 objects, 8 frames, perfect boxes; cell = predicted ID</text>
+
+  <!-- frame numbers: column k at x = 76 + 48 (k - 1), centre + 22 -->
+  <g font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">
+    <text x="16" y="92" text-anchor="start">frame</text>
+    <text x="98" y="92">1</text><text x="146" y="92">2</text><text x="194" y="92">3</text><text x="242" y="92">4</text>
+    <text x="290" y="92">5</text><text x="338" y="92">6</text><text x="386" y="92">7</text><text x="434" y="92">8</text>
+  </g>
+
+  <!-- panel 1: per-frame matching -->
+  <text x="16" y="126" font-family="sans-serif" font-size="17" font-weight="bold" fill="#0f172a">Per-frame matching (CLEAR MOT)</text>
+  <g font-family="sans-serif" font-size="17" fill="#0f172a">
+    <text x="16" y="168">gt A</text>
+    <text x="16" y="216">gt B</text>
+  </g>
+  <g id="mt-p1" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.5">
+    <rect id="mt-p1-A1" x="76" y="142" width="44" height="40" rx="4"/><rect id="mt-p1-A2" x="124" y="142" width="44" height="40" rx="4"/>
+    <rect id="mt-p1-A3" x="172" y="142" width="44" height="40" rx="4"/><rect id="mt-p1-A4" x="220" y="142" width="44" height="40" rx="4"/>
+    <rect id="mt-p1-A5" x="268" y="142" width="44" height="40" rx="4"/><rect id="mt-p1-A6" x="316" y="142" width="44" height="40" rx="4" stroke="#b91c1c" stroke-width="4"/>
+    <rect id="mt-p1-A7" x="364" y="142" width="44" height="40" rx="4"/><rect id="mt-p1-A8" x="412" y="142" width="44" height="40" rx="4"/>
+    <rect id="mt-p1-B1" x="76" y="190" width="44" height="40" rx="4"/><rect id="mt-p1-B2" x="124" y="190" width="44" height="40" rx="4"/>
+    <rect id="mt-p1-B3" x="172" y="190" width="44" height="40" rx="4"/><rect id="mt-p1-B4" x="220" y="190" width="44" height="40" rx="4"/>
+    <rect id="mt-p1-B5" x="268" y="190" width="44" height="40" rx="4"/><rect id="mt-p1-B6" x="316" y="190" width="44" height="40" rx="4"/>
+    <rect id="mt-p1-B7" x="364" y="190" width="44" height="40" rx="4"/><rect id="mt-p1-B8" x="412" y="190" width="44" height="40" rx="4"/>
+  </g>
+  <g id="mt-p1-ids" font-family="sans-serif" font-size="17" font-weight="bold" fill="#0f172a" text-anchor="middle">
+    <text x="98" y="168">1</text><text x="146" y="168">1</text><text x="194" y="168">1</text><text x="242" y="168">1</text>
+    <text x="290" y="168">1</text><text x="338" y="168" fill="#b91c1c">3</text><text x="386" y="168">3</text><text x="434" y="168">3</text>
+    <text x="98" y="216">2</text><text x="146" y="216">2</text><text x="194" y="216">2</text><text x="242" y="216">2</text>
+    <text x="290" y="216">2</text><text x="338" y="216">2</text><text x="386" y="216">2</text><text x="434" y="216">2</text>
+  </g>
+  <text x="468" y="168" font-family="sans-serif" font-size="16" font-weight="bold" fill="#b91c1c">IDSW</text>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="16" y="262">16 TP, 0 FN, 0 FP: detection is perfect</text>
+    <text x="16" y="286">1 switch event (red cell)</text>
+    <text x="16" y="314" font-weight="bold">MOTA = 1 − 1/16 ≈ 0.94</text>
+  </g>
+
+  <line x1="16" y1="336" x2="524" y2="336" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- panel 2: global ID matching -->
+  <text x="16" y="364" font-family="sans-serif" font-size="17" font-weight="bold" fill="#0f172a">Global one-to-one ID matching (IDF1)</text>
+  <g font-family="sans-serif" font-size="17" fill="#0f172a">
+    <text x="16" y="404">gt A</text>
+    <text x="16" y="452">gt B</text>
+  </g>
+  <g id="mt-p2" stroke-width="1.5">
+    <g fill="#15803d" fill-opacity="0.15" stroke="#15803d">
+      <rect id="mt-p2-A1" x="76" y="378" width="44" height="40" rx="4"/><rect id="mt-p2-A2" x="124" y="378" width="44" height="40" rx="4"/>
+      <rect id="mt-p2-A3" x="172" y="378" width="44" height="40" rx="4"/><rect id="mt-p2-A4" x="220" y="378" width="44" height="40" rx="4"/>
+      <rect id="mt-p2-A5" x="268" y="378" width="44" height="40" rx="4"/>
+      <rect id="mt-p2-B1" x="76" y="426" width="44" height="40" rx="4"/><rect id="mt-p2-B2" x="124" y="426" width="44" height="40" rx="4"/>
+      <rect id="mt-p2-B3" x="172" y="426" width="44" height="40" rx="4"/><rect id="mt-p2-B4" x="220" y="426" width="44" height="40" rx="4"/>
+      <rect id="mt-p2-B5" x="268" y="426" width="44" height="40" rx="4"/><rect id="mt-p2-B6" x="316" y="426" width="44" height="40" rx="4"/>
+      <rect id="mt-p2-B7" x="364" y="426" width="44" height="40" rx="4"/><rect id="mt-p2-B8" x="412" y="426" width="44" height="40" rx="4"/>
+    </g>
+    <g fill="#b91c1c" fill-opacity="0.12" stroke="#b91c1c">
+      <rect id="mt-p2-A6" x="316" y="378" width="44" height="40" rx="4"/><rect id="mt-p2-A7" x="364" y="378" width="44" height="40" rx="4"/>
+      <rect id="mt-p2-A8" x="412" y="378" width="44" height="40" rx="4"/>
+    </g>
+  </g>
+  <g id="mt-p2-ids" font-family="sans-serif" font-size="17" font-weight="bold" text-anchor="middle">
+    <g fill="#15803d">
+      <text x="98" y="404">1</text><text x="146" y="404">1</text><text x="194" y="404">1</text><text x="242" y="404">1</text><text x="290" y="404">1</text>
+      <text x="98" y="452">2</text><text x="146" y="452">2</text><text x="194" y="452">2</text><text x="242" y="452">2</text>
+      <text x="290" y="452">2</text><text x="338" y="452">2</text><text x="386" y="452">2</text><text x="434" y="452">2</text>
+    </g>
+    <g fill="#b91c1c">
+      <text x="338" y="404">3</text><text x="386" y="404">3</text><text x="434" y="404">3</text>
+    </g>
+  </g>
+
+  <!-- bipartite graph of identities -->
+  <text x="16" y="500" font-family="sans-serif" font-size="16" fill="#334155">IDs paired once for the whole sequence:</text>
+  <g font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">
+    <text x="150" y="532">truth</text>
+    <text x="380" y="532">tracks</text>
+  </g>
+  <g stroke-width="4" fill="none">
+    <line x1="166" y1="572" x2="364" y2="556" stroke="#15803d"/>
+    <line x1="166" y1="572" x2="364" y2="600" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5"/>
+    <line x1="166" y1="640" x2="364" y2="640" stroke="#15803d"/>
+  </g>
+  <g fill="#e0f2fe" stroke="#0369a1" stroke-width="1.5">
+    <circle cx="150" cy="572" r="16"/><circle cx="150" cy="640" r="16"/>
+    <circle cx="380" cy="556" r="16"/><circle cx="380" cy="600" r="16"/><circle cx="380" cy="640" r="16"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" font-weight="bold" fill="#0f172a" text-anchor="middle">
+    <text x="150" y="578">A</text><text x="150" y="646">B</text>
+    <text x="380" y="562">1</text><text x="380" y="606">3</text><text x="380" y="646">2</text>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#334155">
+    <text x="404" y="562">track 1</text>
+    <text x="404" y="606">track 3</text>
+    <text x="404" y="646">track 2</text>
+  </g>
+  <g font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle">
+    <text x="256" y="554" fill="#15803d">5 frames</text>
+    <text x="215" y="612" fill="#334155" font-weight="normal">3 frames, left out</text>
+    <text x="256" y="666" fill="#15803d">8 frames</text>
+  </g>
+
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="16" y="700">13 explained (green); each red cell: 1 IDFN + 1 IDFP</text>
+    <text x="16" y="730" font-weight="bold">IDF1 = 2·13 / (2·13 + 3 + 3) ≈ 0.81</text>
+  </g>
+</svg>

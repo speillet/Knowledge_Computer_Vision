@@ -1,0 +1,211 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 720" role="img" aria-labelledby="bv-title bv-desc">
+  <title id="bv-title">Two meanings of occupancy: a robot grid and an occupancy network</title>
+  <desc id="bv-desc">Top: one LiDAR scan inserted into a 13 by 9 occupancy grid, the sensor at the bottom centre with a field of view of plus or minus 36 degrees and 13 rays. Cells crossed by a ray become free with probability 0.4, cells holding a return become occupied with probability 0.7, following the OctoMap sensor model with log-odds minus 0.4 and plus 0.85. Cells behind the pallet, beside the field of view and wall cells that no ray reached stay unknown: they were never updated. Bottom, schematic: an occupancy network f of p and x returns a value between 0 and 1 for any query point p of one object, given an input view x. The mesh surface is the level f equal to tau equal to 0.2, outside the level f equal to 0.5. The side hidden from the input view still receives values, from the learned shape prior. Training points are sampled in a padded bounding box; outside it the function was never supervised. The network has no unknown state, no time and no ray model.</desc>
+  <defs>
+    <pattern id="bv-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#e2e8f0"/><line x1="0" y1="0" x2="0" y2="8" stroke="#94a3b8" stroke-width="2"/></pattern>
+    <marker id="bv-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#334155"/></marker>
+  </defs>
+  <rect width="540" height="720" rx="12" fill="#f8fafc"/>
+  <text x="270" y="28" font-family="sans-serif" font-size="18" font-weight="bold" fill="#0f172a" text-anchor="middle">Two meanings of occupancy</text>
+
+  <!-- panel A: robot occupancy grid, one scan (cells computed by ray casting) -->
+  <text x="20" y="58" font-family="sans-serif" font-size="16" font-weight="bold" fill="#0f172a">Robot grid: belief from one LiDAR scan</text>
+  <g id="bv-cells">
+    <rect id="bv-c0r0" x="75" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c1r0" x="105" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c2r0" x="135" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c3r0" x="165" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c4r0" x="195" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c5r0" x="225" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c6r0" x="255" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c7r0" x="285" y="70" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c8r0" x="315" y="70" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c9r0" x="345" y="70" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c10r0" x="375" y="70" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c11r0" x="405" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c12r0" x="435" y="70" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c0r1" x="75" y="100" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r1" x="105" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c2r1" x="135" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c3r1" x="165" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c4r1" x="195" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c5r1" x="225" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c6r1" x="255" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r1" x="285" y="100" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c8r1" x="315" y="100" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c9r1" x="345" y="100" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c10r1" x="375" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c11r1" x="405" y="100" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c12r1" x="435" y="100" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c0r2" x="75" y="130" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r2" x="105" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c2r2" x="135" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c3r2" x="165" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c4r2" x="195" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c5r2" x="225" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c6r2" x="255" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r2" x="285" y="130" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c8r2" x="315" y="130" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c9r2" x="345" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c10r2" x="375" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c11r2" x="405" y="130" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c12r2" x="435" y="130" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c0r3" x="75" y="160" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r3" x="105" y="160" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c2r3" x="135" y="160" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c3r3" x="165" y="160" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c4r3" x="195" y="160" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c5r3" x="225" y="160" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c6r3" x="255" y="160" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r3" x="285" y="160" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c8r3" x="315" y="160" width="30" height="30" fill="#b91c1c" fill-opacity="0.45"/>
+    <rect id="bv-c9r3" x="345" y="160" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c10r3" x="375" y="160" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c11r3" x="405" y="160" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c12r3" x="435" y="160" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c0r4" x="75" y="190" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r4" x="105" y="190" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c2r4" x="135" y="190" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c3r4" x="165" y="190" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c4r4" x="195" y="190" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c5r4" x="225" y="190" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c6r4" x="255" y="190" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r4" x="285" y="190" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c8r4" x="315" y="190" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c9r4" x="345" y="190" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c10r4" x="375" y="190" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c11r4" x="405" y="190" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c12r4" x="435" y="190" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c0r5" x="75" y="220" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r5" x="105" y="220" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c2r5" x="135" y="220" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c3r5" x="165" y="220" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c4r5" x="195" y="220" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c5r5" x="225" y="220" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c6r5" x="255" y="220" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r5" x="285" y="220" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c8r5" x="315" y="220" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c9r5" x="345" y="220" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c10r5" x="375" y="220" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c11r5" x="405" y="220" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c12r5" x="435" y="220" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c0r6" x="75" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r6" x="105" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c2r6" x="135" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c3r6" x="165" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c4r6" x="195" y="250" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c5r6" x="225" y="250" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c6r6" x="255" y="250" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r6" x="285" y="250" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c8r6" x="315" y="250" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c9r6" x="345" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c10r6" x="375" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c11r6" x="405" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c12r6" x="435" y="250" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c0r7" x="75" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r7" x="105" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c2r7" x="135" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c3r7" x="165" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c4r7" x="195" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c5r7" x="225" y="280" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c6r7" x="255" y="280" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r7" x="285" y="280" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c8r7" x="315" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c9r7" x="345" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c10r7" x="375" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c11r7" x="405" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c12r7" x="435" y="280" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c0r8" x="75" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c1r8" x="105" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c2r8" x="135" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c3r8" x="165" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c4r8" x="195" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c5r8" x="225" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c6r8" x="255" y="310" width="30" height="30" fill="#15803d" fill-opacity="0.22"/>
+    <rect id="bv-c7r8" x="285" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c8r8" x="315" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c9r8" x="345" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c10r8" x="375" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c11r8" x="405" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+    <rect id="bv-c12r8" x="435" y="310" width="30" height="30" fill="url(#bv-hatch)"/>
+  </g>
+  <g stroke="#cbd5e1" stroke-width="1">
+    <path d="M105,70 V340 M135,70 V340 M165,70 V340 M195,70 V340 M225,70 V340 M255,70 V340 M285,70 V340 M315,70 V340 M345,70 V340 M375,70 V340 M405,70 V340 M435,70 V340"/>
+    <path d="M75,100 H465 M75,130 H465 M75,160 H465 M75,190 H465 M75,220 H465 M75,250 H465 M75,280 H465 M75,310 H465"/>
+  </g>
+  <rect x="75" y="70" width="390" height="270" fill="none" stroke="#334155" stroke-width="1.5"/>
+  <line x1="75" y1="70" x2="465" y2="70" stroke="#0f172a" stroke-width="4"/>
+  <text x="472" y="76" font-family="sans-serif" font-size="16" fill="#0f172a">wall</text>
+  <!-- rays from the sensor at (270, 325), every 6 degrees from -36 to 36 -->
+  <g id="bv-rays" stroke="#334155" stroke-width="1.2" fill="none">
+    <line x1="270" y1="325" x2="84.7" y2="70"/>
+    <line x1="270" y1="325" x2="122.8" y2="70"/>
+    <line x1="270" y1="325" x2="156.5" y2="70"/>
+    <line x1="270" y1="325" x2="187.1" y2="70"/>
+    <line x1="270" y1="325" x2="215.8" y2="70"/>
+    <line x1="270" y1="325" x2="243.2" y2="70"/>
+    <line x1="270" y1="325" x2="270" y2="70"/>
+    <line x1="270" y1="325" x2="285" y2="182.3"/>
+    <line x1="270" y1="325" x2="298.7" y2="190"/>
+    <line x1="270" y1="325" x2="313.9" y2="190"/>
+    <line x1="270" y1="325" x2="330.1" y2="190"/>
+    <line x1="270" y1="325" x2="417.2" y2="70"/>
+    <line x1="270" y1="325" x2="455.3" y2="70"/>
+  </g>
+  <g fill="#b91c1c">
+    <circle cx="84.7" cy="72" r="3"/><circle cx="122.8" cy="72" r="3"/><circle cx="156.5" cy="72" r="3"/><circle cx="187.1" cy="72" r="3"/><circle cx="215.8" cy="72" r="3"/><circle cx="243.2" cy="72" r="3"/><circle cx="270" cy="72" r="3"/>
+    <circle cx="285" cy="182.3" r="3"/><circle cx="298.7" cy="190" r="3"/><circle cx="313.9" cy="190" r="3"/><circle cx="330.1" cy="190" r="3"/>
+    <circle cx="417.2" cy="72" r="3"/><circle cx="455.3" cy="72" r="3"/>
+  </g>
+  <rect id="bv-pallet" x="285" y="160" width="60" height="30" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+  <text x="315" y="180" font-family="sans-serif" font-size="14" fill="#0f172a" text-anchor="middle">pallet</text>
+  <circle id="bv-sensor" cx="270" cy="325" r="6" fill="#0369a1"/>
+  <text x="270" y="358" font-family="sans-serif" font-size="16" fill="#0369a1" text-anchor="middle">LiDAR</text>
+  <g font-family="sans-serif" font-size="14" fill="#0f172a" text-anchor="middle">
+    <rect x="292" y="84" width="76" height="40" rx="4" fill="#f8fafc" fill-opacity="0.92"/>
+    <text x="330" y="100">behind:</text>
+    <text x="330" y="117">unknown</text>
+    <rect x="80" y="314" width="92" height="22" rx="4" fill="#f8fafc" fill-opacity="0.92"/>
+    <text x="126" y="330">outside field</text>
+  </g>
+  <!-- legend A -->
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <rect x="30" y="380" width="18" height="18" fill="#15803d" fill-opacity="0.22" stroke="#15803d"/>
+    <text x="56" y="395">free, P = 0.4</text>
+    <rect x="196" y="380" width="18" height="18" fill="#b91c1c" fill-opacity="0.45" stroke="#b91c1c"/>
+    <text x="222" y="395">return, P = 0.7</text>
+    <rect x="378" y="380" width="18" height="18" fill="url(#bv-hatch)" stroke="#94a3b8"/>
+    <text x="404" y="395">unknown</text>
+  </g>
+  <text x="30" y="420" font-family="sans-serif" font-size="14" fill="#334155">OctoMap log-odds per scan: −0.4 if a ray passed, +0.85 at a return</text>
+
+  <!-- panel B: occupancy network, schematic -->
+  <line x1="20" y1="438" x2="520" y2="438" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="20" y="464" font-family="sans-serif" font-size="16" font-weight="bold" fill="#0f172a">Occupancy network: one shape (schematic)</text>
+  <rect x="40" y="478" width="260" height="162" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="48" y="616" font-family="sans-serif" font-size="14" fill="#334155">padded box:</text>
+  <text x="48" y="632" font-family="sans-serif" font-size="14" fill="#334155">training points</text>
+  <text x="170" y="500" font-family="sans-serif" font-size="14" fill="#7c3aed" text-anchor="middle">hidden side: values from</text>
+  <text x="170" y="516" font-family="sans-serif" font-size="14" fill="#7c3aed" text-anchor="middle">the learned shape prior</text>
+  <rect x="92" y="524" width="156" height="76" rx="16" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+  <rect x="102" y="534" width="136" height="56" rx="8" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5 4"/>
+  <rect x="110" y="542" width="120" height="40" rx="3" fill="#e2e8f0" stroke="#334155" stroke-width="2"/>
+  <text x="170" y="567" font-family="sans-serif" font-size="14" fill="#0f172a" text-anchor="middle">object</text>
+  <line x1="170" y1="690" x2="170" y2="606" stroke="#334155" stroke-width="2" marker-end="url(#bv-arrow)"/>
+  <text x="182" y="684" font-family="sans-serif" font-size="16" fill="#334155">input view x</text>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="316" y="500">f(p, x) ∈ [0, 1]</text>
+    <text x="316" y="520">at any query p</text>
+    <line x1="316" y1="546" x2="346" y2="546" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="354" y="551">f = τ = 0.2:</text>
+    <text x="354" y="571">mesh surface</text>
+    <line x1="316" y1="594" x2="346" y2="594" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="354" y="599">f = 0.5</text>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#334155">
+    <text x="316" y="636">no unknown state,</text>
+    <text x="316" y="656">no time, no rays;</text>
+    <text x="316" y="676">outside the box:</text>
+    <text x="316" y="696">never supervised</text>
+  </g>
+</svg>

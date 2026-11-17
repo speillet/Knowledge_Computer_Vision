@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-VIO", "CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -308,6 +308,33 @@ fragmentations can both cost 33% of a trajectory [§3.1, Fig. 1]. Constructed ca
 recomputed by checks/132-tracking-trajectoires.py in the review directory
 2026-11-09-four-proposals.
 
+**Events versus frames.** Constructed example, recomputed by the 2026-11-16 check script
+(checks/132-tracking-trajectoires.py in the review directory of 2026-11-16). Same two
+perfectly placed objects over eight frames; B keeps ID 2, and A keeps ID 1 until a new
+ID 3 takes over. With the takeover at frame 6, per-frame matching finds 16 TP, no FN or FP
+and one IDSW, so MOTA is $1-1/16\approx0.94$ while MODA is 1. The ID bijection pairs A
+with 1 (5 shared frames) and B with 2 (8 frames), leaving A–3 (3 frames) out: IDTP 13,
+IDFN 3, IDFP 3, IDF1 $=26/32\approx0.81$; AssA is $98/128\approx0.77$ and HOTA 0.875.
+Moving the takeover changes only the identity metrics: at frame 5 IDF1 falls to 0.75, the
+minimum, and at frame 8 it rises to $30/32\approx0.94$, while MOTA stays at 0.94 because it
+still counts one event. Ristani et al. built their measures on this distinction: an
+event-based count charges between 1 and $n-1$ errors to a trajectory split over $n$ frames
+regardless of how long each part lasts, whereas IDF1 measures "how long the tracker
+correctly identifies targets" [§3.1, §3.3]. HOTA's authors list MOTA's blindness to how
+well predicted and true trajectories align as its sixth problem [§9.1]. Relabelling every
+matched prediction with the ID of its ground-truth object removes the association errors
+without touching the boxes: here MOTA returns to MODA, 1, and IDF1 to 1. In general, when
+the per-frame matches stay the same, the gap between the original and relabelled scores
+isolates association (project protocol behind the first row of the failure table).
+
+![One identity switch counted two ways: per-frame matching charges one IDSW and MOTA 0.94; the global ID bijection explains 13 of 16 detections and gives IDF1 0.81](../../99-Ressources/cv-metriques-temps-id-switch.svg)
+
+*Figure (project construction), schematic: one cell per frame and object, values recomputed
+by the 2026-11-16 check script, which reads the drawn IDs and colours.* The top panel
+counts the switch once, at the frame where it happens; the bottom panel pairs identities
+once for the whole sequence and charges every frame that pairing leaves unexplained
+(CV-METRIQUES-TEMPS-001).
+
 ### Trajectory errors
 
 Relative pose error at step $i$ for an interval $\Delta$, and its RMS over
@@ -356,6 +383,15 @@ also hides the scale (card CV-METRIQUES-TEMPS-003). The 2% scale error gives an 
 0.02 m over 1 m and 0.10 m over 5 m: relative error grows with the interval, which is
 why it is reported per length or as a percentage. A longer scale case with numbers is
 in [CV-VIO](../../60-vision-3d/references/63-slam-vio.md), worked example D.
+
+Why exactly 4 DoF for an inertial system: transforming all states by a scale $s$ and a
+rotation $R$ leaves the preintegrated IMU measurements unchanged only when $s=1$ and
+$R^Tg=g$, that is, for a rotation about gravity plus a translation, because the
+accelerometer senses gravity and metric acceleration in the body frame [Zhang and
+Scaramuzza, §III-A, eqs. 11–12]. Scale, roll and pitch are therefore outputs of the
+estimator, not gauge freedoms. When a Sim(3) alignment is run as a diagnostic, its
+fitted scale, $1/1.02\approx0.98$ in the scale row, measures the error that a 4-DoF ATE
+reports as 0.063 m (2026-11-16 check script).
 
 ## Parameters and tuning
 
@@ -646,3 +682,5 @@ Consulted foundations: [HOTA](https://arxiv.org/html/2009.07736v2): §5 DetA/Ass
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/132-tracking-trajectoires.md).
 Revision 8, 2026-11-16: CV-METRIQUES-TEMPS-006 added after the learner accepted P-CV-METRIQUES-TEMPS-01, worked
 example A extended with the duration of a fragment, and the IDF1 edge cost stated precisely, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/132-tracking-trajectoires.md).
+Revision 9, 2026-11-16: identity-switch figure and the events-versus-frames example added, and the
+gravity argument for the 4-DoF alignment stated, while deepening CV-METRIQUES-TEMPS-001 and -003, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/132-tracking-trajectoires.md).

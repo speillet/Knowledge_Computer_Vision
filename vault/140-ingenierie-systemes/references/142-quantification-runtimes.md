@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-PIPELINE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -266,6 +266,14 @@ in INT8 and 12.5 MB in INT4, the factor 4 of 8-bit weights noted by Krishnamoort
 in INT8, and weight-only quantization leaves it unchanged (constructed, recomputed).
 Peak memory also includes runtime workspaces and I/O buffers.
 
+*Worked example G, memory budget* (constructed, recomputed by the 2026-11-16 check
+script; CV-QUANT-005). With two such maps live at the peak and 200 MB of runtime
+context and workspace that do not depend on precision, the FP32 peak is
+$100+2\times26.2+200=352$ MB. Weight-only INT8 gives 277 MB, a 21% reduction for a
+weight file 75% smaller; INT8 activations as well give 238 MB, where the fixed
+workspace is 84% of the total. The ratio of file sizes therefore overstates the
+peak-memory gain by the share of the peak that the weights did not occupy.
+
 *Worked example F, decision sensitivity* (constructed, recomputed). Near a 0.5
 confidence threshold the sigmoid has slope 1/4, so a logit step of 0.05 moves the
 score by about 0.0125, and detections whose score lies within about $\pm0.006$ of the
@@ -395,6 +403,15 @@ sampling noise; resample images (bootstrap) before concluding. Engine builds can
 select different tactics when clocks float [TensorRT 11.4.1 benchmarking page], so
 compare timings over repeated builds. A calibration set that overlaps the test set
 inflates results.
+
+**Paired decisions.** Float and quantized models see the same images, so compare them
+pair by pair: only discordant cases, missed by one model and found by the other,
+inform the difference. *Constructed example (2026-11-16 check script; CV-QUANT-005):* on
+200 critical defects, float finds 190 and INT8 186, with 6 defects missed only by INT8
+and 2 only by float. Under the hypothesis that each discordant defect is equally likely
+to go either way, a split at least as uneven as 6 to 2 has probability
+$2\times(1+8+28)/2^8\approx0.29$, an exact binomial (sign) test computed by the project:
+this set neither establishes nor excludes the 2-point recall drop.
 
 ## Failure modes and diagnosis
 
@@ -543,3 +560,5 @@ Consulted foundations: [ONNX Runtime quantization](https://onnxruntime.ai/docs/p
 - Sibling notes: [CV-PIPELINE](141-contrats-profiling-video.md), [CV-DEPLOIEMENT](143-edge-reproductibilite.md).
 
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/142-quantification-runtimes.md).
+Revision 8, 2026-11-16: worked example G (peak-memory budget) and the paired comparison of decisions
+added while deepening CV-QUANT-005, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/142-quantification-runtimes.md).

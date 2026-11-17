@@ -7,7 +7,7 @@ priorite: V2
 profondeur: reperage
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -172,6 +172,17 @@ $x=(10,12,30,31,12,11)$, the alternating detail $\delta=(1,-1,1,-1,1,-1)$ satisf
 $H\delta=0$, so $x$ and $x+\delta$ give the same $y=(11,30.5,11.5)$. A generator chooses
 between them by prior, not by evidence.
 
+*Example E (constructed, recomputed by the 2026-11-16 check script; CV-DIFFUSION-003).*
+A sensor pixel averages 4 high-resolution columns, and a dark crack of width $w\le4$ px
+and depth $a$ lies inside one cell: the pixel drops by $aw/4$. A dip of 10 grey levels
+fits $(w,a)=(1,40)$, $(2,20)$ and $(4,10)$, and a 1 px crack at any of the 4 positions,
+all with $H\hat x=y$ exactly; the measurement fixes $aw=40$ grey levels·px, not the
+width. The MMSE estimate is the posterior mean, "an average over all possible
+explanations", which yields blurry reconstructions [Blau and Michaeli, §3.1]: with the
+three widths equally likely and left-aligned, it is $(23.3,10,3.3,3.3)$, none of the
+candidates. A sampler returns one sharp candidate per seed, so a width that varies
+across seeds while $H\hat x\approx y$ holds is undetermined by the data.
+
 **Metrics.** PSNR $=10\log_{10}(\mathrm{MAX}^2/\mathrm{MSE})$, for example 34.15 dB for
 an RMS error of 5 grey levels on an 8-bit scale (constructed). FID is the Fréchet
 distance between Gaussians fitted to Inception features of real and generated images,
@@ -331,7 +342,7 @@ Consulted foundations: [DDPM](https://arxiv.org/html/2006.11239v2): Algorithms 1
 - [Ho et al. 2020, DDPM](https://arxiv.org/html/2006.11239v2): eq. 4, §3.3 data scaling, §3.4 eq. 14, Algorithms 1–2, §4 schedule; also the [NeurIPS version](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html).
 - [Song et al. 2021, DDIM](https://arxiv.org/html/2010.02502v4): abstract and §1, same training objective and faster sampling.
 - [Rombach et al. 2022, Latent Diffusion](https://arxiv.org/html/2112.10752v2): §3.1–3.3, §4.1 (downsampling factors), §5 limitations.
-- [Blau and Michaeli 2018, The perception–distortion tradeoff](https://arxiv.org/abs/1711.06077): Theorem 1, Definition 3, Example 1, Theorem 2.
+- [Blau and Michaeli 2018, The perception–distortion tradeoff](https://arxiv.org/abs/1711.06077): §3.1 (MMSE estimate as posterior mean, blurry reconstructions, Fig. 4), Theorem 1, Definition 3, Example 1, Theorem 2.
 - [Heusel et al. 2017, FID](https://arxiv.org/abs/1706.08500): eq. 6.
 
 ### Implementation sources
@@ -344,3 +355,5 @@ None: no library API or code is described in this awareness-level note.
 - [CV-ANOMALIES](../../70-reconnaissance-representations/references/73-patchcore-padim.md) for inspection without generation; [CV-METRIQUES-APPLIQUEES](../../130-evaluation-fiabilite/references/134-metriques-applications.md) for inspection metrics.
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/122-generation-restauration.md).
+Revision 9, 2026-11-16: example E (crack width under pixel averaging, MMSE profile, seed check)
+added while deepening CV-DIFFUSION-003, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/122-generation-restauration.md).

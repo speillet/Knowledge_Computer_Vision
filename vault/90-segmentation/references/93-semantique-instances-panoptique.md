@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -275,6 +275,21 @@ Boundary IoU simplifies to $(d-\delta)/(d+\delta)$ for an error of $\delta$ pixe
 for $d=15$ and $\delta=1$, whatever $R$. The same boundary error that Mask IoU forgives on
 a large object keeps the same cost under Boundary IoU (project derivation from eq. 1).
 
+### Worked example D: the pixels that decide a count
+
+Constructed example, recomputed by the 2026-11-16 check script
+(`docs/revues/2026-11-16-card-depth/checks/93-semantique-instances-panoptique.py`). Two
+$50\times50$ parts touch along 50 px. If the annotation carves a one-pixel separating line,
+the part class has 4,950 pixels in two connected components; a prediction that fills the
+line scores a class IoU of $4{,}950/5{,}000=0.99$ and has one component. One per cent of the
+class IoU decides a count error of one part in two. Reinke et al. show the same inversion
+for detection problems: the pixel Dice of a prediction that recognizes all three structures
+can be lower than that of a prediction that recognizes only one [P1, Fig. 3]. U-Net's
+separation weight $w_0\exp(-(d_1+d_2)^2/2\sigma^2)$ with $w_0=10$ and $\sigma=5$ px is
+$10e^{-0.08}=9.2$ in a gap where $d_1=d_2=1$ px and $10e^{-8}=0.003$ where
+$d_1+d_2=20$ px [Ronneberger et al., §3, eq. 2]: the loss concentrates on exactly those
+few pixels, which the labels must contain (CV-SEGMENTATION-002).
+
 ## Parameters and tuning
 
 | Parameter | Values in the sources | Effect | Interactions and what to watch |
@@ -519,7 +534,7 @@ Consulted foundations: [Panoptic Segmentation](https://arxiv.org/html/1801.00868
 - [Cheng et al. 2021, "Boundary IoU"](https://arxiv.org/abs/2103.16562): §1, §4.1, §5 eq. 1 and choice of $d$, §6.
 - [Cordts et al. 2016, "The Cityscapes Dataset"](https://arxiv.org/abs/1604.01685): §2.2 (void), §3.1 (dataset-level IoU, iIoU).
 - [Isensee et al. 2021, "nnU-Net"](https://arxiv.org/abs/1904.08128) ([journal DOI](https://doi.org/10.1038/s41592-020-01008-z)): abstract.
-- [Reinke et al. 2024, "Understanding metric-related pitfalls"](https://www.nature.com/articles/s41592-023-02150-0): P1–P3 as cited by the cards; not re-read in this pass.
+- [Reinke et al. 2024, "Understanding metric-related pitfalls"](https://www.nature.com/articles/s41592-023-02150-0): P1–P3 as cited by the cards. Read on 2026-11-16 in [arXiv 2302.01790v4](https://arxiv.org/abs/2302.01790) because nature.com required authentication: [P1] pitfalls of the problem category, Fig. 1 (voxel-level sensitivity hides missed lesions) and Fig. 3 (pixel Dice ranks a prediction finding one of three structures above one finding all three); figure numbers follow the arXiv version.
 
 ### Implementation sources
 
@@ -536,3 +551,4 @@ Consulted foundations: [Panoptic Segmentation](https://arxiv.org/html/1801.00868
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/93-semantique-instances-panoptique.md).
 Revision 9, 2026-11-16: CV-SEGMENTATION-005 added after the learner accepted P-CV-SEGMENTATION-01, and the panoptic quality
 section extended with the panopticapi conventions, the strict-threshold tie and the card's worked example, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/93-semantique-instances-panoptique.md).
+Revision 10, 2026-11-16: worked example D (the pixels that decide a count, U-Net separation weights) added and Reinke et al. read in its arXiv version while deepening CV-SEGMENTATION-002, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/93-semantique-instances-panoptique.md).

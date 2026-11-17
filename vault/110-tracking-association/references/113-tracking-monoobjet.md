@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d11]
@@ -270,6 +270,28 @@ With the OpenCV defaults, a third of a second of ungated updates on an occluder
 makes it the majority of the appearance model. The share is a linear mixing weight,
 not the probability that the tracker follows the occluder.
 
+*Tipping point (constructed toy model, recomputed by the 2026-11-16 check script).* Let
+the template be $m=(1-s)\,a+s\,d$, with unit appearance vectors $a$ for the target and $d$
+for a similar distractor, similarity $c=a\cdot d<1$, and responses given by inner
+products. The distractor answers more strongly than the target when
+$(1-s)c+s>(1-s)+sc$, that is, when $(2s-1)(1-c)>0$: exactly when $s>1/2$, whatever $c$.
+During an occlusion the box sits on the distractor and $s=1-(1-\eta)^L$ after $L$
+updates. When the target reappears inside the search region, the tracker follows the
+larger response; if $s>1/2$ it stays on the distractor and every further update raises
+$s$, so a momentary association becomes permanent. The occlusion locks the tracker when
+it lasts longer than the half-life of the table: 9 frames lock and 8 recover at
+$\eta=0.075$, 35 and 34 at $\eta=0.02$. With the update gated during the occlusion, $s$
+stays 0 and only the search region decides the recovery. Real filters are not linear
+mixtures (MOSSE averages a numerator and a denominator, KCF interpolates coefficients
+and appearance), so the threshold is illustrative; the loop, a position choice that
+supervises the next update, is the mechanism to test.
+
+![Distractor share of the template during a 10-frame occlusion: 0.54 at eta 0.075, past the 0.5 tipping point, then rising toward 1; 0.18 at eta 0.02, then decaying; 0 with gated updates](../../99-Ressources/cv-sot-template-drift.svg)
+
+*Figure (project construction), drawn to scale for the toy model above; the check script
+recomputes the plotted points.* The dashed line is the tipping point $s=1/2$; the red
+curve crosses it after 8.9 updates, the half-life at $\eta=0.075$ (CV-SOT-002).
+
 ## Parameters and tuning
 
 | Parameter | Values in the sources | Effect | Interactions and what to watch |
@@ -349,6 +371,13 @@ Cost drivers, with their variables:
   (constructed from Table 1 and recomputed by checks/113-tracking-monoobjet.py), so
   the backbone dominates. Reported: 86 and 58 frames/s for 3 and 5 scales on a
   GTX Titan X with an i7-4790K [§4.1].
+- **A bank of single-object trackers** repeats the search-crop embedding for every
+  target: twenty people at 3 scales need 60 crop embeddings per frame, against one
+  detector pass plus an assignment for detection and association. A linear
+  extrapolation of SiamFC's 86 frames/s gives about 4.3 frames/s for twenty targets
+  (constructed, recomputed by the 2026-11-16 check script). SiamFC already batches its
+  scales in one forward pass [§2.1], so batching targets would do better, but the cost
+  still grows with their number.
 
 These speeds come from different languages, hardware and region sizes. They show
 orders of magnitude, not a ranking.
@@ -470,7 +499,15 @@ Conditional choices:
   video segmentation for masks ([SAM 2](../../90-segmentation/references/94-sam-sam2.md)).
 - A **hybrid** that runs a detector every $N$ frames and a single-object tracker in
   between bounds the duration of any drift to $N$ frames; a low tracker confidence can
-  trigger an earlier detection.
+  trigger an earlier detection. At each detector frame it must still decide which
+  detection continues which track, so the association step of multi-object tracking
+  returns (project deduction). SORT performs that step with an IoU cost matrix between
+  predicted track boxes and detections, solved by the Hungarian algorithm with a minimum
+  IoU, so one detection feeds at most one track; an unmatched detection creates a track
+  that must survive a probationary period, and a track without a detection for
+  $T_{Lost}$ frames is deleted ($T_{Lost}=1$ in SORT), so a reappearing object resumes
+  under a new identity [Bewley et al., §§3.3–3.4]. A bank of single-object trackers has
+  none of these steps (card CV-SOT-001).
 
 Industrial uses (project reasoning, not published results): PTZ or gimbal lock-on
 on an operator-selected object, where a reliable loss signal matters more than mean
@@ -551,3 +588,5 @@ These explanations complement the mechanism associated with each question. Calcu
 
 Drafted by agent, 2026-10-18. Revision 6, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/113-tracking-monoobjet.md).
 Revision 7, 2026-11-15: question of CV-SOT-002 reworded at the learner's request so that its front no longer hints at the answer, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/113-tracking-monoobjet.md).
+Revision 8, 2026-11-16: template-drift tipping point and figure, the cost of a bank of single-object
+trackers and the association steps it lacks added while deepening CV-SOT-001 and CV-SOT-002, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/113-tracking-monoobjet.md).

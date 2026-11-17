@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 760" role="img" aria-labelledby="sa-title sa-desc">
+  <title id="sa-title">SAM data flow: encode once, decode per prompt</title>
+  <desc id="sa-desc">Schematic data flow of the Segment Anything Model. The image is resized so that its longest side is 1024 pixels and padded to 1024 by 1024. The heavy image encoder, a ViT-H/16 in the 636-million-parameter variant, runs once per image and produces a 64 by 64 by 256 embedding that is cached. Each prompt runs only the light part: the prompt encoder turns points and boxes into 256-dimensional tokens and a mask prompt of 256 by 256 logits into a 64 by 64 by 256 map added to the embedding; the mask decoder, two two-way attention blocks with four mask tokens and one IoU token, upsamples by 4 to 256 by 256 and returns three masks as logits with three predicted IoU scores and no class. The masks are upsampled, cropped and resized to the original image, then thresholded at logit 0. Low-resolution logits can return as the next mask prompt. The per-prompt part needs under 1 percent of the encoder's compute and about 50 ms on a CPU in a browser.</desc>
+  <defs>
+    <marker id="sa-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#334155"/></marker>
+    <marker id="sa-arrow-v" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#7c3aed"/></marker>
+  </defs>
+  <rect width="540" height="760" rx="12" fill="#f8fafc"/>
+  <text x="270" y="34" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">SAM: encode once, decode per prompt</text>
+
+  <!-- inputs -->
+  <g fill="#e0f2fe" stroke="#0369a1" stroke-width="2">
+    <rect x="16" y="56" width="260" height="58" rx="8"/>
+    <rect x="296" y="56" width="228" height="58" rx="8"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a" text-anchor="middle">
+    <text x="146" y="79">image H × W × 3</text>
+    <text x="146" y="102">longest side → 1024, pad</text>
+    <text x="410" y="79">prompts: points, box</text>
+    <text x="410" y="102">mask: 256 × 256 logits</text>
+  </g>
+
+  <!-- once per image (green) -->
+  <g fill="#e0f2fe" stroke="#15803d" stroke-width="3">
+    <rect x="16" y="142" width="260" height="82" rx="8"/>
+    <rect x="16" y="252" width="260" height="58" rx="8" stroke-dasharray="8 4"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a" text-anchor="middle">
+    <text x="146" y="166" font-weight="bold" fill="#15803d">image encoder</text>
+    <text x="146" y="189">ViT-H/16, 636M params</text>
+    <text x="146" y="212">1024 × 1024, stride 16</text>
+    <text x="146" y="275">embedding 64 × 64 × 256</text>
+    <text x="146" y="298" fill="#15803d">computed once, cached</text>
+  </g>
+
+  <!-- per prompt (violet) -->
+  <g fill="#e0f2fe" stroke="#7c3aed" stroke-width="3">
+    <rect x="296" y="142" width="228" height="82" rx="8"/>
+    <rect x="16" y="342" width="508" height="104" rx="8"/>
+    <rect x="16" y="478" width="508" height="82" rx="8"/>
+    <rect x="16" y="592" width="508" height="58" rx="8"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a" text-anchor="middle">
+    <text x="410" y="166" font-weight="bold" fill="#7c3aed">prompt encoder</text>
+    <text x="410" y="189">points, box → tokens</text>
+    <text x="410" y="212">mask → 64 × 64 × 256</text>
+    <text x="270" y="366" font-weight="bold" fill="#7c3aed">mask decoder</text>
+    <text x="270" y="389">2 two-way attention blocks</text>
+    <text x="270" y="412">4 mask tokens + 1 IoU token</text>
+    <text x="270" y="435">upsample × 4 → 256 × 256</text>
+    <text x="270" y="502" font-weight="bold" fill="#7c3aed">outputs of one prompt</text>
+    <text x="270" y="525">C = 3 masks (256 × 256 logits), C IoU scores</text>
+    <text x="270" y="548">one logit per location: no class channel</text>
+    <text x="270" y="616">upsample, crop padding, resize to H × W</text>
+    <text x="270" y="639">threshold logit &gt; 0 → C × H × W masks</text>
+  </g>
+
+  <!-- data flow -->
+  <g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#sa-arrow)">
+    <line x1="146" y1="114" x2="146" y2="138"/>
+    <line x1="146" y1="224" x2="146" y2="248"/>
+    <line x1="146" y1="310" x2="146" y2="338"/>
+    <line x1="410" y1="114" x2="410" y2="138"/>
+    <line x1="340" y1="224" x2="340" y2="338"/>
+    <line x1="270" y1="446" x2="270" y2="474"/>
+    <line x1="270" y1="560" x2="270" y2="588"/>
+  </g>
+  <!-- feedback: low-resolution logits as the next mask prompt -->
+  <polyline points="524,519 532,519 532,85 528,85" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#sa-arrow-v)"/>
+  <g font-family="sans-serif" font-size="16" fill="#7c3aed" text-anchor="end">
+    <text x="522" y="268">logits re-enter</text>
+    <text x="522" y="290">as mask prompt</text>
+  </g>
+
+  <!-- legend -->
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="16" y="684"><tspan fill="#15803d" font-weight="bold">Green</tspan>: once per image. <tspan fill="#7c3aed" font-weight="bold">Violet</tspan>: per prompt,</text>
+    <text x="16" y="707">under 1 % of encoder compute, ≈ 50 ms on CPU.</text>
+  </g>
+  <text x="270" y="740" font-family="sans-serif" font-size="14" fill="#334155" text-anchor="middle">Schematic; sizes from Kirillov et al. 2023, App. A, and the code.</text>
+</svg>

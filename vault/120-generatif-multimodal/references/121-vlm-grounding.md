@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-CLIP", "CV-VIDEO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d12]
@@ -145,6 +145,22 @@ $257\times1024$ ViT-L/14 features; the queries are trained with image–text
 contrastive, image-grounded generation and image–text matching objectives, then a
 fully connected layer projects $Z$ into the LLM's embedding dimension as soft visual
 prompts [§3.1–3.3].
+
+The three stage-1 objectives share the queries and differ by their self-attention
+mask [§3.2]. Contrastive learning uses a unimodal mask (queries and text cannot see each
+other; the image–text similarity is the highest of the 32 query–text similarities);
+image-grounded generation uses a multimodal causal mask in which text tokens attend to
+all queries and to earlier text, while the queries cannot see the text, so "the
+information required for generating the text must be first extracted by the queries";
+matching uses a bidirectional mask and averages 32 per-query logits. Stage 2 uses the
+language-modeling loss for decoder LLMs (OPT) and a prefix language-modeling loss for
+encoder–decoder LLMs (FlanT5) [§3.3]. Without stage 1, the Q-Former bridges the gap by
+generative learning alone, "similar to the Perceiver Resampler in Flamingo"; zero-shot
+VQA is substantially lower, and OPT "suffers from catastrophic forgetting where
+performance drastically degrades as training proceeds" [§4.1, Fig. 5]. *Size check
+(constructed, recomputed by the 2026-11-16 check script; CV-VLM-002):* the LLM receives
+32 prefix tokens whatever the image, against 256 for a per-patch projection of the same
+ViT-L/14 at 224 px.
 
 **Flamingo gating.** Each new cross-attention layer's output is multiplied by
 $\tanh(\alpha)$, with a layer-specific scalar $\alpha$ initialized to 0, so the
@@ -370,7 +386,7 @@ Consulted foundations: [BLIP-2](https://arxiv.org/html/2301.12597v2): §3 Q-Form
 ### Scientific sources
 
 - [Radford et al. 2021, CLIP](https://arxiv.org/abs/2103.00020): §2.3, contrastive objective over $N\times N$ pairs.
-- [Li et al. 2023, BLIP-2](https://arxiv.org/html/2301.12597v3): §1, §3.1 (Q-Former, 32 × 768 queries, 188M parameters), §3.2 (three objectives), §3.3 (projection and soft visual prompts).
+- [Li et al. 2023, BLIP-2](https://arxiv.org/html/2301.12597v3): §1, §3.1 (Q-Former, 32 × 768 queries, 188M parameters), §3.2 (three objectives and their attention masks), §3.3 (projection, soft visual prompts, LM and prefix-LM losses), §4.1 and Fig. 5 (effect of the representation-learning stage).
 - [Liu et al. 2023, LLaVA](https://arxiv.org/html/2304.08485v2): §4.1 eq. 1, §4.2 eq. 3 and two-stage training, §5.1 limitations, hallucination paragraph.
 - [Alayrac et al. 2022, Flamingo](https://arxiv.org/html/2204.14198v2): §2.1 Perceiver Resampler and video sampling, §2.2 tanh gating, §2.3 per-image attention masking.
 - [Xiao et al. 2023, Florence-2](https://arxiv.org/html/2311.06242v1): §3 location tokens and region formats, §6.1 training resolutions.
@@ -390,3 +406,5 @@ No library API is described in this note. The [OpenVLA project page](https://ope
 - [CV-CLIP](../../70-reconnaissance-representations/references/72-clip-siglip.md), [CV-OPENVOC](../../80-detection-pose/references/83-detection-open-vocabulary.md), [CV-VIDEO](../../100-mouvement-video/references/102-points-actions-video.md).
 
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/121-vlm-grounding.md).
+Revision 8, 2026-11-16: BLIP-2 attention masks, stage-2 losses and the stage-1 ablation added while
+deepening CV-VLM-002, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/121-vlm-grounding.md).

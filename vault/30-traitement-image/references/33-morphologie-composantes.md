@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d03]
@@ -167,6 +167,16 @@ anti-extensive ($A\circ B\subseteq A$, Proposition 41) and closing extensive
 ($A\subseteq A\bullet B$, Proposition 42); both are idempotent (Theorems 38 and 40);
 both are invariant to translations of the image and of the structuring element.
 
+**Geometric characterization and duality** [§III, Theorem 43, Propositions 44–45]. The
+opening is the union of all translates of $B$ contained in $A$,
+$A\circ B=\bigcup\{B_y: B_y\subseteq A\}$: a pixel survives when some placement of $B$ that
+covers it fits entirely in the foreground. The closing keeps a pixel $x$ when every
+translate of the reflected element $\check B$ that covers $x$ meets $A$, which is $B$ itself
+for a symmetric element. Opening and closing are dual,
+$(A\bullet B)^c=A^c\circ\check B$: closing the foreground is opening the background with the
+reflected element. The same propositions imply that the origin of $B$ does not change an
+opening or closing of sets, unlike the shifted OpenCV result of worked example C.
+
 **Chain rule and size** [§II, Proposition 3; §III, Corollary 31].
 $A\oplus(B\oplus C)=(A\oplus B)\oplus C$ and $A\ominus(B\oplus C)=(A\ominus B)\ominus C$:
 $n$ erosions by a $3\times3$ square equal one erosion by a $(2n+1)\times(2n+1)$
@@ -230,6 +240,17 @@ $\{-1,0\}$). The set opening $(A\ominus B)\oplus B$ returns $\{0,\dots,4\}$. App
 OpenCV's erosion then dilation with the same offsets returns $\{1,\dots,5\}$: shifted
 by one pixel and no longer inside $A$. Even-sized or off-centre elements therefore
 need care; odd, centred, symmetric elements avoid the issue.
+
+### Worked example D: the order of opening and closing
+
+Constructed example, recomputed by the 2026-11-16 check script
+(`docs/revues/2026-11-16-card-depth/checks/33-morphologie-composantes.py`). In 1-D, take the
+run $\{0,\dots,5\}$, a one-pixel speck at 7 and the centred element $\{-1,0,1\}$. Opening
+first erodes the run to $\{1,\dots,4\}$ and the speck to nothing, then dilates back to
+$\{0,\dots,5\}$; the closing that follows leaves it unchanged. Closing first dilates to
+$\{-1,\dots,8\}$ and erodes to $\{0,\dots,7\}$, filling the gap at 6 and absorbing the speck;
+the opening that follows keeps $\{0,\dots,7\}$. The object measures 6 or 8 pixels depending
+only on the order (CV-MORPHO-001).
 
 ## Parameters and tuning
 
@@ -339,6 +360,7 @@ same resolution.
 | Behaviour changes after a camera change | Element size fixed in pixels | Convert gaps and defects to pixels at both resolutions | Size the element in mm |
 | Hole counts inconsistent | Same connectivity for foreground and background | Count holes with complementary connectivity | Use 8/4 or 4/8 consistently |
 | Component count off by one | Background label counted as an object | Compare $N$ with the number of foreground labels | Use $N-1$ |
+| Opening fills holes instead of removing specks | Inverted polarity: objects are 0 on a 255 background, so the operation acts on the background and, by duality, closes the objects [Theorem 43] | Apply the operation to a synthetic mask with one speck and one hole | Invert the mask or swap the operation; state the polarity |
 | Objects at the image border shrink or grow | Non-neutral constant border | Compare with the default magic border | Neutral border or ignore border components |
 | Label colours or IDs change between runs or versions | Label order depends on the algorithm | Compare SAUF and the default | Sort components by position or match by geometry |
 
@@ -453,3 +475,4 @@ protocol are project derivations or proposals.
 - Related references: [CV-WATERSHED](../../90-segmentation/references/91-otsu-distance-watershed.md), [CV-SEGMENTATION](../../90-segmentation/references/93-semantique-instances-panoptique.md), [CV-FILTRES](31-filtrage-gradients.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/33-morphologie-composantes.md).
+Revision 9, 2026-11-16: Theorem 43 and Propositions 44–45, worked example D (order of opening and closing) and a polarity failure row added while deepening CV-MORPHO-001, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/33-morphologie-composantes.md).

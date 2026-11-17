@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 5
+revision: 6
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -187,7 +187,10 @@ training set of 15 images" [§2.1]. Units: $\|z_m-z_n\|^2$ in squared 8-bit leve
 $\beta$ in inverse squared levels; $D$ and $E$ are in nats; $\gamma$ is a cost in nats per
 unit-distance neighbor pair. A constant added to both $D(0,\cdot)$ and $D(1,\cdot)$ of a
 pixel does not change the minimizer, which is why the $\tfrac32\log2\pi$ term can be
-dropped [Boykov & Jolly, footnote 2].
+dropped [Boykov & Jolly, footnote 2]. Eq. 11 as printed omits the factor
+$\mathrm{dis}(m,n)^{-1}$, but the text calls the smoothness term "basically unchanged" from
+the monochrome eq. 4, which carries it; OpenCV divides the diagonal n-links by $\sqrt2$
+[grabcut.cpp L282–L324].
 
 ### Graph construction and exactness
 
@@ -204,12 +207,27 @@ segmentations satisfying" the hard constraints, provided the boundary penalties 
 non-negative [Boykov & Jolly, §3, Lemma 1, Theorem 1, footnote 2]. In GrabCut this
 exactness holds for step 3 only, with $k$ and $\theta$ fixed.
 
+In OpenCV the source is the foreground side. A probable pixel's link from the source
+weighs $-\log p(z_n\mid\mathrm{BG})$ and its link to the sink $-\log p(z_n\mid\mathrm{FG})$, so a
+pixel that ends on the sink side pays the first; a definite background pixel gets 0 and
+$\lambda=9\gamma$, a definite foreground pixel the reverse; after the cut, probable pixels on
+the source side become `GC_PR_FGD` [grabcut.cpp L479–L496, L526–L543].
+
+![GrabCut s–t graph for one row of five pixels: thick and thin t-links and n-links, a definite background pixel with t-links 0 and 450, the minimum cut through the cheap links, and the assign–refit–cut loop](../../99-Ressources/cv-grabcut-graph.svg)
+
+*Figure (project construction), schematic:* one pixel row instead of the 8-connected grid;
+link widths show cost qualitatively. The cut severs the sink links of the foreground
+pixels, the weak n-link across the colour edge and the source links of the background
+pixels; the loop repeats `iterCount` times with fixed n-links (CV-GRABCUT-001).
+
 ### Alternation and convergence
 
 Steps 1 to 3 each minimize $E$ with respect to $k$, $\theta$ and $\alpha$ in turn, so
 "$E$ decreases monotonically" and the algorithm converges "at least to a local minimum"
 [§3.2]; the llama example converges in 12 iterations [Fig. 4]. The joint problem is not
-solved globally: the result depends on the initialization.
+solved globally: the result depends on the initialization. OpenCV computes $\beta$ and the
+n-link weights once per call; each iteration rebuilds the graph with new t-links and the
+same n-links [grabcut.cpp L582–L597].
 
 ### Worked example A: contrast-normalized n-links
 
@@ -247,6 +265,35 @@ contrast with its surroundings exceeds $\rho\approx6.8$ times the image mean. Wi
 and thin legs usually fail this test, which is why the method needs foreground strokes or
 border matting there (project derivation from eqs. 9 and 11).
 
+### Worked example D: what one iteration changes
+
+Constructed example, recomputed by the 2026-11-16 check script
+(`docs/revues/2026-11-16-card-depth/checks/92-grabcut-regions.py`). A rectangle holds a
+red mug (60% of its pixels) and grey desk (40%); outside it, the desk is the only colour.
+Assume that the grey components of the two mixtures coincide and ignore the boundary
+term. A grey pixel inside the rectangle then costs $-\log(0.4\,\mathcal N)$ as foreground and
+$-\log\mathcal N$ as background: the background is cheaper by $\log(1/0.4)=0.92$ nats. The cut
+moves the grey pixels out, the refit drops grey from the foreground mixture, and the next
+cut confirms the result. If grey made up only 30% of the outside sample, the foreground
+would win by $\log(0.4/0.3)=0.29$ nats and the refit would entrench the desk in the
+foreground model, a form of the third failure case of §5 (background material poorly
+represented outside the rectangle). The mixture weights matter in both the paper ($-\log\pi$
+in eq. 9) and OpenCV (weighted mixture density in the t-links); the example is a project
+derivation, not a measurement.
+
+### Worked example E: a rectangle that cuts the object
+
+Constructed example, recomputed by the 2026-11-16 check script. An object of
+$100\times300$ px whose bottom 20 rows fall outside the rectangle has 2,000 of its 30,000
+pixels fixed as `GC_BGD`. Even a perfect cut elsewhere caps its IoU at
+$28{,}000/30{,}000=0.933$. On an annotated sample, a quality plateau at the ceiling computed
+from `GC_BGD` ∩ ground truth means that the constraint explains the whole loss; a plateau
+well below it points to the appearance or boundary terms as well. The excluded pixels also
+train the background mixture, because each iteration learns it from every `GC_BGD` and
+`GC_PR_BGD` pixel [grabcut.cpp L435–L458]; object colours learned as background can pull
+similar object pixels inside the rectangle out too, so a truncation that extends beyond
+the constrained area does not rule the constraint out (project deduction from the code).
+
 ## Parameters and tuning
 
 | Parameter | Value in the sources | Effect | Interactions and what to watch |
@@ -277,9 +324,12 @@ Tuning approach (project method), on held-out images with ground-truth masks:
   problem reaches only a local minimum [Rother et al., §3.2].
 - **Implementation deviation.** OpenCV assigns each pixel to the component with the
   highest Gaussian density *without* the mixture weight $\pi$ [grabcut.cpp, L121–L152],
-  whereas the paper's step 1 minimizes $D$, which includes $-\log\pi$ [eq. 9, Fig. 3]. The
-  paper's monotonic-decrease argument therefore does not strictly cover the
-  implementation (project deduction).
+  whereas the paper's step 1 minimizes $D$, which includes $-\log\pi$ [eq. 9, Fig. 3]. Its
+  t-links use the whole weighted mixture, $-\log\sum_k\pi_k\mathcal N(z_n;\mu_k,\Sigma_k)$
+  without the $(2\pi)^{-3/2}$ constant [L113–L137, L483–L484], whereas the paper's step 3
+  takes the best component for each label, $\min_k D$ [Fig. 3]. The paper's
+  monotonic-decrease argument therefore does not strictly cover the implementation
+  (project deduction).
 - **Hard labels stay hard** in both the paper ("guaranteed not to be retracted") and
   OpenCV (example B).
 - **Invariances.** Approximately invariant to a global colour gain (example A); not
@@ -308,7 +358,9 @@ Cost drivers, for $N=HW$ pixels and $K=5$ components per model:
   of a different $\beta$ and a smaller background sample (project deduction).
 - **Reported timing**: a $450\times300$ rectangle took 0.9 s for the initial segmentation
   and 0.12 s per brush stroke on a 2.5 GHz CPU with 512 MB RAM [Rother et al., §5]; a
-  2004 measurement, not a current benchmark.
+  2004 measurement, not a current benchmark. A stroke is cheap because an edit reruns the
+  min cut "just once" [Fig. 3] and "the optimal flow ... can be re-used during user
+  edits" [§3.3]; the optional refinement reruns the whole loop.
 
 ### OpenCV 4.13 contracts
 
@@ -347,6 +399,15 @@ a 50-image ground-truth database, GrabCut with a single outer lasso reached an e
 rate of 2.13 ± 0.19% against 1.36 ± 0.18% for Graph Cut given two lassos, outer and inner
 [Rother et al., §5]. The second result compares unequal inputs: less user information,
 slightly higher error.
+
+*Worked example F (constructed, recomputed by the 2026-11-16 check script).* Method A
+answers in 0.1 s per interaction but needs 6 strokes to reach the target quality; method B
+answers in 1.5 s and needs 2. With an assumed operator time of 4 s per stroke, A costs
+$6\times(4+0.1)=24.6$ s and B $2\times(4+1.5)=11$ s, although B is 15 times slower per call.
+The two totals are equal when a stroke costs the operator $h$ with $6(h+0.1)=2(h+1.5)$,
+that is $h=0.6$ s; above it, the method with fewer interactions wins. All times are
+assumptions; the point is that the per-call time enters multiplied by the number of
+interactions (CV-GRABCUT-003).
 
 ### Proposed baseline and controlled variation (not executed)
 
@@ -491,3 +552,4 @@ These explanations complement the mechanism associated with each question. Calcu
 - Related references: [CV-WATERSHED](91-otsu-distance-watershed.md), [CV-SEGMENTATION](93-semantique-instances-panoptique.md), [CV-SAM](94-sam-sam2.md).
 
 Drafted by agent, 2026-10-18. Revision 5, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/92-grabcut-regions.md).
+Revision 6, 2026-11-16: s–t graph figure, OpenCV link orientation and mixture-density t-links, the omitted $\mathrm{dis}(m,n)^{-1}$ of eq. 11, edit cost, and worked examples D to F added while deepening CV-GRABCUT-001 to 003, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/92-grabcut-regions.md).

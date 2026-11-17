@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: []
-revision: 10
+revision: 11
 tags: [cv/d13, evaluation, iou, ap]
 ---
 # IoU and AP — the COCO detection protocol
@@ -349,6 +349,34 @@ output at a fixed threshold is unchanged by that tail: in the card's example, AP
 from $51/101$ to $63.5/101$ while precision $2/3$ and recall $1/2$ at the deployed
 threshold stay the same.
 
+### Worked example E: where a duplicate sits, and which box it is
+
+Constructed example, recomputed by checks/131-iou-ap-coco.py of the 2026-11-16 pass.
+One category holds four objects and five boxes, ranked TP, duplicate, TP, TP, TP. After
+each rank the recall is 0.25, 0.25, 0.5, 0.75, 1 and the precision 1, 1/2, 2/3, 3/4, 4/5.
+The duplicate stays in the denominator of every later rank, so the envelope is 1 up to
+recall 0.25 and 4/5 above it: 26 levels read 1, 75 read 0.8, and
+$AP=86/101\approx0.851$. The same five boxes with the duplicate ranked last give
+$AP=1$, and the same output at any threshold that keeps all five. In general, for $N$
+objects and a list that is perfect except for one duplicate right after the $k$-th TP,
+the $j$-th TP after it has precision $j/(j+1)$, the envelope above recall $k/N$ is
+$N/(N+1)$, and each recall level above $k/N$ loses $1/(N+1)$: with $N=4$ the duplicate
+costs $15/101$, $10/101$, $5/101$ or 0 after the first, second, third or fourth TP
+(project derivation from the accumulation in Procedure).
+
+![Two precision–recall staircases for four objects: a duplicate at rank 2 lowers the envelope from 1 to 0.8 above recall 0.25 (AP 86/101), the same duplicate ranked last leaves it at 1 (AP 1)](../../99-Ressources/cv-iou-ap-duplicate-envelope.svg)
+
+*Figure (project construction), drawn to scale:* dots are the precision after each rank,
+the blue step is the envelope and the violet dots its 101 samples; the shaded band is
+the AP lost to the early duplicate (CV-IOU-AP-003).
+
+Which box is the duplicate also depends on the IoU threshold, because `evaluateImg`
+matches again at each threshold and a detection below $t$ cannot claim the object
+[L273, L276, L286]. With one object, $d_1$ scored higher at IoU 0.72 and $d_2$ at IoU
+0.88, $d_1$ is the TP and $d_2$ the duplicate for $t\le0.70$ (AP 1); for
+$t\in\{0.75,0.80,0.85\}$, $d_1$ is an FP ranked first and $d_2$ the TP (AP 0.5); for
+$t\ge0.90$ both are FPs. The category's COCO AP is $(5+3\times0.5)/10=0.65$.
+
 ## Parameters and tuning
 
 | Parameter | COCO default | Effect | Interactions and what to watch |
@@ -400,6 +428,10 @@ for any number compared with published results.
   but critical category can be hidden by many easy ones, and a rare category's AP is
   noisy: LVIS returns only the overall AP partly because tail categories have "few
   examples for evaluation", which "makes per-category AP unstable" [Gupta et al., §2.3].
+  `summarize` takes a plain mean over the defined entries [L452–L455]. Constructed case
+  (checks/131-iou-ap-coco.py of the 2026-11-16 pass): model A scores 0.85 on four
+  categories and 0.30 on a critical one, mean 0.74; model B scores 0.90 and 0.20, mean
+  0.76. The mean prefers B although the critical category got worse (CV-IOU-AP-007).
 - **Annotation dependence.** AP is a property of a detector *and* an annotation policy
   (crowd, ignore, exhaustiveness, mask area). It does not transfer to another dataset.
 
@@ -441,6 +473,12 @@ API). No evaluation was executed for this note.
   [NumPy 1.24.0 release notes, "Expired deprecations"], so the commit as written raises
   `AttributeError` with NumPy ≥ 1.24; record the build actually used.
 - `summarize` "can *only* be applied on the default parameter setting" [L425].
+- `recThrs` comes from `np.linspace(0, 1, 101)` [L507], whose level $m$ is computed as
+  $m\times0.01$: level 70 is $0.7000000000000001$ (checked with NumPy 2.2.6). The
+  left-sided search for that level therefore skips a rank whose recall is exactly
+  $7/10$, and a hand computation with exact fractions can differ from pycocotools: for
+  ten objects ranked as seven TPs, one FP and three TPs, by $1/1111\approx0.0009$
+  (checks/131-iou-ap-coco.py of the 2026-11-16 pass; pycocotools not run).
 
 ### torchvision 0.29.0 box utilities
 
@@ -475,6 +513,13 @@ with replacement, recompute both APs on each resample and report the paired diff
 with a percentile interval (project method; see
 [CV-FIABILITE](133-donnees-generalisation.md) for resampling and grouped data). Expect
 wide intervals for categories with few objects [Gupta et al., §2.3].
+
+The same holds for recall on a critical subgroup at the deployed threshold. Constructed
+case (exact one-sided binomial bound at 95%, checks/131-iou-ap-coco.py of the
+2026-11-16 pass): 19 of 20 critical defects found gives a point recall of 0.95 and a
+lower bound of about 0.78; without any miss, 59 defects are needed to claim a recall
+above 0.95, since $0.95^{59}<0.05<0.95^{58}$. Defects that share a part, batch or camera
+are not independent trials (CV-IOU-AP-007).
 
 ### Proposed baseline and controlled variation (not executed)
 
@@ -663,7 +708,7 @@ Consulted foundations: [COCO evaluator](https://github.com/cocodataset/cocoapi/b
 ### Related flashcards and references
 
 - [Flashcards IoU/AP](../131-iou-ap-coco.md): CV-IOU-AP-001 to CV-IOU-AP-007; CV-IOU-AP-008 (low-score tail, per-image cap and the deployed operating point).
-- Constructed examples A–D and the greedy-matching case are recomputed by checks/131-iou-ap-coco.py in the review directory of 2026-11-14.
+- Constructed examples A–D and the greedy-matching case are recomputed by checks/131-iou-ap-coco.py in the review directory of 2026-11-14; example E, the category-mean case, the recall bound and the figure's coordinates by the script of the same name in the review directory of 2026-11-16.
 
 [cocodoc]: https://cocodataset.org/#detection-eval
 [format]: https://cocodataset.org/#format-results
@@ -674,3 +719,6 @@ Consulted foundations: [COCO evaluator](https://github.com/cocodataset/cocoapi/b
 Drafted by agent, 2026-10-18. Revision 9, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/131-iou-ap-coco.md).
 Revision 10, 2026-11-15: CV-IOU-AP-008 added after the learner accepted P-CV-IOU-AP-01, and worked
 example D aligned with it (condition of the tail argument, per-image cap counterexample), by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/131-iou-ap-coco.md).
+Revision 11, 2026-11-16: worked example E (duplicate rank and threshold) with its figure, the
+category-mean case, the critical-recall bound and the `recThrs` rounding note added while
+deepening CV-IOU-AP-003 and CV-IOU-AP-007, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/131-iou-ap-coco.md).

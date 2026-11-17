@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-ZHANG", "CV-SE3", "CV-CAPTEURS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -124,7 +124,17 @@ errors.
   gives $(R_A-I)n=0$: the component of $t_X$ along $n$ is not constrained by that motion,
   and a pure translation ($R_A=I$) constrains no component through this equation. OpenCV
   requires at least two motions with non-parallel rotation axes, hence at least three
-  poses, and "strongly" recommends many more [calib3d.hpp, L2352–L2353].
+  poses, and "strongly" recommends many more [calib3d.hpp, L2352–L2353]. The rotation
+  equation gives $n_A=R_Xn_B$ [Horaud and Dornaika 1995, §3, eq. 18], so when every axis is
+  parallel to $n_A$, a separable solver's rotation step leaves $R_X$ free about $n_A$ as
+  well (project deduction): a single-axis plan leaves two components unobserved, the
+  rotation about $n_A$ and the translation along it. *Constructed example (recomputed by
+  the 2026-11-16 check script; CV-MULTICALIB-002):* for 20 motions of 30° about $z$, the
+  stacked $(R_A-I)$ has singular values 2.31, 2.31 and 0 whatever the count; replacing two
+  of them by 30° motions about $x$ gives 2.31, 2.20 and 0.73. OpenCV 4.13's default Tsai
+  path solves both of its systems with `solve(..., DECOMP_SVD)` and checks only that two
+  pairs pass its angle filter, so it returns an estimate without warning for parallel
+  axes [calibration_handeye.cpp, L334–L376].
 - *Camera–IMU.* The data are collected "while exciting all rotational degrees of
   freedom", typically for 1–2 minutes [Rehder et al. 2016, §3.3.2]; Kalibr advises
   exciting all IMU axes in rotation and translation [Kalibr wiki].
@@ -141,7 +151,9 @@ errors.
   §3.3.2).
 
 **Degenerate cases.** Planar vehicle motion rotates about one axis, so the hand-eye
-argument leaves the extrinsic component along that axis weak (project deduction);
+argument leaves the extrinsic component along that axis weak (project deduction): the
+vertical lever arm of a camera–IMU or camera–LiDAR extrinsic estimated from driving needs
+pitch and roll excitation or an independent measurement;
 symmetric targets (checkerboards, circle grids) can flip their estimated pose, which
 Kalibr avoids with an Aprilgrid [Kalibr wiki]; burst-transmitted IMU messages (1 ms bursts
 with 6 ms gaps in the wiki's example) corrupt timestamps and must be fixed before
@@ -438,10 +450,12 @@ Consulted foundations: [OpenCV hand-eye](https://docs.opencv.org/4.13.0/d9/d0c/g
 - Rehder, Siegwart and Furgale 2016, A General Approach to Spatiotemporal Calibration in Multisensor Systems (IEEE T-RO 32(2)), read as chapter 3 of [Rehder 2018, Multi-Sensor System Calibrations, ETH Zurich doctoral thesis](https://doi.org/10.3929/ethz-b-000334970), which also incorporates Furgale, Rehder and Siegwart 2013 (IROS): §3.1 (clock synchronization versus temporal calibration, three synchronization schemes, mid-exposure instant), §3.3.1 (eqs. 3.2–3.5), §3.3.2 (procedure, B-spline parametrization, eqs. 3.6–3.12), §3.4.2–§3.4.4 (setup, simulation, Figs. 3.5–3.7); chapter 2 (hand-held scanning application).
 - [Qin and Shen 2018, Online Temporal Calibration for Monocular Visual-Inertial Systems](https://arxiv.org/abs/1808.00692) (IROS): §I (range of offsets), §III-A to §III-C (eqs. 1, 2 and 4).
 - [Zhang and Singh 2014, LOAM: Lidar Odometry and Mapping in Real-time](https://www.roboticsproceedings.org/rss10/p07.pdf) (RSS): Fig. 1 and §V-C (constant-velocity sweep model, eq. 4).
+- [Horaud and Dornaika 1995, Hand-Eye Calibration](https://arxiv.org/abs/2311.12655) (IJRR 14(3); author copy on arXiv): §3, eq. 18 (axis relation $n_A=R_Xn_B$) and eq. 19 (rank deficiency for one motion).
 
 ### Implementation sources
 
 - [OpenCV 4.13.0, `modules/calib3d/include/opencv2/calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp): `HandEyeCalibrationMethod` and `RobotWorldHandEyeCalibrationMethod` (L640–L653), `stereoCalibrate` (L1880–L1985), `calibrateHandEye` (L2210–L2358), `calibrateRobotWorldHandEye` (L2361–L2505).
+- [OpenCV 4.13.0, `modules/calib3d/src/calibration_handeye.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/src/calibration_handeye.cpp#L334-L376): Tsai path, pair-count check and the two `solve(..., DECOMP_SVD)` calls (L334–L376).
 - [Kalibr wiki, Camera-IMU calibration](https://github.com/ethz-asl/kalibr/wiki/camera-imu-calibration) and [Multiple camera calibration](https://github.com/ethz-asl/kalibr/wiki/multiple-camera-calibration): requirements, data collection, temporal calibration switch, outputs, IMU timestamp warning (unversioned wiki, consulted 2026-11-14).
 - [OpenCV 4.13.0 calib3d documentation](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html): rendered page consulted in earlier passes; HTTP 403 in this pass.
 
@@ -451,3 +465,6 @@ Consulted foundations: [OpenCV hand-eye](https://docs.opencv.org/4.13.0/d9/d0c/g
 - Neighbouring references: [CV-HANDEYE](57-calibration-hand-eye.md), [CV-CAPTEURS](../../20-acquisition-images/references/22-capteurs-horodatage.md), [CV-VIO](../../60-vision-3d/references/63-slam-vio.md), [CV-BEV](../../60-vision-3d/references/64-nuages-bev-occupation.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/55-calibration-multicapteurs.md).
+Revision 9, 2026-11-16: the rotation ambiguity of single-axis motion plans, a constructed singular-value
+example, the absence of a rank check in OpenCV's Tsai path and the vertical lever arm of planar driving
+added while deepening CV-MULTICALIB-002, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/55-calibration-multicapteurs.md).

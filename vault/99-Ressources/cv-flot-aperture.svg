@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 750" role="img" aria-labelledby="fa-title fa-desc">
+  <title id="fa-title">Aperture problem: one equation, one line</title>
+  <desc id="fa-desc">Top: a straight edge and a corner seen through two circular windows of the same size, both moving by the true displacement d = (2, 1) px per frame. For the edge, every vector that ends on the edge's new position (dashed) explains what the window shows, so only the normal flow dn = (1.2, 1.6), along the intensity gradient, is observed. For the corner, the moved vertex fixes d. Bottom: velocity space with u to the right and v downward, as image y. The edge pixel, with gradient (6, 8) grey levels per pixel and temporal derivative minus 20 grey levels per frame, gives the constraint line 6u + 8v = 20, perpendicular to the gradient at distance 2 from the origin. The normal flow is the foot of that line; the true flow lies on it, 1 px further along the edge. The corner's second edge, with gradient (0, 10) and temporal derivative minus 10, adds the line v = 1, which crosses the first line at d = (2, 1). Drawn to scale: 80 px per pixel per frame in velocity space, 30 px per pixel per frame for the arrows in the windows.</desc>
+  <defs>
+    <marker id="fa-arrow-g" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,6 L0,12z" fill="#15803d"/></marker>
+    <marker id="fa-arrow-v" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,6 L0,12z" fill="#7c3aed"/></marker>
+    <marker id="fa-arrow-k" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10z" fill="#334155"/></marker>
+    <clipPath id="fa-clip-l"><circle cx="140" cy="170" r="85"/></clipPath>
+    <clipPath id="fa-clip-r"><circle cx="400" cy="170" r="85"/></clipPath>
+  </defs>
+  <rect width="540" height="750" rx="12" fill="#f8fafc"/>
+  <text x="270" y="34" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">Aperture problem: one equation, one line</text>
+
+  <!-- panel 1: windows -->
+  <text x="16" y="66" font-family="sans-serif" font-size="17" fill="#0f172a">Through a small window</text>
+
+  <!-- left window: oblique edge, gradient (0.6, 0.8), edge direction (0.8, -0.6) -->
+  <g clip-path="url(#fa-clip-l)">
+    <rect x="50" y="80" width="180" height="180" fill="#ffffff"/>
+    <polygon points="300,50 180,-110 -140,130 -20,290" fill="#64748b"/>
+    <line x1="80" y1="290" x2="250" y2="162.5" stroke="#b91c1c" stroke-width="2.5" stroke-dasharray="7 5"/>
+  </g>
+  <circle cx="140" cy="170" r="85" fill="none" stroke="#0369a1" stroke-width="2"/>
+  <line x1="140" y1="170" x2="176" y2="218" stroke="#15803d" stroke-width="3" marker-end="url(#fa-arrow-g)"/>
+  <line x1="140" y1="170" x2="200" y2="200" stroke="#7c3aed" stroke-width="3" marker-end="url(#fa-arrow-v)"/>
+  <path d="M171.2,211.6 L177.6,206.8 L182.4,213.2" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+  <circle cx="140" cy="170" r="4" fill="#0f172a"/>
+  <text x="114" y="222" font-family="sans-serif" font-size="16" font-weight="bold" fill="#15803d">d<tspan font-size="12" dy="4">n</tspan></text>
+  <text x="178" y="183" font-family="sans-serif" font-size="16" font-weight="bold" fill="#7c3aed">d</text>
+  <text x="232" y="190" font-family="sans-serif" font-size="14" fill="#b91c1c">edge at</text>
+  <text x="232" y="208" font-family="sans-serif" font-size="14" fill="#b91c1c">t + 1</text>
+  <text x="140" y="283" font-family="sans-serif" font-size="16" fill="#0f172a" text-anchor="middle">edge: normal part only</text>
+
+  <!-- right window: corner made of the oblique edge and a horizontal edge -->
+  <g clip-path="url(#fa-clip-r)">
+    <rect x="310" y="80" width="180" height="180" fill="#ffffff"/>
+    <polygon points="400,170 560,50 560,-50 200,-50 200,170" fill="#64748b"/>
+    <line x1="300" y1="200" x2="460" y2="200" stroke="#0369a1" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <line x1="460" y1="200" x2="540" y2="140" stroke="#b91c1c" stroke-width="2.5" stroke-dasharray="7 5"/>
+  </g>
+  <circle cx="400" cy="170" r="85" fill="none" stroke="#0369a1" stroke-width="2"/>
+  <line x1="400" y1="170" x2="460" y2="200" stroke="#7c3aed" stroke-width="3" marker-end="url(#fa-arrow-v)"/>
+  <circle cx="400" cy="170" r="4" fill="#0f172a"/>
+  <text x="438" y="183" font-family="sans-serif" font-size="16" font-weight="bold" fill="#7c3aed">d</text>
+  <text x="400" y="283" font-family="sans-serif" font-size="16" fill="#0f172a" text-anchor="middle">corner: full motion</text>
+
+  <!-- panel 2: velocity space, origin (110, 400), 80 px per px/frame, v downward -->
+  <text x="16" y="330" font-family="sans-serif" font-size="17" fill="#0f172a">Velocity space (u, v), v down as image y</text>
+  <g stroke="#334155" stroke-width="2" marker-end="url(#fa-arrow-k)">
+    <line x1="86" y1="400" x2="482" y2="400"/>
+    <line x1="110" y1="376" x2="110" y2="672"/>
+  </g>
+  <g stroke="#334155" stroke-width="1.5">
+    <line x1="190" y1="396" x2="190" y2="404"/><line x1="270" y1="396" x2="270" y2="404"/>
+    <line x1="350" y1="396" x2="350" y2="404"/><line x1="430" y1="396" x2="430" y2="404"/>
+    <line x1="106" y1="480" x2="114" y2="480"/><line x1="106" y1="560" x2="114" y2="560"/>
+    <line x1="106" y1="640" x2="114" y2="640"/>
+  </g>
+  <g font-family="sans-serif" font-size="14" fill="#334155" text-anchor="middle">
+    <text x="190" y="390">1</text><text x="270" y="390">2</text><text x="350" y="390">3</text><text x="430" y="390">4</text>
+  </g>
+  <g font-family="sans-serif" font-size="14" fill="#334155" text-anchor="end">
+    <text x="100" y="485">1</text><text x="100" y="565">2</text><text x="100" y="645">3</text><text x="100" y="394">0</text>
+  </g>
+  <text x="500" y="406" font-family="sans-serif" font-size="16" fill="#334155">u</text>
+  <text x="122" y="676" font-family="sans-serif" font-size="16" fill="#334155">v</text>
+
+  <!-- edge constraint 6u + 8v = 20 and corner constraint v = 1 -->
+  <line x1="86" y1="618" x2="408.67" y2="376" stroke="#b91c1c" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <line x1="114" y1="480" x2="470" y2="480" stroke="#0369a1" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <line x1="206" y1="528" x2="270" y2="480" stroke="#b91c1c" stroke-width="5"/>
+  <line x1="110" y1="400" x2="206" y2="528" stroke="#15803d" stroke-width="3" marker-end="url(#fa-arrow-g)"/>
+  <line x1="110" y1="400" x2="270" y2="480" stroke="#7c3aed" stroke-width="3" marker-end="url(#fa-arrow-v)"/>
+  <path d="M200,520 L208,514 L214,522" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+  <circle cx="270" cy="480" r="8" fill="none" stroke="#0f172a" stroke-width="2"/>
+
+  <text x="345" y="448" font-family="sans-serif" font-size="16" fill="#b91c1c">edge: 6u + 8v = 20</text>
+  <text x="345" y="469" font-family="sans-serif" font-size="16" fill="#b91c1c">I<tspan font-size="12" dy="4">x</tspan><tspan dx="3" dy="-4">u + I</tspan><tspan font-size="12" dy="4">y</tspan><tspan dx="3" dy="-4">v + I</tspan><tspan font-size="12" dy="4">t</tspan><tspan dx="3" dy="-4">= 0</tspan></text>
+  <text x="300" y="507" font-family="sans-serif" font-size="16" fill="#0369a1">corner's 2nd edge: v = 1</text>
+  <text x="205" y="430" font-family="sans-serif" font-size="16" font-weight="bold" fill="#7c3aed">d = (2, 1)</text>
+  <text x="138" y="507" font-family="sans-serif" font-size="16" font-weight="bold" fill="#15803d">d<tspan font-size="12" dy="4">n</tspan></text>
+  <text x="226" y="556" font-family="sans-serif" font-size="14" fill="#b91c1c">1 px along the edge: unobservable</text>
+
+  <g font-family="sans-serif" font-size="14" fill="#334155">
+    <text x="16" y="712">To scale: 80 px per px/frame here, 30 in the windows.</text>
+    <text x="16" y="734">Edge ∇I = (6, 8), I<tspan font-size="12" dy="4">t</tspan><tspan dx="3" dy="-4">= −20; corner adds ∇I = (0, 10), I</tspan><tspan font-size="12" dy="4">t</tspan><tspan dx="3" dy="-4">= −10.</tspan></text>
+  </g>
+</svg>

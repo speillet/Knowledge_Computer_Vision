@@ -14,6 +14,8 @@ ID: CV-METRIQUES-TEMPS-001
 Question: How can two systems have identical frame-by-frame AP but different tracking quality?
 Reponse: **Expected answer**: Boxes/classes can be identical while IDs are exchanged or fragmented; AP does not measure this continuity.
 
+**Reading the diagram**: ![One switch: per-frame versus global matching](../99-Ressources/cv-metriques-temps-id-switch.svg) Both panels show the same output: two perfectly placed objects over eight frames, with A handed from track 1 to a new track 3 at frame 6. Per-frame matching finds 16 true positives, so AP and the detection counts see nothing; MOTA charges the switch once, $1-1/16\approx0.94$. IDF1 first pairs identities once for the whole sequence, A with track 1 and B with track 2, then counts what that pairing leaves unexplained: A's last 3 frames are identity false negatives (IDFN) and track 3's 3 detections identity false positives (IDFP), so $\mathrm{IDF1}=26/32\approx0.81$.
+
 **Further explanation**: Use metrics and association diagnostics under identical sequence protocol.
 
 **Constructed example**: Keep the boxes and classes of two pedestrians exactly, but exchange their IDs in the middle of the video. Spatial associations to the GT can remain identical in each frame for detection evaluation. Temporal continuity becomes false.
@@ -22,8 +24,12 @@ Reponse: **Expected answer**: Boxes/classes can be identical while IDs are excha
 
 **Decomposition of tracking errors**: A missing box on the right target is a detection error, while a correct box with a wrong ID is an association error under the protocol. Fragmentation splits one true identity into several predicted tracks; a merge links several objects to one track. A simple number of switches does not necessarily describe their duration or all these relationships. Building the same boxes with several ID schemes lets you check what each metric penalizes. Presenting components and temporal examples helps explain a tracker's gain instead of ranking two systems on a single scalar.
 
+**Events versus frames** (constructed example, recomputed in the check script of this pass): move the same takeover to frame 8 and MOTA stays at 0.94, because it still counts one event, while IDF1 rises to $30/32\approx0.94$; at frame 5 IDF1 falls to its minimum, 0.75. An event count charges a trajectory split over $n$ frames between 1 and $n-1$ errors regardless of how long each part lasts, whereas IDF1 measures how long the tracker identifies targets correctly [Ristani et al., §3.1, §3.3]. HOTA's authors list MOTA's indifference to how well predicted and true trajectories align as its sixth problem [§9.1].
+
+**Diagnosis**: To attribute a gap to association, replay the evaluation with every matched prediction relabelled with the ID of its ground-truth object. The boxes, hence AP and the detection counts, do not change. When the per-frame matches stay the same, as they normally do, IDSW falls to zero, MOTA becomes MODA and the identity scores reach the ceiling that detection alone allows. The distance between the original and the replayed scores is the share of association errors, which a single MOTA value mixes with detection.
+
 **Blocking errors**: Deducing identity quality from AP alone.
-Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Luiten et al., HOTA, §4.1 (IDSW), §4.2 (IDF1 matching) and §5 (association scores TPA, FNA, FPA)](https://arxiv.org/abs/2009.07736); [Ristani et al., §3.3, truth-to-result match](https://arxiv.org/abs/1609.01775). Swapped-ID case: project construction.
+Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Luiten et al., HOTA, §4.1 (IDSW), §4.2 (IDF1 matching), §5 (association scores TPA, FNA, FPA) and §9.1, problem 6](https://arxiv.org/abs/2009.07736); [Ristani et al., §3.1 (event-based penalties) and §3.3, truth-to-result match](https://arxiv.org/abs/1609.01775); [TrackEval `clear.py` at 12c8791, L62–L97 (IDSW against the last matched ID)](https://github.com/JonathonLuiten/TrackEval/blob/12c8791b303e0a0b50f753af204249e622d0281a/trackeval/metrics/clear.py#L62-L97). Swapped-ID case, takeover example, diagram and relabelled replay: project constructions.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-METRIQUES-TEMPS-001 provenance::agent pole::B pole::C pole::D
 END
 
@@ -70,8 +76,14 @@ Reponse: **Expected answer**: Adjusts the scale and can therefore hide a metric 
 
 **Permitted transformation**: A similarity, written $p'=sRp+t$, has a scale freedom $s$ absent from a rigid transformation. If a metric estimate is everywhere $\hat p=2p$, choosing $s=1/2$ removes this error entirely in an ideal case. For a system whose only unobservable quantities are a global origin and a global yaw, the alignment must preserve the other physical information you want to test. Document the fitted parameters and, if useful, report the estimated scale factor as a separate diagnostic. Do not confuse correcting the coordinate frame with correcting a property that the system was supposed to provide.
 
+**Why 4 DoF for an inertial system**: Transforming all states by a scale $s$ and a rotation $R$ leaves the preintegrated IMU measurements unchanged only when $s=1$ and $R^Tg=g$, that is, for a rotation about gravity, because the accelerometer senses gravity and metric acceleration in the body frame [Zhang and Scaramuzza, §III-A, eqs. 11–12]. With a translation, that yaw rotation makes up the 4 unobservable degrees of freedom; scale, roll and pitch are outputs of the estimator and must stay in the error.
+
+**Constructed example** (worked example B of the reference, recomputed in the check script of this pass): eleven ground-truth poses 1 m apart on a 10 m line. A 2% scale error leaves residuals $0.02\,u_i$ around the centroid, where the offsets $u_i$ have an RMS of $\sqrt{10}$ m, so the ATE is $0.02\sqrt{10}\approx0.063$ m after a 4-DoF or SE(3) alignment and 0 after Sim(3). A 1° pitch tilt gives 0.055 m after the 4-DoF alignment and 0 after SE(3). The same scale error yields an RPE of 0.02 m over 1 m and 0.10 m over 5 m, so relative errors still expose it.
+
+**Diagnosis**: A large ATE drop from the 4-DoF to the Sim(3) alignment, with a fitted scale away from 1 (about 0.98 here), signals a scale error in a system declared metric. The remedy is scale observability (IMU excitation, stereo baseline, calibration), not a more permissive alignment.
+
 **Blocking errors**: Optimizing the alignment to get the best score without justification.
-Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Zhang and Scaramuzza 2018, §III-A (ambiguities), §III-C eq. 13 and Table I (alignment groups)](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); [Sturm et al. 2012, §VII-B (ATE after least-squares alignment)](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf). Scale and tilt examples: project constructions.
+Source: [[130-evaluation-fiabilite/references/132-tracking-trajectoires|Full reference]]; [Zhang and Scaramuzza 2018, §III-A eqs. 11–12 (ambiguities, yaw-only transformation for inertial sensors), §III-C eq. 13 and Table I (alignment groups)](https://rpg.ifi.uzh.ch/docs/IROS18_Zhang.pdf); [Sturm et al. 2012, §VII-B (ATE after least-squares alignment)](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf). Scale and tilt examples: project constructions.
 Tags: cv::pilote cv::d13 famille::evaluation cv_id::CV-METRIQUES-TEMPS-003 provenance::agent pole::B pole::C pole::D
 END
 

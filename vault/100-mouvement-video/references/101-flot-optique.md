@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 6
+revision: 7
 prerequis: ["CV-MATCHING"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -226,7 +226,11 @@ $$I_x u + I_y v + I_t \approx 0,$$
 with $I_x,I_y$ in grey levels per pixel, $I_t$ in grey levels per frame and $(u,v)$ in
 pixels per frame [OpenCV tutorial, "Optical Flow"]. One scalar equation per pixel
 constrains only the flow component along $\nabla I$: the *normal flow*
-$-I_t/\|\nabla I\|$. The tangential component is free.
+$-I_t/\|\nabla I\|$. The tangential component is free. Horn and Schunck draw the
+same constraint in velocity space: $(u,v)$ "has to lie along a line perpendicular to
+the brightness gradient", whose distance from the origin is $|I_t|/\|\nabla I\|$
+[Horn and Schunck, §4, Fig. 1]; the minimum-norm point of that line is the normal-flow
+vector $\mathbf d_n=-I_t\nabla I/\|\nabla I\|^2$ (worked example E).
 
 **Lucas–Kanade normal equations.** Over a window $\mathcal W$ of $N$ pixels, with $A$
 the first image, $B$ the second image pre-shifted by the current guess and
@@ -306,6 +310,44 @@ $1088\times1920$ the grid has 32,640 cells and the first level alone needs 4.26 
 The lookup reads $4\times(2r+1)^2=324$ values per pixel in the code (corr.py L29–L50)
 against $4\times41=164$ for the L1 ball of eq. 2, and radius 4 on the coarsest level
 spans $4\times8\times8=256$ px, as the paper states [§3.2].
+
+### Worked example E: normal flow at an edge and at a corner
+
+Constructed example, recomputed by the 2026-11-16 check script (CV-FLOT-001). An edge
+pixel with $\nabla I=(6,8)$ grey levels/px and $I_t=-20$ grey levels/frame gives the
+line $6u+8v=20$, at distance $20/10=2$ px/frame from the origin. Its foot is
+$\mathbf d_n=(1.2,1.6)$. A true flow $\mathbf d=(2,1)$ lies on the same line, 1 px
+further along the edge direction $(0.8,-0.6)$, and no measurement at this pixel
+separates the two. A pixel on a second edge, with $\nabla I=(0,10)$ and $I_t=-10$, adds
+the line $v=1$; with one row of each kind, $G=\sum\nabla I\nabla I^T$ has rows $(36,48)$
+and $(48,164)$, $-\sum I_t\nabla I=(120,260)$, and the solve returns $(2,1)$. The
+eigenvalues of $G$ are 180 and 20; two rows of the first edge give 200 and 0. The
+traces are equal: gradient energy alone does not reveal the missing direction.
+
+![Aperture problem: an edge seen through a window constrains only the normal flow, a corner fixes the motion; in velocity space the edge gives the line 6u + 8v = 20, the corner adds v = 1, and they cross at (2, 1)](../../99-Ressources/cv-flot-aperture.svg)
+
+*Figure (project construction), drawn to scale for worked example E:* in velocity space,
+80 px per px/frame with $v$ downward as image $y$; the arrows in the windows use
+30 px per px/frame. The dashed lines in the windows are the edges at $t+1$; their
+colours match the constraint lines they produce (CV-FLOT-001).
+
+### Worked example F: forward–backward check at an occlusion
+
+Constructed example, recomputed by the 2026-11-16 check script (CV-FLOT-004). The
+background is static and an object moves 6 px/frame to the right. The 6 px band of
+background just ahead of the object is visible in $I_1$ and covered in $I_2$: a forward
+vector $\mathbf w=(0,0)$ there meets the object's backward vector
+$\hat{\mathbf w}=(-6,0)$ at $\mathbf x+\mathbf w$, a round-trip residual of 6 px. The band
+uncovered behind the object has no source in $I_1$ and is flagged only by the
+backward check on the grid of $I_2$. Sundaram et al. accept a point when
+$|\mathbf w+\hat{\mathbf w}|^2<0.01(|\mathbf w|^2+|\hat{\mathbf w}|^2)+0.5$, with
+$\hat{\mathbf w}$ read at the forward-displaced position, and stop the track otherwise,
+because the point "is either getting occluded ... or the flow was not correctly
+estimated" [Sundaram et al., §4, eq. 5]. The occluded pixel gives $36>0.86$. A visible
+pixel with $\mathbf w=(20,0)$ and $\hat{\mathbf w}=(-18.8,0.4)$ gives $1.6<8.04$ and is
+kept, while the fixed 1 px per axis of OpenCV's `lk_track.py` (L56–L59) rejects it.
+The scaled tolerance trades false rejections of fast points for a looser test of
+large motions; neither rule detects a consistent error on a periodic texture.
 
 ## Parameters and tuning
 
@@ -487,7 +529,7 @@ selected points is not comparable with dense averages.
 | Tracks slide along edges | Aperture: rank-deficient $G$ | Ratio $\lambda_{\min}/\lambda_{\max}$ of the window; motion of the point along the edge direction | Select corners; raise the eigenvalue threshold; use a larger window if motion is coherent |
 | Points jump by a fixed period on repetitive textures | Multiple minima beyond half a wavelength (example B) | Error clusters at multiples of the texture period; forward-backward check passes for both directions | Better prior (motion model, IMU), larger-scale structure, reject periodic windows |
 | Fast objects lost while background is fine | Displacement beyond pyramid range, or object too small for coarse levels | Per-object displacement against $(2^{L_m+1}-1)\omega$; object size at level $L_m$ | Higher frame rate, prediction as initial flow (`OPTFLOW_USE_INITIAL_FLOW`), detection-based association |
-| `status=1` on an occluded point | Status tests conditioning and bounds, not visibility | Forward-backward distance; patch residual `err` | Reject on round-trip distance; re-detect points regularly as the OpenCV sample does |
+| `status=1` on an occluded point | Status tests conditioning and bounds, not visibility | Forward-backward distance; patch residual `err` | Reject on round-trip distance, with a fixed or motion-scaled tolerance (worked example F); re-detect points regularly as the OpenCV sample does |
 | Long tracks drift slowly | Pairwise tracking re-initializes the reference each frame [Bouguet, §2.7] | Compare the patch with its first appearance | Fixed-reference check or affine verification for rejection [§2.7] |
 | Error concentrated at motion boundaries | Window or receptive field mixes two motions | Error versus distance to boundary (Sintel bands) | Smaller window; dense method with context; bidirectional consistency mask |
 | Flow wrong after illumination change | Brightness constancy violated | Same scene with constant exposure or Clean vs Final | Normalize patches, lock exposure, use learned features |
@@ -512,7 +554,11 @@ Conditional choices:
   when the whole image follows one warp, and **long-term point tracking**
   ([CV-VIDEO](102-points-actions-video.md)) when trajectories must survive occlusions.
 - Global variational methods add a smoothness term over the whole image to resolve the
-  aperture problem (Horn and Schunck, 1981; not re-read in this pass).
+  aperture problem [Horn and Schunck, §5]. Their iterative update moves each estimate
+  from the local average flow toward the pixel's constraint line, along its
+  perpendicular [§10, Fig. 4], so edge pixels inherit the tangential component of their
+  neighbours; the assumption fails at motion boundaries, which the authors exclude from
+  their simple world [§3].
 
 Industrial uses (project reasoning, not published results): video stabilization from
 LK tracks and a fitted homography; belt or web speed from the median flow on a
@@ -608,6 +654,8 @@ Consulted foundations: [OpenCV optical flow tutorial source](https://github.com/
 - [Teed and Deng 2020, RAFT](https://arxiv.org/abs/2003.12039) (v3 PDF): §3 and §§3.1–3.4 (eqs. 1–7, pyramid, lookup, efficient computation, upsampling), §4 (training, iterations), §§4.1–4.4, Tables 1–2.
 - [Butler et al. 2012, MPI-Sintel](http://files.is.tue.mpg.de/black/papers/ButlerECCV2012.pdf): §1 (EPE, Middlebury comparison), §4 (render passes, unmatched pixels, resolution), §6 (evaluation bands).
 - [Menze and Geiger 2015, KITTI 2015](https://www.cvlibs.net/publications/Menze2015CVPR.pdf): §5, evaluation protocol (3 px and 5% outlier rule; bg, fg, all).
+- [Horn and Schunck 1981, Determining Optical Flow, Artificial Intelligence 17, 185–203](https://people.csail.mit.edu/bkph/papers/Optical_Flow_OPT.pdf) (author-hosted scan of the journal version): §1 (one constraint for two velocity components), §3 (occlusions excluded), §4 and Fig. 1 (constraint line perpendicular to the gradient, distance $E_t/\|\nabla E\|$), §5 (smoothness constraint), §10 and Fig. 4 (update from the local average toward the constraint line).
+- [Sundaram, Brox and Keutzer 2010, Dense Point Trajectories by GPU-accelerated Large Displacement Optical Flow, ECCV](https://lmb.informatik.uni-freiburg.de/Publications/2010/Bro10e/sundaram_eccv10.pdf): §4, eq. 5 (forward–backward consistency with a tolerance growing with motion), eq. 6 (motion-boundary stop).
 
 ### Implementation sources
 
@@ -623,3 +671,6 @@ Consulted foundations: [OpenCV optical flow tutorial source](https://github.com/
 - [CV-FARNEBACK](103-farneback.md), [CV-VIDEO](102-points-actions-video.md), [CV-CORNERS](../../40-features-matching/references/46-harris-shi-tomasi.md), [CV-ECC](../../40-features-matching/references/45-recalage-ecc.md), [CV-SOT](../../110-tracking-association/references/113-tracking-monoobjet.md).
 
 Drafted by agent, 2026-10-18. Revision 6, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/101-flot-optique.md).
+Revision 7, 2026-11-16: aperture figure and worked examples E (normal flow, corner) and F
+(forward–backward tolerance) added, Horn and Schunck re-read and Sundaram et al. added, while
+deepening CV-FLOT-001 and CV-FLOT-004, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/101-flot-optique.md).

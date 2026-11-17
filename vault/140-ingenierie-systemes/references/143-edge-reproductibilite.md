@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: ["CV-PIPELINE", "CV-QUANT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -190,7 +190,16 @@ For a 40 ms path (decoding 8, preprocessing 6, inference 20, postprocessing 6 ms
 INT8 that runs inference 2.5 times faster but adds 2 ms of reformatting gives 30 ms,
 a 1.33× latency gain. If the four stages are pipelined, throughput is set by the
 slowest stage and goes from 50 to 100 frames/s: the same change doubles throughput
-while improving latency by a third.
+while it shortens latency by a quarter (40 to 30 ms, the 1.33× gain), assuming the 2 ms
+reformatting runs inside the inference stage. When another stage is slower than
+inference, accelerating inference leaves pipelined throughput unchanged.
+
+*Required stage speedup* (constructed, recomputed by the 2026-11-16 check script;
+CV-DEPLOIEMENT-001). Inverting the model with $c=0$ gives the speedup that a target
+overall factor $S$ requires, $s=f/(1/S-(1-f))$, defined while $S<1/(1-f)$. For $f=0.1$,
+$S=1.05$ needs $s\approx1.91$ and $S=1.10$ needs $s=11$; for $f=0.6$, $s=2$ already
+gives $S\approx1.43$. The required $s$ diverges as $S$ approaches the bound, which is
+Amdahl's verbal argument in numbers.
 
 ### Compression arithmetic
 
@@ -492,3 +501,5 @@ Consulted foundations: [Amdahl 1967](https://www.cs.cmu.edu/~18742/papers/Amdahl
 - Sibling notes: [CV-PIPELINE](141-contrats-profiling-video.md), [CV-QUANT](142-quantification-runtimes.md).
 
 Drafted by agent, 2026-10-18. Revision 9, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/143-edge-reproductibilite.md).
+Revision 10, 2026-11-16: required stage speedup added and the latency wording of worked example A
+made precise while deepening CV-DEPLOIEMENT-001, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/143-edge-reproductibilite.md).

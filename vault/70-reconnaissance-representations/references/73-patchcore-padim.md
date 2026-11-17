@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-REPRESENTATIONS", "CV-ACQUISITION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d07]
@@ -497,6 +497,23 @@ resizing. Timings depend on hardware, batch size and the search library.
 | PaDiM scores huge, infinite or unstable | $d\ge N$ with a tiny $\epsilon$; features rescaled after tuning (example C) | Condition number of $\Sigma_{ij}$ per position | Increase $\epsilon$, reduce $d$, add images |
 | Latency or memory over budget | Bank too large; $d^2$ storage | Profile per stage; bank or covariance size | Smaller coreset, approximate search, smaller $d$, triangular storage |
 
+*Reading an acquisition shift (CV-ANOMALIES-003).* Both deep scores measure distance to
+the nominal features, and the image score is a maximum over patches [PatchCore, §3.3;
+PaDiM, §III-C]. A lighting change absent from training moves every patch, and PaDiM
+amplifies directions that never varied by up to $1/\sqrt{\epsilon}=10$ (example C), so all
+image scores rise. On the same verified conforming part, an acquisition shift raises the
+median patch score with the maximum, across the map; a real defect raises a localized
+group of patches and leaves the median in place (project deduction).
+
+*Worked example H (constructed, Gaussian scores for illustration, recomputed by
+checks/73-patchcore-padim.py of the 2026-11-16 pass).* Good parts score
+$\mathcal N(1.0,0.2^2)$ and defects $\mathcal N(2.0,0.3^2)$: $\tau=1.465$ rejects 1% of good
+parts and catches 96.3% of defects. After the lighting change, good parts score
+$\mathcal N(1.5,0.2^2)$ (57% rejected at the old threshold) and defects only
+$\mathcal N(2.2,0.3^2)$. Raising $\tau$ to 1.965 restores 1% false rejections and lowers
+recall to 78%: when the populations get closer, re-tuning the threshold alone trades
+false rejections for misses.
+
 ## Alternatives and applications
 
 Conditional choices:
@@ -628,3 +645,5 @@ Consulted foundations: [PatchCore](https://arxiv.org/html/2106.08265v2): §3 fea
 - Metrics: [CV-METRIQUES-APPLIQUEES](../../130-evaluation-fiabilite/references/134-metriques-applications.md); data splits and drift: [CV-FIABILITE](../../130-evaluation-fiabilite/references/133-donnees-generalisation.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/73-patchcore-padim.md).
+Revision 9, 2026-11-16: reading of an acquisition shift (median versus maximum patch score) and
+worked example H on re-tuning the threshold added while deepening CV-ANOMALIES-003, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/73-patchcore-padim.md).

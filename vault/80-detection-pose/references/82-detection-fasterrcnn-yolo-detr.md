@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 12
+revision: 13
 prerequis: ["CV-IOU-AP", "CV-NMS"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -264,10 +264,16 @@ $k=\lfloor k_0+\log_2(\sqrt{wh}/224)\rfloor$ with $k_0=4$ [FPN, §4.2, eq. 1].
   mAP" [YOLO, §2, §2.2, §2.3].
 - **YOLOv3** uses anchors obtained by k-means ("dimension clusters"), 9 clusters split
   over 3 scales, independent logistic class outputs, and a tensor
-  $N\times N\times[3(4+1+80)]$ per scale on COCO [YOLOv3, §2.1–§2.3].
+  $N\times N\times[3(4+1+80)]$ per scale on COCO [YOLOv3, §2.1–§2.3]. It trains the box
+  offsets with a sum of squared errors, the objectness by logistic regression and the
+  classes with binary cross-entropy [§2.1–§2.2].
 - **YOLOX** switches to anchor-free prediction with one prediction per location, a
-  decoupled head and SimOTA assignment [YOLOX, §2.1]. **YOLOv10** adds a one-to-one
-  assignment branch to remove NMS at inference [YOLOv10, §3.1]. The family name
+  decoupled head and SimOTA assignment [YOLOX, §2.1]. Its baseline trains classes and
+  objectness with BCE and boxes with an IoU loss; an end-to-end variant with one-to-one
+  assignment lost 0.8 AP (46.5 against 47.3 on COCO val) and slowed inference, so it
+  was left out of the final models, which keep NMS [§2.1, Table 2]. **YOLOv10** adds a
+  one-to-one head trained jointly with the one-to-many head and keeps only the
+  one-to-one head at inference, without NMS [YOLOv10, §3.1]. The family name
   therefore fixes neither the box encoding, nor the assignment, nor the presence of NMS
   (card CV-DETECTEURS-002).
 - **RetinaNet** places $A=9$ anchors per location on each level $P_3$–$P_7$
@@ -368,8 +374,18 @@ and 0.2 without mean subtraction. The weights are part of a trained head's outpu
 contract. YOLOv3 decodes instead
 $b_x=\sigma(t_x)+c_x$ and $b_w=p_we^{t_w}$ in grid units, where $(c_x,c_y)$ is the cell
 offset and $(p_w,p_h)$ the prior size: the sigmoid keeps the centre inside the
-responsible cell [YOLOv3, §2.1]. DETR predicts $(c_x,c_y,w,h)\in[0,1]^4$ directly,
+responsible cell [YOLOv3, §2.1]. YOLOX predicts "two offsets in terms of the left-top
+corner of the grid, and the height and width" [YOLOX, §2.1]; its code at tag 0.3.0
+decodes $(t_x+c_x)\cdot s$ and $e^{t_w}\cdot s$ in pixels, with $s$ the stride and no sigmoid
+[`yolo_head.py` L249–L250]. DETR predicts $(c_x,c_y,w,h)\in[0,1]^4$ directly,
 without a reference box [DETR, §3.1].
+
+*Constructed contrast (recomputed by checks/82-detection-fasterrcnn-yolo-detr.py of the
+2026-11-16 pass; CV-DETECTEURS-002).* The raw output $(0,0,0,0)$ at cell $(10,7)$ of a
+stride-32 level decodes in YOLOv3 to a centre at $(10.5,7.5)$ cells, $(336,240)$ px, with
+the prior's size, and in YOLOX to a centre at the cell's corner, $(320,224)$ px, with
+size $32\times32$ px. A decoder taken from the wrong version shifts every centre by half
+a cell and replaces the prior's size by the stride, an error that no retraining fixes.
 
 **Worked example A** (constructed example, recomputed by
 checks/82-detection-fasterrcnn-yolo-detr.py). Take a $128\times128$ anchor centred at
@@ -780,13 +796,30 @@ by the protocol, even if an inspection confirms an omitted real object. A high s
 not enough: check the image, the expected class, partial objects, box conventions,
 exclusions and the crowd or ignore processing. TIDE §3.4 and Appendix D show examples
 of missing or ambiguous annotations, and Appendix E shows that the handling of ignored
-detections changes the diagnosis.
+detections changes the diagnosis. Appendix D, Table 5 bins the 100 most confident
+background errors of Mask R-CNN on COCO: 57 are misannotations (34 bad annotations, 20
+ambiguous cases such as mannequins, sculptures or reflections, 3 missing crowd flags),
+against "50 out of 100" in the §3.4 text; for localization errors the table gives 32
+(22 of them missing crowd flags) against 30 in the text. The sample holds only the most
+confident errors of one model on one dataset: it supports inspecting confident unmatched
+boxes, not a base rate for all false positives.
 
 Protocol proposed by the project: review a documented sample without favouring any
 model, apply stable annotation rules, arbitrate ambiguous cases, then version the
 corrections. Re-evaluate all compared models on the same version, keeping the previous
 results. Do not selectively remove one model's false positives to improve its score.
 An omitted object differs from an intentional exclusion by the dataset's policy.
+
+*Constructed case (recomputed by checks/82-detection-fasterrcnn-yolo-detr.py of the
+2026-11-16 pass; CV-DETECTEURS-012).* Four objects are annotated and a fifth real one is
+not. Model A ranks TP, the unannotated object, TP, TP, TP; model B finds the four
+annotated objects and misses the fifth. Before correction A scores $86/101\approx0.851$
+and B 1; after it A scores 1 and B $81/101\approx0.802$, since B's recall stops at 0.8.
+A correction can therefore reverse a ranking, which is why it is versioned and applied
+to every model. In pycocotools at `8c9bcc3`, `_prepare` overwrites a dataset's `ignore`
+field with `iscrowd` [cocoeval.py L107–L109], so a doubtful region must be marked
+`iscrowd=1` (crowd overlap rule) or fixed in the annotations; `ignore=1` alone leaves its
+detections counted as FPs ([CV-IOU-AP](../../130-evaluation-fiabilite/references/131-iou-ap-coco.md)).
 
 ### Box sizes, aspect ratios and accuracy
 
@@ -1077,7 +1110,7 @@ Consulted foundations: [DETR](https://arxiv.org/html/2005.12872v3): §3.1 bipart
 - [Ren et al., Faster R-CNN, arXiv HTML v3](https://arxiv.org/html/1506.01497v3): §I (10 ms marginal cost of proposals), §III, §III-A and §III-A1 (anchors, $k=9$, translation invariance, pyramid of regression references), §III-A2 (eqs. 1–2, $\lambda=10$, one regressor per anchor shape), §III-A3 (256 sampled anchors), §III-C (600 px scale, stride 16, anchor sizes, cross-boundary anchors, NMS 0.7), §IV-A (Table II ablations, Table V timing, Table VIII anchors, Table IX $\lambda$), §IV-B (added $64^2$ anchors on COCO).
 - [Redmon et al., YOLO, arXiv HTML v5](https://arxiv.org/html/1506.02640v5): §1, §2 (grid, confidence, $7\times7\times30$ tensor), §2.2 (loss weights), §2.3 (98 boxes, NMS), §2.4 (limitations), §4.1, §4.2 (error analysis). Also at [CVF open access](https://openaccess.thecvf.com/content_cvpr_2016/html/Redmon_You_Only_Look_CVPR_2016_paper.html).
 - [Redmon and Farhadi, YOLOv3, arXiv HTML v1](https://arxiv.org/html/1804.02767v1): §2.1 (box decoding, objectness assignment), §2.2 (independent logistic classifiers), §2.3 (three scales, nine clusters).
-- [Ge et al., YOLOX, arXiv HTML v2](https://arxiv.org/html/2107.08430v2): §2.1, paragraphs "Decoupled head", "Anchor-free" and "SimOTA".
+- [Ge et al., YOLOX, arXiv HTML v2](https://arxiv.org/html/2107.08430v2): §2.1, paragraphs "YOLOv3 baseline" (BCE and IoU losses), "Decoupled head", "Anchor-free", "SimOTA" and "End-to-end YOLO", Table 2.
 - [Wang et al., YOLOv10, arXiv HTML v2](https://arxiv.org/html/2405.14458v2): §1 (one-to-many assignment requires NMS), §3.1 (consistent dual assignments).
 - [Lin et al., FPN, arXiv HTML v2](https://arxiv.org/html/1612.03144v2): §1 (AR and AP gains), §3 and Figure 3 (top-down path, lateral $1\times1$, nearest-neighbour upsampling, $3\times3$ smoothing, $d=256$), §4.1 (anchors per level), §4.2 (eq. 1, RoI level).
 - [Girshick, Fast R-CNN, arXiv 1504.08083v2](https://arxiv.org/abs/1504.08083): §2.3, multi-task loss (regression targets normalized to zero mean and unit variance); PDF read on 2026-11-15.
@@ -1088,7 +1121,7 @@ Consulted foundations: [DETR](https://arxiv.org/html/2005.12872v3): §3.1 bipart
 - [Zhu et al., Deformable DETR, arXiv HTML v4](https://arxiv.org/html/2010.04159v4): abstract, §1 (convergence, small objects), §3 (attention complexity), §4.1 (deformable attention complexity), §5 (implementation details, 50 epochs, four sampling points).
 - [Zhang et al., DINO, arXiv abstract](https://arxiv.org/abs/2203.03605): abstract only.
 - [Rezatofighi et al., GIoU, arXiv HTML v2](https://arxiv.org/html/1902.09630v2): §3 and Algorithms 1–2, §3.1.
-- [Bolya et al., TIDE, arXiv HTML v2](https://arxiv.org/html/2008.08115v2): §2.1–§2.3 (thresholds, error types, oracles, progressive bias), §3.4 (mislabelled top errors), Appendices A.1, D and E.
+- [Bolya et al., TIDE, arXiv HTML v2](https://arxiv.org/html/2008.08115v2): §2.1–§2.3 (thresholds, error types, oracles, progressive bias), §3.4 (mislabelled top errors), Appendices A.1, D (Table 5) and E.
 - [Bodla et al., Soft-NMS](https://arxiv.org/html/1704.04503): §4, suppression mechanism; accessed on 2026-10-21, not re-read in this pass.
 - [COCO detection evaluation](https://cocodataset.org/#detection-eval): AP definitions, area strata measured on the segmentation mask, 100 detections per image, share of small objects.
 
@@ -1105,6 +1138,8 @@ torchvision tag v0.29.0, read on GitHub:
 - [`retinanet.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/retinanet.py): anchors (L51–L53), defaults (L430–L435), matcher with low-quality matches and box coder (L462–L470).
 - [`fcos.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/fcos.py): defaults (L370–L381), matching with centre sampling and scale ranges (L455–L482), ranking score (L516–L519).
 - [`anchor_utils.py`](https://github.com/pytorch/vision/blob/v0.29.0/torchvision/models/detection/anchor_utils.py): anchor centres at $ks$ (L101–L103).
+- [YOLOX tag 0.3.0, `yolox/models/yolo_head.py`](https://github.com/Megvii-BaseDetection/YOLOX/blob/0.3.0/yolox/models/yolo_head.py#L236-L251): `decode_outputs`, centres $(t+\text{grid})\cdot s$ and sizes $e^{t}\cdot s$ (L249–L250); read on 2026-11-16, not executed.
+- [cocoapi `cocoeval.py` at `8c9bcc3`](https://github.com/cocodataset/cocoapi/blob/8c9bcc3cf640524c4c20a9c40e89cb6a2f2fa0e9/PythonAPI/pycocotools/cocoeval.py#L107-L109): `ignore` overwritten by `iscrowd` (L107–L109); read on 2026-11-16.
 - [torchvision 0.29 `batched_nms`](https://docs.pytorch.org/vision/0.29/generated/torchvision.ops.batched_nms.html): per-category suppression (card CV-DETECTEURS-013).
 
 ### Related flashcards and references
@@ -1115,3 +1150,6 @@ torchvision tag v0.29.0, read on GitHub:
 Drafted by agent, 2026-10-18; enriched on 2026-10-21 (cards CV-DETECTEURS-006 to 013, resolution protocol, size and aspect-ratio cases). Revision 11, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/82-detection-fasterrcnn-yolo-detr.md).
 Revision 12, 2026-11-15: CV-DETECTEURS-014 added after the learner accepted P-CV-DETECTEURS-01, and
 worked example A, the box coder and the torchvision matcher contracts aligned with it, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/82-detection-fasterrcnn-yolo-detr.md).
+Revision 13, 2026-11-16: YOLO losses and NMS per version, the YOLOX decoder and a decoding
+contrast, TIDE's Table 5 breakdown, a two-model re-scoring case and the pycocotools `ignore`
+contract added while deepening CV-DETECTEURS-002 and CV-DETECTEURS-012, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/82-detection-fasterrcnn-yolo-detr.md).

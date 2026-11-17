@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SEGMENTATION"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -103,6 +103,11 @@ diagnose wrong-part masks, identity switches and lost objects.
 - **A prompt defines the target.** SAM segments what the prompt indicates; it does not
   enumerate or name objects. Its automatic mask generation prompts a regular grid of
   points (32×32 on the full image, plus crops) [App. B], which still yields unnamed masks.
+  The released generator keeps masks whose predicted IoU exceeds 0.88 and whose stability
+  score exceeds 0.95, then applies box NMS at 0.7 [automatic_mask_generator.py, L39–L44];
+  nested whole, part and subpart masks can all survive, and pixels covered by no surviving
+  mask stay unlabeled. A pixel can therefore belong to zero, one or several masks, where a
+  semantic map gives it exactly one class (project deduction).
 - **Objects with visible boundaries.** SAM 2 focuses on "valid objects which have a
   clearly defined boundary" and does "not consider regions without visual boundaries"
   [Ravi et al., App. B].
@@ -153,7 +158,12 @@ Purpose of the steps. *Encoding once* amortizes the heavy computation over many 
 ranks them [§3]. *Memory attention* replaces re-segmentation from scratch: a frame is
 interpreted with the target's recent appearance and the user's corrections [Ravi et al.,
 §4]. *The presence head* lets the model say "absent" instead of always drawing a mask.
-*The FIFO queues* bound memory and computation, at the cost of forgetting.
+*The FIFO queues* bound memory and computation, at the cost of forgetting. Memory attention
+stacks $L=4$ blocks of self-attention, cross-attention to the bank and MLP [§4, App. D];
+recent-frame memories carry a temporal position encoding and prompted-frame memories do
+not [§4]; memories are projected to 64 channels and each 256-dimensional object pointer,
+taken from the decoder's output mask token, is split into four 64-dimensional tokens
+[App. D].
 
 ## Mathematics, conventions and units
 
@@ -171,11 +181,27 @@ must read correctly are the outputs, the training targets of the scores and the 
   $1024\times1024$ padded input; the code upsamples them bilinearly to $1024\times1024$,
   crops the padding, resizes to the original size and thresholds at logit 0
   (`mask_threshold = 0.0`) [sam.py, L19, L133–L162].
+- **Mask head.** After two two-way attention blocks, two transposed convolutions upsample
+  the $64\times64$ embedding by 4 to 32 channels; an MLP maps each of the four mask tokens
+  to a 32-value vector whose dot product with the upsampled embedding at every location
+  gives one logit per location, a "dynamic linear classifier" [App. A; mask_decoder.py,
+  L49–L69, L134–L147]. No output channel stands for a category. `multimask_output=True`
+  returns tokens 1–3 and `False` returns token 0 [L101–L107], the token trained for
+  multi-prompt inputs [App. A]; the released predictor leaves the choice to the caller and
+  advises `False` for unambiguous prompts [predictor.py, L115–L120].
 - **Video metric.** $\mathcal J$ is the region IoU of a frame's mask; $\mathcal F$ the
   F-measure of a bipartite matching between boundary pixels; $\mathcal J\&\mathcal F$
   averages the two, and DAVIS 2017 averages over object instances rather than sequences
   [Pont-Tuset et al. 2017, §3]. SAM 2 reports $\mathcal J\&\mathcal F$ for video and
   mIoU for images [Ravi et al., §6].
+
+![SAM data flow: the image encoder runs once per image and caches a 64 × 64 × 256 embedding; the prompt encoder, the mask decoder and the post-processing run per prompt and return C masks with C predicted IoU scores, whose logits can return as the next mask prompt](../../99-Ressources/cv-sam-architecture.svg)
+
+*Figure (project construction), schematic:* green boxes run once per image, violet boxes
+per prompt; sizes from Kirillov et al. 2023, App. A, and segment-anything at `dca509f`
+(build_sam.py L62–L65, prompt_encoder.py L50–L59, mask_decoder.py L49–L69). The
+per-prompt part needs less than 1% of the image encoder's compute [App. A, training
+algorithm] (CV-SAM-001).
 
 ### Worked example A: what one click becomes
 
@@ -244,7 +270,8 @@ Cost drivers:
 
 - **SAM**: one image-encoder pass per image at $1024\times1024$, then about 50 ms per
   prompt for prompt encoder and decoder on CPU [Kirillov et al. 2023, §3]. The image
-  encoder dominates (636M parameters for the ViT-H model [Fig. 13]).
+  encoder dominates (636M parameters for the ViT-H model [Fig. 13]); the mask decoder
+  "requires less than 1% of the image encoder's compute" [App. A, training algorithm].
 - **SAM 2**: one encoder pass per frame plus memory attention and decoding per object;
   objects share only the per-frame embedding [Ravi et al., App. C], so cost grows with
   the number of tracked objects (project deduction). Reported speed on the
@@ -289,6 +316,20 @@ with >3× fewer interactions" than SAM combined with XMem++ or Cutie in the inte
 settings [§6.1]; in semi-supervised VOS it scores 64.7, 75.3 and 77.6 $\mathcal J\&\mathcal F$
 with 1, 3 and 5 first-frame clicks, 74.4 with a box and 79.3 with a mask [Table 4]. The
 first-frame prompt alone moves the result by about 15 points.
+
+Data-engine comparison with per-frame segmentation [Ravi et al., §5.1, Table 1, App. E.2.2]:
+in a controlled experiment, three groups of annotators labelled the same 452 masklets in
+169 videos with each phase's protocol. With image SAM on every frame (Phase 1),
+annotation took 37.8 s per frame, every frame was edited and a clicked frame took 4.80
+clicks; with SAM 2 in the loop (Phase 3), 4.5 s, 19.04% and 2.68, and 89.1% of the masks
+matched the Phase 1 masks at IoU above 0.75 (72.8% for small objects, 100.0% for large).
+These are human annotation times with models retrained during collection, not inference
+costs.
+
+*Worked example C (constructed, recomputed by the 2026-11-16 check script).* A 20-s clip
+annotated at the engine's 6 frames/s has 120 frames: about $120\times37.8\ \mathrm s=75.6$ min
+per object with Phase 1 against $120\times4.5\ \mathrm s=9$ min with Phase 3, of which about
+23 frames are edited (CV-SAM-002).
 
 ### Proposed baseline and controlled variation (not executed)
 
@@ -439,3 +480,4 @@ Consulted foundations: [SAM](https://arxiv.org/html/2304.02643v1): §§2–3 pro
 - Related references: [CV-SEGMENTATION](93-semantique-instances-panoptique.md), [CV-GRABCUT](92-grabcut-regions.md), [CV-SOT](../../110-tracking-association/references/113-tracking-monoobjet.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/94-sam-sam2.md).
+Revision 9, 2026-11-16: data-flow figure, mask head and token selection, automatic-generator filters, memory-attention details, the data-engine comparison and worked example C added while deepening CV-SAM-001 and CV-SAM-002, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/94-sam-sam2.md).

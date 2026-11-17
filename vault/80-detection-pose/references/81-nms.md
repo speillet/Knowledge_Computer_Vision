@@ -8,7 +8,7 @@ profondeur: approfondissement
 statut: redige
 provenance: agent
 prerequis: ["CV-IOU-AP"]
-revision: 10
+revision: 11
 tags: [cv/d08, detection, nms]
 ---
 # NMS — suppressing redundant detections
@@ -276,9 +276,19 @@ suppressed by a selected container only if $|B|>\tau|A|$. A large box does not a
 delete all the small boxes it contains. Project analytical calculation, derived from the
 definition of IoU [GIoU, §3, equation 1][giou].
 
-The ratio "intersection / area of the small box" here is 1: it is not the IoU. Replacing it with
-the IoU would change the deletion rule and could eliminate legitimate detections of nested
-objects or parts. Conversely, a large mislocalized box and a small box on the same object can
+The condition depends on the area ratio only, not on where $B$ sits inside $A$. For the same
+aspect ratio and a side ratio $k$, $\operatorname{IoU}=k^2$, so the nested box is suppressed when
+$k>\sqrt\tau$: 0.707 at $\tau=0.5$, 0.837 at $\tau=0.7$. A box spanning 80% of each side of $A$
+(IoU 0.64) is removed at 0.5 and kept at 0.7, while a shrunk duplicate with $k=0.9$ (IoU 0.81)
+is removed at both: raising $\tau$ protects large nested boxes and keeps more near-duplicates
+(constructed, recomputed by checks/81-nms.py of the 2026-11-16 pass; CV-NMS-006).
+
+The ratio "intersection / area of the small box" here is 1: it is not the IoU. Using it in place
+of the IoU would change the deletion rule and could eliminate legitimate detections of nested
+objects or parts. Constructed counterexample (same check script): an adult $(0,0,100,250)$ at
+0.9 and a child in front of them, $(30,130,80,250)$ at 0.8, both of class person, have IoU
+$6000/25000=0.24$ and survive hard NMS at 0.5; a rule on the intersection over the smaller box
+at 0.5 deletes the child, as it deletes every nested box. Conversely, a large mislocalized box and a small box on the same object can
 both remain; their survival does not prove two instances. See also [size cases and aspect
 ratios](82-detection-fasterrcnn-yolo-detr.md#box-sizes-aspect-ratios-and-accuracy).
 
@@ -548,3 +558,5 @@ Consulted foundations: [Soft-NMS](https://arxiv.org/html/1704.04503v2): §4 gree
 [giou]: https://arxiv.org/html/1902.09630v2
 
 Drafted by agent, 2026-10-18. Revision 10, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/81-nms.md).
+Revision 11, 2026-11-16: side-ratio condition for nested boxes and a containment counterexample
+added to the inclusion section while deepening CV-NMS-006, and a reversed sentence on the containment ratio corrected, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/81-nms.md).

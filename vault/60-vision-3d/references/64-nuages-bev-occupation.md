@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-SE3", "CV-CAPTEURS", "CV-MULTICALIB"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -258,7 +258,25 @@ surface $\{p\mid f_\theta(p,x)=\tau\}$; $\tau$ is chosen on validation data, 0.2
 paper [Mescheder et al., §3.1, §3.3, §4.2]. DeepSDF's signed distance is negative inside and
 positive outside the surface, whose zero-level set is the shape; training clamps
 distances to $\delta=0.1$ in coordinates normalized to the unit sphere [Park et al.,
-§3, §5]. Neither output is an occupancy belief about a robot's environment.
+§3, §5]. Neither output is an occupancy belief about a robot's environment. The
+network is trained with a cross-entropy loss on points sampled uniformly in the
+object's bounding box with a small padding, against the true occupancy of the full
+shape [Mescheder et al., §3.2]; outside that box it was never supervised. $\tau=0.2$
+was found by grid search on validation data as "a good trade-off between accuracy and
+completeness" of the mesh [§4.2], and the paper describes $\tau$ as setting the
+"thickness" of the extracted surface [§3.3]: a point with $f_\theta=0.3$ lies inside the
+mesh although its value is below 0.5. In single-image reconstruction the network is
+scored against the complete mesh [§4.2], so the side hidden from the input view
+receives values from the learned shape prior, where a robot grid fed by the same view
+would hold unknown cells (project reading of §3.2 and §4.2; CV-BEV-003).
+
+![Two meanings of occupancy: a LiDAR scan cast into a grid leaves free cells along the rays, occupied cells at the returns and unknown cells behind the pallet and outside the field; an occupancy network returns a value at any point of one shape, hidden side included, with its surface at f = 0.2](../../99-Ressources/cv-bev-occupancy-implicit.svg)
+
+*Figure (project construction).* Top: one constructed scan of 13 rays over a
+13 × 9 grid, cells classified by exact ray traversal with the OctoMap sensor model
+(probabilities 0.4 and 0.7 after one scan; recomputed by the 2026-11-16 check script
+`checks/64-nuages-bev-occupation.py`). Bottom: schematic occupancy network with the
+paper's $\tau=0.2$; contour spacing is not to scale (CV-BEV-003).
 
 **Ego-motion transport.** A point observed at time $t_0$ is moved to the current
 ego frame by $p_{e(t)}=T_{w\leftarrow e(t)}^{-1}T_{w\leftarrow e(t_0)}\,p_{e(t_0)}$, valid only
@@ -268,7 +286,17 @@ for static points.
 During a 30°/s turn, a 50 ms timestamp error rotates the scene by 1.5°: a point at
 20 m moves by 0.52 m (3.3 cells of 0.16 m) and a point at 5 m by 0.13 m. At 10 m/s the
 same error translates every point by 0.5 m regardless of range. Range dependence
-separates rotation-related timing errors from translation-related ones.
+separates rotation-related timing errors from translation-related ones. Extended on
+2026-11-16 (constructed, recomputed by the 2026-11-16 check script
+`checks/64-nuages-bev-occupation.py`; CV-BEV-004): plotted against range, the lateral
+error of static points during the turn is a line through the origin of slope
+$\tan(\omega\,\delta t)\approx0.026$ m per metre, which returns $\delta t=0.026/0.524\approx0.05$ s
+and changes sign with the turn direction. A missing deskew has another signature: if
+every point of a 100 ms sweep (a 10 Hz spinning sensor, constructed) is placed with one
+pose, the same 30°/s turn misplaces points by up to $\omega T=3°$, so a static wall at
+20 m shows a tear of about 1.05 m at the azimuth where the sweep starts and ends, with an
+error that varies along the sweep rather than a uniform rotation. An extrinsic rotation
+error also grows with range but is visible at rest and does not follow $\omega$.
 
 *Worked example E (constructed, recomputed by checks/64-nuages-bev-occupation.py).*
 With 0.2° horizontal and 0.4° vertical angular steps, consecutive returns are 0.17 m
@@ -546,3 +574,4 @@ Consulted foundations: [OctoMap](https://octomap.github.io/): explicit distincti
 - Related references: [CV-POSE3D](../../80-detection-pose/references/84-detection-pose-3d.md), [CV-RENDU3D](../../120-generatif-multimodal/references/123-nerf-gaussian-splatting.md), [CV-ICP](62-recalage-global-icp.md), [CV-VIO](63-slam-vio.md), [CV-MULTICALIB](../../50-calibration-geometrie/references/55-calibration-multicapteurs.md).
 
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/64-nuages-bev-occupation.md).
+Revision 8, 2026-11-16: occupancy-network training domain, surface level and hidden-side completion stated, two-meanings-of-occupancy figure added, and worked example D extended (timing-offset slope, deskew tear, extrinsic error) while deepening CV-BEV-003 and CV-BEV-004, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/64-nuages-bev-occupation.md).

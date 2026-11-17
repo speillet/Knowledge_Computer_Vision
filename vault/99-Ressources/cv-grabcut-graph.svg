@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 790" role="img" aria-labelledby="gc-title gc-desc">
+  <title id="gc-title">GrabCut: graph, minimum cut and iteration loop</title>
+  <desc id="gc-desc">Schematic s–t graph for one row of five pixels. Each pixel is linked to the source S, the foreground side, and to the sink T, the background side, by t-links, and to its neighbours by n-links. The S–n link weighs minus log p of the colour under the background mixture and the n–T link minus log p under the foreground mixture; the n-link between neighbours m and n weighs gamma times exp of minus beta times the squared colour difference. Pixels 1 to 3 resemble the foreground, pixel 4 the background, and pixel 5 is definite background with t-links 0 and lambda = 9 gamma = 450. The minimum cut severs the cheap links: the n–T links of pixels 1 to 3, the weak n-link across the colour edge between pixels 3 and 4, and the S–n links of pixels 4 and 5. Below, the loop: 1 assign a mixture component to each pixel, 2 refit the mixtures, 3 rebuild the t-links and solve the minimum cut, repeated iterCount times with n-links computed once per call.</desc>
+  <defs>
+    <marker id="gc-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#334155"/></marker>
+  </defs>
+  <rect width="540" height="790" rx="12" fill="#f8fafc"/>
+  <text x="270" y="34" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">GrabCut: graph, min cut and loop</text>
+
+  <!-- t-links from S (270,96) to pixel centres (x,280); width encodes cost -->
+  <g stroke="#334155" fill="none">
+    <line x1="270" y1="96" x2="70" y2="280" stroke-width="5"/>
+    <line x1="270" y1="96" x2="170" y2="280" stroke-width="5"/>
+    <line x1="270" y1="96" x2="270" y2="280" stroke-width="5"/>
+    <line x1="270" y1="96" x2="370" y2="280" stroke-width="1.5"/>
+    <line x1="270" y1="96" x2="470" y2="280" stroke-width="1.5" stroke-dasharray="3 5"/>
+  </g>
+  <!-- t-links from pixel centres to T (270,464) -->
+  <g stroke="#334155" fill="none">
+    <line x1="70" y1="280" x2="270" y2="464" stroke-width="1.5"/>
+    <line x1="170" y1="280" x2="270" y2="464" stroke-width="1.5"/>
+    <line x1="270" y1="280" x2="270" y2="464" stroke-width="1.5"/>
+    <line x1="370" y1="280" x2="270" y2="464" stroke-width="5"/>
+    <line x1="470" y1="280" x2="270" y2="464" stroke-width="9"/>
+  </g>
+  <!-- n-links between neighbouring pixels -->
+  <g stroke="#0369a1" fill="none">
+    <line x1="70" y1="280" x2="170" y2="280" stroke-width="5"/>
+    <line x1="170" y1="280" x2="270" y2="280" stroke-width="5"/>
+    <line x1="270" y1="280" x2="370" y2="280" stroke-width="1.5"/>
+    <line x1="370" y1="280" x2="470" y2="280" stroke-width="5"/>
+  </g>
+
+  <!-- terminals -->
+  <circle cx="270" cy="96" r="24" fill="#e0f2fe" stroke="#15803d" stroke-width="3"/>
+  <text x="270" y="103" font-family="sans-serif" font-size="19" font-weight="bold" fill="#15803d" text-anchor="middle">S</text>
+  <text x="304" y="92" font-family="sans-serif" font-size="16" fill="#15803d">source = foreground</text>
+  <circle cx="270" cy="464" r="24" fill="#e0f2fe" stroke="#b91c1c" stroke-width="3"/>
+  <text x="270" y="471" font-family="sans-serif" font-size="19" font-weight="bold" fill="#b91c1c" text-anchor="middle">T</text>
+  <text x="304" y="484" font-family="sans-serif" font-size="16" fill="#b91c1c">sink = background</text>
+
+  <!-- pixel nodes: 1-3 end on the S side (green), 4-5 on the T side (red) -->
+  <g fill="#e0f2fe" stroke-width="3">
+    <circle cx="70" cy="280" r="22" stroke="#15803d"/>
+    <circle cx="170" cy="280" r="22" stroke="#15803d"/>
+    <circle cx="270" cy="280" r="22" stroke="#15803d"/>
+    <circle cx="370" cy="280" r="22" stroke="#b91c1c"/>
+    <circle cx="470" cy="280" r="22" stroke="#b91c1c"/>
+  </g>
+  <circle cx="470" cy="280" r="27" fill="none" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <g font-family="sans-serif" font-size="17" font-weight="bold" fill="#0f172a" text-anchor="middle">
+    <text x="70" y="286">1</text><text x="170" y="286">2</text><text x="270" y="286">3</text>
+    <text x="370" y="286">4</text><text x="470" y="286">5</text>
+  </g>
+  <text x="478" y="328" font-family="sans-serif" font-size="16" fill="#b91c1c" text-anchor="middle">GC_BGD</text>
+  <text x="432" y="238" font-family="sans-serif" font-size="16" fill="#334155">0</text>
+  <text x="384" y="374" font-family="sans-serif" font-size="16" fill="#334155">λ = 9γ = 450</text>
+
+  <!-- the minimum cut: crosses n-T of 1-3, n-link 3-4, S-n of 4-5 -->
+  <polyline points="16,400 285,400 320,280 345,200 524,200" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="9 6" stroke-linejoin="round"/>
+  <text x="440" y="190" font-family="sans-serif" font-size="16" font-weight="bold" fill="#7c3aed">min cut</text>
+  <text x="22" y="390" font-family="sans-serif" font-size="16" font-weight="bold" fill="#7c3aed">min cut</text>
+
+  <!-- legend -->
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="16" y="526">S–n: −log p(z<tspan font-size="12" dy="4">n</tspan><tspan dx="5" dy="-4">| BG), paid if n ends on T</tspan></text>
+    <text x="16" y="552">n–T: −log p(z<tspan font-size="12" dy="4">n</tspan><tspan dx="5" dy="-4">| FG), paid if n ends on S</tspan></text>
+    <text x="16" y="578" fill="#0369a1">m–n: γ·exp(−β‖z<tspan font-size="12" dy="4">m</tspan><tspan dx="5" dy="-4">− z</tspan><tspan font-size="12" dy="4">n</tspan><tspan dx="5" dy="-4">‖²), paid if split</tspan></text>
+    <text x="16" y="604" fill="#334155">Width shows cost; the cut takes thin links.</text>
+  </g>
+
+  <!-- iteration loop -->
+  <g fill="#e0f2fe" stroke="#0369a1" stroke-width="2">
+    <rect x="16" y="628" width="152" height="58" rx="8"/>
+    <rect x="194" y="628" width="152" height="58" rx="8"/>
+    <rect x="372" y="628" width="152" height="58" rx="8"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a" text-anchor="middle">
+    <text x="92" y="651">1. assign</text>
+    <text x="92" y="674">component k<tspan font-size="12" dy="4">n</tspan></text>
+    <text x="270" y="651">2. refit GMMs</text>
+    <text x="270" y="674">π, μ, Σ</text>
+    <text x="448" y="651">3. new t-links,</text>
+    <text x="448" y="674">min cut → α</text>
+  </g>
+  <g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#gc-arrow)">
+    <line x1="168" y1="657" x2="190" y2="657"/>
+    <line x1="346" y1="657" x2="368" y2="657"/>
+    <polyline points="448,686 448,712 92,712 92,692"/>
+  </g>
+  <text x="270" y="736" font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">iterCount times; n-links fixed per call</text>
+  <text x="270" y="770" font-family="sans-serif" font-size="14" fill="#334155" text-anchor="middle">Schematic: one pixel row; OpenCV links 8 neighbours.</text>
+</svg>

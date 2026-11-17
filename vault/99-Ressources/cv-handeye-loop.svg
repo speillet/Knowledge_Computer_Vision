@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 720" role="img" aria-labelledby="he-title he-desc">
+  <title id="he-title">Eye-in-hand loop: AX = XB</title>
+  <desc id="he-desc">Schematic frame graph of eye-in-hand calibration at two robot stations i and j. Each arrow from frame b to frame a is the transform that maps b coordinates into a. Measured, in green: G i and G j, gripper to base, from the robot kinematics; C i and C j, target to camera, from PnP. Unknown, in red: X, camera to gripper, the same at both stations because the camera rides on the gripper. Computed, in violet: A equals G j inverse times G i, gripper i to gripper j, and B equals C j times C i inverse, camera i to camera j. The two paths from camera i to gripper j, X then A, or B then X, give A X equals X B. The target is fixed, so both paths from the target to the base give the same Y.</desc>
+  <defs>
+    <marker id="he-arrow-green" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5z" fill="#15803d"/></marker>
+    <marker id="he-arrow-red" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5z" fill="#b91c1c"/></marker>
+    <marker id="he-arrow-violet" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L0,7 L9,3.5z" fill="#7c3aed"/></marker>
+  </defs>
+  <rect width="540" height="720" rx="12" fill="#f8fafc"/>
+  <text x="270" y="34" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">Eye-in-hand loop: AX = XB</text>
+
+  <!-- station groups: the camera rides on the gripper -->
+  <g fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="6 5">
+    <rect x="34" y="166" width="152" height="254" rx="10"/>
+    <rect x="354" y="166" width="152" height="254" rx="10"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">
+    <text x="110" y="442">station i</text>
+    <text x="430" y="442">station j</text>
+  </g>
+
+  <!-- frames -->
+  <g fill="#e0f2fe" stroke="#0369a1" stroke-width="2">
+    <rect x="208" y="65" width="124" height="42" rx="8"/>
+    <rect x="48" y="185" width="124" height="42" rx="8"/>
+    <rect x="368" y="185" width="124" height="42" rx="8"/>
+    <rect x="48" y="355" width="124" height="42" rx="8"/>
+    <rect x="368" y="355" width="124" height="42" rx="8"/>
+    <rect x="208" y="499" width="124" height="42" rx="8"/>
+  </g>
+  <g font-family="sans-serif" font-size="17" fill="#0f172a" text-anchor="middle">
+    <text x="270" y="92">base</text>
+    <text x="110" y="212">gripper i</text>
+    <text x="430" y="212">gripper j</text>
+    <text x="110" y="382">camera i</text>
+    <text x="430" y="382">camera j</text>
+    <text x="270" y="526">target</text>
+  </g>
+
+  <!-- measured: robot kinematics, gripper to base -->
+  <g stroke="#15803d" stroke-width="2.5" fill="none" marker-end="url(#he-arrow-green)">
+    <line x1="128" y1="183" x2="204" y2="106"/>
+    <line x1="412" y1="183" x2="336" y2="106"/>
+    <!-- measured: PnP, target to camera -->
+    <line x1="220" y1="497" x2="130" y2="401"/>
+    <line x1="320" y1="497" x2="410" y2="401"/>
+  </g>
+  <g font-family="sans-serif" font-size="18" font-weight="bold" fill="#15803d">
+    <text x="160" y="136" text-anchor="end">G<tspan font-size="12" dy="4">i</tspan></text>
+    <text x="380" y="136">G<tspan font-size="12" dy="4">j</tspan></text>
+    <text x="172" y="466" text-anchor="end">C<tspan font-size="12" dy="4">i</tspan></text>
+    <text x="368" y="466">C<tspan font-size="12" dy="4">j</tspan></text>
+  </g>
+
+  <!-- unknown: camera to gripper, the same at both stations -->
+  <g stroke="#b91c1c" stroke-width="3" fill="none" marker-end="url(#he-arrow-red)">
+    <line x1="110" y1="353" x2="110" y2="231"/>
+    <line x1="430" y1="353" x2="430" y2="231"/>
+  </g>
+  <g font-family="sans-serif" font-size="19" font-weight="bold" fill="#b91c1c">
+    <text x="96" y="298" text-anchor="end">X</text>
+    <text x="444" y="298">X</text>
+  </g>
+
+  <!-- computed: relative motions -->
+  <g stroke="#7c3aed" stroke-width="2.5" fill="none" marker-end="url(#he-arrow-violet)">
+    <line x1="174" y1="206" x2="364" y2="206"/>
+    <line x1="174" y1="376" x2="364" y2="376"/>
+  </g>
+  <g font-family="sans-serif" font-size="17" fill="#7c3aed" text-anchor="middle">
+    <text x="270" y="194">A = G<tspan font-size="12" dy="4">j</tspan><tspan dy="-4">⁻¹</tspan><tspan dx="5">G</tspan><tspan font-size="12" dy="4">i</tspan></text>
+    <text x="270" y="403">B = C<tspan font-size="12" dy="4">j</tspan><tspan dx="5" dy="-4">C</tspan><tspan font-size="12" dy="4">i</tspan><tspan dy="-4">⁻¹</tspan></text>
+  </g>
+  <text x="270" y="290" font-family="sans-serif" font-size="19" font-weight="bold" fill="#0f172a" text-anchor="middle">AX = XB</text>
+  <text x="270" y="312" font-family="sans-serif" font-size="14" fill="#334155" text-anchor="middle">two paths from</text>
+  <text x="270" y="330" font-family="sans-serif" font-size="14" fill="#334155" text-anchor="middle">camera i to gripper j</text>
+
+  <!-- fixed target -->
+  <text x="270" y="566" font-family="sans-serif" font-size="16" fill="#334155" text-anchor="middle">fixed target: G<tspan font-size="12" dy="4">i</tspan><tspan dx="5" dy="-4">X C</tspan><tspan font-size="12" dy="4">i</tspan><tspan dx="5" dy="-4">= Y at every station</tspan></text>
+
+  <!-- legend -->
+  <g stroke-width="3" fill="none">
+    <line x1="24" y1="603" x2="54" y2="603" stroke="#15803d"/>
+    <line x1="24" y1="631" x2="54" y2="631" stroke="#b91c1c"/>
+    <line x1="24" y1="659" x2="54" y2="659" stroke="#7c3aed"/>
+  </g>
+  <g font-family="sans-serif" font-size="16" fill="#0f172a">
+    <text x="64" y="609">measured: G gripper → base, C target → camera</text>
+    <text x="64" y="637">unknown: X camera → gripper, rides on gripper</text>
+    <text x="64" y="665">computed from G and C: A and B</text>
+  </g>
+  <text x="270" y="698" font-family="sans-serif" font-size="14" fill="#334155" text-anchor="middle">Arrow from frame b to frame a: ᵃT<tspan font-size="11" dy="4">b</tspan><tspan dx="4" dy="-4">maps b coordinates into a. Schematic.</tspan></text>
+</svg>
