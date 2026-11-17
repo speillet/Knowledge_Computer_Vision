@@ -14,6 +14,8 @@ ID: CV-EPIPOLAIRE-001
 Question: Which coordinate conventions distinguish the essential and fundamental matrices?
 Reponse: **Expected answer**: E acts on ideal normalized camera coordinates; F on ideal pixels with absorbed intrinsics.
 
+**Reading the diagram**: ![Epipolar plane, epipoles and epipolar line](../99-Ressources/cv-epipolaire-plane.svg) Every point of the ray from $C_1$ through $p_1$, such as $X$ and $X'$, projects into image 2 on one line, $l_2=F\tilde p_1$, which passes through the epipole $e_2$, the image of $C_1$. The constraint $\tilde p_2^\top F\tilde p_1=0$ only states that $p_2$ lies on that line. Written on normalized coordinates $x=K^{-1}\tilde p$, the same epipolar plane gives $x_2^\top Ex_1=0$: changing the coordinates changes the matrix, not the geometry.
+
 **Further explanation**: Correct or model distortion; use the matching matrices and the stated pose direction.
 
 **Consistent writing**: for $X_2=RX_1+t$, the essential is $E=[t]_\times R$. The $x_2^TEx_1=0$ constraint is written with ideal normalized coordinates; in ideal pixels, $F=K_2^{-T}EK_1^{-1}$ absorbs both intrinsic matrices. The homogeneous notation also implies a normalization convention.

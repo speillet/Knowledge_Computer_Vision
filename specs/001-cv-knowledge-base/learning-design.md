@@ -76,6 +76,14 @@ in this project; it does not measure understanding or quality, impose a ceiling
 or justify filler. The expected answer remains the grading rule even when the
 full explanation is long.
 
+**Clarity request of 2026-11-17**: the learner found some notions too
+complicated and intermediate steps missing. Each card now defines its acronyms
+and symbols, shows every calculation as formula, substitution and result,
+orders its explanation as intuition, steps, formula and limits, and keeps at
+most six rubrics. Advanced side derivations move to the reference note, and
+missing prerequisite notions become bridge-card proposals. The review grid of
+`revue-cartes` holds the detailed criteria.
+
 Keep the direct answer visible at the beginning of the back. Organize details
 by purpose: mechanism, reasoning, limitations and example. Do not reveal the
 answer on the front through a title or source extract.

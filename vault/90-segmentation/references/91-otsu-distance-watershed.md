@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-MORPHO"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d09]
@@ -475,6 +475,18 @@ match exceeds 0.5, and the image scores TP 0, FP 1, FN 2 and F1 0. With areas 70
 merged region matches the larger object at IoU 0.7: TP 1, FN 1, F1 2/3. Matching
 penalizes a merge only partly, which is why merges must be counted explicitly.
 
+*Worked example E (constructed, recomputed by the 2026-11-16 check script,
+`docs/revues/2026-11-16-card-depth/checks/91-otsu-distance-watershed.py`).* OpenCV labels
+$-1$ every pixel that two different labels reach [segmentation.cpp, L265–L293]. Two
+touching $20\times20$ squares that are correctly split therefore lose a one-pixel dam of
+20 pixels inside the ground-truth foreground. With the tutorial's background label 1 and
+the foreground taken as labels above 1, the split scores a foreground IoU of
+$780/800=0.975$, and its instances 0.95 and 1.0 when the dam falls in one square. The
+merge has no dam and scores a foreground IoU of 1.0 while matching no instance. Foreground
+IoU thus ranks the merge above the correct split; assigning dam pixels to a neighbouring
+label before scoring removes that bias, which instance counting never had
+(CV-WATERSHED-005).
+
 ### Proposed baseline and controlled variation (not executed)
 
 - **Question**: does the global seed rule cause the remaining count errors?
@@ -644,3 +656,4 @@ Consulted foundations: [OpenCV watershed](https://docs.opencv.org/4.13.0/d3/db4/
 Drafted by agent, 2026-10-18. Revision 6, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/91-otsu-distance-watershed.md).
 Revision 7, 2026-11-15: CV-WATERSHED-006 added after the learner accepted P-CV-WATERSHED-01, the
 OpenCV relief paragraph corrected and developed, and worked example D added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/91-otsu-distance-watershed.md).
+Revision 8, 2026-11-16: worked example E (a foreground IoU that prefers the merge over a split with a watershed dam) added while deepening CV-WATERSHED-005, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/91-otsu-distance-watershed.md).

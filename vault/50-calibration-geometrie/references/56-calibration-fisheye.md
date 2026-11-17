@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-ZHANG", "CV-SE3"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -119,7 +119,8 @@ rectification; interpret the rectified-field parameter `balance`.
   Brandt, §II-B, eqs. 8–10], which OpenCV's `fisheye` module does not include.
 - **Monotonic projection.** For real lenses $r(\theta)$ increases on $[0,\theta_{\max}]$,
   which makes the inverse well defined [Kannala and Brandt, §II-A]. A fitted polynomial
-  may violate this outside the calibrated field (worked example E).
+  may violate this outside the calibrated field: with $k_1=-0.1$ alone, $\mathrm d\theta_d/\mathrm d\theta$
+  vanishes at 1.83 rad (constructed example D of the 2026-11-14 check script).
 - **Rays in front of the camera.** OpenCV requires $z>0$ (Problem section).
 - **An accurate target and unbiased features.** For circle grids, "the centroid of the
   projected circle is not the image of the center of the original circle"; Kannala and
@@ -201,6 +202,27 @@ $(K_{\mathrm{new}}R)^{-1}\tilde u'$, i.e. the raw-camera ray $R^\top K_{\mathrm{
 projects it with the fisheye model and stores the source coordinates; output pixels whose
 ray has $w\le0$ receive infinite coordinates [fisheye.cpp, L579–L615]. $R$ therefore maps
 raw camera rays into the rectified frame.
+
+Two consequences for downstream code. *Points*: `fisheye::undistortPoints` with the same
+$R$ and $P$ applies $PR$ to the undistorted normalized point [fisheye.cpp, L394–L409,
+L500–L505], so it sends a raw corner to the rectified pixel that the map samples from it;
+comparing that prediction with the corner detected in the rectified image tests the whole
+contract without remapping. *Poses*: on the rectified image, a pose solver takes
+$K_{\mathrm{new}}$ (the left $3\times3$ block of $P$) and zero distortion, since
+`solvePnP` assumes zero coefficients for an empty vector [calib3d.hpp, L1029–L1030], and
+it returns a pose in the rectified frame, $X_{\mathrm{rect}}=RX_{\mathrm{raw}}$; before
+combining it with extrinsics calibrated on the raw camera, apply $R^\top$. For monocular
+undistortion with $R=I$ the two frames coincide; for stereo rectification they do not, as
+`stereoRectify` states for $R_1$ [calib3d.hpp, L2016–L2019].
+
+*Worked example: one ray, three readings (constructed, recomputed by the 2026-11-16 check
+script; CV-FISHEYE-004).* With the lens of worked example C and `balance` = 0,
+$f_{\mathrm{new}}=f_{\max}=336.1$ px and $R=I$. A horizontal ray 0.6 rad (34.4°) off axis
+lands at $u=940$ px in the raw image and at $u=869.9$ px in the rectified one, 229.9 px from
+the centre. Read with $K_{\mathrm{new}}$ as a pinhole, that offset returns 34.4°; read with
+the raw $K$ and the fisheye model, 26.3°; read with $K_{\mathrm{new}}$ and the fisheye model
+applied a second time, 39.2°. Ignoring a 4° rectification rotation moves a point 1.5 m
+straight ahead by 0.105 m.
 
 **Sampling density.** For an equidistant raw image, one pixel spans $1/f$ rad at every
 radius. A pinhole output with focal $f_{\mathrm{new}}$ spans $1/f_{\mathrm{new}}$ rad per
@@ -463,3 +485,6 @@ Consulted foundations: [OpenCV fisheye](https://docs.opencv.org/4.13.0/db/d58/gr
 - Neighbouring references: [CV-ZHANG](52-calibration-zhang.md), [CV-BA](54-bundle-adjustment.md), [CV-STEREO](../../60-vision-3d/references/61-stereo-profondeur.md).
 
 Drafted by Agent Codex, 2026-10-24. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/56-calibration-fisheye.md).
+Revision 8, 2026-11-16: the point and pose consequences of rectification and a worked example
+of three readings of one rectified pixel added while deepening CV-FISHEYE-004, and a dangling
+"worked example E" label replaced by the example it meant, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/56-calibration-fisheye.md).

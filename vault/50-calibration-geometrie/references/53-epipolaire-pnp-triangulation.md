@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -187,6 +187,19 @@ $l_2=F\tilde p_1=(a,b,c)$, and the distance of $(u,v)$ to it is
 $|au+bv+c|/\sqrt{a^2+b^2}$ pixels; OpenCV's thresholds for $E$ and $F$ are such
 point-to-line distances in pixels [L2624–L2627, L2546–L2549]. The algebraic value
 $\tilde p_2^\top F\tilde p_1$ depends on the arbitrary scale of $F$ and is not a distance.
+
+![Epipolar geometry: camera centres C1 and C2 on the baseline, a point X and a second point X′ on the same ray from C1, their images, the epipolar plane, the epipoles e1 and e2, and the epipolar line l2 = F p1 through e2 and p2](../../99-Ressources/cv-epipolaire-plane.svg)
+
+*Figure (project construction), drawn to scale from a constructed configuration in an
+orthographic view; its coordinates and the constraint $\tilde p_2^\top F\tilde p_1=0$ are
+recomputed by the 2026-11-16 check script `checks/53-epipolaire-pnp-triangulation.py`.*
+The epipolar plane through $C_1$, $C_2$ and $X$ cuts image 2 along $l_2=F\tilde p_1$,
+which passes through $p_2$ and the epipole $e_2$, the image of $C_1$; every point of the
+ray from $C_1$ through $p_1$ projects onto it. The epipole is where the baseline meets
+the image plane, and all epipolar lines pass through it
+([OpenCV 4.13.0 epipolar-geometry tutorial, L33–L50](https://github.com/opencv/opencv/blob/4.13.0/doc/py_tutorials/py_calib3d/py_epipolar_geometry/py_epipolar_geometry.markdown#L33-L50)). OpenCV computes this line as
+$l^{(2)}=Fp^{(1)}$ and the reverse one as $l^{(1)}=F^\top p^{(2)}$ [calib3d.hpp L2960–L2984]
+(CV-EPIPOLAIRE-001).
 
 **Decomposition.** "In general, four possible poses exist": $[R_1,t]$, $[R_1,-t]$,
 $[R_2,t]$, $[R_2,-t]$ [L2761–L2766]. The two rotations differ by a half-turn about $t$
@@ -538,3 +551,4 @@ Consulted foundations: [OpenCV calib3d](https://docs.opencv.org/4.13.0/d9/d0c/gr
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/53-epipolaire-pnp-triangulation.md).
 Revision 9, 2026-11-15: CV-EPIPOLAIRE-006 added after the learner accepted P-CV-EPIPOLAIRE-01,
 worked example D corrected and worked example F added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/53-epipolaire-pnp-triangulation.md).
+Revision 10, 2026-11-16: epipolar-geometry figure added to the mathematics section and to CV-EPIPOLAIRE-001, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/53-epipolaire-pnp-triangulation.md).

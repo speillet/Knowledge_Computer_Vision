@@ -1380,3 +1380,24 @@ No package is rebuilt: the four new notes reach the phone only through a new pac
 built with `paquet-anki`; release `anki-20261116-0021` contains the 294 earlier notes.
 AnkiDroid and Obsidian rendering, learner proficiency and independent scientific review
 are not established.
+
+## Deepening of 2026-11-16 and clarity pass — 2026-11-17
+
+On 2026-11-16 a deepening pass (`approfondir`) developed the 45 shortest answers and
+drew twelve figures, then stopped before its reports; its work was committed as found in
+`594603f`. On 2026-11-17 the learner found some notions too complicated and intermediate
+steps missing. Agent Claude Code added the `clarifier` mode to `revue-cartes` and, as a
+pilot on top of that commit, restructured the six CV-METRIQUES-TEMPS cards: acronyms
+defined in each card, every calculation shown step by step, explanation ordered as
+intuition, steps, formula and limits, at most six rubrics, asides moved to the reference
+note. Card IDs, objectives, families, tags and Source lines are unchanged. The other 59
+subjects are not yet clarified, and 24 of the 30 subjects deepened on 2026-11-16 still
+lack their report. See the
+[scope record](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-17-clarity/00-cadrage.md).
+This remains agent self-review; editorial status is `redige`.
+
+### Correction log for these passes
+
+| Date | Reference and revision | Affected ID | Defect and source | Correction | Responsible and review status | Checks | Export status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-17 | CV-METRIQUES-TEMPS, revision 10 | CV-METRIQUES-TEMPS-001 | The 2026-11-16 deepening attributed "an event-based count charges between 1 and $n-1$ errors" to Ristani et al. §3.1, §3.3; the paper shows one against seven fragmentations at the same 33% cost (Fig. 1) but does not state the bound; [report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-17-clarity/132-tracking-trajectoires.md) | Bound labelled a project deduction in the reference; removed from the card | Agent Claude Code; self-review | Vault, catalogue, curriculum, unit tests, inventory comparison and recomputation scripts pass | to republish with paquet-anki |

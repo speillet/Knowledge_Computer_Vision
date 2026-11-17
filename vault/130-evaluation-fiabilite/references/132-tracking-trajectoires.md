@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 10
 prerequis: ["CV-VIO", "CV-SORT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -289,24 +289,59 @@ HOTA reward the correction. In the gap scenario, HOTA's association score drops 
 though no identity is wrong, because FNA$(c)$ includes the missed detections of B (eq. 11):
 the components are not independent.
 
-**Duration of a fragment** (card CV-METRIQUES-TEMPS-006). Starting A's new ID at frame
-$k$ ($2\le k\le10$) instead of frame 6 leaves CLEAR MOT with one mismatch and MOTA 0.95,
-but IDF1 becomes $1-\min(k-1,\,11-k)/20$: 0.95 when either piece is a single frame
-($k=2$ or 10), 0.80 for $k=5$ or 7, 0.75 for $k=6$. The global mapping keeps A's longer piece;
-every frame of the shorter piece counts once in IDFN (A unexplained) and once in IDFP
-(the unmatched ID unexplained). Only per-pair frame counts enter the edge costs, so for
-given piece lengths the cost depends neither on when the switch happens nor on how many
-switches produced the pieces. A one-frame relabel inside the track (ID 3 in frame 5 only,
-then ID 1 again) costs two mismatches, MOTA 0.90, but leaves IDF1 at 0.95: MOTA and IDF1
-rank it and a six-frame fragment in opposite orders. Both papers state this as a design
-choice. CLEAR MOT counts a mismatch "once at the time frames where a change in
-object-hypothesis mappings is made", because with a sequence-level best mapping "the time
-frame at which the swap occurs drastically influences the value output by such an error
-measure" [Bernardin and Stiefelhagen, §2.1.2, Fig. 2(c)]. Ristani et al. charge the
-frames that the most favorable mapping leaves unexplained, so one fragmentation and seven
-fragmentations can both cost 33% of a trajectory [§3.1, Fig. 1]. Constructed cases,
-recomputed by checks/132-tracking-trajectoires.py in the review directory
-2026-11-09-four-proposals.
+**One fragment: events versus frames** (cards CV-METRIQUES-TEMPS-001 and -006).
+Constructed example, recomputed by checks/132-tracking-trajectoires.py in the review
+directories 2026-11-09-four-proposals, 2026-11-16-card-depth and 2026-11-17-clarity. Two
+perfectly placed objects over $n$ frames; B keeps ID 2, and A keeps ID 1 until a new ID 3
+takes over, so A's track is split into two pieces of $a$ and $b$ frames, $a+b=n$.
+
+1. *Per-frame counts.* All $2n$ ground-truth boxes are matched: $2n$ TP, no FN or FP, and
+   one IDSW at the takeover frame. MOTA $=1-1/(2n)$, while MODA, the same formula without
+   the IDSW term, is 1.
+2. *Global pairing.* The ID bijection keeps A with the ID of its longer piece and B with
+   ID 2: IDTP $=\max(a,b)+n$.
+3. *Unexplained frames.* Every frame of the shorter piece counts once in IDFN (A without
+   its paired ID) and once in IDFP (the unpaired ID): IDFN $=$ IDFP $=\min(a,b)$.
+4. *Score.* $\mathrm{IDF1}=\frac{2\,\mathrm{IDTP}}{2\,\mathrm{IDTP}+\mathrm{IDFP}+\mathrm{IDFN}}
+   =\frac{2(2n-\min(a,b))}{4n}=1-\frac{\min(a,b)}{2n}$.
+5. *Instances.* For $n=8$ with the takeover at frame 6 (the figure below), the pieces last
+   5 and 3 frames: MOTA $=15/16\approx0.94$, IDTP 13, IDFN $=$ IDFP $=3$ and
+   IDF1 $=26/32\approx0.81$; AssA is $98/128\approx0.77$ and HOTA 0.875. A takeover at
+   frame 8 leaves pieces of 7 and 1 frames, IDF1 $=30/32\approx0.94$; at frame 5, pieces of
+   4 and 4, IDF1 $=0.75$, the minimum. For $n=10$ (card CV-METRIQUES-TEMPS-006 and the
+   second row of the table, $k=6$), a takeover at frame $k$ ($2\le k\le10$) leaves pieces of
+   $k-1$ and $11-k$ frames, so IDF1 $=1-\min(k-1,\,11-k)/20$: 0.95 when either piece is a
+   single frame, 0.80 for $k=5$ or 7, 0.75 for $k=6$, while MOTA stays at 0.95.
+
+Only per-pair frame counts enter the edge costs, so for given piece lengths the cost
+depends neither on when the switch happens nor on how many switches produced the pieces.
+A one-frame relabel inside the track ($n=10$, ID 3 in frame 5 only, then ID 1 again)
+costs two mismatches, MOTA 0.90, but leaves IDF1 at 0.95: MOTA and IDF1 rank it and a
+six-frame fragment in opposite orders. Both papers state this as a design choice. CLEAR MOT
+counts a mismatch "once at the time frames where a change in object-hypothesis mappings is
+made", because with a sequence-level best mapping "the time frame at which the swap occurs
+drastically influences the value output by such an error measure" [Bernardin and
+Stiefelhagen, §2.1.2, Fig. 2(c)]. Ristani et al. measure instead "how long the tracker
+correctly identifies targets" [§3.3]: in their Fig. 1, current measures charge one
+fragmentation error to one tracker and seven to another, while both trackers leave 33% of
+the true trajectory unexplained [§3.1]. More generally, an event count can charge a
+trajectory split over $n$ frames anywhere from 1 to $n-1$ errors, whatever the length of
+each part (project deduction). HOTA's authors list MOTA's indifference to how well
+predicted and true trajectories align as its sixth problem [§9.1].
+
+Relabelling every matched prediction with the ID of its ground-truth object removes the
+association errors without touching the boxes: here MOTA returns to MODA, 1, and IDF1 to 1.
+In general, when the per-frame matches stay the same, the gap between the original and
+relabelled scores isolates association (project protocol behind the first row of the
+failure table).
+
+![One identity switch counted two ways: per-frame matching charges one IDSW and MOTA 0.94; the global ID bijection explains 13 of 16 detections and gives IDF1 0.81](../../99-Ressources/cv-metriques-temps-id-switch.svg)
+
+*Figure (project construction), schematic: one cell per frame and object, values recomputed
+by the 2026-11-16 check script, which reads the drawn IDs and colours.* The top panel
+counts the switch once, at the frame where it happens; the bottom panel pairs identities
+once for the whole sequence and charges every frame that pairing leaves unexplained
+(CV-METRIQUES-TEMPS-001).
 
 ### Trajectory errors
 
@@ -356,6 +391,15 @@ also hides the scale (card CV-METRIQUES-TEMPS-003). The 2% scale error gives an 
 0.02 m over 1 m and 0.10 m over 5 m: relative error grows with the interval, which is
 why it is reported per length or as a percentage. A longer scale case with numbers is
 in [CV-VIO](../../60-vision-3d/references/63-slam-vio.md), worked example D.
+
+Why exactly 4 DoF for an inertial system: transforming all states by a scale $s$ and a
+rotation $R$ leaves the preintegrated IMU measurements unchanged only when $s=1$ and
+$R^Tg=g$, that is, for a rotation about gravity plus a translation, because the
+accelerometer senses gravity and metric acceleration in the body frame [Zhang and
+Scaramuzza, §III-A, eqs. 11–12]. Scale, roll and pitch are therefore outputs of the
+estimator, not gauge freedoms. When a Sim(3) alignment is run as a diagnostic, its
+fitted scale, $1/1.02\approx0.98$ in the scale row, measures the error that a 4-DoF ATE
+reports as 0.063 m (2026-11-16 check script).
 
 ## Parameters and tuning
 
@@ -618,6 +662,70 @@ If one tool silently drops difficult timestamps, its error over surviving matche
 
 Consulted foundations: [HOTA](https://arxiv.org/html/2009.07736v2): §5 DetA/AssA and threshold aggregation; [Sturm et al. trajectory evaluation](https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros.pdf): §VII-A/B RPE and ATE definitions.
 
+## Going further
+
+Paragraphs moved out of the flashcards on 2026-11-17 so that each card follows the order
+intuition, steps, formula and limits. Their content is unchanged; the other paragraphs
+removed from the cards already appear above (worked examples A and B, failure table,
+TrackEval notes and the dated sections below).
+
+### CV-METRIQUES-TEMPS-001 — Attributing a gap to association
+
+To attribute a gap to association, replay the evaluation with every matched prediction
+relabelled with the ID of its ground-truth object. The boxes, hence AP and the detection
+counts, do not change. When the per-frame matches stay the same, as they normally do, IDSW
+falls to zero, MOTA becomes MODA and the identity scores reach the ceiling that detection
+alone allows. The distance between the original and the replayed scores is the share of
+association errors, which a single MOTA value mixes with detection.
+
+### CV-METRIQUES-TEMPS-002 — Practical consequence
+
+Keep the values at the level where the protocol combines them, and then use the reference
+code and its parameters. Different matching, class or ignore rules can also modify
+components before aggregation. A summarized formula helps to interpret the balance between
+detection and association; it does not replace the whole definition. Comparing a hand-built
+figure with an official tool therefore requires reproducing the same inputs and all
+relevant conventions. The reference implementation also differs from the paper's
+per-threshold matching: it runs one assignment per frame and filters it at each threshold.
+
+### CV-METRIQUES-TEMPS-003 — Proposed protocol
+
+Declare the legitimate gauge freedoms before observing the results and keep an independent
+physical reference. Separate arbitrary global translation, global yaw and relative drift
+over time. If gravity provides an absolute direction under the system's assumptions, a
+fully free 3D rotation can also remove an error that should be measured. The choice is not
+to look for the transformation giving the best-looking trajectory: it defines which errors
+are deliberately excluded from the score. Report this transformation and justify it by the
+information actually available. A large ATE drop from the 4-DoF to the Sim(3) alignment,
+with a fitted scale away from 1 (about 0.98 in worked example B), signals a scale error in
+a system declared metric.
+
+### CV-METRIQUES-TEMPS-004 — Two time scales and a proposed evaluation
+
+A trajectory can keep fairly precise local displacements while accumulating a global
+drift. Conversely, a loop-closure correction can improve the overall overlay without making
+each local motion accurate. The two measures therefore probe complementary properties.
+
+Set the displacement interval, the time association and the unit, then report translation
+and rotation separately. For an RPE, short and long intervals do not represent the same
+difficulty. For an ATE, the alignment group removes certain ambiguities and must be
+declared. Keep lost segments and availability: a method that stops producing output on
+difficult cases should not appear perfect by measuring only easy portions. The numbers are
+read with the length, motion and coverage of the sequence, not as universal quality
+constants.
+
+### CV-METRIQUES-TEMPS-006 — The minimum-cost mapping
+
+Ristani et al. build a bipartite graph between true and computed trajectories, add a
+false-negative node for each true trajectory and a false-positive node for each computed
+one, and give the pair $(\tau,\gamma)$ the false-negative frames of $\tau$ plus the
+false-positive frames of $\gamma$; the minimum-cost one-to-one solution defines IDTP, IDFN
+and IDFP. In tracker Y of the card, mapping A to ID 1 costs the 6 unexplained frames of A
+plus the 6 detections of the unmatched ID 3, total 12; mapping A to ID 3 costs $4+4=8$, the
+minimum. The paper calls this mapping the most favorable to the tracker. TrackEval at
+12c8791 solves the same assignment on a padded cost matrix and computes IDF1 as
+$IDTP/(IDTP+0.5\,IDFP+0.5\,IDFN)$.
+
 ## Sources and flashcards
 
 ### Scientific sources
@@ -641,8 +749,11 @@ Consulted foundations: [HOTA](https://arxiv.org/html/2009.07736v2): §5 DetA/Ass
 ### Related flashcards and references
 
 - [Related flashcards](../132-tracking-trajectoires.md): CV-METRIQUES-TEMPS-001 to CV-METRIQUES-TEMPS-005; CV-METRIQUES-TEMPS-006 (identity counts and IDF1 after a fragmentation, by its duration).
-- Constructed examples A–C are recomputed by checks/132-tracking-trajectoires.py in the review directory of 2026-11-14; the fragment-duration case and the IDF1 and MOTA rows of example A by checks/132-tracking-trajectoires.py in the review directory 2026-11-09-four-proposals.
+- Constructed examples A–C are recomputed by checks/132-tracking-trajectoires.py in the review directory of 2026-11-14; the fragment-duration case and the IDF1 and MOTA rows of example A by checks/132-tracking-trajectoires.py in the review directory 2026-11-09-four-proposals. The general one-fragment formula, the step-by-step values of the clarified cards and the frame invariance of RPE are recomputed by checks/132-tracking-trajectoires.py in the review directory 2026-11-17-clarity.
 
 Drafted by agent, 2026-10-18. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/132-tracking-trajectoires.md).
 Revision 8, 2026-11-16: CV-METRIQUES-TEMPS-006 added after the learner accepted P-CV-METRIQUES-TEMPS-01, worked
 example A extended with the duration of a fragment, and the IDF1 edge cost stated precisely, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-09-four-proposals/132-tracking-trajectoires.md).
+Revision 9, 2026-11-16: identity-switch figure and the events-versus-frames example added, and the
+gravity argument for the 4-DoF alignment stated, while deepening CV-METRIQUES-TEMPS-001 and -003, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/132-tracking-trajectoires.md).
+Revision 10, 2026-11-17: cards CV-METRIQUES-TEMPS-001 to -006 clarified (terms defined, every calculation shown step by step, asides moved to a new Going further section), the duration-of-a-fragment and events-versus-frames paragraphs merged into one example with its general formula, and the 1-to-$n-1$ event count labelled as a project deduction, by Agent Claude Code (`revue-cartes`, mode `clarifier`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-17-clarity/132-tracking-trajectoires.md).

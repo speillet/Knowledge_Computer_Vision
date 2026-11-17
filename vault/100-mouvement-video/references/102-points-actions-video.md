@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: ["CV-FLOT"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -206,6 +206,15 @@ Constructed example, recomputed by checks/102-points-actions-video.py, at 30 fra
 The Fast pathway exists precisely to keep "a fine representation along the temporal
 dimension" [SlowFast, §3.2]; the table shows what the sparse pathways alone can observe.
 These are sampling probabilities, not detection rates.
+
+Two refinements of the same model (constructed, recomputed by the 2026-11-16 check
+script; CV-VIDEO-002). The number of samples inside an event is $\lfloor d/\Delta\rfloor$
+or $\lceil d/\Delta\rceil$, the larger with probability equal to the fractional part of
+$d/\Delta$: at 25 frames/s a 100 ms event gets 2 or 3 frames with probability 0.5 each,
+so a rule requiring 3 consecutive detections misses half of these events even with a
+perfect per-frame detector. A summary that averages all frames of each second instead of
+decimating keeps every event, but at weight $d/\Delta$: a 100 ms flash of 50 grey levels
+contributes 5 grey levels to its one-second average.
 
 ### Worked example C: waiting time of windowed point tracking
 
@@ -451,3 +460,5 @@ Consulted foundations: [CoTracker3](https://arxiv.org/html/2410.11831v1): point-
 - [CV-FLOT](101-flot-optique.md), [CV-SOT](../../110-tracking-association/references/113-tracking-monoobjet.md), [CV-PIPELINE](../../140-ingenierie-systemes/references/141-contrats-profiling-video.md), [CV-METRIQUES-TEMPS](../../130-evaluation-fiabilite/references/132-tracking-trajectoires.md).
 
 Drafted by agent, 2026-10-18. Revision 9, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/102-points-actions-video.md).
+Revision 10, 2026-11-16: sample-count and averaging refinements of worked example B added while
+deepening CV-VIDEO-002, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/102-points-actions-video.md).

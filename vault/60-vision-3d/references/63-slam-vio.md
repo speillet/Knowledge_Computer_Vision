@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SE3", "CV-FUSION", "CV-FACTEURS", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d06]
@@ -129,7 +129,14 @@ signature.
   drift "occurs in global 3D position (x, y, z) and the rotation around the gravity
   direction (yaw)" and that roll and pitch are observable [Qin et al., §VII, §VII-A].
   Pure visual monocular systems have seven (scale included) and stereo systems six
-  [Zhang and Scaramuzza, Table I].
+  [Zhang and Scaramuzza, Table I]. The mechanism is visible in the increments: applying
+  $p'=sRp+t$, $v'=sRv$, $R'_i=RR_i$ to every state turns the velocity increment into
+  $R_i^\top\big(s(v_k-v_i)-R^\top g\,\Delta t_{ik}\big)$ [§III-A, eqs. 8 and 11], while
+  monocular projections are unchanged for any $s$, $R$, $t$ [eq. 9]. A rotation about gravity
+  ($R^\top g=g$, eq. 12) therefore changes no measurement for any motion; a 1° tilt moves
+  $R^\top g$ by about 0.17 m/s² (worked example B); a wrong scale changes the increment by
+  $(s-1)R_i^\top(v_k-v_i)$, which vanishes at constant velocity and grows with the
+  acceleration (project reading of eq. 11; CV-VIO-003).
 - **Scale needs excitation.** "For monocular VINS, it is well known that acceleration
   excitation is needed to make metric scale observable" [Qin et al., §I]. A one-line
   argument (project deduction): with constant velocity, an up-to-scale visual path
@@ -360,6 +367,17 @@ targets.
 1 m. The same 20 ms as an unmodeled camera–IMU offset creates the same 2°
 disagreement between visual and inertial rotation, and only 0.2° at 10°/s.
 
+*Worked example F (constructed, recomputed by the 2026-11-16 check script
+`checks/63-slam-vio.py`).* An AR overlay tolerates 1 cm of position error (constructed
+tolerance). During a visual outage bridged by the IMU alone, the residual biases of
+examples A and B reach it after $\sqrt{2\varepsilon/b_a}=1.0$ s for an accelerometer
+bias of 0.02 m/s², and after $(6\varepsilon/(g\,b_g))^{1/3}\approx1.5$ s for a 0.1°/s
+gyroscope bias that tilts the attitude. After the 5 s that ORB-SLAM3 allows before
+starting a new map [Campos et al., §V-D], the same biases give 0.25 m and 0.36 m of
+position error, but only 0.5° of orientation error, 8.7 mm at 1 m. Flagging position
+as degraded after about one second while orientation stays usable is a project design
+choice derived from these numbers (CV-VIO-004).
+
 **Published results with their protocol.** ORB-SLAM3 reports RMS ATE as the median
 of ten runs per EuRoC sequence, with an average of 3.5 cm for stereo-inertial SLAM,
 and 9 mm in the TUM-VI room sequences under quick hand-held motion [Campos et al.,
@@ -535,3 +553,4 @@ Consulted foundations: [Forster et al. preintegration](https://dellaert.github.i
 - Related references: [CV-FUSION](../../10-mathematiques-estimation/references/13-kalman-ekf-eskf.md), [CV-FACTEURS](../../10-mathematiques-estimation/references/14-graphes-facteurs.md), [CV-BA](../../50-calibration-geometrie/references/54-bundle-adjustment.md), [CV-METRIQUES-TEMPS](../../130-evaluation-fiabilite/references/132-tracking-trajectoires.md), [CV-ICP](62-recalage-global-icp.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/63-slam-vio.md).
+Revision 9, 2026-11-16: gauge mechanism read from the increments (Zhang and Scaramuzza eq. 11) and IMU-outage budget (worked example F) added while deepening CV-VIO-003 and CV-VIO-004, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/63-slam-vio.md).

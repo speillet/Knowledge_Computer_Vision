@@ -21,16 +21,22 @@ The mode determines the permitted changes. At the learner's request of
 2026-10-30, the default is `approfondir` (deepen): invoking this skill authorizes
 answer development. Always audit first; do not expand an unchecked answer.
 
-| | `approfondir` (default) | `audit` | `ajouter` (add) |
-| --- | --- | --- | --- |
-| Trigger | Any review request unless specified otherwise | Explicit audit-only request | Learner accepts a registered proposal |
-| ID, question, objective, family, tags | Preserved | Preserved | New IDs |
-| Expected answer | Preserved except for sourced corrections | Corrected when contradicted by a source | Written |
-| Further explanation | Corrected, then developed | Corrected | Written |
-| Canonical reference | Corrected and aligned first | Corrected first | Extended |
-| New cards | Proposed only | Proposed only | Written |
+| | `approfondir` (default) | `clarifier` (clarify) | `audit` | `ajouter` (add) |
+| --- | --- | --- | --- | --- |
+| Trigger | Any review request unless specified otherwise | Request to simplify, clarify or add intermediate steps | Explicit audit-only request | Learner accepts a registered proposal |
+| ID, objective, family, tags | Preserved | Preserved | Preserved | New IDs |
+| Question | Preserved | Preserved; an acronym may be expanded | Preserved | Written |
+| Expected answer | Preserved except for sourced corrections | Same criteria; acronyms expanded and wording clarified, old and new text reported | Corrected when contradicted by a source | Written |
+| Further explanation | Corrected, then developed | Corrected, then restructured into the clarity order | Corrected | Written |
+| Canonical reference | Corrected and aligned first | Corrected first; receives the asides moved out of cards | Corrected first | Extended |
+| New cards | Proposed only | Bridge cards proposed only | Proposed only | Written |
 
-`approfondir` follows steps 1–4; `audit` skips step 4. Both finish with steps 5–7.
+`approfondir` follows steps 1–4 and `clarifier` steps 1–3 and 4b; `audit` skips
+step 4. All three finish with steps 5–7. At the learner's request of 2026-11-17
+("je trouve des notions trop compliquées et il manque des étapes
+intermédiaires"), every mode, including `approfondir`, must leave cards that
+satisfy the [Clarity](references/grille.md#clarity) block of the review grid:
+deepening adds intermediate steps and definitions, not further asides.
 
 ## 0. Define the scope
 
@@ -153,6 +159,39 @@ claim an executed experiment only with evidence. Do not paraphrase existing
 paragraphs or pad an answer to reach the threshold. The expected answer remains
 sufficient for recall. Preserve a card that is already complete and say so in
 its report.
+
+## 4b. Clarify answers (`clarifier` mode)
+
+Audit first (step 2): do not restructure an unchecked answer. Then, for each card:
+
+1. List every acronym and symbol the card uses outside formulas. Define each one
+   in the card at its first use, or in a **Key terms** rubric placed second.
+   The card is reviewed alone on the phone: a definition in another card or in
+   the reference does not count.
+2. Rewrite every result as formula → substitution → result, with each
+   intermediate value. Recompute the values with the subject's check script.
+3. Reorder the explanation as intuition → steps → formula → limits. Put the
+   plain-language mechanism in **Further explanation**, the reasoning or
+   calculation in a numbered list (one operation per item), and the conditions
+   under which it stops holding in **Limits**.
+4. Keep at most six rubrics: Expected answer, optional Key terms, Further
+   explanation, one step rubric (Step by step, Worked example, Reading the
+   diagram or Decision procedure), optional Limits, Blocking errors.
+5. Move every other paragraph, including advanced side derivations, to the
+   canonical reference: into the most relevant existing section, otherwise
+   into a `## Going further` section with one `###` subsection per card ID.
+   Before deleting a paragraph from a card, confirm that the reference holds
+   its content. Nothing is lost; record each move in the report.
+6. If a card skips a notion that the learner needs before it, complete the
+   reference's `Prerequisites` section and `prerequis` field with existing
+   links, and register a bridge-card proposal (step 5) when no card covers it.
+
+Clarification does not change what the expected answer requires. If the
+clearer wording would change the recall objective, register a proposal instead.
+An answer that falls below the 180-word threshold gains steps, never an aside.
+Run `docs/revues/2026-11-17-clarity/checks/clarity_metrics.py <card-file>`
+before and after: it flags rubric count, rubric order and acronyms the card
+does not appear to define. Review each flagged acronym by hand.
 
 ## 5. Propose, obtain decisions and add
 

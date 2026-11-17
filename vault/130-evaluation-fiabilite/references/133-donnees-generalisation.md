@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d13]
@@ -207,6 +207,16 @@ eq. 14]; they observe that calibration error grows near image boundaries [§1].
 fitted on validation negative log-likelihood, $\hat q_i=\max_k\sigma_{\mathrm{SM}}(\mathbf z_i/T)^{(k)}$;
 the predicted class, hence accuracy, is unchanged [§4.2, eq. 9].
 
+**Geometric calibration, for contrast.** Camera calibration estimates the parameters of a
+projection model: the intrinsic matrix with scale factors $\alpha,\beta$ and principal
+point $(u_0,v_0)$ in pixels and a skew $\gamma$ [Zhang 1998, §2.1], plus distortion and
+one pose per view, by minimizing the summed squared distance between detected and
+projected pattern points [§3.2, eq. 10]. OpenCV's `calibrateCamera` returns "the overall
+RMS re-projection error" in pixels [calib3d.hpp at 4.13.0, L1685]. Its data are pattern
+points with known geometry, its error is a distance, and none of the quantities above
+enters it; details are in [CV-ZHANG](../../50-calibration-geometrie/references/52-calibration-zhang.md)
+(card CV-FIABILITE-002).
+
 ### Selective prediction
 
 A selective classifier $(f,g)$ abstains when $g(x)=0$. Its coverage is
@@ -215,6 +225,16 @@ $R(f,g)=\mathbb E_P[\ell(f(x),y)\,g(x)]/\phi(f,g)$; the risk–coverage curve is
 trade-off [Geifman and El-Yaniv, §2, eq. 1]. Their risk guarantee holds for samples
 "sampled i.i.d. from the unknown underlying distribution" [§2, eq. 2], so it does not
 carry over to a shifted domain.
+
+*Worked example D (constructed, recomputed by the 2026-11-16 check script).* On the old
+sensor, a score threshold of 0.7 accepts 800 of 1,000 detections with 16 errors: coverage
+0.80, selective risk 2%. On a new sensor the scores stay high, so the same threshold
+accepts 850 of 1,000, and a labelled audit finds 85 errors among them: coverage 0.85,
+risk 10%. Coverage needs only the scores and rose; risk needs labels and quintupled. A
+monitor that watches the rejection rate or the mean score sees no alarm, because the
+rejection rule fires on low scores and the scores did not drop. Ovadia et al. observed
+the same behaviour on data unrelated to training: most methods gave high-confidence,
+low-entropy predictions, "confidently wrong" [§4.1] (card CV-FIABILITE-005).
 
 ### Shift as a mixture of domains
 
@@ -303,9 +323,14 @@ consumed and plan a new one.
   preprocessing remain. Roberts et al. caution that blocking "may also unwittingly
   induce extrapolations" by restricting the predictor ranges seen in training
   [abstract], so a grouped estimate can be pessimistic for interpolation tasks.
-- **Temperature scaling** preserves the ranking of classes and therefore accuracy and
-  AP-type ranking metrics; it changes only the confidence values [Guo et al., §4.2]. On
-  i.i.d. data it was the most effective method they tested on vision tasks [§5].
+- **Temperature scaling** preserves the ranking of classes within each prediction, hence
+  the predicted class and accuracy [Guo et al., §4.2]. Across predictions it preserves the
+  order of a single-logit (sigmoid) score, so a binary or per-class sigmoid AP is
+  unchanged, but the top softmax probability of two predictions can swap order when there
+  are three or more classes: logits $(1,0,0)$ and $(10,9.4,0)$ give 0.576 and 0.646 at
+  $T=1$, but 0.99991 and 0.99753 at $T=0.1$ (project counterexample, recomputed by the
+  2026-11-16 check script). Re-evaluate a softmax-based AP after fitting $T$. On i.i.d.
+  data it was the most effective method they tested on vision tasks [§5].
 - **Calibration does not transfer under shift.** Ovadia et al. report that better
   calibration on the i.i.d. test set "does not usually translate to better calibration
   under dataset shift", that temperature scaling is outperformed as shift grows, and that
@@ -499,12 +524,13 @@ Consulted foundations: [Guo et al. calibration](https://proceedings.mlr.press/v7
 ### Scientific sources
 
 - [Guo et al. 2017, On calibration of modern neural networks](https://arxiv.org/abs/1706.04599) (arXiv HTML v2; [PMLR version](https://proceedings.mlr.press/v70/guo17a.html)): §2 eqs. 1–5 (perfect calibration, reliability diagrams, ECE, MCE), §4.2 eq. 9 (temperature scaling), §5 (results with 15 bins).
-- [Ovadia et al. 2019, uncertainty under dataset shift](https://arxiv.org/abs/1906.02530): abstract, §1, §5 take-home messages.
+- [Ovadia et al. 2019, uncertainty under dataset shift](https://arxiv.org/abs/1906.02530): abstract, §1, §3 (confidence as the maximum class probability), §4.1 (confidently wrong on OOD data), §5 take-home messages.
 - [Koh et al. 2021, WILDS](https://arxiv.org/abs/2012.07421): §3.1–§3.3 (domain generalization, subpopulation shift, hybrid), §4.3.1 (FMoW), §5.1–§5.4 and Tables 1–2 (ID versus OOD gaps), §9.3–§9.4.
 - [Kapoor and Narayanan 2023, leakage in ML-based science](https://arxiv.org/abs/2207.07048): §2.4 taxonomy L1–L3.
 - [Cawley and Talbot 2010, over-fitting in model selection](https://www.jmlr.org/papers/v11/cawley10a.html): abstract.
 - [Geifman and El-Yaniv 2017, selective classification](https://arxiv.org/abs/1705.08500): §2 eqs. 1–2.
 - [Küppers et al. 2020, multivariate confidence calibration for object detection](https://arxiv.org/abs/2004.13546): §1, §3.1 eq. 1, D-ECE eq. 14.
+- [Zhang 1998, flexible camera calibration, MSR-TR-98-71](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf): §2.1 intrinsic matrix, §3.2 eq. 10 (maximum likelihood refinement); read on 2026-11-16 for the contrast with score calibration.
 - [Roberts et al. 2017, cross-validation for structured data](https://doi.org/10.1111/ecog.02881): abstract only, through a search-engine summary; full text not re-read in this pass.
 - [The ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/): retained link, not re-read in this pass.
 
@@ -513,6 +539,7 @@ Consulted foundations: [Guo et al. calibration](https://proceedings.mlr.press/v7
 - [scikit-learn 1.9.1, `sklearn/model_selection/_split.py`](https://github.com/scikit-learn/scikit-learn/blob/1.9.1/sklearn/model_selection/_split.py): `GroupKFold` L533, `StratifiedGroupKFold` L892, `TimeSeriesSplit` L1116, `LeaveOneGroupOut` L1330, `GroupShuffleSplit` L2087.
 - [scikit-learn 1.9.1, `sklearn/calibration.py`](https://github.com/scikit-learn/scikit-learn/blob/1.9.1/sklearn/calibration.py): `CalibratedClassifierCV` L74–L140, `calibration_curve` L1227–L1280.
 - [SciPy 1.18.1, `scipy/stats/_resampling.py`](https://github.com/scipy/scipy/blob/v1.18.1/scipy/stats/_resampling.py): `bootstrap` L300–L390.
+- [OpenCV 4.13.0, `modules/calib3d/include/opencv2/calib3d.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/calib3d/include/opencv2/calib3d.hpp#L1685): `calibrateCamera` returns the overall RMS re-projection error.
 
 ### Related flashcards and references
 
@@ -520,3 +547,5 @@ Consulted foundations: [Guo et al. calibration](https://proceedings.mlr.press/v7
 - Constructed examples A–C are recomputed by checks/133-donnees-generalisation.py in the review directory of 2026-11-14.
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/133-donnees-generalisation.md).
+Revision 9, 2026-11-16: temperature-scaling statement corrected (softmax rankings across predictions can change),
+geometric calibration contrasted and worked example D (risk and coverage after a sensor change) added while deepening CV-FIABILITE-002 and -005, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/133-donnees-generalisation.md).

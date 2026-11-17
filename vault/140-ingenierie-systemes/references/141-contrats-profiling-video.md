@@ -7,7 +7,7 @@ priorite: V0
 profondeur: approfondissement
 statut: redige
 provenance: agent
-revision: 9
+revision: 10
 prerequis: []
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d14]
@@ -195,6 +195,13 @@ age of 66.7 ms and a peak of 83.3 ms. Halving the output rate to save compute ra
 the peak to 116.7 ms at the same latency. On a conveyor moving at 0.5 m/s, a
 detection 100 ms old lags the part by 50 mm.
 
+![Same throughput, different latency and age: two pipelines with equal output spacing; the age of the newest result is a sawtooth from L to L + 1/X, and only the low one stays under the deadline](../../99-Ressources/cv-pipeline-throughput-age.svg)
+
+*Figure (project construction).* Equal output spacing means equal throughput. The
+latency sets the floor of the sawtooth and the output period its height, so a
+deadline on age constrains both, while a throughput target constrains neither the
+floor nor the queue that raises it (CV-PIPELINE-001).
+
 **Serial stages.** With service times $S_k$ and one worker per stage, running the
 stages one after another gives $X=1/\sum_k S_k$; pipelining them across frames gives
 $X=1/\max_k S_k$, while a frame's latency remains at least $\sum_k S_k$.
@@ -210,7 +217,11 @@ In a fluid model with constant rates and no drop, the backlog grows as
 $Q(t)=Q(0)+(\lambda-\mu)t$ while $\lambda>\mu$, and a frame arriving at $t$ waits
 about $Q(t)/\mu$. At 240 against 200 frames/s, the backlog grows by 40 frames/s:
 after 10 s it holds 400 frames, that is 2 s of waiting. An extra buffer of $C$ frames
-only postpones saturation by $C/(\lambda-\mu)$.
+only postpones saturation by $C/(\lambda-\mu)$. At $\lambda=\mu$ the backlog neither grows
+nor drains: a 2 s warm-up at 240 frames/s leaves 480 frames that keep every later
+result about 2 s old while the output rate stays at 240 frames/s (constructed,
+recomputed by the 2026-11-16 check script; CV-PIPELINE-001). Only service faster than
+arrival ($\mu>\lambda$) or dropping frames removes it.
 
 A bounded queue of $C$ waiting frames that leaks drops a fraction $1-\mu/\lambda$ of
 the arrivals at saturation (1/6 here), and its waiting time becomes bounded. When the
@@ -323,6 +334,11 @@ uses separate factors $S/W$ and $S/H$ and changes the aspect ratio the detector 
 trained on. An odd padding total needs a split rule: splitting 277 rows as 138 above
 and 139 below or the reverse moves every box by one input pixel, about $1/r$ source
 pixels.
+
+![Letterbox inverse: the model box maps back to y 450–630 in the 1920 × 1080 frame, and to y 870–1050 when the 140-row padding is not subtracted](../../99-Ressources/cv-pipeline-letterbox.svg)
+
+*Figure (project construction), drawn to scale for worked example F:* hatched rows are
+padding; the inverse subtracts $p_y$ in input pixels before dividing by $r$ (CV-PIPELINE-006).
 
 **Pixel centres.** An integer index $u$ denotes the pixel centre at $u+0.5$ in the
 continuous frame. OpenCV 4.13 `INTER_LINEAR` samples the source index $(d+0.5)s-0.5$
@@ -649,3 +665,4 @@ Consulted foundations: [GStreamer queue](https://gstreamer.freedesktop.org/docum
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/141-contrats-profiling-video.md).
 Revision 9, 2026-11-15: CV-PIPELINE-006 added after the learner accepted P-CV-PIPELINE-02, and the
 letterbox maps aligned with it (applied scale, order of the inverse, symptom of a forgotten padding term), by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/141-contrats-profiling-video.md).
+Revision 10, 2026-11-16: throughput–age and letterbox figures added, and the $\lambda=\mu$ backlog case stated, while deepening CV-PIPELINE-001, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/141-contrats-profiling-video.md).

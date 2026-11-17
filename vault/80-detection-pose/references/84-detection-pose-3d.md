@@ -7,7 +7,7 @@ priorite: V1
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SE3", "CV-BEV", "CV-EPIPOLAIRE"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d08]
@@ -249,6 +249,20 @@ $0.1d=10.77$ mm and the pose is rejected; with the axial symmetry in $S_M$, MSSD
 If a printed mark makes the angle observable, $S_M=\{\mathbf I\}$ and MSSD $=15.31$ mm,
 which passes 8 of the 10 BOP thresholds (from 15% of $d$, 16.2 mm) and contributes 0.8
 to $\text{AR}_{\text{MSSD}}$ for this instance.
+
+*Extension of worked example C (constructed, recomputed by the 2026-11-16 check script
+`checks/84-detection-pose-3d.py`; CV-POSE3D-004).* With the model origin at the centre of
+the base, a 2° error about a transverse axis moves the top rim by up to
+$2\sqrt{r^2+h^2}\sin1^\circ=3.56$ mm, and no rotation about the cylinder axis lowers
+this maximum: MSSD $=3.56$ mm whatever $S_M$ contains. The axis of the relative
+rotation between two estimates, not its angle, separates a symmetric equivalent from an
+error. BOP's floor of 15 mm on the symmetry tolerance "avoids breaking the symmetries by
+too small details", and the removal of texture-resolved symmetries is "decided
+subjectively by the organizers" [BOP 2020, §2.3]. A keyway 4 mm deep cut along this
+cylinder keeps the Hausdorff deviation of every axial turn near 4 mm, below
+$\varepsilon=\max(15,10.77)=15$ mm, so BOP would keep the axial symmetry although an
+assembly step may need to align the keyway: the evaluation's symmetry set and the
+product's tolerance are separate choices.
 
 **Keypoint heatmaps and limb scores.** OpenPose's target for part $j$ of person $k$ is
 $\mathbf S^*_{j,k}(\mathbf p)=\exp(-\lVert\mathbf p-\mathbf x_{j,k}\rVert_2^2/\sigma^2)$,
@@ -526,3 +540,4 @@ Consulted foundations: [BOP tasks](https://bop.felk.cvut.cz/tasks/): 6D localiza
 - Related references: [CV-BEV](../../60-vision-3d/references/64-nuages-bev-occupation.md), [CV-EPIPOLAIRE](../../50-calibration-geometrie/references/53-epipolaire-pnp-triangulation.md), [CV-SE3](../../10-mathematiques-estimation/references/12-rotations-se3.md), [CV-DETECTEURS](82-detection-fasterrcnn-yolo-detr.md).
 
 Drafted by agent, 2026-10-18. Revision 8, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/84-detection-pose-3d.md).
+Revision 9, 2026-11-16: worked example C extended (transverse tilt against an axial turn, BOP symmetry tolerance and a 4 mm keyway) while deepening CV-POSE3D-004, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/84-detection-pose-3d.md).

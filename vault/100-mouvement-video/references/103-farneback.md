@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 7
+revision: 8
 prerequis: ["CV-FLOT", "CV-SVD"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d10]
@@ -245,6 +245,21 @@ $\lambda=0.1$, 0.2 and 0.5 grey level/px$^2$ the returned vector keeps 9%, 62% a
 the true displacement. A smooth, low-contrast surface such as a painted wall or a
 defocused background can therefore report near-zero motion while the camera moves.
 
+### Worked example D: sign and order of a flow map
+
+Constructed example, recomputed by the 2026-11-16 check script (CV-FARNEBACK-003).
+Under a uniform translation $\mathbf f=(4,-2)$, `next` sampled at $\mathbf x+\mathbf f$
+reproduces `prev` exactly (the convention of tracking.hpp L215–L217). Without a warp the
+two images stay misaligned by $\sqrt{20}\approx4.47$ px. Sampling `next` at
+$\mathbf x-\mathbf f$, the sign error, leaves $(8,-4)$, 8.94 px; sampling it at
+$(x+v,\,y+u)=(x-2,\,y+4)$, the component swap, leaves $(-6,6)$, 8.49 px. On a
+non-repetitive texture whose residual grows with misalignment, the correct map gives
+the smallest warped residual and both errors give a larger one than no warp. A test
+translation with $u=v$ cannot reveal a swap, and one with $u=0$ or $v=0$ cannot reveal
+a sign error on the zero axis. At 40 ms between frames, the image speed is
+$(100,-50)$ px/s, 111.8 px/s in magnitude, about 26.6° above the horizontal on
+screen because $y$ points down.
+
 ## Parameters and tuning
 
 | Parameter (OpenCV) | Values in the sources | Effect | Interactions and what to watch |
@@ -328,6 +343,15 @@ HTTP 403 during this pass.
   (L1180–L1186).
 - `cv::FarnebackOpticalFlow` exposes the same parameters as an object, with the
   defaults above (tracking.hpp L549–L585).
+- Warping with the output: `cv::remap` computes
+  $\texttt{dst}(x,y)=\texttt{src}(map_x(x,y),map_y(x,y))$, and the flag
+  `WARP_RELATIVE_MAP`, ORed with the interpolation method, adds the pixel position to
+  the map [imgproc.hpp L2519–L2549]. A Farnebäck flow passed as a relative map
+  therefore resamples `next` on the grid of `prev`. The sample `opt_flow.py` instead
+  negates the flow and adds the grid in `warp_flow`, sampling at $\mathbf x-\mathbf f(\mathbf x)$
+  to push an image along the motion; this reads the forward field at the destination
+  pixel, an approximation for locally constant flow (L51–L57). Its `draw_hsv` maps
+  $\arctan2(f_y,f_x)+\pi$ to hue and four times the magnitude to value (L38–L48).
 
 ## Evaluation and controlled variation
 
@@ -488,7 +512,8 @@ Consulted foundations: [OpenCV 4.13.0 optical flow tutorial source](https://gith
 
 - [OpenCV 4.13.0, `modules/video/include/opencv2/video/tracking.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/video/include/opencv2/video/tracking.hpp): `calcOpticalFlowFarneback` (L188–L229), `FarnebackOpticalFlow` (L549–L585), `DISOpticalFlow` (L652–L767).
 - [OpenCV 4.13.0, `modules/video/src/optflowgf.cpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/video/src/optflowgf.cpp): applicability and expansion (L60–L203), matrix update with border weights (L217–L311), box and Gaussian window solves with the $10^{-3}$ term (L314–L404, L407–L577), class defaults (L588–L589), CPU `calc` (L1098–L1189), free function (L1194–L1203).
-- [OpenCV 4.13.0, `samples/python/opt_flow.py`](https://github.com/opencv/opencv/blob/4.13.0/samples/python/opt_flow.py): parameters of the call (L76).
+- [OpenCV 4.13.0, `samples/python/opt_flow.py`](https://github.com/opencv/opencv/blob/4.13.0/samples/python/opt_flow.py): HSV display (L38–L48), `warp_flow` with the negated flow (L51–L57), parameters of the call (L76).
+- [OpenCV 4.13.0, `modules/imgproc/include/opencv2/imgproc.hpp`](https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/include/opencv2/imgproc.hpp): `WARP_RELATIVE_MAP` (L279), `remap` and its relative-map formula (L2519–L2549).
 - [OpenCV 4.13.0, optical flow tutorial source](https://github.com/opencv/opencv/blob/4.13.0/doc/tutorials/others/optical_flow.markdown): dense optical flow section.
 
 ### Related flashcards and references
@@ -497,3 +522,5 @@ Consulted foundations: [OpenCV 4.13.0 optical flow tutorial source](https://gith
 - [CV-FLOT](101-flot-optique.md) for the general problem, Lucas–Kanade, RAFT and benchmark metrics; [CV-VIDEO](102-points-actions-video.md) for multi-frame point tracking.
 
 Drafted by Agent Codex, 2026-10-24. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/103-farneback.md).
+Revision 8, 2026-11-16: remap and `opt_flow.py` warping contracts and worked example D
+(sign and order of a flow map) added while deepening CV-FARNEBACK-003, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/103-farneback.md).

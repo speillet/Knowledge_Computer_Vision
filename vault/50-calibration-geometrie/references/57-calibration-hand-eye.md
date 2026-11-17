@@ -7,7 +7,7 @@ priorite: V0
 profondeur: usage-operationnel
 statut: redige
 provenance: agent
-revision: 8
+revision: 9
 prerequis: ["CV-SE3", "CV-ZHANG"]
 competences: [expliquer, appliquer, comparer, evaluer, diagnostiquer]
 tags: [cv/d05]
@@ -157,11 +157,30 @@ multiplying $G_iXC_i=G_jXC_j$ on the left by $G_j^{-1}$ and on the right by $C_i
 gives $A_{ij}X=XB_{ij}$ with $A_{ij}=G_j^{-1}G_i$ and $B_{ij}=C_jC_i^{-1}$, the derivation
 shown in OpenCV's documentation [calib3d.hpp, L2322–L2335] and implemented as
 `Hgij = inv(Hg[j])*Hg[i]`, `Hcij = Hc[j]*inv(Hc[i])` [calibration_handeye.cpp, L297–L304].
+In frame terms, $A_{ij}={}^{g_j}T_{g_i}$ is the gripper's motion expressed in the gripper
+frame and $B_{ij}={}^{c_j}T_{c_i}$ the camera's motion in the camera frame.
+
+![Eye-in-hand frame graph at two stations: measured gripper-to-base and target-to-camera poses, the unknown camera-to-gripper X at both stations, and the relative motions A and B that close the loop AX = XB](../../99-Ressources/cv-handeye-loop.svg)
+
+*Figure (project construction), schematic.* Each arrow from frame $b$ to frame $a$ is
+${}^aT_b$. The two paths from camera $i$ to gripper $j$, $X$ then $A$ or $B$ then $X$, are
+the two sides of $AX=XB$; the two paths from the target to the base are $G_iXC_i=Y$ and
+$G_jXC_j=Y$ (CV-HANDEYE-001; frame graph recomputed by the 2026-11-16 check script).
 
 **Eye-to-hand.** With the camera fixed in the base and the target on the gripper,
 $G_iY=XC_i$ with $X={}^bT_c$ and $Y={}^gT_t$, so $G_i^{-1}XC_i=Y$: the same algebra
 applies with the inverted robot poses ${}^gT_b$, as OpenCV's eye-to-hand chain shows
-[calib3d.hpp, L2336–L2346].
+[calib3d.hpp, L2336–L2346]. Equating two stations gives
+$(G_jG_i^{-1})X=X(C_jC_i^{-1})$: $A$ is now the gripper's motion expressed in the base
+frame, while $B$ keeps its form. Passing ${}^gT_b=G_i^{-1}$ in the slots named
+`R_gripper2base`, `t_gripper2base` makes the implementation's `inv(Hg[j])*Hg[i]` equal
+$G_jG_i^{-1}$, and the output named `cam2gripper` is then ${}^bT_c$ (project deduction from
+the chain and the code above, recomputed by the 2026-11-16 check script; CV-HANDEYE-005).
+An error in $X$ also leaves a different signature in the task: in eye-to-hand a detection
+reaches the base through $X$ alone, so a translation error $e$ of $X$ shifts every grasp by
+the same $R_Xe$ at every robot pose; in eye-in-hand it reaches the base through $G_iX$, so
+the shift $R_{G_i}R_Xe$ turns with the gripper. A 2 mm error seen from two stations that
+differ by a 90° wrist roll gives grasp offsets 2.83 mm apart (constructed).
 
 **Separable solutions.** Solve the rotation first, then the translation from the
 linear system $(R_{A_k}-I)\,t_X=R_X\,t_{B_k}-t_{A_k}$ stacked over motions $k$ (eq. 15 of
@@ -453,3 +472,5 @@ Consulted foundations: [OpenCV calibrateHandEye](https://docs.opencv.org/4.13.0/
 Drafted by Agent Codex, 2026-10-24. Revision 7, 2026-11-14: body deepened and language corrected by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-14-reference-depth/57-calibration-hand-eye.md).
 Revision 8, 2026-11-15: CV-HANDEYE-006 added after the learner accepted P-CV-HANDEYE-01, and
 worked example C and the separable/simultaneous classification added, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-15-accepted-proposals/57-calibration-hand-eye.md).
+Revision 9, 2026-11-16: the eye-in-hand frame graph figure, the frames of $A$ and $B$, the eye-to-hand relative
+motion and OpenCV input recipe, and the task signature of an error in $X$ added while deepening CV-HANDEYE-005, by Agent Claude Code (`revue-cartes`, self-review); see the [subject report](https://github.com/speillet/Knowledge_Computer_Vision/blob/main/docs/revues/2026-11-16-card-depth/57-calibration-hand-eye.md).
