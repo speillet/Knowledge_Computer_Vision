@@ -8,9 +8,10 @@ FR-007–FR-016, FR-031, FR-032 and FR-036.
 2. [Relevance to senior engineering](#relevance-to-senior-engineering)
 3. [Gradability](#gradability)
 4. [Answer development](#answer-development)
-5. [Consistency](#consistency)
-6. [Warning signals](#warning-signals)
-7. [Severity](#severity)
+5. [Clarity](#clarity)
+6. [Consistency](#consistency)
+7. [Warning signals](#warning-signals)
+8. [Severity](#severity)
 
 ## Accuracy
 
@@ -89,6 +90,33 @@ Avoid paraphrasing the expected answer, repeating another card's diagnostic
 paragraph, collecting unrelated facts or presenting a project calculation or
 protocol as a published result.
 
+## Clarity
+
+Applies to every mode, at the learner's request of 2026-11-17: notions were
+too complicated and intermediate steps were missing. A card is reviewed alone
+on the phone, so it must be readable without the reference.
+
+- Is every acronym and symbol used outside a formula defined in the card at its
+  first use, or in a **Key terms** rubric placed second? Method, dataset and
+  library names count as acronyms when their expansion helps (RANSAC: random
+  sample consensus).
+- Does every numerical result show formula → substitution → result, with each
+  intermediate value (IDF1 $=2\,\mathrm{IDTP}/(2\,\mathrm{IDTP}+\mathrm{IDFP}+\mathrm{IDFN})=26/(26+3+3)$,
+  not only $26/32$)?
+- Does the reasoning avoid skipped steps? Each numbered step performs one
+  operation, and a conclusion follows from the steps shown.
+- Does the back follow intuition → steps → formula → limits: Expected answer,
+  optional Key terms, Further explanation (plain-language mechanism), one step
+  rubric, optional Limits, Blocking errors?
+- Are there at most six bold rubrics? Advanced side derivations, alternative
+  readings and historical remarks belong to the reference, not the card.
+- Does the card rely on a notion that no earlier card or prerequisite teaches?
+  Complete the reference's prerequisites and propose a bridge card.
+
+`docs/revues/2026-11-17-clarity/checks/clarity_metrics.py` reports rubric
+count and order and lists acronyms that a card does not appear to define. It is
+a heuristic: read each flagged token.
+
 ## Consistency
 
 - Do the card, reference and related topics agree? Use `rg` for shared concepts
@@ -119,6 +147,9 @@ protocol as a published result.
 | Heading, table, blockquote or stray `$` in a field | Package conversion fails | Inventory conversion anomaly |
 | Paraphrase used to lengthen an answer | Review cost without information | Contribution of each paragraph |
 | Unlabelled constructed calculation or proposed ablation | Confusion with measured results | Number origin and execution evidence |
+| Result given without its calculation | The learner cannot rebuild it | Formula, substitution and each intermediate value |
+| Acronym or symbol undefined in the card | The card does not stand alone | Definition at first use or in Key terms |
+| More than six rubrics or an aside between steps | The main line of reasoning is lost | Move the aside to the reference |
 
 ## Severity
 

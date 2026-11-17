@@ -20,7 +20,13 @@ ID: CV-<TOPIC>-NNN
 Question: <context and standalone question without revealing the answer>
 Reponse: **Expected answer**: <points required to satisfy the objective>
 
-**Further explanation**: <mechanism, reasoning, limitations and example>
+**Key terms**: <optional: each acronym or symbol used outside formulas, defined>
+
+**Further explanation**: <plain-language mechanism: the intuition>
+
+**Step by step**: <numbered steps, one operation each; formula → substitution → result>
+
+**Limits**: <optional: when the reasoning or method stops holding>
 
 **Blocking errors**: <misconceptions that invalidate the answer>
 Source: [[<folder>/references/<reference>|Reference <Name>]] ; [<Author year, §x>](https://…).
@@ -76,5 +82,10 @@ END
   unique across the vault. Avoid trailing whitespace. The package rejects
   headings, tables, blockquotes and `$` outside a formula; the inventory reports
   conversion errors.
+- **Rubric order** (learner's request of 2026-11-17): Expected answer, optional
+  Key terms, Further explanation, one step rubric (Step by step, Worked example,
+  Reading the diagram or Decision procedure), optional Limits, Blocking errors.
+  At most six rubrics; other asides belong to the reference. See the
+  [Clarity](grille.md#clarity) block of the review grid.
 - **Length**: at least 180 lexical words in `Reponse`, without an upper limit
   or padding. The expected answer remains concise and gradable.
